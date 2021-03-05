@@ -1,0 +1,42 @@
+/**
+ * Copyright 2021 GoneTone
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
+body {
+    word-break: break-all;
+    cursor: url('../cur/3.cur'), auto;
+}
+
+a, label {
+    cursor: url('../cur/3.cur'), auto;
+}
+
+.border-left-bd6932 {
+    border-left: .25rem solid #bd6932 !important
+}
+
+.border-left-a256e1 {
+    border-left: .25rem solid #a256e1 !important
+}
+
+.border-left-8e8e8e {
+    border-left: .25rem solid #8e8e8e !important
+}
+
+.text-bd6932 {
+    color: #bd6932 !important
+}
+
+.text-a256e1 {
+    color: #a256e1 !important
+}
+
+.text-8e8e8e {
+    color: #8e8e8e !important
+}
+
+.bg-bd6932 {
+    background-color: #bd6932 !important;
+}
