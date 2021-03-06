@@ -38,7 +38,7 @@ export default {
         const bapRender = $('#bapRender')
         bapRender.buttonAudioPlayer({
           type: 'default',
-          src: require(`@/assets/audio/${audios[Math.floor(Math.random() * audios.length)]}`)
+          src: require(`@/assets/audio/background/${audios[Math.floor(Math.random() * audios.length)]}`)
         })
         bapRender.find('button').click()
         // eslint-disable-next-line no-undef
