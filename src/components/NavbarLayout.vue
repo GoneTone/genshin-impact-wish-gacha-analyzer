@@ -11,7 +11,12 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item">
-      <span style="display: block; padding: 0.5rem 1rem; color: #dddfeb">UID：{{ this.$store.getters.datas.playerUID }}</span>
+      <div class="form-group mb-0" style="display: block; padding: 0.5rem 1rem; color: #dddfeb">
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <select class="form-control" id="UIDSelect" disabled>
+          <option>UID：{{ this.$store.getters.datas.playerUID }}</option>
+        </select>
+      </div>
     </li>
 
     <hr class="sidebar-divider">
@@ -58,6 +63,53 @@
         </a>
       </li>
     </router-link>
+
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+      關於
+    </div>
+
+    <li class="nav-item">
+      <a class="nav-link" @click="openExternal(this.$store.getters.configs.team.websiteUrl);">
+        <i class="fas fa-fw fa-globe"></i>
+        <span>{{ this.$store.getters.configs.team.name }} - 官網</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommunity" aria-expanded="true" aria-controls="collapseCommunity">
+        <i class="fas fa-fw fa-comments"></i>
+        <span>社群</span>
+      </a>
+      <div id="collapseCommunity" class="collapse" aria-labelledby="headingCommunity" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item" @click="openExternal(this.$store.getters.configs.team.facebookUrl);"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a class="collapse-item" @click="openExternal(this.$store.getters.configs.team.discordUrl);"><i class="fab fa-discord"></i> Discord</a>
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDonate" aria-expanded="true" aria-controls="collapseDonate">
+        <i class="fas fa-fw fa-donate"></i>
+        <span>贊助開發者</span>
+      </a>
+      <div id="collapseDonate" class="collapse" aria-labelledby="headingDonate" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">贊助我們請我們喝杯咖啡 :)</h6>
+          <a class="collapse-item" @click="openExternal('https://donate.reh.tw/');"><i class="fas fa-donate"></i> donate.reh.tw</a>
+          <a class="collapse-item" @click="openExternal('https://paypal.me/GoneTone');"><i class="fab fa-paypal"></i> Paypal</a>
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" @click="openExternal(`${this.$store.getters.configs.app.githubUrl}/issues`);">
+        <i class="fab fa-fw fa-github"></i>
+        <span>問題回報</span>
+      </a>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 
