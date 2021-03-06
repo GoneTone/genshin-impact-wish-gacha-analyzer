@@ -99,6 +99,8 @@ export default createStore({
           updateGachaLog = true
         }
 
+        window.log.info('加載卡池資料...')
+
         context.commit('setLoadStatus', {
           status: 'load',
           msg: '正在加載卡池資料，<span class="text-danger">可能需要一點時間</span>...'
@@ -106,10 +108,14 @@ export default createStore({
 
         const uid = await miHoYoApi.getPlayerUID()
 
+        window.log.info(`讀取 UID "${uid}" 玩家的卡池歷史資料...`)
+
         const gachaTypeList = await miHoYoApi.getGachaTypeList()
         const gachaLogs = []
         let updateTime
         for (const data of gachaTypeList) {
+          window.log.info(`讀取 "${data.name}" 卡池歷史資料...`)
+
           context.commit('setLoadStatus', {
             status: 'load',
             msg: `正在讀取 UID <kbd>${uid}</kbd> 玩家的 <span class="text-info">${data.name}</span> 卡池歷史資料，<span class="text-danger">可能需要一點時間</span>...`
@@ -130,6 +136,8 @@ export default createStore({
           }
         })
 
+        window.log.info('卡池歷史資料讀取完畢。')
+
         console.log(this.getters.datas.gachaTypeList)
         console.log(this.getters.datas.gachaLogs)
 
@@ -138,6 +146,8 @@ export default createStore({
           msg: 'Success.'
         })
       } catch (e) {
+        window.error.info(e.message)
+
         context.commit('setLoadStatus', {
           status: false,
           msg: e.message

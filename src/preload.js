@@ -9,6 +9,9 @@
 const electron = require('electron')
 const { remote, shell } = electron
 
+const log = require('electron-log')
+log.transports.console.level = false
+
 const moment = require('moment')
 
 const FileControl = require('@/modules/FileControl')
@@ -18,6 +21,8 @@ const ExportGachaData = require('@/modules/ExportGachaData')
 
 window.app = remote.app
 window.shell = shell
+
+window.log = log
 
 window.moment = moment
 window.moment.locale(window.app.getLocale())

@@ -13,10 +13,14 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const path = require('path')
 const windowStateKeeper = require('electron-window-state')
+const log = require('electron-log')
+
+log.info('應用程式啟動...')
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -31,6 +35,8 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 async function createWindow () {
+  log.info('視窗創建...')
+
   // Load the previous state with fallback to defaults
   const mainWindowState = windowStateKeeper({
     defaultWidth: 800,
@@ -75,6 +81,7 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
+    log.info('應用程式關閉。')
     app.quit()
   }
 })
