@@ -124,6 +124,7 @@ export default {
   name: 'NavbarLayout',
   methods: {
     openExternal (link) {
+      this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
       window.shell.openExternal(link)
     }
   },

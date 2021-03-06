@@ -21,9 +21,11 @@ export default {
   name: 'Error',
   methods: {
     openExternal (link) {
+      this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
       window.shell.openExternal(link)
     },
     reload () {
+      this.$store.dispatch('playerAudioEffect', 'switch_task') // 播放音效
       this.$router.go(0)
     }
   },

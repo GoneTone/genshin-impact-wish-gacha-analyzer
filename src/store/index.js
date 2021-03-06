@@ -14,6 +14,12 @@ export default createStore({
       status: null,
       msg: null
     },
+    audio: {
+      switchType: new Audio(require('@/assets/audio/effect/switch_type.mp3')),
+      switchTask: new Audio(require('@/assets/audio/effect/switch_task.mp3')),
+      openWin: new Audio(require('@/assets/audio/effect/open_win.mp3')),
+      closeWin: new Audio(require('@/assets/audio/effect/close_win.mp3'))
+    },
     configs: {
       app: {
         name: process.env.VUE_APP_NAME, // 應用程式名稱
@@ -152,6 +158,34 @@ export default createStore({
           status: false,
           msg: e.message
         })
+      }
+    },
+    async playerAudioEffect (context, name) {
+      switch (name) {
+        case 'switch_type':
+          context.state.audio.switchType.pause()
+          context.state.audio.switchType.currentTime = 0
+          await context.state.audio.switchType.play()
+
+          break
+        case 'switch_task':
+          context.state.audio.switchTask.pause()
+          context.state.audio.switchTask.currentTime = 0
+          await context.state.audio.switchTask.play()
+
+          break
+        case 'open_win':
+          context.state.audio.openWin.pause()
+          context.state.audio.openWin.currentTime = 0
+          await context.state.audio.openWin.play()
+
+          break
+        case 'close_win':
+          context.state.audio.closeWin.pause()
+          context.state.audio.closeWin.currentTime = 0
+          await context.state.audio.closeWin.play()
+
+          break
       }
     }
   },

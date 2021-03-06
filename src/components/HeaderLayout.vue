@@ -39,9 +39,12 @@ export default {
   },
   methods: {
     reload () {
+      this.$store.dispatch('playerAudioEffect', 'switch_task') // 播放音效
       this.$store.dispatch('setDatas', true)
     },
     async exportExcel () {
+      this.$store.dispatch('playerAudioEffect', 'switch_task') // 播放音效
+
       const exportGachaData = new window.ExportGachaData(this.$store.getters.datas.gachaTypeList, this.$store.getters.datas.gachaLogs.data)
       await exportGachaData.xlsx()
     }
