@@ -10,7 +10,7 @@
 
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, screen } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
@@ -37,18 +37,45 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow () {
   log.info('視窗創建...')
 
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+  let defaultWidth = Math.round((width - 100))
+  let defaultHeight = Math.round((height - 100))
+  if (width > height) {
+    // 16:9
+    defaultWidth = Math.round((((height - 100) * 16) / 9))
+    defaultHeight = Math.round(((defaultWidth * 9) / 16))
+  }
+  if (height > width) {
+    // 9:16
+    defaultWidth = Math.round((((width - 100) * 9) / 16))
+    defaultHeight = Math.round(((defaultWidth * 16) / 9))
+  }
+
   // Load the previous state with fallback to defaults
   const mainWindowState = windowStateKeeper({
-    defaultWidth: 800,
-    defaultHeight: 600
+    defaultWidth: defaultWidth,
+    defaultHeight: defaultHeight
   })
+
+  const setX = mainWindowState.x
+  const setY = mainWindowState.y
+  const setWidth = mainWindowState.width
+  const setHeight = mainWindowState.height
+  const isMaximized = mainWindowState.isMaximized
+
+  if (isMaximized) {
+    log.info('視窗大小設定為最大化。')
+  } else {
+    log.info(`視窗大小設定為 ${setWidth}*${setHeight}。`)
+  }
 
   // Create the window using the state information
   const win = new BrowserWindow({
-    x: mainWindowState.x,
-    y: mainWindowState.y,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
+    x: setX,
+    y: setY,
+    width: setWidth,
+    height: setHeight,
     title: process.env.VUE_APP_NAME, // 應用程式標題
     icon: path.join(__static, 'icon.png'), // 應用程式 Icon
     webPreferences: {
