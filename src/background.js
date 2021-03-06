@@ -10,7 +10,7 @@
 
 'use strict'
 
-import { app, protocol, BrowserWindow, screen } from 'electron'
+import { app, protocol, BrowserWindow, Menu, screen } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
@@ -69,6 +69,8 @@ async function createWindow () {
   } else {
     log.info(`視窗大小設定為 ${setWidth}*${setHeight}。`)
   }
+
+  Menu.setApplicationMenu(null)
 
   // Create the window using the state information
   const win = new BrowserWindow({
