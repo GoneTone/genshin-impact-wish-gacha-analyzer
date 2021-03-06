@@ -26,7 +26,8 @@ export default {
     const audios = [
       'Venti Chinese VA (喵☆酱) - Patchwork Staccato (ツギハギスタッカート) (Tsugihagi Staccato) Lyrics KAN_ROM_ENG.mp3',
       'Xiao\'s VA Sings - Vigilant Yaksha ft. @kin sen  (Official Lyrics Video) _ Prod. by MiXiao.mp3',
-      '【Original Genshin Fansong】让风告诉你 (Let the Wind Tell You).mp3'
+      '【Original Genshin Fansong】让风告诉你 (Let the Wind Tell You).mp3',
+      'Genshin Impact Fansong - Hutao【胡口桃生】.mp3'
     ]
     audios.sort(function () {
       return (0.5 - Math.random())
