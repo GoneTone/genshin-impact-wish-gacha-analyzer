@@ -8,6 +8,8 @@
       <div class="container-fluid mt-4">
         <header-layout :title="title" :data-time-range="dataTimeRange" :update-time="updateTime"></header-layout>
 
+        <img class="img-fluid mx-auto d-block mb-4" :src="`https://api.reh.tw/images/miHoYo/Genshin/Gacha/${this.$route.params.key}.png`" width="800" alt="活動祈願圖" v-if="isDisplayEventImage(this.$route.params.key)">
+
         <draws-info :accumulate-draws="allCount" :accumulate-not-win-draws="drawsCountInWin" :averag-draws-count-in-win="averagDrawsCountInWin"></draws-info>
 
         <h4>級別中獎率</h4>
@@ -192,6 +194,9 @@ export default {
       const endTime = this.formatDataTime(gachaLog[(gachaLog.length - 1)].time, 'L')
 
       return `${startTime} ~ ${endTime}`
+    },
+    isDisplayEventImage (key) {
+      return (Number(key) === 301 || Number(key) === 302)
     },
     getAveragDrawsCountInWin () {
       const miHoYoApi = new window.MiHoYoApi(this.$store.getters.datas.queryStringParameters)
