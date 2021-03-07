@@ -31,6 +31,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "custom-electron-titlebar": "^3.2.6",
     "electron-log": "^4.3.2",
     "electron-window-state": "^5.0.3",
     "exceljs": "^4.2.0",

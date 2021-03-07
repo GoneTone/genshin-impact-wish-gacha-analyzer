@@ -21,6 +21,10 @@ export default {
     Error
   },
   mounted () {
+    window.addEventListener('DOMContentLoaded', () => {
+      window.titlebar.updateIcon(require('../build/icons/256x256.png'))
+    })
+
     this.$store.dispatch('setDatas')
 
     this.$nextTick(function () {

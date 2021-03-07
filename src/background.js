@@ -80,6 +80,7 @@ async function createWindow () {
     height: setHeight,
     title: process.env.VUE_APP_NAME, // 應用程式標題
     icon: path.join(__static, 'icon.png'), // 應用程式 Icon
+    frame: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

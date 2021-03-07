@@ -9,6 +9,8 @@
 const electron = require('electron')
 const { remote, shell } = electron
 
+const { Titlebar, Color } = require('custom-electron-titlebar')
+
 const log = require('electron-log')
 log.transports.console.level = false
 
@@ -31,3 +33,10 @@ window.FileControl = FileControl
 window.ReadGenshinFile = ReadGenshinFile
 window.MiHoYoApi = MiHoYoApi
 window.ExportGachaData = ExportGachaData
+
+window.addEventListener('DOMContentLoaded', () => {
+  window.titlebar = new Titlebar({
+    backgroundColor: Color.fromHex('#2f3241'),
+    icon: '../build/icons/256x256.png'
+  })
+})
