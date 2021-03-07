@@ -49,7 +49,7 @@ export default {
   mounted () {
     this.$nextTick(function () {
       // eslint-disable-next-line no-undef
-      Chart.defaults.global.defaultFontFamily = '"Noto Sans TC", "Muli", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+      Chart.defaults.global.defaultFontFamily = '"HYWenHei-85W", "Default_SC", "Muli", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
       // eslint-disable-next-line no-undef
       Chart.defaults.global.defaultFontColor = '#858796'
 
