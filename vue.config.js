@@ -8,7 +8,7 @@ module.exports = {
       nodeIntegration: false,
       preload: 'src/preload.js', // preload 檔案位置
       builderOptions: {
-        appId: 'tw.reh.genshininfogachaanalyzer', // 應用程式 ID
+        appId: 'tw.reh.genshininfo.gachaanalyzer', // 應用程式 ID
         productName: 'Genshin Impact Wish Gacha Analyzer', // 專案名稱
         copyright: `Copyright © ${year} 原神情報站 Genshin Info`, // 版權
         win: { // Windows 相關設定
