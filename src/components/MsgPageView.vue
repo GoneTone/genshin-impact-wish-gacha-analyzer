@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'Error',
+  name: 'MsgPageView',
   methods: {
     openExternal (link) {
       this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效

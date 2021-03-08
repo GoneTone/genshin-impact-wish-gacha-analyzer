@@ -1,8 +1,8 @@
 <template>
-  <error title="初始化..." description="請稍等，正在初始化..." v-if="this.$store.getters.loadStatus.status === null"></error>
-  <error title="資料加載中..." :description="this.$store.getters.loadStatus.msg" v-else-if="this.$store.getters.loadStatus.status === 'load'"></error>
+  <msg-page-view title="初始化..." description="請稍等，正在初始化..." v-if="this.$store.getters.loadStatus.status === null"></msg-page-view>
+  <msg-page-view title="資料加載中..." :description="this.$store.getters.loadStatus.msg" v-else-if="this.$store.getters.loadStatus.status === 'load'"></msg-page-view>
   <router-view v-else-if="this.$store.getters.loadStatus.status" />
-  <error title="發生錯誤" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></error>
+  <msg-page-view title="發生錯誤" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></msg-page-view>
 
   <!--suppress HtmlUnknownAnchorTarget -->
   <a class="scroll-to-top rounded" href="#page-top">
@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import Error from '@/components/Error'
+import MsgPageView from '@/components/MsgPageView'
 
 export default {
   name: 'App',
   components: {
-    Error
+    MsgPageView
   },
   mounted () {
     window.addEventListener('DOMContentLoaded', () => {
