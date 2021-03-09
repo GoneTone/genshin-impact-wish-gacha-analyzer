@@ -144,6 +144,7 @@ export default createStore({
 
         window.log.info('卡池歷史資料讀取完畢。')
 
+        console.log(this.getters.datas.queryStringParameters)
         console.log(this.getters.datas.gachaTypeList)
         console.log(this.getters.datas.gachaLogs)
 

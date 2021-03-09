@@ -126,19 +126,23 @@ class MiHoYoApi {
    * @returns {Promise<string>}
    */
   async getItemsApiUrl (lang) {
-    const apiUrlAppend = new URL(`https://${this._mihoyoWebApiHost}${this._mihoyoWebApiPath}${this._queryStringParameters.region.toString()}/items/${lang}.json`)
-    const apiUrl = apiUrlAppend.href
+    if (this._queryStringParameters.region.toString()) {
+      const apiUrlAppend = new URL(`https://${this._mihoyoWebApiHost}${this._mihoyoWebApiPath}${this._queryStringParameters.region.toString()}/items/${lang}.json`)
+      const apiUrl = apiUrlAppend.href
 
-    if (!this.itemsApiUrlCheck) {
-      const check = await checkUrl(apiUrl)
-      if (check.status) {
-        this.itemsApiUrlCheck = true
-        return apiUrl
+      if (!this.itemsApiUrlCheck) {
+        const check = await checkUrl(apiUrl)
+        if (check.status) {
+          this.itemsApiUrlCheck = true
+          return apiUrl
+        } else {
+          throw Error('項目資料 Api 網址取得失敗。')
+        }
       } else {
-        throw Error('項目資料 Api 網址取得失敗。')
+        return apiUrl
       }
     } else {
-      return apiUrl
+      throw Error('區域參數取得失敗，請重新開啟遊戲內卡池歷史紀錄。')
     }
   }
 
