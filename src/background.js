@@ -78,7 +78,9 @@ async function createWindow () {
     log.info(`視窗大小設定為 ${setWidth}*${setHeight}。`)
   }
 
-  Menu.setApplicationMenu(null)
+  if (!isDevelopment) {
+    Menu.setApplicationMenu(null)
+  }
 
   // Create the window using the state information
   win = new BrowserWindow({
