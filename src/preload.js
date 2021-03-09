@@ -7,7 +7,7 @@
  */
 
 const electron = require('electron')
-const { remote, shell } = electron
+const { remote, shell, ipcRenderer } = electron
 
 const { Titlebar, Color } = require('custom-electron-titlebar')
 
@@ -15,6 +15,8 @@ const log = require('electron-log')
 log.transports.console.level = false
 
 const moment = require('moment')
+const GitHub = require('github-api')
+const showdown = require('showdown')
 
 const FileControl = require('@/modules/FileControl')
 const ReadGenshinFile = require('@/modules/ReadGenshinFile')
@@ -23,11 +25,17 @@ const ExportGachaData = require('@/modules/ExportGachaData')
 
 window.app = remote.app
 window.shell = shell
+window.ipcRenderer = ipcRenderer
 
 window.log = log
 
 window.moment = moment
 window.moment.locale(window.app.getLocale())
+
+window.github = new GitHub()
+
+showdown.setFlavor('github')
+window.mdConverter = new showdown.Converter()
 
 window.FileControl = FileControl
 window.ReadGenshinFile = ReadGenshinFile

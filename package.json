@@ -1,6 +1,6 @@
 {
   "name": "genshin-impact-wish-gacha-analyzer",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "author": {
     "name": "原神情報站 Genshin Info",
     "url": "https://genshininfo.reh.tw/"
@@ -23,6 +23,7 @@
     "electron:build:win": "vue-cli-service electron:build --win --ia32 --x64",
     "electron:build:win32": "vue-cli-service electron:build --win --ia32",
     "electron:build:win64": "vue-cli-service electron:build --win --x64",
+    "electron:publish": "vue-cli-service electron:build --win --ia32 --x64 -p always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
@@ -33,10 +34,13 @@
     "core-js": "^3.6.5",
     "custom-electron-titlebar": "^3.2.6",
     "electron-log": "^4.3.2",
+    "electron-updater": "^4.3.8",
     "electron-window-state": "^5.0.3",
     "exceljs": "^4.2.0",
     "fs-extra": "^7.0.1",
+    "github-api": "^3.4.0",
     "moment": "^2.29.1",
+    "showdown": "^1.9.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

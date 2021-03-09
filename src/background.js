@@ -19,6 +19,12 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path')
 const windowStateKeeper = require('electron-window-state')
 const log = require('electron-log')
+const { autoUpdater } = require('electron-updater')
+
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+
+let win
 
 log.info('應用程式啟動...')
 
@@ -73,7 +79,7 @@ async function createWindow () {
   Menu.setApplicationMenu(null)
 
   // Create the window using the state information
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     x: setX,
     y: setY,
     width: setWidth,
@@ -135,6 +141,7 @@ app.on('ready', async () => {
     }
   }
   await createWindow()
+  await autoUpdater.checkForUpdates()
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -151,3 +158,7 @@ if (isDevelopment) {
     })
   }
 }
+
+autoUpdater.on('update-available', () => {
+  win.webContents.send('IS_UPDATE', true)
+})

@@ -13,7 +13,7 @@
 <script>
 export default {
   name: 'FooterLayout',
-  data: function () {
+  data () {
     return {
       year: (window.moment().format('YYYY') === '2020') ? window.moment().format('YYYY') : `2020-${window.moment().format('YYYY')}`
     }

@@ -152,7 +152,7 @@ export default createStore({
           msg: 'Success.'
         })
       } catch (e) {
-        window.error.info(e.message)
+        window.log.error(e.message)
 
         context.commit('setLoadStatus', {
           status: false,
