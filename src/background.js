@@ -21,6 +21,8 @@ const windowStateKeeper = require('electron-window-state')
 const log = require('electron-log')
 const { autoUpdater } = require('electron-updater')
 
+autoUpdater.autoDownload = false // 不自動下載新版本
+autoUpdater.autoInstallOnAppQuit = false // 不自動安裝新版本
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 
