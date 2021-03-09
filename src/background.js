@@ -143,7 +143,7 @@ app.on('ready', async () => {
     }
   }
   await createWindow()
-  await autoUpdater.checkForUpdates()
+  await autoUpdater.checkForUpdates() // 檢查更新
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -161,6 +161,7 @@ if (isDevelopment) {
   }
 }
 
+/* 監聽更新 - 有更新 */
 autoUpdater.on('update-available', () => {
   win.webContents.send('IS_UPDATE', true)
 })

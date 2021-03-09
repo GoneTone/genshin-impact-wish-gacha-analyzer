@@ -11,7 +11,7 @@ npm install
 npm run electron:serve
 ```
 
-### 編譯並最小化 (生產，Windows exe)
+### 編譯並最小化 (生產)
 ia32 和 x64
 ```
 npm run electron:build:win
@@ -43,3 +43,10 @@ npm run electron:build:win64
 - [x] 版本更新通知
 - [ ] 多國語言
 - [ ] 多帳號紀錄切換
+
+## 截圖
+![](images/1.png)
+![](images/2.png)
+![](images/3.png)
+![](images/4.png)
+![](images/5.png)
