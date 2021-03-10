@@ -63,7 +63,7 @@
                 <tbody>
                 <tr v-for="(data, index) of this.$store.getters.datas.gachaLogs.data[this.$route.params.key]" :key="index" :class="{'text-bd6932 table-active': Number(data.rank_type) === 5, 'text-a256e1': Number(data.rank_type) === 4, 'text-8e8e8e': Number(data.rank_type) <= 3}">
                   <td class="align-middle">{{ (index + 1) }}</td>
-                  <td class="align-middle"><img :src="data.icon_url" class="img-fluid" width="35" :alt="`${data.name} - Icon`" v-if="data.icon_url && data.icon_url !== null"> {{ data.name }}</td>
+                  <td class="align-middle"><img :src="data.icon_url" class="img-fluid" width="35" :alt="`${data.name} - Icon`" v-if="data.icon_url && data.icon_url !== null"> {{ data.name }} <a :href="data.image_url" :data-lightbox="`image_${(index + 1)}`" v-if="data.image_url && data.image_url !== null"><i class="far fa-image"></i></a></td>
                   <td class="align-middle">{{ data.item_type }}</td>
                   <td class="align-middle">{{ data.rank_type }}星</td>
                   <td class="align-middle">{{ this.formatDataTime(data.time) }}</td>

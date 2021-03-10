@@ -241,8 +241,10 @@ class MiHoYoApi {
         if (this.isCharacter(data.item_type)) {
           const id = await this.getItemID(data)
           data.icon_url = await this.getGenshinIconUrl(id)
+          data.image_url = await this.getGenshinCharacterImageUrl(id)
         } else {
           data.icon_url = null
+          data.image_url = null
         }
 
         if (Number(data.rank_type) === 5) {
@@ -397,6 +399,30 @@ class MiHoYoApi {
     if (path !== null) {
       const iconName = this.genshinIconNameReplace(data.name.replace(/\s+/g, '_'))
       return `https://${this._mihoyoBbsApiHost}${this._mihoyoBbsApiIconPath}${path}${iconName}.png`
+    }
+
+    return false
+  }
+
+  /**
+   * 取得原神角色圖像網址
+   *
+   * @param {String} id 項目 ID
+   *
+   * @returns {String|boolean}
+   */
+  async getGenshinCharacterImageUrl (id) {
+    const items = await this.getItems('en-us')
+    const data = items.find(data => data.item_id === id)
+
+    let path = null
+    if (this.isCharacter(data.item_type)) {
+      path = 'character_image/UI_AvatarIcon_'
+    }
+
+    if (path !== null) {
+      const iconName = this.genshinIconNameReplace(data.name.replace(/\s+/g, '_'))
+      return `https://${this._mihoyoBbsApiHost}${this._mihoyoBbsApiIconPath}${path}${iconName}@2x.png`
     }
 
     return false
