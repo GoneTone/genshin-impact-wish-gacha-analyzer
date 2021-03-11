@@ -8,7 +8,7 @@
       <div class="container-fluid mt-4">
         <header-layout :title="title" :update-time="updateTime"></header-layout>
 
-        <draws-info :accumulate-draws="allCount" :averag-draws-count-in-win="averagDrawsCountInWin" is-home></draws-info>
+        <draws-info :accumulate-draws="allCount" :averag-draws-count-in-win="averagDrawsCountInWin" is-no-display-guaranteed></draws-info>
 
         <h4>級別中獎率</h4>
         <div class="row">

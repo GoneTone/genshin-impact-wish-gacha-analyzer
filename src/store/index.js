@@ -53,7 +53,8 @@ export default createStore({
         }
       },
       game: {
-        guaranteedCount: process.env.VUE_APP_GAME_GACHA_GUARANTEED_COUNT
+        guaranteedCount: process.env.VUE_APP_GAME_GACHA_GUARANTEED_COUNT,
+        guaranteedCountForWeapon: process.env.VUE_APP_GAME_GACHA_GUARANTEED_COUNT_FOR_WEAPON
       }
     },
     datas: {
