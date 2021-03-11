@@ -49,7 +49,7 @@ export default {
         const bapRender = $('#bapRender')
         bapRender.buttonAudioPlayer({
           type: 'default',
-          src: require('@/assets/audio/background/Hu Tao Theme Music EXTENDED - Let the Living Beware (tnbee mix) _ Genshin Impact.mp3')
+          src: require('@/assets/audio/background/Rosaria & Abyss Herald Theme Music EXTENDED - Invitation of Windblume (tnbee mix) _ Genshin Impact.mp3')
         })
         bapRender.find('button').click()
 
