@@ -32,6 +32,8 @@ class MiHoYoApi {
     this._mihoyoApiGachaCharacterTypeNames = process.env.VUE_APP_MIHOYO_API_GACHA_CHARACTER_TYPE_NAMES.split(',')
     this._mihoyoApiGachaWeaponTypeNames = process.env.VUE_APP_MIHOYO_API_GACHA_WEAPON_TYPE_NAMES.split(',')
 
+    this._playerUID = null
+
     this.configListApiUrlCheck = false
     this.gachaLogApiUrlCheck = false
     this.itemsApiUrlCheck = false
@@ -192,18 +194,17 @@ class MiHoYoApi {
    *
    * @param {Number} gachaTypeID 卡池類型 ID
    * @param {Number} size 一頁資料最大數 (最大 20，預設 6)
+   * @param {String} playerUID 玩家 UID
    * @param {boolean} update 是否更新資料 (預設 false)
    *
    * @returns {Promise<Array>}
    */
-  async getGachaLog (gachaTypeID, size = 6, update = false) {
+  async getGachaLog (gachaTypeID, size = 6, playerUID, update = false) {
     let logArray = []
     let page = 1
     let message = null
 
-    const uid = await this.getPlayerUID()
-
-    const isExists = await this._fileControl.isExists(`${this._basePath}/data/${uid}/gacha/${gachaTypeID}.json`)
+    const isExists = await this._fileControl.isExists(`${this._basePath}/data/${playerUID}/gacha/${gachaTypeID}.json`)
     if (!isExists || update) {
       try {
         size = (size > 20) ? 20 : (size < 1) ? 1 : size
@@ -256,10 +257,10 @@ class MiHoYoApi {
         newLogArray.push(data)
       }
 
-      await this._fileControl.writeGachaData(`/data/${uid}/gacha/`, gachaTypeID.toString(), newLogArray.reverse())
+      await this._fileControl.writeGachaData(`/data/${playerUID}/gacha/`, gachaTypeID.toString(), newLogArray.reverse())
     }
 
-    const gachaData = await this._fileControl.readGachaData(`/data/${uid}/gacha/`, gachaTypeID.toString())
+    const gachaData = await this._fileControl.readGachaData(`/data/${playerUID}/gacha/`, gachaTypeID.toString())
     return gachaData.reverse()
   }
 
@@ -441,36 +442,43 @@ class MiHoYoApi {
   /**
    * 取得玩家 UID
    *
+   * @param {boolean} updateUID 是否更新 UID (預設 false)
+   *
    * @returns {Promise<string>}
    */
-  async getPlayerUID () {
-    let uid = null
+  async getPlayerUID (updateUID = false) {
+    let playerUID
+    if (this._playerUID === null || updateUID) {
+      const gachaTypeList = await this.getGachaTypeList()
+      for (const gachaTypeData of gachaTypeList) {
+        const gachaLogApiUrl = await this.getGachaLogApiUrl(gachaTypeData.key, 1, 1)
+        const axios = await promisifiedAxios(gachaLogApiUrl)
+        const data = axios.data
 
-    const gachaTypeList = await this.getGachaTypeList()
-    for (const gachaTypeData of gachaTypeList) {
-      const gachaLogApiUrl = await this.getGachaLogApiUrl(gachaTypeData.key, 1, 1)
-      const axios = await promisifiedAxios(gachaLogApiUrl)
-      const data = axios.data
-
-      if (this.verificationRetcode(data.retcode)) {
-        if (data.data.list.length > 0) {
-          uid = data.data.list[0].uid
+        if (this.verificationRetcode(data.retcode)) {
+          if (data.data.list.length > 0) {
+            playerUID = data.data.list[0].uid
+            break
+          }
+        } else {
           break
         }
-      } else {
-        break
       }
+
+      if (playerUID === null) {
+        try {
+          playerUID = await this._readGenshinFile.getPlayerUID()
+        } catch (e) {
+          throw Error(e.message)
+        }
+      }
+
+      this._playerUID = playerUID
+    } else {
+      playerUID = this._playerUID
     }
 
-    if (uid === null) {
-      try {
-        uid = await this._readGenshinFile.getPlayerUID()
-      } catch (e) {
-        throw Error(e.message)
-      }
-    }
-
-    return uid
+    return playerUID
   }
 }
 

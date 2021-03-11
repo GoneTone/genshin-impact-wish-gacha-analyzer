@@ -112,9 +112,9 @@ export default createStore({
           msg: '正在加載卡池資料，<span class="text-danger">可能需要一點時間</span>...'
         })
 
-        const uid = await miHoYoApi.getPlayerUID()
+        const playerUID = await miHoYoApi.getPlayerUID(updateGachaLog)
 
-        window.log.info(`讀取 UID "${uid}" 玩家的卡池歷史資料...`)
+        window.log.info(`讀取 UID "${playerUID}" 玩家的卡池歷史資料...`)
 
         const gachaTypeList = await miHoYoApi.getGachaTypeList()
         const gachaLogs = []
@@ -124,15 +124,15 @@ export default createStore({
 
           context.commit('setLoadStatus', {
             status: 'load',
-            msg: `正在讀取 UID <kbd>${uid}</kbd> 玩家的 <span class="text-info">${data.name}</span> 卡池歷史資料，<span class="text-danger">可能需要一點時間</span>...`
+            msg: `正在讀取 UID <kbd>${playerUID}</kbd> 玩家的 <span class="text-info">${data.name}</span> 卡池歷史資料，<span class="text-danger">可能需要一點時間</span>...`
           })
 
-          gachaLogs[data.key] = await miHoYoApi.getGachaLog(data.key, 20, updateGachaLog)
+          gachaLogs[data.key] = await miHoYoApi.getGachaLog(data.key, 20, playerUID, updateGachaLog)
           updateTime = await miHoYoApi.getUpdateTime()
         }
 
         context.commit('setDatas', {
-          playerUID: uid,
+          playerUID: playerUID,
           wishHistoryPageUrl: wishHistoryPageUrl,
           queryStringParameters: queryStringParameters,
           gachaTypeList: gachaTypeList,
