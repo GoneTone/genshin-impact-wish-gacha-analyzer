@@ -61,13 +61,28 @@ export default {
             // noinspection JSUnresolvedFunction
             repo.listReleases().then(function (data) {
               if (data.data.length > 0) {
-                const latestReleaseData = data.data[0]
+                let body = ''
+                const latestReleaseDatas = data.data
+                for (const latestReleaseData of latestReleaseDatas) {
+                  if (latestReleaseData.tag_name === `v${_this.$store.getters.configs.app.version}`) {
+                    break
+                  }
+
+                  body += `<div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">${latestReleaseData.tag_name} (發佈於 ${_this.formatDataTime(latestReleaseData.published_at)})</h6>
+                                </div>
+                                <div class="card-body">
+                                    ${window.mdConverter.makeHtml(latestReleaseData.body)}
+                                </div>
+                            </div>`
+                }
 
                 _this.msgModal.id = 'updateMsg'
-                _this.msgModal.title = `<span class="text-danger"><i class="fas fa-info-circle"></i> 有新版本可以更新！ (<span class="text-success">${latestReleaseData.tag_name}</span>)</span>`
-                _this.msgModal.body = window.mdConverter.makeHtml(latestReleaseData.body)
-                _this.msgModal.buttonName = `<i class="fas fa-download"></i> 前往下載 ${latestReleaseData.tag_name}`
-                _this.msgModal.buttonOnClick = `window.shell.openExternal("${latestReleaseData.html_url}")`
+                _this.msgModal.title = `<span class="text-danger"><i class="fas fa-info-circle"></i> 有新版本可以更新！ (<span class="text-success">${latestReleaseDatas[0].tag_name}</span>)</span>`
+                _this.msgModal.body = body
+                _this.msgModal.buttonName = `<i class="fas fa-download"></i> 前往下載 ${latestReleaseDatas[0].tag_name}`
+                _this.msgModal.buttonOnClick = `window.shell.openExternal("${latestReleaseDatas[0].html_url}")`
                 _this.msgModal.isShow = true
               }
             })
@@ -76,6 +91,11 @@ export default {
         // eslint-disable-next-line no-undef
       })(jQuery)
     })
+  },
+  methods: {
+    formatDataTime (dataTime, format = 'L LTS') {
+      return window.moment(dataTime).format(format)
+    }
   }
 }
 </script>
