@@ -160,7 +160,7 @@ class MiHoYoApi {
       case 0:
         return true
       case -100:
-        throw Error('米哈遊 API 授權 Key 無效。')
+        throw Error('米哈遊 API 授權 Key 無效，請重新開啟遊戲內卡池歷史紀錄。')
       case -101:
         throw Error('米哈遊 API 授權 Key 過期，請重新開啟遊戲內卡池歷史紀錄。')
       default:
