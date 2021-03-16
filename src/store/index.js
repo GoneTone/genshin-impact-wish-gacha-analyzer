@@ -55,7 +55,8 @@ export default createStore({
       game: {
         guaranteedCount: process.env.VUE_APP_GAME_GACHA_GUARANTEED_COUNT,
         guaranteedCountForWeapon: process.env.VUE_APP_GAME_GACHA_GUARANTEED_COUNT_FOR_WEAPON
-      }
+      },
+      randomStr: null
     },
     datas: {
       playerUID: null, // 玩家 UID
@@ -74,6 +75,9 @@ export default createStore({
     },
     setDatas (state, datas) {
       state.datas = datas
+    },
+    setRandomStr (state, randomStr) {
+      state.configs.randomStr = randomStr
     }
   },
   actions: {
@@ -189,6 +193,16 @@ export default createStore({
 
           break
       }
+    },
+    generateRandomStr (context) {
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+      let text = ''
+      for (let i = 0; i < 10; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length))
+      }
+
+      context.commit('setRandomStr', text)
     }
   },
   getters: {
@@ -200,6 +214,9 @@ export default createStore({
     },
     datas (state) {
       return state.datas
+    },
+    randomStr (state) {
+      return state.configs.randomStr
     }
   }
 })

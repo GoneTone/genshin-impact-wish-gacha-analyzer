@@ -8,7 +8,7 @@
       <div class="container-fluid mt-4">
         <header-layout :title="title" :data-time-range="dataTimeRange" :update-time="updateTime"></header-layout>
 
-        <img class="img-fluid mx-auto d-block mb-4" :src="`https://api.reh.tw/images/miHoYo/Genshin/Gacha/${this.$route.params.key}.png`" width="800" alt="活動祈願圖" v-if="isDisplayEventImage(this.$route.params.key)">
+        <img class="img-fluid mx-auto d-block mb-4" :src="`https://api.reh.tw/images/miHoYo/Genshin/Gacha/${this.$route.params.key}.png?${this.$store.getters.randomStr}`" width="800" :alt="$t('ui.text.event_wish_image')" v-if="isDisplayEventImage(this.$route.params.key)">
 
         <draws-info :gacha-id="Number(this.$route.params.key)" :accumulate-draws="allCount" :accumulate-not-win-draws="drawsCountInWin" :averag-draws-count-in-win="averagDrawsCountInWin" :is-no-display-guaranteed="Number(this.$route.params.key) === 100"></draws-info>
 
