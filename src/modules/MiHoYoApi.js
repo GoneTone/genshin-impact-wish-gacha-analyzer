@@ -69,7 +69,7 @@ class MiHoYoApi {
         this.configListApiUrlCheck = true
         return apiUrl
       } else {
-        throw Error('卡池類型資料 API 網址取得失敗。')
+        throw Error(window.i18n.t('modules.error.get_gacha_type_data_api_url_failed'))
       }
     } else {
       return apiUrl
@@ -113,7 +113,7 @@ class MiHoYoApi {
         this.gachaLogApiUrlCheck = true
         return apiUrl
       } else {
-        throw Error('卡池歷史紀錄 API 網址取得失敗。')
+        throw Error(window.i18n.t('modules.error.get_gacha_history_api_url_failed'))
       }
     } else {
       return apiUrl
@@ -138,13 +138,13 @@ class MiHoYoApi {
           this.itemsApiUrlCheck = true
           return apiUrl
         } else {
-          throw Error('項目資料 Api 網址取得失敗。')
+          throw Error(window.i18n.t('modules.error.get_items_api_url_failed'))
         }
       } else {
         return apiUrl
       }
     } else {
-      throw Error('區域參數取得失敗，請重新開啟遊戲內卡池歷史紀錄。')
+      throw Error(window.i18n.t('modules.error.get_area_parameter_failed'))
     }
   }
 
@@ -160,9 +160,9 @@ class MiHoYoApi {
       case 0:
         return true
       case -100:
-        throw Error('米哈遊 API 授權 Key 無效，請重新開啟遊戲內卡池歷史紀錄。')
+        throw Error(window.i18n.t('modules.error.mihoyo_api_invalid'))
       case -101:
-        throw Error('米哈遊 API 授權 Key 過期，請重新開啟遊戲內卡池歷史紀錄。')
+        throw Error(window.i18n.t('modules.error.mihoyo_api_expired'))
       default:
         return false
     }
@@ -186,7 +186,7 @@ class MiHoYoApi {
       throw Error(e.message)
     }
 
-    throw Error('卡池類型清單 API 資料取得失敗。')
+    throw Error(window.i18n.t('modules.error.get_gacha_type_list_failed'))
   }
 
   /**
@@ -222,7 +222,7 @@ class MiHoYoApi {
               break
             }
           } else {
-            message = '卡池歷史紀錄 API 資料取得失敗。'
+            message = window.i18n.t('modules.error.get_gacha_history_failed')
             break
           }
         }
@@ -370,7 +370,7 @@ class MiHoYoApi {
     const itemData = items.find(itemData => itemData.name === data.name)
 
     if (itemData === undefined) {
-      throw Error(`無法取得項目名稱 "${data.name}" 的 ID。`)
+      throw Error(window.i18n.t('modules.error.unable_get_item_id', { name: data.name }))
     }
 
     return itemData.item_id

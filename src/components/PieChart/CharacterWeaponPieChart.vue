@@ -2,7 +2,7 @@
   <div class="col-lg-6">
     <div class="card shadow mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">中獎數圓餅圖 (角色/武器)</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ $t("ui.text.wins_pie_chart") }} ({{ $t("ui.text.character") }}/{{ $t("ui.text.weapon") }})</h6>
       </div>
       <div class="card-body">
         <div class="chart-pie pt-4 pb-2">
@@ -10,10 +10,10 @@
         </div>
         <div class="mt-4 text-center small">
           <span class="mr-2">
-            <i class="fas fa-circle text-bd6932"></i> 角色中獎數：{{ characterWins.toString() }}
+            <i class="fas fa-circle text-bd6932"></i> {{ $t("ui.text.character_wins_count", { count: characterWins.toString() }) }}
           </span>
           <span class="mr-2">
-            <i class="fas fa-circle text-a256e1"></i> 武器中獎數：{{ weaponWins.toString() }}
+            <i class="fas fa-circle text-a256e1"></i> {{ $t("ui.text.weapon_wins_count", { count: weaponWins.toString() }) }}
           </span>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default {
       this.$data.characterWeaponPieChart = new Chart(document.getElementById('characterWeaponPieChart'), {
         type: 'doughnut',
         data: {
-          labels: ['角色中獎數', '武器中獎數'],
+          labels: [this.$t('ui.text.count_of_win_by_character'), this.$t('ui.text.count_of_win_by_weapon')],
           datasets: [{
             data: [this.characterWins, this.weaponWins],
             backgroundColor: ['#bd6932', '#a256e1'],

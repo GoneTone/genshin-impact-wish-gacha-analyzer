@@ -1,0 +1,120 @@
+{
+  "lang_name": "繁體中文",
+  "app": {
+    "name": "原神祈願卡池分析"
+  },
+  "ui": {
+    "text": {
+      "title": {
+        "home": "綜合數據圖表",
+        "gacha": "{gacha_name} - 數據圖表",
+        "history": "歷史紀錄"
+      },
+      "initialize": {
+        "title": "初始化...",
+        "description": "請稍等，正在初始化..."
+      },
+      "data_loading": "資料加載中...",
+      "erroe": "發生錯誤",
+      "loading": {
+        "loading_gacha_data": "正在加載卡池資料，{may_take_a_while}...",
+        "loading_gacha_data_uid": "正在讀取 UID {uid} 玩家的 {gacha_name} 卡池歷史資料，{may_take_a_while}...",
+        "may_take_a_while": "可能需要一點時間"
+      },
+      "chance_of_win_by_rank": "級別中獎率",
+      "chance_of_win_by_character_and_weapon": "角色武器中獎率",
+      "wins_pie_chart": "中獎數圓餅圖",
+      "character": "角色",
+      "weapon": "武器",
+      "rank": "級別",
+      "table": {
+        "title": "表格",
+        "total_of_draws": "總抽數",
+        "name": "名稱",
+        "type": "類型",
+        "rank": "級別",
+        "get_time": "抽到時間",
+        "draws_count_in_win": "保底內抽數",
+        "stars": "{star}星",
+        "data_table": {
+          "length_menu": "每頁顯示 {menu} 筆記錄",
+          "zero_records": "未找到任何結果",
+          "info": "第 {page} 頁 / 共 {pages} 頁",
+          "info_empty": "沒有任何資料",
+          "info_filtered": "(從 {max} 筆記錄中篩選出)",
+          "search": "搜尋：",
+          "paginate": {
+            "previous": "上一頁",
+            "next": "下一頁"
+          }
+        }
+      },
+      "chance_of_win_by_five_rank": "5星中獎率",
+      "chance_of_win_by_four_rank": "4星中獎率",
+      "chance_of_win_by_three_rank": "3星以下中獎率",
+      "chance_of_win_by_character": "角色中獎率",
+      "chance_of_win_by_weapon": "武器中獎率",
+      "count_of_win_by_five_rank": "5星中獎數",
+      "count_of_win_by_four_rank": "4星中獎數",
+      "count_of_win_by_three_rank": "3星以下中獎數",
+      "count_of_win_by_character": "角色中獎數",
+      "count_of_win_by_weapon": "武器中獎數",
+      "character_wins_count": "角色中獎數：{count}",
+      "weapon_wins_count": "武器中獎數：{count}",
+      "five_rank_wins_count": "5星中獎數：{count}",
+      "four_rank_wins_count": "4星中獎數：{count}",
+      "three_rank_wins_count": "3星以下中獎數：{count}",
+      "event_wish_image": "活動祈願圖",
+      "update": {
+        "title": "有新版本可以更新！ ({version})",
+        "download": "前往下載 {version}",
+        "release": "發佈於 {date_time}"
+      },
+      "comprehensive": "綜合",
+      "various_gacha": "各類卡池",
+      "other": "其他",
+      "about": "關於",
+      "official_website": "官方網站",
+      "community": "社群",
+      "donate_developer": "贊助開發者",
+      "donate_description": "贊助我們請我們喝杯咖啡 :)",
+      "issues_report": "問題回報",
+      "issues_report_description": "如有任何問題請至 GitHub 回報",
+      "lightbox": {
+        "album_label": "第 {0} 張圖片，共有 {1} 張圖片"
+      },
+      "update_data": "更新資料",
+      "export_excel": "導出 Excel",
+      "data_update_time": "資料更新時間：{time}",
+      "close_msg": "關閉訊息",
+      "reload": "重新加載",
+      "draws_info": {
+        "msg1": "目前累積 {accumulate_draws} 抽，平均 {averag_draws_count_in_win} 抽中5星。",
+        "msg2": "目前累積 {accumulate_draws} 抽，離上次已累積 {accumulate_not_win_draws} 抽未出5星，平均 {averag_draws_count_in_win} 抽中5星。",
+        "guaranteed_progress": "保底進度：{progress}%",
+        "guaranteed_count_msg": "距離保底還剩下 {count} 抽！"
+      }
+    }
+  },
+  "modules": {
+    "error": {
+      "url_get_data_failed": "網址 \"{url}\" 取得資源失敗：{msg}",
+      "unable_read_log": "無法讀取 Log 檔案，請確保您啟動過遊戲。",
+      "unable_get_gacha_history_url": "無法取得卡池歷史紀錄頁面網址，請確保您在遊戲內卡池開啟過歷史紀錄。",
+      "url_verification_failed": "網址 \"{url}\" 驗證失敗：{msg}",
+      "unable_get_player_uid": "無法取得玩家 UID。",
+      "get_gacha_type_data_api_url_failed": "卡池類型資料 API 網址取得失敗。",
+      "get_gacha_history_api_url_failed": "卡池歷史紀錄 API 網址取得失敗。",
+      "get_items_api_url_failed": "項目資料 Api 網址取得失敗。",
+      "get_area_parameter_failed": "區域參數取得失敗，請重新開啟遊戲內卡池歷史紀錄。",
+      "mihoyo_api_invalid": "米哈遊 API 授權 Key 無效，請重新開啟遊戲內卡池歷史紀錄。",
+      "mihoyo_api_expired": "米哈遊 API 授權 Key 過期，請重新開啟遊戲內卡池歷史紀錄。",
+      "get_gacha_type_list_failed": "卡池類型清單 API 資料取得失敗。",
+      "get_gacha_history_failed": "卡池歷史紀錄 API 資料取得失敗。",
+      "unable_get_item_id": "無法取得項目名稱 \"{name}\" 的 ID。"
+    }
+  },
+  "file": {
+    "genshin_gacha_history": "原神卡池歷史紀錄"
+  }
+}

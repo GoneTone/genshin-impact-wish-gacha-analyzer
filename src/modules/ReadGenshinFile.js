@@ -28,8 +28,8 @@ class ReadGenshinFile {
    */
   getWishHistoryPageUrl () {
     return new Promise((resolve, reject) => {
-      const readStream = fs.createReadStream(`${this._path}output_log.txt`).on('error', (e) => {
-        return reject(new Error('無法讀取 Log 檔案，請確保您啟動過遊戲。'))
+      const readStream = fs.createReadStream(`${this._path}output_log.txt`).on('error', () => {
+        return reject(new Error(window.i18n.t('modules.error.unable_read_log')))
       })
 
       const rl = readline.createInterface({
@@ -49,14 +49,14 @@ class ReadGenshinFile {
         const wishHistoryPageUrl = wishHistoryPageUrlArray.pop()
 
         if (!wishHistoryPageUrl) {
-          return reject(new Error('無法取得卡池歷史紀錄頁面網址，請確保您在遊戲內卡池開啟過歷史紀錄。'))
+          return reject(new Error(window.i18n.t('modules.error.unable_get_gacha_history_url')))
         }
 
         const check = await checkUrl(wishHistoryPageUrl)
         if (check.status) {
           return resolve(wishHistoryPageUrl)
         } else {
-          return reject(new Error(`網址 "${wishHistoryPageUrl}" 驗證失敗：${check.msg}`))
+          return reject(new Error(window.i18n.t('modules.error.url_verification_failed', { url: wishHistoryPageUrl, msg: check.msg })))
         }
       })
     })
@@ -69,8 +69,8 @@ class ReadGenshinFile {
    */
   getPlayerUID () {
     return new Promise((resolve, reject) => {
-      const readStream = fs.createReadStream(`${this._path}info.txt`).on('error', (e) => {
-        return reject(new Error('無法取得玩家 UID。'))
+      const readStream = fs.createReadStream(`${this._path}info.txt`).on('error', () => {
+        return reject(new Error(window.i18n.t('modules.error.unable_get_player_uid')))
       })
 
       const rl = readline.createInterface({
@@ -88,7 +88,7 @@ class ReadGenshinFile {
         }
       }).on('close', async () => {
         if (uid === null || uid === '') {
-          return reject(new Error('無法取得玩家 UID。'))
+          return reject(new Error(window.i18n.t('modules.error.unable_get_player_uid')))
         }
 
         return resolve(uid)

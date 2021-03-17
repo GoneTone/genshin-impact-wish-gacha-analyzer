@@ -35,12 +35,18 @@ export default {
   },
   data () {
     return {
-      title: '歷史紀錄'
+      title: this.$t('ui.text.title.history')
     }
   },
   mounted () {
     window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
     this.$store.dispatch('playerAudioEffect', 'switch_type') // 播放音效
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.title = this.$t('ui.text.title.history')
+      window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
+    }
   }
 }
 </script>

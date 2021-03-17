@@ -1,8 +1,8 @@
 <template>
-  <msg-page-view title="初始化..." description="請稍等，正在初始化..." v-if="this.$store.getters.loadStatus.status === null"></msg-page-view>
-  <msg-page-view title="資料加載中..." :description="this.$store.getters.loadStatus.msg" v-else-if="this.$store.getters.loadStatus.status === 'load'"></msg-page-view>
+  <msg-page-view :title="$t('ui.text.initialize.title')" :description="$t('ui.text.initialize.description')" v-if="this.$store.getters.loadStatus.status === null"></msg-page-view>
+  <msg-page-view :title="$t('ui.text.data_loading')" :description="this.$store.getters.loadStatus.msg" v-else-if="this.$store.getters.loadStatus.status === 'load'"></msg-page-view>
   <router-view v-else-if="this.$store.getters.loadStatus.status" />
-  <msg-page-view title="發生錯誤" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></msg-page-view>
+  <msg-page-view :title="$t('ui.text.erroe')" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></msg-page-view>
 
   <!--suppress HtmlUnknownAnchorTarget -->
   <a class="scroll-to-top rounded" href="#page-top">
@@ -42,10 +42,22 @@ export default {
     })
 
     this.$store.dispatch('setDatas')
+    this.$store.dispatch('generateRandomStr')
 
     const _this = this
     this.$nextTick(function () {
-      (function ($) {
+      /* Lightbox2 功能設定 */
+      // eslint-disable-next-line no-undef
+      lightbox.option({
+        alwaysShowNavOnTouchDevices: true,
+        albumLabel: _this.$t('ui.text.lightbox.album_label', ['%1', '%2']),
+        fadeDuration: 300,
+        imageFadeDuration: 300,
+        resizeDuration: 400,
+        disableScrolling: true
+      })
+
+      ;(function ($) {
         const bapRender = $('#bapRender')
         bapRender.buttonAudioPlayer({
           type: 'default',
@@ -70,7 +82,7 @@ export default {
 
                   body += `<div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">${latestReleaseData.tag_name} (發佈於 ${_this.formatDataTime(latestReleaseData.published_at)})</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">${latestReleaseData.tag_name} (${_this.$t('ui.text.update.release', { date_time: _this.formatDataTime(latestReleaseData.published_at) })})</h6>
                                 </div>
                                 <div class="card-body">
                                     ${window.mdConverter.makeHtml(latestReleaseData.body)}
@@ -79,9 +91,9 @@ export default {
                 }
 
                 _this.msgModal.id = 'updateMsg'
-                _this.msgModal.title = `<span class="text-danger"><i class="fas fa-info-circle"></i> 有新版本可以更新！ (<span class="text-success">${latestReleaseDatas[0].tag_name}</span>)</span>`
+                _this.msgModal.title = `<span class="text-danger"><i class="fas fa-info-circle"></i> ${_this.$t('ui.text.update.title', { version: `<span class="text-success">${latestReleaseDatas[0].tag_name}</span>` })}</span>`
                 _this.msgModal.body = body
-                _this.msgModal.buttonName = `<i class="fas fa-download"></i> 前往下載 ${latestReleaseDatas[0].tag_name}`
+                _this.msgModal.buttonName = `<i class="fas fa-download"></i> ${_this.$t('ui.text.update.download', { version: latestReleaseDatas[0].tag_name })}`
                 _this.msgModal.buttonOnClick = `window.shell.openExternal("${latestReleaseDatas[0].html_url}")`
                 _this.msgModal.isShow = true
               }
@@ -95,6 +107,11 @@ export default {
   methods: {
     formatDataTime (dataTime, format = 'L LTS') {
       return window.moment(dataTime).format(format)
+    }
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.$store.state.configs.app.name = this.$t('app.name')
     }
   }
 }

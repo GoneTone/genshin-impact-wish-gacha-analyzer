@@ -2,7 +2,7 @@
   <div class="col-lg-6">
     <div class="card shadow mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">中獎數圓餅圖 (級別)</h6>
+        <h6 class="m-0 font-weight-bold text-primary">{{ $t("ui.text.wins_pie_chart") }} ({{ $t("ui.text.rank") }})</h6>
       </div>
       <div class="card-body">
         <div class="chart-pie pt-4 pb-2">
@@ -10,13 +10,13 @@
         </div>
         <div class="mt-4 text-center small">
           <span class="mr-2">
-            <i class="fas fa-circle text-bd6932"></i> 5星中獎數：{{ fiveRankWins.toString() }}
+            <i class="fas fa-circle text-bd6932"></i> {{ $t("ui.text.five_rank_wins_count", { count: fiveRankWins.toString() }) }}
           </span>
           <span class="mr-2">
-            <i class="fas fa-circle text-a256e1"></i> 4星中獎數：{{ fourRankWins.toString() }}
+            <i class="fas fa-circle text-a256e1"></i> {{ $t("ui.text.four_rank_wins_count", { count: fourRankWins.toString() }) }}
           </span>
           <span class="mr-2">
-            <i class="fas fa-circle text-8e8e8e"></i> 3星以下中獎數：{{ threeRankWins.toString() }}
+            <i class="fas fa-circle text-8e8e8e"></i> {{ $t("ui.text.three_rank_wins_count", { count: threeRankWins.toString() }) }}
           </span>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default {
       this.$data.rankPieChart = new Chart(document.getElementById('rankPieChart'), {
         type: 'doughnut',
         data: {
-          labels: ['5星中獎數', '4星中獎數', '3星以下中獎數'],
+          labels: [this.$t('ui.text.count_of_win_by_five_rank'), this.$t('ui.text.count_of_win_by_four_rank'), this.$t('ui.text.count_of_win_by_three_rank')],
           datasets: [{
             data: [this.fiveRankWins, this.fourRankWins, this.threeRankWins],
             backgroundColor: ['#bd6932', '#a256e1', '#8e8e8e'],

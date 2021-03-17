@@ -28,7 +28,7 @@ autoUpdater.logger.transports.file.level = 'info'
 
 let win
 
-log.info('應用程式啟動...')
+log.info('Application launch...')
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -43,7 +43,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 async function createWindow () {
-  log.info('視窗創建...')
+  log.info('Window creation...')
 
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
@@ -73,9 +73,9 @@ async function createWindow () {
   const isMaximized = mainWindowState.isMaximized
 
   if (isMaximized) {
-    log.info('視窗大小設定為最大化。')
+    log.info('Window size set to maximize.')
   } else {
-    log.info(`視窗大小設定為 ${setWidth}*${setHeight}。`)
+    log.info(`Window size set to ${setWidth}*${setHeight}.`)
   }
 
   if (!isDevelopment) {
@@ -121,7 +121,7 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    log.info('應用程式關閉。')
+    log.info('Application closed.')
     app.quit()
   }
 })

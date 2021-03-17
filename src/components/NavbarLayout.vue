@@ -22,14 +22,14 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-      綜合
+      {{ $t("ui.text.comprehensive") }}
     </div>
 
     <router-link to="/" v-slot="{ href, navigate, isActive }" custom>
       <li :class="['nav-item', isActive && 'active']">
         <a :class="['nav-link']" :href="href" @click="navigate">
           <i class="fas fa-fw fa-chart-pie"></i>
-          <span>綜合數據圖表</span>
+          <span>{{ $t("ui.text.title.home") }}</span>
         </a>
       </li>
     </router-link>
@@ -37,7 +37,7 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-      各類卡池
+      {{ $t("ui.text.various_gacha") }}
     </div>
 
     <router-link v-for="data of this.$store.getters.datas.gachaTypeList" :key="data.key" :to="{path: '/gacha/' + data.key}" v-slot="{ href, navigate, isActive }" custom>
@@ -52,14 +52,14 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-      其他
+      {{ $t("ui.text.other") }}
     </div>
 
     <router-link to="/history" v-slot="{ href, navigate, isActive }" custom>
       <li :class="['nav-item', isActive && 'active']">
         <a :class="['nav-link']" :href="href" @click="navigate">
           <i class="fas fa-fw fa-table"></i>
-          <span>歷史紀錄</span>
+          <span>{{ $t("ui.text.title.history") }}</span>
         </a>
       </li>
     </router-link>
@@ -67,20 +67,20 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-      關於
+      {{ $t("ui.text.about") }}
     </div>
 
     <li class="nav-item">
       <a class="nav-link" @click="openExternal(this.$store.getters.configs.team.websiteUrl);">
         <i class="fas fa-fw fa-globe"></i>
-        <span>{{ this.$store.getters.configs.team.name }} - 官網</span>
+        <span>{{ this.$store.getters.configs.team.name }} - {{ $t("ui.text.official_website") }}</span>
       </a>
     </li>
 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCommunity" aria-expanded="true" aria-controls="collapseCommunity">
         <i class="fas fa-fw fa-comments"></i>
-        <span>社群</span>
+        <span>{{ $t("ui.text.community") }}</span>
       </a>
       <div id="collapseCommunity" class="collapse" aria-labelledby="headingCommunity" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -93,11 +93,11 @@
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDonate" aria-expanded="true" aria-controls="collapseDonate">
         <i class="fas fa-fw fa-donate"></i>
-        <span>贊助開發者</span>
+        <span>{{ $t("ui.text.donate_developer") }}</span>
       </a>
       <div id="collapseDonate" class="collapse" aria-labelledby="headingDonate" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">贊助我們請我們喝杯咖啡 :)</h6>
+          <h6 class="collapse-header">{{ $t("ui.text.donate_description") }}</h6>
           <a class="collapse-item" @click="openExternal('https://donate.reh.tw/');"><i class="fas fa-donate"></i> donate.reh.tw</a>
           <a class="collapse-item" @click="openExternal('https://paypal.me/GoneTone');"><i class="fab fa-paypal"></i> Paypal</a>
         </div>
@@ -107,7 +107,7 @@
     <li class="nav-item">
       <a class="nav-link" @click="openExternal(`${this.$store.getters.configs.app.githubUrl}/issues`);">
         <i class="fab fa-fw fa-github"></i>
-        <span>問題回報</span>
+        <span>{{ $t("ui.text.issues_report") }}</span>
       </a>
     </li>
 
@@ -136,7 +136,7 @@ export default {
         const sidebar = $('.sidebar')
 
         // Toggle the side navigation
-        $('#sidebarToggle, #sidebarToggleTop').on('click', function (e) {
+        $('#sidebarToggle, #sidebarToggleTop').on('click', function () {
           $('body').toggleClass('sidebar-toggled')
           sidebar.toggleClass('toggled')
           if (sidebar.hasClass('toggled')) {

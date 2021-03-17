@@ -8,15 +8,15 @@
       <span class="icon text-white-50">
         <i class="fas fa-sync-alt"></i>
       </span>
-      <span class="text">更新資料</span>
+      <span class="text">{{ $t("ui.text.update_data") }}</span>
     </a>
     <a @click="exportExcel()" class="btn btn-sm btn-primary btn-icon-split">
       <span class="icon text-white-50">
         <i class="fas fa-download"></i>
       </span>
-      <span class="text">導出 Excel</span>
+      <span class="text">{{ $t("ui.text.export_excel") }}</span>
     </a>
-    <p>資料更新時間：{{ updateTime }}</p>
+    <p>{{ $t("ui.text.data_update_time", { time: updateTime }) }}</p>
   </div>
 </template>
 

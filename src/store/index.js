@@ -7,6 +7,7 @@
  */
 
 import { createStore } from 'vuex'
+import i18n from '@/i18n'
 
 export default createStore({
   state: {
@@ -22,7 +23,7 @@ export default createStore({
     },
     configs: {
       app: {
-        name: process.env.VUE_APP_NAME, // 應用程式名稱
+        name: i18n.global.t('app.name'), // 應用程式名稱
         version: window.app.getVersion(), // 應用程式版本號
         githubUrl: process.env.VUE_APP_GITHUB_URL // 應用程式 GitHub 網址
       },
@@ -110,26 +111,26 @@ export default createStore({
           updateGachaLog = true
         }
 
-        window.log.info('加載卡池資料...')
+        window.log.info('Loading gacha data...')
 
         context.commit('setLoadStatus', {
           status: 'load',
-          msg: '正在加載卡池資料，<span class="text-danger">可能需要一點時間</span>...'
+          msg: i18n.global.t('ui.text.loading.loading_gacha_data', { may_take_a_while: `<span class="text-danger">${i18n.global.t('ui.text.loading.may_take_a_while')}</span>` })
         })
 
         const playerUID = await miHoYoApi.getPlayerUID(updateGachaLog)
 
-        window.log.info(`讀取 UID "${playerUID}" 玩家的卡池歷史資料...`)
+        window.log.info(`Reading UID "${playerUID}" player gacha history data...`)
 
         const gachaTypeList = await miHoYoApi.getGachaTypeList()
         const gachaLogs = []
         let updateTime
         for (const data of gachaTypeList) {
-          window.log.info(`讀取 "${data.name}" 卡池歷史資料...`)
+          window.log.info(`Reading "${data.name}" gacha history data...`)
 
           context.commit('setLoadStatus', {
             status: 'load',
-            msg: `正在讀取 UID <kbd>${playerUID}</kbd> 玩家的 <span class="text-info">${data.name}</span> 卡池歷史資料，<span class="text-danger">可能需要一點時間</span>...`
+            msg: i18n.global.t('ui.text.loading.loading_gacha_data_uid', { uid: `<kbd>${playerUID}</kbd>`, gacha_name: `<span class="text-info">${data.name}</span>`, may_take_a_while: `<span class="text-danger">${i18n.global.t('ui.text.loading.may_take_a_while')}</span>` })
           })
 
           gachaLogs[data.key] = await miHoYoApi.getGachaLog(data.key, 20, playerUID, updateGachaLog)
@@ -147,7 +148,7 @@ export default createStore({
           }
         })
 
-        window.log.info('卡池歷史資料讀取完畢。')
+        window.log.info('Gacha history data has been read.')
 
         console.log(this.getters.datas.queryStringParameters)
         console.log(this.getters.datas.gachaTypeList)

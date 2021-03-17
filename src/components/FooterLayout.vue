@@ -2,9 +2,9 @@
   <footer class="sticky-footer bg-white" id="footer">
     <div class="container my-auto">
       <div class="copyright text-center my-auto" style="line-height: 1.2;">
-        <span>Copyright © {{ year }} <a href="#" @click="openExternal(this.$store.getters.configs.team.websiteUrl);">{{ this.$store.getters.configs.team.name }}</a>. All rights reserved.
-          <br>Developed by <a href="#" @click="openExternal(this.$store.getters.configs.developer.url);">{{ this.$store.getters.configs.developer.displayName }}</a>.
-          <br><br>版本：v{{ this.$store.getters.configs.app.version }}</span>
+        <span>Copyright © {{ year }} <a href="#" @click="openExternal(this.$store.getters.configs.team.websiteUrl);">{{ this.$store.getters.configs.team.name }}</a>. All rights reserved.</span>
+          <span><br>Developed by <a href="#" @click="openExternal(this.$store.getters.configs.developer.url);">{{ this.$store.getters.configs.developer.displayName }}</a>.</span>
+          <span><br><br>Version：v{{ this.$store.getters.configs.app.version }}</span>
       </div>
     </div>
   </footer>

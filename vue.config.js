@@ -31,12 +31,23 @@ module.exports = {
           createDesktopShortcut: true, // 是否建立桌面捷徑
           createStartMenuShortcut: true // 是否建立開始捷徑
         },
-        publish: [{
-          provider: 'github',
-          owner: 'GoneTone',
-          repo: 'genshin-impact-wish-gacha-analyzer'
-        }]
+        publish: [
+          {
+            provider: 'github',
+            owner: 'GoneTone',
+            repo: 'genshin-impact-wish-gacha-analyzer'
+          }
+        ]
       }
+    },
+    i18n: {
+      locale: 'zh_TW',
+      fallbackLocale: 'zh_TW',
+      localeDir: 'locales',
+      enableLegacy: true,
+      runtimeOnly: false,
+      compositionOnly: false,
+      fullInstall: true
     }
   }
 }

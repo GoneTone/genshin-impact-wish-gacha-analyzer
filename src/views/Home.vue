@@ -10,20 +10,20 @@
 
         <draws-info :accumulate-draws="allCount" :averag-draws-count-in-win="averagDrawsCountInWin" is-no-display-guaranteed></draws-info>
 
-        <h4>級別中獎率</h4>
+        <h4>{{ $t("ui.text.chance_of_win_by_rank") }}</h4>
         <div class="row">
-          <percentage title="5星中獎率" color="bd6932" :percentage="wins.rank.five.chance"></percentage>
-          <percentage title="4星中獎率" color="a256e1" :percentage="wins.rank.four.chance"></percentage>
-          <percentage title="3星中獎率" color="8e8e8e" :percentage="wins.rank.three.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_five_rank')" color="bd6932" :percentage="wins.rank.five.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_four_rank')" color="a256e1" :percentage="wins.rank.four.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_three_rank')" color="8e8e8e" :percentage="wins.rank.three.chance"></percentage>
         </div>
 
-        <h4>角色武器中獎率</h4>
+        <h4>{{ $t("ui.text.chance_of_win_by_character_and_weapon") }}</h4>
         <div class="row">
-          <percentage title="角色中獎率" color="bd6932" :percentage="wins.characterWeapon.character.chance"></percentage>
-          <percentage title="武器中獎率" color="a256e1" :percentage="wins.characterWeapon.weapon.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_character')" color="bd6932" :percentage="wins.characterWeapon.character.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_weapon')" color="a256e1" :percentage="wins.characterWeapon.weapon.chance"></percentage>
         </div>
 
-        <h4>中獎數圓餅圖</h4>
+        <h4>{{ $t("ui.text.wins_pie_chart") }}</h4>
         <div class="row">
           <rank-pie-chart :five-rank-wins="wins.rank.five.count" :four-rank-wins="wins.rank.four.count" :three-rank-wins="wins.rank.three.count"></rank-pie-chart>
           <character-weapon-pie-chart :character-wins="wins.characterWeapon.character.count" :weapon-wins="wins.characterWeapon.weapon.count"></character-weapon-pie-chart>
@@ -63,7 +63,7 @@ export default {
   },
   data () {
     return {
-      title: '綜合數據圖表',
+      title: this.$t('ui.text.title.home'),
       updateTime: this.formatDataTime(this.$store.getters.datas.gachaLogs.updateTime),
       allCount: this.getAllCount(),
       averagDrawsCountInWin: this.getAveragDrawsCountInWin(),
@@ -194,6 +194,12 @@ export default {
       }
 
       return Math.round(((this.getWeaponCount() / (this.getCharacterCount() + this.getWeaponCount())) * 100) * 1000) / 1000
+    }
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.title = this.$t('ui.text.title.home')
+      window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
     }
   }
 }

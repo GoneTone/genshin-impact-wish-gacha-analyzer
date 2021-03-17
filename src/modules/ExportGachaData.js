@@ -39,12 +39,12 @@ class ExportGachaData {
       })
 
       sheet.columns = [
-        { header: '總抽數', key: 'indax', width: 8 },
-        { header: '名稱', key: 'name', width: 20 },
-        { header: '類別', key: 'item_type', width: 10 },
-        { header: '級別', key: 'rank_type', width: 8 },
-        { header: '抽到時間', key: 'time', width: 25 },
-        { header: '保底內抽數', key: 'draws_count_in_win', width: 8 }
+        { header: window.i18n.t('ui.text.table.total_of_draws'), key: 'indax', width: 8 },
+        { header: window.i18n.t('ui.text.table.name'), key: 'name', width: 20 },
+        { header: window.i18n.t('ui.text.table.type'), key: 'item_type', width: 10 },
+        { header: window.i18n.t('ui.text.table.rank'), key: 'rank_type', width: 8 },
+        { header: window.i18n.t('ui.text.table.get_time'), key: 'time', width: 25 },
+        { header: window.i18n.t('ui.text.table.draws_count_in_win'), key: 'draws_count_in_win', width: 8 }
       ]
 
       const rows = []
@@ -116,7 +116,7 @@ class ExportGachaData {
 
     const buffer = await workbook.xlsx.writeBuffer()
     const filePath = remote.dialog.showSaveDialogSync({
-      defaultPath: path.join(remote.app.getPath('downloads'), `原神卡池紀錄_${this._datatime}`),
+      defaultPath: path.join(remote.app.getPath('downloads'), `${window.i18n.t('file.genshin_gacha_history')}_${this._datatime}`),
       filters: [
         { name: 'Excel', extensions: ['xlsx'] }
       ]

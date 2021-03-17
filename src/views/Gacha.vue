@@ -12,26 +12,26 @@
 
         <draws-info :gacha-id="Number(this.$route.params.key)" :accumulate-draws="allCount" :accumulate-not-win-draws="drawsCountInWin" :averag-draws-count-in-win="averagDrawsCountInWin" :is-no-display-guaranteed="Number(this.$route.params.key) === 100"></draws-info>
 
-        <h4>級別中獎率</h4>
+        <h4>{{ $t("ui.text.chance_of_win_by_rank") }}</h4>
         <div class="row">
-          <percentage title="5星中獎率" color="bd6932" :percentage="wins.rank.five.chance"></percentage>
-          <percentage title="4星中獎率" color="a256e1" :percentage="wins.rank.four.chance"></percentage>
-          <percentage title="3星中獎率" color="8e8e8e" :percentage="wins.rank.three.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_five_rank')" color="bd6932" :percentage="wins.rank.five.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_four_rank')" color="a256e1" :percentage="wins.rank.four.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_three_rank')" color="8e8e8e" :percentage="wins.rank.three.chance"></percentage>
         </div>
 
-        <h4>角色武器中獎率</h4>
+        <h4>{{ $t("ui.text.chance_of_win_by_character_and_weapon") }}</h4>
         <div class="row">
-          <percentage title="角色中獎率" color="bd6932" :percentage="wins.characterWeapon.character.chance"></percentage>
-          <percentage title="武器中獎率" color="a256e1" :percentage="wins.characterWeapon.weapon.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_character')" color="bd6932" :percentage="wins.characterWeapon.character.chance"></percentage>
+          <percentage :title="$t('ui.text.chance_of_win_by_weapon')" color="a256e1" :percentage="wins.characterWeapon.weapon.chance"></percentage>
         </div>
 
-        <h4>中獎數圓餅圖</h4>
+        <h4>{{ $t("ui.text.wins_pie_chart") }}</h4>
         <div class="row">
           <rank-pie-chart :five-rank-wins="wins.rank.five.count" :four-rank-wins="wins.rank.four.count" :three-rank-wins="wins.rank.three.count"></rank-pie-chart>
           <character-weapon-pie-chart :character-wins="wins.characterWeapon.character.count" :weapon-wins="wins.characterWeapon.weapon.count"></character-weapon-pie-chart>
         </div>
 
-        <h4>表格</h4>
+        <h4>{{ $t("ui.text.table.title") }}</h4>
         <div class="card shadow mb-4">
           <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">{{ title }}</h6>
@@ -42,22 +42,22 @@
               <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead class="thead-light">
                 <tr>
-                  <th class="align-middle">總抽數</th>
-                  <th class="align-middle">名稱</th>
-                  <th class="align-middle">類別</th>
-                  <th class="align-middle">級別</th>
-                  <th class="align-middle">抽到時間</th>
-                  <th class="align-middle">保底內抽數</th>
+                  <th class="align-middle">{{ $t("ui.text.table.total_of_draws") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.name") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.type") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.rank") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.get_time") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.draws_count_in_win") }}</th>
                 </tr>
                 </thead>
                 <tfoot class="thead-light">
                 <tr>
-                  <th class="align-middle">總抽數</th>
-                  <th class="align-middle">名稱</th>
-                  <th class="align-middle">類別</th>
-                  <th class="align-middle">級別</th>
-                  <th class="align-middle">抽到時間</th>
-                  <th class="align-middle">保底內抽數</th>
+                  <th class="align-middle">{{ $t("ui.text.table.total_of_draws") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.name") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.type") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.rank") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.get_time") }}</th>
+                  <th class="align-middle">{{ $t("ui.text.table.draws_count_in_win") }}</th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -65,7 +65,7 @@
                   <td class="align-middle">{{ (index + 1) }}</td>
                   <td class="align-middle"><img :src="data.icon_url" class="img-fluid" width="35" :alt="`${data.name} - Icon`" v-if="data.icon_url && data.icon_url !== null"> {{ data.name }} <a :href="data.image_url" :data-lightbox="`image_${(index + 1)}`" v-if="data.image_url && data.image_url !== null"><i class="far fa-image"></i></a></td>
                   <td class="align-middle">{{ data.item_type }}</td>
-                  <td class="align-middle">{{ data.rank_type }}星</td>
+                  <td class="align-middle">{{ $t("ui.text.table.stars", { star: data.rank_type }) }}</td>
                   <td class="align-middle">{{ this.formatDataTime(data.time) }}</td>
                   <td class="align-middle">{{ data.draws_count_in_win }}</td>
                 </tr>
@@ -105,7 +105,7 @@ export default {
   },
   data () {
     return {
-      title: `${this.getTitle(this.$route.params.key)} - 數據圖表`,
+      title: this.$t('ui.text.title.gacha', { gacha_name: this.getTitle(this.$route.params.key) }),
       updateTime: this.formatDataTime(this.$store.getters.datas.gachaLogs.updateTime),
       dataTimeRange: this.getDataTimeRange(),
       allCount: this.getAllCount(),
@@ -153,15 +153,15 @@ export default {
           $('#dataTable').DataTable({
             order: [[0, 'desc']],
             language: {
-              lengthMenu: '每頁顯示 _MENU_ 筆記錄',
-              zeroRecords: '未找到任何結果',
-              info: '第 _PAGE_ 頁 / 共 _PAGES_ 頁',
-              infoEmpty: '沒有任何資料',
-              infoFiltered: '(從 _MAX_ 筆記錄中篩選出)',
-              search: '搜尋：',
+              lengthMenu: _this.$t('ui.text.table.data_table.length_menu', { menu: '_MENU_' }),
+              zeroRecords: _this.$t('ui.text.table.data_table.zero_records'),
+              info: _this.$t('ui.text.table.data_table.info', { page: '_PAGE_', pages: '_PAGES_' }),
+              infoEmpty: _this.$t('ui.text.table.data_table.info_empty'),
+              infoFiltered: _this.$t('ui.text.table.data_table.info_filtered', { max: '_MAX_' }),
+              search: _this.$t('ui.text.table.data_table.search'),
               paginate: {
-                previous: '上一頁',
-                next: '下一頁'
+                previous: _this.$t('ui.text.table.data_table.paginate.previous'),
+                next: _this.$t('ui.text.table.data_table.paginate.next')
               }
             }
           })
@@ -279,6 +279,12 @@ export default {
       }
 
       return Math.round(((this.getWeaponCount() / (this.getCharacterCount() + this.getWeaponCount())) * 100) * 1000) / 1000
+    }
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.title = this.$t('ui.text.title.gacha', { gacha_name: this.getTitle(this.$route.params.key) })
+      window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
     }
   }
 }

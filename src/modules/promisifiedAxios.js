@@ -34,10 +34,10 @@ const promisifiedAxios = (url, isReject = true) => {
       return resolve(response)
     }).catch((e) => {
       if (isReject) {
-        return reject(new Error(`網址 "${url}" 取得資源失敗：${e.message}`))
+        return reject(new Error(window.i18n.t('modules.error.url_get_data_failed', { url: url, msg: e.message })))
       }
 
-      return resolve(new Error(`網址 "${url}" 取得資源失敗：${e.message}`))
+      return resolve(new Error(window.i18n.t('modules.error.url_get_data_failed', { url: url, msg: e.message })))
     })
   })
 }

@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body" v-html="body"></div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="this.$store.dispatch('playerAudioEffect', 'close_win')">關閉訊息</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="this.$store.dispatch('playerAudioEffect', 'close_win')">{{ $t("ui.text.close_msg") }}</button>
           <button type="button" class="btn btn-primary" :onclick="buttonOnClick" v-html="buttonName" @click="this.$store.dispatch('playerAudioEffect', 'open_win')"></button>
         </div>
       </div>
@@ -48,24 +48,26 @@ export default {
     }
   },
   updated () {
-    const _this = this
-    ;(function ($) {
-      const dom = $(`#${_this.id}`)
+    if (this.id) {
+      const _this = this
+      ;(function ($) {
+        const dom = $(`#${_this.id}`)
 
-      dom.on('click', '.modal-body a', (event) => {
-        event.preventDefault()
+        dom.on('click', '.modal-body a', (event) => {
+          event.preventDefault()
 
-        _this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
+          _this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
 
-        const link = event.target.href
-        window.shell.openExternal(link) // 使用外部瀏覽器
-      })
+          const link = event.target.href
+          window.shell.openExternal(link) // 使用外部瀏覽器
+        })
 
-      if (_this.isShow) {
-        dom.modal() // 顯示訊息
-      }
-      // eslint-disable-next-line no-undef
-    })(jQuery)
+        if (_this.isShow) {
+          dom.modal() // 顯示訊息
+        }
+        // eslint-disable-next-line no-undef
+      })(jQuery)
+    }
   }
 }
 </script>
