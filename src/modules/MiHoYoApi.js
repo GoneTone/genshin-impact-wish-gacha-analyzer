@@ -82,10 +82,11 @@ class MiHoYoApi {
    * @param {number} gachaTypeID 卡池類型 ID
    * @param {number} page 頁數
    * @param {number} size 一頁資料最大數 (最大 20，預設 6)
+   * @param {String} endID (預設 '0')
    *
    * @returns {Promise<string>}
    */
-  async getGachaLogApiUrl (gachaTypeID, page, size = 6) {
+  async getGachaLogApiUrl (gachaTypeID, page, size = 6, endID = '0') {
     size = (size > 20) ? 20 : (size < 1) ? 1 : size
 
     const apiUrlAppend = new URL(`https://${this._mihoyoApiHost}${this._mihoyoApiPath}${this._mihoyoApiGetGachaLogPathName}`)
@@ -104,6 +105,7 @@ class MiHoYoApi {
     apiUrlAppend.searchParams.append('gacha_type', gachaTypeID.toString())
     apiUrlAppend.searchParams.append('page', page.toString())
     apiUrlAppend.searchParams.append('size', size.toString())
+    apiUrlAppend.searchParams.append('end_id', endID)
 
     const apiUrl = apiUrlAppend.href
 
@@ -209,14 +211,19 @@ class MiHoYoApi {
       try {
         size = (size > 20) ? 20 : (size < 1) ? 1 : size
 
+        let endID = '0'
         while (true) {
-          const gachaLogApiUrl = await this.getGachaLogApiUrl(gachaTypeID, page, size)
+          const gachaLogApiUrl = await this.getGachaLogApiUrl(gachaTypeID, page, size, endID)
           const axios = await promisifiedAxios(gachaLogApiUrl)
           const data = axios.data
 
           if (this.verificationRetcode(data.retcode)) {
             if (data.data.list.length > 0) {
-              logArray = logArray.concat(data.data.list)
+              const res = data.data.list
+
+              endID = res[res.length - 1].id
+
+              logArray = logArray.concat(res)
               page++
             } else {
               break

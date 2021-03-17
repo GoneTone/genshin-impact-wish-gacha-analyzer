@@ -100,7 +100,8 @@ export default createStore({
           game_version: searchParams.get('game_version') ?? '',
           region: searchParams.get('region') ?? '',
           authkey: searchParams.get('authkey') ?? '',
-          game_biz: searchParams.get('game_biz') ?? ''
+          game_biz: searchParams.get('game_biz') ?? '',
+          end_id: searchParams.get('end_id') ?? '0'
         }
 
         const miHoYoApi = new window.MiHoYoApi(queryStringParameters)
