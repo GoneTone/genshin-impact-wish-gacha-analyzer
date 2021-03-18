@@ -32,6 +32,6 @@ const locale = window.app.getLocale().replace('-', '_')
 export default createI18n({
   legacy: true,
   locale: locale || process.env.VUE_APP_I18N_LOCALE,
-  fallbackLocale: locale || process.env.VUE_APP_I18N_FALLBACK_LOCALE,
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE,
   messages: loadLocaleMessages()
 })
