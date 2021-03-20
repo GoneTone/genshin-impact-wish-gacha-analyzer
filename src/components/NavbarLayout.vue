@@ -12,10 +12,25 @@
 
     <li class="nav-item">
       <div class="form-group mb-0" style="display: block; padding: 0.5rem 1rem; color: #dddfeb">
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <select class="form-control" id="UIDSelect" disabled>
-          <option>UID：{{ this.$store.getters.datas.playerUID }}</option>
-        </select>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fas fa-language"></i></div>
+          </div>
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <select class="form-control" id="locales" v-model="$i18n.locale">
+            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ this.$store.getters.langNames[locale] }}</option>
+          </select>
+        </div>
+
+        <div class="input-group mt-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fas fa-address-card"></i></div>
+          </div>
+          <!--suppress HtmlFormInputWithoutLabel -->
+          <select class="form-control" id="uidSelect" disabled>
+            <option>{{ this.$store.getters.datas.playerUID }}</option>
+          </select>
+        </div>
       </div>
     </li>
 
@@ -102,6 +117,19 @@
           <a class="collapse-item" @click="openExternal('https://paypal.me/GoneTone');"><i class="fab fa-paypal"></i> Paypal</a>
         </div>
       </div>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+      {{ $t("ui.text.contribution") }}
+    </div>
+
+    <li class="nav-item">
+      <a class="nav-link" @click="openExternal(this.$store.getters.configs.app.translationUrl);">
+        <i class="fas fa-fw fa-language"></i>
+        <span>{{ $t("ui.text.help_translate") }}</span>
+      </a>
     </li>
 
     <li class="nav-item">

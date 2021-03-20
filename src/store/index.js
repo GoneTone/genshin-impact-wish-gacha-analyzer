@@ -25,7 +25,8 @@ export default createStore({
       app: {
         name: i18n.global.t('app.name'), // 應用程式名稱
         version: window.app.getVersion(), // 應用程式版本號
-        githubUrl: process.env.VUE_APP_GITHUB_URL // 應用程式 GitHub 網址
+        githubUrl: process.env.VUE_APP_GITHUB_URL, // 應用程式 GitHub 網址
+        translationUrl: process.env.VUE_APP_TRANSLATION_URL // 應用程式協助翻譯網址
       },
       team: {
         name: process.env.VUE_APP_TEAM_NAME, // 團隊名稱
@@ -68,7 +69,8 @@ export default createStore({
         update_time: null,
         data: null
       }
-    }
+    },
+    langNames: null
   },
   mutations: {
     setLoadStatus (state, loadStatus) {
@@ -76,6 +78,9 @@ export default createStore({
     },
     setDatas (state, datas) {
       state.datas = datas
+    },
+    setLangNames (state, langNames) {
+      state.langNames = langNames
     },
     setRandomStr (state, randomStr) {
       state.configs.randomStr = randomStr
@@ -196,6 +201,19 @@ export default createStore({
           break
       }
     },
+    async setLangNames (context) {
+      const fileControl = new window.FileControl(window.app.getPath('userData'))
+
+      const langNames = {}
+      for (const locale of i18n.global.availableLocales) {
+        langNames[locale] = fileControl.getLangNames(locale)
+      }
+
+      i18n.global.locale = await fileControl.readLangCode() // 切換成上次使用的語言
+      window.log.info(`Set language to ${i18n.global.locale}.`)
+
+      context.commit('setLangNames', langNames)
+    },
     generateRandomStr (context) {
       const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
@@ -216,6 +234,9 @@ export default createStore({
     },
     datas (state) {
       return state.datas
+    },
+    langNames (state) {
+      return state.langNames
     },
     randomStr (state) {
       return state.configs.randomStr

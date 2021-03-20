@@ -114,7 +114,7 @@ class FileControl {
     try {
       const isExists = await this.isExists(filePath)
       if (isExists) {
-        const data = await fs.promises.readFile(`${this.basePath}/version.txt`, 'utf-8')
+        const data = await fs.promises.readFile(filePath, 'utf-8')
         return data.toString()
       }
 
@@ -155,6 +155,59 @@ class FileControl {
 
     await this.writeVersion()
     return false
+  }
+
+  /**
+   * 取得語言名稱
+   *
+   * @param {String} locale 語言代碼
+   *
+   * @returns {String}
+   */
+  getLangNames (locale) {
+    const langData = require(`@/locales/${locale}.json`)
+    return (langData.lang === undefined || langData.lang.name === undefined || langData.lang.name === '') ? locale : langData.lang.name
+  }
+
+  /**
+   * 讀取語言代碼
+   *
+   * @returns {Promise<string|boolean>}
+   */
+  async readLangCode () {
+    const filePath = `${this.basePath}/lang_code.txt`
+
+    try {
+      const isExists = await this.isExists(filePath)
+      if (isExists) {
+        const data = await fs.promises.readFile(filePath, 'utf-8')
+        return data.toString()
+      }
+
+      return remote.app.getLocale().replace('-', '_')
+    } catch (e) {
+      return remote.app.getLocale().replace('-', '_')
+    }
+  }
+
+  /**
+   * 寫入語言代碼
+   *
+   * @param {String} langCode 語言代碼
+   */
+  async writeLangCode (langCode) {
+    try {
+      const isExists = await this.isExists(this.basePath)
+      if (!isExists) {
+        await fs.promises.mkdir(this.basePath, {
+          recursive: true
+        })
+      }
+
+      await fs.promises.writeFile(`${this.basePath}/lang_code.txt`, langCode)
+    } catch (e) {
+      throw Error(e.message)
+    }
   }
 
   /**

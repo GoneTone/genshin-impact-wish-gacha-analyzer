@@ -42,6 +42,7 @@ export default {
     })
 
     this.$store.dispatch('setDatas')
+    this.$store.dispatch('setLangNames')
     this.$store.dispatch('generateRandomStr')
 
     const _this = this
@@ -112,6 +113,25 @@ export default {
   watch: {
     '$i18n.locale': function () {
       this.$store.state.configs.app.name = this.$t('app.name')
+
+      const fileControl = new window.FileControl(window.app.getPath('userData'))
+      fileControl.writeLangCode(this.$i18n.locale)
+
+      window.log.info(`Switch language to ${this.$i18n.locale}.`)
+    },
+    '$store.getters.langNames': function () {
+      if (this.$store.getters.langNames[this.$i18n.locale] === undefined) {
+        const langCodeSplit = this.$i18n.locale.split('_')
+        if (langCodeSplit && langCodeSplit.length > 0) {
+          if (this.$store.getters.langNames[langCodeSplit[0]] !== undefined) {
+            this.$i18n.locale = langCodeSplit[0]
+          } else {
+            this.$i18n.locale = process.env.VUE_APP_I18N_FALLBACK_LOCALE // 預設語言
+          }
+        } else {
+          this.$i18n.locale = process.env.VUE_APP_I18N_FALLBACK_LOCALE // 預設語言
+        }
+      }
     }
   }
 }

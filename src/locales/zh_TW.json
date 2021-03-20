@@ -1,5 +1,8 @@
 {
-  "lang_name": "繁體中文",
+  "lang": {
+    "name": "繁體中文",
+    "translator": ""
+  },
   "app": {
     "name": "原神祈願卡池分析"
   },
@@ -74,12 +77,15 @@
       "various_gacha": "各類卡池",
       "other": "其他",
       "about": "關於",
+      "contribution": "貢獻",
       "official_website": "官方網站",
       "community": "社群",
       "donate_developer": "贊助開發者",
       "donate_description": "贊助我們請我們喝杯咖啡 :)",
       "issues_report": "問題回報",
       "issues_report_description": "如有任何問題請至 GitHub 回報",
+      "help_translate": "協助翻譯",
+      "help_translate_description": "沒有您的語言嗎？幫助我們翻譯！",
       "lightbox": {
         "album_label": "第 {0} 張圖片，共有 {1} 張圖片"
       },
@@ -93,7 +99,9 @@
         "msg2": "目前累積 {accumulate_draws} 抽，離上次已累積 {accumulate_not_win_draws} 抽未出5星，平均 {averag_draws_count_in_win} 抽中5星。",
         "guaranteed_progress": "保底進度：{progress}%",
         "guaranteed_count_msg": "距離保底還剩下 {count} 抽！"
-      }
+      },
+      "translated_by": "{lang_name} 由 {translator_name} 翻譯",
+      "version": "版本：{version}"
     }
   },
   "modules": {
