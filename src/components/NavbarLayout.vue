@@ -18,7 +18,7 @@
           </div>
           <!--suppress HtmlFormInputWithoutLabel -->
           <select class="form-control" id="locales" v-model="$i18n.locale">
-            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ this.$store.getters.langNames[locale] }}</option>
+            <option v-for="locale in locales()" :key="`locale-${locale}`" :value="locale">{{ this.$store.getters.langNames[locale] }}</option>
           </select>
         </div>
 
@@ -151,6 +151,16 @@
 export default {
   name: 'NavbarLayout',
   methods: {
+    locales () {
+      const locales = []
+      for (const locale of this.$i18n.availableLocales) {
+        if (this.$store.getters.langNames[locale] !== locale) {
+          locales.push(locale)
+        }
+      }
+
+      return locales
+    },
     openExternal (link) {
       this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
       window.shell.openExternal(link)

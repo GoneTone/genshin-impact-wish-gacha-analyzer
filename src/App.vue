@@ -132,6 +132,10 @@ export default {
           this.$i18n.locale = process.env.VUE_APP_I18N_FALLBACK_LOCALE // 預設語言
         }
       }
+
+      if (this.$store.getters.langNames[this.$i18n.locale] === this.$i18n.locale) {
+        this.$i18n.locale = process.env.VUE_APP_I18N_FALLBACK_LOCALE // 預設語言
+      }
     }
   }
 }
