@@ -1,1 +1,125 @@
-{}
+{
+  "ui": {
+    "text": {
+      "data_loading": "资料载入中...",
+      "initialize": {
+        "title": "初始化...",
+        "description": "请稍后，正在初始化..."
+      },
+      "erroe": "发生错误",
+      "lightbox": {
+        "album_label": "第 {0} 张图片，共有 {1} 张图片"
+      },
+      "export_excel": "导出 Excel",
+      "update_data": "更新资料",
+      "data_update_time": "资料更新时间：{time}",
+      "reload": "重新载入",
+      "draws_info": {
+        "guaranteed_progress": "保底进度：{progress}%",
+        "msg1": "目前累积 {accumulate_draws} 抽，平均 {averag_draws_count_in_win} 抽中5星。",
+        "guaranteed_count_msg": "距离保底还剩下 {count} 抽！",
+        "msg2": "目前累计 {accumulate_draws} 抽，离上次已累积 {accumulate_not_win_draws} 抽未出5星，平均 {averag_draws_count_in_win} 抽中5星。"
+      },
+      "close_msg": "关闭信息",
+      "title": {
+        "home": "综合数据图表",
+        "gacha": "{gacha_name} - 数据图表",
+        "history": "历史纪录"
+      },
+      "wins_pie_chart": "中奖数圆饼图",
+      "character": "角色",
+      "table": {
+        "name": "名称",
+        "stars": "{star}星",
+        "data_table": {
+          "info": "第 {page} 页 / 共 {pages} 页",
+          "info_empty": "没有任何资料",
+          "search": "搜索：",
+          "paginate": {
+            "previous": "上一页",
+            "next": "下一页"
+          },
+          "length_menu": "每页显示 {menu} 笔纪录",
+          "zero_records": "未发现任何结果"
+        },
+        "title": "表格",
+        "type": "类型",
+        "rank": "级别",
+        "draws_count_in_win": "保底内抽数",
+        "total_of_draws": "总抽数",
+        "get_time": "抽到时间"
+      },
+      "chance_of_win_by_five_rank": "5星中奖率",
+      "chance_of_win_by_three_rank": "3星以下中奖率",
+      "chance_of_win_by_character": "角色中奖率",
+      "chance_of_win_by_weapon": "武器中奖率",
+      "count_of_win_by_five_rank": "5星中奖数",
+      "count_of_win_by_four_rank": "4星中奖数",
+      "count_of_win_by_three_rank": "3星以下中奖数",
+      "count_of_win_by_character": "角色中奖数",
+      "count_of_win_by_weapon": "武器中奖数",
+      "weapon_wins_count": "武器中奖数：{count}",
+      "five_rank_wins_count": "5星中奖数：{count}",
+      "four_rank_wins_count": "4星中奖数：{count}",
+      "three_rank_wins_count": "3星以下中奖数：{count}",
+      "comprehensive": "综合",
+      "other": "其他",
+      "about": "关于",
+      "official_website": "官方网站",
+      "issues_report_description": "如有任何问题请至 GitHub 反馈",
+      "loading": {
+        "may_take_a_while": "可能需要一点时间",
+        "loading_gacha_data": "正在载入卡池资料，{may_take_a_while}...",
+        "loading_gacha_data_uid": "正在读取 UID {uid} 玩家的 {gacha_name} 卡池历史资料，{may_take_a_while}..."
+      },
+      "chance_of_win_by_rank": "级别中奖率",
+      "weapon": "武器",
+      "rank": "级别",
+      "update": {
+        "title": "有新版本可以更新！ ({version})",
+        "release": "发布于 {date_time}"
+      },
+      "various_gacha": "各类卡池",
+      "contribution": "贡献",
+      "community": "社区",
+      "donate_description": "赞助我们请我们喝杯咖啡 :)",
+      "chance_of_win_by_character_and_weapon": "角色武器中奖率",
+      "chance_of_win_by_four_rank": "4星中奖率",
+      "character_wins_count": "角色中奖数：{count}",
+      "issues_report": "问题反馈",
+      "help_translate": "协助翻译",
+      "help_translate_description": "没有您的语言吗？帮助我们翻译！",
+      "donate_developer": "赞助开发者",
+      "version": "版本：{version}",
+      "translated_by": "{lang_name} 由 {translator_name} 翻译"
+    }
+  },
+  "modules": {
+    "error": {
+      "get_items_api_url_failed": "项目资料 Api 地址获取失败。",
+      "url_get_data_failed": "地址 \"{url}\" 获取资源失败：{msg}",
+      "unable_read_log": "无法读取 Log 档案，请确保您启动过游戏。",
+      "url_verification_failed": "地址 \"{url}\" 验证失败：{msg}",
+      "unable_get_player_uid": "无法获取玩家 UID。",
+      "get_gacha_type_data_api_url_failed": "卡池类型资料 API 地址获取失败。",
+      "get_gacha_history_api_url_failed": "卡池历史纪录 API 地址获取失败。",
+      "get_area_parameter_failed": "区域参数获取失败，请重新开启游戏内卡池历史记录。",
+      "mihoyo_api_invalid": "米哈游 API 授权 Key 无效，请重新开启游戏内卡池历史记录。",
+      "mihoyo_api_expired": "米哈游 API 授权 Key 过期，请重新开启游戏内卡池历史记录。",
+      "get_gacha_type_list_failed": "卡池类型清单 API 资料获取失败。",
+      "get_gacha_history_failed": "卡池历史记录 API 资料获取失败。",
+      "unable_get_item_id": "无法获取项目名称 \"{name}\" 的 ID。",
+      "unable_get_gacha_history_url": "无法获取卡池历史记录頁面地址，请确保您在游戏内卡池开启过历史纪录。"
+    }
+  },
+  "lang": {
+    "translator": "卤海带",
+    "name": "简体中文"
+  },
+  "file": {
+    "genshin_gacha_history": "原神卡池历史记录"
+  },
+  "app": {
+    "name": "原神祈愿卡池分析"
+  }
+}
