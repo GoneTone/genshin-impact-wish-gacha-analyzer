@@ -40,7 +40,8 @@
             "next": "下一页"
           },
           "length_menu": "每页显示 {menu} 笔纪录",
-          "zero_records": "未发现任何结果"
+          "zero_records": "未发现任何结果",
+          "info_filtered": "(从 {max} 笔记录中筛选出)"
         },
         "title": "表格",
         "type": "类型",
