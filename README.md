@@ -27,10 +27,15 @@
 - [x] 依據玩家語言讀取官方 API 取得相對語言資料
 - [x] 原神角色圖像查看
 - [x] 版本更新通知
-- [ ] 多國語言
+- [x] 多國語言 ([協助翻譯](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
 - [ ] 多帳號紀錄切換
 - [ ] 紀錄和分析結果分享至線上
 - [ ] 黑暗模式主題
+
+## 多國語言
+請協助我們將軟體翻譯成各國語言！
+
+[https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
 ## 截圖
 ![](images/1.png)
