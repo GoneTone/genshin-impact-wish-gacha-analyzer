@@ -99,20 +99,20 @@
   },
   "modules": {
     "error": {
-      "get_items_api_url_failed": "项目资料 Api 地址获取失败。",
-      "url_get_data_failed": "地址 \"{url}\" 获取资源失败：{msg}",
+      "get_items_api_url_failed": "项目资料 Api 网址获取失败。",
+      "url_get_data_failed": "网址 \"{url}\" 获取资源失败：{msg}",
       "unable_read_log": "无法读取 Log 档案，请确保您启动过游戏。",
-      "url_verification_failed": "地址 \"{url}\" 验证失败：{msg}",
+      "url_verification_failed": "网址 \"{url}\" 验证失败：{msg}",
       "unable_get_player_uid": "无法获取玩家 UID。",
-      "get_gacha_type_data_api_url_failed": "卡池类型资料 API 地址获取失败。",
-      "get_gacha_history_api_url_failed": "卡池历史纪录 API 地址获取失败。",
+      "get_gacha_type_data_api_url_failed": "卡池类型资料 API 网址获取失败。",
+      "get_gacha_history_api_url_failed": "卡池历史纪录 API 网址获取失败。",
       "get_area_parameter_failed": "区域参数获取失败，请重新开启游戏内卡池历史纪录。",
       "mihoyo_api_invalid": "米哈游 API 授权 Key 无效，请重新开启游戏内卡池历史纪录。",
       "mihoyo_api_expired": "米哈游 API 授权 Key 过期，请重新开启游戏内卡池历史纪录。",
       "get_gacha_type_list_failed": "卡池类型清单 API 资料获取失败。",
       "get_gacha_history_failed": "卡池历史纪录 API 资料获取失败。",
       "unable_get_item_id": "无法获取项目名称 \"{name}\" 的 ID。",
-      "unable_get_gacha_history_url": "无法获取卡池历史纪录頁面地址，请确保您在游戏内卡池开启过历史纪录。"
+      "unable_get_gacha_history_url": "无法获取卡池历史纪录頁面网址，请确保您在游戏内卡池开启过历史纪录。"
     }
   },
   "lang": {
