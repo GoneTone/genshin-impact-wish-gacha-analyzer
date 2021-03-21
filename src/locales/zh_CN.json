@@ -39,7 +39,7 @@
             "previous": "上一页",
             "next": "下一页"
           },
-          "length_menu": "每页显示 {menu} 笔纪录",
+          "length_menu": "每页显示 {menu} 笔记录",
           "zero_records": "未发现任何结果",
           "info_filtered": "(从 {max} 笔记录中筛选出)"
         },
@@ -78,7 +78,8 @@
       "rank": "级别",
       "update": {
         "title": "有新版本可以更新！ ({version})",
-        "release": "发布于 {date_time}"
+        "release": "发布于 {date_time}",
+        "download": "前往下载 {version}"
       },
       "various_gacha": "各类卡池",
       "contribution": "贡献",
@@ -92,7 +93,8 @@
       "help_translate_description": "没有您的语言吗？帮助我们翻译！",
       "donate_developer": "赞助开发者",
       "version": "版本：{version}",
-      "translated_by": "{lang_name} 由 {translator_name} 翻译"
+      "translated_by": "{lang_name} 由 {translator_name} 翻译",
+      "event_wish_image": "活动祈愿图"
     }
   },
   "modules": {
@@ -104,13 +106,13 @@
       "unable_get_player_uid": "无法获取玩家 UID。",
       "get_gacha_type_data_api_url_failed": "卡池类型资料 API 地址获取失败。",
       "get_gacha_history_api_url_failed": "卡池历史纪录 API 地址获取失败。",
-      "get_area_parameter_failed": "区域参数获取失败，请重新开启游戏内卡池历史记录。",
-      "mihoyo_api_invalid": "米哈游 API 授权 Key 无效，请重新开启游戏内卡池历史记录。",
-      "mihoyo_api_expired": "米哈游 API 授权 Key 过期，请重新开启游戏内卡池历史记录。",
+      "get_area_parameter_failed": "区域参数获取失败，请重新开启游戏内卡池历史纪录。",
+      "mihoyo_api_invalid": "米哈游 API 授权 Key 无效，请重新开启游戏内卡池历史纪录。",
+      "mihoyo_api_expired": "米哈游 API 授权 Key 过期，请重新开启游戏内卡池历史纪录。",
       "get_gacha_type_list_failed": "卡池类型清单 API 资料获取失败。",
-      "get_gacha_history_failed": "卡池历史记录 API 资料获取失败。",
+      "get_gacha_history_failed": "卡池历史纪录 API 资料获取失败。",
       "unable_get_item_id": "无法获取项目名称 \"{name}\" 的 ID。",
-      "unable_get_gacha_history_url": "无法获取卡池历史记录頁面地址，请确保您在游戏内卡池开启过历史纪录。"
+      "unable_get_gacha_history_url": "无法获取卡池历史纪录頁面地址，请确保您在游戏内卡池开启过历史纪录。"
     }
   },
   "lang": {
@@ -118,7 +120,7 @@
     "name": "简体中文"
   },
   "file": {
-    "genshin_gacha_history": "原神卡池历史记录"
+    "genshin_gacha_history": "原神卡池历史纪录"
   },
   "app": {
     "name": "原神祈愿卡池分析"
