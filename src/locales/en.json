@@ -1,1 +1,82 @@
-{}
+{
+  "ui": {
+    "text": {
+      "title": {
+        "history": "History",
+        "home": "Comprehensive Data Chart",
+        "gacha": "{gacha_name} - Data Chart"
+      },
+      "character": "Character",
+      "update": {
+        "download": "Go to download {version}",
+        "release": "Release on {date_time}",
+        "title": "A new version is available! ({version})"
+      },
+      "weapon": "Weapon",
+      "rank": "Rank",
+      "table": {
+        "title": "Table",
+        "name": "Name",
+        "type": "Type",
+        "rank": "Rank",
+        "get_time": "Drop time",
+        "data_table": {
+          "zero_records": "Results not found",
+          "info_empty": "No data",
+          "search": "Search :",
+          "paginate": {
+            "previous": "Previous page",
+            "next": "Next page"
+          }
+        },
+        "total_of_draws": "Total pulls",
+        "stars": "{star}star"
+      },
+      "about": "About",
+      "official_website": "Official Website",
+      "community": "Community",
+      "donate_developer": "Donate Developer",
+      "translated_by": "{lang_name} translated by {translator_name}",
+      "version": "Version: {version}",
+      "loading": {
+        "loading_gacha_data": "Loading gacha pool data，{may_take_a_while}...",
+        "may_take_a_while": "may take some time",
+        "loading_gacha_data_uid": "Reading UID {uid} player's {gacha_name} gacha pool history, {may_take_a_while}..."
+      },
+      "chance_of_win_by_character_and_weapon": "Character & Weapon drop rate",
+      "character_wins_count": "Character drop times：{count}",
+      "event_wish_image": "Event wish chart",
+      "wins_pie_chart": "Drop results pie graph",
+      "chance_of_win_by_five_rank": "5* drop rate",
+      "chance_of_win_by_four_rank": "4* drop rate",
+      "chance_of_win_by_three_rank": "3* and below drop rate",
+      "chance_of_win_by_character": "Character drop rate",
+      "chance_of_win_by_weapon": "Weapon drop rate",
+      "weapon_wins_count": "Weapon drop times：{count}",
+      "count_of_win_by_five_rank": "5* drop times",
+      "count_of_win_by_four_rank": "4* drop times",
+      "count_of_win_by_three_rank": "3* and below drop times",
+      "count_of_win_by_character": "Character drop times",
+      "count_of_win_by_weapon": "Weapon drop times",
+      "five_rank_wins_count": "5* drop times：{count}",
+      "four_rank_wins_count": "4* drop times：{count}",
+      "three_rank_wins_count": "3* and below drop times：{count}",
+      "initialize": {
+        "title": "Initializing...",
+        "description": "Please wait, initializing..."
+      },
+      "data_loading": "Loading data...",
+      "erroe": "Error occurred"
+    }
+  },
+  "app": {
+    "name": "Genshin Impact Wish Gacha Analyzer"
+  },
+  "lang": {
+    "name": "English",
+    "translator": "Zanah_68"
+  },
+  "file": {
+    "genshin_gacha_history": "Genshin Impact Gacha History"
+  }
+}
