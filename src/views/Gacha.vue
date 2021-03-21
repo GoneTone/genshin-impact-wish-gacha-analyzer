@@ -285,6 +285,29 @@ export default {
     '$i18n.locale': function () {
       this.title = this.$t('ui.text.title.gacha', { gacha_name: this.getTitle(this.$route.params.key) })
       window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
+
+      const _this = this
+      this.$nextTick(function () {
+        (function ($) {
+          $('#dataTable').DataTable({
+            destroy: true,
+            order: [[0, 'desc']],
+            language: {
+              lengthMenu: _this.$t('ui.text.table.data_table.length_menu', { menu: '_MENU_' }),
+              zeroRecords: _this.$t('ui.text.table.data_table.zero_records'),
+              info: _this.$t('ui.text.table.data_table.info', { page: '_PAGE_', pages: '_PAGES_' }),
+              infoEmpty: _this.$t('ui.text.table.data_table.info_empty'),
+              infoFiltered: _this.$t('ui.text.table.data_table.info_filtered', { max: '_MAX_' }),
+              search: _this.$t('ui.text.table.data_table.search'),
+              paginate: {
+                previous: _this.$t('ui.text.table.data_table.paginate.previous'),
+                next: _this.$t('ui.text.table.data_table.paginate.next')
+              }
+            }
+          })
+          // eslint-disable-next-line no-undef
+        })(jQuery)
+      })
     }
   }
 }
