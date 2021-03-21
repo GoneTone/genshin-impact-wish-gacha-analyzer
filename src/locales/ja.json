@@ -38,8 +38,8 @@
         "history": "祈願履歴"
       },
       "data_loading": "データ読み込み中...",
-      "chance_of_win_by_rank": "★別排出確率",
-      "chance_of_win_by_character_and_weapon": "キャラ/武器排出確率",
+      "chance_of_win_by_rank": "★別当たり確率",
+      "chance_of_win_by_character_and_weapon": "キャラ/武器当たり確率",
       "wins_pie_chart": "当たり円グラフ",
       "chance_of_win_by_three_rank": "★3以下排出確率",
       "weapon": "武器",
@@ -94,14 +94,27 @@
   },
   "lang": {
     "name": "日本語",
-    "translator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX%22%3E世界へいわ</a>"
+    "translator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>"
   },
   "modules": {
     "error": {
       "unable_get_player_uid": "プレーヤーのUIDを取得できません。",
       "url_get_data_failed": "\"{url}\" からリソース取得失敗：{msg}",
       "unable_read_log": "Log を読み込むことができません，ゲームの起動したことを確認してください。",
-      "unable_get_gacha_history_url": "ガチャ履歴を読み込むことができません，祈願ページを確認してください。"
+      "unable_get_gacha_history_url": "ガチャ履歴を読み込むことができません，祈願ページを確認してください。",
+      "url_verification_failed": "\"{url}\" 認証失敗：{msg}",
+      "get_area_parameter_failed": "地域パラメータを取得できません，ゲーム内の祈願履歴を再確認してください。",
+      "mihoyo_api_invalid": "MHYの API 認証キーが無効です，ゲーム内の祈願履歴を再起動してください。",
+      "get_items_api_url_failed": "プロジェクト情報のAPIの取得失敗しました。",
+      "get_gacha_type_data_api_url_failed": "祈願タイプデータのAPIの取得失敗しました。",
+      "get_gacha_history_api_url_failed": "祈願履歴のAPIの取得失敗しました。",
+      "mihoyo_api_expired": "MHYの API 認証キー有効期限が切れています，ゲーム内の祈願履歴を再起動してください。",
+      "get_gacha_type_list_failed": "祈願タイプリストAPIデータの取得失敗しました。",
+      "get_gacha_history_failed": "祈願履歴APIデータの取得失敗しました。",
+      "unable_get_item_id": "プロジェクト名 \"{name}\" の IDを取得できません。"
     }
+  },
+  "file": {
+    "genshin_gacha_history": "原神ガチャ履歴"
   }
 }
