@@ -3,11 +3,12 @@
     "text": {
       "initialize": {
         "description": "初期設定中、しばらくお待ちください ...",
-        "title": "初期設定..."
+        "title": "初期設定中..."
       },
       "loading": {
-        "loading_gacha_data_uid": "プレイヤー UID {uid} の {gacha_name} 履歴ロード中，{may_take_a_while}...",
-        "may_take_a_while": "少し時間がかかります"
+        "loading_gacha_data_uid": "プレイヤー UID {uid} の {gacha_name} 履歴データ読み込み中，{may_take_a_while}...",
+        "may_take_a_while": "少し時間がかかります",
+        "loading_gacha_data": "祈願履歴データ読み込み中，{may_take_a_while}..."
       },
       "table": {
         "data_table": {
@@ -23,7 +24,7 @@
           "search": "検索："
         },
         "total_of_draws": "累計ガチャ回数",
-        "draws_count_in_win": "天井まで回数",
+        "draws_count_in_win": "天井まで累計ガチャ回数",
         "type": "タイプ",
         "title": "表",
         "name": "タイトル",
@@ -36,7 +37,7 @@
         "gacha": "{gacha_name} - データチャート",
         "history": "祈願履歴"
       },
-      "data_loading": "データロード中...",
+      "data_loading": "データ読み込み中...",
       "chance_of_win_by_rank": "★別排出確率",
       "chance_of_win_by_character_and_weapon": "キャラ/武器排出確率",
       "wins_pie_chart": "当たり円グラフ",
@@ -46,14 +47,38 @@
       "chance_of_win_by_five_rank": "★5キャラクターの出現確率",
       "chance_of_win_by_character": "キャラクターの出現確率",
       "chance_of_win_by_weapon": "武器の出現確率",
-      "erroe": "問題が発生しました",
+      "erroe": "エラーが発生しました。",
       "character": "キャラクター",
       "official_website": "公式サイト",
       "issues_report": "報告",
-      "chance_of_win_by_four_rank": "★4キャラクターの出現確率",
+      "chance_of_win_by_four_rank": "★4排出確率",
       "help_translate": "翻訳に協力",
       "close_msg": "閉じる",
-      "reload": "リロード"
+      "reload": "リロード",
+      "community": "コミュニティ",
+      "update": {
+        "title": "新しいバージョンがあります！ ({version})",
+        "download": "ダウンロードへ {version}",
+        "release": "最終更新 {date_time}"
+      },
+      "count_of_win_by_five_rank": "★5獲得数",
+      "count_of_win_by_four_rank": "★4獲得数",
+      "count_of_win_by_three_rank": "★3以下獲得数",
+      "count_of_win_by_character": "キャラ獲得数",
+      "count_of_win_by_weapon": "武器獲得数",
+      "character_wins_count": "キャラ獲得数：{count}",
+      "weapon_wins_count": "武器獲得数：{count}",
+      "five_rank_wins_count": "★5獲得数：{count}",
+      "four_rank_wins_count": "★4獲得数：{count}",
+      "three_rank_wins_count": "★3以下獲得数：{count}",
+      "event_wish_image": "イベント祈願画像",
+      "comprehensive": "総合",
+      "draws_info": {
+        "guaranteed_progress": "天井進捗：{progress}%",
+        "guaranteed_count_msg": "天井まであと {count} 回！",
+        "msg1": "累計ガチャ回数 {accumulate_draws} 回，平均的に {averag_draws_count_in_win} 回で★5当たり。"
+      },
+      "version": "バージョン：{version}"
     }
   },
   "app": {
@@ -61,5 +86,10 @@
   },
   "lang": {
     "name": "日本語"
+  },
+  "modules": {
+    "error": {
+      "unable_get_player_uid": "プレーヤーのUIDを取得できません。"
+    }
   }
 }
