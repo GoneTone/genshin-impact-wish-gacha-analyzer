@@ -23,14 +23,14 @@
         "data_table": {
           "zero_records": "Results not found",
           "info_empty": "No data",
-          "search": "Search :",
+          "search": "Search:",
           "paginate": {
-            "previous": "Previous page",
-            "next": "Next page"
+            "previous": "Previous",
+            "next": "Next"
           }
         },
         "total_of_draws": "Total pulls",
-        "stars": "{star}star"
+        "stars": "{star} star"
       },
       "about": "About",
       "official_website": "Official Website",
@@ -39,34 +39,43 @@
       "translated_by": "{lang_name} translated by {translator_name}",
       "version": "Version: {version}",
       "loading": {
-        "loading_gacha_data": "Loading gacha pool data，{may_take_a_while}...",
+        "loading_gacha_data": "Loading gacha data，{may_take_a_while}...",
         "may_take_a_while": "may take some time",
-        "loading_gacha_data_uid": "Reading UID {uid} player's {gacha_name} gacha pool history, {may_take_a_while}..."
+        "loading_gacha_data_uid": "Reading UID {uid} player's {gacha_name} gacha history, {may_take_a_while}..."
       },
       "chance_of_win_by_character_and_weapon": "Character & Weapon drop rate",
-      "character_wins_count": "Character drop times：{count}",
-      "event_wish_image": "Event wish chart",
+      "character_wins_count": "Character drop times: {count}",
+      "event_wish_image": "Event wish image",
       "wins_pie_chart": "Drop results pie graph",
       "chance_of_win_by_five_rank": "5* drop rate",
       "chance_of_win_by_four_rank": "4* drop rate",
       "chance_of_win_by_three_rank": "3* and below drop rate",
       "chance_of_win_by_character": "Character drop rate",
       "chance_of_win_by_weapon": "Weapon drop rate",
-      "weapon_wins_count": "Weapon drop times：{count}",
+      "weapon_wins_count": "Weapon drop times: {count}",
       "count_of_win_by_five_rank": "5* drop times",
       "count_of_win_by_four_rank": "4* drop times",
       "count_of_win_by_three_rank": "3* and below drop times",
       "count_of_win_by_character": "Character drop times",
       "count_of_win_by_weapon": "Weapon drop times",
-      "five_rank_wins_count": "5* drop times：{count}",
-      "four_rank_wins_count": "4* drop times：{count}",
-      "three_rank_wins_count": "3* and below drop times：{count}",
+      "five_rank_wins_count": "5* drop times: {count}",
+      "four_rank_wins_count": "4* drop times: {count}",
+      "three_rank_wins_count": "3* and below drop times: {count}",
       "initialize": {
         "title": "Initializing...",
         "description": "Please wait, initializing..."
       },
       "data_loading": "Loading data...",
-      "erroe": "Error occurred"
+      "erroe": "Error occurred",
+      "comprehensive": "Comprehensive",
+      "various_gacha": "All gacha pools",
+      "other": "Others",
+      "contribution": "Contribution",
+      "donate_description": "Donate us to get us a coffee :)",
+      "issues_report": "Report issue",
+      "issues_report_description": "Please report on GitHub for any issue",
+      "help_translate": "Translation Supports",
+      "help_translate_description": "There isn't your language available? Help us to translate!"
     }
   },
   "app": {
