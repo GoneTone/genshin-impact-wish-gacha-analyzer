@@ -1,1 +1,65 @@
-{}
+{
+  "ui": {
+    "text": {
+      "initialize": {
+        "description": "初期設定中、しばらくお待ちください ...",
+        "title": "初期設定..."
+      },
+      "loading": {
+        "loading_gacha_data_uid": "プレイヤー UID {uid} の {gacha_name} 履歴ロード中，{may_take_a_while}...",
+        "may_take_a_while": "少し時間がかかります"
+      },
+      "table": {
+        "data_table": {
+          "info_filtered": "( {max} 件の履歴の絞り込み)",
+          "length_menu": "1ページごと {menu} 件表示します",
+          "info": "{page} ページ / {pages}",
+          "zero_records": "リザルトが見つかりません",
+          "info_empty": "データがありません",
+          "paginate": {
+            "previous": "前へ",
+            "next": "次へ"
+          },
+          "search": "検索："
+        },
+        "total_of_draws": "累計ガチャ回数",
+        "draws_count_in_win": "天井まで回数",
+        "type": "タイプ",
+        "title": "表",
+        "name": "タイトル",
+        "rank": "レベル",
+        "get_time": "祈願期間",
+        "stars": "★{star}"
+      },
+      "title": {
+        "home": "総合データチャート",
+        "gacha": "{gacha_name} - データチャート",
+        "history": "祈願履歴"
+      },
+      "data_loading": "データロード中...",
+      "chance_of_win_by_rank": "★別排出確率",
+      "chance_of_win_by_character_and_weapon": "キャラ/武器排出確率",
+      "wins_pie_chart": "当たり円グラフ",
+      "chance_of_win_by_three_rank": "★3以下排出確率",
+      "weapon": "武器",
+      "rank": "レベル",
+      "chance_of_win_by_five_rank": "★5キャラクターの出現確率",
+      "chance_of_win_by_character": "キャラクターの出現確率",
+      "chance_of_win_by_weapon": "武器の出現確率",
+      "erroe": "問題が発生しました",
+      "character": "キャラクター",
+      "official_website": "公式サイト",
+      "issues_report": "報告",
+      "chance_of_win_by_four_rank": "★4キャラクターの出現確率",
+      "help_translate": "翻訳に協力",
+      "close_msg": "閉じる",
+      "reload": "リロード"
+    }
+  },
+  "app": {
+    "name": "原神祈願分析ツール"
+  },
+  "lang": {
+    "name": "日本語"
+  }
+}
