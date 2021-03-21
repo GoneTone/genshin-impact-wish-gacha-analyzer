@@ -7,6 +7,11 @@
 
 巴哈姆特文：[https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4](https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4)
 
+## 多國語言
+請協助我們將軟體翻譯成各國語言！
+
+[https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+
 ## 下載軟體
 軟體在安裝或執行時有可能會被防毒軟體阻擋，如果無法正常執行，請嘗試關閉防毒軟體後再執行看看，本軟體保證無毒。
 
@@ -31,11 +36,6 @@
 - [ ] 多帳號紀錄切換
 - [ ] 紀錄和分析結果分享至線上
 - [ ] 黑暗模式主題
-
-## 多國語言
-請協助我們將軟體翻譯成各國語言！
-
-[https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
 ## 截圖
 ![](images/1.png)
