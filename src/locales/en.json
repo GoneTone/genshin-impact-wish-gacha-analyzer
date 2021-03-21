@@ -68,14 +68,18 @@
       "data_loading": "Loading data...",
       "erroe": "Error occurred",
       "comprehensive": "Comprehensive",
-      "various_gacha": "All gacha pools",
+      "various_gacha": "All gacha",
       "other": "Others",
       "contribution": "Contribution",
       "donate_description": "Donate us to get us a coffee :)",
       "issues_report": "Report issue",
       "issues_report_description": "Please report on GitHub for any issue",
       "help_translate": "Translation Supports",
-      "help_translate_description": "There isn't your language available? Help us to translate!"
+      "help_translate_description": "There isn't your language available? Help us to translate!",
+      "update_data": "Update date",
+      "export_excel": "Export Excel",
+      "data_update_time": "Data updated time: {time}",
+      "reload": "Reload"
     }
   },
   "app": {
