@@ -76,25 +76,32 @@
       "draws_info": {
         "guaranteed_progress": "天井進捗：{progress}%",
         "guaranteed_count_msg": "天井まであと {count} 回！",
-        "msg1": "累計ガチャ回数 {accumulate_draws} 回，平均的に {averag_draws_count_in_win} 回で★5当たり。"
+        "msg1": "累計ガチャ回数 {accumulate_draws} 回，平均的に {averag_draws_count_in_win} 回で★5当たり。",
+        "msg2": "累計ガチャ回数 {accumulate_draws} 回，最後の★5排出から累計 {accumulate_not_win_draws} 回， {averag_draws_count_in_win} 回あたりに★5一個。"
       },
       "version": "バージョン：{version}",
       "other": "その他",
       "about": "このツールについて",
       "contribution": "貢献",
       "various_gacha": "すべての祈願",
-      "update_data": "ファイル更新"
+      "update_data": "データ更新",
+      "export_excel": "Excelファイルにエクスポートする",
+      "data_update_time": "データ更新時間：{time}"
     }
   },
   "app": {
     "name": "原神祈願分析ツール"
   },
   "lang": {
-    "name": "日本語"
+    "name": "日本語",
+    "translator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX%22%3E世界へいわ</a>"
   },
   "modules": {
     "error": {
-      "unable_get_player_uid": "プレーヤーのUIDを取得できません。"
+      "unable_get_player_uid": "プレーヤーのUIDを取得できません。",
+      "url_get_data_failed": "\"{url}\" からリソース取得失敗：{msg}",
+      "unable_read_log": "Log を読み込むことができません，ゲームの起動したことを確認してください。",
+      "unable_get_gacha_history_url": "ガチャ履歴を読み込むことができません，祈願ページを確認してください。"
     }
   }
 }
