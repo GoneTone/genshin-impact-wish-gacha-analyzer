@@ -93,6 +93,14 @@ export default {
 
       this.$data.rankPieChart.update()
     })
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.$nextTick(function () {
+        this.$data.rankPieChart.data.labels = [this.$t('ui.text.count_of_win_by_five_rank'), this.$t('ui.text.count_of_win_by_four_rank'), this.$t('ui.text.count_of_win_by_three_rank')]
+        this.$data.rankPieChart.update()
+      })
+    }
   }
 }
 </script>

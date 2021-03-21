@@ -86,6 +86,14 @@ export default {
 
       this.$data.characterWeaponPieChart.update()
     })
+  },
+  watch: {
+    '$i18n.locale': function () {
+      this.$nextTick(function () {
+        this.$data.characterWeaponPieChart.data.labels = [this.$t('ui.text.count_of_win_by_character'), this.$t('ui.text.count_of_win_by_weapon')]
+        this.$data.characterWeaponPieChart.update()
+      })
+    }
   }
 }
 </script>
