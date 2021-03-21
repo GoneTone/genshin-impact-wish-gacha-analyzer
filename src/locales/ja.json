@@ -50,7 +50,7 @@
       "erroe": "エラーが発生しました。",
       "character": "キャラクター",
       "official_website": "公式サイト",
-      "issues_report": "報告",
+      "issues_report": "エラー報告",
       "chance_of_win_by_four_rank": "★4排出確率",
       "help_translate": "翻訳に協力",
       "close_msg": "閉じる",
@@ -78,7 +78,12 @@
         "guaranteed_count_msg": "天井まであと {count} 回！",
         "msg1": "累計ガチャ回数 {accumulate_draws} 回，平均的に {averag_draws_count_in_win} 回で★5当たり。"
       },
-      "version": "バージョン：{version}"
+      "version": "バージョン：{version}",
+      "other": "その他",
+      "about": "このツールについて",
+      "contribution": "貢献",
+      "various_gacha": "すべての祈願",
+      "update_data": "ファイル更新"
     }
   },
   "app": {
