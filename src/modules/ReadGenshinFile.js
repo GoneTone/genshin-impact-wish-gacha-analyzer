@@ -42,7 +42,7 @@ class ReadGenshinFile {
       rl.on('line', (line) => {
         const line2 = line.trim()
 
-        if (line2.startsWith('OnGetWebViewPageFinish:')) {
+        if (line2.startsWith('OnGetWebViewPageFinish:') && line2.endsWith('#/log')) {
           wishHistoryPageUrlArray.push(line2.replace('OnGetWebViewPageFinish:', ''))
         }
       }).on('close', async () => {
