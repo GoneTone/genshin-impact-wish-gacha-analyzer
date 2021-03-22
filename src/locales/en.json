@@ -71,7 +71,7 @@
       "various_gacha": "All gacha",
       "other": "Others",
       "contribution": "Contribution",
-      "donate_description": "Donate us to get us a coffee :)",
+      "donate_description": "Buy us some coffee :)",
       "issues_report": "Report issue",
       "issues_report_description": "Please report on GitHub for any issue",
       "help_translate": "Translation Supports",
@@ -79,7 +79,13 @@
       "update_data": "Update date",
       "export_excel": "Export Excel",
       "data_update_time": "Data updated time: {time}",
-      "reload": "Reload"
+      "reload": "Reload",
+      "draws_info": {
+        "msg2": "Current draws: {accumulate_draws} , {accumulate_not_win_draws} draws no 5* since last time, Every {averag_draws_count_in_win} draws per 5*.",
+        "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*",
+        "guaranteed_progress": "Guarantee progress: {progress}%",
+        "guaranteed_count_msg": "{count} draws left for guarantee!"
+      }
     }
   },
   "app": {
