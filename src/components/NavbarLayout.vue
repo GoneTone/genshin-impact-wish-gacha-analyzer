@@ -1,6 +1,6 @@
 <template>
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-    <a class="sidebar-brand d-flex align-items-center justify-content-center">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" style="height: auto; padding: .7rem 1rem;">
       <div class="sidebar-brand-icon">
         <!--suppress CheckImageSize -->
         <img class="img-fluid" src="../../build/icons/256x256.png" width="64" alt="Icon">
