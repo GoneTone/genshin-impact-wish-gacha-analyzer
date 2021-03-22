@@ -30,7 +30,7 @@
           }
         },
         "total_of_draws": "Total pulls",
-        "stars": "{star} star"
+        "stars": "{star} stars"
       },
       "about": "About",
       "official_website": "Official Website",
@@ -39,7 +39,7 @@
       "translated_by": "{lang_name} translated by {translator_name}",
       "version": "Version: {version}",
       "loading": {
-        "loading_gacha_data": "Loading gacha data，{may_take_a_while}...",
+        "loading_gacha_data": "Loading gacha data, {may_take_a_while}...",
         "may_take_a_while": "may take some time",
         "loading_gacha_data_uid": "Reading UID {uid} player's {gacha_name} gacha history, {may_take_a_while}..."
       },
@@ -85,7 +85,8 @@
         "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*",
         "guaranteed_progress": "Guarantee progress: {progress}%",
         "guaranteed_count_msg": "{count} draws left for guarantee!"
-      }
+      },
+      "close_msg": "Close Message"
     }
   },
   "app": {
