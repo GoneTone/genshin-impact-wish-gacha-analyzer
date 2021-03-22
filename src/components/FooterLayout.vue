@@ -20,12 +20,6 @@ export default {
       year: (window.moment().format('YYYY') === '2020') ? window.moment().format('YYYY') : `2020-${window.moment().format('YYYY')}`
     }
   },
-  methods: {
-    openExternal (link) {
-      this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
-      window.shell.openExternal(link)
-    }
-  },
   mounted () {
     const _this = this
     ;(function ($) {
