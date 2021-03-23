@@ -62,7 +62,7 @@ export default {
         const bapRender = $('#bapRender')
         bapRender.buttonAudioPlayer({
           type: 'default',
-          src: require('@/assets/audio/background/Rosaria & Abyss Herald Theme Music EXTENDED - Invitation of Windblume (tnbee mix) _ Genshin Impact.mp3')
+          src: `https://${_this.$store.getters.configs.api.app.host}${_this.$store.getters.configs.api.app.path}audios/background.mp3`
         })
         bapRender.find('button').click()
 
