@@ -86,7 +86,8 @@
         "guaranteed_progress": "Guarantee progress: {progress}%",
         "guaranteed_count_msg": "{count} draws left for guarantee!"
       },
-      "close_msg": "Close Message"
+      "close_msg": "Close Message",
+      "chance_of_win_by_rank": "Level Winning Rate"
     }
   },
   "app": {
