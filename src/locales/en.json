@@ -27,7 +27,9 @@
           "paginate": {
             "previous": "Previous",
             "next": "Next"
-          }
+          },
+          "info": "Page {page} of {pages}",
+          "info_filtered": "(filtered from {max} total records)"
         },
         "total_of_draws": "Total pulls",
         "stars": "{star} stars"
@@ -87,7 +89,7 @@
         "guaranteed_count_msg": "{count} draws left for guarantee!"
       },
       "close_msg": "Close Message",
-      "chance_of_win_by_rank": "Level Winning Rate"
+      "chance_of_win_by_rank": "Drop rate by Rank"
     }
   },
   "app": {
