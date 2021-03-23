@@ -5,16 +5,7 @@
     <div id="content">
       <nav-layout></nav-layout>
 
-      <div class="embed-responsive embed-responsive-16by9" v-if="this.$store.getters.datas.wishHistoryPageUrl">
-        <iframe class="embed-responsive-item" :src="this.$store.getters.datas.wishHistoryPageUrl" allowfullscreen></iframe>
-      </div>
-      <div class="container-fluid mt-4" v-else>
-        <div class="mb-4">
-          <h1 class="h3 text-gray-800">
-            無法加載頁面，請確保您在遊戲內卡池開啟過歷史紀錄。
-          </h1>
-        </div>
-      </div>
+      <iframe-view :src="this.$store.getters.datas.wishHistoryPageUrl"></iframe-view>
     </div>
 
     <footer-layout></footer-layout>
@@ -24,11 +15,13 @@
 <script>
 import NavbarLayout from '@/components/NavbarLayout'
 import NavLayout from '@/components/NavLayout'
+import IframeView from '@/components/IframeView.vue'
 import FooterLayout from '@/components/FooterLayout.vue'
 
 export default {
   name: 'History',
   components: {
+    IframeView,
     NavbarLayout,
     NavLayout,
     FooterLayout
