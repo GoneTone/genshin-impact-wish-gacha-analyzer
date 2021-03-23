@@ -84,7 +84,7 @@
       "reload": "Reload",
       "draws_info": {
         "msg2": "Current draws: {accumulate_draws} , {accumulate_not_win_draws} draws no 5* since last time, Every {averag_draws_count_in_win} draws per 5*.",
-        "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*",
+        "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*.",
         "guaranteed_progress": "Guarantee progress: {progress}%",
         "guaranteed_count_msg": "{count} draws left for guarantee!"
       },
