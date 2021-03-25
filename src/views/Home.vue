@@ -59,7 +59,6 @@ export default {
   },
   mounted () {
     window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
-    this.$store.dispatch('playerAudioEffect', 'switch_type') // 播放音效
   },
   data () {
     return {
