@@ -17,7 +17,7 @@
       "table": {
         "title": "Table",
         "name": "Name",
-        "type": "Kind",
+        "type": "Type",
         "rank": "Rank",
         "get_time": "Drop time",
         "data_table": {
@@ -111,16 +111,16 @@
       "unable_read_log": "Unable to read the logs. Make sure that you have launched the game.",
       "url_get_data_failed": "Failed to fetch resources from \"{url}\": {msg}",
       "url_verification_failed": "Failed to verify \"{url}\": {msg}",
-      "unable_get_item_id": "Unable to get the ID of the entry \"{name}\".",
+      "unable_get_item_id": "Unable to get the ID of the item \"{name}\".",
       "unable_get_player_uid": "Unable to get the UID of this player.",
       "get_items_api_url_failed": "Unable to get the API endpoint of the item data.",
       "unable_get_gacha_history_url": "Unable to fetch the URL of the gacha history page, make sure that you have opened it in the game.",
       "get_gacha_history_api_url_failed": "Failed to get the API endpoint of the gacha history data.",
-      "get_gacha_type_data_api_url_failed": "Failed to get the API endpoint of the gacha kind data.",
-      "get_area_parameter_failed": "Unable to get the local parameters. Please open the gacha history page in this game again.",
-      "mihoyo_api_invalid": "The MiHoYo API authorization key is invalid. Please open the gacha history page in this game again.",
-      "mihoyo_api_expired": "The MiHoYo API authorization key is expired. Please open the gacha history page in this game again.",
-      "get_gacha_type_list_failed": "Failed to fetch the API data about gacha kind list.",
+      "get_gacha_type_data_api_url_failed": "Failed to get the API endpoint of the gacha type data.",
+      "get_area_parameter_failed": "Unable to get the region parameters. Please open the gacha history page in this game again.",
+      "mihoyo_api_invalid": "The miHoYo API authorization key is invalid. Please open the gacha history page in this game again.",
+      "mihoyo_api_expired": "The miHoYo API authorization key is expired. Please open the gacha history page in this game again.",
+      "get_gacha_type_list_failed": "Failed to fetch the API data about gacha type list.",
       "get_gacha_history_failed": "Failed to fetch the API data about gacha history."
     }
   }
