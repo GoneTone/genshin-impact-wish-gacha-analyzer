@@ -29,7 +29,8 @@
             "next": "Next"
           },
           "info": "Page {page} of {pages}",
-          "info_filtered": "(filtered from {max} total records)"
+          "info_filtered": "(filtered from {max} total records)",
+          "length_menu": "Show {menu} records per pages"
         },
         "total_of_draws": "Total pulls",
         "stars": "{star} stars"
@@ -37,13 +38,13 @@
       "about": "About",
       "official_website": "Official Website",
       "community": "Community",
-      "donate_developer": "Donate Developer",
+      "donate_developer": "Donate Developers",
       "translated_by": "{lang_name} translated by {translator_name}",
       "version": "Version: {version}",
       "loading": {
         "loading_gacha_data": "Loading gacha data, {may_take_a_while}...",
-        "may_take_a_while": "may take some time",
-        "loading_gacha_data_uid": "Reading UID {uid} player's {gacha_name} gacha history, {may_take_a_while}..."
+        "may_take_a_while": "may take a while",
+        "loading_gacha_data_uid": "Reading the {gacha_name} gacha history of player {uid}, {may_take_a_while}..."
       },
       "chance_of_win_by_character_and_weapon": "Character & Weapon drop rate",
       "character_wins_count": "Character drop times: {count}",
@@ -76,12 +77,12 @@
       "donate_description": "Buy us some coffee :)",
       "issues_report": "Report issue",
       "issues_report_description": "Please report on GitHub for any issue",
-      "help_translate": "Translation Supports",
+      "help_translate": "Help translate",
       "help_translate_description": "There isn't your language available? Help us to translate!",
-      "update_data": "Update date",
-      "export_excel": "Export Excel",
-      "data_update_time": "Data updated time: {time}",
-      "reload": "Reload",
+      "update_data": "Update data",
+      "export_excel": "Export to Excel",
+      "data_update_time": "Last updated: {time}",
+      "reload": "Refresh",
       "draws_info": {
         "msg2": "Current draws: {accumulate_draws} , {accumulate_not_win_draws} draws no 5* since last time, Every {averag_draws_count_in_win} draws per 5*.",
         "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*.",
@@ -89,7 +90,10 @@
         "guaranteed_count_msg": "{count} draws left for guarantee!"
       },
       "close_msg": "Close Message",
-      "chance_of_win_by_rank": "Drop rate by Rank"
+      "chance_of_win_by_rank": "Drop rate by Rank",
+      "lightbox": {
+        "album_label": "{0} of {1} pictures"
+      }
     }
   },
   "app": {
@@ -97,9 +101,27 @@
   },
   "lang": {
     "name": "English",
-    "translator": "Zanah_68"
+    "translator": "Zanah_68 and pan93412"
   },
   "file": {
     "genshin_gacha_history": "Genshin Impact Gacha History"
+  },
+  "modules": {
+    "error": {
+      "unable_read_log": "Unable to read the logs. Make sure that you have launched the game.",
+      "url_get_data_failed": "Failed to fetch resources from \"{url}\": {msg}",
+      "url_verification_failed": "Failed to verify \"{url}\": {msg}",
+      "unable_get_item_id": "Unable to get the ID of the entry \"{name}\".",
+      "unable_get_player_uid": "Unable to get the UID of this player.",
+      "get_items_api_url_failed": "Unable to get the API endpoint of the item data.",
+      "unable_get_gacha_history_url": "Unable to fetch the URL of the gacha history page, make sure that you have opened it in the game.",
+      "get_gacha_history_api_url_failed": "Failed to get the API endpoint of the gacha history data.",
+      "get_gacha_type_data_api_url_failed": "Failed to get the API endpoint of the gacha kind data.",
+      "get_area_parameter_failed": "Unable to get the local parameters. Please open the gacha history page in this game again.",
+      "mihoyo_api_invalid": "The MiHoYo API authorization key is invalid. Please open the gacha history page in this game again.",
+      "mihoyo_api_expired": "The MiHoYo API authorization key is expired. Please open the gacha history page in this game again.",
+      "get_gacha_type_list_failed": "Failed to fetch the API data about gacha kind list.",
+      "get_gacha_history_failed": "Failed to fetch the API data about gacha history."
+    }
   }
 }
