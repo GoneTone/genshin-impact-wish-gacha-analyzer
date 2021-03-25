@@ -17,7 +17,7 @@
       "table": {
         "title": "Table",
         "name": "Name",
-        "type": "Type",
+        "type": "Kind",
         "rank": "Rank",
         "get_time": "Drop time",
         "data_table": {
