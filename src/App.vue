@@ -112,7 +112,13 @@ export default {
   },
   watch: {
     $route (to) {
+      (function ($) {
+        $('.container-after-titlebar').scrollTop(0)
+        // eslint-disable-next-line no-undef
+      })(jQuery)
+
       this.$store.dispatch('playerAudioEffect', 'switch_type') // 播放音效
+
       window.log.info(`Path Switch to "${to.path}"`)
     },
     '$i18n.locale': function () {
