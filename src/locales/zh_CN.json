@@ -24,7 +24,11 @@
       "title": {
         "home": "综合数据图表",
         "gacha": "{gacha_name} - 数据图表",
-        "history": "历史纪录"
+        "history": "历史纪录",
+        "contribution_list": {
+          "name": "贡献名单",
+          "description": "感谢以下为此软件贡献的伙伴！"
+        }
       },
       "wins_pie_chart": "中奖数圆饼图",
       "character": "角色",
@@ -94,7 +98,13 @@
       "donate_developer": "赞助开发者",
       "version": "版本：{version}",
       "translated_by": "{lang_name} 由 {translator_name} 翻译",
-      "event_wish_image": "活动祈愿图"
+      "event_wish_image": "活动祈愿图",
+      "project_leader": "专案负责人",
+      "testers": "测试人员",
+      "github_contributor": "GitHub 贡献者",
+      "translation_reviewer": "翻译审核人员",
+      "translated_language": "已翻译语言",
+      "project_license": "专案许可证"
     }
   },
   "modules": {
