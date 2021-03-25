@@ -3,7 +3,11 @@
     <div class="container my-auto">
       <div class="copyright text-center my-auto" style="line-height: 1.2;">
         <span>Copyright © {{ year }} <a :href="this.$store.getters.configs.team.websiteUrl">{{ this.$store.getters.configs.team.name }}</a>. All rights reserved.</span>
-          <span><br>Developed by <a :href="this.$store.getters.configs.developer.url">{{ this.$store.getters.configs.developer.displayName }}</a>.</span>
+          <span><br>Developed by <a :href="this.$store.getters.configs.developer.url">{{ this.$store.getters.configs.developer.displayName }}</a>. | <router-link to="/contribution-list" v-slot="{ href, navigate }" custom>
+            <a :href="href" @click="navigate" data-not-open-external="true">
+              {{ $t("ui.text.title.contribution_list.name") }}
+            </a>
+          </router-link></span>
           <span v-if="$t('lang.translator') !== ''" v-html="`<br><br>${$t('ui.text.translated_by', { lang_name: $t('lang.name'), translator_name: $t('lang.translator') })}`"></span>
           <span><br v-if="$t('lang.translator') === ''"><br><a :href="this.$store.getters.configs.app.translationUrl">{{ $t('ui.text.help_translate_description') }}</a></span>
           <span><br><br>{{ $t('ui.text.version', { version: `v${this.$store.getters.configs.app.version}` }) }}</span>
@@ -26,10 +30,12 @@ export default {
       $('#footer').on('click', 'a', (event) => {
         event.preventDefault()
 
-        _this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
+        if (event.target.dataset.notOpenExternal === undefined) {
+          _this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
 
-        const link = event.target.href
-        window.shell.openExternal(link) // 使用外部瀏覽器
+          const link = event.target.href
+          window.shell.openExternal(link) // 使用外部瀏覽器
+        }
       })
       // eslint-disable-next-line no-undef
     })(jQuery)

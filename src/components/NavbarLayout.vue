@@ -125,6 +125,15 @@
       {{ $t("ui.text.contribution") }}
     </div>
 
+    <router-link to="/contribution-list" v-slot="{ href, navigate, isActive }" custom>
+      <li :class="['nav-item', isActive && 'active']">
+        <a :class="['nav-link']" :href="href" @click="navigate">
+          <i class="fas fa-fw fa-pencil-ruler"></i>
+          <span>{{ $t("ui.text.title.contribution_list.name") }}</span>
+        </a>
+      </li>
+    </router-link>
+
     <li class="nav-item">
       <a class="nav-link" @click="openExternal(this.$store.getters.configs.app.translationUrl);">
         <i class="fas fa-fw fa-language"></i>

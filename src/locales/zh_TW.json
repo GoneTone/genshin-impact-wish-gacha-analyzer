@@ -11,7 +11,11 @@
       "title": {
         "home": "綜合數據圖表",
         "gacha": "{gacha_name} - 數據圖表",
-        "history": "歷史紀錄"
+        "history": "歷史紀錄",
+        "contribution_list": {
+          "name": "貢獻名單",
+          "description": "感謝以下為此軟體貢獻的夥伴！"
+        }
       },
       "initialize": {
         "title": "初始化...",
@@ -101,7 +105,13 @@
         "guaranteed_count_msg": "距離保底還剩下 {count} 抽！"
       },
       "translated_by": "{lang_name} 由 {translator_name} 翻譯",
-      "version": "版本：{version}"
+      "version": "版本：{version}",
+      "project_leader": "專案負責人",
+      "testers": "測試人員",
+      "github_contributor": "GitHub 貢獻者",
+      "translation_reviewer": "翻譯審核人員",
+      "translated_language": "已翻譯語言",
+      "project_license": "專案許可證"
     }
   },
   "modules": {
