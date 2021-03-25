@@ -207,7 +207,7 @@ export default {
         })
 
         // Scroll to top button appear
-        $(document).on('scroll', function () {
+        $('.container-after-titlebar').on('scroll', function () {
           const scrollDistance = $(this).scrollTop()
           if (scrollDistance > 100) {
             $('.scroll-to-top').fadeIn()
@@ -217,9 +217,9 @@ export default {
         })
 
         // Smooth scrolling using jQuery easing
-        $(document).on('click', 'a.scroll-to-top', function (e) {
+        $('.scroll-to-top').on('click', function (e) {
           const $anchor = $(this)
-          $('html, body').stop().animate({
+          $('.container-after-titlebar').stop().animate({
             scrollTop: ($($anchor.attr('href')).offset().top)
           }, 1000, 'easeInOutExpo')
           e.preventDefault()
