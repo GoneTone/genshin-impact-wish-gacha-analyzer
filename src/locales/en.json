@@ -4,7 +4,11 @@
       "title": {
         "history": "History",
         "home": "Comprehensive Data Chart",
-        "gacha": "{gacha_name} - Data Chart"
+        "gacha": "{gacha_name} - Data Chart",
+        "contribution_list": {
+          "name": "Contributors",
+          "description": "Thanks these partners who contributed to this software!"
+        }
       },
       "character": "Character",
       "update": {
@@ -93,7 +97,13 @@
       "chance_of_win_by_rank": "Drop rate by Rank",
       "lightbox": {
         "album_label": "{0} of {1} pictures"
-      }
+      },
+      "testers": "Testers",
+      "github_contributor": "GitHub contributors",
+      "translation_reviewer": "Translation proofreaders",
+      "translated_language": "has translated to",
+      "project_license": "Project license",
+      "project_leader": "Project leader"
     }
   },
   "app": {
