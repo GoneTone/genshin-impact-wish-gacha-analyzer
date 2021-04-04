@@ -19,7 +19,7 @@ import IframeView from '@/components/IframeView.vue'
 import FooterLayout from '@/components/FooterLayout.vue'
 
 export default {
-  name: 'History',
+  name: 'Page',
   components: {
     IframeView,
     NavbarLayout,
