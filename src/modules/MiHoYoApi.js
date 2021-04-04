@@ -24,6 +24,7 @@ class MiHoYoApi {
     this._mihoyoApiHost = process.env.VUE_APP_MIHOYO_API_HOST
     this._mihoyoWebApiHost = process.env.VUE_APP_MIHOYO_WEBAPI_HOST
     this._mihoyoBbsApiHost = process.env.VUE_APP_MIHOYO_BBSAPI_HOST
+    this._mihoyoSeaHost = process.env.VUE_APP_MIHOYO_SEA_HOST
     this._mihoyoApiPath = process.env.VUE_APP_MIHOYO_API_PATH
     this._mihoyoWebApiPath = process.env.VUE_APP_MIHOYO_WEBAPI_PATH
     this._mihoyoBbsApiIconPath = process.env.VUE_APP_MIHOYO_BBSAPI_ICON_PATH
@@ -440,6 +441,8 @@ class MiHoYoApi {
    * 原神 Icon 名稱替換
    *
    * @param {String} iconName Icon 名稱
+   *
+   * @returns {String}
    */
   genshinIconNameReplace (iconName) {
     const replaceList = require('@/assets/datas/icon_name_replace_list.json')
@@ -486,6 +489,21 @@ class MiHoYoApi {
     }
 
     return playerUID
+  }
+
+  /**
+   * 取得簽到頁面網址
+   *
+   * @returns {string}
+   */
+  getSigninPageUrl () {
+    const actId = 'e202102251931481'
+    const path = '/ys/event/signin-sea/index.html'
+
+    const pageUrlAppend = new URL(`https://${this._mihoyoSeaHost}${path}`)
+    pageUrlAppend.searchParams.append('act_id', actId.toString())
+
+    return pageUrlAppend.href
   }
 }
 

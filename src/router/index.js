@@ -10,7 +10,7 @@ import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router
 
 import Home from '../views/Home.vue'
 import Gacha from '../views/Gacha.vue'
-import History from '../views/History.vue'
+import Page from '../views/Page.vue'
 import ContributionList from '../views/ContributionList.vue'
 
 const routes = [
@@ -26,9 +26,10 @@ const routes = [
     props: true
   },
   {
-    path: '/history',
-    name: 'History',
-    component: History
+    path: '/page/:url',
+    name: 'Page',
+    component: Page,
+    props: true
   },
   {
     path: '/contribution-list',

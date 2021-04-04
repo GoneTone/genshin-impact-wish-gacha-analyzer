@@ -119,7 +119,7 @@ export default {
 
       this.$store.dispatch('playerAudioEffect', 'switch_type') // 播放音效
 
-      window.log.info(`Path Switch to "${to.path}"`)
+      window.log.info(`Path Switch to "${to.fullPath}"`)
     },
     '$i18n.locale': function () {
       this.$store.state.configs.app.name = this.$t('app.name')

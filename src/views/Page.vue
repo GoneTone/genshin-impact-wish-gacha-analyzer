@@ -5,7 +5,7 @@
     <div id="content">
       <nav-layout></nav-layout>
 
-      <iframe-view :src="this.$store.getters.datas.wishHistoryPageUrl"></iframe-view>
+      <iframe-view :src="this.$route.params.url"></iframe-view>
     </div>
 
     <footer-layout></footer-layout>
@@ -26,18 +26,12 @@ export default {
     NavLayout,
     FooterLayout
   },
-  data () {
-    return {
-      title: this.$t('ui.text.title.history')
-    }
-  },
   mounted () {
-    window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
+    window.titlebar.updateTitle(this.$store.getters.configs.app.name) // 更新標題
   },
   watch: {
     '$i18n.locale': function () {
-      this.title = this.$t('ui.text.title.history')
-      window.titlebar.updateTitle(`${this.title} | ${this.$store.getters.configs.app.name}`) // 更新標題
+      window.titlebar.updateTitle(this.$store.getters.configs.app.name) // 更新標題
     }
   }
 }

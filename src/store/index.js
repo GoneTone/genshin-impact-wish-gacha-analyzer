@@ -51,6 +51,9 @@ export default createStore({
           bbs: {
             host: process.env.VUE_APP_MIHOYO_BBSAPI_HOST,
             pathIcon: process.env.VUE_APP_MIHOYO_BBSAPI_ICON_PATH
+          },
+          sea: {
+            host: process.env.VUE_APP_MIHOYO_SEA_HOST
           }
         },
         app: { // APP API

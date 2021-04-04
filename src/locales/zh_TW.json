@@ -12,6 +12,7 @@
         "home": "綜合數據圖表",
         "gacha": "{gacha_name} - 數據圖表",
         "history": "歷史紀錄",
+        "web_signin": "網頁每日簽到",
         "contribution_list": {
           "name": "貢獻名單",
           "description": "感謝以下為此軟體貢獻的夥伴！"

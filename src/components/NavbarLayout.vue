@@ -70,11 +70,20 @@
       {{ $t("ui.text.other") }}
     </div>
 
-    <router-link to="/history" v-slot="{ href, navigate, isActive }" custom>
+    <router-link :to="{ path: '/page/' + encodeURIComponent(this.$store.getters.datas.wishHistoryPageUrl)}" v-slot="{ href, navigate, isActive }" custom>
       <li :class="['nav-item', isActive && 'active']">
         <a :class="['nav-link']" :href="href" @click="navigate">
           <i class="fas fa-fw fa-table"></i>
           <span>{{ $t("ui.text.title.history") }}</span>
+        </a>
+      </li>
+    </router-link>
+
+    <router-link :to="{ path: '/page/' + encodeURIComponent(url.signin)}" v-slot="{ href, navigate, isActive }" custom>
+      <li :class="['nav-item', isActive && 'active']">
+        <a :class="['nav-link']" :href="href" @click="navigate">
+          <i class="fas fa-fw fa-file-signature"></i>
+          <span>{{ $t("ui.text.title.web_signin") }}</span>
         </a>
       </li>
     </router-link>
@@ -159,6 +168,13 @@
 <script>
 export default {
   name: 'NavbarLayout',
+  data () {
+    return {
+      url: {
+        signin: this.getSigninPageUrl()
+      }
+    }
+  },
   methods: {
     locales () {
       const locales = []
@@ -173,6 +189,10 @@ export default {
     openExternal (link) {
       this.$store.dispatch('playerAudioEffect', 'open_win') // 播放音效
       window.shell.openExternal(link)
+    },
+    getSigninPageUrl () {
+      const miHoYoApi = new window.MiHoYoApi(this.$store.getters.datas.queryStringParameters)
+      return miHoYoApi.getSigninPageUrl()
     }
   },
   mounted () {
