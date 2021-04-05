@@ -62,7 +62,7 @@ export default {
         const bapRender = $('#bapRender')
         bapRender.buttonAudioPlayer({
           type: 'default',
-          src: `https://${_this.$store.getters.configs.api.app.host}${_this.$store.getters.configs.api.app.path}audios/background.mp3`
+          src: `https://${_this.$store.getters.configs.api.app.host}${_this.$store.getters.configs.api.app.path}audios/background.mp3?${_this.$store.getters.randomStr}`
         })
         bapRender.find('button').click()
 
