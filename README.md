@@ -1,4 +1,5 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
+
 我開發了一套用來分析祈願卡池歷史紀錄的軟體，一開啟各種數據清清楚楚，不用在手動計算啦！
 
 本軟體原理是讀取原神遊戲 Log 檔案取得卡池歷史紀錄頁面網址，所以要先在遊戲內開啟過卡池歷史紀錄才能讀取到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
@@ -10,16 +11,19 @@
 巴哈姆特文：[https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4](https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4)
 
 ## 多國語言
+
 請協助我們將軟體翻譯成各國語言！
 
 [https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
 ## 下載軟體
+
 軟體在安裝或執行時有可能會被防毒軟體阻擋，如果無法正常執行，請嘗試關閉防毒軟體後再執行看看，本軟體保證無毒。
 
 [https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
 
 ## 功能和待做
+
 - [x] 支援國際服
 - [ ] 支援中國服
 - [x] 總抽數統計
@@ -41,36 +45,44 @@
 - [X] 網頁簽到頁面
 
 ## 截圖
-![](images/1.png)
-![](images/2.png)
-![](images/3.png)
-![](images/4.png)
-![](images/5.png)
-![](images/6.png)
+
+![綜合數據圖表](images/1.png)
+![角色活動祈願 - 數據圖表](images/2.png)
+![中獎率](images/3.png)
+![表格 1](images/4.png)
+![表格 2](images/5.png)
+![每日簽到](images/6.png)
 
 ## 開發
+
 ### 安裝依賴套件
-```
+
+```bash
 npm install
 ```
 
 ### 編譯並執行 (開發)
-```
+
+```bash
 npm run electron:serve
 ```
 
 ### 編譯並最小化 (生產)
-ia32 和 x64
-```
+
+#### ia32 和 x64
+
+```bash
 npm run electron:build:win
 ```
 
-ia32
-```
+#### ia32
+
+```bash
 npm run electron:build:win32
 ```
 
-x64
-```
+#### x64
+
+```bash
 npm run electron:build:win64
 ```
