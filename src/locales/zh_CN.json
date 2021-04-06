@@ -122,7 +122,6 @@
       "mihoyo_api_expired": "米哈游 API 授权 Key 过期，请重新开启游戏内卡池历史纪录。",
       "get_gacha_type_list_failed": "卡池类型清单 API 资料获取失败。",
       "get_gacha_history_failed": "卡池历史纪录 API 资料获取失败。",
-      "unable_get_item_id": "无法获取项目名称 \"{name}\" 的 ID。",
       "unable_get_gacha_history_url": "无法获取卡池历史纪录頁面网址，请确保您在游戏内卡池开启过历史纪录。"
     }
   },
