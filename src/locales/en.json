@@ -8,7 +8,8 @@
         "contribution_list": {
           "name": "Contributors",
           "description": "Thanks these partners who contributed to this software!"
-        }
+        },
+        "web_signin": "Webpage Daily Check-In"
       },
       "character": "Character",
       "update": {
@@ -37,7 +38,8 @@
           "length_menu": "Show {menu} records per pages"
         },
         "total_of_draws": "Total pulls",
-        "stars": "{star} stars"
+        "stars": "{star} stars",
+        "draws_count_in_win": "Draws before pity"
       },
       "about": "About",
       "official_website": "Official Website",
@@ -121,7 +123,6 @@
       "unable_read_log": "Unable to read the logs. Make sure that you have launched the game.",
       "url_get_data_failed": "Failed to fetch resources from \"{url}\": {msg}",
       "url_verification_failed": "Failed to verify \"{url}\": {msg}",
-      "unable_get_item_id": "Unable to get the ID of the item \"{name}\".",
       "unable_get_player_uid": "Unable to get the UID of this player.",
       "get_items_api_url_failed": "Unable to get the API endpoint of the item data.",
       "unable_get_gacha_history_url": "Unable to fetch the URL of the gacha history page, make sure that you have opened it in the game.",
