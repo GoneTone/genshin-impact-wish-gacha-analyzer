@@ -110,8 +110,7 @@
       "get_gacha_history_api_url_failed": "祈願履歴のAPIの取得失敗しました。",
       "mihoyo_api_expired": "MHYの API 認証キー有効期限が切れています，ゲーム内の祈願履歴を再起動してください。",
       "get_gacha_type_list_failed": "祈願タイプリストAPIデータの取得失敗しました。",
-      "get_gacha_history_failed": "祈願履歴APIデータの取得失敗しました。",
-      "unable_get_item_id": "プロジェクト名 \"{name}\" の IDを取得できません。"
+      "get_gacha_history_failed": "祈願履歴APIデータの取得失敗しました。"
     }
   },
   "file": {
