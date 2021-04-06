@@ -129,8 +129,7 @@
       "mihoyo_api_invalid": "米哈遊 API 授權 Key 無效，請重新開啟遊戲內卡池歷史紀錄。",
       "mihoyo_api_expired": "米哈遊 API 授權 Key 過期，請重新開啟遊戲內卡池歷史紀錄。",
       "get_gacha_type_list_failed": "卡池類型清單 API 資料取得失敗。",
-      "get_gacha_history_failed": "卡池歷史紀錄 API 資料取得失敗。",
-      "unable_get_item_id": "無法取得項目名稱 \"{name}\" 的 ID。"
+      "get_gacha_history_failed": "卡池歷史紀錄 API 資料取得失敗。"
     }
   },
   "file": {

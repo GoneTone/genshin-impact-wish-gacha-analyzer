@@ -249,8 +249,14 @@ class MiHoYoApi {
 
         if (this.isCharacter(data.item_type)) {
           const id = await this.getItemID(data)
-          data.icon_url = await this.getGenshinIconUrl(id)
-          data.image_url = await this.getGenshinCharacterImageUrl(id)
+
+          if (id !== false) {
+            data.icon_url = await this.getGenshinIconUrl(id)
+            data.image_url = await this.getGenshinCharacterImageUrl(id)
+          } else {
+            data.icon_url = null
+            data.image_url = null
+          }
         } else {
           data.icon_url = null
           data.image_url = null
@@ -371,14 +377,14 @@ class MiHoYoApi {
    *
    * @param {Object} data 項目資料
    *
-   * @returns {String}
+   * @returns {String|Boolean}
    */
   async getItemID (data) {
     const items = await this.getItems(data.lang)
     const itemData = items.find(itemData => itemData.name === data.name)
 
     if (itemData === undefined) {
-      throw Error(window.i18n.t('modules.error.unable_get_item_id', { name: data.name }))
+      return false
     }
 
     return itemData.item_id
