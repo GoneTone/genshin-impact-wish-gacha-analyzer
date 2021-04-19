@@ -48,12 +48,12 @@
 
 ## 截圖
 
-![綜合數據圖表](images/1.png)
-![角色活動祈願 - 數據圖表](images/2.png)
-![中獎率](images/3.png)
-![表格 1](images/4.png)
-![表格 2](images/5.png)
-![每日簽到](images/6.png)
+![綜合數據圖表](/images/1.png)
+![角色活動祈願 - 數據圖表](/images/2.png)
+![中獎率](/images/3.png)
+![表格 1](/images/4.png)
+![表格 2](/images/5.png)
+![每日簽到](/images/6.png)
 
 ## 開發
 
