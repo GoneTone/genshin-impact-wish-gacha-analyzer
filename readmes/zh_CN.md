@@ -1,10 +1,10 @@
-# 原神祈愿卡池分析 Genshin Impact Wish Gacha Analyzer
+# 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![翻译状态](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-我開發了一套用來分析祈願卡池歷史紀錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
+我开发了一套用来分析祈愿卡池历史纪录的软件，一开启各种数据清清楚楚，不用再手动计算啦！
 
-本軟體原理是讀取原神遊戲 Log 檔案取得卡池歷史紀錄頁面網址，所以要先在遊戲內開啟過卡池歷史紀錄才能讀取到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
+本软件原理是读取原神游戏 Log 文件取得卡池历史纪录页面网址，所以要先在游戏内开启过卡池历史纪录才能读取到，取得网址后拆解参数，参数会用于 miHoYo 原神相关的API。
 
 第一次開啟時會載入您的加載歷史資料。這可能需要一些時間，完成後會將資料存放在您的電腦內，這樣下次開啟軟體時就不用再花時間等待資料加載了。但要取得新資料要按下更新資料才會更新，如果版本更新了會自動重新加載資料。
 
