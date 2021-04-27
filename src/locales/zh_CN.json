@@ -29,7 +29,8 @@
           "name": "贡献名单",
           "description": "感谢以下为此软件贡献的伙伴！"
         },
-        "web_signin": "网页每日签到"
+        "web_signin": "网页每日签到",
+        "teyvat_interactive_map": "提瓦特互动地图"
       },
       "wins_pie_chart": "中奖数圆饼图",
       "character": "角色",
