@@ -88,6 +88,15 @@
       </li>
     </router-link>
 
+    <router-link :to="{ path: '/page/' + encodeURIComponent(url.teyvat_interactive_map)}" v-slot="{ href, navigate, isActive }" custom>
+      <li :class="['nav-item', isActive && 'active']">
+        <a :class="['nav-link']" :href="href" @click="navigate">
+          <i class="fas fa-fw fa-map-marked-alt"></i>
+          <span>{{ $t("ui.text.title.teyvat_interactive_map") }}</span>
+        </a>
+      </li>
+    </router-link>
+
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
@@ -171,7 +180,8 @@ export default {
   data () {
     return {
       url: {
-        signin: this.getSigninPageUrl()
+        signin: this.getSigninPageUrl(),
+        teyvat_interactive_map: `https://${this.$store.getters.configs.api.mihoyo.sea.host}/app/ys-map-sea/`
       }
     }
   },
