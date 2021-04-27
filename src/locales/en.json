@@ -9,7 +9,8 @@
           "name": "Contributors",
           "description": "Thanks these partners who contributed to this software!"
         },
-        "web_signin": "Webpage Daily Check-In"
+        "web_signin": "Webpage Daily Check-In",
+        "teyvat_interactive_map": "Teyvat Interactive Map"
       },
       "character": "Character",
       "update": {
