@@ -35,7 +35,8 @@
       "title": {
         "home": "総合データチャート",
         "gacha": "{gacha_name} - データチャート",
-        "history": "祈願履歴"
+        "history": "祈願履歴",
+        "teyvat_interactive_map": "テイワットマップ"
       },
       "data_loading": "データ読み込み中...",
       "chance_of_win_by_rank": "★別当たり確率",
