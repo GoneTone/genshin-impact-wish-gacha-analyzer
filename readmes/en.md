@@ -1,61 +1,63 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-我開發了一套用來分析祈願卡池歷史紀錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
+I developed a set of software to analyze the historical records of the Genshin Impact Gatcha. NO MORE GUARANTEE COUNTING! Everything will be all set once you open your gacha history.
 
-本軟體原理是讀取原神遊戲 Log 檔案取得卡池歷史紀錄頁面網址，所以要先在遊戲內開啟過卡池歷史紀錄才能讀取到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
+The principle of this software is to read the original game Log file to obtain the Gacha history page URL. So you need to open the Gacha history in the game before you can load it. After obtaining the URL, the software will disassemble the parameters, the parameters will be used in the API related to miHoYo.
 
-第一次開啟時會加載您的卡池歷史資料，這可能需要一些時間，完成後會將資料存放在您的電腦內，這樣下次開啟軟體時就不用再花時間等待資料加載了，但要取得新資料要按下更新資料才會更新，如果版本更新了會自動重新加載資料。
+Your Gacha history data will be loaded when you open it for the first time. This may take a while. After completion, the data will be stored in your computer, in that case you don’t have to spend time waiting for the data to load next time you open the software. However, if you want to obtain new information, you need to click Update Information. Once the software version is updated, the information will be reloaded automatically.
 
-請放心：本軟體不會竄改任何遊戲檔案和數據，所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
+DISCLAIMER : this software will not tamper with any game files and data, there is no risk of getting BANNED. We do not take responsibility whether you have been BANNED for other reasons if happened.
 
-巴哈姆特文：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+Original post from Bahamut forum 巴哈姆特文：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
 
-## 多國語言
+## multi-lingual
 
-請協助我們將軟體翻譯成各國語言！
+Please help us translate the software into various languages!
 
-[![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-## 下載軟體
+## Download software
 
-軟體在安裝或執行時有可能會被防毒軟體阻擋。如果無法正常執行，請嘗試關閉防毒軟體後再執行看看，本軟體保證無毒。
+The software may be blocked by anti-virus software during installation or execution. If the software fails to execute, please try closing the anti-virus software and rerun. The software is guaranteed to be virus-free.
 
 [https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
 
-## 功能和待做事項
+## Features and to-dos
 
-- [x] 支援國際服
-- [ ] 支援中國服
-- [x] 總抽數統計
-- [x] 中5星平均抽數統計
-- [x] 保底進度條及剩餘抽數統計
-- [x] 級別中獎率和中獎數統計
-- [x] 角色武器中獎率和中獎數統計
-- [x] 級別中獎數圓餅圖
-- [x] 角色武器中獎數圓餅圖
-- [x] 歷史紀錄 (官方 API 資料) 表單 (可自訂排序及搜尋)
-- [x] 將抽卡紀錄導出 Excel
-- [x] 依據玩家語言讀取官方 API 取得相對語言資料
-- [x] 原神角色圖像查看
-- [x] 版本更新通知
-- [x] 多國語言 ([協助翻譯](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
-- [ ] 多帳號紀錄切換
-- [ ] 紀錄和分析結果分享至線上
-- [ ] 黑暗模式主題
-- [X] 網頁簽到頁面
+- [x] Support International Server
+- [ ] Support CN Server
+- [x] Total pull counts
+- [x] 5-star average draw statistics
+- [x] Guaranteed progress bar and remaining pulls statistics
+- [x] Pull rate and number of Rank gacha statistics
+- [x] Pull rate and number of Characters and Weapons gacha statistics
+- [x] Number of Rank gacha pie chart
+- [x] Number of Characters and Weapons gacha pie chart
+- [x] Gacha history (official API data) form (Customizable sorting and search)
+- [x] Export gacha records to Excel
+- [x] Load the official API according to the player's language to obtain relative language data
+- [x] Genshin Impact character image review
+- [x] Software version update notification
+- [x] multi-lingual ([Help us translate](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
+- [ ] Multi-account record switch
+- [ ] Share records and analysis results online
+- [ ] Dark mode
+- [X] Web daily check-in
+- [X] Teyvat Interactive Map
 
-## 截圖
+## Screenshots
 
-![綜合數據圖表](/images/1.png)
-![角色活動祈願 - 數據圖表](/images/2.png)
-![中獎率](/images/3.png)
-![表格 1](/images/4.png)
-![表格 2](/images/5.png)
-![每日簽到](/images/6.png)
+![Comprehensive data chart](/images/1.png)
+![Character Gacha Data Chart](/images/2.png)
+![Pull rate](/images/3.png)
+![Chart 1](/images/4.png)
+![Chart 2](/images/5.png)
+![Daily login](/images/6.png)
+![Teyvat interactive map](/images/7.png)
 
-## 開發
+## Development
 
 ### 安裝依賴套件
 
@@ -71,7 +73,7 @@ npm run electron:serve
 
 ### 編譯並最小化 (生產)
 
-#### ia32 和 x64
+#### ia32 & x64
 
 ```bash
 npm run electron:build:win
