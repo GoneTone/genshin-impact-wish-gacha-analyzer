@@ -3,11 +3,11 @@
     "text": {
       "title": {
         "history": "History",
-        "home": "Comprehensive Data Chart",
+        "home": "Overall Data Chart",
         "gacha": "{gacha_name} - Data Chart",
         "contribution_list": {
           "name": "Contributors",
-          "description": "Thanks these partners who contributed to this software!"
+          "description": "Special thanks to the following partners who have contributed to the development of this software!"
         },
         "web_signin": "Webpage Daily Check-In",
         "teyvat_interactive_map": "Teyvat Interactive Map"
@@ -25,10 +25,10 @@
         "name": "Name",
         "type": "Type",
         "rank": "Rank",
-        "get_time": "Drop time",
+        "get_time": "Time Received",
         "data_table": {
-          "zero_records": "Results not found",
-          "info_empty": "No data",
+          "zero_records": "Result not found",
+          "info_empty": "No data found",
           "search": "Search:",
           "paginate": {
             "previous": "Previous",
@@ -38,9 +38,9 @@
           "info_filtered": "(filtered from {max} total records)",
           "length_menu": "Show {menu} records per pages"
         },
-        "total_of_draws": "Total pulls",
+        "total_of_draws": "Total Pulls",
         "stars": "{star} stars",
-        "draws_count_in_win": "Draws before pity"
+        "draws_count_in_win": "Number of Pulls Since the Last Pity"
       },
       "about": "About",
       "official_website": "Official Website",
@@ -54,57 +54,57 @@
         "loading_gacha_data_uid": "Reading the {gacha_name} gacha history of player {uid}, {may_take_a_while}..."
       },
       "chance_of_win_by_character_and_weapon": "Character & Weapon Drop Rate",
-      "character_wins_count": "Character drop times: {count}",
+      "character_wins_count": "Number of Characters Drops: {count}",
       "event_wish_image": "Event wish image",
-      "wins_pie_chart": "Drop results pie graph",
-      "chance_of_win_by_five_rank": "5* drop rate",
-      "chance_of_win_by_four_rank": "4* drop rate",
-      "chance_of_win_by_three_rank": "3* and below drop rate",
-      "chance_of_win_by_character": "Character drop rate",
-      "chance_of_win_by_weapon": "Weapon drop rate",
-      "weapon_wins_count": "Weapon drop times: {count}",
-      "count_of_win_by_five_rank": "5* drop times",
-      "count_of_win_by_four_rank": "4* drop times",
-      "count_of_win_by_three_rank": "3* and below drop times",
-      "count_of_win_by_character": "Character drop times",
-      "count_of_win_by_weapon": "Weapon drop times",
-      "five_rank_wins_count": "5* drop times: {count}",
-      "four_rank_wins_count": "4* drop times: {count}",
-      "three_rank_wins_count": "3* and below drop times: {count}",
+      "wins_pie_chart": "Pull Result Pie Chart",
+      "chance_of_win_by_five_rank": "5* Drop Rate",
+      "chance_of_win_by_four_rank": "4* Drop Rate",
+      "chance_of_win_by_three_rank": "3* and below Drop Rate",
+      "chance_of_win_by_character": "Character Drop Rate",
+      "chance_of_win_by_weapon": "Weapon Drop Rate",
+      "weapon_wins_count": "Number of Weapons Drops: {count}",
+      "count_of_win_by_five_rank": "Total Number of 5* Drops",
+      "count_of_win_by_four_rank": "Total Number of 4* Drops",
+      "count_of_win_by_three_rank": "Total Number of Other Drops (3* and below)",
+      "count_of_win_by_character": "Number of Character Drops",
+      "count_of_win_by_weapon": "Number of Weapon Drops",
+      "five_rank_wins_count": "Number of 5* Drops: {count}",
+      "four_rank_wins_count": "Number of 4* Drops: {count}",
+      "three_rank_wins_count": "3* and below Drops: {count}",
       "initialize": {
         "title": "Initializing...",
         "description": "Please wait, initializing..."
       },
       "data_loading": "Loading data...",
       "erroe": "Error occurred",
-      "comprehensive": "Comprehensive",
-      "various_gacha": "All gacha",
+      "comprehensive": "Overall",
+      "various_gacha": "All Gacha Banners",
       "other": "Others",
       "contribution": "Contribution",
-      "donate_description": "Buy us some coffee :)",
+      "donate_description": "Support us with some coffee money :)",
       "issues_report": "Report issue",
       "issues_report_description": "Please report on GitHub for any issue",
       "help_translate": "Help translate",
-      "help_translate_description": "There isn't your language available? Help us to translate!",
+      "help_translate_description": "Unavailable in your preferred languages? Help us translate it!",
       "update_data": "Update data",
       "export_excel": "Export to Excel",
       "data_update_time": "Last updated: {time}",
       "reload": "Refresh",
       "draws_info": {
-        "msg2": "Current draws: {accumulate_draws} , {accumulate_not_win_draws} draws no 5* since last time, Every {averag_draws_count_in_win} draws per 5*.",
-        "msg1": "Current draws: {accumulate_draws} , Every {averag_draws_count_in_win} draws on average for getting a 5*.",
-        "guaranteed_progress": "Guarantee progress: {progress}%",
-        "guaranteed_count_msg": "{count} draws left for guarantee!"
+        "msg2": "Currently accumulated {accumulate_draws} draws, It has been {accumulate_not_win_draws} draws since the last 5*, on average every {averag_draws_count_in_win} draws per 5*.",
+        "msg1": "Currently accumulated {accumulate_draws} draws ,on average {averag_draws_count_in_win} draws per 5*.",
+        "guaranteed_progress": "Pity progress: {progress}%",
+        "guaranteed_count_msg": "{count} draws left till pity!"
       },
       "close_msg": "Close Message",
-      "chance_of_win_by_rank": "Drop rate by Rank",
+      "chance_of_win_by_rank": "Drop Rate by Rarity",
       "lightbox": {
         "album_label": "{0} of {1} pictures"
       },
       "testers": "Testers",
       "github_contributor": "GitHub contributors",
       "translation_reviewer": "Translation proofreaders",
-      "translated_language": "has translated to",
+      "translated_language": "has been translated to",
       "project_license": "Project license",
       "project_leader": "Project leader"
     }
@@ -121,19 +121,19 @@
   },
   "modules": {
     "error": {
-      "unable_read_log": "Unable to read the logs. Make sure that you have launched the game.",
+      "unable_read_log": "Unable to read the logs. Please make sure that you have launched the game before.",
       "url_get_data_failed": "Failed to fetch resources from \"{url}\": {msg}",
-      "url_verification_failed": "Failed to verify \"{url}\": {msg}",
-      "unable_get_player_uid": "Unable to get the UID of this player.",
+      "url_verification_failed": "Failed to verify site \"{url}\" : {msg}",
+      "unable_get_player_uid": "Unable to get the player UID.",
       "get_items_api_url_failed": "Unable to get the API endpoint of the item data.",
-      "unable_get_gacha_history_url": "Unable to fetch the URL of the gacha history page, make sure that you have opened it in the game.",
+      "unable_get_gacha_history_url": "Unable to fetch the URL of the gacha history page, please make sure that you have opened it in the game.",
       "get_gacha_history_api_url_failed": "Failed to get the API endpoint of the gacha history data.",
       "get_gacha_type_data_api_url_failed": "Failed to get the API endpoint of the gacha type data.",
-      "get_area_parameter_failed": "Unable to get the region parameters. Please open the gacha history page in this game again.",
-      "mihoyo_api_invalid": "The miHoYo API authorization key is invalid. Please open the gacha history page in this game again.",
-      "mihoyo_api_expired": "The miHoYo API authorization key is expired. Please open the gacha history page in this game again.",
-      "get_gacha_type_list_failed": "Failed to fetch the API data about gacha type list.",
-      "get_gacha_history_failed": "Failed to fetch the API data about gacha history."
+      "get_area_parameter_failed": "Unable to get the region parameters. Please reopen the gacha history page in the game.",
+      "mihoyo_api_invalid": "Invalid miHoYo API authorization, please reopen the gacha history page in the game.",
+      "mihoyo_api_expired": "Expired miHoYo API Authorization, please reopen the gacha history page in the game.",
+      "get_gacha_type_list_failed": "Failed to fetch the API data of the gacha type list.",
+      "get_gacha_history_failed": "Failed to fetch the API data of the gacha history."
     }
   }
 }
