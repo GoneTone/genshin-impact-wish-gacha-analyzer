@@ -24,10 +24,10 @@
 
 [https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
 
-## 功能和待做事项
+## 功能和待办事项
 
 - [x] 支援国际服
-- [ ] 支援中国服
+- [ ] 支援国服
 - [x] 总抽数统计
 - [x] 中5星平均抽数统计
 - [x] 保底进度条及剩余抽数统计
@@ -35,7 +35,7 @@
 - [x] 角色武器中奖率和中奖数统计
 - [x] 级别中奖数圆饼图
 - [x] 角色武器中奖数圆饼图
-- [x] 历史纪录 (官方 API 资料) 表单 (可自订排序及搜索)
+- [x] 历史纪录 (官方 API 资料) 表单 (可自订排序及搜寻)
 - [x] 将抽卡纪录导出 Excel
 - [x] 依据玩家语言读取官方 API 取得相对语言资料
 - [x] 原神角色图像查看
@@ -43,8 +43,9 @@
 - [x] 多国语言 ([协助翻译](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
 - [ ] 多帐号纪录切换
 - [ ] 纪录和分析结果分享至线上
-- [ ] 黑暗模式主题
+- [ ] 暗黑模式主题
 - [X] 网页签到页面
+- [X] 提瓦特互动地图
 
 ## 截图
 
@@ -54,16 +55,17 @@
 ![表格 1](/images/4.png)
 ![表格 2](/images/5.png)
 ![每日签到](/images/6.png)
+![提瓦特互动地图](/images/7.png)
 
 ## 开发
 
-### 安装依赖套件
+### 安装项目依赖包
 
 ```bash
 npm install
 ```
 
-### 编译并运行 (开发)
+### 编译并执行 (开发)
 
 ```bash
 npm run electron:serve
