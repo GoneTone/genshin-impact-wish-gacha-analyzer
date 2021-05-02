@@ -50,10 +50,10 @@
       "version": "Version: {version}",
       "loading": {
         "loading_gacha_data": "Loading gacha data, {may_take_a_while}...",
-        "may_take_a_while": "may take a while",
+        "may_take_a_while": "This may take a while",
         "loading_gacha_data_uid": "Reading the {gacha_name} gacha history of player {uid}, {may_take_a_while}..."
       },
-      "chance_of_win_by_character_and_weapon": "Character & Weapon drop rate",
+      "chance_of_win_by_character_and_weapon": "Character & Weapon Drop Rate",
       "character_wins_count": "Character drop times: {count}",
       "event_wish_image": "Event wish image",
       "wins_pie_chart": "Drop results pie graph",
@@ -114,7 +114,7 @@
   },
   "lang": {
     "name": "English",
-    "translator": "Zanah_68 and pan93412"
+    "translator": "Zanah_68, pan93412, Lemon7777"
   },
   "file": {
     "genshin_gacha_history": "Genshin Impact Gacha History"
