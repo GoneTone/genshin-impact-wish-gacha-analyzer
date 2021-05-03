@@ -1,4 +1,4 @@
-# Genshin Impact Wish Gacha Analyzer
+# 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
 [![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
@@ -26,26 +26,26 @@
 
 ## 功能和待做事項
 
-- [x] 支援國際服
-- [ ] 支援中國服
-- [x] 總抽數統計
-- [x] 中5星平均抽數統計
-- [x] 保底進度條及剩餘抽數統計
-- [x] 級別中獎率和中獎數統計
-- [x] 角色武器中獎率和中獎數統計
-- [x] 級別中獎數圓餅圖
-- [x] 角色武器中獎數圓餅圖
-- [x] 歷史紀錄 (官方 API 資料) 表單 (可自訂排序及搜尋)
-- [x] 將抽卡紀錄導出 Excel
-- [x] 依據玩家語言讀取官方 API 取得相對語言資料
-- [x] 原神角色圖像查看
-- [x] 版本更新通知
-- [x] 多國語言 ([協助翻譯](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
-- [ ] 多帳號紀錄切換
-- [ ] 紀錄和分析結果分享至線上
-- [ ] 黑暗模式主題
-- [X] 網頁簽到頁面
-- [X] 提瓦特互動地圖
+- [x] Support International Server
+- [ ] Support CN Server
+- [x] Total wish counts
+- [x] 5-star average draw statistics
+- [x] Pity progress bar and remaining pulls statistics
+- [x] Drop rate and number of wish statistics according to rarity
+- [x] Drop rate and number of Characters and Weapons wish statistics
+- [x] Wish drop rarity pie chart
+- [x] Characters and Weapons drops pie chart
+- [x] Wish history (official API data) form (Customizable sorting and search)
+- [x] Export wish records to Excel
+- [x] Load the official API according to the player's language to obtain relative language data
+- [x] Genshin Impact character image preview
+- [x] Software version update notification
+- [x] Multi-lingual ([Help us translate](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
+- [ ] Multi-account record switch
+- [ ] Share records and analysis results online
+- [ ] Dark mode
+- [X] Web daily check-in
+- [X] Teyvat Interactive Map
 
 ## 截圖
 
