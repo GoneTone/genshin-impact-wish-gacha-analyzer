@@ -26,7 +26,7 @@ export default {
     },
     reload () {
       this.$store.dispatch('playerAudioEffect', 'switch_task') // 播放音效
-      this.$router.go(0)
+      this.$store.dispatch('setDatas')
     }
   },
   props: {
