@@ -1,30 +1,30 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-I developed a software to analyze the historical records of the Genshin Impact Wish. NO MORE GUARANTEE COUNTING! Everything will be all set once you opened your wish history.
+我開發了一套用來分析祈願卡池歷史紀錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
 
-The principle of this software is to read the original game Log file to obtain the wish history page URL. So you need to open the wish history in the game before you can load it. After obtaining the URL, the software will disassemble the parameters, the parameters will be used in the API related to miHoYo.
+本軟體原理是讀取原神遊戲 Log 檔案取得卡池歷史紀錄頁面網址，所以要先在遊戲內開啟過卡池歷史紀錄才能讀取到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
 
-Your wish history data will be loaded when you open it for the first time. This may take a while. After the completion, the data will be stored in your computer, therefore you don’t have to spend time waiting for the data to load next time you open the software. However, if you want to obtain new information, you need to click Update Information. Once the software version is updated, the information will be reloaded automatically.
+第一次開啟時會加載您的卡池歷史資料，這可能需要一些時間，完成後會將資料存放在您的電腦內，這樣下次開啟軟體時就不用再花時間等待資料加載了，但要取得新資料要按下更新資料才會更新，如果版本更新了會自動重新加載資料。
 
-DISCLAIMER : this software will NOT tamper with any game files and data, there is NO RISK of getting BANNED. We do not take responsibility whether you have been BANNED for other reasons if happened.
+請放心：本軟體不會竄改任何遊戲檔案和數據，所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
 
-Original post from Bahamut forum 巴哈姆特文：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+巴哈姆特文：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
 
-## Multi-lingual
+## 多國語言
 
-Please help us translate the software into various languages!
+請協助我們將軟體翻譯成各國語言！
 
-[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-## Download software
+## 下載軟體
 
-The software may be blocked by anti-virus software during installation or execution. If the software fails to execute, please try disabling the anti-virus software and rerun. The software is guaranteed to be virus-free.
+軟體在安裝或執行時有可能會被防毒軟體阻擋。如果無法正常執行，請嘗試關閉防毒軟體後再執行看看，本軟體保證無毒。
 
 [https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
 
-## Features And To-dos
+## 功能和待做事項
 
 - [x] 支援國際服
 - [ ] 支援中國服
@@ -49,7 +49,7 @@ The software may be blocked by anti-virus software during installation or execut
 - [ ] 資料更新不覆蓋舊資料
 - [ ] 資料備份導出導入 (手動)
 
-## 截圖
+## Screenshots
 
 ![綜合數據圖表](/images/1.png)
 ![角色活動祈願 - 數據圖表](/images/2.png)
