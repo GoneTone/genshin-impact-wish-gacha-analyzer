@@ -1,5 +1,7 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
+繁體中文 | [简体中文](README_ZH-CN.md) | [English](README_EN.md)
+
 [![翻譯狀態](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
 我開發了一套用來分析祈願卡池歷史紀錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
@@ -51,13 +53,13 @@
 
 ## 截圖
 
-![綜合數據圖表](/images/1.png)
-![角色活動祈願 - 數據圖表](/images/2.png)
-![中獎率](/images/3.png)
-![表格 1](/images/4.png)
-![表格 2](/images/5.png)
-![每日簽到](/images/6.png)
-![提瓦特互動地圖](/images/7.png)
+![綜合數據圖表](images/1.png)
+![角色活動祈願 - 數據圖表](images/2.png)
+![中獎率](images/3.png)
+![表格 1](images/4.png)
+![表格 2](images/5.png)
+![每日簽到](images/6.png)
+![提瓦特互動地圖](images/7.png)
 
 ## 開發
 
