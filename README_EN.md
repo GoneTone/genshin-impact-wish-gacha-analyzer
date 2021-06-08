@@ -54,7 +54,7 @@ The software may get blocked by the anti-virus software during the installation 
 ## Screenshot 
 
 ![Overall Data Chart](docs/images/en/1.png)
-![Character Event Wish-Data Chart](images/2.png)
+![Character Event Wish-Data Chart](docs/images/en/2.png)
 ![Drop Rate](docs/images/en/3.png)
 ![Table 1](docs/images/en/4.png)
 ![Table 2](docs/images/en/5.png)
