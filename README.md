@@ -53,13 +53,13 @@
 
 ## 截圖
 
-![綜合數據圖表](images/1.png)
-![角色活動祈願 - 數據圖表](images/2.png)
-![中獎率](images/3.png)
-![表格 1](images/4.png)
-![表格 2](images/5.png)
-![每日簽到](images/6.png)
-![提瓦特互動地圖](images/7.png)
+![綜合數據圖表](docs/images/zh-TW/1.png)
+![角色活動祈願 - 數據圖表](docs/images/zh-TW/2.png)
+![中獎率](docs/images/zh-TW/3.png)
+![表格 1](docs/images/zh-TW/4.png)
+![表格 2](docs/images/zh-TW/5.png)
+![每日簽到](docs/images/zh-TW/6.png)
+![提瓦特互動地圖](docs/images/zh-TW/7.png)
 
 ## 開發
 
