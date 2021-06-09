@@ -4,27 +4,27 @@
 
 [![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-I developed a utility to analyze the gacha history. All data and numbers are well-organized to free your hand without the dazzling calculations!
+I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
+ 
+It works by reading game lots to obtain the wish history website. Thus, you must start the game and open the wish history page at least once before running this utility.
 
-This software works by reading the logs in the game to get the wish history website. Therefore, you must start the game and open the wish history page at least once before running this utility to function correctly.
-
-The variables in the website retrieved will be broken down and used in API related to Genshin Impact (from miHoYo).
-
-The software loads your gacha history during the initial start -  this process may take a while. Then, the loaded data will store in the local to make it not take that much time in the next start. The retrieved data will not be updated until you update it manually. The data will also be automatically updated when there is a version update.
-
-Disclaimer: This software does NOT tamper with any game file and data; thus, there is no risk of getting banned from using this software. If you got banned, please kindly consider if you had other factors that got you banned.  Please do not blame us, thanks.
+Variables retrieved from the website will be analyzed and used in an API related to Genshin Impact (from miHoYo).
+ 
+This program loads your gacha history during initial startup, which may take a while. The resulting data will be stored locally to ensure it not take that much time in the next start, after which it will not be updated until you update it manually. The data will also be automatically updated when there is a version update.
+ 
+This program does not tamper with any game resources; thus, there is no risk of being banned for using this software. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 The original post on Bahamut (巴哈姆特): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
-
-## Multiple Language
-
-Please help us translate this software into a variety of languages!
-
-[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
-
-## Download Software
-
-The software may get blocked by the anti-virus software during the installation and execution process. If the software cannot function correctly, please try disabling the anti-virus and run again. We promise this software is safe, virus-free.
+ 
+ ## Multiple Language
+ 
+Please help us translate this software.
+ 
+ [![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+ 
+ ## Download Software
+ 
+The software may trigger anti-virus software during installation and execution. If the software does function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
 
 <https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
