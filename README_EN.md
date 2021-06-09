@@ -4,29 +4,31 @@
 
 [![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
-I developed a software to analyze the gacha history, all data and numbers are well organized, let your hand go free without the dazzling calculations!
+I developed a utility to analyze the gacha history. All data and numbers are well-organized to free your hand without the dazzling calculations!
 
-This software works by reading the Log files in the game to get the wish history website, therefore you have to start the game and open the wish history page for at least once before you run the programme for it to function correctly. The variables in the website retrieved will be broken down and used in Genshin Impact(from miHoYo)-related API
+This software works by reading the logs in the game to get the wish history website. Therefore, you must start the game and open the wish history page at least once before running this utility to function correctly.
 
-The software will load your gacha history during the initial start, this process may take a while, the loaded data will be saved in the local so it does not take that much time in the next start. The retrieved data will not be updated until you update it Manually. The data will also be automatically updated when there is a version-update.
+The variables in the website retrieved will be broken down and used in API related to Genshin Impact (from miHoYo).
 
-Disclaimer: This Software does NOT tamper with any game file and data, there is no risk of getting banned from using this software. If you got banned, please kindly consider if you had other factor that got you banned, please do not blame on us, thank you.
+The software loads your gacha history during the initial start -  this process may take a while. Then, the loaded data will store in the local to make it not take that much time in the next start. The retrieved data will not be updated until you update it manually. The data will also be automatically updated when there is a version update.
 
-The Origin Post On Bahamut (巴哈姆特): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+Disclaimer: This software does NOT tamper with any game file and data; thus, there is no risk of getting banned from using this software. If you got banned, please kindly consider if you had other factors that got you banned.  Please do not blame us, thanks.
+
+The original post on Bahamut (巴哈姆特): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
 
 ## Multiple Language
 
-Please help us translate this software into variety of language!
+Please help us translate this software into a variety of languages!
 
 [![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
 
 ## Download Software
 
-The software may get blocked by the anti-virus software during the installation and execution process. If the software cannot function correctly, please try disabling the anti-virus and run again, we promise this software is virus-free.
+The software may get blocked by the anti-virus software during the installation and execution process. If the software cannot function correctly, please try disabling the anti-virus and run again. We promise this software is safe, virus-free.
 
-[https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
+<https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
-## Funstions & To-do List
+## Functions & To-do List
 
 - [x] Support The International Server
 - [ ] Support The CN Server
@@ -63,19 +65,19 @@ The software may get blocked by the anti-virus software during the installation 
 
 ## Development
 
-### Installation Packages
+### Install Packages
 
 ```bash
 npm install
 ```
 
-### Compile and Execute (For Development Use Only)
+### Compile and Run (For Development Use)
 
 ```bash
 npm run electron:serve
 ```
 
-### Compile and Minimized (For Production Use Only)
+### Compile and Minify (For Production Use)
 
 #### ia32 and x64
 
