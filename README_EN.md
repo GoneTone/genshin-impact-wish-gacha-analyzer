@@ -24,7 +24,7 @@ Please help us translate this software.
  
  ## Download Software
  
-The software may trigger anti-virus software during installation and execution. If the software does function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
+The software may trigger anti-virus software during installation and execution. If the software doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
 
 <https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
