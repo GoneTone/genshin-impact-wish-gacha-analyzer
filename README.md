@@ -24,7 +24,7 @@
 
 軟體在安裝或執行時有可能會被防毒軟體阻擋。如果無法正常執行，請嘗試關閉防毒軟體後再執行看看，本軟體保證無毒。
 
-[https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases](https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases)
+<https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
 ## 功能和待做事項
 
@@ -50,6 +50,7 @@
 - [X] 提瓦特互動地圖
 - [ ] 資料更新不覆蓋舊資料
 - [ ] 資料備份導出導入 (手動)
+- [ ] 登入 miHoYo 帳號取得 Cookie (用於處理需要 Cookie 驗證的 API)
 
 ## 截圖
 

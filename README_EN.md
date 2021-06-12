@@ -16,13 +16,13 @@ This program does not tamper with any game resources; thus, there is no risk of 
 
 The original post on Bahamut (巴哈姆特): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
  
- ## Multiple Language
+## Multiple Language
  
 Please help us translate this software.
  
- [![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
  
- ## Download Software
+## Download Software
  
 The software may trigger anti-virus software during installation and execution. If the software doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
 
@@ -39,7 +39,7 @@ The software may trigger anti-virus software during installation and execution. 
 - [x] Characters/Weapons Drop Rate and Drop Counter
 - [x] Rare Drops Pie-chart
 - [x] Characters/Weapons Drops Pie-chart
-- [x] Record History From The Official API(Allow Custom Ordering and Search)
+- [x] Record History From The Official API (Allow Custom Ordering and Search)
 - [x] Export the Record to Excel
 - [x] Load The According Language Data Form The Official API by Local User's Language
 - [x] View Character Image
@@ -52,8 +52,9 @@ The software may trigger anti-virus software during installation and execution. 
 - [X] Teyvat Interactive Map
 - [ ] Update Data Without Overwriting The Original Data
 - [ ] Export and Import Data Back-ups (Manual)
+- [ ] Log in to your miHoYo account to get the Cookies (for API that require Cookie authentication)
 
-## Screenshot 
+## Screenshot
 
 ![Overall Data Chart](docs/images/en/1.png)
 ![Character Event Wish-Data Chart](docs/images/en/2.png)
