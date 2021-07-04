@@ -6,7 +6,7 @@
 
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
  
-It works by reading game lots to obtain the wish history website. Thus, you must start the game and open the wish history page at least once before running this utility.
+It works by reading game logs to obtain the wish history website. Thus, you must start the game and open the wish history page at least once before running this utility.
 
 Variables retrieved from the website will be analyzed and used in an API related to Genshin Impact (from miHoYo).
  
