@@ -14,7 +14,9 @@ This program loads your gacha history during initial startup, which may take a w
  
 This program does not tamper with any game resources; thus, there is no risk of being banned for using this software. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
-The original post on Bahamut (巴哈姆特): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+Posts:
+- 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+- HoYoLAB: <https://www.hoyolab.com/genshin/article/552176>
  
 ## Multiple Language
  

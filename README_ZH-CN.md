@@ -12,7 +12,9 @@
 
 请放心：本软件不会窜改任何游戏文件和数据，所以不会有被封锁帐号的风险。如果有被封号，请思考您是不是其他原因被封锁，不要怪罪我们。
 
-巴哈姆特文：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+帖子：
+- 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+- HoYoLAB：<https://www.hoyolab.com/genshin/article/552176>
 
 ## 多国语言
 
