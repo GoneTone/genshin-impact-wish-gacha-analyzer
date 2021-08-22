@@ -55,6 +55,7 @@ The software may trigger anti-virus software during installation and execution. 
 - [ ] Update Data Without Overwriting The Original Data
 - [ ] Export and Import Data Back-ups (Manual)
 - [ ] Log in to your miHoYo account to get the Cookies (for API that require Cookie authentication)
+- [ ] Integration query Genesis Crystal, Primogem transactions record and Original Resin usage record and Artifacts, Weapons record
 
 ## Screenshot
 
