@@ -1,1 +1,139 @@
-{}
+{
+  "lang": {
+    "translator": "Por favor, ingresa tu nombre (puedes usar HTML)",
+    "name": "Por favor, introduzca el idioma de la traduccion actual"
+  },
+  "ui": {
+    "text": {
+      "title": {
+        "home": "Cuadro de datos globales",
+        "gacha": "{gacha_name} - Cuadro de datos",
+        "history": "Historial",
+        "teyvat_interactive_map": "Mapa interactivo de Teyvat",
+        "contribution_list": {
+          "name": "Contribuidores",
+          "description": "¡Agradecemos especialmente a los siguientes socios que han contribuido al desarrollo de este software!"
+        },
+        "web_signin": "Pagina web de Check-in diario"
+      },
+      "initialize": {
+        "title": "Iniciando...",
+        "description": "Por favor, espere, iniciando..."
+      },
+      "data_loading": "Cargando datos...",
+      "erroe": "Error",
+      "loading": {
+        "loading_gacha_data": "Cargando datos del banner, {may_take_a_while}...",
+        "loading_gacha_data_uid": "Leyendo el {gacha_name} historial del banner del jugadoor {uid}, {may_take_a_while}...",
+        "may_take_a_while": "Esto puede demorar un tiempo"
+      },
+      "chance_of_win_by_rank": "Tasa de drop por rareza",
+      "wins_pie_chart": "Grafico circular de resultados deseados",
+      "character": "Personaje",
+      "weapon": "Arma",
+      "rank": "Rareza",
+      "table": {
+        "title": "Tabla",
+        "total_of_draws": "Deseos Totales",
+        "name": "Nombre",
+        "type": "Tipo",
+        "rank": "Rareza",
+        "get_time": "Hora de recepcion",
+        "draws_count_in_win": "Numero de deseos desde el ultimo Pity",
+        "stars": "{star} estrellas",
+        "data_table": {
+          "zero_records": "Resultados no encontrados",
+          "info": "Pagina {page} de {pages}",
+          "info_empty": "Datos no encontrados",
+          "info_filtered": "(filtrado de {max} registros totales)",
+          "search": "Buscar:",
+          "paginate": {
+            "previous": "Pagina anterior",
+            "next": "Siguiente pagina"
+          },
+          "length_menu": "Mostrar {menu} registros por pagina"
+        }
+      },
+      "chance_of_win_by_five_rank": "Tasa de drop de 5-Estrellas",
+      "chance_of_win_by_four_rank": "Tasa de drop de 4-Estrellas",
+      "chance_of_win_by_three_rank": "Tasa de drop de 3-Estrellas",
+      "chance_of_win_by_character": "Tasa de drop de personaje",
+      "chance_of_win_by_weapon": "Tasa de drop de arma",
+      "count_of_win_by_five_rank": "Numero de articulos 5-Estrellas",
+      "count_of_win_by_three_rank": "Numero de otros drops (3-Estrellas e inferior)",
+      "count_of_win_by_character": "Numero de drop de personajes",
+      "count_of_win_by_weapon": "Numero de drops de armas",
+      "character_wins_count": "Numero de personajes adquiridos: {count}",
+      "five_rank_wins_count": "Numero de articulos 5-Estrellas conseguidos: {count}",
+      "three_rank_wins_count": "3-Estrellas e inferiores conseguidos: {count}",
+      "event_wish_image": "Imagen del banner de evento",
+      "update": {
+        "download": "Ve a la pagina de descarga {version}",
+        "release": "Publicado el {date_time}",
+        "title": "¡Una nueva version esta disponible! {version}"
+      },
+      "comprehensive": "En total",
+      "various_gacha": "Todos los banners de deseos",
+      "other": "Otros",
+      "about": "Sobre",
+      "contribution": "Contribucion",
+      "official_website": "Sitio oficial",
+      "community": "Comunidad",
+      "donate_description": "Apoyanos dandonos dinero para un cafe =)",
+      "issues_report": "Reportar error",
+      "issues_report_description": "Por favor, reporta en GitHub cualquier error",
+      "help_translate": "Ayudanos a traducir",
+      "lightbox": {
+        "album_label": "{0} de {1} imagenes"
+      },
+      "update_data": "Actualizar datos",
+      "export_excel": "Exportar a Excel",
+      "data_update_time": "Ultima actualizacion: {time}",
+      "close_msg": "Cerrar mensaje",
+      "reload": "Recargar",
+      "draws_info": {
+        "guaranteed_progress": "Progreso de Pity: {progress}%",
+        "guaranteed_count_msg": "¡{count} deseos faltantes para el pity!",
+        "msg1": "Actualmente se han acumulado {accumulate_draws} deseos, en promedio {averag_draws_count_in_win} deseos por articulos de 5-Estrellas.",
+        "msg2": "Actualmente se han acumulado {accumulate_draws} deseos, ha acumulado {accumulate_not_win_draws} deseos desde el ultimo drop de 5-Estrellas, en promedio cada {averag_draws_count_in_win} deseos por articulos de 5-Estrellas."
+      },
+      "translated_by": "{lang_name} traducido por {translator_name}",
+      "version": "Version: {version}",
+      "project_leader": "Moderador del proyecto",
+      "testers": "Testers",
+      "github_contributor": "Contribuidores en GitHub",
+      "translation_reviewer": "Correctores de traduccion",
+      "translated_language": "Ha sido traducido a",
+      "project_license": "Licencia del proyecto",
+      "chance_of_win_by_character_and_weapon": "Tasa de drop de Personajes y Armas",
+      "count_of_win_by_four_rank": "Numero de articulos 4-Estrellas",
+      "weapon_wins_count": "Numero de armas adquiridas: {count}",
+      "four_rank_wins_count": "Numero de articulos 4-Estrellas conseguidos: {count}",
+      "donate_developer": "Apoya a los desarrolladores",
+      "help_translate_description": "¡¿No esta tu lenguaje? Ayudanos a traducirlo!"
+    }
+  },
+  "modules": {
+    "error": {
+      "url_get_data_failed": "Fallo al obtener recursos de \"{url}\":{msg}",
+      "unable_read_log": "No se puede leer el archivo de registro. Por favor, asegúrese de que ha lanzado el juego antes.",
+      "url_verification_failed": "Fallo al verificar sitio \"{url}\" : {msg}",
+      "unable_get_player_uid": "No se puede obtener el UID del jugador.",
+      "get_gacha_type_data_api_url_failed": "No se ha podido obtener el punto final de la API de los datos del tipo de deseo.",
+      "get_gacha_history_api_url_failed": "No se puede obtener el punto final de la API de los datos del historial de deseos.",
+      "get_items_api_url_failed": "No se puede obtener el punto final de la API de los datos del artículo.",
+      "mihoyo_api_invalid": "Autorización inválida de la API de miHoYo, por favor reabre la página del historial de deseos en el juego.",
+      "unable_get_gacha_history_url": "No se puede obtener la URL de la página del historial de deseos, por favor asegúrate de que has abierto en el juego.",
+      "get_area_parameter_failed": "No se pueden obtener los parámetros de la región. Vuelve a abrir la página del historial de deseos en el juego.",
+      "mihoyo_api_expired": "Autorización de la API de miHoYo caducada, vuelve a abrir la página del historial de deseos en el juego.",
+      "get_gacha_type_list_failed": "Fallo en la obtención de los datos de la API de la lista de tipos de deseos.",
+      "get_gacha_history_failed": "No se pueden obtener los datos de la API del historial de deseos."
+    }
+  },
+  "app": {
+    "name": "Analizador de Gacha de Genshin Impact"
+  },
+  "file": {
+    "genshin_gacha_history": "Historial de deseos de Genshin Impact"
+  }
+}
