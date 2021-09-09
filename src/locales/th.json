@@ -92,7 +92,7 @@
       "draws_info": {
         "guaranteed_progress": "ความคืบหน้า : {progress}%",
         "guaranteed_count_msg": "เหลือ {count} ก่อนการรับประกัน !",
-        "msg2": "ปัจจุบันมีความปรารถนา {accumulate_draws} สะสม เป็นความปรารถนา {accumulate_not_win_draws} รายการตั้งแต่การดรอประดับ 5 ดาวครั้งล่าสุด โดยเฉลี่ยทุกความปรารถนา {averag_draws_count_in_win} รายการต่อรายการระดับ 5 ดาว",
+        "msg2": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม เป็นการอธิษฐาน {accumulate_not_win_draws} รายการตั้งแต่การดรอประดับ 5 ดาวครั้งล่าสุด โดยเฉลี่ยทุกการอธิษฐาน {averag_draws_count_in_win} รายการต่อรายการระดับ 5 ดาว",
         "msg1": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม โดยเฉลี่ย {averag_draws_count_in_win} การอธิษฐานต่อรายการระดับ 5 ดาว"
       },
       "lightbox": {
