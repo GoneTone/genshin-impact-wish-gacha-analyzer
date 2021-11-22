@@ -24,7 +24,7 @@
       "erroe": "Error",
       "loading": {
         "loading_gacha_data": "Cargando datos del banner, {may_take_a_while}...",
-        "loading_gacha_data_uid": "Leyendo el {gacha_name} historial del banner del jugadoor {uid}, {may_take_a_while}...",
+        "loading_gacha_data_uid": "Leyendo el {gacha_name} historial del banner del jugador {uid}, {may_take_a_while}...",
         "may_take_a_while": "Esto puede demorar un tiempo"
       },
       "chance_of_win_by_rank": "Tasa de drop por rareza",
