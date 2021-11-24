@@ -226,6 +226,8 @@ class MiHoYoApi {
 
               logArray = logArray.concat(res)
               page++
+
+              await new Promise((resolve) => setTimeout(resolve, 300)) // 應付 miHoYo API 限速，每 300ms 發送一次 HTTP 請求
             } else {
               break
             }
