@@ -8,7 +8,14 @@
       <div class="container-fluid mt-4">
         <header-layout :title="title" :data-time-range="dataTimeRange" :update-time="updateTime"></header-layout>
 
-        <img class="img-fluid mx-auto d-block mb-4" :src="`https://${this.$store.getters.configs.api.app.host}${this.$store.getters.configs.api.app.path}images/gacha/${this.$route.params.key}.jpg?${this.$store.getters.randomStr}`" width="800" :alt="$t('ui.text.event_wish_image')" v-if="isDisplayEventImage(this.$route.params.key)">
+        <div class="row" v-if="isDisplayEventImage(this.$route.params.key)">
+          <div class="col-md-6">
+            <img class="img-fluid mx-auto d-block mb-4" :src="`https://${this.$store.getters.configs.api.app.host}${this.$store.getters.configs.api.app.path}images/gacha/${this.$route.params.key}.jpg?${this.$store.getters.randomStr}`" width="800" :alt="$t('ui.text.event_wish_image')">
+          </div>
+          <div class="col-md-6">
+            <img class="img-fluid mx-auto d-block mb-4 image404" :src="`https://${this.$store.getters.configs.api.app.host}${this.$store.getters.configs.api.app.path}images/gacha/${this.$route.params.key}-2.jpg?${this.$store.getters.randomStr}`" width="800" :alt="$t('ui.text.event_wish_image')">
+          </div>
+        </div>
 
         <draws-info :gacha-id="Number(this.$route.params.key)" :accumulate-draws="allCount" :accumulate-not-win-draws="drawsCountInWin" :averag-draws-count-in-win="averagDrawsCountInWin" :is-no-display-guaranteed="Number(this.$route.params.key) === 100"></draws-info>
 

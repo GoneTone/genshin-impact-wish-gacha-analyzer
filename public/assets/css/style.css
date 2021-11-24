@@ -6,6 +6,7 @@
     font-family: HYWenHei-85W;
     src: url('../font/HYWenHei-85W.ttf');
 }
+
 @font-face {
     font-family: Default_SC;
     src: url('../font/Default_SC.ttf');
@@ -50,4 +51,16 @@ a, label {
 
 .bg-bd6932 {
     background-color: #bd6932 !important;
+}
+
+.image404:after {
+    content: "";
+    display: block;
+    position: relative;
+    z-index: 2;
+    top: -27px;
+    left: 0;
+    width: 120px;
+    height: 25px;
+    background-color: #F8F9FC;
 }
