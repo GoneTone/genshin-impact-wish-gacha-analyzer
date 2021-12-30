@@ -1,0 +1,139 @@
+{
+  "lang": {
+    "name": "",
+    "translator": ""
+  },
+  "app": {
+    "name": ""
+  },
+  "ui": {
+    "text": {
+      "title": {
+        "home": "",
+        "gacha": "",
+        "history": "",
+        "web_signin": "",
+        "teyvat_interactive_map": "",
+        "contribution_list": {
+          "name": "",
+          "description": ""
+        }
+      },
+      "initialize": {
+        "title": "",
+        "description": ""
+      },
+      "data_loading": "",
+      "erroe": "",
+      "loading": {
+        "loading_gacha_data": "",
+        "loading_gacha_data_uid": "",
+        "may_take_a_while": ""
+      },
+      "chance_of_win_by_rank": "",
+      "chance_of_win_by_character_and_weapon": "",
+      "wins_pie_chart": "",
+      "character": "",
+      "weapon": "",
+      "rank": "",
+      "table": {
+        "title": "",
+        "total_of_draws": "",
+        "name": "",
+        "type": "",
+        "rank": "",
+        "get_time": "",
+        "draws_count_in_win": "",
+        "stars": "",
+        "data_table": {
+          "length_menu": "",
+          "zero_records": "",
+          "info": "",
+          "info_empty": "",
+          "info_filtered": "",
+          "search": "",
+          "paginate": {
+            "previous": "",
+            "next": ""
+          }
+        }
+      },
+      "chance_of_win_by_five_rank": "",
+      "chance_of_win_by_four_rank": "",
+      "chance_of_win_by_three_rank": "",
+      "chance_of_win_by_character": "",
+      "chance_of_win_by_weapon": "",
+      "count_of_win_by_five_rank": "",
+      "count_of_win_by_four_rank": "",
+      "count_of_win_by_three_rank": "",
+      "count_of_win_by_character": "",
+      "count_of_win_by_weapon": "",
+      "character_wins_count": "",
+      "weapon_wins_count": "",
+      "five_rank_wins_count": "",
+      "four_rank_wins_count": "",
+      "three_rank_wins_count": "",
+      "event_wish_image": "",
+      "update": {
+        "title": "",
+        "download": "",
+        "release": ""
+      },
+      "comprehensive": "",
+      "various_gacha": "",
+      "other": "",
+      "about": "",
+      "contribution": "",
+      "official_website": "",
+      "community": "",
+      "donate_developer": "",
+      "donate_description": "",
+      "issues_report": "",
+      "issues_report_description": "",
+      "help_translate": "",
+      "help_translate_description": "",
+      "lightbox": {
+        "album_label": ""
+      },
+      "update_data": "",
+      "export_excel": "",
+      "data_update_time": "",
+      "close_msg": "",
+      "reload": "",
+      "draws_info": {
+        "msg1": "",
+        "msg2": "",
+        "guaranteed_progress": "",
+        "guaranteed_count_msg": ""
+      },
+      "translated_by": "",
+      "version": "",
+      "project_leader": "",
+      "testers": "",
+      "github_contributor": "",
+      "translation_reviewer": "",
+      "translated_language": "",
+      "project_license": ""
+    }
+  },
+  "modules": {
+    "error": {
+      "url_get_data_failed": "",
+      "unable_read_log": "",
+      "unable_get_gacha_history_url": "",
+      "url_verification_failed": "",
+      "unable_get_player_uid": "",
+      "get_gacha_type_data_api_url_failed": "",
+      "get_gacha_history_api_url_failed": "",
+      "get_items_api_url_failed": "",
+      "get_area_parameter_failed": "",
+      "mihoyo_api_invalid": "",
+      "mihoyo_api_expired": "",
+      "get_gacha_type_list_failed": "",
+      "get_gacha_history_failed": ""
+    }
+  },
+  "file": {
+    "genshin_gacha_history": ""
+  }
+}
