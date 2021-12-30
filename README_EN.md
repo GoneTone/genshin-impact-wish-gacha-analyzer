@@ -46,7 +46,7 @@ The software may trigger anti-virus software during installation and execution. 
 - [x] Load The According Language Data Form The Official API by Local User's Language
 - [x] View Character Image
 - [x] Software Update Notification
-- [x] Multi-language ([Help us traslate!](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
+- [x] Multi-language ([Help us traslate!](https://crwd.in/genshin-impact-wish-gacha-analyzer))
 - [ ] Switching Between Multi-accounts' records
 - [ ] Share The Record and Analyzed Result Online
 - [ ] Dark mode

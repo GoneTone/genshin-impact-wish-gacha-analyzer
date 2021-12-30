@@ -44,7 +44,7 @@
 - [x] 依据玩家语言读取官方 API 取得相对语言资料
 - [x] 原神角色图像查看
 - [x] 版本更新通知
-- [x] 多国语言 ([协助翻译](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/))
+- [x] 多国语言 ([协助翻译](https://crwd.in/genshin-impact-wish-gacha-analyzer))
 - [ ] 多帐号纪录切换
 - [ ] 纪录和分析结果分享至线上
 - [ ] 黑暗模式主题
