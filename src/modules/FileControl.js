@@ -166,6 +166,9 @@ class FileControl {
    */
   getLangNames (locale) {
     const langData = require(`@/locales/${locale}.json`)
+
+    if (langData.lang !== undefined && langData.lang.name === '繁體中文' && locale !== 'zh_TW') return locale
+
     return (langData.lang === undefined || langData.lang.name === undefined || langData.lang.name === '') ? locale : langData.lang.name
   }
 
