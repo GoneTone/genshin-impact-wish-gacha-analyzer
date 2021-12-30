@@ -12,11 +12,11 @@
         "home": "総合データチャート",
         "gacha": "{gacha_name} - データチャート",
         "history": "祈願履歴",
-        "web_signin": "網頁每日簽到",
+        "web_signin": "",
         "teyvat_interactive_map": "テイワットマップ",
         "contribution_list": {
-          "name": "貢獻名單",
-          "description": "感謝以下為此軟體貢獻的夥伴！"
+          "name": "",
+          "description": ""
         }
       },
       "initialize": {
@@ -34,7 +34,7 @@
       "chance_of_win_by_character_and_weapon": "キャラ/武器当たり確率",
       "wins_pie_chart": "当たり円グラフ",
       "character": "キャラクター",
-      "weapon": "武器",
+      "weapon": "",
       "rank": "★別",
       "table": {
         "title": "表",
@@ -86,14 +86,14 @@
       "contribution": "貢献",
       "official_website": "公式サイト",
       "community": "コミュニティ",
-      "donate_developer": "贊助開發者",
-      "donate_description": "贊助我們請我們喝杯咖啡 :)",
+      "donate_developer": "",
+      "donate_description": "",
       "issues_report": "エラー報告",
-      "issues_report_description": "如有任何問題請至 GitHub 回報",
+      "issues_report_description": "",
       "help_translate": "翻訳に協力",
-      "help_translate_description": "沒有您的語言嗎？幫助我們翻譯！",
+      "help_translate_description": "",
       "lightbox": {
-        "album_label": "第 {0} 張圖片，共有 {1} 張圖片"
+        "album_label": ""
       },
       "update_data": "データ更新",
       "export_excel": "Excelファイルにエクスポートする",
@@ -106,14 +106,14 @@
         "guaranteed_progress": "天井進捗：{progress}%",
         "guaranteed_count_msg": "天井まであと {count} 回！"
       },
-      "translated_by": "{lang_name} 由 {translator_name} 翻譯",
+      "translated_by": "",
       "version": "バージョン：{version}",
-      "project_leader": "專案負責人",
-      "testers": "測試人員",
-      "github_contributor": "GitHub 貢獻者",
-      "translation_reviewer": "翻譯審核人員",
-      "translated_language": "已翻譯語言",
-      "project_license": "專案許可證"
+      "project_leader": "",
+      "testers": "",
+      "github_contributor": "",
+      "translation_reviewer": "",
+      "translated_language": "",
+      "project_license": ""
     }
   },
   "modules": {
