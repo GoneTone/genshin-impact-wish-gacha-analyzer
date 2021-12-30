@@ -1,3 +1,6 @@
+commit_message: "Translations %original_file_name% (%language%)"
+append_commit_message: false
+
 files:
   - source: /src/locales/zh_TW.json
     translation: /src/locales/%two_letters_code%.json
