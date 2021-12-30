@@ -1,4 +1,4 @@
-commit_message: "Translations %original_file_name% (%language%)"
+commit_message: "Translations %language%"
 append_commit_message: false
 
 files:
