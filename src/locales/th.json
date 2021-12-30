@@ -1,86 +1,111 @@
 {
+  "lang": {
+    "name": "ภาษาไทย",
+    "translator": ""
+  },
+  "app": {
+    "name": "Genshin Impact Wish Gacha Analyzer"
+  },
   "ui": {
     "text": {
       "title": {
-        "contribution_list": {
-          "name": "ผู้ที่มีส่วนร่วม",
-          "description": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!"
-        },
         "home": "กราฟข้อมูลโดยรวม",
         "gacha": "{gacha_name} - กราฟข้อมูล",
         "history": "ประวัติ",
         "web_signin": "เว็ปล็อกอินประจำวัน",
-        "teyvat_interactive_map": "แผนที่สู่มิติแห่ง Teyvat"
+        "teyvat_interactive_map": "แผนที่สู่มิติแห่ง Teyvat",
+        "contribution_list": {
+          "name": "ผู้ที่มีส่วนร่วม",
+          "description": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!"
+        }
       },
+      "initialize": {
+        "title": "กำลังเริ่มต้น...",
+        "description": "กรุณารอสักครู่, กำลังเริ่มต้น..."
+      },
+      "data_loading": "กำลังโหลดข้อมูล...",
+      "erroe": "ผิดพลาด",
+      "loading": {
+        "loading_gacha_data": "กำลังโหลดการอธิษฐาน, {may_take_a_while}...",
+        "loading_gacha_data_uid": "กำลังอ่านข้อมูลประวัติ {gacha_name} ของผู้เล่น UID {uid}, {may_take_a_while}...",
+        "may_take_a_while": "อาจใช้เวลาสักครู่"
+      },
+      "chance_of_win_by_rank": "อัตราดรอปตามระดับความหายาก",
+      "chance_of_win_by_character_and_weapon": "อัตราการดรอปตัวละครและอาวุธ",
+      "wins_pie_chart": "แผนภูมิผลลัพธ์",
+      "character": "ตัวละคร",
+      "weapon": "อาวุธ",
+      "rank": "ระดับ",
       "table": {
         "title": "ตาราง",
+        "total_of_draws": "จำนวนครั้ง",
+        "name": "ชื่อ",
         "type": "รูปแบบ",
         "rank": "ระดับ",
+        "get_time": "เวลาที่ได้รับ",
+        "draws_count_in_win": "จำนวนครั้ง",
+        "stars": "{star} ดาว",
         "data_table": {
           "length_menu": "แสดง {menu} การบันทึกต่อหน้า",
           "zero_records": "ไม่พบผลลัพธ์",
           "info": "หน้า {page} จาก {pages}",
           "info_empty": "ไม่มีข้อมูล",
+          "info_filtered": "(กรองจากบันทึกทั้งหมด {max} รายการ)",
           "search": "ค้นหา :",
           "paginate": {
             "previous": "ก่อนหน้า",
             "next": "ถัดไป"
-          },
-          "info_filtered": "(กรองจากบันทึกทั้งหมด {max} รายการ)"
-        },
-        "name": "ชื่อ",
-        "get_time": "เวลาที่ได้รับ",
-        "total_of_draws": "จำนวนครั้ง",
-        "stars": "{star} ดาว",
-        "draws_count_in_win": "จำนวนครั้ง"
+          }
+        }
       },
-      "data_loading": "กำลังโหลดข้อมูล...",
-      "erroe": "ผิดพลาด",
-      "loading": {
-        "may_take_a_while": "อาจใช้เวลาสักครู่",
-        "loading_gacha_data_uid": "กำลังอ่านข้อมูลประวัติ {gacha_name} ของผู้เล่น UID {uid}, {may_take_a_while}...",
-        "loading_gacha_data": "กำลังโหลดการอธิษฐาน, {may_take_a_while}..."
-      },
-      "character": "ตัวละคร",
-      "weapon": "อาวุธ",
-      "rank": "ระดับ",
       "chance_of_win_by_five_rank": "เรทดรอป 5 ดาว",
       "chance_of_win_by_four_rank": "เรทดรอป 4 ดาว",
       "chance_of_win_by_three_rank": "เรทดรอป 3 ดาว",
+      "chance_of_win_by_character": "จำนวนตัวละครที่ดรอป",
       "chance_of_win_by_weapon": "จำนวนอาวุธที่ดรอป",
       "count_of_win_by_five_rank": "จำนวนไอเทม 5 ดาวที่ดรอป",
       "count_of_win_by_four_rank": "จำนวนไอเทม 4 ดาวที่ดรอป",
+      "count_of_win_by_three_rank": "จำนวนไอเทม 3 ดาวที่ดรอป",
       "count_of_win_by_character": "จำนวนตัวละครดรอป",
       "count_of_win_by_weapon": "จำนวนอาวุธดรอป",
+      "character_wins_count": "จำนวนตัวละครที่ดรอป : {count}",
       "weapon_wins_count": "จำนวนอาวุธที่ดรอป : {count}",
+      "five_rank_wins_count": "จำนวนไอเทม 5 ดาวที่ดรอป : {count}",
       "four_rank_wins_count": "จำนวนไอเทม 4 ดาวที่ดรอป : {count}",
       "three_rank_wins_count": "จำนวนไอเทม 3ดาวที่ดรอป : {count}",
       "event_wish_image": "ภาพแบนเนอร์ของอีเว้นท์",
       "update": {
-        "download": "ไปยังหน้าดาวน์โหลด {version}",
         "title": "มีเวอร์ชั่นใหม่ให้อัพเดท! ({version})",
+        "download": "ไปยังหน้าดาวน์โหลด {version}",
         "release": "เผยแพร่เมื่อ {date_time}"
-      },
-      "chance_of_win_by_rank": "อัตราดรอปตามระดับความหายาก",
-      "wins_pie_chart": "แผนภูมิผลลัพธ์",
-      "initialize": {
-        "description": "กรุณารอสักครู่, กำลังเริ่มต้น...",
-        "title": "กำลังเริ่มต้น..."
       },
       "comprehensive": "โดยรวม",
       "various_gacha": "แบนเนอร์ปรารถนาทั้งหมด",
       "other": "อื่น ๆ",
       "about": "เกี่ยวกับ",
+      "contribution": "ผลงาน",
       "official_website": "เว็บไซต์อย่างเป็นทางการ",
       "community": "ชุมชน",
+      "donate_developer": "บริจาคให้นักพัฒนา",
       "donate_description": "คำอธิบาย",
       "issues_report": "รายงานปัญหา",
+      "issues_report_description": "กรุณารายงานบน GitHub สำหรับปัญหาต่างๆ",
       "help_translate": "ช่วยในการแปล",
+      "help_translate_description": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
+      "lightbox": {
+        "album_label": "รูปภาพ {0} จาก {1}"
+      },
       "update_data": "อัพเดทข้อมูล",
       "export_excel": "ส่งออกไปยัง Excel",
       "data_update_time": "ปรับปรุงล่าสุด: {time}",
       "close_msg": "ปิดข้อความ",
       "reload": "โหลดซ้ำ",
+      "draws_info": {
+        "msg1": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม โดยเฉลี่ย {averag_draws_count_in_win} การอธิษฐานต่อรายการระดับ 5 ดาว",
+        "msg2": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม เป็นการอธิษฐาน {accumulate_not_win_draws} รายการตั้งแต่การดรอประดับ 5 ดาวครั้งล่าสุด โดยเฉลี่ยทุกการอธิษฐาน {averag_draws_count_in_win} รายการต่อรายการระดับ 5 ดาว",
+        "guaranteed_progress": "ความคืบหน้า : {progress}%",
+        "guaranteed_count_msg": "เหลือ {count} ก่อนการันตี !"
+      },
       "translated_by": "{lang_name} แปลโดย {translator_name}",
       "version": "เวอร์ชัน ：{version}",
       "project_leader": "หัวหน้าโปรเจค",
@@ -88,50 +113,25 @@
       "github_contributor": "ผู้ร่วมให้ข้อมูล GitHub",
       "translation_reviewer": "ผู้ตรวจสอบการแปล",
       "translated_language": "ภาษาที่แปล",
-      "project_license": "ใบอนุญาตโปรเจค",
-      "draws_info": {
-        "guaranteed_progress": "ความคืบหน้า : {progress}%",
-        "guaranteed_count_msg": "เหลือ {count} ก่อนการันตี !",
-        "msg2": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม เป็นการอธิษฐาน {accumulate_not_win_draws} รายการตั้งแต่การดรอประดับ 5 ดาวครั้งล่าสุด โดยเฉลี่ยทุกการอธิษฐาน {averag_draws_count_in_win} รายการต่อรายการระดับ 5 ดาว",
-        "msg1": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม โดยเฉลี่ย {averag_draws_count_in_win} การอธิษฐานต่อรายการระดับ 5 ดาว"
-      },
-      "lightbox": {
-        "album_label": "รูปภาพ {0} จาก {1}"
-      },
-      "chance_of_win_by_character": "จำนวนตัวละครที่ดรอป",
-      "count_of_win_by_three_rank": "จำนวนไอเทม 3 ดาวที่ดรอป",
-      "character_wins_count": "จำนวนตัวละครที่ดรอป : {count}",
-      "five_rank_wins_count": "จำนวนไอเทม 5 ดาวที่ดรอป : {count}",
-      "contribution": "ผลงาน",
-      "donate_developer": "บริจาคให้นักพัฒนา",
-      "help_translate_description": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
-      "chance_of_win_by_character_and_weapon": "อัตราการดรอปตัวละครและอาวุธ",
-      "issues_report_description": "กรุณารายงานบน GitHub สำหรับปัญหาต่างๆ"
+      "project_license": "ใบอนุญาตโปรเจค"
     }
   },
   "modules": {
     "error": {
       "url_get_data_failed": "ไม่สามารถดึงทรัพยากรจาก \\\"{url} \\\": {msg}",
-      "url_verification_failed": "ไม่สามารถยืนยันไซต์ \\\"{url}\\\" : {msg}",
-      "unable_get_player_uid": "ไม่สามารถรับ UID ของผู้เล่นได้",
       "unable_read_log": "ไม่สามารถอ่านรายการ โปรดตรวจสอบว่าคุณกำลังเปิดเกมอยู่",
       "unable_get_gacha_history_url": "ไม่สามารถดึง URL ของหน้าประวัติได้ โปรดตรวจสอบว่าคุณกำลังเปิดมันในเกม",
+      "url_verification_failed": "ไม่สามารถยืนยันไซต์ \\\"{url}\\\" : {msg}",
+      "unable_get_player_uid": "ไม่สามารถรับ UID ของผู้เล่นได้",
       "get_gacha_type_data_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลประเภทการอธิษฐาน",
       "get_gacha_history_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลประวัติการอธิษฐาน",
       "get_items_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลรายการได้",
       "get_area_parameter_failed": "ไม่สามารถรับพารามิเตอร์ภูมิภาคได้ โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
-      "get_gacha_history_failed": "ไม่สามารถดึงข้อมูล API ของประวัติการอธิษฐาน",
-      "get_gacha_type_list_failed": "ไม่สามารถดึงข้อมูล API ของรายการประเภทที่ต้องการ",
+      "mihoyo_api_invalid": "การอนุญาต miHoYo API ไม่ถูกต้อง โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
       "mihoyo_api_expired": "การอนุญาต miHoYo API ที่หมดอายุ โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
-      "mihoyo_api_invalid": "การอนุญาต miHoYo API ไม่ถูกต้อง โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง"
+      "get_gacha_type_list_failed": "ไม่สามารถดึงข้อมูล API ของรายการประเภทที่ต้องการ",
+      "get_gacha_history_failed": "ไม่สามารถดึงข้อมูล API ของประวัติการอธิษฐาน"
     }
-  },
-  "lang": {
-    "name": "ภาษาไทย",
-    "translator": "Armzyaec1234"
-  },
-  "app": {
-    "name": "Genshin Impact Wish Gacha Analyzer"
   },
   "file": {
     "genshin_gacha_history": "Genshin Impact Wish History"
