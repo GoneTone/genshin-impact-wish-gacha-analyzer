@@ -2,7 +2,7 @@
 
 [繁體中文](README.md) | 简体中文 | [English](README_EN.md)
 
-[![翻译状态](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
 我开发了一套用来分析祈愿卡池历史纪录的软件，一开启各种数据清清楚楚，不用再手动计算啦！
 
@@ -20,7 +20,7 @@
 
 请协助我们将软件翻译成各国语言！
 
-[![翻译状态](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+<https://crwd.in/genshin-impact-wish-gacha-analyzer>
 
 ## 下载软件
 

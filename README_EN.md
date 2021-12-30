@@ -2,7 +2,7 @@
 
 [繁體中文](README.md) | [简体中文](README_ZH-CN.md) | English
 
-[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/svg-badge.svg)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+[![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
  
@@ -22,7 +22,7 @@ Posts:
  
 Please help us translate this software.
  
-[![Translation status](https://weblate.reh.tw/widgets/genshin-impact-wish-gacha-analyzer/-/open-graph.png)](https://weblate.reh.tw/engage/genshin-impact-wish-gacha-analyzer/)
+<https://crwd.in/genshin-impact-wish-gacha-analyzer>
  
 ## Download Software
  
