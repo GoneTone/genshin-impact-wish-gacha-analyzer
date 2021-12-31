@@ -1,6 +1,5 @@
-commit_message: "Translations %language%"
+commit_message: Translations %language%
 append_commit_message: false
-
 files:
   - source: /src/locales/zh_TW.json
     translation: /src/locales/%locale_with_underscore%.json
