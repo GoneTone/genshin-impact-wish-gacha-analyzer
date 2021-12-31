@@ -51,7 +51,7 @@
           "info": "หน้า {page} จาก {pages}",
           "info_empty": "ไม่มีข้อมูล",
           "info_filtered": "(กรองจากบันทึกทั้งหมด {max} รายการ)",
-          "search": "ค้นหา :",
+          "search": "ค้นหา ：",
           "paginate": {
             "previous": "ก่อนหน้า",
             "next": "ถัดไป"
@@ -68,14 +68,14 @@
       "count_of_win_by_three_rank": "จำนวนไอเทม 3 ดาวที่ดรอป",
       "count_of_win_by_character": "จำนวนตัวละครดรอป",
       "count_of_win_by_weapon": "จำนวนอาวุธที่ดรอป",
-      "character_wins_count": "จำนวนตัวละครที่ดรอป : {count}",
-      "weapon_wins_count": "จำนวนอาวุธที่ดรอป : {count}",
-      "five_rank_wins_count": "จำนวนไอเทม 5 ดาวที่ดรอป : {count}",
-      "four_rank_wins_count": "จำนวนไอเทม 4 ดาวที่ดรอป : {count}",
-      "three_rank_wins_count": "จำนวนไอเทม 3ดาวที่ดรอป : {count}",
+      "character_wins_count": "จำนวนตัวละครที่ดรอป ：{count}",
+      "weapon_wins_count": "จำนวนอาวุธที่ดรอป ：{count}",
+      "five_rank_wins_count": "จำนวนไอเทม 5 ดาวที่ดรอป ：{count}",
+      "four_rank_wins_count": "จำนวนไอเทม 4 ดาวที่ดรอป ：{count}",
+      "three_rank_wins_count": "จำนวนไอเทม 3ดาวที่ดรอป ：{count}",
       "event_wish_image": "ภาพแบนเนอร์ของอีเว้นท์",
       "update": {
-        "title": "มีเวอร์ชั่นใหม่ให้อัพเดท! ({version})",
+        "title": "มีเวอร์ชั่นใหม่ให้อัพเดท！({version})",
         "download": "ไปยังหน้าดาวน์โหลด {version}",
         "release": "เผยแพร่เมื่อ {date_time}"
       },
@@ -87,7 +87,7 @@
       "official_website": "เว็บไซต์อย่างเป็นทางการ",
       "community": "ชุมชน",
       "donate_developer": "บริจาคให้นักพัฒนา",
-      "donate_description": "คำอธิบาย",
+      "donate_description": "คำอธิบาย :)",
       "issues_report": "รายงานปัญหา",
       "issues_report_description": "กรุณารายงานบน GitHub สำหรับปัญหาต่างๆ",
       "help_translate": "ช่วยในการแปล",
@@ -97,14 +97,14 @@
       },
       "update_data": "อัพเดทข้อมูล",
       "export_excel": "ส่งออกไปยัง Excel",
-      "data_update_time": "ปรับปรุงล่าสุด: {time}",
+      "data_update_time": "ปรับปรุงล่าสุด ：{time}",
       "close_msg": "ปิดข้อความ",
       "reload": "โหลดซ้ำ",
       "draws_info": {
         "msg1": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม โดยเฉลี่ย {averag_draws_count_in_win} การอธิษฐานต่อรายการระดับ 5 ดาว",
         "msg2": "ปัจจุบันมีการอธิษฐาน {accumulate_draws} สะสม เป็นการอธิษฐาน {accumulate_not_win_draws} รายการตั้งแต่การดรอประดับ 5 ดาวครั้งล่าสุด โดยเฉลี่ยทุกการอธิษฐาน {averag_draws_count_in_win} รายการต่อรายการระดับ 5 ดาว",
-        "guaranteed_progress": "ความคืบหน้า : {progress}%",
-        "guaranteed_count_msg": "เหลือ {count} ก่อนการันตี !"
+        "guaranteed_progress": "ความคืบหน้า ：{progress}%：",
+        "guaranteed_count_msg": "เหลือ {count} ก่อนการันตี ！"
       },
       "translated_by": "{lang_name} แปลโดย {translator_name}",
       "version": "เวอร์ชัน ：{version}",
@@ -118,19 +118,19 @@
   },
   "modules": {
     "error": {
-      "url_get_data_failed": "ไม่สามารถดึงทรัพยากรจาก \\\"{url} \\\": {msg}",
+      "url_get_data_failed": "ไม่สามารถดึงทรัพยากรจาก \"{url}\"：{msg}",
       "unable_read_log": "ไม่สามารถอ่านรายการ โปรดตรวจสอบว่าคุณกำลังเปิดเกมอยู่",
       "unable_get_gacha_history_url": "ไม่สามารถดึง URL ของหน้าประวัติได้ โปรดตรวจสอบว่าคุณกำลังเปิดมันในเกม",
-      "url_verification_failed": "ไม่สามารถยืนยันไซต์ \\\"{url}\\\" : {msg}",
+      "url_verification_failed": "ไม่สามารถยืนยันไซต์ \\\"{url}\\\"：{msg}",
       "unable_get_player_uid": "ไม่สามารถรับ UID ของผู้เล่นได้",
-      "get_gacha_type_data_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลประเภทการอธิษฐาน",
-      "get_gacha_history_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลประวัติการอธิษฐาน",
-      "get_items_api_url_failed": "ไม่สามารถรับ API ปลายทางของข้อมูลรายการได้",
+      "get_gacha_type_data_api_url_failed": "ไม่สามารถรับ Api ปลายทางของข้อมูลประเภทการอธิษฐาน",
+      "get_gacha_history_api_url_failed": "ไม่สามารถรับ Api ปลายทางของข้อมูลประวัติการอธิษฐาน",
+      "get_items_api_url_failed": "ไม่สามารถรับ Api ปลายทางของข้อมูลรายการได้",
       "get_area_parameter_failed": "ไม่สามารถรับพารามิเตอร์ภูมิภาคได้ โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
-      "mihoyo_api_invalid": "การอนุญาต miHoYo API ไม่ถูกต้อง โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
-      "mihoyo_api_expired": "การอนุญาต miHoYo API ที่หมดอายุ โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
-      "get_gacha_type_list_failed": "ไม่สามารถดึงข้อมูล API ของรายการประเภทที่ต้องการ",
-      "get_gacha_history_failed": "ไม่สามารถดึงข้อมูล API ของประวัติการอธิษฐาน"
+      "mihoyo_api_invalid": "การอนุญาต miHoYo Api ไม่ถูกต้อง โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
+      "mihoyo_api_expired": "การอนุญาต miHoYo Api ที่หมดอายุ โปรดเปิดหน้าประวัติการอธิษฐานในเกมอีกครั้ง",
+      "get_gacha_type_list_failed": "ไม่สามารถดึงข้อมูล Api ของรายการประเภทที่ต้องการ",
+      "get_gacha_history_failed": "ไม่สามารถดึงข้อมูล Api ของประวัติการอธิษฐาน"
     }
   },
   "file": {
