@@ -15,7 +15,7 @@
         "web_signin": "เว็ปล็อกอินประจำวัน",
         "teyvat_interactive_map": "แผนที่สู่มิติแห่ง Teyvat",
         "contribution_list": {
-          "name": "ผู้ที่มีส่วนร่วม",
+          "name": "รายชื่อผู้ให้การสนับสนุน",
           "description": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!"
         }
       },
@@ -23,14 +23,14 @@
         "title": "กำลังเริ่มต้น...",
         "description": "กรุณารอสักครู่, กำลังเริ่มต้น..."
       },
-      "data_loading": "กำลังโหลดข้อมูล...",
-      "erroe": "ผิดพลาด",
+      "data_loading": "กำลังโหลด...",
+      "erroe": "เกิดข้อผิดพลาด",
       "loading": {
         "loading_gacha_data": "กำลังโหลดการอธิษฐาน, {may_take_a_while}...",
         "loading_gacha_data_uid": "กำลังอ่านข้อมูลประวัติ {gacha_name} ของผู้เล่น UID {uid}, {may_take_a_while}...",
         "may_take_a_while": "อาจใช้เวลาสักครู่"
       },
-      "chance_of_win_by_rank": "อัตราดรอปตามระดับความหายาก",
+      "chance_of_win_by_rank": "อัตราดรอปตามระดับความแรร์",
       "chance_of_win_by_character_and_weapon": "อัตราการดรอปตัวละครและอาวุธ",
       "wins_pie_chart": "แผนภูมิผลลัพธ์",
       "character": "ตัวละคร",
@@ -67,7 +67,7 @@
       "count_of_win_by_four_rank": "จำนวนไอเทม 4 ดาวที่ดรอป",
       "count_of_win_by_three_rank": "จำนวนไอเทม 3 ดาวที่ดรอป",
       "count_of_win_by_character": "จำนวนตัวละครดรอป",
-      "count_of_win_by_weapon": "จำนวนอาวุธดรอป",
+      "count_of_win_by_weapon": "จำนวนอาวุธที่ดรอป",
       "character_wins_count": "จำนวนตัวละครที่ดรอป : {count}",
       "weapon_wins_count": "จำนวนอาวุธที่ดรอป : {count}",
       "five_rank_wins_count": "จำนวนไอเทม 5 ดาวที่ดรอป : {count}",
