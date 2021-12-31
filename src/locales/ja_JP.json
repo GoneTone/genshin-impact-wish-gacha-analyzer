@@ -1,67 +1,68 @@
 {
+  "lang": {
+    "name": "日本語",
+    "translator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>"
+  },
+  "app": {
+    "name": "原神祈願分析ツール"
+  },
   "ui": {
     "text": {
-      "initialize": {
-        "description": "初期設定中、しばらくお待ちください ...",
-        "title": "初期設定中..."
-      },
-      "loading": {
-        "loading_gacha_data_uid": "プレイヤー UID {uid} の {gacha_name} 履歴データ読み込み中，{may_take_a_while}...",
-        "may_take_a_while": "少し時間がかかります",
-        "loading_gacha_data": "祈願履歴データ読み込み中，{may_take_a_while}..."
-      },
-      "table": {
-        "data_table": {
-          "info_filtered": "( {max} 件の履歴の絞り込み)",
-          "length_menu": "1ページごと {menu} 件表示します",
-          "info": "{page} ページ / {pages}",
-          "zero_records": "リザルトが見つかりません",
-          "info_empty": "データがありません",
-          "paginate": {
-            "previous": "前へ",
-            "next": "次へ"
-          },
-          "search": "検索："
-        },
-        "total_of_draws": "累計ガチャ回数",
-        "draws_count_in_win": "天井まで累計ガチャ回数",
-        "type": "タイプ",
-        "title": "表",
-        "name": "タイトル",
-        "rank": "レベル",
-        "get_time": "祈願期間",
-        "stars": "★{star}"
-      },
       "title": {
         "home": "総合データチャート",
         "gacha": "{gacha_name} - データチャート",
         "history": "祈願履歴",
-        "teyvat_interactive_map": "テイワットマップ"
+        "web_signin": "網頁每日簽到",
+        "teyvat_interactive_map": "テイワットマップ",
+        "contribution_list": {
+          "name": "貢獻名單",
+          "description": "感謝以下為此軟體貢獻的夥伴！"
+        }
+      },
+      "initialize": {
+        "title": "初期設定中...",
+        "description": "初期設定中、しばらくお待ちください ..."
       },
       "data_loading": "データ読み込み中...",
+      "erroe": "エラーが発生しました。",
+      "loading": {
+        "loading_gacha_data": "祈願履歴データ読み込み中，{may_take_a_while}...",
+        "loading_gacha_data_uid": "プレイヤー UID {uid} の {gacha_name} 履歴データ読み込み中，{may_take_a_while}...",
+        "may_take_a_while": "少し時間がかかります"
+      },
       "chance_of_win_by_rank": "★別当たり確率",
       "chance_of_win_by_character_and_weapon": "キャラ/武器当たり確率",
       "wins_pie_chart": "当たり円グラフ",
-      "chance_of_win_by_three_rank": "★3以下排出確率",
+      "character": "キャラクター",
       "weapon": "武器",
       "rank": "★別",
+      "table": {
+        "title": "表",
+        "total_of_draws": "累計ガチャ回数",
+        "name": "タイトル",
+        "type": "タイプ",
+        "rank": "レベル",
+        "get_time": "祈願期間",
+        "draws_count_in_win": "天井まで累計ガチャ回数",
+        "stars": "★{star}",
+        "data_table": {
+          "length_menu": "1ページごと {menu} 件表示します",
+          "zero_records": "リザルトが見つかりません",
+          "info": "{page} ページ / {pages}",
+          "info_empty": "データがありません",
+          "info_filtered": "( {max} 件の履歴の絞り込み)",
+          "search": "検索：",
+          "paginate": {
+            "previous": "前へ",
+            "next": "次へ"
+          }
+        }
+      },
       "chance_of_win_by_five_rank": "★5排出確率",
+      "chance_of_win_by_four_rank": "★4排出確率",
+      "chance_of_win_by_three_rank": "★3以下排出確率",
       "chance_of_win_by_character": "キャラクターの出現確率",
       "chance_of_win_by_weapon": "武器の出現確率",
-      "erroe": "エラーが発生しました。",
-      "character": "キャラクター",
-      "official_website": "公式サイト",
-      "issues_report": "エラー報告",
-      "chance_of_win_by_four_rank": "★4排出確率",
-      "help_translate": "翻訳に協力",
-      "close_msg": "閉じる",
-      "reload": "リロード",
-      "community": "コミュニティ",
-      "update": {
-        "title": "新しいバージョンがあります！ ({version})",
-        "download": "ダウンロードへ {version}",
-        "release": "最終更新 {date_time}"
-      },
       "count_of_win_by_five_rank": "★5獲得数",
       "count_of_win_by_four_rank": "★4獲得数",
       "count_of_win_by_three_rank": "★3以下獲得数",
@@ -73,42 +74,60 @@
       "four_rank_wins_count": "★4獲得数：{count}",
       "three_rank_wins_count": "★3以下獲得数：{count}",
       "event_wish_image": "イベント祈願画像",
-      "comprehensive": "総合",
-      "draws_info": {
-        "guaranteed_progress": "天井進捗：{progress}%",
-        "guaranteed_count_msg": "天井まであと {count} 回！",
-        "msg1": "累計ガチャ回数 {accumulate_draws} 回， {averag_draws_count_in_win} 回あたりに★5一個。",
-        "msg2": "累計ガチャ回数 {accumulate_draws} 回，最後の★5排出から累計 {accumulate_not_win_draws} 回， {averag_draws_count_in_win} 回あたりに★5一個。"
+      "update": {
+        "title": "新しいバージョンがあります！ ({version})",
+        "download": "ダウンロードへ {version}",
+        "release": "最終更新 {date_time}"
       },
-      "version": "バージョン：{version}",
+      "comprehensive": "総合",
+      "various_gacha": "すべての祈願",
       "other": "その他",
       "about": "このツールについて",
       "contribution": "貢献",
-      "various_gacha": "すべての祈願",
+      "official_website": "公式サイト",
+      "community": "コミュニティ",
+      "donate_developer": "開発者に寄付する",
+      "donate_description": "贊助我們請我們喝杯咖啡 :)",
+      "issues_report": "エラー報告",
+      "issues_report_description": "如有任何問題請至 GitHub 回報",
+      "help_translate": "翻訳に協力",
+      "help_translate_description": "沒有您的語言嗎？幫助我們翻譯！",
+      "lightbox": {
+        "album_label": "第 {0} 張圖片，共有 {1} 張圖片"
+      },
       "update_data": "データ更新",
       "export_excel": "Excelファイルにエクスポートする",
-      "data_update_time": "データ更新時間：{time}"
+      "data_update_time": "データ更新時間：{time}",
+      "close_msg": "閉じる",
+      "reload": "リロード",
+      "draws_info": {
+        "msg1": "累計ガチャ回数 {accumulate_draws} 回， {averag_draws_count_in_win} 回あたりに★5一個。",
+        "msg2": "累計ガチャ回数 {accumulate_draws} 回，最後の★5排出から累計 {accumulate_not_win_draws} 回， {averag_draws_count_in_win} 回あたりに★5一個。",
+        "guaranteed_progress": "天井進捗：{progress}%",
+        "guaranteed_count_msg": "天井まであと {count} 回！"
+      },
+      "translated_by": "{lang_name} 由 {translator_name} 翻譯",
+      "version": "バージョン：{version}",
+      "project_leader": "專案負責人",
+      "testers": "測試人員",
+      "github_contributor": "GitHub 貢獻者",
+      "translation_reviewer": "翻譯審核人員",
+      "translated_language": "已翻譯語言",
+      "project_license": "專案許可證"
     }
-  },
-  "app": {
-    "name": "原神祈願分析ツール"
-  },
-  "lang": {
-    "name": "日本語",
-    "translator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>"
   },
   "modules": {
     "error": {
-      "unable_get_player_uid": "プレーヤーのUIDを取得できません。",
       "url_get_data_failed": "\"{url}\" からリソース取得失敗：{msg}",
       "unable_read_log": "Log を読み込むことができません，ゲームの起動したことを確認してください。",
       "unable_get_gacha_history_url": "ガチャ履歴を読み込むことができません，祈願ページを確認してください。",
       "url_verification_failed": "\"{url}\" 認証失敗：{msg}",
-      "get_area_parameter_failed": "地域パラメータを取得できません，ゲーム内の祈願履歴を再確認してください。",
-      "mihoyo_api_invalid": "MHYの API 認証キーが無効です，ゲーム内の祈願履歴を再起動してください。",
-      "get_items_api_url_failed": "プロジェクト情報のAPIの取得失敗しました。",
+      "unable_get_player_uid": "プレーヤーのUIDを取得できません。",
       "get_gacha_type_data_api_url_failed": "祈願タイプデータのAPIの取得失敗しました。",
       "get_gacha_history_api_url_failed": "祈願履歴のAPIの取得失敗しました。",
+      "get_items_api_url_failed": "プロジェクト情報のAPIの取得失敗しました。",
+      "get_area_parameter_failed": "地域パラメータを取得できません，ゲーム内の祈願履歴を再確認してください。",
+      "mihoyo_api_invalid": "MHYの API 認証キーが無効です，ゲーム内の祈願履歴を再起動してください。",
       "mihoyo_api_expired": "MHYの API 認証キー有効期限が切れています，ゲーム内の祈願履歴を再起動してください。",
       "get_gacha_type_list_failed": "祈願タイプリストAPIデータの取得失敗しました。",
       "get_gacha_history_failed": "祈願履歴APIデータの取得失敗しました。"
