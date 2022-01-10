@@ -9,6 +9,7 @@
 'use strict'
 
 const { remote } = require('electron')
+const log = require('electron-log')
 const checkUrl = require('@/modules/checkUrl')
 const promisifiedAxios = require('@/modules/promisifiedAxios')
 const FileControl = require('@/modules/FileControl')
@@ -184,6 +185,8 @@ class MiHoYoApi {
 
       if (this.verificationRetcode(data.retcode)) {
         return data.data.gacha_type_list
+      } else {
+        log.error(`Get gacha type list failed: ${configListApiUrl} (${data.retcode} ${data.message})`)
       }
     } catch (e) {
       throw Error(e.message)
@@ -233,6 +236,8 @@ class MiHoYoApi {
             }
           } else {
             message = window.i18n.t('modules.error.get_gacha_history_failed')
+            log.error(`Get gacha history failed: ${gachaLogApiUrl} (${data.retcode} ${data.message})`)
+
             break
           }
         }
@@ -479,6 +484,7 @@ class MiHoYoApi {
             break
           }
         } else {
+          log.error(`Get gacha history failed: ${gachaLogApiUrl} (${data.retcode} ${data.message})`)
           break
         }
       }
