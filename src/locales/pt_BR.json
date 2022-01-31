@@ -107,10 +107,10 @@
         "guaranteed_count_msg": "距離保底還剩下 {count} 抽！"
       },
       "translated_by": "{lang_name} 由 {translator_name} 翻譯",
-      "version": "版本：{version}",
-      "project_leader": "專案負責人",
-      "testers": "測試人員",
-      "github_contributor": "GitHub 貢獻者",
+      "version": "A visão:{version}",
+      "project_leader": "O líder do projeto",
+      "testers": "Os testadores",
+      "github_contributor": "Os contribuintes de Github",
       "translation_reviewer": "翻譯審核人員",
       "translated_language": "已翻譯語言",
       "project_license": "專案許可證"
