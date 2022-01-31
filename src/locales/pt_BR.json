@@ -20,8 +20,8 @@
         }
       },
       "initialize": {
-        "title": "初始化...",
-        "description": "請稍等，正在初始化..."
+        "title": "Inicializando...",
+        "description": "Espere por favor, inicializando..."
       },
       "data_loading": "資料加載中...",
       "erroe": "發生錯誤",
