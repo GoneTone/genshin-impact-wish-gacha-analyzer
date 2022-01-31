@@ -4,14 +4,14 @@
     "translator": "Mirusausiliq & Boemio"
   },
   "app": {
-    "name": "原神祈願卡池分析"
+    "name": "Gacha de evento de personagem de Genshin Impact"
   },
   "ui": {
     "text": {
       "title": {
         "home": "綜合數據圖表",
         "gacha": "{gacha_name} - 數據圖表",
-        "history": "歷史紀錄",
+        "history": "Histórico de pulls do gacha",
         "web_signin": "網頁每日簽到",
         "teyvat_interactive_map": "提瓦特互動地圖",
         "contribution_list": {
@@ -33,14 +33,14 @@
       "chance_of_win_by_rank": "級別中獎率",
       "chance_of_win_by_character_and_weapon": "角色武器中獎率",
       "wins_pie_chart": "中獎數圓餅圖",
-      "character": "角色",
-      "weapon": "Arma",
-      "rank": "Nível",
+      "character": "o personangem",
+      "weapon": "a arma",
+      "rank": "a raridade",
       "table": {
-        "title": "表格",
+        "title": "o formulário",
         "total_of_draws": "總抽數",
-        "name": "名稱",
-        "type": "類型",
+        "name": "o nome",
+        "type": "tipo",
         "rank": "Nível",
         "get_time": "抽到時間",
         "draws_count_in_win": "保底內抽數",
@@ -51,18 +51,18 @@
           "info": "第 {page} 頁 / 共 {pages} 頁",
           "info_empty": "沒有任何資料",
           "info_filtered": "(從 {max} 筆記錄中篩選出)",
-          "search": "搜尋：",
+          "search": "Procurar:",
           "paginate": {
-            "previous": "上一頁",
-            "next": "下一頁"
+            "previous": "A página anterior",
+            "next": "A próxima página"
           }
         }
       },
-      "chance_of_win_by_five_rank": "5星中獎率",
-      "chance_of_win_by_four_rank": "4星中獎率",
-      "chance_of_win_by_three_rank": "3星以下中獎率",
-      "chance_of_win_by_character": "角色中獎率",
-      "chance_of_win_by_weapon": "武器中獎率",
+      "chance_of_win_by_five_rank": "A chance de ganhar um 5 estrelas",
+      "chance_of_win_by_four_rank": "A chence de ganhar um 4 estrelas",
+      "chance_of_win_by_three_rank": "A chance de ganhar um 3 estrelas para baixo",
+      "chance_of_win_by_character": "A chance de ganhar um personagem",
+      "chance_of_win_by_weapon": "A chance de ganhar uma arma",
       "count_of_win_by_five_rank": "5星中獎數",
       "count_of_win_by_four_rank": "4星中獎數",
       "count_of_win_by_three_rank": "3星以下中獎數",
