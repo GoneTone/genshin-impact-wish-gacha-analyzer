@@ -4,14 +4,14 @@
     "translator": "Mirusausiliq & Boemio"
   },
   "app": {
-    "name": "Gacha de evento de personagem de Genshin Impact"
+    "name": "O analisador de gacha de Genshin Impact\n"
   },
   "ui": {
     "text": {
       "title": {
         "home": "綜合數據圖表",
         "gacha": "{gacha_name} - 數據圖表",
-        "history": "Histórico de pulls do gacha",
+        "history": "A história",
         "web_signin": "網頁每日簽到",
         "teyvat_interactive_map": "提瓦特互動地圖",
         "contribution_list": {
@@ -33,13 +33,13 @@
       "chance_of_win_by_rank": "級別中獎率",
       "chance_of_win_by_character_and_weapon": "角色武器中獎率",
       "wins_pie_chart": "中獎數圓餅圖",
-      "character": "o personangem",
-      "weapon": "a arma",
-      "rank": "a raridade",
+      "character": "O personangem",
+      "weapon": "A arma",
+      "rank": "A raridade",
       "table": {
-        "title": "o formulário",
+        "title": "O formulário",
         "total_of_draws": "總抽數",
-        "name": "o nome",
+        "name": "O nome",
         "type": "tipo",
         "rank": "Nível",
         "get_time": "抽到時間",
@@ -59,20 +59,20 @@
         }
       },
       "chance_of_win_by_five_rank": "A chance de ganhar um 5 estrelas",
-      "chance_of_win_by_four_rank": "A chence de ganhar um 4 estrelas",
+      "chance_of_win_by_four_rank": "A chance de ganhar um 4 estrelas",
       "chance_of_win_by_three_rank": "A chance de ganhar um 3 estrelas para baixo",
       "chance_of_win_by_character": "A chance de ganhar um personagem",
       "chance_of_win_by_weapon": "A chance de ganhar uma arma",
-      "count_of_win_by_five_rank": "5星中獎數",
-      "count_of_win_by_four_rank": "4星中獎數",
-      "count_of_win_by_three_rank": "3星以下中獎數",
-      "count_of_win_by_character": "角色中獎數",
-      "count_of_win_by_weapon": "武器中獎數",
-      "character_wins_count": "角色中獎數：{count}",
-      "weapon_wins_count": "武器中獎數：{count}",
-      "five_rank_wins_count": "5星中獎數：{count}",
-      "four_rank_wins_count": "4星中獎數：{count}",
-      "three_rank_wins_count": "3星以下中獎數：{count}",
+      "count_of_win_by_five_rank": "O número de ganhar um 5 estrelas",
+      "count_of_win_by_four_rank": "A quantidade ganha de um 4 estrelas",
+      "count_of_win_by_three_rank": "A quantidade ganha de um  3 estrelas para baxio",
+      "count_of_win_by_character": "A quantidade ganha de personagens",
+      "count_of_win_by_weapon": "A quantidade ganha de armas",
+      "character_wins_count": "A quantidade ganha de personagens: {count}",
+      "weapon_wins_count": "A quantidade ganha de armas: {count}",
+      "five_rank_wins_count": "A quantidade ganha de um 5 estrelos: {count}",
+      "four_rank_wins_count": "A quantidade ganha de 4 estrelas: {count}",
+      "three_rank_wins_count": "A quantidade ganha de 3 estrelas: {count}",
       "event_wish_image": "活動祈願圖",
       "update": {
         "title": "有新版本可以更新！ ({version})",
@@ -81,11 +81,11 @@
       },
       "comprehensive": "綜合",
       "various_gacha": "各類卡池",
-      "other": "其他",
-      "about": "關於",
+      "other": "As oturas",
+      "about": "Cerca de",
       "contribution": "貢獻",
       "official_website": "官方網站",
-      "community": "社群",
+      "community": "A comunidade",
       "donate_developer": "贊助開發者",
       "donate_description": "贊助我們請我們喝杯咖啡 :)",
       "issues_report": "問題回報",
@@ -134,6 +134,6 @@
     }
   },
   "file": {
-    "genshin_gacha_history": "原神卡池歷史紀錄"
+    "genshin_gacha_history": "A história de gacha de Genshin Impact"
   }
 }
