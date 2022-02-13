@@ -17,6 +17,7 @@
   "ui.text.chance_of_win_by_character_and_weapon": "キャラ/武器当たり確率",
   "ui.text.wins_pie_chart": "当たり円グラフ",
   "ui.text.character": "キャラクター",
+  "ui.text.weapon": "武器",
   "ui.text.rank": "★別",
   "ui.text.table.title": "表",
   "ui.text.table.total_of_draws": "累計ガチャ回数",
