@@ -2,7 +2,7 @@
   <msg-page-view :title="$t('ui.text.initialize.title')" :description="$t('ui.text.initialize.description')" v-if="this.$store.getters.loadStatus.status === null"></msg-page-view>
   <msg-page-view :title="$t('ui.text.data_loading')" :description="this.$store.getters.loadStatus.msg" v-else-if="this.$store.getters.loadStatus.status === 'load'"></msg-page-view>
   <router-view v-else-if="this.$store.getters.loadStatus.status" />
-  <msg-page-view :title="$t('ui.text.erroe')" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></msg-page-view>
+  <msg-page-view :title="$t('ui.text.error')" :description="this.$store.getters.loadStatus.msg" is-show-reload-button v-else></msg-page-view>
 
   <!--suppress HtmlUnknownAnchorTarget -->
   <a class="scroll-to-top rounded" href="#page-top">
