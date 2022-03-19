@@ -1,1 +1,13 @@
-{}
+{
+  "ui.text.title.history": "Lịch sử cầu nguyện",
+  "ui.text.title.teyvat_interactive_map": "Bản đồ tương tác Teyvat",
+  "ui.text.initialize.description": "Vui lòng đợi...",
+  "ui.text.data_loading": "Đang tải dữ liệu...",
+  "ui.text.error": "Có lỗi xảy ra",
+  "ui.text.loading.loading_gacha_data": "Đang tải dữ liệu ，{may_take_a_while}...",
+  "ui.text.loading.may_take_a_while": "Có thể mất một chút thời gian",
+  "ui.text.character": "Nhân Vật",
+  "ui.text.weapon": "Vũ Khí",
+  "ui.text.rank": "Cấp",
+  "ui.text.table.name": "Tên"
+}
