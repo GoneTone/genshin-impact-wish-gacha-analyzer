@@ -119,6 +119,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item" @click="openExternal(this.$store.getters.configs.team.facebookUrl);"><i class="fab fa-facebook-f"></i> Facebook</a>
           <a class="collapse-item" @click="openExternal(this.$store.getters.configs.team.discordUrl);"><i class="fab fa-discord"></i> Discord</a>
+          <a class="collapse-item" @click="openExternal(this.$store.getters.configs.team.lineUrl);"><i class="fab fa-line"></i> Line</a>
         </div>
       </div>
     </li>

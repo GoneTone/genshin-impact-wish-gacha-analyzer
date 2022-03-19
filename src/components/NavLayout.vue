@@ -18,6 +18,12 @@
       </li>
 
       <li class="nav-item dropdown no-arrow mx-1">
+        <a class="nav-link" @click="openExternal(this.$store.getters.configs.team.lineUrl);">
+          <i class="fab fa-line fa-fw"></i>
+        </a>
+      </li>
+
+      <li class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link" @click="openExternal(this.$store.getters.configs.app.githubUrl);">
           <i class="fab fa-github fa-fw"></i>
         </a>

@@ -32,7 +32,8 @@ export default createStore({
         name: process.env.VUE_APP_TEAM_NAME, // 團隊名稱
         websiteUrl: process.env.VUE_APP_TEAM_WEBSITE_URL, // 團隊網站網址
         facebookUrl: process.env.VUE_APP_TEAM_FACEBOOK_URL, // 團隊 Facebook 網址
-        discordUrl: process.env.VUE_APP_TEAM_DISCORD_URL // 團隊 Discord 網址
+        discordUrl: process.env.VUE_APP_TEAM_DISCORD_URL, // 團隊 Discord 網址
+        lineUrl: process.env.VUE_APP_TEAM_LINE_URL // 團隊 Line 網址
       },
       developer: {
         displayName: process.env.VUE_APP_DEVELOPER_DISPLAY_NAME, // 開發者名稱

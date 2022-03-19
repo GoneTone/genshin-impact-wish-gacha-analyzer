@@ -10,7 +10,7 @@ module.exports = {
       builderOptions: {
         appId: 'tw.reh.genshininfo.gachaanalyzer', // 應用程式 ID
         productName: 'Genshin Impact Wish Gacha Analyzer', // 專案名稱
-        copyright: `Copyright © ${year} 原神情報站 Genshin Info`, // 版權
+        copyright: `Copyright © ${year} 原神資訊站 Genshin Impact Info`, // 版權
         win: { // Windows 相關設定
           icon: 'build/icons/icon.ico', // 安裝檔圖示
           target: ['nsis', 'portable', 'zip'] // 安裝、免安裝、ZIP
