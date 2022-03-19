@@ -1,5 +1,5 @@
 /**
- * Copyright © 2020-2021 原神情報站 Genshin Info
+ * Copyright © 2020-2021 原神資訊站 Genshin Impact Info
  * https://genshininfo.reh.tw/
  *
  * Developed by 旋風之音 GoneTone
