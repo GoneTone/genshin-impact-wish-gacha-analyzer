@@ -45,6 +45,9 @@ class MiHoYoApi {
     this._basePath = remote.app.getPath('userData')
     this._fileControl = new FileControl(this._basePath)
     this._readGenshinFile = new ReadGenshinFile()
+
+    this._characterList = []
+    this._weaponList = []
   }
 
   /**
@@ -249,24 +252,59 @@ class MiHoYoApi {
         throw Error(message)
       }
 
+      const character = new window.hoyowikiApi.Character()
+      const weapon = new window.hoyowikiApi.Weapon()
+
       const newLogArray = []
       let drawsCountInWin = 1
+      let hoyowikiApiIsSetLanguage = false
       for (const data of logArray.reverse()) {
+        if (!hoyowikiApiIsSetLanguage) {
+          await window.hoyowikiApi.setLanguage(data.lang)
+          hoyowikiApiIsSetLanguage = true
+        }
+
+        const characterList = this._characterList.length > 0 ? this._characterList : await character.getList()
+        const weaponList = this._weaponList.length > 0 ? this._weaponList : await weapon.getList()
+        this._characterList = characterList
+        this._weaponList = weaponList
+
         data.draws_count_in_win = drawsCountInWin
 
         if (this.isCharacter(data.item_type)) {
-          const id = await this.getItemID(data)
+          const characterData = characterList.filter(character => character.name === data.name)[0]
+          if (characterData) {
+            const characterId = Number(characterData.entry_page_id)
+            const entry = new window.hoyowikiApi.Entry()
+            const character = await entry.get(characterId)
 
-          if (id !== false) {
-            data.icon_url = await this.getGenshinIconUrl(id)
-            data.image_url = await this.getGenshinCharacterImageUrl(id)
+            data.icon_url = character.icon_url
+            data.image_url = character.header_img_url
+            data.hoyowiki_url = `https://wiki.hoyolab.com/pc/genshin/entry/${characterId.toString()}`
           } else {
             data.icon_url = null
             data.image_url = null
+            data.hoyowiki_url = null
+          }
+        } else if (this.isWeapon(data.item_type)) {
+          const weaponData = weaponList.filter(weapon => weapon.name === data.name)[0]
+          if (weaponData) {
+            const weaponId = Number(weaponData.entry_page_id)
+            const entry = new window.hoyowikiApi.Entry()
+            const weapon = await entry.get(weaponId)
+
+            data.icon_url = weapon.icon_url
+            data.image_url = null
+            data.hoyowiki_url = `https://wiki.hoyolab.com/pc/genshin/entry/${weaponId.toString()}`
+          } else {
+            data.icon_url = null
+            data.image_url = null
+            data.hoyowiki_url = null
           }
         } else {
           data.icon_url = null
           data.image_url = null
+          data.hoyowiki_url = null
         }
 
         if (Number(data.rank_type) === 5) {

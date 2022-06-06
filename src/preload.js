@@ -17,6 +17,7 @@ log.transports.console.level = false
 const moment = require('moment')
 const GitHub = require('github-api')
 const showdown = require('showdown')
+const hoyowikiApi = require('@gonetone/hoyowiki-api')
 
 const FileControl = require('@/modules/FileControl')
 const ReadGenshinFile = require('@/modules/ReadGenshinFile')
@@ -36,6 +37,9 @@ window.github = new GitHub()
 
 showdown.setFlavor('github')
 window.mdConverter = new showdown.Converter()
+
+hoyowikiApi.axiosInstance.defaults.adapter = require('axios/lib/adapters/http')
+window.hoyowikiApi = hoyowikiApi
 
 window.FileControl = FileControl
 window.ReadGenshinFile = ReadGenshinFile

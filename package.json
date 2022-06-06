@@ -22,6 +22,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@gonetone/hoyowiki-api": "^1.0.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "custom-electron-titlebar": "^3.2.6",
@@ -31,6 +32,7 @@
     "exceljs": "^4.2.0",
     "fs-extra": "^7.0.1",
     "github-api": "^3.4.0",
+    "jszip": "^3.6.0",
     "moment": "^2.29.1",
     "showdown": "^1.9.1",
     "vue": "^3.0.0",
