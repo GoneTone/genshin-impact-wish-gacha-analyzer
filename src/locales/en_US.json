@@ -86,7 +86,7 @@
   "ui.text.testers": "Testers",
   "ui.text.github_contributor": "GitHub Contributors",
   "ui.text.translation_reviewer": "Translation proofreaders",
-  "ui.text.translated_language": "has been translated to",
+  "ui.text.translated_language": "available language",
   "ui.text.project_license": "Project License",
   "modules.error.url_get_data_failed": "Failed to fetch resources from \"{url}\": {msg}",
   "modules.error.unable_read_log": "Unable to read the log file. Please make sure that you have launched the game before.",
