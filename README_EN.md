@@ -5,8 +5,8 @@
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
- 
-It works by reading game logs to obtain the wish history website. Thus, you must start the game and open the wish history page at least once before running this utility.
+
+It works by use proxy to obtain the wish history api url. Thus, you must open the wish history page at least once after running this utility.
 
 Variables retrieved from the website will be analyzed and used in an API related to Genshin Impact (from miHoYo).
  
@@ -32,6 +32,7 @@ The software may trigger anti-virus software during installation and execution. 
 
 ## Functions & To-do List
 
+- [x] Support Genshin Impact 3.0
 - [x] Support The International Server
 - [ ] Support The CN Server
 - [x] Total Wish Counter
