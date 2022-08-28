@@ -13,6 +13,7 @@
   "ui.text.initialize.description": "請稍等，正在初始化...",
   "ui.text.data_loading": "資料加載中...",
   "ui.text.error": "發生錯誤",
+  "ui.text.loading.wait_proxy_get_gacha_history_url": "已開啟並連上 Proxy，接下來請在遊戲內開啟卡池歷史記錄頁面，當取得歷史記錄 API 網址後會自動關閉 Proxy，等待中...<br><br>如果您在使用其他應用程式時無法連線，可能是 Proxy 未自動關閉，請至 Windows 設定中手動關閉 Proxy。",
   "ui.text.loading.loading_gacha_data": "正在加載卡池資料，{may_take_a_while}...",
   "ui.text.loading.loading_gacha_data_uid": "正在讀取 UID {uid} 玩家的 {gacha_name} 卡池歷史資料，{may_take_a_while}...",
   "ui.text.loading.may_take_a_while": "可能需要一點時間",

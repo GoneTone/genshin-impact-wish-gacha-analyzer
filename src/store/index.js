@@ -55,6 +55,9 @@ export default createStore({
           },
           sea: {
             host: process.env.VUE_APP_MIHOYO_SEA_HOST
+          },
+          act: {
+            host: process.env.VUE_APP_HOYOLAB_ACT_HOST
           }
         },
         app: { // APP API
@@ -97,8 +100,13 @@ export default createStore({
   actions: {
     async setDatas (context, updateGachaLog = false) {
       try {
+        context.commit('setLoadStatus', {
+          status: 'load',
+          msg: i18n.global.t('ui.text.loading.wait_proxy_get_gacha_history_url')
+        })
+
         const readGenshinFile = new window.ReadGenshinFile()
-        const wishHistoryPageUrl = await readGenshinFile.getWishHistoryPageUrl()
+        const wishHistoryPageUrl = this.getters.datas.wishHistoryPageUrl ?? await readGenshinFile.getWishHistoryPageUrl()
         const parseUrl = new URL(wishHistoryPageUrl)
         const searchParams = parseUrl.searchParams
         const queryStringParameters = {
@@ -109,8 +117,8 @@ export default createStore({
           gacha_id: searchParams.get('gacha_id') ?? '',
           lang: searchParams.get('lang') ?? '',
           device_type: searchParams.get('device_type') ?? '',
-          ext: searchParams.get('ext') ?? '',
           game_version: searchParams.get('game_version') ?? '',
+          plat_type: searchParams.get('plat_type') ?? '',
           region: searchParams.get('region') ?? '',
           authkey: searchParams.get('authkey') ?? '',
           game_biz: searchParams.get('game_biz') ?? '',

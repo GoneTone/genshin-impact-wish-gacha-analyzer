@@ -70,6 +70,7 @@
       {{ $t("ui.text.other") }}
     </div>
 
+    <!--
     <router-link :to="{ path: '/page/' + encodeURIComponent(this.$store.getters.datas.wishHistoryPageUrl)}" v-slot="{ href, navigate, isActive }" custom>
       <li :class="['nav-item', isActive && 'active']">
         <a :class="['nav-link']" :href="href" @click="navigate">
@@ -78,6 +79,7 @@
         </a>
       </li>
     </router-link>
+    -->
 
     <router-link :to="{ path: '/page/' + encodeURIComponent(url.signin)}" v-slot="{ href, navigate, isActive }" custom>
       <li :class="['nav-item', isActive && 'active']">

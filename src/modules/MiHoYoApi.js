@@ -26,6 +26,7 @@ class MiHoYoApi {
     this._mihoyoWebApiHost = process.env.VUE_APP_MIHOYO_WEBAPI_HOST
     this._mihoyoBbsApiHost = process.env.VUE_APP_MIHOYO_BBSAPI_HOST
     this._mihoyoSeaHost = process.env.VUE_APP_MIHOYO_SEA_HOST
+    this._mihoyoActHost = process.env.VUE_APP_HOYOLAB_ACT_HOST
     this._mihoyoApiPath = process.env.VUE_APP_MIHOYO_API_PATH
     this._mihoyoWebApiPath = process.env.VUE_APP_MIHOYO_WEBAPI_PATH
     this._mihoyoBbsApiIconPath = process.env.VUE_APP_MIHOYO_BBSAPI_ICON_PATH
@@ -102,8 +103,8 @@ class MiHoYoApi {
     apiUrlAppend.searchParams.append('gacha_id', this._queryStringParameters.gacha_id.toString())
     apiUrlAppend.searchParams.append('lang', this._queryStringParameters.lang.toString())
     apiUrlAppend.searchParams.append('device_type', this._queryStringParameters.device_type.toString())
-    apiUrlAppend.searchParams.append('ext', this._queryStringParameters.ext.toString())
     apiUrlAppend.searchParams.append('game_version', this._queryStringParameters.game_version.toString())
+    apiUrlAppend.searchParams.append('plat_type', this._queryStringParameters.plat_type.toString())
     apiUrlAppend.searchParams.append('region', this._queryStringParameters.region.toString())
     apiUrlAppend.searchParams.append('authkey', this._queryStringParameters.authkey.toString())
     apiUrlAppend.searchParams.append('game_biz', this._queryStringParameters.game_biz.toString())
@@ -550,9 +551,9 @@ class MiHoYoApi {
    */
   getSigninPageUrl () {
     const actId = 'e202102251931481'
-    const path = '/ys/event/signin-sea/index.html'
+    const path = '/ys/event/signin-sea-v3/index.html'
 
-    const pageUrlAppend = new URL(`https://${this._mihoyoSeaHost}${path}`)
+    const pageUrlAppend = new URL(`https://${this._mihoyoActHost}${path}`)
     pageUrlAppend.searchParams.append('act_id', actId.toString())
 
     return pageUrlAppend.href
