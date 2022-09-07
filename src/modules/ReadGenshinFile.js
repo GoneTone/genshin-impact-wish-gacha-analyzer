@@ -10,10 +10,11 @@
 
 const { remote } = require('electron')
 const fs = require('fs')
+const path = require('path')
 const readline = require('readline')
 const checkUrl = require('@/modules/checkUrl')
-const Registry = require('winreg')
-const Proxy = require('http-mitm-proxy')
+// const Registry = require('winreg')
+// const Proxy = require('http-mitm-proxy')
 
 class ReadGenshinFile {
   /**
@@ -28,8 +29,9 @@ class ReadGenshinFile {
    *
    * @returns {Promise<string>}
    */
-  getWishHistoryPageUrl () {
+  async getWishHistoryPageUrl () {
     /* 設定 Proxy */
+    /*
     const setProxy = async (enable, proxyIp = '', ignoreIp = '') => {
       const regKey = new Registry({
         hive: Registry.HKCU,
@@ -48,9 +50,10 @@ class ReadGenshinFile {
       await regSet('ProxyServer', Registry.REG_SZ, proxyIp)
       await regSet('ProxyOverride', Registry.REG_SZ, ignoreIp)
     }
+    */
 
-    return new Promise((resolve, reject) => {
-      /*
+    // return new Promise((resolve, reject) => {
+    /*
       const readStream = fs.createReadStream(`${this._path}output_log.txt`).on('error', () => {
         return reject(new Error(window.i18n.t('modules.error.unable_read_log')))
       })
@@ -84,6 +87,7 @@ class ReadGenshinFile {
       })
       */
 
+    /*
       const proxyPort = 7097
 
       const proxyIp = `127.0.0.1:${proxyPort}`
@@ -109,7 +113,29 @@ class ReadGenshinFile {
         return callback()
       })
       proxy.listen({ port: proxyPort })
-    })
+      */
+    // })
+
+    let logString = ''
+    try {
+      logString = await fs.promises.readFile(`${this._path}output_log.txt`, 'utf8')
+    } catch {
+      throw Error(window.i18n.t('modules.error.unable_read_log'))
+    }
+
+    const gamePathMatch = logString.match(/\w:\/.+(GenshinImpact_Data)/)
+    if (!gamePathMatch) throw Error(window.i18n.t('modules.error.unable_get_gacha_history_url'))
+
+    const cacheText = await fs.promises.readFile(path.join(gamePathMatch[0], '/webCaches/Cache/Cache_Data/data_2'), 'utf8')
+    const urlMatch = cacheText.match(/https.+?game_biz=hk4e_\w+/g)
+    if (!urlMatch) throw Error(window.i18n.t('modules.error.unable_get_gacha_history_url'))
+
+    const wishHistoryUrl = urlMatch[(urlMatch.length - 1)]
+
+    const check = await checkUrl(wishHistoryUrl)
+    if (!check.status) throw Error(window.i18n.t('modules.error.url_verification_failed', { url: wishHistoryUrl, msg: check.msg }))
+
+    return wishHistoryUrl
   }
 
   /**
