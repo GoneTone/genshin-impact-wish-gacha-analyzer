@@ -100,10 +100,12 @@ export default createStore({
   actions: {
     async setDatas (context, updateGachaLog = false) {
       try {
+        /*
         context.commit('setLoadStatus', {
           status: 'load',
           msg: i18n.global.t('ui.text.loading.wait_proxy_get_gacha_history_url')
         })
+        */
 
         const readGenshinFile = new window.ReadGenshinFile()
         const wishHistoryPageUrl = this.getters.datas.wishHistoryPageUrl ?? await readGenshinFile.getWishHistoryPageUrl()
