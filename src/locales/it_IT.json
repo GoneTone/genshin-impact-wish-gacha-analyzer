@@ -1,1 +1,7 @@
-{}
+{
+  "lang.name": "Italiano",
+  "app.name": "Analizzatore Gachapon di Genshin Impact",
+  "ui.text.title.home": "Registro dei Dati Generale",
+  "ui.text.title.gacha": "{gacha_name} - Grafico dei Dati",
+  "ui.text.title.history": "Cronologia"
+}
