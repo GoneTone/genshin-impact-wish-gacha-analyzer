@@ -13,6 +13,7 @@
   "ui.text.initialize.description": "กรุณารอสักครู่, กำลังเริ่มต้น...",
   "ui.text.data_loading": "กำลังโหลด...",
   "ui.text.error": "เกิดข้อผิดพลาด",
+  "ui.text.loading.wait_proxy_get_gacha_history_url": "พร็อกซีเปิดและเชื่อมต่อแล้ว กรุณาเปิดประวัติอธิษฐานในเกม พร็อกซีจะถูกปิดโดยอัตโนมัติหลังจากอัปโหลดลิงก์ API ของข้อมูลประวัติแล้ว กรุณารอ...<br><br> หากคุณไม่สามารถเชื่อมต่ออินเทอร์เน็ตในขณะที่ใช้แอปอื่น พร็อกซีอาจไม่ได้ตัดการเชื่อมต่อโดยอัตโนมัติ โปรดไปที่ Windows - การตั้งค่า และปิดด้วยตนเอง",
   "ui.text.loading.loading_gacha_data": "กำลังโหลดการอธิษฐาน, {may_take_a_while}...",
   "ui.text.loading.loading_gacha_data_uid": "กำลังอ่านข้อมูลประวัติ {gacha_name} ของผู้เล่น UID {uid}, {may_take_a_while}...",
   "ui.text.loading.may_take_a_while": "อาจใช้เวลาสักครู่",
