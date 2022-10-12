@@ -1,7 +1,13 @@
 {
   "lang.name": "Tiếng Việt",
+  "app.name": "Genshin Impact Wish Gacha Analyzer",
+  "ui.text.title.home": "Tổng Biểu Đồ Dữ Liệu",
+  "ui.text.title.gacha": "{gacha_name} - Biểu Đồ Dữ Liệu",
   "ui.text.title.history": "Lịch sử cầu nguyện",
+  "ui.text.title.web_signin": "Trang Điểm Danh Hằng Ngày",
   "ui.text.title.teyvat_interactive_map": "Bản đồ tương tác Teyvat",
+  "ui.text.title.contribution_list.name": "Danh Sách Người Đóng Góp",
+  "ui.text.title.contribution_list.description": "Cảm ơn các đối tác sau đây đã đóng góp phát triển phần mềm này!",
   "ui.text.initialize.description": "Vui lòng đợi...",
   "ui.text.data_loading": "Đang tải dữ liệu...",
   "ui.text.error": "Có lỗi xảy ra",
