@@ -91,7 +91,9 @@
   "modules.error.unable_get_gacha_history_url": "Không thể nạp URL của trang lịch sử cầu nguyện. Hãy chắc rằng bạn đã mở trang lịch sử cầu nguyện trong trò chơi.",
   "modules.error.url_verification_failed": "Xác thực trang web \"{url}\" không thành công: {msg}",
   "modules.error.unable_get_player_uid": "Không tải được UID của người chơi.",
-  "modules.error.get_gacha_type_data_api_url_failed": "Không nạp được điểm cuối API của dữ liệu loại cầu nguyện.",
-  "modules.error.get_gacha_history_api_url_failed": "Không nạp được điểm cuối API của lịch sử cầu nguyện.",
-  "modules.error.get_items_api_url_failed": "Không nạp được điểm cuối Api của dữ liệu vật phẩm."
+  "modules.error.get_gacha_type_data_api_url_failed": "Không lấy được URL API của dữ liệu loại cầu nguyện.",
+  "modules.error.get_gacha_history_api_url_failed": "Không lấy được URL API của lịch sử cầu nguyện.",
+  "modules.error.get_items_api_url_failed": "Không lấy được Url Api của dữ liệu vật phẩm.",
+  "modules.error.get_gacha_history_failed": "Không lấy được dữ liệu API của lịch sử cầu nguyện.",
+  "file.genshin_gacha_history": "Lịch Sử Cầu Nguyện Genshin Impact"
 }
