@@ -5,6 +5,7 @@
   "ui.text.title.home": "総合データチャート",
   "ui.text.title.gacha": "{gacha_name} - データチャート",
   "ui.text.title.history": "祈願履歴",
+  "ui.text.title.web_signin": "網頁每日簽到",
   "ui.text.title.teyvat_interactive_map": "テイワットマップ",
   "ui.text.initialize.title": "初期設定中...",
   "ui.text.initialize.description": "初期設定中、しばらくお待ちください ...",
