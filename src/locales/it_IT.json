@@ -12,7 +12,7 @@
   "ui.text.initialize.description": "Attendere, avviando...",
   "ui.text.data_loading": "Caricamento dati...",
   "ui.text.error": "Qualcosa non ha funzionato.",
-  "ui.text.loading.wait_proxy_get_gacha_history_url": "Il proxy è attivo e connesso. Si prega di aprire la cronologia desideri in gioco. Il proxy verrà disattivato automaticamente dopo che il collegamento API della cronologia dati si sarà caricata. Abbi pazienza...<br><br>Se non riesci a connetterti a Internet mentre usi altre applicazioni allora il Proxy potrebbe non essersi disconnesso automaticamente. SI prega di andare su <Menu Start - Impostazioni - Rete e Intenet - Proxy> e disattivarlo manualmente.",
+  "ui.text.loading.wait_proxy_get_gacha_history_url": "Il proxy è attivo e connesso. Si prega di aprire la cronologia desideri in gioco. Il proxy verrà disattivato automaticamente dopo che il collegamento API della cronologia dati si sarà caricata. Abbi pazienza...<br><br>Se non riesci a connetterti a Internet mentre usi altre applicazioni allora il Proxy potrebbe non essersi disconnesso automaticamente. Si prega di andare su \"Menu Start - Impostazioni - Rete e Intenet - Proxy\" e disattivarlo manualmente.",
   "ui.text.loading.loading_gacha_data": "Caricando i dati dell'inserzione, {may_take_a_while}...",
   "ui.text.loading.loading_gacha_data_uid": "Analizzando la cronologia dell'inserzione {gacha_name} del giocatore {uid}, {may_take_a_while}...",
   "ui.text.loading.may_take_a_while": "Potrebbe volerci un po'",
@@ -37,5 +37,16 @@
   "ui.text.table.data_table.info_filtered": "(Filtrato da {max} registri)",
   "ui.text.table.data_table.search": "Cerca:",
   "ui.text.table.data_table.paginate.previous": "Precedente",
-  "ui.text.table.data_table.paginate.next": "Successivo"
+  "ui.text.table.data_table.paginate.next": "Successivo",
+  "ui.text.chance_of_win_by_five_rank": "Tasso di estrazione dei 5 stelle",
+  "ui.text.chance_of_win_by_four_rank": "Tasso di estrazione dei 4 stelle",
+  "ui.text.chance_of_win_by_three_rank": "Tasso di estrazione dei 3 stelle e sotto",
+  "ui.text.chance_of_win_by_character": "Tasso di estrazione dei personaggi",
+  "ui.text.chance_of_win_by_weapon": "Tasso di estrazione delle armi",
+  "ui.text.count_of_win_by_five_rank": "Numero dei 5 stelle estratti",
+  "ui.text.count_of_win_by_four_rank": "Numero dei 4 stelle estratti",
+  "ui.text.count_of_win_by_three_rank": "Numero dei 3 stelle estratti",
+  "ui.text.count_of_win_by_character": "Numero dei personaggi estratti",
+  "ui.text.count_of_win_by_weapon": "Numero delle armi estratte",
+  "ui.text.character_wins_count": "Numero dei personaggi estratti: {count}"
 }
