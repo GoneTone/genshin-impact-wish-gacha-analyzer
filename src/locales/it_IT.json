@@ -31,5 +31,11 @@
   "ui.text.table.draws_count_in_win": "Numero di desideri dall'ultimo cinque stelle",
   "ui.text.table.stars": "{star} stelle",
   "ui.text.table.data_table.length_menu": "Visualizza il registro del {menu} per pagine",
-  "ui.text.table.data_table.zero_records": "Nessun risultato trovato"
+  "ui.text.table.data_table.zero_records": "Nessun risultato trovato",
+  "ui.text.table.data_table.info": "{page} pagina di {pages} pagine",
+  "ui.text.table.data_table.info_empty": "Dati non trovati",
+  "ui.text.table.data_table.info_filtered": "(Filtrato da {max} registri)",
+  "ui.text.table.data_table.search": "Cerca:",
+  "ui.text.table.data_table.paginate.previous": "Precedente",
+  "ui.text.table.data_table.paginate.next": "Successivo"
 }
