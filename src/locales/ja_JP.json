@@ -7,6 +7,8 @@
   "ui.text.title.history": "祈願履歴",
   "ui.text.title.web_signin": "網頁每日簽到",
   "ui.text.title.teyvat_interactive_map": "テイワットマップ",
+  "ui.text.title.contribution_list.name": "貢献した人",
+  "ui.text.title.contribution_list.description": "このソフトウェアに貢献した人に感謝する",
   "ui.text.initialize.title": "初期設定中...",
   "ui.text.initialize.description": "初期設定中、しばらくお待ちください ...",
   "ui.text.data_loading": "データ読み込み中...",
