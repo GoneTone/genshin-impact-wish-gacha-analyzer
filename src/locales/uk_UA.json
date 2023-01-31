@@ -27,5 +27,11 @@
   "ui.text.table.name": "Назва",
   "ui.text.table.type": "Тип",
   "ui.text.table.rank": "Рідкість",
-  "ui.text.table.get_time": "Час отримання"
+  "ui.text.table.get_time": "Час отримання",
+  "ui.text.table.stars": "{star}★",
+  "ui.text.table.data_table.zero_records": "Результатів не знайдено",
+  "ui.text.table.data_table.info": "Сторінка {page} / {pages}",
+  "ui.text.table.data_table.info_empty": "Інформації не знайдено",
+  "ui.text.table.data_table.info_filtered": "(відібрано з {max} записів)",
+  "ui.text.table.data_table.search": "Пошук："
 }
