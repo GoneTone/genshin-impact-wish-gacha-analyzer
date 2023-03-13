@@ -4,6 +4,8 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
+## 通知：本人于 3/14 被抓去服兵役，役期 4 个月，软件内的当期卡池图片和音乐无法即时更新，但仍然可以使用 (除非游戏官方又改了什么)，敬请谅解。
+
 我开发了一套用来分析祈愿卡池历史记录的软件，一开启各种数据清清楚楚，不用再手动计算啦！
 
 本软件原理是读取原神游戏 Web Cache 文件取得卡池历史记录页面网址，所以要先在游戏内开启过卡池历史记录才能读取到，取得网址后拆解参数，参数会用于 miHoYo 原神相关的 API。

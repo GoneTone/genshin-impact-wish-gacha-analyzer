@@ -4,6 +4,8 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
+## Notice: I will be serving military service starting from 3/14 for a period of 4 months. The current gacha images and music in the software will not be updated in real-time but can still be used (unless the game officials change something). Please understand.
+
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
 
 It works by reading game web cache file to obtain the wish history website url. Thus, you must start the game and open the wish history page at least once before running this utility.
