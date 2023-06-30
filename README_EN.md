@@ -4,7 +4,7 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-## Notice: I will be serving military service starting from 3/14 for a period of 4 months. The current gacha images and music in the software will not be updated in real-time but can still be used (unless the game officials change something). Please understand.
+## Notification: Due to limited personal time, I am currently unable to continue maintaining and developing this project. Therefore, it will be temporarily suspended. However, there is a possibility that I may return in the future to resume maintenance and development. If anyone is interested in taking over, please contact me at (p29022716@gmail.com). Thank you.
 
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
 

@@ -4,7 +4,7 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-## 通知：本人於 3/14 被抓去服兵役，役期 4 個月，軟體內的當期卡池圖片和音樂無法即時更新，但還是可以使用 (除非遊戲官方又改了什麼)，請見諒。
+## 通知：因本人時間有限，暫無法繼續維護和開發此專案，故暫停進行，但未來可能回來繼續維護和開發。若有人願意接手，請聯繫我 (p29022716@gmail.com)，感謝。
 
 我開發了一套用來分析祈願卡池歷史記錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
 
