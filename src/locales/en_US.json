@@ -13,6 +13,7 @@
   "ui.text.initialize.description": "Please wait, initializing...",
   "ui.text.data_loading": "Loading data...",
   "ui.text.error": "Error",
+  "ui.text.loading.wait_proxy_get_gacha_history_url": "Proxy has been turned on and connected. Please open up the wish history in-game. The proxy will be turned off automatically after the API link of history data has been uploaded. Be patient... <br><br> If you are unable to connect the internet while using other App, the Proxy may not have disconnected automatically. Please go to Windows - Settings and turn off manually.",
   "ui.text.loading.loading_gacha_data": "Loading banner data, {may_take_a_while}...",
   "ui.text.loading.loading_gacha_data_uid": "Reading the {gacha_name} banner history of player {uid}, {may_take_a_while}...",
   "ui.text.loading.may_take_a_while": "This may take a while",
