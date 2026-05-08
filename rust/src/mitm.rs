@@ -45,6 +45,10 @@ struct LogHandler {
     sink: StreamSink<CapturedRequest>,
     // Arc-shared across handler clones so the first hit wins for the whole proxy.
     fired: Arc<AtomicBool>,
+    // 命中後 set true；handle_response 第一次看到後 swap 為 false 並 spawn delayed stop。
+    // 不能在 handle_request 內直接 spawn stop：那時上游 response 還沒回來，
+    // hudsucker graceful shutdown 不等 outbound in-flight request，會直接切斷 connection。
+    pending_stop: Arc<AtomicBool>,
 }
 
 impl HttpHandler for LogHandler {
@@ -77,12 +81,8 @@ impl HttpHandler for LogHandler {
             timestamp_ms,
         });
 
-        // 在 mitm runtime 之外觸發 stop，避免 self-join 死鎖
-        std::thread::spawn(|| {
-            if let Err(e) = crate::api::capture::stop_capture() {
-                tracing::error!(target: "mitm", "auto-stop after match failed: {e}");
-            }
-        });
+        // 暫不 spawn stop_capture：要等 response 從上游回來，避免 hudsucker 太早 shutdown 切斷 connection。
+        self.pending_stop.store(true, Ordering::SeqCst);
 
         Request::from_parts(parts, body).into()
     }
@@ -92,8 +92,18 @@ impl HttpHandler for LogHandler {
         _ctx: &HttpContext,
         res: Response<Body>,
     ) -> Response<Body> {
-        if self.fired.load(Ordering::SeqCst) {
-            tracing::info!(target: "mitm", "handle_response after hit: status {}", res.status());
+        if self.pending_stop.swap(false, Ordering::SeqCst) {
+            tracing::info!(target: "mitm", "handle_response after hit: status {}, scheduling stop", res.status());
+
+            // 在 mitm runtime 之外觸發 stop，避免 self-join 死鎖。
+            // 延遲 500ms 給 hudsucker 把 response body stream 完整寫回 client socket
+            // （handle_response 觸發 = 上游 headers 已到，body 仍在 stream）。
+            std::thread::spawn(|| {
+                std::thread::sleep(std::time::Duration::from_millis(500));
+                if let Err(e) = crate::api::capture::stop_capture() {
+                    tracing::error!(target: "mitm", "auto-stop after match failed: {e}");
+                }
+            });
         }
         res
     }
@@ -132,6 +142,7 @@ pub fn start(
     let handler = LogHandler {
         sink,
         fired: Arc::new(AtomicBool::new(false)),
+        pending_stop: Arc::new(AtomicBool::new(false)),
     };
 
     let handle = std::thread::spawn(move || {
