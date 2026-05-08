@@ -29,7 +29,12 @@ pub fn start_capture(sink: StreamSink<CapturedRequest>) -> Result<()> {
         return Err(anyhow!("capture already running"));
     }
 
-    let _ = tracing_subscriber::fmt::try_init();
+    let _ = tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"))
+        )
+        .try_init();
 
     let root = ca::load_or_generate()?;
     cert_store::install_to_current_user_root(&root.cert_der)?;
