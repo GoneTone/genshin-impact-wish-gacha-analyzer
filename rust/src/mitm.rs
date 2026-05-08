@@ -1,12 +1,12 @@
 use std::net::SocketAddr;
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use anyhow::{Context, Result};
-use http_body_util::BodyExt;
 use hudsucker::{
     Proxy,
     Body, HttpContext, HttpHandler, RequestOrResponse,
     certificate_authority::RcgenAuthority,
-    hyper::{Request, Response},
+    hyper::{Request, Response, Uri},
     rcgen::{Issuer, KeyPair},
     rustls::{ClientConfig, crypto::aws_lc_rs},
 };
@@ -31,9 +31,20 @@ impl Drop for MitmServerGuard {
     }
 }
 
+fn is_target(uri: &Uri) -> bool {
+    let host_ok = uri
+        .host()
+        .map(|h| h == "hoyoverse.com" || h.ends_with(".hoyoverse.com"))
+        .unwrap_or(false);
+    let path_ok = uri.path().ends_with("/getGachaLog");
+    host_ok && path_ok
+}
+
 #[derive(Clone)]
 struct LogHandler {
     sink: StreamSink<CapturedRequest>,
+    // Arc-shared across handler clones so the first hit wins for the whole proxy.
+    fired: Arc<AtomicBool>,
 }
 
 impl HttpHandler for LogHandler {
@@ -44,44 +55,36 @@ impl HttpHandler for LogHandler {
     ) -> RequestOrResponse {
         let (parts, body) = req.into_parts();
 
+        if !is_target(&parts.uri) {
+            return Request::from_parts(parts, body).into();
+        }
+
+        if self.fired.swap(true, Ordering::SeqCst) {
+            return Request::from_parts(parts, body).into();
+        }
+
         let method = parts.method.to_string();
-        let uri = &parts.uri;
-        let url = uri.to_string();
-        let host = uri.host().unwrap_or("").to_string();
-        let ts = chrono::Utc::now().timestamp_millis();
+        let url = parts.uri.to_string();
+        let host = parts.uri.host().unwrap_or("").to_string();
+        let timestamp_ms = chrono::Utc::now().timestamp_millis();
 
-        // 同步 log 一條，方便除錯
-        tracing::info!(target: "mitm", "{} {}", method, url);
+        tracing::info!(target: "mitm", "hit getGachaLog: {} {}", method, url);
 
-        // 收集 body bytes（用於 PoC 驗證）；失敗時 warn 並改用空 body
-        let body_bytes = match body.collect().await {
-            Ok(collected) => collected.to_bytes(),
-            Err(e) => {
-                tracing::warn!(target: "mitm", "body collection failed: {}", e);
-                Default::default()
-            }
-        };
-
-        // 印出 body 摘要：byte 長度 + 前 256 bytes 的 UTF-8 lossy 預覽（spec §7 step 5）
-        let preview_len = body_bytes.len().min(256);
-        let preview = String::from_utf8_lossy(&body_bytes[..preview_len]);
-        tracing::info!(
-            target: "mitm",
-            "body summary: {} bytes, preview: {:?}",
-            body_bytes.len(),
-            preview,
-        );
-
-        // 不阻塞請求；sink 滿了就丟棄這筆
         let _ = self.sink.add(CapturedRequest {
             method,
             url,
             host,
-            timestamp_ms: ts,
+            timestamp_ms,
         });
 
-        // 重建 request，讓下游仍能收到相同的 body
-        Request::from_parts(parts, Body::from(body_bytes)).into()
+        // 在 mitm runtime 之外觸發 stop，避免 self-join 死鎖
+        std::thread::spawn(|| {
+            if let Err(e) = crate::api::capture::stop_capture() {
+                tracing::error!(target: "mitm", "auto-stop after match failed: {e}");
+            }
+        });
+
+        Request::from_parts(parts, body).into()
     }
 
     async fn handle_response(
@@ -106,10 +109,8 @@ pub fn start(
     let provider = aws_lc_rs::default_provider();
     let ca = RcgenAuthority::new(issuer, 1_000, provider);
 
-    // Build an outbound TLS connector that advertises h2 + http/1.1 via ALPN.
-    // Using with_http_connector instead of with_rustls_connector so we can
-    // supply a ClientConfig with alpn_protocols set; this prevents
-    // "peer doesn't support any known protocol" errors from h2-only servers.
+    // with_http_connector lets us supply a ClientConfig with ALPN h2 + http/1.1
+    // (the default with_rustls_connector skips ALPN, breaking h2-only servers).
     let tls_config = ClientConfig::builder_with_provider(Arc::new(aws_lc_rs::default_provider()))
         .with_safe_default_protocol_versions()
         .context("rustls ClientConfig: no supported protocol versions")?
@@ -125,7 +126,10 @@ pub fn start(
 
     let (shutdown_tx, shutdown_rx) = oneshot::channel::<()>();
 
-    let handler = LogHandler { sink };
+    let handler = LogHandler {
+        sink,
+        fired: Arc::new(AtomicBool::new(false)),
+    };
 
     let handle = std::thread::spawn(move || {
         let rt = tokio::runtime::Builder::new_multi_thread()
@@ -146,7 +150,7 @@ pub fn start(
                 .expect("hudsucker proxy build failed");
 
             if let Err(e) = proxy.start().await {
-                tracing::error!("mitm proxy stopped: {e}");
+                tracing::error!(target: "mitm", "mitm proxy stopped: {e}");
             }
         });
     });
