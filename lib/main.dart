@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/pages/poc_capture_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/frb_generated.dart';
 
 Future<void> main() async {
@@ -13,12 +13,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Rust says: ${ping()}'),
-        ),
-      ),
-    );
+    return const MaterialApp(home: PocCapturePage());
   }
 }
