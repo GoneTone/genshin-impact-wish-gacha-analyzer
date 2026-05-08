@@ -3,6 +3,7 @@ use rcgen::{BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa
 use sha1::Digest;
 use std::fs;
 use std::path::PathBuf;
+use tracing::debug;
 
 /// Returns `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca\`, creating it if missing.
 pub fn ca_dir() -> Result<PathBuf> {
@@ -29,13 +30,16 @@ pub fn load_or_generate() -> Result<RootCa> {
 
     let cert_exists = cert_path.exists();
     let key_exists = key_path.exists();
-    eprintln!(
-        "[ca] load_or_generate start: path={} cert_exists={} key_exists={}",
-        dir.display(), cert_exists, key_exists
+    debug!(
+        target: "ca",
+        path = %dir.display(),
+        cert_exists,
+        key_exists,
+        "load_or_generate start"
     );
 
     let result: Result<RootCa> = if cert_exists && key_exists {
-        eprintln!("[ca] load branch (existing files)");
+        debug!(target: "ca", "load branch (existing files)");
 
         let cert_pem = fs::read_to_string(&cert_path)
             .with_context(|| format!("Failed to read {}", cert_path.display()))?;
@@ -49,7 +53,7 @@ pub fn load_or_generate() -> Result<RootCa> {
 
         Ok(RootCa { cert_pem, key_pem, cert_der })
     } else {
-        eprintln!("[ca] generate branch (no existing files)");
+        debug!(target: "ca", "generate branch (no existing files)");
 
         // Generate a new self-signed root CA.
         let mut params = CertificateParams::new(Vec::new())
@@ -80,7 +84,7 @@ pub fn load_or_generate() -> Result<RootCa> {
 
     if let Ok(ref ca) = result {
         let hash = sha1::Sha1::digest(&ca.cert_der);
-        eprintln!("[ca] load_or_generate done: sha1={}", hex::encode(hash));
+        debug!(target: "ca", sha1 = %hex::encode(hash), "load_or_generate done");
     }
     result
 }

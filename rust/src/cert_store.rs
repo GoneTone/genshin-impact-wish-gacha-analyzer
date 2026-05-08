@@ -1,5 +1,6 @@
 use anyhow::Context;
 use sha1::{Digest, Sha1};
+use tracing::debug;
 use windows::core::w;
 use windows::Win32::Security::Cryptography::{
     CertAddEncodedCertificateToStore, CertCloseStore, CertFindCertificateInStore, CertOpenStore,
@@ -16,7 +17,7 @@ use windows::Win32::Security::Cryptography::{
 pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
     // 計算 cert_der 的 SHA-1 指紋（20 bytes）
     let mut hash: [u8; 20] = Sha1::digest(cert_der).into();
-    eprintln!("[cert_store] looking up cert by thumbprint sha1={}", hex::encode(hash));
+    debug!(target: "cert_store", sha1 = %hex::encode(hash), "looking up cert by thumbprint");
 
     // SAFETY:
     // - store handle 僅在 CertOpenStore 成功後至 CertCloseStore 之間使用。
@@ -51,7 +52,7 @@ pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
         );
 
         let found = !existing.is_null();
-        eprintln!("[cert_store] find result: found={}", found);
+        debug!(target: "cert_store", found, "find result");
 
         if found {
             // 憑證已存在，跳過安裝，不觸發 Windows 確認對話框
@@ -60,7 +61,7 @@ pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
         }
 
         // 憑證不存在，安裝之（使用者僅在此首次安裝時看到對話框）
-        eprintln!("[cert_store] installing cert (will trigger Windows dialog)");
+        debug!(target: "cert_store", "installing cert (will trigger Windows dialog)");
         let result = CertAddEncodedCertificateToStore(
             Some(store),
             X509_ASN_ENCODING,
