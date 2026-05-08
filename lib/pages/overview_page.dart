@@ -35,12 +35,24 @@ class OverviewPage extends ConsumerWidget {
           Text('綜合數據（全卡池合計）',
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 220,
-            child: Row(children: [
-              Expanded(child: RarityPie(stats: stats)),
-              Expanded(child: ItemTypePie(stats: stats)),
-            ]),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final stack = constraints.maxWidth < 720;
+              if (stack) {
+                return Column(children: [
+                  SizedBox(height: 220, child: RarityPie(stats: stats)),
+                  const SizedBox(height: 16),
+                  SizedBox(height: 220, child: ItemTypePie(stats: stats)),
+                ]);
+              }
+              return SizedBox(
+                height: 220,
+                child: Row(children: [
+                  Expanded(child: RarityPie(stats: stats)),
+                  Expanded(child: ItemTypePie(stats: stats)),
+                ]),
+              );
+            },
           ),
           const SizedBox(height: 16),
           StatsPanel(stats: stats),

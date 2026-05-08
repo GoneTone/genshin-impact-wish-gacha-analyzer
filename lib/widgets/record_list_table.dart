@@ -14,7 +14,7 @@ class RecordListTable extends StatefulWidget {
 
 class _RecordListTableState extends State<RecordListTable> {
   static const _pageSize = 20;
-  int _page = 0;  // 0-based
+  int _page = 0; // 0-based
 
   @override
   void didUpdateWidget(RecordListTable oldWidget) {
@@ -38,44 +38,98 @@ class _RecordListTableState extends State<RecordListTable> {
     final start = _page * _pageSize;
     final end = (start + _pageSize).clamp(0, widget.records.length);
     final slice = widget.records.sublist(start, end);
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const [
-              DataColumn(label: Text('時間')),
-              DataColumn(label: Text('名稱')),
-              DataColumn(label: Text('類型')),
-              DataColumn(label: Text('稀有度')),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.dividerColor),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              _HeaderRow(theme: theme),
+              for (var i = 0; i < slice.length; i++)
+                _DataRow(
+                  record: slice[i],
+                  isStripe: i.isOdd,
+                  theme: theme,
+                ),
             ],
-            rows: slice.map((r) {
-              final color = switch (r.rankType) {
-                5 => GachaColors.fiveStar,
-                4 => GachaColors.fourStar,
-                _ => null,
-              };
-              final style = color == null
-                  ? null
-                  : TextStyle(color: color, fontWeight: FontWeight.bold);
-              return DataRow(cells: [
-                DataCell(Text(_formatTime(r.time))),
-                DataCell(Text(r.name, style: style)),
-                DataCell(Text(r.itemType)),
-                DataCell(Text('${r.rankType}★', style: style)),
-              ]);
-            }).toList(),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _Pager(
           page: _page,
           totalPages: _totalPages,
           onChanged: (p) => setState(() => _page = p),
         ),
       ],
+    );
+  }
+}
+
+class _HeaderRow extends StatelessWidget {
+  const _HeaderRow({required this.theme});
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = theme.textTheme.titleSmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      color: theme.colorScheme.surfaceContainerHigh,
+      child: DefaultTextStyle.merge(
+        style: style ?? const TextStyle(),
+        child: const Row(
+          children: [
+            Expanded(flex: 4, child: Text('時間')),
+            Expanded(flex: 5, child: Text('名稱')),
+            Expanded(flex: 2, child: Text('類型')),
+            Expanded(flex: 2, child: Text('稀有度')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DataRow extends StatelessWidget {
+  const _DataRow({
+    required this.record,
+    required this.isStripe,
+    required this.theme,
+  });
+  final WishRecord record;
+  final bool isStripe;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (record.rankType) {
+      5 => GachaColors.fiveStar,
+      4 => GachaColors.fourStar,
+      _ => null,
+    };
+    final highlight = color == null
+        ? null
+        : TextStyle(color: color, fontWeight: FontWeight.bold);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      color: isStripe ? theme.colorScheme.surfaceContainerLow : null,
+      child: Row(
+        children: [
+          Expanded(flex: 4, child: Text(_formatTime(record.time))),
+          Expanded(flex: 5, child: Text(record.name, style: highlight)),
+          Expanded(flex: 2, child: Text(record.itemType)),
+          Expanded(flex: 2, child: Text('${record.rankType}★', style: highlight)),
+        ],
+      ),
     );
   }
 

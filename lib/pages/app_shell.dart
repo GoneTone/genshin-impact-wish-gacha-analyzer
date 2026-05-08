@@ -43,6 +43,8 @@ class _AppShellState extends ConsumerState<AppShell> {
     final selectedIndex = _indexFromLocation(location);
     final activeData = ref.watch(
         wishRepositoryProvider.select((s) => s.activeData));
+    final width = MediaQuery.of(context).size.width;
+    final extendedRail = width >= 1100;
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +70,8 @@ class _AppShellState extends ConsumerState<AppShell> {
               NavigationRail(
                 selectedIndex: selectedIndex,
                 onDestinationSelected: (i) => _go(context, i),
-                labelType: NavigationRailLabelType.all,
+                extended: extendedRail,
+                labelType: extendedRail ? null : NavigationRailLabelType.all,
                 destinations: const [
                   NavigationRailDestination(
                     icon: Icon(Icons.dashboard_outlined),
