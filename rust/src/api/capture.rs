@@ -6,8 +6,8 @@ use crate::{ca, cert_store, mitm, sys_proxy};
 const PROXY_ADDR: &str = "127.0.0.1:18080";
 
 struct Session {
-    _mitm: mitm::MitmServerGuard,
-    _proxy: sys_proxy::SysProxyGuard,
+    _proxy: sys_proxy::SysProxyGuard, // dropped first → restores Windows system proxy
+    _mitm: mitm::MitmServerGuard,     // dropped second → shuts down MITM proxy
 }
 
 static SESSION: Lazy<Mutex<Option<Session>>> = Lazy::new(|| Mutex::new(None));
@@ -31,7 +31,7 @@ pub fn start_capture() -> Result<()> {
     // mitm 起好後再切系統 proxy，避免 race
     let proxy = sys_proxy::apply(PROXY_ADDR)?;
 
-    *guard = Some(Session { _mitm: mitm, _proxy: proxy });
+    *guard = Some(Session { _proxy: proxy, _mitm: mitm });
     Ok(())
 }
 
