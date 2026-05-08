@@ -92,6 +92,9 @@ impl HttpHandler for LogHandler {
         _ctx: &HttpContext,
         res: Response<Body>,
     ) -> Response<Body> {
+        if self.fired.load(Ordering::SeqCst) {
+            tracing::info!(target: "mitm", "handle_response after hit: status {}", res.status());
+        }
         res
     }
 }
