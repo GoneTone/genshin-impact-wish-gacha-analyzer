@@ -13,12 +13,14 @@ GoRouter buildAppRouter() => GoRouter(
           routes: [
             GoRoute(
               path: '/',
-              builder: (_, state) => const OverviewPage(),
+              pageBuilder: (_, _) =>
+                  const NoTransitionPage(child: OverviewPage()),
             ),
             GoRoute(
               path: '/banner/:type',
-              builder: (_, state) =>
-                  BannerPage(gachaType: state.pathParameters['type']!),
+              pageBuilder: (_, state) => NoTransitionPage(
+                child: BannerPage(gachaType: state.pathParameters['type']!),
+              ),
             ),
           ],
         ),
