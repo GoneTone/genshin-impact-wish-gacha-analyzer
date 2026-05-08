@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 
 void main() {
@@ -75,6 +76,44 @@ void main() {
       expect(restored.id, original.id);
       expect(restored.kind, original.kind);
       expect(restored.time, original.time);
+    });
+  });
+
+  group('BannerStorage roundtrip', () {
+    test('serialize/deserialize 保留 5 個 banner key', () {
+      final record = WishRecord(
+        id: '1',
+        uid: '801057625',
+        gachaType: '301',
+        name: '雷電將軍',
+        itemType: '角色',
+        kind: WishItemKind.character,
+        rankType: 5,
+        time: DateTime(2025, 9, 23, 21, 27, 37),
+        lang: 'zh-tw',
+      );
+      final original = BannerStorage(
+        uid: '801057625',
+        lastUpdated: DateTime.utc(2026, 5, 9, 3, 30),
+        banners: {
+          '301': [record],
+          '302': [],
+          '500': [],
+          '200': [],
+          '100': [],
+        },
+      );
+
+      final json = original.toJson();
+      expect(json['uid'], '801057625');
+      expect(json['last_updated'], '2026-05-09T03:30:00.000Z');
+      expect((json['banners'] as Map)['301'], hasLength(1));
+
+      final restored = BannerStorage.fromJson(json);
+      expect(restored.uid, original.uid);
+      expect(restored.lastUpdated, original.lastUpdated);
+      expect(restored.banners['301']!.first.id, '1');
+      expect(restored.banners['302'], isEmpty);
     });
   });
 }
