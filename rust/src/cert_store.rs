@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context};
+use anyhow::Context;
 use windows::core::w;
 use windows::Win32::Security::Cryptography::{
     CertAddCertificateContextToStore, CertCloseStore, CertCreateCertificateContext,
@@ -12,6 +12,11 @@ use windows::Win32::Security::Cryptography::{
 /// 若相同憑證已存在則以新憑證覆蓋（CERT_STORE_ADD_REPLACE_EXISTING），
 /// 不會因重複安裝而回傳錯誤。
 pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
+    // SAFETY:
+    // - `cert_der` slice 在整個 FFI 呼叫期間保持有效（借用於函式生命週期內）。
+    // - store handle 僅在 CertOpenStore 成功後至 CertCloseStore 之間使用。
+    // - cert context 在函式返回前一定會被 CertFreeCertificateContext 釋放。
+    // - `Some(w!("Root").as_ptr() as _)` 指向靜態 UTF-16 字串，生命週期為整個程式執行期間。
     unsafe {
         // 開啟 CurrentUser\Root 憑證存放區
         let store_name = w!("Root");
@@ -30,9 +35,12 @@ pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
             cert_der,
         );
         if ctx.is_null() {
-            // 關閉存放區後再回傳錯誤
+            // 關閉存放區後再回傳錯誤（資源清理順序不得更動）
             let _ = CertCloseStore(Some(store), 0);
-            return Err(anyhow!("CertCreateCertificateContext 回傳 null"));
+            return Err(
+                anyhow::Error::from(windows::core::Error::from_thread())
+                    .context("CertCreateCertificateContext 回傳 null"),
+            );
         }
 
         // 將憑證加入存放區（若已存在則覆蓋）
