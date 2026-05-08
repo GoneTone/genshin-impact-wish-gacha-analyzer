@@ -2,3 +2,4 @@ mod frb_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be
 pub mod api;
 pub(crate) mod ca;
 pub(crate) mod cert_store;
+pub(crate) mod sys_proxy;
