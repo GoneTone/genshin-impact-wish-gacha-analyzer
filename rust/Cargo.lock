@@ -779,6 +779,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "flutter_rust_bridge",
+ "hex",
  "http-body-util",
  "hudsucker",
  "once_cell",

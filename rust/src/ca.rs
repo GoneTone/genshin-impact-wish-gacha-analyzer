@@ -1,7 +1,9 @@
 use anyhow::{Context, Result};
 use rcgen::{BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa, KeyPair, KeyUsagePurpose};
+use sha1::Digest;
 use std::fs;
 use std::path::PathBuf;
+use tracing::info;
 
 /// Returns `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca\`, creating it if missing.
 pub fn ca_dir() -> Result<PathBuf> {
@@ -26,7 +28,19 @@ pub fn load_or_generate() -> Result<RootCa> {
     let cert_path = dir.join("root_ca.pem");
     let key_path = dir.join("root_ca.key");
 
-    if cert_path.exists() && key_path.exists() {
+    let cert_exists = cert_path.exists();
+    let key_exists = key_path.exists();
+    info!(
+        target: "ca",
+        path = %dir.display(),
+        cert_exists,
+        key_exists,
+        "ca::load_or_generate start"
+    );
+
+    let result: Result<RootCa> = if cert_exists && key_exists {
+        info!(target: "ca", "load branch (existing files)");
+
         let cert_pem = fs::read_to_string(&cert_path)
             .with_context(|| format!("Failed to read {}", cert_path.display()))?;
         let key_pem = fs::read_to_string(&key_path)
@@ -37,34 +51,42 @@ pub fn load_or_generate() -> Result<RootCa> {
             .with_context(|| "Failed to parse root_ca.pem")?;
         let cert_der = pem_obj.contents().to_vec();
 
-        return Ok(RootCa { cert_pem, key_pem, cert_der });
+        Ok(RootCa { cert_pem, key_pem, cert_der })
+    } else {
+        info!(target: "ca", "generate branch (no existing files)");
+
+        // Generate a new self-signed root CA.
+        let mut params = CertificateParams::new(Vec::new())
+            .context("Failed to create CertificateParams")?;
+
+        params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
+        params.key_usages = vec![KeyUsagePurpose::KeyCertSign, KeyUsagePurpose::CrlSign];
+
+        let mut dn = DistinguishedName::new();
+        dn.push(DnType::CommonName, "GIWA PoC Root CA");
+        dn.push(DnType::OrganizationName, "GIWA PoC");
+        params.distinguished_name = dn;
+
+        let key_pair = KeyPair::generate().context("Failed to generate key pair")?;
+        let cert = params.self_signed(&key_pair).context("Failed to self-sign certificate")?;
+
+        let cert_pem = cert.pem();
+        let key_pem = key_pair.serialize_pem();
+        let cert_der = cert.der().as_ref().to_vec();
+
+        fs::write(&cert_path, &cert_pem)
+            .with_context(|| format!("Failed to write {}", cert_path.display()))?;
+        fs::write(&key_path, &key_pem)
+            .with_context(|| format!("Failed to write {}", key_path.display()))?;
+
+        Ok(RootCa { cert_pem, key_pem, cert_der })
+    };
+
+    if let Ok(ref ca) = result {
+        let hash = sha1::Sha1::digest(&ca.cert_der);
+        info!(target: "ca", sha1 = %hex::encode(hash), "ca::load_or_generate done");
     }
-
-    // Generate a new self-signed root CA.
-    let mut params = CertificateParams::new(Vec::new())
-        .context("Failed to create CertificateParams")?;
-
-    params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
-    params.key_usages = vec![KeyUsagePurpose::KeyCertSign, KeyUsagePurpose::CrlSign];
-
-    let mut dn = DistinguishedName::new();
-    dn.push(DnType::CommonName, "GIWA PoC Root CA");
-    dn.push(DnType::OrganizationName, "GIWA PoC");
-    params.distinguished_name = dn;
-
-    let key_pair = KeyPair::generate().context("Failed to generate key pair")?;
-    let cert = params.self_signed(&key_pair).context("Failed to self-sign certificate")?;
-
-    let cert_pem = cert.pem();
-    let key_pem = key_pair.serialize_pem();
-    let cert_der = cert.der().as_ref().to_vec();
-
-    fs::write(&cert_path, &cert_pem)
-        .with_context(|| format!("Failed to write {}", cert_path.display()))?;
-    fs::write(&key_path, &key_pem)
-        .with_context(|| format!("Failed to write {}", key_path.display()))?;
-
-    Ok(RootCa { cert_pem, key_pem, cert_der })
+    result
 }
 
 #[cfg(test)]
