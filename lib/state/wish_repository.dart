@@ -2,7 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
@@ -101,8 +104,184 @@ class WishRepository extends Notifier<WishState> {
   }
 
   Future<void> update() async {
-    // 完整流程在 Task 11 實作
-    throw UnimplementedError('see Task 11');
+    await _runUpdate(forceRecapture: false);
+  }
+
+  Future<void> _runUpdate({required bool forceRecapture}) async {
+    if (_isUpdating) return; // 防止重入
+    _isUpdating = true;
+    try {
+      final storage = ref.read(wishStorageProvider);
+      final fetcher = ref.read(wishFetcherProvider);
+
+      String? capturedUrl;
+
+      // 1. 解析 cached URL
+      if (!forceRecapture && state.activeUid != null) {
+        capturedUrl = await storage.loadCapturedUrl(state.activeUid!);
+        if (!ref.mounted) return;
+      }
+
+      // 2. 沒 cached → MITM
+      if (capturedUrl == null) {
+        capturedUrl = await _runMitm(isFallback: false);
+        if (!ref.mounted) return;
+        if (capturedUrl == null) {
+          // 取消
+          state = state.copyWith(clearProgress: true);
+          return;
+        }
+      }
+
+      // 3. fetch（含 fallback）
+      try {
+        await _fetchAllBanners(
+          url: capturedUrl,
+          fetcher: fetcher,
+          storage: storage,
+        );
+      } on AuthExpiredException {
+        if (!ref.mounted) return;
+        // 第一次 auth 失敗 → fallback
+        if (state.activeUid != null) {
+          await storage.deleteCapturedUrl(state.activeUid!);
+          if (!ref.mounted) return;
+        }
+        final newUrl = await _runMitm(isFallback: true);
+        if (!ref.mounted) return;
+        if (newUrl == null) {
+          state = state.copyWith(clearProgress: true);
+          return;
+        }
+        try {
+          await _fetchAllBanners(
+            url: newUrl,
+            fetcher: fetcher,
+            storage: storage,
+          );
+        } on AuthExpiredException {
+          if (!ref.mounted) return;
+          state = state.copyWith(
+              progress: const UpdateFailed('認證持續失效，請重新登入遊戲'));
+        } catch (e) {
+          if (!ref.mounted) return;
+          state = state.copyWith(progress: UpdateFailed('$e'));
+        }
+      } catch (e) {
+        if (!ref.mounted) return;
+        state = state.copyWith(progress: UpdateFailed('$e'));
+      }
+    } finally {
+      _isUpdating = false;
+    }
+  }
+
+  Future<String?> _runMitm({required bool isFallback}) async {
+    state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
+    final session = ref.read(wishCaptureProvider).start();
+    _activeCancel = session.cancel;
+    try {
+      return await session.result;
+    } finally {
+      _activeCancel = null;
+    }
+  }
+
+  Future<void> _fetchAllBanners({
+    required String url,
+    required WishFetcher fetcher,
+    required WishStorage storage,
+  }) async {
+    final gachaUrl = GachaUrl.parse(url);
+
+    // UID 探測（含 primer pages）
+    final probe = await fetcher.probeUid(url: gachaUrl);
+    if (!ref.mounted) return;
+    if (probe.uid == null) {
+      throw const FormatException('此帳號尚無任何卡池紀錄');
+    }
+    final uid = probe.uid!;
+
+    // 載 existing（可能是新 UID 沒有檔）
+    final existing = state.byUid[uid] ??
+        BannerStorage(
+          uid: uid,
+          lastUpdated: DateTime.utc(1970),
+          banners: {
+            for (final t in gachaTypes) t.gachaType: <WishRecord>[],
+          },
+        );
+
+    final mergedBanners = <String, List<WishRecord>>{};
+    final failed = <String>[];
+    var totalNew = 0;
+
+    for (final t in gachaTypes) {
+      try {
+        final merged = await fetcher.fetchBannerWithMerge(
+          url: gachaUrl,
+          gachaType: t.gachaType,
+          existing: existing.banners[t.gachaType] ?? const [],
+          primer: probe.primerPages[t.gachaType],
+          onProgress: (p) {
+            if (!ref.mounted) return;
+            state = state.copyWith(
+              progress: FetchingBanner(
+                gachaType: t.gachaType,
+                displayName: t.name,
+                pageIndex: p.pageIndex,
+                newRecordsSoFar: p.newRecordsSoFar,
+              ),
+            );
+          },
+        );
+        if (!ref.mounted) return;
+        final newCount =
+            merged.length - (existing.banners[t.gachaType]?.length ?? 0);
+        totalNew += newCount;
+        mergedBanners[t.gachaType] = merged;
+      } on AuthExpiredException {
+        rethrow; // 讓上層處理 fallback
+      } catch (e) {
+        // 該 banner all-or-nothing 失敗 → 保留既有資料
+        mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
+        failed.add(t.name);
+      }
+    }
+
+    // 寫檔
+    final updatedAt = DateTime.now().toUtc();
+    final newData = BannerStorage(
+      uid: uid,
+      lastUpdated: updatedAt,
+      banners: mergedBanners,
+    );
+    await storage.save(newData);
+    if (!ref.mounted) return;
+    await storage.saveCapturedUrl(uid, url);
+    if (!ref.mounted) return;
+
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)
+      ..[uid] = newData;
+    state = state.copyWith(
+      byUid: newByUid,
+      activeUid: uid,
+      progress: UpdateCompleted(
+        totalNewRecords: totalNew,
+        failedBanners: failed,
+        updatedAt: updatedAt,
+      ),
+    );
+  }
+
+  bool _isUpdating = false;
+  Future<void> Function()? _activeCancel;
+
+  Future<void> cancelCapture() async {
+    final cancel = _activeCancel;
+    if (cancel != null) {
+      await cancel();
+    }
   }
 
   Future<void> forceRecaptureAndUpdate() async {
