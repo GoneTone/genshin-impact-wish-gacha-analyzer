@@ -1,0 +1,142 @@
+// lib/pages/app_shell.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart' show DateFormat;
+
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
+
+class AppShell extends ConsumerStatefulWidget {
+  const AppShell({super.key, required this.child});
+  final Widget child;
+
+  @override
+  ConsumerState<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends ConsumerState<AppShell> {
+  bool _dialogOpen = false;
+
+  @override
+  Widget build(BuildContext context) {
+    // progress null → 非 null 時開 dialog；dialog 內部偵測 null 自 pop
+    ref.listen<UpdateProgress?>(
+      wishRepositoryProvider.select((s) => s.progress),
+      (prev, next) {
+        if (next != null && !_dialogOpen) {
+          _dialogOpen = true;
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const UpdateProgressDialog(),
+          ).whenComplete(() {
+            _dialogOpen = false;
+          });
+        }
+      },
+    );
+
+    final location = GoRouterState.of(context).uri.path;
+    final selectedIndex = _indexFromLocation(location);
+    final activeData = ref.watch(
+        wishRepositoryProvider.select((s) => s.activeData));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('卡池分析'),
+        actions: [
+          const UidIndicator(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: FilledButton.icon(
+              icon: const Icon(Icons.refresh),
+              label: const Text('更新資料'),
+              onPressed: () async {
+                await ref.read(wishRepositoryProvider.notifier).update();
+              },
+            ),
+          ),
+        ],
+      ),
+      body: Column(children: [
+        Expanded(
+          child: Row(
+            children: [
+              NavigationRail(
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (i) => _go(context, i),
+                labelType: NavigationRailLabelType.all,
+                destinations: const [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.dashboard_outlined),
+                    selectedIcon: Icon(Icons.dashboard),
+                    label: Text('綜合'),
+                  ),
+                  ..._bannerDestinations,
+                ],
+              ),
+              const VerticalDivider(thickness: 1, width: 1),
+              Expanded(child: widget.child),
+            ],
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          child: Text(
+            activeData == null
+                ? '尚未同步'
+                : '最後更新：${DateFormat('yyyy-MM-dd HH:mm').format(activeData.lastUpdated.toLocal())}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ]),
+    );
+  }
+
+  static const _bannerDestinations = <NavigationRailDestination>[
+    NavigationRailDestination(
+      icon: Icon(Icons.person_outline),
+      label: Text('角色'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.shield_outlined),
+      label: Text('武器'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.collections_bookmark_outlined),
+      label: Text('集錄'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.history),
+      label: Text('常駐'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.school_outlined),
+      label: Text('新手'),
+    ),
+  ];
+
+  int _indexFromLocation(String path) {
+    if (path == '/') return 0;
+    if (path.startsWith('/banner/')) {
+      final type = path.substring('/banner/'.length);
+      final i = gachaTypes.indexWhere((t) => t.gachaType == type);
+      return i < 0 ? 0 : i + 1;
+    }
+    return 0;
+  }
+
+  void _go(BuildContext context, int i) {
+    if (i == 0) {
+      context.go('/');
+    } else {
+      final type = gachaTypes[i - 1].gachaType;
+      context.go('/banner/$type');
+    }
+  }
+}
