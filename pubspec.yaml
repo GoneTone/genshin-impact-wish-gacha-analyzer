@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_rust_bridge: ^2.12.0
+  ffi: ^2.2.0
 
 dev_dependencies:
   flutter_test:
