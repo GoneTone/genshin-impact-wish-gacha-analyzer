@@ -46,10 +46,11 @@ class _AppShellState extends ConsumerState<AppShell> {
         wishRepositoryProvider.select((s) => s.activeData));
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1100;
+    final version = ref.watch(appVersionProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('$appName v$appVersion'),
+        title: Text('$appName v$version'),
         actions: [
           const UidIndicator(),
           Padding(

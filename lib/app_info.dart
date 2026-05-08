@@ -1,3 +1,9 @@
-// 與 pubspec.yaml `version:` 同步維護；釋出新版本時兩處同改。
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 const appName = '原神祈願卡池分析';
-const appVersion = '0.1.0';
+
+/// 由 main.dart 透過 `PackageInfo.fromPlatform()` 取得 pubspec.yaml `version:` 並 override。
+/// Windows 從 .exe 的 FileVersion 讀（CMake 內建從 pubspec 同步寫入 Runner.rc）。
+final appVersionProvider = Provider<String>((ref) {
+  throw UnimplementedError('appVersionProvider must be overridden in main()');
+});

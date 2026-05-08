@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
@@ -33,9 +34,12 @@ Future<void> main() async {
   }
   final storage = WishStorage(wishDir);
 
+  final pkgInfo = await PackageInfo.fromPlatform();
+
   runApp(ProviderScope(
     overrides: [
       wishStorageProvider.overrideWithValue(storage),
+      appVersionProvider.overrideWithValue(pkgInfo.version),
     ],
     child: const MainApp(),
   ));
