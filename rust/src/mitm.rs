@@ -1,4 +1,5 @@
 use std::net::SocketAddr;
+use std::sync::Arc;
 use anyhow::{Context, Result};
 use http_body_util::BodyExt;
 use hudsucker::{
@@ -7,8 +8,9 @@ use hudsucker::{
     certificate_authority::RcgenAuthority,
     hyper::{Request, Response},
     rcgen::{Issuer, KeyPair},
-    rustls::crypto::aws_lc_rs,
+    rustls::{ClientConfig, crypto::aws_lc_rs},
 };
+use hyper_rustls::{ConfigBuilderExt, HttpsConnectorBuilder};
 use tokio::sync::oneshot;
 use crate::api::capture::CapturedRequest;
 use crate::frb_generated::StreamSink;
@@ -104,6 +106,24 @@ pub fn start(
     let provider = aws_lc_rs::default_provider();
     let ca = RcgenAuthority::new(issuer, 1_000, provider);
 
+    // Build an outbound TLS connector that advertises h2 + http/1.1 via ALPN.
+    // Using with_http_connector instead of with_rustls_connector so we can
+    // supply a ClientConfig with alpn_protocols set; this prevents
+    // "peer doesn't support any known protocol" errors from h2-only servers.
+    let mut tls_config = ClientConfig::builder_with_provider(Arc::new(aws_lc_rs::default_provider()))
+        .with_safe_default_protocol_versions()
+        .context("rustls ClientConfig: no supported protocol versions")?
+        .with_webpki_roots()
+        .with_no_client_auth();
+    tls_config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
+
+    let https_connector = HttpsConnectorBuilder::new()
+        .with_tls_config(tls_config)
+        .https_or_http()
+        .enable_http1()
+        .enable_http2()
+        .build();
+
     let (shutdown_tx, shutdown_rx) = oneshot::channel::<()>();
 
     let handler = LogHandler { sink };
@@ -118,7 +138,7 @@ pub fn start(
             let proxy = Proxy::builder()
                 .with_addr(addr)
                 .with_ca(ca)
-                .with_rustls_connector(aws_lc_rs::default_provider())
+                .with_http_connector(https_connector)
                 .with_http_handler(handler)
                 .with_graceful_shutdown(async move {
                     let _ = shutdown_rx.await;

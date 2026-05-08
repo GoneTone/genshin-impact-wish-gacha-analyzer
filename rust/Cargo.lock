@@ -782,6 +782,7 @@ dependencies = [
  "hex",
  "http-body-util",
  "hudsucker",
+ "hyper-rustls",
  "once_cell",
  "pem",
  "rcgen",
