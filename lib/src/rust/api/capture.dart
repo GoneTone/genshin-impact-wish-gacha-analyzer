@@ -22,23 +22,17 @@ class CapturedRequest {
   final String url;
   final String host;
   final PlatformInt64 timestampMs;
-  final String configListUrl;
 
   const CapturedRequest({
     required this.method,
     required this.url,
     required this.host,
     required this.timestampMs,
-    required this.configListUrl,
   });
 
   @override
   int get hashCode =>
-      method.hashCode ^
-      url.hashCode ^
-      host.hashCode ^
-      timestampMs.hashCode ^
-      configListUrl.hashCode;
+      method.hashCode ^ url.hashCode ^ host.hashCode ^ timestampMs.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -48,6 +42,5 @@ class CapturedRequest {
           method == other.method &&
           url == other.url &&
           host == other.host &&
-          timestampMs == other.timestampMs &&
-          configListUrl == other.configListUrl;
+          timestampMs == other.timestampMs;
 }

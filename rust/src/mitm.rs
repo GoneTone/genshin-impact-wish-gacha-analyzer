@@ -72,17 +72,13 @@ impl HttpHandler for LogHandler {
         let host = parts.uri.host().unwrap_or("").to_string();
         let timestamp_ms = chrono::Utc::now().timestamp_millis();
 
-        let config_list_url = url.replacen("/getGachaLog", "/getConfigList", 1);
-
         tracing::info!(target: "mitm", "hit getGachaLog: {} {}", method, url);
-        tracing::info!(target: "mitm", "derived getConfigList: {}", config_list_url);
 
         let _ = self.sink.add(CapturedRequest {
             method,
             url,
             host,
             timestamp_ms,
-            config_list_url,
         });
 
         // 暫不 spawn stop_capture：要等 response 從上游回來，避免 hudsucker 太早 shutdown 切斷 connection。
