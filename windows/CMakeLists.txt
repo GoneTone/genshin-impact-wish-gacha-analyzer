@@ -57,6 +57,13 @@ add_subdirectory("runner")
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# === Rust (flutter_rust_bridge) ===
+# Build genshin_capture_core.dll via cargokit and install it next to the exe.
+# lib_name must match the Cargo.toml package name so the dll stem matches what
+# the FRB Dart loader expects (ExternalLibraryLoaderConfig.stem = 'genshin_capture_core').
+set(CARGOKIT_RUST_PROJECT "genshin_capture_core")
+include("${CMAKE_CURRENT_SOURCE_DIR}/../rust_builder/cargokit/cmake/cargokit.cmake")
+apply_cargokit(${CARGOKIT_RUST_PROJECT} ../rust ${CARGOKIT_RUST_PROJECT} "")
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can
@@ -86,6 +93,11 @@ if(PLUGIN_BUNDLED_LIBRARIES)
     DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
+
+# Install the Rust dynamic library (genshin_capture_core.dll) built by cargokit.
+install(FILES "${${CARGOKIT_RUST_PROJECT}_cargokit_lib}"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime)
 
 # Copy the native assets provided by the build.dart from all packages.
 set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/windows/")

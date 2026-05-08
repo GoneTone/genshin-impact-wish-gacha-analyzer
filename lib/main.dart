@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/src/rust/frb_generated.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await RustLib.init();
   runApp(const MainApp());
 }
 
@@ -9,10 +13,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: Text('Rust says: ${ping()}'),
         ),
       ),
     );
