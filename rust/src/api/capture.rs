@@ -1,11 +1,12 @@
 use std::sync::Mutex;
 use anyhow::{anyhow, Result};
 use once_cell::sync::Lazy;
-use crate::{ca, cert_store, sys_proxy};
+use crate::{ca, cert_store, mitm, sys_proxy};
 
 const PROXY_ADDR: &str = "127.0.0.1:18080";
 
 struct Session {
+    _mitm: mitm::MitmServerGuard,
     _proxy: sys_proxy::SysProxyGuard,
 }
 
@@ -17,17 +18,26 @@ pub fn start_capture() -> Result<()> {
         return Err(anyhow!("capture already running"));
     }
 
+    let _ = tracing_subscriber::fmt::try_init();
+
     let root = ca::load_or_generate()?;
     cert_store::install_to_current_user_root(&root.cert_der)?;
+
+    let mitm = mitm::start(
+        PROXY_ADDR.parse()?,
+        &root.cert_pem,
+        &root.key_pem,
+    )?;
+    // mitm 起好後再切系統 proxy，避免 race
     let proxy = sys_proxy::apply(PROXY_ADDR)?;
 
-    *guard = Some(Session { _proxy: proxy });
+    *guard = Some(Session { _mitm: mitm, _proxy: proxy });
     Ok(())
 }
 
 pub fn stop_capture() -> Result<()> {
     let mut guard = SESSION.lock().unwrap();
-    *guard = None; // Drop SysProxyGuard 還原
+    *guard = None; // Drop 順序：_proxy 先（sys proxy 還原）→ _mitm（關 proxy server）
     Ok(())
 }
 

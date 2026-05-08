@@ -3,3 +3,4 @@ pub mod api;
 pub(crate) mod ca;
 pub(crate) mod cert_store;
 pub(crate) mod sys_proxy;
+pub(crate) mod mitm;
