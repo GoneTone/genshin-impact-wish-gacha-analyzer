@@ -285,8 +285,11 @@ class WishRepository extends Notifier<WishState> {
   }
 
   Future<void> forceRecaptureAndUpdate() async {
-    // 完整流程在 Task 12 實作
-    throw UnimplementedError('see Task 12');
+    if (state.activeUid != null) {
+      final storage = ref.read(wishStorageProvider);
+      await storage.deleteCapturedUrl(state.activeUid!);
+    }
+    await _runUpdate(forceRecapture: true);
   }
 
   // ─── debug helpers，僅供測試用 ───
