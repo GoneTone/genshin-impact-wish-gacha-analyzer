@@ -8,8 +8,9 @@ publish = false
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "2"
+flutter_rust_bridge = "=2.12.0"
 anyhow = "1"
+once_cell = "1"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "net"] }

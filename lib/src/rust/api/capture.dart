@@ -6,5 +6,12 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-/// PoC sanity-check function. Removed in Task 8 once real APIs land.
-String ping() => RustLib.instance.api.crateApiCapturePing();
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Session`
+
+Future<void> startCapture() =>
+    RustLib.instance.api.crateApiCaptureStartCapture();
+
+Future<void> stopCapture() => RustLib.instance.api.crateApiCaptureStopCapture();
+
+Future<bool> cleanupStaleProxy() =>
+    RustLib.instance.api.crateApiCaptureCleanupStaleProxy();
