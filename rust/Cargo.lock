@@ -784,6 +784,7 @@ dependencies = [
  "once_cell",
  "pem",
  "rcgen",
+ "sha1",
  "tempfile",
  "tokio",
  "tracing",

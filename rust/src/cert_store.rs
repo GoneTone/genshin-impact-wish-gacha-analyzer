@@ -1,25 +1,28 @@
 use anyhow::Context;
+use sha1::{Digest, Sha1};
 use windows::core::w;
 use windows::Win32::Security::Cryptography::{
-    CertAddCertificateContextToStore, CertCloseStore, CertCreateCertificateContext,
-    CertFindCertificateInStore, CertFreeCertificateContext, CertOpenStore, CERT_FIND_EXISTING,
-    CERT_OPEN_STORE_FLAGS, CERT_QUERY_ENCODING_TYPE, CERT_STORE_ADD_NEW,
-    CERT_STORE_PROV_SYSTEM_W, CERT_SYSTEM_STORE_CURRENT_USER, PKCS_7_ASN_ENCODING,
+    CertAddEncodedCertificateToStore, CertCloseStore, CertFindCertificateInStore, CertOpenStore,
+    CERT_FIND_SHA1_HASH, CERT_OPEN_STORE_FLAGS, CERT_QUERY_ENCODING_TYPE, CERT_STORE_ADD_NEW,
+    CERT_STORE_PROV_SYSTEM_W, CERT_SYSTEM_STORE_CURRENT_USER, CRYPT_INTEGER_BLOB,
     X509_ASN_ENCODING,
 };
 
 /// 將 DER 編碼的 CA 憑證安裝到當前使用者的「根」憑證存放區。
 ///
-/// 若相同 DER 的憑證已在存放區內則跳過安裝，不會再次跳出 Windows 確認對話框。
-/// 僅在憑證尚未安裝時才呼叫 `CertAddCertificateContextToStore`，使用 `CERT_STORE_ADD_NEW`。
+/// 以 SHA-1 指紋（thumbprint）比對是否已安裝相同憑證：
+/// - 已存在 → 跳過，不觸發 Windows 確認對話框。
+/// - 不存在 → 呼叫 `CertAddEncodedCertificateToStore`（使用者只有首次安裝時看到對話框）。
 pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
+    // 計算 cert_der 的 SHA-1 指紋（20 bytes）
+    let mut hash: [u8; 20] = Sha1::digest(cert_der).into();
+
     // SAFETY:
-    // - `cert_der` slice 在整個 FFI 呼叫期間保持有效（借用於函式生命週期內）。
     // - store handle 僅在 CertOpenStore 成功後至 CertCloseStore 之間使用。
-    // - cert context 在函式返回前一定會被 CertFreeCertificateContext 釋放。
+    // - `hash` 陣列存活至函式結束，`blob.pbData` 在整段 unsafe 區塊內始終有效。
+    // - `pvfindpara` 指向 `blob`（CRYPT_HASH_BLOB），而 `blob.pbData` 指向同一 stack frame
+    //   上的 `hash`，CertFindCertificateInStore 呼叫完成前二者均不會被釋放或移動。
     // - `Some(w!("Root").as_ptr() as _)` 指向靜態 UTF-16 字串，生命週期為整個程式執行期間。
-    // - CertFindCertificateInStore 使用 CERT_FIND_EXISTING，傳入 ctx 作為比對依據；
-    //   回傳的 existing context（若非 null）在使用後立即以 CertFreeCertificateContext 釋放。
     unsafe {
         // 開啟 CurrentUser\Root 憑證存放區
         let store_name = w!("Root");
@@ -32,50 +35,37 @@ pub fn install_to_current_user_root(cert_der: &[u8]) -> anyhow::Result<()> {
         )
         .context("CertOpenStore Root 失敗")?;
 
-        // 從 DER 位元組建立憑證上下文
-        let ctx = CertCreateCertificateContext(
-            X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
-            cert_der,
-        );
-        if ctx.is_null() {
-            // 關閉存放區後再回傳錯誤（資源清理順序不得更動）
-            let _ = CertCloseStore(Some(store), 0);
-            return Err(
-                anyhow::Error::from(windows::core::Error::from_thread())
-                    .context("CertCreateCertificateContext 回傳 null"),
-            );
-        }
-
-        // 檢查存放區內是否已有完全相同的憑證（位元組比對）
+        // 以 SHA-1 指紋查詢存放區是否已有相同憑證（canonical thumbprint dedup）
+        let blob = CRYPT_INTEGER_BLOB {
+            cbData: hash.len() as u32,
+            pbData: hash.as_mut_ptr(),
+        };
         let existing = CertFindCertificateInStore(
             store,
-            X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+            X509_ASN_ENCODING,
             0,
-            CERT_FIND_EXISTING,
-            Some(ctx as *const core::ffi::c_void),
+            CERT_FIND_SHA1_HASH,
+            Some(&blob as *const CRYPT_INTEGER_BLOB as *const core::ffi::c_void),
             None,
         );
 
         if !existing.is_null() {
             // 憑證已存在，跳過安裝，不觸發 Windows 確認對話框
-            let _ = CertFreeCertificateContext(Some(existing));
-            let _ = CertFreeCertificateContext(Some(ctx));
             let _ = CertCloseStore(Some(store), 0);
             return Ok(());
         }
 
         // 憑證不存在，安裝之（使用者僅在此首次安裝時看到對話框）
-        let result = CertAddCertificateContextToStore(
+        let result = CertAddEncodedCertificateToStore(
             Some(store),
-            ctx,
+            X509_ASN_ENCODING,
+            cert_der,
             CERT_STORE_ADD_NEW,
             None,
         );
 
-        // 釋放資源（無論成功與否）
-        let _ = CertFreeCertificateContext(Some(ctx));
         let _ = CertCloseStore(Some(store), 0);
 
-        result.context("CertAddCertificateContextToStore 失敗")
+        result.context("CertAddEncodedCertificateToStore 失敗")
     }
 }

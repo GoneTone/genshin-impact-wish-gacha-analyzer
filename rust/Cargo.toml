@@ -19,6 +19,7 @@ hudsucker = { version = "0.24", default-features = false, features = ["decoder",
 http-body-util = "0.1"
 rcgen = "0.14"
 pem = "3.0.6"
+sha1 = "0.10"
 
 [dev-dependencies]
 tempfile = "3.27.0"
