@@ -111,14 +111,21 @@ class WishRepository extends Notifier<WishState> {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
     try {
+      final initialActiveUid = state.activeUid; // 快照，避免 mid-update 競爭
       final storage = ref.read(wishStorageProvider);
       final fetcher = ref.read(wishFetcherProvider);
+
+      // 強制重攔：先刪舊 URL，再進 MITM 流程
+      if (forceRecapture && initialActiveUid != null) {
+        await storage.deleteCapturedUrl(initialActiveUid);
+        if (!ref.mounted) return;
+      }
 
       String? capturedUrl;
 
       // 1. 解析 cached URL
-      if (!forceRecapture && state.activeUid != null) {
-        capturedUrl = await storage.loadCapturedUrl(state.activeUid!);
+      if (!forceRecapture && initialActiveUid != null) {
+        capturedUrl = await storage.loadCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
       }
 
@@ -143,8 +150,8 @@ class WishRepository extends Notifier<WishState> {
       } on AuthExpiredException {
         if (!ref.mounted) return;
         // 第一次 auth 失敗 → fallback
-        if (state.activeUid != null) {
-          await storage.deleteCapturedUrl(state.activeUid!);
+        if (initialActiveUid != null) {
+          await storage.deleteCapturedUrl(initialActiveUid);
           if (!ref.mounted) return;
         }
         final newUrl = await _runMitm(isFallback: true);
@@ -165,11 +172,11 @@ class WishRepository extends Notifier<WishState> {
               progress: const UpdateFailed('認證持續失效，請重新登入遊戲'));
         } catch (e) {
           if (!ref.mounted) return;
-          state = state.copyWith(progress: UpdateFailed('$e'));
+          state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
         }
       } catch (e) {
         if (!ref.mounted) return;
-        state = state.copyWith(progress: UpdateFailed('$e'));
+        state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
     } finally {
       _isUpdating = false;
@@ -285,12 +292,16 @@ class WishRepository extends Notifier<WishState> {
   }
 
   Future<void> forceRecaptureAndUpdate() async {
-    if (state.activeUid != null) {
-      final storage = ref.read(wishStorageProvider);
-      await storage.deleteCapturedUrl(state.activeUid!);
-    }
     await _runUpdate(forceRecapture: true);
   }
+
+  String _friendlyError(Object e) => switch (e) {
+        FormatException(:final message) => message,
+        RateLimitedException() => '請求過於頻繁，請稍後再試',
+        ApiErrorException(:final message) => '伺服器錯誤：$message',
+        AuthExpiredException() => '認證失效',
+        _ => e.toString(),
+      };
 
   // ─── debug helpers，僅供測試用 ───
   @visibleForTesting

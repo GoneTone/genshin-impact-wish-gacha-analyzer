@@ -5,22 +5,22 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 void main() {
   group('WishItemKind', () {
     test('zh-tw 角色 → character', () {
-      expect(WishItemKind.fromItemType('角色', 'zh-tw'),
+      expect(WishItemKind.fromItemType('角色'),
           WishItemKind.character);
     });
 
     test('zh-tw 武器 → weapon', () {
-      expect(WishItemKind.fromItemType('武器', 'zh-tw'),
+      expect(WishItemKind.fromItemType('武器'),
           WishItemKind.weapon);
     });
 
     test('en Character → character', () {
-      expect(WishItemKind.fromItemType('Character', 'en'),
+      expect(WishItemKind.fromItemType('Character'),
           WishItemKind.character);
     });
 
     test('未知字串 → unknown', () {
-      expect(WishItemKind.fromItemType('???', 'qq'),
+      expect(WishItemKind.fromItemType('???'),
           WishItemKind.unknown);
     });
   });

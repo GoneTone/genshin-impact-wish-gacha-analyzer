@@ -16,7 +16,7 @@ enum WishItemKind {
     '무기',
   };
 
-  static WishItemKind fromItemType(String itemType, String lang) {
+  static WishItemKind fromItemType(String itemType) {
     if (_characterStrings.contains(itemType)) return WishItemKind.character;
     if (_weaponStrings.contains(itemType)) return WishItemKind.weapon;
     return WishItemKind.unknown;
@@ -56,7 +56,7 @@ class WishRecord {
       gachaType: json['gacha_type'] as String,
       name: json['name'] as String,
       itemType: itemType,
-      kind: WishItemKind.fromItemType(itemType, lang),
+      kind: WishItemKind.fromItemType(itemType),
       rankType: int.parse(json['rank_type'] as String),
       time: DateTime.parse((json['time'] as String).replaceFirst(' ', 'T')),
       lang: lang,
@@ -73,7 +73,7 @@ class WishRecord {
       gachaType: json['gacha_type'] as String,
       name: json['name'] as String,
       itemType: itemType,
-      kind: WishItemKind.fromItemType(itemType, lang),
+      kind: WishItemKind.fromItemType(itemType),
       rankType: json['rank_type'] as int,
       time: DateTime.parse((json['time'] as String).replaceFirst(' ', 'T')),
       lang: lang,
