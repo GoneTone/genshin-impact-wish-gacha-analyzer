@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
@@ -46,7 +47,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: '卡池分析',
+      title: appName,
       theme: buildAppTheme(),
       routerConfig: buildAppRouter(),
     );

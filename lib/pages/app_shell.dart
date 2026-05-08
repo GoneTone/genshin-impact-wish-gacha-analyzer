@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
+import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
@@ -48,7 +49,7 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('卡池分析'),
+        title: const Text('$appName v$appVersion'),
         actions: [
           const UidIndicator(),
           Padding(
