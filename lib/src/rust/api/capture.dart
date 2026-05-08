@@ -7,11 +7,40 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `Session`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`
 
-Future<void> startCapture() =>
+Stream<CapturedRequest> startCapture() =>
     RustLib.instance.api.crateApiCaptureStartCapture();
 
 Future<void> stopCapture() => RustLib.instance.api.crateApiCaptureStopCapture();
 
 Future<bool> cleanupStaleProxy() =>
     RustLib.instance.api.crateApiCaptureCleanupStaleProxy();
+
+class CapturedRequest {
+  final String method;
+  final String url;
+  final String host;
+  final PlatformInt64 timestampMs;
+
+  const CapturedRequest({
+    required this.method,
+    required this.url,
+    required this.host,
+    required this.timestampMs,
+  });
+
+  @override
+  int get hashCode =>
+      method.hashCode ^ url.hashCode ^ host.hashCode ^ timestampMs.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CapturedRequest &&
+          runtimeType == other.runtimeType &&
+          method == other.method &&
+          url == other.url &&
+          host == other.host &&
+          timestampMs == other.timestampMs;
+}

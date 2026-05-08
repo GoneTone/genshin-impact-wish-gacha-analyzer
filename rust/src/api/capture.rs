@@ -1,9 +1,20 @@
 use std::sync::Mutex;
 use anyhow::{anyhow, Result};
+use flutter_rust_bridge::frb;
 use once_cell::sync::Lazy;
 use crate::{ca, cert_store, mitm, sys_proxy};
+use crate::frb_generated::StreamSink;
 
 const PROXY_ADDR: &str = "127.0.0.1:18080";
+
+#[derive(Clone)]
+#[frb]
+pub struct CapturedRequest {
+    pub method: String,
+    pub url: String,
+    pub host: String,
+    pub timestamp_ms: i64,
+}
 
 struct Session {
     _proxy: sys_proxy::SysProxyGuard, // dropped first → restores Windows system proxy
@@ -12,7 +23,7 @@ struct Session {
 
 static SESSION: Lazy<Mutex<Option<Session>>> = Lazy::new(|| Mutex::new(None));
 
-pub fn start_capture() -> Result<()> {
+pub fn start_capture(sink: StreamSink<CapturedRequest>) -> Result<()> {
     let mut guard = SESSION.lock().unwrap();
     if guard.is_some() {
         return Err(anyhow!("capture already running"));
@@ -27,6 +38,7 @@ pub fn start_capture() -> Result<()> {
         PROXY_ADDR.parse()?,
         &root.cert_pem,
         &root.key_pem,
+        sink,
     )?;
     // mitm 起好後再切系統 proxy，避免 race
     let proxy = sys_proxy::apply(PROXY_ADDR)?;

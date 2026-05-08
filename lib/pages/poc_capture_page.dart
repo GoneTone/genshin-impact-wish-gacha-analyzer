@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart' as rust_capture;
 
@@ -11,19 +12,41 @@ class PocCapturePage extends StatefulWidget {
 class _PocCapturePageState extends State<PocCapturePage> {
   bool _capturing = false;
   String? _error;
-  final List<String> _urls = [];
+  final List<rust_capture.CapturedRequest> _urls = [];
+  StreamSubscription<rust_capture.CapturedRequest>? _sub;
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
 
   Future<void> _toggle() async {
     setState(() => _error = null);
     try {
       if (_capturing) {
+        await _sub?.cancel();
+        _sub = null;
         await rust_capture.stopCapture();
+        if (!mounted) return;
         setState(() => _capturing = false);
       } else {
-        await rust_capture.startCapture();
+        final stream = rust_capture.startCapture();
+        _sub = stream.listen(
+          (event) {
+            if (!mounted) return;
+            setState(() => _urls.insert(0, event));
+          },
+          onError: (e) {
+            if (!mounted) return;
+            setState(() => _error = '$e');
+          },
+        );
+        if (!mounted) return;
         setState(() => _capturing = true);
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => _error = '$e');
     }
   }
@@ -47,6 +70,8 @@ class _PocCapturePageState extends State<PocCapturePage> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(_error!, style: const TextStyle(color: Colors.red)),
                   ),
+                const SizedBox(height: 8),
+                Text('共 ${_urls.length} 筆'),
               ],
             ),
           ),
@@ -57,10 +82,19 @@ class _PocCapturePageState extends State<PocCapturePage> {
                 : ListView.separated(
                     itemCount: _urls.length,
                     separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (_, i) => ListTile(
-                      dense: true,
-                      title: Text(_urls[i], maxLines: 2, overflow: TextOverflow.ellipsis),
-                    ),
+                    itemBuilder: (_, i) {
+                      final r = _urls[i];
+                      return ListTile(
+                        dense: true,
+                        title: Text(
+                          '${r.method}  ${r.url}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontFamily: 'monospace'),
+                        ),
+                        subtitle: Text(r.host),
+                      );
+                    },
                   ),
           ),
         ],
