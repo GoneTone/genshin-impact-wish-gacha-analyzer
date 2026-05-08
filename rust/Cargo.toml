@@ -16,6 +16,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "net"] }
 hudsucker = { version = "0.24", default-features = false, features = ["decoder", "rcgen-ca", "rustls-client", "http2"] }
+http-body-util = "0.1"
 rcgen = "0.14"
 pem = "3.0.6"
 

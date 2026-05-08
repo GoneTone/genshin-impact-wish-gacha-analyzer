@@ -1,5 +1,6 @@
 use std::net::SocketAddr;
 use anyhow::{Context, Result};
+use http_body_util::BodyExt;
 use hudsucker::{
     Proxy,
     Body, HttpContext, HttpHandler, RequestOrResponse,
@@ -39,14 +40,35 @@ impl HttpHandler for LogHandler {
         _ctx: &HttpContext,
         req: Request<Body>,
     ) -> RequestOrResponse {
-        let method = req.method().to_string();
-        let uri = req.uri();
+        let (parts, body) = req.into_parts();
+
+        let method = parts.method.to_string();
+        let uri = &parts.uri;
         let url = uri.to_string();
         let host = uri.host().unwrap_or("").to_string();
         let ts = chrono::Utc::now().timestamp_millis();
 
         // 同步 log 一條，方便除錯
         tracing::info!(target: "mitm", "{} {}", method, url);
+
+        // 收集 body bytes（用於 PoC 驗證）；失敗時 warn 並改用空 body
+        let body_bytes = match body.collect().await {
+            Ok(collected) => collected.to_bytes(),
+            Err(e) => {
+                tracing::warn!(target: "mitm", "body collection failed: {}", e);
+                Default::default()
+            }
+        };
+
+        // 印出 body 摘要：byte 長度 + 前 256 bytes 的 UTF-8 lossy 預覽（spec §7 step 5）
+        let preview_len = body_bytes.len().min(256);
+        let preview = String::from_utf8_lossy(&body_bytes[..preview_len]);
+        tracing::info!(
+            target: "mitm",
+            "body summary: {} bytes, preview: {:?}",
+            body_bytes.len(),
+            preview,
+        );
 
         // 不阻塞請求；sink 滿了就丟棄這筆
         let _ = self.sink.add(CapturedRequest {
@@ -56,7 +78,8 @@ impl HttpHandler for LogHandler {
             timestamp_ms: ts,
         });
 
-        req.into()
+        // 重建 request，讓下游仍能收到相同的 body
+        Request::from_parts(parts, Body::from(body_bytes)).into()
     }
 
     async fn handle_response(
