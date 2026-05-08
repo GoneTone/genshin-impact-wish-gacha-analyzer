@@ -207,13 +207,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CapturedRequest dco_decode_captured_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return CapturedRequest(
       method: dco_decode_String(arr[0]),
       url: dco_decode_String(arr[1]),
       host: dco_decode_String(arr[2]),
       timestampMs: dco_decode_i_64(arr[3]),
+      configListUrl: dco_decode_String(arr[4]),
     );
   }
 
@@ -276,11 +277,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_url = sse_decode_String(deserializer);
     var var_host = sse_decode_String(deserializer);
     var var_timestampMs = sse_decode_i_64(deserializer);
+    var var_configListUrl = sse_decode_String(deserializer);
     return CapturedRequest(
       method: var_method,
       url: var_url,
       host: var_host,
       timestampMs: var_timestampMs,
+      configListUrl: var_configListUrl,
     );
   }
 
@@ -362,6 +365,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.url, serializer);
     sse_encode_String(self.host, serializer);
     sse_encode_i_64(self.timestampMs, serializer);
+    sse_encode_String(self.configListUrl, serializer);
   }
 
   @protected

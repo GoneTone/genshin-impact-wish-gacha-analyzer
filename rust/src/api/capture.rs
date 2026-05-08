@@ -14,6 +14,7 @@ pub struct CapturedRequest {
     pub url: String,
     pub host: String,
     pub timestamp_ms: i64,
+    pub config_list_url: String,
 }
 
 struct Session {

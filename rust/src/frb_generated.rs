@@ -198,11 +198,13 @@ impl SseDecode for crate::api::capture::CapturedRequest {
         let mut var_url = <String>::sse_decode(deserializer);
         let mut var_host = <String>::sse_decode(deserializer);
         let mut var_timestampMs = <i64>::sse_decode(deserializer);
+        let mut var_configListUrl = <String>::sse_decode(deserializer);
         return crate::api::capture::CapturedRequest {
             method: var_method,
             url: var_url,
             host: var_host,
             timestamp_ms: var_timestampMs,
+            config_list_url: var_configListUrl,
         };
     }
 }
@@ -283,6 +285,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::capture::CapturedRequest {
             self.url.into_into_dart().into_dart(),
             self.host.into_into_dart().into_dart(),
             self.timestamp_ms.into_into_dart().into_dart(),
+            self.config_list_url.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -339,6 +342,7 @@ impl SseEncode for crate::api::capture::CapturedRequest {
         <String>::sse_encode(self.url, serializer);
         <String>::sse_encode(self.host, serializer);
         <i64>::sse_encode(self.timestamp_ms, serializer);
+        <String>::sse_encode(self.config_list_url, serializer);
     }
 }
 
