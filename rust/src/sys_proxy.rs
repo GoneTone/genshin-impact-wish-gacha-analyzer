@@ -18,11 +18,20 @@ pub struct SavedProxyState {
     pub server: Option<String>,
 }
 
-/// 啟用系統代理並返回 RAII guard；guard 被 drop 時自動恢復原始設定。
+/// 啟用全系統 proxy 指向 `addr`，回傳 RAII guard，drop 時自動還原到啟動前狀態。
+///
+/// 若任何步驟失敗會先嘗試回復到原本的 proxy 設定再傳播錯誤；
+/// 但若 `write_state` 之後的廣播失敗且 rollback 也失敗，
+/// registry 可能殘留 PoC 設定——此種極端情況依賴啟動時的 `cleanup_stale` 自我修復。
 pub fn apply(addr: &str) -> Result<SysProxyGuard> {
     let saved = read_state().context("讀取原有代理設定失敗")?;
     write_state(1, Some(addr)).context("寫入代理設定失敗")?;
-    broadcast_change().context("廣播代理設定變更失敗")?;
+    if let Err(e) = broadcast_change() {
+        // Best-effort rollback so we don't leave a stale proxy setting.
+        let _ = write_state(saved.enable, saved.server.as_deref());
+        let _ = broadcast_change();
+        return Err(e).context("廣播代理設定變更失敗");
+    }
     Ok(SysProxyGuard { saved: Some(saved) })
 }
 
@@ -163,6 +172,7 @@ fn write_state(enable: u32, server: Option<&str>) -> Result<()> {
         }
     };
 
+    // Close before propagating errors to avoid leaking hkey on failure paths.
     // SAFETY: hkey 有效且尚未關閉。
     unsafe {
         let _ = RegCloseKey(hkey);
