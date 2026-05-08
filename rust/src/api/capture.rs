@@ -24,7 +24,7 @@ struct Session {
 static SESSION: Lazy<Mutex<Option<Session>>> = Lazy::new(|| Mutex::new(None));
 
 pub fn start_capture(sink: StreamSink<CapturedRequest>) -> Result<()> {
-    let mut guard = SESSION.lock().unwrap();
+    let mut guard = SESSION.lock().unwrap_or_else(|e| e.into_inner());
     if guard.is_some() {
         return Err(anyhow!("capture already running"));
     }
@@ -53,7 +53,7 @@ pub fn start_capture(sink: StreamSink<CapturedRequest>) -> Result<()> {
 }
 
 pub fn stop_capture() -> Result<()> {
-    let mut guard = SESSION.lock().unwrap();
+    let mut guard = SESSION.lock().unwrap_or_else(|e| e.into_inner());
     *guard = None; // Drop 順序：_proxy 先（sys proxy 還原）→ _mitm（關 proxy server）
     Ok(())
 }

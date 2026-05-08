@@ -110,12 +110,11 @@ pub fn start(
     // Using with_http_connector instead of with_rustls_connector so we can
     // supply a ClientConfig with alpn_protocols set; this prevents
     // "peer doesn't support any known protocol" errors from h2-only servers.
-    let mut tls_config = ClientConfig::builder_with_provider(Arc::new(aws_lc_rs::default_provider()))
+    let tls_config = ClientConfig::builder_with_provider(Arc::new(aws_lc_rs::default_provider()))
         .with_safe_default_protocol_versions()
         .context("rustls ClientConfig: no supported protocol versions")?
         .with_webpki_roots()
         .with_no_client_auth();
-    tls_config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
 
     let https_connector = HttpsConnectorBuilder::new()
         .with_tls_config(tls_config)
