@@ -1,13 +1,14 @@
 // lib/pages/app_shell.dart
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
 
@@ -24,7 +25,6 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    // progress null → 非 null 時開 dialog；dialog 內部偵測 null 自 pop
     ref.listen<UpdateProgress?>(
       wishRepositoryProvider.select((s) => s.progress),
       (prev, next) {
@@ -41,25 +41,31 @@ class _AppShellState extends ConsumerState<AppShell> {
       },
     );
 
+    final l = AppLocalizations.of(context)!;
+    final tokens = Theme.of(context).gacha;
     final location = GoRouterState.of(context).uri.path;
-    final selectedIndex = _indexFromLocation(location);
     final activeData = ref.watch(
         wishRepositoryProvider.select((s) => s.activeData));
     final width = MediaQuery.of(context).size.width;
-    final extendedRail = width >= 1100;
+    final extendedRail = width >= 1180;
+    final showFooter = location != '/settings';
     final version = ref.watch(appVersionProvider);
-    final l = AppLocalizations.of(context)!;
+
+    final isSettingsActive = location == '/settings';
+    final selectedIndex =
+        isSettingsActive ? null : _bannerIndexFromLocation(location);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('$appName v$version'),
+        title: Text('${l.appName} v$version'),
         actions: [
           const UidIndicator(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding:
+                const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
             child: FilledButton.icon(
               icon: const Icon(Icons.refresh),
-              label: const Text('更新資料'),
+              label: Text(l.actionUpdate),
               onPressed: () async {
                 await ref.read(wishRepositoryProvider.notifier).update();
               },
@@ -71,43 +77,68 @@ class _AppShellState extends ConsumerState<AppShell> {
         Expanded(
           child: Row(
             children: [
-              NavigationRail(
+              _Rail(
                 selectedIndex: selectedIndex,
-                onDestinationSelected: (i) => _go(context, i),
+                isSettingsActive: isSettingsActive,
                 extended: extendedRail,
-                labelType: extendedRail ? null : NavigationRailLabelType.all,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: const Icon(Icons.dashboard_outlined),
-                    selectedIcon: const Icon(Icons.dashboard),
-                    label: Text(l.navOverview),
-                  ),
-                  ..._buildBannerDestinations(l),
-                ],
+                l: l,
               ),
               const VerticalDivider(thickness: 1, width: 1),
               Expanded(child: widget.child),
             ],
           ),
         ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          child: Text(
-            activeData == null
-                ? '尚未同步'
-                : '最後更新：${DateFormat('yyyy-MM-dd HH:mm').format(activeData.lastUpdated.toLocal())}',
-            style: Theme.of(context).textTheme.bodySmall,
+        if (showFooter)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.l, vertical: AppSpacing.xs * 1.5),
+            color: tokens.surfaceCardHigh,
+            child: Text(
+              activeData == null
+                  ? l.footerNotSynced
+                  : l.footerLastUpdated(
+                      DateFormat('yyyy-MM-dd HH:mm')
+                          .format(activeData.lastUpdated.toLocal()),
+                    ),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
-        ),
       ]),
     );
   }
 
-  List<NavigationRailDestination> _buildBannerDestinations(
-      AppLocalizations l) {
-    return [
+  int _bannerIndexFromLocation(String path) {
+    if (path == '/') return 0;
+    if (path.startsWith('/banner/')) {
+      final type = path.substring('/banner/'.length);
+      final i = gachaTypes.indexWhere((t) => t.gachaType == type);
+      return i < 0 ? 0 : i + 1;
+    }
+    return 0;
+  }
+}
+
+class _Rail extends StatelessWidget {
+  const _Rail({
+    required this.selectedIndex,
+    required this.isSettingsActive,
+    required this.extended,
+    required this.l,
+  });
+  final int? selectedIndex;
+  final bool isSettingsActive;
+  final bool extended;
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
+    final destinations = <NavigationRailDestination>[
+      NavigationRailDestination(
+        icon: const Icon(Icons.dashboard_outlined),
+        selectedIcon: const Icon(Icons.dashboard),
+        label: Text(l.navOverview),
+      ),
       NavigationRailDestination(
         icon: const Icon(Icons.person_outline),
         selectedIcon: const Icon(Icons.person),
@@ -134,16 +165,32 @@ class _AppShellState extends ConsumerState<AppShell> {
         label: Text(l.navBeginner),
       ),
     ];
-  }
 
-  int _indexFromLocation(String path) {
-    if (path == '/') return 0;
-    if (path.startsWith('/banner/')) {
-      final type = path.substring('/banner/'.length);
-      final i = gachaTypes.indexWhere((t) => t.gachaType == type);
-      return i < 0 ? 0 : i + 1;
-    }
-    return 0;
+    return IntrinsicHeight(
+      child: Column(
+        children: [
+          Expanded(
+            child: NavigationRail(
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (i) => _go(context, i),
+              extended: extended,
+              labelType:
+                  extended ? null : NavigationRailLabelType.all,
+              destinations: destinations,
+              trailing: const Spacer(),
+            ),
+          ),
+          // 設定入口（與其他 destination 視覺分隔）
+          _SettingsRailButton(
+            active: isSettingsActive,
+            extended: extended,
+            label: l.navSettings,
+            onPressed: () => context.go('/settings'),
+          ),
+          const SizedBox(height: AppSpacing.s),
+        ],
+      ),
+    );
   }
 
   void _go(BuildContext context, int i) {
@@ -153,5 +200,53 @@ class _AppShellState extends ConsumerState<AppShell> {
       final type = gachaTypes[i - 1].gachaType;
       context.go('/banner/$type');
     }
+  }
+}
+
+class _SettingsRailButton extends StatelessWidget {
+  const _SettingsRailButton({
+    required this.active,
+    required this.extended,
+    required this.label,
+    required this.onPressed,
+  });
+  final bool active;
+  final bool extended;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = Theme.of(context).gacha;
+    final color = active
+        ? Theme.of(context).colorScheme.primary
+        : tokens.textSecondary;
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: tokens.borderSubtle)),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.m, horizontal: AppSpacing.s),
+          child: extended
+              ? Row(children: [
+                  const SizedBox(width: AppSpacing.xs),
+                  Icon(active ? Icons.settings : Icons.settings_outlined,
+                      color: color),
+                  const SizedBox(width: AppSpacing.m),
+                  Text(label, style: TextStyle(color: color)),
+                ])
+              : Column(children: [
+                  Icon(active ? Icons.settings : Icons.settings_outlined,
+                      color: color),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(label,
+                      style: TextStyle(color: color, fontSize: 11)),
+                ]),
+        ),
+      ),
+    );
   }
 }
