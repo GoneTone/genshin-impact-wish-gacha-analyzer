@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
@@ -16,10 +17,20 @@ class BannerPage extends ConsumerWidget {
 
   final String gachaType;
 
-  String get _displayName => gachaTypes
-      .firstWhere((t) => t.gachaType == gachaType,
-          orElse: () => GachaType(gachaType: gachaType, name: gachaType))
-      .name;
+  String _resolveDisplayName(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return gachaTypes
+        .firstWhere(
+          (t) => t.gachaType == gachaType,
+          orElse: () => GachaType(
+            gachaType: gachaType,
+            nameKey: gachaType,
+            fiveStarPity: 90,
+            fourStarPity: 10,
+          ),
+        )
+        .resolveName(l);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +52,7 @@ class BannerPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('$_displayName（gacha_type=$gachaType）',
+          Text('${_resolveDisplayName(context)}（gacha_type=$gachaType）',
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           LayoutBuilder(

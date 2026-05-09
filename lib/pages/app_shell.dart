@@ -6,6 +6,7 @@ import 'package:intl/intl.dart' show DateFormat;
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
@@ -47,6 +48,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1100;
     final version = ref.watch(appVersionProvider);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,13 +76,13 @@ class _AppShellState extends ConsumerState<AppShell> {
                 onDestinationSelected: (i) => _go(context, i),
                 extended: extendedRail,
                 labelType: extendedRail ? null : NavigationRailLabelType.all,
-                destinations: const [
+                destinations: [
                   NavigationRailDestination(
-                    icon: Icon(Icons.dashboard_outlined),
-                    selectedIcon: Icon(Icons.dashboard),
-                    label: Text('綜合'),
+                    icon: const Icon(Icons.dashboard_outlined),
+                    selectedIcon: const Icon(Icons.dashboard),
+                    label: Text(l.navOverview),
                   ),
-                  ..._bannerDestinations,
+                  ..._buildBannerDestinations(l),
                 ],
               ),
               const VerticalDivider(thickness: 1, width: 1),
@@ -103,28 +105,36 @@ class _AppShellState extends ConsumerState<AppShell> {
     );
   }
 
-  static const _bannerDestinations = <NavigationRailDestination>[
-    NavigationRailDestination(
-      icon: Icon(Icons.person_outline),
-      label: Text('角色'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.shield_outlined),
-      label: Text('武器'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.collections_bookmark_outlined),
-      label: Text('集錄'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.history),
-      label: Text('常駐'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.school_outlined),
-      label: Text('新手'),
-    ),
-  ];
+  List<NavigationRailDestination> _buildBannerDestinations(
+      AppLocalizations l) {
+    return [
+      NavigationRailDestination(
+        icon: const Icon(Icons.person_outline),
+        selectedIcon: const Icon(Icons.person),
+        label: Text(l.navCharacter),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.shield_outlined),
+        selectedIcon: const Icon(Icons.shield),
+        label: Text(l.navWeapon),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.collections_bookmark_outlined),
+        selectedIcon: const Icon(Icons.collections_bookmark),
+        label: Text(l.navChronicled),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.history),
+        selectedIcon: const Icon(Icons.history_toggle_off),
+        label: Text(l.navStandard),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.school_outlined),
+        selectedIcon: const Icon(Icons.school),
+        label: Text(l.navBeginner),
+      ),
+    ];
+  }
 
   int _indexFromLocation(String path) {
     if (path == '/') return 0;

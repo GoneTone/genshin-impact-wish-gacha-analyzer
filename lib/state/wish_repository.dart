@@ -235,7 +235,7 @@ class WishRepository extends Notifier<WishState> {
             state = state.copyWith(
               progress: FetchingBanner(
                 gachaType: t.gachaType,
-                displayName: t.name,
+                displayName: t.nameKey,
                 pageIndex: p.pageIndex,
                 newRecordsSoFar: p.newRecordsSoFar,
               ),
@@ -252,7 +252,7 @@ class WishRepository extends Notifier<WishState> {
       } catch (e) {
         // 該 banner all-or-nothing 失敗 → 保留既有資料
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
-        failed.add(t.name);
+        failed.add(t.nameKey);
       }
     }
 
