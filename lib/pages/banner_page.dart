@@ -42,6 +42,23 @@ class BannerPage extends ConsumerWidget {
     }
     final type = _resolveType();
     final records = activeData.banners[gachaType] ?? const [];
+
+    if (records.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(AppSpacing.l),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PageHeader(title: type.resolveName(l)),
+            SizedBox(
+              height: 320,
+              child: EmptyState.noRecords(context),
+            ),
+          ],
+        ),
+      );
+    }
+
     final stats = computeWishStats(records);
 
     return SingleChildScrollView(
