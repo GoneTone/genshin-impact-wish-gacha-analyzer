@@ -78,6 +78,7 @@ class _AppShellState extends ConsumerState<AppShell> {
       body: Column(children: [
         Expanded(
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _Rail(
                 selectedIndex: selectedIndex,
@@ -171,33 +172,32 @@ class _Rail extends StatelessWidget {
       ),
     ];
 
-    return IntrinsicHeight(
-      child: Column(
-        children: [
-          Expanded(
-            child: NavigationRail(
-              selectedIndex: selectedIndex,
-              onDestinationSelected: (i) => _go(context, i),
-              extended: extended,
-              labelType: extended
-                  ? null
-                  : (collapsedNoLabel
-                      ? NavigationRailLabelType.none
-                      : NavigationRailLabelType.all),
-              destinations: destinations,
-            ),
-          ),
-          // 設定入口（與其他 destination 視覺分隔）
-          _SettingsRailButton(
-            active: isSettingsActive,
+    return Column(
+      children: [
+        Expanded(
+          child: NavigationRail(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (i) => _go(context, i),
             extended: extended,
-            hideLabel: collapsedNoLabel,
-            label: l.navSettings,
-            onPressed: () => context.go('/settings'),
+            labelType: extended
+                ? null
+                : (collapsedNoLabel
+                    ? NavigationRailLabelType.none
+                    : NavigationRailLabelType.all),
+            destinations: destinations,
+            groupAlignment: -1.0,
           ),
-          const SizedBox(height: AppSpacing.s),
-        ],
-      ),
+        ),
+        // 設定入口（與其他 destination 視覺分隔，固定在底部）
+        _SettingsRailButton(
+          active: isSettingsActive,
+          extended: extended,
+          hideLabel: collapsedNoLabel,
+          label: l.navSettings,
+          onPressed: () => context.go('/settings'),
+        ),
+        const SizedBox(height: AppSpacing.s),
+      ],
     );
   }
 

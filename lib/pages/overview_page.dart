@@ -46,44 +46,68 @@ class OverviewPage extends ConsumerWidget {
           LayoutBuilder(builder: (context, c) {
             final wide = c.maxWidth >= 1024;
             final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-            return Wrap(
-              spacing: AppSpacing.m,
-              runSpacing: AppSpacing.m,
+
+            final totalCard = StatCard(
+              label: l.statsTotal,
+              value: '${stats.total}',
+              accent: tokens.accentPrimary,
+            );
+            final fiveCard = StatCard(
+              label: l.statsFiveStarRate,
+              value: '${stats.fiveStarCount}',
+              accent: tokens.fiveStar,
+              subtitle:
+                  '${(stats.fiveStarRate * 100).toStringAsFixed(2)}%',
+            );
+            final fourCard = StatCard(
+              label: l.statsFourStarRate,
+              value: '${stats.fourStarCount}',
+              accent: tokens.fourStar,
+              subtitle:
+                  '${(stats.fourStarRate * 100).toStringAsFixed(2)}%',
+            );
+
+            if (wide) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 6, child: totalCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: fiveCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: fourCard),
+                  ],
+                ),
+              );
+            }
+            if (mid) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  totalCard,
+                  const SizedBox(height: AppSpacing.m),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: fiveCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: fourCard),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 6 / 12
-                      : (mid ? c.maxWidth : c.maxWidth),
-                  child: StatCard(
-                    label: l.statsTotal,
-                    value: '${stats.total}',
-                    accent: tokens.accentPrimary,
-                  ),
-                ),
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
-                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
-                  child: StatCard(
-                    label: l.statsFiveStarRate,
-                    value: '${stats.fiveStarCount}',
-                    accent: tokens.fiveStar,
-                    subtitle:
-                        '${(stats.fiveStarRate * 100).toStringAsFixed(2)}%',
-                  ),
-                ),
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
-                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
-                  child: StatCard(
-                    label: l.statsFourStarRate,
-                    value: '${stats.fourStarCount}',
-                    accent: tokens.fourStar,
-                    subtitle:
-                        '${(stats.fourStarRate * 100).toStringAsFixed(2)}%',
-                  ),
-                ),
+                totalCard,
+                const SizedBox(height: AppSpacing.m),
+                fiveCard,
+                const SizedBox(height: AppSpacing.m),
+                fourCard,
               ],
             );
           }),

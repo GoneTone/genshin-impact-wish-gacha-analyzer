@@ -91,42 +91,66 @@ class BannerPage extends ConsumerWidget {
           LayoutBuilder(builder: (context, c) {
             final wide = c.maxWidth >= 1024;
             final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-            return Wrap(
-              spacing: AppSpacing.m,
-              runSpacing: AppSpacing.m,
+
+            final fiveCard = PityCard(
+              label: l.pityFiveStar,
+              pity: fivePity,
+              accent: tokens.fiveStar,
+              isEndedPool: isEndedPool,
+            );
+            final fourCard = PityCard(
+              label: l.pityFourStar,
+              pity: fourPity,
+              accent: tokens.fourStar,
+              isEndedPool: isEndedPool,
+            );
+            final totalCard = StatCard(
+              label: l.statsTotal,
+              value: '${stats.total}',
+              accent: tokens.accentPrimary,
+            );
+
+            if (wide) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 6, child: fiveCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: fourCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: totalCard),
+                  ],
+                ),
+              );
+            }
+            if (mid) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  fiveCard,
+                  const SizedBox(height: AppSpacing.m),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: fourCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: totalCard),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 6 / 12
-                      : c.maxWidth,
-                  child: PityCard(
-                    label: l.pityFiveStar,
-                    pity: fivePity,
-                    accent: tokens.fiveStar,
-                    isEndedPool: isEndedPool,
-                  ),
-                ),
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
-                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
-                  child: PityCard(
-                    label: l.pityFourStar,
-                    pity: fourPity,
-                    accent: tokens.fourStar,
-                    isEndedPool: isEndedPool,
-                  ),
-                ),
-                SizedBox(
-                  width: wide
-                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
-                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
-                  child: StatCard(
-                    label: l.statsTotal,
-                    value: '${stats.total}',
-                    accent: tokens.accentPrimary,
-                  ),
-                ),
+                fiveCard,
+                const SizedBox(height: AppSpacing.m),
+                fourCard,
+                const SizedBox(height: AppSpacing.m),
+                totalCard,
               ],
             );
           }),
