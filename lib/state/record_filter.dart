@@ -45,5 +45,6 @@ class RecordFilterNotifier extends Notifier<RecordFilterState> {
   }
 }
 
-final recordFilterProvider = NotifierProvider.family<RecordFilterNotifier,
-    RecordFilterState, String>((gachaType) => RecordFilterNotifier());
+final recordFilterProvider = NotifierProvider.autoDispose.family<
+    RecordFilterNotifier, RecordFilterState, String>(
+        (gachaType) => RecordFilterNotifier());

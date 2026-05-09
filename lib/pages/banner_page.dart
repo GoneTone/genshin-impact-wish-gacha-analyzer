@@ -73,7 +73,7 @@ class BannerPage extends ConsumerWidget {
     final fivePity =
         computePity(records, threshold: type.fiveStarPity);
     final fourPity =
-        computePity(records, threshold: type.fourStarPity);
+        computePity(records, threshold: type.fourStarPity, rank: 4);
     final isEndedPool = type.gachaType == '100';
 
     final filterState = ref.watch(recordFilterProvider(gachaType));

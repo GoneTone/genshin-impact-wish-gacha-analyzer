@@ -10,42 +10,38 @@ class Pity {
     required this.lastFiveStarAt,
   });
 
-  /// 距上次 5★ 已抽幾抽（不含 5★ 那筆本身）。沒有 5★ 時 = 總抽數。
+  /// 距上次符合 [computePity.rank] 的紀錄已抽幾抽。沒有則 = 總抽數。
   final int current;
 
   /// 該卡池的保底閾值。
   final int threshold;
 
-  /// 上次 5★ 抽中的時間；若從未 5★，為 null。
+  /// 上次符合 rank 的紀錄時間（雖以 fiveStarAt 命名，4★ pity 也會放上次 4★ 時間）。
   final DateTime? lastFiveStarAt;
 
-  /// 0.0–1.0，超過 threshold clamp 到 1.0。
   double get progress {
     if (threshold <= 0) return 0;
     final raw = current / threshold;
     return raw > 1 ? 1.0 : raw;
   }
 
-  /// 距下次保底還差幾抽（>= 0）。
   int get distance {
     final d = threshold - current;
     return d < 0 ? 0 : d;
   }
 }
 
-/// 計算單一卡池的保底狀態。
-///
-/// [records] 必須以時間 desc 排序（最新在前），與 `BannerStorage.banners[gachaType]`
-/// 的儲存約定一致。
+/// 計算單一卡池對指定 [rank] 的保底狀態。預設 rank=5，4★ pity 傳 rank=4。
 Pity computePity(
   List<WishRecord> records, {
   required int threshold,
+  int rank = 5,
 }) {
   var current = 0;
-  DateTime? lastFiveStarAt;
+  DateTime? lastAt;
   for (final r in records) {
-    if (r.rankType == 5) {
-      lastFiveStarAt = r.time;
+    if (r.rankType == rank) {
+      lastAt = r.time;
       break;
     }
     current++;
@@ -53,6 +49,6 @@ Pity computePity(
   return Pity(
     current: current,
     threshold: threshold,
-    lastFiveStarAt: lastFiveStarAt,
+    lastFiveStarAt: lastAt,
   );
 }

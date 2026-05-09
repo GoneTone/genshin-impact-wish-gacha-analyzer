@@ -326,7 +326,7 @@ class WishRepository extends Notifier<WishState> {
     final storage = ref.read(wishStorageProvider);
     await storage.clearAll();
     if (!ref.mounted) return;
-    state = const WishState();
+    state = const WishState(isBootstrapping: false);
   }
 
   Future<void> importData(BannerStorage data) async {

@@ -92,5 +92,40 @@ void main() {
       expect(p.progress, 1.0);
       expect(p.distance, 0);
     });
+
+    test('rank=4 → counts to last 4★ ignoring 5★', () {
+      // records: 4★, 3★, 5★, 4★, 3★ (newest first)
+      final records = [
+        WishRecord(
+          id: '5', uid: '1', gachaType: '301', name: 'a',
+          itemType: '角色', kind: WishItemKind.character,
+          rankType: 3, time: DateTime(2025, 1, 5), lang: 'zh-tw',
+        ),
+        WishRecord(
+          id: '4', uid: '1', gachaType: '301', name: 'b',
+          itemType: '角色', kind: WishItemKind.character,
+          rankType: 5, time: DateTime(2025, 1, 4), lang: 'zh-tw',
+        ),
+        WishRecord(
+          id: '3', uid: '1', gachaType: '301', name: 'c',
+          itemType: '角色', kind: WishItemKind.character,
+          rankType: 3, time: DateTime(2025, 1, 3), lang: 'zh-tw',
+        ),
+        WishRecord(
+          id: '2', uid: '1', gachaType: '301', name: 'd',
+          itemType: '角色', kind: WishItemKind.character,
+          rankType: 4, time: DateTime(2025, 1, 2), lang: 'zh-tw',
+        ),
+        WishRecord(
+          id: '1', uid: '1', gachaType: '301', name: 'e',
+          itemType: '角色', kind: WishItemKind.character,
+          rankType: 3, time: DateTime(2025, 1, 1), lang: 'zh-tw',
+        ),
+      ];
+      final p = computePity(records, threshold: 10, rank: 4);
+      // 上次 4★ 是 id '2'；之後是 3★ + 5★ + 3★ = 3 抽
+      expect(p.current, 3);
+      expect(p.lastFiveStarAt, DateTime(2025, 1, 2));
+    });
   });
 }

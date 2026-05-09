@@ -267,6 +267,11 @@ class _DataManagement extends ConsumerWidget {
       ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
         content: Text(l.settingsImportFailed(e.message)),
       ));
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+        content: Text(l.settingsImportFailed(e.toString())),
+      ));
     }
   }
 
