@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -149,11 +150,8 @@ class BannerPage extends ConsumerWidget {
                 SizedBox(
                   width: tileWidth,
                   child: ChartCard(
-                    title: '5★',
-                    chart: Center(
-                      child: Text(l.settingsPlaceholderPhase2,
-                          style: TextStyle(color: tokens.textMuted)),
-                    ),
+                    title: l.timelineCountFiveStar(stats.fiveStarCount),
+                    chart: TimelineCard(records: records),
                   ),
                 ),
               ],
