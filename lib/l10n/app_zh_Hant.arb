@@ -111,5 +111,102 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "settingsPlaceholderPhase2": "（即將推出）"
+  "settingsPlaceholderPhase2": "（即將推出）",
+
+  "pityFiveStar": "5★ 保底",
+  "pityFourStar": "4★ 保底",
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "threshold": { "type": "int" }
+    }
+  },
+  "pityDistance": "距下次保底 {n} 抽",
+  "@pityDistance": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityClose": "快保底了！",
+  "pityGuaranteed": "保底中",
+  "pityNoFiveStar": "暫無 5★",
+  "pityBeginnerEnded": "已結束",
+
+  "timelineNoRecords": "暫無 5★ 紀錄",
+  "timelineSinceLast": "{n} 抽",
+  "@timelineSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "filterRarityAll": "全部稀有度",
+  "filterRarityFiveStar": "只看 5★",
+  "filterRarityFourStar": "只看 4★",
+  "filterKindAll": "全部類型",
+  "filterKindCharacter": "只看角色",
+  "filterKindWeapon": "只看武器",
+  "filterSearchHint": "搜尋名稱…",
+  "filterClear": "清除篩選",
+
+  "sortByTimeDesc": "時間由近到遠",
+  "sortByTimeAsc": "時間由遠到近",
+  "sortByRarityDesc": "稀有度高到低",
+  "sortByRarityAsc": "稀有度低到高",
+  "sortByName": "名稱",
+
+  "pagerFirst": "首頁",
+  "pagerLast": "末頁",
+
+  "settingsExportJson": "匯出 JSON",
+  "settingsExportCsv": "匯出 CSV",
+  "settingsImportJson": "匯入 JSON",
+  "settingsClearActive": "清除目前帳號資料",
+  "settingsClearAll": "清除所有資料",
+  "settingsExportSuccess": "已匯出至 {path}",
+  "@settingsExportSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportSuccess": "成功匯入 UID {uid} 的 {count} 筆紀錄",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "uid": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "settingsImportFailed": "匯入失敗：{reason}",
+  "@settingsImportFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "confirmTitle": "確認操作",
+  "confirmClearActiveBody": "這會永久刪除 UID {uid} 的所有祈願紀錄。輸入 UID 確認：",
+  "@confirmClearActiveBody": {
+    "placeholders": { "uid": { "type": "String" } }
+  },
+  "confirmClearAllBody": "這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：",
+  "confirmTypeMismatch": "輸入不符，操作已取消",
+  "confirmCancel": "取消",
+  "confirmDelete": "刪除",
+
+  "accountListEmpty": "目前沒有任何帳號",
+  "accountLastUpdated": "最後更新 {time}",
+  "@accountLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "accountActiveTag": "活躍",
+  "accountSetActive": "設為活躍",
+  "accountRemove": "移除",
+  "accountRecapture": "重新攔截 / 新增帳號",
+
+  "loadingBootstrap": "載入中…",
+
+  "timelineCountFiveStar": "5★ × {n}",
+  "@timelineCountFiveStar": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineLatestEntry": "最新：{name}（{n} 抽）",
+  "@timelineLatestEntry": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  }
 }

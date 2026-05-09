@@ -245,4 +245,169 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsPlaceholderPhase2 => '(Coming soon)';
+
+  @override
+  String get pityFiveStar => '5★ pity';
+
+  @override
+  String get pityFourStar => '4★ pity';
+
+  @override
+  String pityCurrent(int current, int threshold) {
+    return '$current / $threshold';
+  }
+
+  @override
+  String pityDistance(int n) {
+    return '$n pulls until guaranteed';
+  }
+
+  @override
+  String get pityClose => 'Close to guaranteed!';
+
+  @override
+  String get pityGuaranteed => 'Guaranteed soon';
+
+  @override
+  String get pityNoFiveStar => 'No 5★ yet';
+
+  @override
+  String get pityBeginnerEnded => 'Ended';
+
+  @override
+  String get timelineNoRecords => 'No 5★ records';
+
+  @override
+  String timelineSinceLast(int n) {
+    return '$n pulls';
+  }
+
+  @override
+  String get filterRarityAll => 'All rarities';
+
+  @override
+  String get filterRarityFiveStar => '5★ only';
+
+  @override
+  String get filterRarityFourStar => '4★ only';
+
+  @override
+  String get filterKindAll => 'All kinds';
+
+  @override
+  String get filterKindCharacter => 'Characters only';
+
+  @override
+  String get filterKindWeapon => 'Weapons only';
+
+  @override
+  String get filterSearchHint => 'Search name…';
+
+  @override
+  String get filterClear => 'Clear filters';
+
+  @override
+  String get sortByTimeDesc => 'Time, newest first';
+
+  @override
+  String get sortByTimeAsc => 'Time, oldest first';
+
+  @override
+  String get sortByRarityDesc => 'Rarity, high to low';
+
+  @override
+  String get sortByRarityAsc => 'Rarity, low to high';
+
+  @override
+  String get sortByName => 'Name';
+
+  @override
+  String get pagerFirst => 'First';
+
+  @override
+  String get pagerLast => 'Last';
+
+  @override
+  String get settingsExportJson => 'Export JSON';
+
+  @override
+  String get settingsExportCsv => 'Export CSV';
+
+  @override
+  String get settingsImportJson => 'Import JSON';
+
+  @override
+  String get settingsClearActive => 'Clear current account data';
+
+  @override
+  String get settingsClearAll => 'Clear all data';
+
+  @override
+  String settingsExportSuccess(String path) {
+    return 'Exported to $path';
+  }
+
+  @override
+  String settingsImportSuccess(String uid, int count) {
+    return 'Imported $count records for UID $uid';
+  }
+
+  @override
+  String settingsImportFailed(String reason) {
+    return 'Import failed: $reason';
+  }
+
+  @override
+  String get confirmTitle => 'Confirm';
+
+  @override
+  String confirmClearActiveBody(String uid) {
+    return 'This will permanently delete all wish records for UID $uid. Type the UID to confirm:';
+  }
+
+  @override
+  String get confirmClearAllBody =>
+      'This will permanently delete every account\'s wish records. Type DELETE to confirm:';
+
+  @override
+  String get confirmTypeMismatch => 'Input did not match. Operation cancelled.';
+
+  @override
+  String get confirmCancel => 'Cancel';
+
+  @override
+  String get confirmDelete => 'Delete';
+
+  @override
+  String get accountListEmpty => 'No accounts yet';
+
+  @override
+  String accountLastUpdated(String time) {
+    return 'Last updated $time';
+  }
+
+  @override
+  String get accountActiveTag => 'Active';
+
+  @override
+  String get accountSetActive => 'Set active';
+
+  @override
+  String get accountRemove => 'Remove';
+
+  @override
+  String get accountRecapture => 'Re-capture / add account';
+
+  @override
+  String get loadingBootstrap => 'Loading…';
+
+  @override
+  String timelineCountFiveStar(int n) {
+    return '5★ × $n';
+  }
+
+  @override
+  String timelineLatestEntry(String name, int n) {
+    return 'Latest: $name ($n pulls)';
+  }
 }

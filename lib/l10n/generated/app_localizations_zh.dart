@@ -243,6 +243,170 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsPlaceholderPhase2 => '（即將推出）';
+
+  @override
+  String get pityFiveStar => '5★ 保底';
+
+  @override
+  String get pityFourStar => '4★ 保底';
+
+  @override
+  String pityCurrent(int current, int threshold) {
+    return '$current / $threshold';
+  }
+
+  @override
+  String pityDistance(int n) {
+    return '距下次保底 $n 抽';
+  }
+
+  @override
+  String get pityClose => '快保底了！';
+
+  @override
+  String get pityGuaranteed => '保底中';
+
+  @override
+  String get pityNoFiveStar => '暫無 5★';
+
+  @override
+  String get pityBeginnerEnded => '已結束';
+
+  @override
+  String get timelineNoRecords => '暫無 5★ 紀錄';
+
+  @override
+  String timelineSinceLast(int n) {
+    return '$n 抽';
+  }
+
+  @override
+  String get filterRarityAll => '全部稀有度';
+
+  @override
+  String get filterRarityFiveStar => '只看 5★';
+
+  @override
+  String get filterRarityFourStar => '只看 4★';
+
+  @override
+  String get filterKindAll => '全部類型';
+
+  @override
+  String get filterKindCharacter => '只看角色';
+
+  @override
+  String get filterKindWeapon => '只看武器';
+
+  @override
+  String get filterSearchHint => '搜尋名稱…';
+
+  @override
+  String get filterClear => '清除篩選';
+
+  @override
+  String get sortByTimeDesc => '時間由近到遠';
+
+  @override
+  String get sortByTimeAsc => '時間由遠到近';
+
+  @override
+  String get sortByRarityDesc => '稀有度高到低';
+
+  @override
+  String get sortByRarityAsc => '稀有度低到高';
+
+  @override
+  String get sortByName => '名稱';
+
+  @override
+  String get pagerFirst => '首頁';
+
+  @override
+  String get pagerLast => '末頁';
+
+  @override
+  String get settingsExportJson => '匯出 JSON';
+
+  @override
+  String get settingsExportCsv => '匯出 CSV';
+
+  @override
+  String get settingsImportJson => '匯入 JSON';
+
+  @override
+  String get settingsClearActive => '清除目前帳號資料';
+
+  @override
+  String get settingsClearAll => '清除所有資料';
+
+  @override
+  String settingsExportSuccess(String path) {
+    return '已匯出至 $path';
+  }
+
+  @override
+  String settingsImportSuccess(String uid, int count) {
+    return '成功匯入 UID $uid 的 $count 筆紀錄';
+  }
+
+  @override
+  String settingsImportFailed(String reason) {
+    return '匯入失敗：$reason';
+  }
+
+  @override
+  String get confirmTitle => '確認操作';
+
+  @override
+  String confirmClearActiveBody(String uid) {
+    return '這會永久刪除 UID $uid 的所有祈願紀錄。輸入 UID 確認：';
+  }
+
+  @override
+  String get confirmClearAllBody => '這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：';
+
+  @override
+  String get confirmTypeMismatch => '輸入不符，操作已取消';
+
+  @override
+  String get confirmCancel => '取消';
+
+  @override
+  String get confirmDelete => '刪除';
+
+  @override
+  String get accountListEmpty => '目前沒有任何帳號';
+
+  @override
+  String accountLastUpdated(String time) {
+    return '最後更新 $time';
+  }
+
+  @override
+  String get accountActiveTag => '活躍';
+
+  @override
+  String get accountSetActive => '設為活躍';
+
+  @override
+  String get accountRemove => '移除';
+
+  @override
+  String get accountRecapture => '重新攔截 / 新增帳號';
+
+  @override
+  String get loadingBootstrap => '載入中…';
+
+  @override
+  String timelineCountFiveStar(int n) {
+    return '5★ × $n';
+  }
+
+  @override
+  String timelineLatestEntry(String name, int n) {
+    return '最新：$name（$n 抽）';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -484,6 +648,170 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get settingsPlaceholderPhase2 => '（即将推出）';
+
+  @override
+  String get pityFiveStar => '5★ 保底';
+
+  @override
+  String get pityFourStar => '4★ 保底';
+
+  @override
+  String pityCurrent(int current, int threshold) {
+    return '$current / $threshold';
+  }
+
+  @override
+  String pityDistance(int n) {
+    return '距下次保底 $n 抽';
+  }
+
+  @override
+  String get pityClose => '快保底了！';
+
+  @override
+  String get pityGuaranteed => '保底中';
+
+  @override
+  String get pityNoFiveStar => '暂无 5★';
+
+  @override
+  String get pityBeginnerEnded => '已结束';
+
+  @override
+  String get timelineNoRecords => '暂无 5★ 记录';
+
+  @override
+  String timelineSinceLast(int n) {
+    return '$n 抽';
+  }
+
+  @override
+  String get filterRarityAll => '全部稀有度';
+
+  @override
+  String get filterRarityFiveStar => '只看 5★';
+
+  @override
+  String get filterRarityFourStar => '只看 4★';
+
+  @override
+  String get filterKindAll => '全部类型';
+
+  @override
+  String get filterKindCharacter => '只看角色';
+
+  @override
+  String get filterKindWeapon => '只看武器';
+
+  @override
+  String get filterSearchHint => '搜索名称…';
+
+  @override
+  String get filterClear => '清除筛选';
+
+  @override
+  String get sortByTimeDesc => '时间由近到远';
+
+  @override
+  String get sortByTimeAsc => '时间由远到近';
+
+  @override
+  String get sortByRarityDesc => '稀有度高到低';
+
+  @override
+  String get sortByRarityAsc => '稀有度低到高';
+
+  @override
+  String get sortByName => '名称';
+
+  @override
+  String get pagerFirst => '首页';
+
+  @override
+  String get pagerLast => '末页';
+
+  @override
+  String get settingsExportJson => '导出 JSON';
+
+  @override
+  String get settingsExportCsv => '导出 CSV';
+
+  @override
+  String get settingsImportJson => '导入 JSON';
+
+  @override
+  String get settingsClearActive => '清除当前账号数据';
+
+  @override
+  String get settingsClearAll => '清除所有数据';
+
+  @override
+  String settingsExportSuccess(String path) {
+    return '已导出至 $path';
+  }
+
+  @override
+  String settingsImportSuccess(String uid, int count) {
+    return '成功导入 UID $uid 的 $count 条记录';
+  }
+
+  @override
+  String settingsImportFailed(String reason) {
+    return '导入失败：$reason';
+  }
+
+  @override
+  String get confirmTitle => '确认操作';
+
+  @override
+  String confirmClearActiveBody(String uid) {
+    return '这会永久删除 UID $uid 的所有祈愿记录。输入 UID 确认：';
+  }
+
+  @override
+  String get confirmClearAllBody => '这会永久删除所有账号的祈愿记录。输入 DELETE 确认：';
+
+  @override
+  String get confirmTypeMismatch => '输入不符，操作已取消';
+
+  @override
+  String get confirmCancel => '取消';
+
+  @override
+  String get confirmDelete => '删除';
+
+  @override
+  String get accountListEmpty => '目前没有任何账号';
+
+  @override
+  String accountLastUpdated(String time) {
+    return '最后更新 $time';
+  }
+
+  @override
+  String get accountActiveTag => '活跃';
+
+  @override
+  String get accountSetActive => '设为活跃';
+
+  @override
+  String get accountRemove => '移除';
+
+  @override
+  String get accountRecapture => '重新拦截 / 新增账号';
+
+  @override
+  String get loadingBootstrap => '加载中…';
+
+  @override
+  String timelineCountFiveStar(int n) {
+    return '5★ × $n';
+  }
+
+  @override
+  String timelineLatestEntry(String name, int n) {
+    return '最新：$name（$n 抽）';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -725,4 +1053,168 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get settingsPlaceholderPhase2 => '（即將推出）';
+
+  @override
+  String get pityFiveStar => '5★ 保底';
+
+  @override
+  String get pityFourStar => '4★ 保底';
+
+  @override
+  String pityCurrent(int current, int threshold) {
+    return '$current / $threshold';
+  }
+
+  @override
+  String pityDistance(int n) {
+    return '距下次保底 $n 抽';
+  }
+
+  @override
+  String get pityClose => '快保底了！';
+
+  @override
+  String get pityGuaranteed => '保底中';
+
+  @override
+  String get pityNoFiveStar => '暫無 5★';
+
+  @override
+  String get pityBeginnerEnded => '已結束';
+
+  @override
+  String get timelineNoRecords => '暫無 5★ 紀錄';
+
+  @override
+  String timelineSinceLast(int n) {
+    return '$n 抽';
+  }
+
+  @override
+  String get filterRarityAll => '全部稀有度';
+
+  @override
+  String get filterRarityFiveStar => '只看 5★';
+
+  @override
+  String get filterRarityFourStar => '只看 4★';
+
+  @override
+  String get filterKindAll => '全部類型';
+
+  @override
+  String get filterKindCharacter => '只看角色';
+
+  @override
+  String get filterKindWeapon => '只看武器';
+
+  @override
+  String get filterSearchHint => '搜尋名稱…';
+
+  @override
+  String get filterClear => '清除篩選';
+
+  @override
+  String get sortByTimeDesc => '時間由近到遠';
+
+  @override
+  String get sortByTimeAsc => '時間由遠到近';
+
+  @override
+  String get sortByRarityDesc => '稀有度高到低';
+
+  @override
+  String get sortByRarityAsc => '稀有度低到高';
+
+  @override
+  String get sortByName => '名稱';
+
+  @override
+  String get pagerFirst => '首頁';
+
+  @override
+  String get pagerLast => '末頁';
+
+  @override
+  String get settingsExportJson => '匯出 JSON';
+
+  @override
+  String get settingsExportCsv => '匯出 CSV';
+
+  @override
+  String get settingsImportJson => '匯入 JSON';
+
+  @override
+  String get settingsClearActive => '清除目前帳號資料';
+
+  @override
+  String get settingsClearAll => '清除所有資料';
+
+  @override
+  String settingsExportSuccess(String path) {
+    return '已匯出至 $path';
+  }
+
+  @override
+  String settingsImportSuccess(String uid, int count) {
+    return '成功匯入 UID $uid 的 $count 筆紀錄';
+  }
+
+  @override
+  String settingsImportFailed(String reason) {
+    return '匯入失敗：$reason';
+  }
+
+  @override
+  String get confirmTitle => '確認操作';
+
+  @override
+  String confirmClearActiveBody(String uid) {
+    return '這會永久刪除 UID $uid 的所有祈願紀錄。輸入 UID 確認：';
+  }
+
+  @override
+  String get confirmClearAllBody => '這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：';
+
+  @override
+  String get confirmTypeMismatch => '輸入不符，操作已取消';
+
+  @override
+  String get confirmCancel => '取消';
+
+  @override
+  String get confirmDelete => '刪除';
+
+  @override
+  String get accountListEmpty => '目前沒有任何帳號';
+
+  @override
+  String accountLastUpdated(String time) {
+    return '最後更新 $time';
+  }
+
+  @override
+  String get accountActiveTag => '活躍';
+
+  @override
+  String get accountSetActive => '設為活躍';
+
+  @override
+  String get accountRemove => '移除';
+
+  @override
+  String get accountRecapture => '重新攔截 / 新增帳號';
+
+  @override
+  String get loadingBootstrap => '載入中…';
+
+  @override
+  String timelineCountFiveStar(int n) {
+    return '5★ × $n';
+  }
+
+  @override
+  String timelineLatestEntry(String name, int n) {
+    return '最新：$name（$n 抽）';
+  }
 }

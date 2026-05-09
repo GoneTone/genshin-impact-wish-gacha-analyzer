@@ -111,5 +111,102 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "settingsPlaceholderPhase2": "（即将推出）"
+  "settingsPlaceholderPhase2": "（即将推出）",
+
+  "pityFiveStar": "5★ 保底",
+  "pityFourStar": "4★ 保底",
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "threshold": { "type": "int" }
+    }
+  },
+  "pityDistance": "距下次保底 {n} 抽",
+  "@pityDistance": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityClose": "快保底了！",
+  "pityGuaranteed": "保底中",
+  "pityNoFiveStar": "暂无 5★",
+  "pityBeginnerEnded": "已结束",
+
+  "timelineNoRecords": "暂无 5★ 记录",
+  "timelineSinceLast": "{n} 抽",
+  "@timelineSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "filterRarityAll": "全部稀有度",
+  "filterRarityFiveStar": "只看 5★",
+  "filterRarityFourStar": "只看 4★",
+  "filterKindAll": "全部类型",
+  "filterKindCharacter": "只看角色",
+  "filterKindWeapon": "只看武器",
+  "filterSearchHint": "搜索名称…",
+  "filterClear": "清除筛选",
+
+  "sortByTimeDesc": "时间由近到远",
+  "sortByTimeAsc": "时间由远到近",
+  "sortByRarityDesc": "稀有度高到低",
+  "sortByRarityAsc": "稀有度低到高",
+  "sortByName": "名称",
+
+  "pagerFirst": "首页",
+  "pagerLast": "末页",
+
+  "settingsExportJson": "导出 JSON",
+  "settingsExportCsv": "导出 CSV",
+  "settingsImportJson": "导入 JSON",
+  "settingsClearActive": "清除当前账号数据",
+  "settingsClearAll": "清除所有数据",
+  "settingsExportSuccess": "已导出至 {path}",
+  "@settingsExportSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportSuccess": "成功导入 UID {uid} 的 {count} 条记录",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "uid": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "settingsImportFailed": "导入失败：{reason}",
+  "@settingsImportFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "confirmTitle": "确认操作",
+  "confirmClearActiveBody": "这会永久删除 UID {uid} 的所有祈愿记录。输入 UID 确认：",
+  "@confirmClearActiveBody": {
+    "placeholders": { "uid": { "type": "String" } }
+  },
+  "confirmClearAllBody": "这会永久删除所有账号的祈愿记录。输入 DELETE 确认：",
+  "confirmTypeMismatch": "输入不符，操作已取消",
+  "confirmCancel": "取消",
+  "confirmDelete": "删除",
+
+  "accountListEmpty": "目前没有任何账号",
+  "accountLastUpdated": "最后更新 {time}",
+  "@accountLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "accountActiveTag": "活跃",
+  "accountSetActive": "设为活跃",
+  "accountRemove": "移除",
+  "accountRecapture": "重新拦截 / 新增账号",
+
+  "loadingBootstrap": "加载中…",
+
+  "timelineCountFiveStar": "5★ × {n}",
+  "@timelineCountFiveStar": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineLatestEntry": "最新：{name}（{n} 抽）",
+  "@timelineLatestEntry": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  }
 }

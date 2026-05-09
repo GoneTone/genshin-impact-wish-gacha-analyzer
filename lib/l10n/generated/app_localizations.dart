@@ -543,6 +543,294 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'（即將推出）'**
   String get settingsPlaceholderPhase2;
+
+  /// No description provided for @pityFiveStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'5★ 保底'**
+  String get pityFiveStar;
+
+  /// No description provided for @pityFourStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'4★ 保底'**
+  String get pityFourStar;
+
+  /// No description provided for @pityCurrent.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{current} / {threshold}'**
+  String pityCurrent(int current, int threshold);
+
+  /// No description provided for @pityDistance.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'距下次保底 {n} 抽'**
+  String pityDistance(int n);
+
+  /// No description provided for @pityClose.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'快保底了！'**
+  String get pityClose;
+
+  /// No description provided for @pityGuaranteed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'保底中'**
+  String get pityGuaranteed;
+
+  /// No description provided for @pityNoFiveStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'暫無 5★'**
+  String get pityNoFiveStar;
+
+  /// No description provided for @pityBeginnerEnded.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已結束'**
+  String get pityBeginnerEnded;
+
+  /// No description provided for @timelineNoRecords.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'暫無 5★ 紀錄'**
+  String get timelineNoRecords;
+
+  /// No description provided for @timelineSinceLast.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{n} 抽'**
+  String timelineSinceLast(int n);
+
+  /// No description provided for @filterRarityAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'全部稀有度'**
+  String get filterRarityAll;
+
+  /// No description provided for @filterRarityFiveStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'只看 5★'**
+  String get filterRarityFiveStar;
+
+  /// No description provided for @filterRarityFourStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'只看 4★'**
+  String get filterRarityFourStar;
+
+  /// No description provided for @filterKindAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'全部類型'**
+  String get filterKindAll;
+
+  /// No description provided for @filterKindCharacter.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'只看角色'**
+  String get filterKindCharacter;
+
+  /// No description provided for @filterKindWeapon.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'只看武器'**
+  String get filterKindWeapon;
+
+  /// No description provided for @filterSearchHint.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'搜尋名稱…'**
+  String get filterSearchHint;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'清除篩選'**
+  String get filterClear;
+
+  /// No description provided for @sortByTimeDesc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'時間由近到遠'**
+  String get sortByTimeDesc;
+
+  /// No description provided for @sortByTimeAsc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'時間由遠到近'**
+  String get sortByTimeAsc;
+
+  /// No description provided for @sortByRarityDesc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'稀有度高到低'**
+  String get sortByRarityDesc;
+
+  /// No description provided for @sortByRarityAsc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'稀有度低到高'**
+  String get sortByRarityAsc;
+
+  /// No description provided for @sortByName.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'名稱'**
+  String get sortByName;
+
+  /// No description provided for @pagerFirst.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'首頁'**
+  String get pagerFirst;
+
+  /// No description provided for @pagerLast.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'末頁'**
+  String get pagerLast;
+
+  /// No description provided for @settingsExportJson.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯出 JSON'**
+  String get settingsExportJson;
+
+  /// No description provided for @settingsExportCsv.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯出 CSV'**
+  String get settingsExportCsv;
+
+  /// No description provided for @settingsImportJson.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入 JSON'**
+  String get settingsImportJson;
+
+  /// No description provided for @settingsClearActive.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'清除目前帳號資料'**
+  String get settingsClearActive;
+
+  /// No description provided for @settingsClearAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'清除所有資料'**
+  String get settingsClearAll;
+
+  /// No description provided for @settingsExportSuccess.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已匯出至 {path}'**
+  String settingsExportSuccess(String path);
+
+  /// No description provided for @settingsImportSuccess.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'成功匯入 UID {uid} 的 {count} 筆紀錄'**
+  String settingsImportSuccess(String uid, int count);
+
+  /// No description provided for @settingsImportFailed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入失敗：{reason}'**
+  String settingsImportFailed(String reason);
+
+  /// No description provided for @confirmTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'確認操作'**
+  String get confirmTitle;
+
+  /// No description provided for @confirmClearActiveBody.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'這會永久刪除 UID {uid} 的所有祈願紀錄。輸入 UID 確認：'**
+  String confirmClearActiveBody(String uid);
+
+  /// No description provided for @confirmClearAllBody.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：'**
+  String get confirmClearAllBody;
+
+  /// No description provided for @confirmTypeMismatch.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'輸入不符，操作已取消'**
+  String get confirmTypeMismatch;
+
+  /// No description provided for @confirmCancel.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'取消'**
+  String get confirmCancel;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'刪除'**
+  String get confirmDelete;
+
+  /// No description provided for @accountListEmpty.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'目前沒有任何帳號'**
+  String get accountListEmpty;
+
+  /// No description provided for @accountLastUpdated.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'最後更新 {time}'**
+  String accountLastUpdated(String time);
+
+  /// No description provided for @accountActiveTag.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'活躍'**
+  String get accountActiveTag;
+
+  /// No description provided for @accountSetActive.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'設為活躍'**
+  String get accountSetActive;
+
+  /// No description provided for @accountRemove.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'移除'**
+  String get accountRemove;
+
+  /// No description provided for @accountRecapture.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'重新攔截 / 新增帳號'**
+  String get accountRecapture;
+
+  /// No description provided for @loadingBootstrap.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'載入中…'**
+  String get loadingBootstrap;
+
+  /// No description provided for @timelineCountFiveStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'5★ × {n}'**
+  String timelineCountFiveStar(int n);
+
+  /// No description provided for @timelineLatestEntry.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'最新：{name}（{n} 抽）'**
+  String timelineLatestEntry(String name, int n);
 }
 
 class _AppLocalizationsDelegate
