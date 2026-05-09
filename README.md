@@ -4,8 +4,6 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-## 通知：因本人時間有限，暫無法繼續維護和開發此專案，故暫停進行，但未來可能回來繼續維護和開發。若有人願意接手，請聯繫我 (p29022716@gmail.com)，感謝。
-
 我開發了一套用來分析祈願卡池歷史記錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
 
 本軟體原理是讀取原神遊戲 Web Cache 檔案取得卡池歷史記錄頁面網址，所以要先在遊戲內開啟過卡池歷史記錄才能讀取到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
@@ -22,7 +20,7 @@
 
 請協助我們將軟體翻譯成各國語言！
 
-<https://crwd.in/genshin-impact-wish-gacha-analyzer>
+<https://crowdin.com/project/genshin-impact-wish-gacha-analyzer>
 
 ## 下載軟體
 
@@ -32,7 +30,6 @@
 
 ## 功能和待做事項
 
-- [x] 支援原神 3.0 版本
 - [x] 支援國際服
 - [ ] 支援中國服
 - [x] 總抽數統計
@@ -45,18 +42,15 @@
 - [x] 歷史記錄 (官方 API 資料) 表單 (可自訂排序及搜尋)
 - [x] 將抽卡記錄導出 Excel
 - [x] 依據玩家語言讀取官方 API 取得相對語言資料
-- [x] 原神角色圖像查看
 - [x] 版本更新通知
-- [x] 多國語言 ([協助翻譯](https://crwd.in/genshin-impact-wish-gacha-analyzer))
-- [ ] 多帳號記錄切換
+- [x] 多國語言 ([協助翻譯](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
+- [x] 多帳號記錄切換
 - [ ] 記錄和分析結果分享至線上
 - [ ] 黑暗模式主題
-- [X] 網頁簽到頁面
-- [X] 提瓦特互動地圖
-- [ ] 資料更新不覆蓋舊資料
+- [x] 網頁簽到頁面
+- [x] 提瓦特互動地圖
+- [x] 資料更新不覆蓋舊資料
 - [ ] 資料備份導出導入 (手動)
-- [ ] 登入 miHoYo 帳號取得 Cookie (用於處理需要 Cookie 驗證的 API)
-- [ ] 整合查詢 創世結晶、原石、聖遺物、武器 獲得/消耗記錄 和 樹脂 消耗記錄
 
 ## 截圖
 

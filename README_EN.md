@@ -4,8 +4,6 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-## Notification: Due to limited personal time, I am currently unable to continue maintaining and developing this project. Therefore, it will be temporarily suspended. However, there is a possibility that I may return in the future to resume maintenance and development. If anyone is interested in taking over, please contact me at (p29022716@gmail.com). Thank you.
-
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
 
 It works by reading game web cache file to obtain the wish history website url. Thus, you must start the game and open the wish history page at least once before running this utility.
@@ -24,7 +22,7 @@ Posts:
  
 Please help us translate this software.
  
-<https://crwd.in/genshin-impact-wish-gacha-analyzer>
+<https://crowdin.com/project/genshin-impact-wish-gacha-analyzer>
  
 ## Download Software
  
@@ -34,7 +32,6 @@ The software may trigger anti-virus software during installation and execution. 
 
 ## Functions & To-do List
 
-- [x] Support Genshin Impact 3.0
 - [x] Support The International Server
 - [ ] Support The CN Server
 - [x] Total Wish Counter
@@ -47,18 +44,15 @@ The software may trigger anti-virus software during installation and execution. 
 - [x] Record History From The Official API (Allow Custom Ordering and Search)
 - [x] Export the Record to Excel
 - [x] Load The According Language Data Form The Official API by Local User's Language
-- [x] View Character Image
 - [x] Software Update Notification
-- [x] Multi-language ([Help us traslate!](https://crwd.in/genshin-impact-wish-gacha-analyzer))
-- [ ] Switching Between Multi-accounts' records
+- [x] Multi-language ([Help us traslate!](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
+- [x] Switching Between Multi-accounts' records
 - [ ] Share The Record and Analyzed Result Online
 - [ ] Dark mode
-- [X] Daily Check-in Webpage
-- [X] Teyvat Interactive Map
-- [ ] Update Data Without Overwriting The Original Data
+- [x] Daily Check-in Webpage
+- [x] Teyvat Interactive Map
+- [x] Update Data Without Overwriting The Original Data
 - [ ] Export and Import Data Back-ups (Manual)
-- [ ] Log in to your miHoYo account to get the Cookies (for API that require Cookie authentication)
-- [ ] Integration query Genesis Crystal, Primogem transactions record and Original Resin usage record and Artifacts, Weapons record
 
 ## Screenshot
 
