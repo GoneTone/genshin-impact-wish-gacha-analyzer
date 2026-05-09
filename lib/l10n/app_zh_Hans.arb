@@ -1,4 +1,115 @@
 {
   "@@locale": "zh_Hans",
-  "appName": "原神祈愿卡池分析"
+
+  "appName": "原神祈愿卡池分析",
+
+  "actionUpdate": "更新数据",
+  "actionCancel": "取消",
+  "actionClose": "关闭",
+  "actionPrevPage": "上一页",
+  "actionNextPage": "下一页",
+
+  "navOverview": "综合",
+  "navCharacter": "角色",
+  "navWeapon": "武器",
+  "navChronicled": "集录",
+  "navStandard": "常驻",
+  "navBeginner": "新手",
+  "navSettings": "设置",
+
+  "gachaTypeCharacter": "角色活动祈愿",
+  "gachaTypeWeapon": "武器活动祈愿",
+  "gachaTypeChronicled": "集录祈愿",
+  "gachaTypeStandard": "常驻祈愿",
+  "gachaTypeBeginner": "新手祈愿",
+
+  "footerNotSynced": "尚未同步",
+  "footerLastUpdated": "最后更新：{time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "uidSwitchTooltip": "切换账号",
+  "uidNotSynced": "未同步",
+  "uidActiveSuffix": "（活跃）",
+  "uidRecapture": "重新拦截 / 切换账号",
+
+  "emptyNoSyncTitle": "尚未同步任何数据",
+  "emptyNoSyncMessage": "点右上「更新数据」开始",
+  "emptyNoRecords": "此卡池无记录",
+  "emptyNoFiltered": "没有符合条件的记录",
+
+  "statsTotal": "总抽数",
+  "statsFiveStarRate": "5★ 中奖率",
+  "statsFourStarRate": "4★ 中奖率",
+  "statsThreeStarRate": "3★ 中奖率",
+  "statsCharacterRate": "角色中奖率",
+  "statsWeaponRate": "武器中奖率",
+  "statsNoData": "无数据",
+
+  "kindCharacter": "角色",
+  "kindWeapon": "武器",
+  "kindUnknown": "未知",
+
+  "tableTime": "时间",
+  "tableName": "名称",
+  "tableKind": "类型",
+  "tableRarity": "稀有度",
+
+  "progressWaiting": "等待拦截…",
+  "progressFetching": "抓取中…",
+  "progressDone": "更新完成",
+  "progressFailed": "失败",
+  "progressOpenGameHint": "请打开原神 → 卡池 → 历史记录",
+  "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
+  "progressFetchingBanner": "正在抓取：{name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "第 {page} 页，已新增 {count} 笔",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "新增 {count} 笔记录",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ 部分失败：{names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "认证持续失效，请重新登录游戏",
+  "errorRateLimited": "请求过于频繁，请稍后再试",
+  "errorServer": "服务器错误：{message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "此账号尚无任何卡池记录",
+
+  "pageOverviewTitle": "综合数据（全卡池合计）",
+  "pageBannerRecordList": "记录列表",
+
+  "settingsTitle": "设置",
+  "settingsAppearance": "外观",
+  "settingsTheme": "主题",
+  "settingsThemeSystem": "跟随系统",
+  "settingsThemeDark": "深色",
+  "settingsThemeLight": "浅色",
+  "settingsLanguage": "语言",
+  "settingsLocaleSystem": "跟随系统",
+  "settingsLocaleZhHant": "繁體中文",
+  "settingsLocaleZhHans": "简体中文",
+  "settingsLocaleEn": "English",
+  "settingsDataManagement": "数据管理",
+  "settingsAccountManagement": "账号管理",
+  "settingsAbout": "关于",
+  "settingsAboutVersion": "版本 {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "settingsPlaceholderPhase2": "（即将推出）"
 }

@@ -1,4 +1,115 @@
 {
   "@@locale": "zh",
-  "appName": "原神祈願卡池分析"
+
+  "appName": "原神祈願卡池分析",
+
+  "actionUpdate": "更新資料",
+  "actionCancel": "取消",
+  "actionClose": "關閉",
+  "actionPrevPage": "上一頁",
+  "actionNextPage": "下一頁",
+
+  "navOverview": "綜合",
+  "navCharacter": "角色",
+  "navWeapon": "武器",
+  "navChronicled": "集錄",
+  "navStandard": "常駐",
+  "navBeginner": "新手",
+  "navSettings": "設定",
+
+  "gachaTypeCharacter": "角色活動祈願",
+  "gachaTypeWeapon": "武器活動祈願",
+  "gachaTypeChronicled": "集錄祈願",
+  "gachaTypeStandard": "常駐祈願",
+  "gachaTypeBeginner": "新手祈願",
+
+  "footerNotSynced": "尚未同步",
+  "footerLastUpdated": "最後更新：{time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "uidSwitchTooltip": "切換帳號",
+  "uidNotSynced": "未同步",
+  "uidActiveSuffix": "（活躍）",
+  "uidRecapture": "重新攔截 / 切換帳號",
+
+  "emptyNoSyncTitle": "尚未同步任何資料",
+  "emptyNoSyncMessage": "點右上「更新資料」開始",
+  "emptyNoRecords": "此卡池無紀錄",
+  "emptyNoFiltered": "沒有符合條件的紀錄",
+
+  "statsTotal": "總抽數",
+  "statsFiveStarRate": "5★ 中獎率",
+  "statsFourStarRate": "4★ 中獎率",
+  "statsThreeStarRate": "3★ 中獎率",
+  "statsCharacterRate": "角色中獎率",
+  "statsWeaponRate": "武器中獎率",
+  "statsNoData": "無資料",
+
+  "kindCharacter": "角色",
+  "kindWeapon": "武器",
+  "kindUnknown": "未知",
+
+  "tableTime": "時間",
+  "tableName": "名稱",
+  "tableKind": "類型",
+  "tableRarity": "稀有度",
+
+  "progressWaiting": "等待攔截…",
+  "progressFetching": "抓取中…",
+  "progressDone": "更新完成",
+  "progressFailed": "失敗",
+  "progressOpenGameHint": "請開啟原神 → 卡池 → 歷史紀錄",
+  "progressFallbackHint": "（先前的認證已失效，需重新攔截）",
+  "progressFetchingBanner": "正在抓取：{name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "第 {page} 頁，已新增 {count} 筆",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "新增 {count} 筆紀錄",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ 部分失敗：{names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "認證持續失效，請重新登入遊戲",
+  "errorRateLimited": "請求過於頻繁，請稍後再試",
+  "errorServer": "伺服器錯誤：{message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "此帳號尚無任何卡池紀錄",
+
+  "pageOverviewTitle": "綜合數據（全卡池合計）",
+  "pageBannerRecordList": "紀錄列表",
+
+  "settingsTitle": "設定",
+  "settingsAppearance": "外觀",
+  "settingsTheme": "主題",
+  "settingsThemeSystem": "跟隨系統",
+  "settingsThemeDark": "深色",
+  "settingsThemeLight": "淺色",
+  "settingsLanguage": "語言",
+  "settingsLocaleSystem": "跟隨系統",
+  "settingsLocaleZhHant": "繁體中文",
+  "settingsLocaleZhHans": "简体中文",
+  "settingsLocaleEn": "English",
+  "settingsDataManagement": "資料管理",
+  "settingsAccountManagement": "帳號管理",
+  "settingsAbout": "關於",
+  "settingsAboutVersion": "版本 {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "settingsPlaceholderPhase2": "（即將推出）"
 }

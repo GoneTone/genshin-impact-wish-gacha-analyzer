@@ -1,4 +1,115 @@
 {
   "@@locale": "en",
-  "appName": "Genshin Wish Analyzer"
+
+  "appName": "Genshin Wish Analyzer",
+
+  "actionUpdate": "Update",
+  "actionCancel": "Cancel",
+  "actionClose": "Close",
+  "actionPrevPage": "Previous",
+  "actionNextPage": "Next",
+
+  "navOverview": "Overview",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Standard",
+  "navBeginner": "Beginner",
+  "navSettings": "Settings",
+
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeBeginner": "Beginners' Wish",
+
+  "footerNotSynced": "Not synced",
+  "footerLastUpdated": "Last updated: {time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "uidSwitchTooltip": "Switch account",
+  "uidNotSynced": "Not synced",
+  "uidActiveSuffix": " (active)",
+  "uidRecapture": "Re-capture / switch account",
+
+  "emptyNoSyncTitle": "No data synced yet",
+  "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
+  "emptyNoRecords": "No records for this banner",
+  "emptyNoFiltered": "No records match the current filter",
+
+  "statsTotal": "Total pulls",
+  "statsFiveStarRate": "5★ Rate",
+  "statsFourStarRate": "4★ Rate",
+  "statsThreeStarRate": "3★ Rate",
+  "statsCharacterRate": "Character Rate",
+  "statsWeaponRate": "Weapon Rate",
+  "statsNoData": "No data",
+
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "kindUnknown": "Unknown",
+
+  "tableTime": "Time",
+  "tableName": "Name",
+  "tableKind": "Type",
+  "tableRarity": "Rarity",
+
+  "progressWaiting": "Waiting for capture…",
+  "progressFetching": "Fetching…",
+  "progressDone": "Update complete",
+  "progressFailed": "Failed",
+  "progressOpenGameHint": "Open Genshin → Wishes → History",
+  "progressFallbackHint": "(Previous auth expired, re-capture needed)",
+  "progressFetchingBanner": "Fetching: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "Page {page}, {count} new records so far",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "Added {count} new records",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ Partial failure: {names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "Auth keeps expiring; please log in to the game again",
+  "errorRateLimited": "Too many requests; please retry later",
+  "errorServer": "Server error: {message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "This account has no wish records yet",
+
+  "pageOverviewTitle": "Overview (all banners)",
+  "pageBannerRecordList": "Record list",
+
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "settingsThemeSystem": "Follow system",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+  "settingsLanguage": "Language",
+  "settingsLocaleSystem": "Follow system",
+  "settingsLocaleZhHant": "繁體中文",
+  "settingsLocaleZhHans": "简体中文",
+  "settingsLocaleEn": "English",
+  "settingsDataManagement": "Data management",
+  "settingsAccountManagement": "Account management",
+  "settingsAbout": "About",
+  "settingsAboutVersion": "Version {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "settingsPlaceholderPhase2": "(Coming soon)"
 }
