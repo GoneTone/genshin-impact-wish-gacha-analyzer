@@ -158,8 +158,17 @@ class _Body extends StatelessWidget {
             ],
           ],
         ),
-      UpdateFailed(:final message) => Text(message),
+      UpdateFailed(:final error) => Text(_resolveError(error, l)),
       null => const SizedBox.shrink(),
     };
   }
+
+  String _resolveError(UpdateError error, AppLocalizations l) =>
+      switch (error) {
+        UpdateErrorAuthExpired() => l.errorAuthExpired,
+        UpdateErrorRateLimited() => l.errorRateLimited,
+        UpdateErrorServer(:final details) => l.errorServer(details),
+        UpdateErrorNoRecords() => l.errorNoRecords,
+        UpdateErrorOther(:final message) => message,
+      };
 }
