@@ -1,15 +1,17 @@
 // lib/widgets/update_progress_dialog.dart
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 class UpdateProgressDialog extends ConsumerWidget {
   const UpdateProgressDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // dialog 內部訂閱 progress；變 null 自動 pop
     ref.listen<UpdateProgress?>(
       wishRepositoryProvider.select((s) => s.progress),
       (prev, next) {
@@ -21,42 +23,41 @@ class UpdateProgressDialog extends ConsumerWidget {
     final progress = ref.watch(
         wishRepositoryProvider.select((s) => s.progress));
     final notifier = ref.read(wishRepositoryProvider.notifier);
+    final l = AppLocalizations.of(context)!;
+    final tokens = Theme.of(context).gacha;
 
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        title: Text(_title(progress)),
-        content: _Body(progress: progress),
-        actions: _actions(context, progress, notifier),
+        title: _Title(progress: progress, l: l, tokens: tokens),
+        content: _Body(progress: progress, l: l),
+        actions: _actions(context, progress, notifier, l),
       ),
     );
   }
 
-  String _title(UpdateProgress? p) => switch (p) {
-        WaitingForCapture() => '等待攔截…',
-        FetchingBanner() => '抓取中…',
-        UpdateCompleted() => '✅ 更新完成',
-        UpdateFailed() => '❌ 失敗',
-        null => '',
-      };
-
-  List<Widget> _actions(BuildContext ctx, UpdateProgress? p, WishRepository r) {
+  List<Widget> _actions(
+    BuildContext ctx,
+    UpdateProgress? p,
+    WishRepository r,
+    AppLocalizations l,
+  ) {
     return switch (p) {
       WaitingForCapture() => [
           TextButton(
             onPressed: () async {
               await r.cancelCapture();
             },
-            child: const Text('取消'),
+            child: Text(l.actionCancel),
           ),
         ],
-      FetchingBanner() => const <Widget>[], // 無動作
+      FetchingBanner() => const <Widget>[],
       UpdateCompleted() ||
       UpdateFailed() =>
         [
           TextButton(
             onPressed: r.clearProgress,
-            child: const Text('關閉'),
+            child: Text(l.actionClose),
           ),
         ],
       null => const <Widget>[],
@@ -64,23 +65,61 @@ class UpdateProgressDialog extends ConsumerWidget {
   }
 }
 
-class _Body extends StatelessWidget {
-  const _Body({required this.progress});
+class _Title extends StatelessWidget {
+  const _Title({required this.progress, required this.l, required this.tokens});
   final UpdateProgress? progress;
+  final AppLocalizations l;
+  final GachaTokens tokens;
 
   @override
   Widget build(BuildContext context) {
+    final (icon, color, text) = switch (progress) {
+      WaitingForCapture() => (Icons.hourglass_top, tokens.textPrimary, l.progressWaiting),
+      FetchingBanner() => (Icons.cloud_download_outlined, tokens.textPrimary, l.progressFetching),
+      UpdateCompleted() => (Icons.check_circle, tokens.stateSuccess, l.progressDone),
+      UpdateFailed() => (Icons.error, tokens.stateDanger, l.progressFailed),
+      null => (Icons.info_outline, tokens.textMuted, ''),
+    };
+    return Row(
+      children: [
+        Icon(icon, color: color),
+        const SizedBox(width: AppSpacing.s),
+        Text(text),
+      ],
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({required this.progress, required this.l});
+  final UpdateProgress? progress;
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+
+    String _resolveBannerName(String key) => switch (key) {
+          'gachaTypeCharacter' => l.gachaTypeCharacter,
+          'gachaTypeWeapon' => l.gachaTypeWeapon,
+          'gachaTypeChronicled' => l.gachaTypeChronicled,
+          'gachaTypeStandard' => l.gachaTypeStandard,
+          'gachaTypeBeginner' => l.gachaTypeBeginner,
+          _ => key,
+        };
+
     return switch (progress) {
       WaitingForCapture(:final isFallback) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const LinearProgressIndicator(),
-            const SizedBox(height: 16),
-            const Text('請開啟原神 → 卡池 → 歷史紀錄'),
+            const SizedBox(height: AppSpacing.l),
+            Text(l.progressOpenGameHint),
             if (isFallback) ...[
-              const SizedBox(height: 8),
-              Text('（先前的認證已失效，需重新攔截）',
-                  style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: AppSpacing.s),
+              Text(l.progressFallbackHint,
+                  style: theme.textTheme.bodySmall),
             ],
           ],
         ),
@@ -93,11 +132,11 @@ class _Body extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const LinearProgressIndicator(),
-            const SizedBox(height: 16),
-            Text('正在抓取：$displayName'),
-            const SizedBox(height: 4),
-            Text('第 $pageIndex 頁，已新增 $newRecordsSoFar 筆',
-                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: AppSpacing.l),
+            Text(l.progressFetchingBanner(_resolveBannerName(displayName))),
+            const SizedBox(height: AppSpacing.xs),
+            Text(l.progressPageStatus(pageIndex, newRecordsSoFar),
+                style: theme.textTheme.bodySmall),
           ],
         ),
       UpdateCompleted(
@@ -108,11 +147,15 @@ class _Body extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('新增 $totalNewRecords 筆紀錄'),
+            Text(l.progressDoneSummary(totalNewRecords)),
             if (failedBanners.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text('⚠ 部分失敗：${failedBanners.join('、')}',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.progressPartialFailed(
+                  failedBanners.map(_resolveBannerName).join('、'),
+                ),
+                style: TextStyle(color: tokens.stateDanger),
+              ),
             ],
           ],
         ),
