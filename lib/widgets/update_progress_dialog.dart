@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
@@ -100,7 +99,7 @@ class _Body extends StatelessWidget {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
 
-    String _resolveBannerName(String key) => switch (key) {
+    String resolveBannerName(String key) => switch (key) {
           'gachaTypeCharacter' => l.gachaTypeCharacter,
           'gachaTypeWeapon' => l.gachaTypeWeapon,
           'gachaTypeChronicled' => l.gachaTypeChronicled,
@@ -133,7 +132,7 @@ class _Body extends StatelessWidget {
           children: [
             const LinearProgressIndicator(),
             const SizedBox(height: AppSpacing.l),
-            Text(l.progressFetchingBanner(_resolveBannerName(displayName))),
+            Text(l.progressFetchingBanner(resolveBannerName(displayName))),
             const SizedBox(height: AppSpacing.xs),
             Text(l.progressPageStatus(pageIndex, newRecordsSoFar),
                 style: theme.textTheme.bodySmall),
@@ -152,7 +151,7 @@ class _Body extends StatelessWidget {
               const SizedBox(height: AppSpacing.s),
               Text(
                 l.progressPartialFailed(
-                  failedBanners.map(_resolveBannerName).join('、'),
+                  failedBanners.map(resolveBannerName).join('、'),
                 ),
                 style: TextStyle(color: tokens.stateDanger),
               ),
