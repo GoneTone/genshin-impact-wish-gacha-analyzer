@@ -23,11 +23,13 @@ class WishState {
     this.activeUid,
     this.byUid = const {},
     this.progress,
+    this.isBootstrapping = true,
   });
 
   final String? activeUid;
   final Map<String, BannerStorage> byUid;
   final UpdateProgress? progress;
+  final bool isBootstrapping;
 
   BannerStorage? get activeData =>
       activeUid == null ? null : byUid[activeUid];
@@ -39,11 +41,13 @@ class WishState {
     Map<String, BannerStorage>? byUid,
     UpdateProgress? progress,
     bool clearProgress = false,
+    bool? isBootstrapping,
   }) =>
       WishState(
         activeUid: clearActiveUid ? null : (activeUid ?? this.activeUid),
         byUid: byUid ?? this.byUid,
         progress: clearProgress ? null : (progress ?? this.progress),
+        isBootstrapping: isBootstrapping ?? this.isBootstrapping,
       );
 }
 
@@ -91,12 +95,13 @@ class WishRepository extends Notifier<WishState> {
     }
 
     if (byUid.isEmpty) {
-      state = state.copyWith(byUid: byUid);
+      state = state.copyWith(byUid: byUid, isBootstrapping: false);
       return;
     }
     final newest = byUid.values
         .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
-    state = state.copyWith(byUid: byUid, activeUid: newest.uid);
+    state = state.copyWith(
+        byUid: byUid, activeUid: newest.uid, isBootstrapping: false);
   }
 
   Future<void> setActiveUid(String uid) async {

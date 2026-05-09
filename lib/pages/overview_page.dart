@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/five_star_list.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
@@ -22,9 +23,12 @@ class OverviewPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final activeData = ref.watch(
-        wishRepositoryProvider.select((s) => s.activeData));
+    final state = ref.watch(wishRepositoryProvider);
+    final activeData = state.activeData;
 
+    if (state.isBootstrapping) {
+      return const LoadingState();
+    }
     if (activeData == null) {
       return EmptyState.noSync(context);
     }
