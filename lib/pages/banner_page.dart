@@ -1,81 +1,144 @@
 // lib/pages/banner_page.dart
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/record_list_table.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/stats_panel.dart';
 
 class BannerPage extends ConsumerWidget {
   const BannerPage({super.key, required this.gachaType});
 
   final String gachaType;
 
-  String _resolveDisplayName(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
-    return gachaTypes
-        .firstWhere(
-          (t) => t.gachaType == gachaType,
-          orElse: () => GachaType(
-            gachaType: gachaType,
-            nameKey: gachaType,
-            fiveStarPity: 90,
-            fourStarPity: 10,
-          ),
-        )
-        .resolveName(l);
-  }
+  GachaType _resolveType() => gachaTypes.firstWhere(
+        (t) => t.gachaType == gachaType,
+        orElse: () => GachaType(
+          gachaType: gachaType,
+          nameKey: gachaType,
+          fiveStarPity: 90,
+          fourStarPity: 10,
+        ),
+      );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final tokens = Theme.of(context).gacha;
     final activeData = ref.watch(
         wishRepositoryProvider.select((s) => s.activeData));
 
     if (activeData == null) {
       return EmptyState.noSync(context);
     }
+    final type = _resolveType();
     final records = activeData.banners[gachaType] ?? const [];
     final stats = computeWishStats(records);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.l),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('${_resolveDisplayName(context)}（gacha_type=$gachaType）',
+          PageHeader(title: type.resolveName(l)),
+
+          // Row 1: 三聯 Stat 卡（Phase 1 還是 placeholder pity，純展示 5★/4★ 數）
+          LayoutBuilder(builder: (context, c) {
+            final wide = c.maxWidth >= 1024;
+            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+            return Wrap(
+              spacing: AppSpacing.m,
+              runSpacing: AppSpacing.m,
+              children: [
+                SizedBox(
+                  width: wide
+                      ? (c.maxWidth - AppSpacing.m * 2) * 6 / 12
+                      : c.maxWidth,
+                  child: StatCard(
+                    label: l.statsFiveStarRate,
+                    value: '${stats.fiveStarCount} / ${type.fiveStarPity}',
+                    accent: tokens.fiveStar,
+                    subtitle: l.settingsPlaceholderPhase2,
+                  ),
+                ),
+                SizedBox(
+                  width: wide
+                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
+                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
+                  child: StatCard(
+                    label: l.statsFourStarRate,
+                    value: '${stats.fourStarCount}',
+                    accent: tokens.fourStar,
+                  ),
+                ),
+                SizedBox(
+                  width: wide
+                      ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
+                      : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
+                  child: StatCard(
+                    label: l.statsTotal,
+                    value: '${stats.total}',
+                    accent: tokens.accentPrimary,
+                  ),
+                ),
+              ],
+            );
+          }),
+
+          const SizedBox(height: AppSpacing.l),
+
+          // Row 2: 兩 Pie + Timeline placeholder
+          LayoutBuilder(builder: (context, c) {
+            final wide = c.maxWidth >= 1024;
+            final col = wide ? 3 : (c.maxWidth >= 800 ? 2 : 1);
+            final tileWidth = col == 1
+                ? c.maxWidth
+                : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
+            return Wrap(
+              spacing: AppSpacing.m,
+              runSpacing: AppSpacing.m,
+              children: [
+                SizedBox(
+                  width: tileWidth,
+                  child: ChartCard(
+                    title: l.statsFiveStarRate,
+                    chart: RarityPie(stats: stats),
+                  ),
+                ),
+                SizedBox(
+                  width: tileWidth,
+                  child: ChartCard(
+                    title: '${l.kindCharacter} / ${l.kindWeapon}',
+                    chart: ItemTypePie(stats: stats),
+                  ),
+                ),
+                SizedBox(
+                  width: tileWidth,
+                  child: ChartCard(
+                    title: '5★',
+                    chart: Center(
+                      child: Text(l.settingsPlaceholderPhase2,
+                          style: TextStyle(color: tokens.textMuted)),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+
+          const SizedBox(height: AppSpacing.xl),
+          Text(l.pageBannerRecordList,
               style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final stack = constraints.maxWidth < 720;
-              if (stack) {
-                return Column(children: [
-                  SizedBox(height: 220, child: RarityPie(stats: stats)),
-                  const SizedBox(height: 16),
-                  SizedBox(height: 220, child: ItemTypePie(stats: stats)),
-                ]);
-              }
-              return SizedBox(
-                height: 220,
-                child: Row(children: [
-                  Expanded(child: RarityPie(stats: stats)),
-                  Expanded(child: ItemTypePie(stats: stats)),
-                ]),
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-          StatsPanel(stats: stats),
-          const SizedBox(height: 24),
-          Text('紀錄列表',
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s),
           RecordListTable(records: records),
         ],
       ),
