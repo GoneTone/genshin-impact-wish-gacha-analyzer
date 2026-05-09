@@ -13,6 +13,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
+class _NoRecordsException implements Exception {
+  const _NoRecordsException();
+}
+
 @immutable
 class WishState {
   const WishState({
@@ -169,7 +173,7 @@ class WishRepository extends Notifier<WishState> {
         } on AuthExpiredException {
           if (!ref.mounted) return;
           state = state.copyWith(
-              progress: const UpdateFailed('認證持續失效，請重新登入遊戲'));
+              progress: const UpdateFailed(UpdateErrorAuthExpired()));
         } catch (e) {
           if (!ref.mounted) return;
           state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
@@ -205,7 +209,7 @@ class WishRepository extends Notifier<WishState> {
     final probe = await fetcher.probeUid(url: gachaUrl);
     if (!ref.mounted) return;
     if (probe.uid == null) {
-      throw const FormatException('此帳號尚無任何卡池紀錄');
+      throw const _NoRecordsException();
     }
     final uid = probe.uid!;
 
@@ -295,12 +299,13 @@ class WishRepository extends Notifier<WishState> {
     await _runUpdate(forceRecapture: true);
   }
 
-  String _friendlyError(Object e) => switch (e) {
-        FormatException(:final message) => message,
-        RateLimitedException() => '請求過於頻繁，請稍後再試',
-        ApiErrorException(:final message) => '伺服器錯誤：$message',
-        AuthExpiredException() => '認證失效',
-        _ => e.toString(),
+  UpdateError _friendlyError(Object e) => switch (e) {
+        _NoRecordsException() => const UpdateErrorNoRecords(),
+        FormatException(:final message) => UpdateErrorOther(message),
+        RateLimitedException() => const UpdateErrorRateLimited(),
+        ApiErrorException(:final message) => UpdateErrorServer(message),
+        AuthExpiredException() => const UpdateErrorAuthExpired(),
+        _ => UpdateErrorOther(e.toString()),
       };
 
   // ─── debug helpers，僅供測試用 ───

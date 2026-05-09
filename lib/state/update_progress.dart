@@ -1,3 +1,7 @@
+import 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
+
+export 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
+
 sealed class UpdateProgress {
   const UpdateProgress();
 }
@@ -32,6 +36,6 @@ class UpdateCompleted extends UpdateProgress {
 }
 
 class UpdateFailed extends UpdateProgress {
-  const UpdateFailed(this.message);
-  final String message;
+  const UpdateFailed(this.error);
+  final UpdateError error;
 }
