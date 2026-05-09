@@ -35,12 +35,13 @@ class WishState {
 
   WishState copyWith({
     String? activeUid,
+    bool clearActiveUid = false,
     Map<String, BannerStorage>? byUid,
     UpdateProgress? progress,
     bool clearProgress = false,
   }) =>
       WishState(
-        activeUid: activeUid ?? this.activeUid,
+        activeUid: clearActiveUid ? null : (activeUid ?? this.activeUid),
         byUid: byUid ?? this.byUid,
         progress: clearProgress ? null : (progress ?? this.progress),
       );
@@ -297,6 +298,58 @@ class WishRepository extends Notifier<WishState> {
 
   Future<void> forceRecaptureAndUpdate() async {
     await _runUpdate(forceRecapture: true);
+  }
+
+  Future<void> clearActive() async {
+    final uid = state.activeUid;
+    if (uid == null) return;
+    final storage = ref.read(wishStorageProvider);
+    await storage.delete(uid);
+    if (!ref.mounted) return;
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)
+      ..remove(uid);
+    if (newByUid.isEmpty) {
+      state = state.copyWith(byUid: newByUid, clearActiveUid: true);
+    } else {
+      final newest = newByUid.values
+          .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
+      state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
+    }
+  }
+
+  Future<void> clearAll() async {
+    final storage = ref.read(wishStorageProvider);
+    await storage.clearAll();
+    if (!ref.mounted) return;
+    state = const WishState();
+  }
+
+  Future<void> importData(BannerStorage data) async {
+    final storage = ref.read(wishStorageProvider);
+    await storage.save(data);
+    if (!ref.mounted) return;
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)
+      ..[data.uid] = data;
+    state = state.copyWith(byUid: newByUid, activeUid: data.uid);
+  }
+
+  Future<void> removeUid(String uid) async {
+    final storage = ref.read(wishStorageProvider);
+    await storage.delete(uid);
+    if (!ref.mounted) return;
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)
+      ..remove(uid);
+    if (state.activeUid == uid) {
+      if (newByUid.isEmpty) {
+        state = state.copyWith(byUid: newByUid, clearActiveUid: true);
+      } else {
+        final newest = newByUid.values
+            .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
+        state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
+      }
+    } else {
+      state = state.copyWith(byUid: newByUid);
+    }
   }
 
   UpdateError _friendlyError(Object e) => switch (e) {

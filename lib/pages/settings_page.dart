@@ -1,13 +1,21 @@
 // lib/pages/settings_page.dart
+import 'dart:io';
+
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/data_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/data_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -48,9 +56,7 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsDataManagement,
-                child: Text(l.settingsPlaceholderPhase2,
-                    style: TextStyle(
-                        color: Theme.of(context).gacha.textMuted)),
+                child: const _DataManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -147,5 +153,150 @@ class _AboutContent extends ConsumerWidget {
     final l = AppLocalizations.of(context)!;
     final version = ref.watch(appVersionProvider);
     return Text(l.settingsAboutVersion(version));
+  }
+}
+
+class _DataManagement extends ConsumerWidget {
+  const _DataManagement();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final state = ref.watch(wishRepositoryProvider);
+    final activeData = state.activeData;
+    final hasData = state.byUid.isNotEmpty;
+
+    return Wrap(
+      spacing: AppSpacing.s,
+      runSpacing: AppSpacing.s,
+      children: [
+        OutlinedButton.icon(
+          onPressed: activeData == null
+              ? null
+              : () => _exportJson(context, activeData),
+          icon: const Icon(Icons.download_outlined, size: 18),
+          label: Text(l.settingsExportJson),
+        ),
+        OutlinedButton.icon(
+          onPressed: activeData == null
+              ? null
+              : () => _exportCsv(context, activeData),
+          icon: const Icon(Icons.table_chart_outlined, size: 18),
+          label: Text(l.settingsExportCsv),
+        ),
+        OutlinedButton.icon(
+          onPressed: () => _import(context, ref),
+          icon: const Icon(Icons.upload_outlined, size: 18),
+          label: Text(l.settingsImportJson),
+        ),
+        FilledButton.icon(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).gacha.stateDanger,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: state.activeUid == null
+              ? null
+              : () => _clearActive(context, ref, state.activeUid!),
+          icon: const Icon(Icons.delete_outline, size: 18),
+          label: Text(l.settingsClearActive),
+        ),
+        FilledButton.icon(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).gacha.stateDanger,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: !hasData ? null : () => _clearAll(context, ref),
+          icon: const Icon(Icons.delete_forever_outlined, size: 18),
+          label: Text(l.settingsClearAll),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _exportJson(BuildContext ctx, BannerStorage data) async {
+    final l = AppLocalizations.of(ctx)!;
+    final loc = await getSaveLocation(
+      suggestedName: 'wish_${data.uid}.json',
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'JSON', extensions: ['json']),
+      ],
+    );
+    if (loc == null) return;
+    await File(loc.path).writeAsString(exportJson(data));
+    if (!ctx.mounted) return;
+    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+      content: Text(l.settingsExportSuccess(loc.path)),
+    ));
+  }
+
+  Future<void> _exportCsv(BuildContext ctx, BannerStorage data) async {
+    final l = AppLocalizations.of(ctx)!;
+    final loc = await getSaveLocation(
+      suggestedName: 'wish_${data.uid}.csv',
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'CSV', extensions: ['csv']),
+      ],
+    );
+    if (loc == null) return;
+    await File(loc.path).writeAsString(exportCsv(data));
+    if (!ctx.mounted) return;
+    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+      content: Text(l.settingsExportSuccess(loc.path)),
+    ));
+  }
+
+  Future<void> _import(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final file = await openFile(
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'JSON', extensions: ['json']),
+      ],
+    );
+    if (file == null) return;
+    final text = await file.readAsString();
+    try {
+      final data = importJson(text);
+      await ref.read(wishRepositoryProvider.notifier).importData(data);
+      if (!ctx.mounted) return;
+      final count =
+          data.banners.values.fold<int>(0, (n, list) => n + list.length);
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+        content: Text(l.settingsImportSuccess(data.uid, count)),
+      ));
+    } on FormatException catch (e) {
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+        content: Text(l.settingsImportFailed(e.message)),
+      ));
+    }
+  }
+
+  Future<void> _clearActive(
+      BuildContext ctx, WidgetRef ref, String uid) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showConfirmTypeDialog(
+      context: ctx,
+      title: l.confirmTitle,
+      body: l.confirmClearActiveBody(uid),
+      expectedText: uid,
+      cancelLabel: l.confirmCancel,
+      confirmLabel: l.confirmDelete,
+    );
+    if (ok != true) return;
+    await ref.read(wishRepositoryProvider.notifier).clearActive();
+  }
+
+  Future<void> _clearAll(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showConfirmTypeDialog(
+      context: ctx,
+      title: l.confirmTitle,
+      body: l.confirmClearAllBody,
+      expectedText: 'DELETE',
+      cancelLabel: l.confirmCancel,
+      confirmLabel: l.confirmDelete,
+    );
+    if (ok != true) return;
+    await ref.read(wishRepositoryProvider.notifier).clearAll();
   }
 }

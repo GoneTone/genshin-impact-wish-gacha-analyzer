@@ -60,6 +60,22 @@ class WishStorage {
     if (await f.exists()) await f.delete();
   }
 
+  Future<void> delete(String uid) async {
+    final f = _dataFile(uid);
+    if (await f.exists()) await f.delete();
+    await deleteCapturedUrl(uid);
+  }
+
+  Future<void> clearAll() async {
+    if (!await baseDir.exists()) return;
+    final entries = await baseDir.list().toList();
+    for (final e in entries) {
+      if (e is File && e.path.endsWith('.json')) {
+        await e.delete();
+      }
+    }
+  }
+
   Future<void> _atomicWrite(File target, String content) async {
     final tmp = File('${target.path}.tmp');
     await tmp.writeAsString(content);
