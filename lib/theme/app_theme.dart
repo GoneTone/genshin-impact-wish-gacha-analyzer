@@ -3,19 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
-/// 提供給 callsite 的舊 GachaColors 包裝（過渡用，搬完後移除）。
-///
-/// 新程式請改用 `Theme.of(context).extension<GachaTokens>()!`。
-@Deprecated('Use Theme.of(context).extension<GachaTokens>()! instead')
-abstract class GachaColors {
-  static Color fiveStar = GachaTokens.dark.fiveStar;
-  static Color fourStar = GachaTokens.dark.fourStar;
-  static Color threeStar = GachaTokens.dark.threeStar;
-  static Color character = GachaTokens.dark.character;
-  static Color weapon = GachaTokens.dark.weapon;
-  static const Color unknown = Color(0xFF9E9E9E);
-}
-
 ThemeData buildDarkTheme() => _buildTheme(
       brightness: Brightness.dark,
       tokens: GachaTokens.dark,
