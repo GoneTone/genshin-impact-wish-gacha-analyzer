@@ -67,7 +67,6 @@ class BannerPage extends ConsumerWidget {
                     label: l.statsFiveStarRate,
                     value: '${stats.fiveStarCount} / ${type.fiveStarPity}',
                     accent: tokens.fiveStar,
-                    subtitle: l.settingsPlaceholderPhase2,
                   ),
                 ),
                 SizedBox(

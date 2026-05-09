@@ -55,6 +55,8 @@ class _AppShellState extends ConsumerState<AppShell> {
     final selectedIndex =
         isSettingsActive ? null : _bannerIndexFromLocation(location);
 
+    final collapsedNoLabel = !extendedRail && width < 800;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${l.appName} v$version'),
@@ -81,6 +83,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                 selectedIndex: selectedIndex,
                 isSettingsActive: isSettingsActive,
                 extended: extendedRail,
+                collapsedNoLabel: collapsedNoLabel,
                 l: l,
               ),
               const VerticalDivider(thickness: 1, width: 1),
@@ -124,11 +127,13 @@ class _Rail extends StatelessWidget {
     required this.selectedIndex,
     required this.isSettingsActive,
     required this.extended,
+    required this.collapsedNoLabel,
     required this.l,
   });
   final int? selectedIndex;
   final bool isSettingsActive;
   final bool extended;
+  final bool collapsedNoLabel;
   final AppLocalizations l;
 
   @override
@@ -174,16 +179,19 @@ class _Rail extends StatelessWidget {
               selectedIndex: selectedIndex,
               onDestinationSelected: (i) => _go(context, i),
               extended: extended,
-              labelType:
-                  extended ? null : NavigationRailLabelType.all,
+              labelType: extended
+                  ? null
+                  : (collapsedNoLabel
+                      ? NavigationRailLabelType.none
+                      : NavigationRailLabelType.all),
               destinations: destinations,
-              trailing: const Spacer(),
             ),
           ),
           // 設定入口（與其他 destination 視覺分隔）
           _SettingsRailButton(
             active: isSettingsActive,
             extended: extended,
+            hideLabel: collapsedNoLabel,
             label: l.navSettings,
             onPressed: () => context.go('/settings'),
           ),
@@ -207,11 +215,13 @@ class _SettingsRailButton extends StatelessWidget {
   const _SettingsRailButton({
     required this.active,
     required this.extended,
+    required this.hideLabel,
     required this.label,
     required this.onPressed,
   });
   final bool active;
   final bool extended;
+  final bool hideLabel;
   final String label;
   final VoidCallback onPressed;
 
@@ -238,13 +248,19 @@ class _SettingsRailButton extends StatelessWidget {
                   const SizedBox(width: AppSpacing.m),
                   Text(label, style: TextStyle(color: color)),
                 ])
-              : Column(children: [
-                  Icon(active ? Icons.settings : Icons.settings_outlined,
-                      color: color),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(label,
-                      style: TextStyle(color: color, fontSize: 11)),
-                ]),
+              : (hideLabel
+                  ? Center(
+                      child: Icon(
+                          active ? Icons.settings : Icons.settings_outlined,
+                          color: color),
+                    )
+                  : Column(children: [
+                      Icon(active ? Icons.settings : Icons.settings_outlined,
+                          color: color),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(label,
+                          style: TextStyle(color: color, fontSize: 11)),
+                    ])),
         ),
       ),
     );
