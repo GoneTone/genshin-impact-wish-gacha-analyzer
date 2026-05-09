@@ -1,8 +1,10 @@
+// lib/widgets/rarity_pie.dart
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 class RarityPie extends StatelessWidget {
   const RarityPie({super.key, required this.stats});
@@ -10,13 +12,20 @@ class RarityPie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final tokens = Theme.of(context).gacha;
+
     if (stats.total == 0) {
-      return const Center(child: Text('無資料'));
+      return Center(
+        child: Text(l.statsNoData,
+            style: TextStyle(color: tokens.textMuted)),
+      );
     }
     final sections = <PieChartSectionData>[
-      _section('5★ ${stats.fiveStarCount}', stats.fiveStarCount, GachaColors.fiveStar),
-      _section('4★ ${stats.fourStarCount}', stats.fourStarCount, GachaColors.fourStar),
-      _section('3★ ${stats.threeStarOrBelowCount}', stats.threeStarOrBelowCount, GachaColors.threeStar),
+      _section('5★ ${stats.fiveStarCount}', stats.fiveStarCount, tokens.fiveStar),
+      _section('4★ ${stats.fourStarCount}', stats.fourStarCount, tokens.fourStar),
+      _section('3★ ${stats.threeStarOrBelowCount}',
+          stats.threeStarOrBelowCount, tokens.threeStar),
     ].where((s) => s.value > 0).toList(growable: false);
 
     return PieChart(
@@ -25,6 +34,8 @@ class RarityPie extends StatelessWidget {
         sectionsSpace: 2,
         centerSpaceRadius: 32,
       ),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOut,
     );
   }
 
