@@ -20,7 +20,7 @@ class RecordFilterState {
       );
 }
 
-class _RecordFilterNotifier extends Notifier<RecordFilterState> {
+class RecordFilterNotifier extends Notifier<RecordFilterState> {
   @override
   RecordFilterState build() {
     return const RecordFilterState(
@@ -45,7 +45,5 @@ class _RecordFilterNotifier extends Notifier<RecordFilterState> {
   }
 }
 
-final recordFilterProvider = NotifierProvider.family<
-    _RecordFilterNotifier,
-    RecordFilterState,
-    String>((gachaType) => _RecordFilterNotifier());
+final recordFilterProvider = NotifierProvider.family<RecordFilterNotifier,
+    RecordFilterState, String>((gachaType) => RecordFilterNotifier());
