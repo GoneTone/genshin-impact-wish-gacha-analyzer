@@ -145,7 +145,7 @@ void main() {
 
     final progress = container.read(wishRepositoryProvider).progress;
     expect(progress, isA<UpdateFailed>());
-    expect((progress as UpdateFailed).message, '認證持續失效，請重新登入遊戲');
+    expect((progress as UpdateFailed).error, isA<UpdateErrorAuthExpired>());
     // capture 應該被叫 1 次（fallback MITM）；cached URL 第一次直接用，沒 MITM
     expect(captureCalls, 1);
     // fetcher 至少被叫過（兩次嘗試都打 mock）
@@ -164,7 +164,7 @@ void main() {
     addTearDown(container.dispose);
 
     final notifier = container.read(wishRepositoryProvider.notifier);
-    notifier.debugSetProgress(const UpdateFailed('test'));
+    notifier.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
     expect(container.read(wishRepositoryProvider).progress, isA<UpdateFailed>());
 
     notifier.clearProgress();
