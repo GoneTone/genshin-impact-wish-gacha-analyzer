@@ -1,0 +1,728 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Chinese (`zh`).
+class AppLocalizationsZh extends AppLocalizations {
+  AppLocalizationsZh([String locale = 'zh']) : super(locale);
+
+  @override
+  String get appName => '原神祈願卡池分析';
+
+  @override
+  String get actionUpdate => '更新資料';
+
+  @override
+  String get actionCancel => '取消';
+
+  @override
+  String get actionClose => '關閉';
+
+  @override
+  String get actionPrevPage => '上一頁';
+
+  @override
+  String get actionNextPage => '下一頁';
+
+  @override
+  String get navOverview => '綜合';
+
+  @override
+  String get navCharacter => '角色';
+
+  @override
+  String get navWeapon => '武器';
+
+  @override
+  String get navChronicled => '集錄';
+
+  @override
+  String get navStandard => '常駐';
+
+  @override
+  String get navBeginner => '新手';
+
+  @override
+  String get navSettings => '設定';
+
+  @override
+  String get gachaTypeCharacter => '角色活動祈願';
+
+  @override
+  String get gachaTypeWeapon => '武器活動祈願';
+
+  @override
+  String get gachaTypeChronicled => '集錄祈願';
+
+  @override
+  String get gachaTypeStandard => '常駐祈願';
+
+  @override
+  String get gachaTypeBeginner => '新手祈願';
+
+  @override
+  String get footerNotSynced => '尚未同步';
+
+  @override
+  String footerLastUpdated(String time) {
+    return '最後更新：$time';
+  }
+
+  @override
+  String get uidSwitchTooltip => '切換帳號';
+
+  @override
+  String get uidNotSynced => '未同步';
+
+  @override
+  String get uidActiveSuffix => '（活躍）';
+
+  @override
+  String get uidRecapture => '重新攔截 / 切換帳號';
+
+  @override
+  String get emptyNoSyncTitle => '尚未同步任何資料';
+
+  @override
+  String get emptyNoSyncMessage => '點右上「更新資料」開始';
+
+  @override
+  String get emptyNoRecords => '此卡池無紀錄';
+
+  @override
+  String get emptyNoFiltered => '沒有符合條件的紀錄';
+
+  @override
+  String get statsTotal => '總抽數';
+
+  @override
+  String get statsFiveStarRate => '5★ 中獎率';
+
+  @override
+  String get statsFourStarRate => '4★ 中獎率';
+
+  @override
+  String get statsThreeStarRate => '3★ 中獎率';
+
+  @override
+  String get statsCharacterRate => '角色中獎率';
+
+  @override
+  String get statsWeaponRate => '武器中獎率';
+
+  @override
+  String get statsNoData => '無資料';
+
+  @override
+  String get kindCharacter => '角色';
+
+  @override
+  String get kindWeapon => '武器';
+
+  @override
+  String get kindUnknown => '未知';
+
+  @override
+  String get tableTime => '時間';
+
+  @override
+  String get tableName => '名稱';
+
+  @override
+  String get tableKind => '類型';
+
+  @override
+  String get tableRarity => '稀有度';
+
+  @override
+  String get progressWaiting => '等待攔截…';
+
+  @override
+  String get progressFetching => '抓取中…';
+
+  @override
+  String get progressDone => '更新完成';
+
+  @override
+  String get progressFailed => '失敗';
+
+  @override
+  String get progressOpenGameHint => '請開啟原神 → 卡池 → 歷史紀錄';
+
+  @override
+  String get progressFallbackHint => '（先前的認證已失效，需重新攔截）';
+
+  @override
+  String progressFetchingBanner(String name) {
+    return '正在抓取：$name';
+  }
+
+  @override
+  String progressPageStatus(int page, int count) {
+    return '第 $page 頁，已新增 $count 筆';
+  }
+
+  @override
+  String progressDoneSummary(int count) {
+    return '新增 $count 筆紀錄';
+  }
+
+  @override
+  String progressPartialFailed(String names) {
+    return '⚠ 部分失敗：$names';
+  }
+
+  @override
+  String get errorAuthExpired => '認證持續失效，請重新登入遊戲';
+
+  @override
+  String get errorRateLimited => '請求過於頻繁，請稍後再試';
+
+  @override
+  String errorServer(String message) {
+    return '伺服器錯誤：$message';
+  }
+
+  @override
+  String get errorNoRecords => '此帳號尚無任何卡池紀錄';
+
+  @override
+  String get pageOverviewTitle => '綜合數據（全卡池合計）';
+
+  @override
+  String get pageBannerRecordList => '紀錄列表';
+
+  @override
+  String get settingsTitle => '設定';
+
+  @override
+  String get settingsAppearance => '外觀';
+
+  @override
+  String get settingsTheme => '主題';
+
+  @override
+  String get settingsThemeSystem => '跟隨系統';
+
+  @override
+  String get settingsThemeDark => '深色';
+
+  @override
+  String get settingsThemeLight => '淺色';
+
+  @override
+  String get settingsLanguage => '語言';
+
+  @override
+  String get settingsLocaleSystem => '跟隨系統';
+
+  @override
+  String get settingsLocaleZhHant => '繁體中文';
+
+  @override
+  String get settingsLocaleZhHans => '简体中文';
+
+  @override
+  String get settingsLocaleEn => 'English';
+
+  @override
+  String get settingsDataManagement => '資料管理';
+
+  @override
+  String get settingsAccountManagement => '帳號管理';
+
+  @override
+  String get settingsAbout => '關於';
+
+  @override
+  String settingsAboutVersion(String version) {
+    return '版本 $version';
+  }
+
+  @override
+  String get settingsPlaceholderPhase2 => '（即將推出）';
+}
+
+/// The translations for Chinese, using the Han script (`zh_Hans`).
+class AppLocalizationsZhHans extends AppLocalizationsZh {
+  AppLocalizationsZhHans() : super('zh_Hans');
+
+  @override
+  String get appName => '原神祈愿卡池分析';
+
+  @override
+  String get actionUpdate => '更新数据';
+
+  @override
+  String get actionCancel => '取消';
+
+  @override
+  String get actionClose => '关闭';
+
+  @override
+  String get actionPrevPage => '上一页';
+
+  @override
+  String get actionNextPage => '下一页';
+
+  @override
+  String get navOverview => '综合';
+
+  @override
+  String get navCharacter => '角色';
+
+  @override
+  String get navWeapon => '武器';
+
+  @override
+  String get navChronicled => '集录';
+
+  @override
+  String get navStandard => '常驻';
+
+  @override
+  String get navBeginner => '新手';
+
+  @override
+  String get navSettings => '设置';
+
+  @override
+  String get gachaTypeCharacter => '角色活动祈愿';
+
+  @override
+  String get gachaTypeWeapon => '武器活动祈愿';
+
+  @override
+  String get gachaTypeChronicled => '集录祈愿';
+
+  @override
+  String get gachaTypeStandard => '常驻祈愿';
+
+  @override
+  String get gachaTypeBeginner => '新手祈愿';
+
+  @override
+  String get footerNotSynced => '尚未同步';
+
+  @override
+  String footerLastUpdated(String time) {
+    return '最后更新：$time';
+  }
+
+  @override
+  String get uidSwitchTooltip => '切换账号';
+
+  @override
+  String get uidNotSynced => '未同步';
+
+  @override
+  String get uidActiveSuffix => '（活跃）';
+
+  @override
+  String get uidRecapture => '重新拦截 / 切换账号';
+
+  @override
+  String get emptyNoSyncTitle => '尚未同步任何数据';
+
+  @override
+  String get emptyNoSyncMessage => '点右上「更新数据」开始';
+
+  @override
+  String get emptyNoRecords => '此卡池无记录';
+
+  @override
+  String get emptyNoFiltered => '没有符合条件的记录';
+
+  @override
+  String get statsTotal => '总抽数';
+
+  @override
+  String get statsFiveStarRate => '5★ 中奖率';
+
+  @override
+  String get statsFourStarRate => '4★ 中奖率';
+
+  @override
+  String get statsThreeStarRate => '3★ 中奖率';
+
+  @override
+  String get statsCharacterRate => '角色中奖率';
+
+  @override
+  String get statsWeaponRate => '武器中奖率';
+
+  @override
+  String get statsNoData => '无数据';
+
+  @override
+  String get kindCharacter => '角色';
+
+  @override
+  String get kindWeapon => '武器';
+
+  @override
+  String get kindUnknown => '未知';
+
+  @override
+  String get tableTime => '时间';
+
+  @override
+  String get tableName => '名称';
+
+  @override
+  String get tableKind => '类型';
+
+  @override
+  String get tableRarity => '稀有度';
+
+  @override
+  String get progressWaiting => '等待拦截…';
+
+  @override
+  String get progressFetching => '抓取中…';
+
+  @override
+  String get progressDone => '更新完成';
+
+  @override
+  String get progressFailed => '失败';
+
+  @override
+  String get progressOpenGameHint => '请打开原神 → 卡池 → 历史记录';
+
+  @override
+  String get progressFallbackHint => '（先前的认证已失效，需重新拦截）';
+
+  @override
+  String progressFetchingBanner(String name) {
+    return '正在抓取：$name';
+  }
+
+  @override
+  String progressPageStatus(int page, int count) {
+    return '第 $page 页，已新增 $count 笔';
+  }
+
+  @override
+  String progressDoneSummary(int count) {
+    return '新增 $count 笔记录';
+  }
+
+  @override
+  String progressPartialFailed(String names) {
+    return '⚠ 部分失败：$names';
+  }
+
+  @override
+  String get errorAuthExpired => '认证持续失效，请重新登录游戏';
+
+  @override
+  String get errorRateLimited => '请求过于频繁，请稍后再试';
+
+  @override
+  String errorServer(String message) {
+    return '服务器错误：$message';
+  }
+
+  @override
+  String get errorNoRecords => '此账号尚无任何卡池记录';
+
+  @override
+  String get pageOverviewTitle => '综合数据（全卡池合计）';
+
+  @override
+  String get pageBannerRecordList => '记录列表';
+
+  @override
+  String get settingsTitle => '设置';
+
+  @override
+  String get settingsAppearance => '外观';
+
+  @override
+  String get settingsTheme => '主题';
+
+  @override
+  String get settingsThemeSystem => '跟随系统';
+
+  @override
+  String get settingsThemeDark => '深色';
+
+  @override
+  String get settingsThemeLight => '浅色';
+
+  @override
+  String get settingsLanguage => '语言';
+
+  @override
+  String get settingsLocaleSystem => '跟随系统';
+
+  @override
+  String get settingsLocaleZhHant => '繁體中文';
+
+  @override
+  String get settingsLocaleZhHans => '简体中文';
+
+  @override
+  String get settingsLocaleEn => 'English';
+
+  @override
+  String get settingsDataManagement => '数据管理';
+
+  @override
+  String get settingsAccountManagement => '账号管理';
+
+  @override
+  String get settingsAbout => '关于';
+
+  @override
+  String settingsAboutVersion(String version) {
+    return '版本 $version';
+  }
+
+  @override
+  String get settingsPlaceholderPhase2 => '（即将推出）';
+}
+
+/// The translations for Chinese, using the Han script (`zh_Hant`).
+class AppLocalizationsZhHant extends AppLocalizationsZh {
+  AppLocalizationsZhHant() : super('zh_Hant');
+
+  @override
+  String get appName => '原神祈願卡池分析';
+
+  @override
+  String get actionUpdate => '更新資料';
+
+  @override
+  String get actionCancel => '取消';
+
+  @override
+  String get actionClose => '關閉';
+
+  @override
+  String get actionPrevPage => '上一頁';
+
+  @override
+  String get actionNextPage => '下一頁';
+
+  @override
+  String get navOverview => '綜合';
+
+  @override
+  String get navCharacter => '角色';
+
+  @override
+  String get navWeapon => '武器';
+
+  @override
+  String get navChronicled => '集錄';
+
+  @override
+  String get navStandard => '常駐';
+
+  @override
+  String get navBeginner => '新手';
+
+  @override
+  String get navSettings => '設定';
+
+  @override
+  String get gachaTypeCharacter => '角色活動祈願';
+
+  @override
+  String get gachaTypeWeapon => '武器活動祈願';
+
+  @override
+  String get gachaTypeChronicled => '集錄祈願';
+
+  @override
+  String get gachaTypeStandard => '常駐祈願';
+
+  @override
+  String get gachaTypeBeginner => '新手祈願';
+
+  @override
+  String get footerNotSynced => '尚未同步';
+
+  @override
+  String footerLastUpdated(String time) {
+    return '最後更新：$time';
+  }
+
+  @override
+  String get uidSwitchTooltip => '切換帳號';
+
+  @override
+  String get uidNotSynced => '未同步';
+
+  @override
+  String get uidActiveSuffix => '（活躍）';
+
+  @override
+  String get uidRecapture => '重新攔截 / 切換帳號';
+
+  @override
+  String get emptyNoSyncTitle => '尚未同步任何資料';
+
+  @override
+  String get emptyNoSyncMessage => '點右上「更新資料」開始';
+
+  @override
+  String get emptyNoRecords => '此卡池無紀錄';
+
+  @override
+  String get emptyNoFiltered => '沒有符合條件的紀錄';
+
+  @override
+  String get statsTotal => '總抽數';
+
+  @override
+  String get statsFiveStarRate => '5★ 中獎率';
+
+  @override
+  String get statsFourStarRate => '4★ 中獎率';
+
+  @override
+  String get statsThreeStarRate => '3★ 中獎率';
+
+  @override
+  String get statsCharacterRate => '角色中獎率';
+
+  @override
+  String get statsWeaponRate => '武器中獎率';
+
+  @override
+  String get statsNoData => '無資料';
+
+  @override
+  String get kindCharacter => '角色';
+
+  @override
+  String get kindWeapon => '武器';
+
+  @override
+  String get kindUnknown => '未知';
+
+  @override
+  String get tableTime => '時間';
+
+  @override
+  String get tableName => '名稱';
+
+  @override
+  String get tableKind => '類型';
+
+  @override
+  String get tableRarity => '稀有度';
+
+  @override
+  String get progressWaiting => '等待攔截…';
+
+  @override
+  String get progressFetching => '抓取中…';
+
+  @override
+  String get progressDone => '更新完成';
+
+  @override
+  String get progressFailed => '失敗';
+
+  @override
+  String get progressOpenGameHint => '請開啟原神 → 卡池 → 歷史紀錄';
+
+  @override
+  String get progressFallbackHint => '（先前的認證已失效，需重新攔截）';
+
+  @override
+  String progressFetchingBanner(String name) {
+    return '正在抓取：$name';
+  }
+
+  @override
+  String progressPageStatus(int page, int count) {
+    return '第 $page 頁，已新增 $count 筆';
+  }
+
+  @override
+  String progressDoneSummary(int count) {
+    return '新增 $count 筆紀錄';
+  }
+
+  @override
+  String progressPartialFailed(String names) {
+    return '⚠ 部分失敗：$names';
+  }
+
+  @override
+  String get errorAuthExpired => '認證持續失效，請重新登入遊戲';
+
+  @override
+  String get errorRateLimited => '請求過於頻繁，請稍後再試';
+
+  @override
+  String errorServer(String message) {
+    return '伺服器錯誤：$message';
+  }
+
+  @override
+  String get errorNoRecords => '此帳號尚無任何卡池紀錄';
+
+  @override
+  String get pageOverviewTitle => '綜合數據（全卡池合計）';
+
+  @override
+  String get pageBannerRecordList => '紀錄列表';
+
+  @override
+  String get settingsTitle => '設定';
+
+  @override
+  String get settingsAppearance => '外觀';
+
+  @override
+  String get settingsTheme => '主題';
+
+  @override
+  String get settingsThemeSystem => '跟隨系統';
+
+  @override
+  String get settingsThemeDark => '深色';
+
+  @override
+  String get settingsThemeLight => '淺色';
+
+  @override
+  String get settingsLanguage => '語言';
+
+  @override
+  String get settingsLocaleSystem => '跟隨系統';
+
+  @override
+  String get settingsLocaleZhHant => '繁體中文';
+
+  @override
+  String get settingsLocaleZhHans => '简体中文';
+
+  @override
+  String get settingsLocaleEn => 'English';
+
+  @override
+  String get settingsDataManagement => '資料管理';
+
+  @override
+  String get settingsAccountManagement => '帳號管理';
+
+  @override
+  String get settingsAbout => '關於';
+
+  @override
+  String settingsAboutVersion(String version) {
+    return '版本 $version';
+  }
+
+  @override
+  String get settingsPlaceholderPhase2 => '（即將推出）';
+}

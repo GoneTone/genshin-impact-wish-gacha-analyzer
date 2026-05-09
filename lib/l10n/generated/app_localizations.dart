@@ -1,0 +1,594 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_zh.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('zh'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+  ];
+
+  /// No description provided for @appName.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'原神祈願卡池分析'**
+  String get appName;
+
+  /// No description provided for @actionUpdate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'更新資料'**
+  String get actionUpdate;
+
+  /// No description provided for @actionCancel.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'取消'**
+  String get actionCancel;
+
+  /// No description provided for @actionClose.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'關閉'**
+  String get actionClose;
+
+  /// No description provided for @actionPrevPage.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'上一頁'**
+  String get actionPrevPage;
+
+  /// No description provided for @actionNextPage.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'下一頁'**
+  String get actionNextPage;
+
+  /// No description provided for @navOverview.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'綜合'**
+  String get navOverview;
+
+  /// No description provided for @navCharacter.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'角色'**
+  String get navCharacter;
+
+  /// No description provided for @navWeapon.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'武器'**
+  String get navWeapon;
+
+  /// No description provided for @navChronicled.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'集錄'**
+  String get navChronicled;
+
+  /// No description provided for @navStandard.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'常駐'**
+  String get navStandard;
+
+  /// No description provided for @navBeginner.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'新手'**
+  String get navBeginner;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'設定'**
+  String get navSettings;
+
+  /// No description provided for @gachaTypeCharacter.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'角色活動祈願'**
+  String get gachaTypeCharacter;
+
+  /// No description provided for @gachaTypeWeapon.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'武器活動祈願'**
+  String get gachaTypeWeapon;
+
+  /// No description provided for @gachaTypeChronicled.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'集錄祈願'**
+  String get gachaTypeChronicled;
+
+  /// No description provided for @gachaTypeStandard.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'常駐祈願'**
+  String get gachaTypeStandard;
+
+  /// No description provided for @gachaTypeBeginner.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'新手祈願'**
+  String get gachaTypeBeginner;
+
+  /// No description provided for @footerNotSynced.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'尚未同步'**
+  String get footerNotSynced;
+
+  /// No description provided for @footerLastUpdated.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'最後更新：{time}'**
+  String footerLastUpdated(String time);
+
+  /// No description provided for @uidSwitchTooltip.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'切換帳號'**
+  String get uidSwitchTooltip;
+
+  /// No description provided for @uidNotSynced.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'未同步'**
+  String get uidNotSynced;
+
+  /// No description provided for @uidActiveSuffix.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'（活躍）'**
+  String get uidActiveSuffix;
+
+  /// No description provided for @uidRecapture.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'重新攔截 / 切換帳號'**
+  String get uidRecapture;
+
+  /// No description provided for @emptyNoSyncTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'尚未同步任何資料'**
+  String get emptyNoSyncTitle;
+
+  /// No description provided for @emptyNoSyncMessage.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'點右上「更新資料」開始'**
+  String get emptyNoSyncMessage;
+
+  /// No description provided for @emptyNoRecords.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'此卡池無紀錄'**
+  String get emptyNoRecords;
+
+  /// No description provided for @emptyNoFiltered.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'沒有符合條件的紀錄'**
+  String get emptyNoFiltered;
+
+  /// No description provided for @statsTotal.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'總抽數'**
+  String get statsTotal;
+
+  /// No description provided for @statsFiveStarRate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'5★ 中獎率'**
+  String get statsFiveStarRate;
+
+  /// No description provided for @statsFourStarRate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'4★ 中獎率'**
+  String get statsFourStarRate;
+
+  /// No description provided for @statsThreeStarRate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'3★ 中獎率'**
+  String get statsThreeStarRate;
+
+  /// No description provided for @statsCharacterRate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'角色中獎率'**
+  String get statsCharacterRate;
+
+  /// No description provided for @statsWeaponRate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'武器中獎率'**
+  String get statsWeaponRate;
+
+  /// No description provided for @statsNoData.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'無資料'**
+  String get statsNoData;
+
+  /// No description provided for @kindCharacter.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'角色'**
+  String get kindCharacter;
+
+  /// No description provided for @kindWeapon.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'武器'**
+  String get kindWeapon;
+
+  /// No description provided for @kindUnknown.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'未知'**
+  String get kindUnknown;
+
+  /// No description provided for @tableTime.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'時間'**
+  String get tableTime;
+
+  /// No description provided for @tableName.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'名稱'**
+  String get tableName;
+
+  /// No description provided for @tableKind.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'類型'**
+  String get tableKind;
+
+  /// No description provided for @tableRarity.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'稀有度'**
+  String get tableRarity;
+
+  /// No description provided for @progressWaiting.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'等待攔截…'**
+  String get progressWaiting;
+
+  /// No description provided for @progressFetching.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'抓取中…'**
+  String get progressFetching;
+
+  /// No description provided for @progressDone.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'更新完成'**
+  String get progressDone;
+
+  /// No description provided for @progressFailed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'失敗'**
+  String get progressFailed;
+
+  /// No description provided for @progressOpenGameHint.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'請開啟原神 → 卡池 → 歷史紀錄'**
+  String get progressOpenGameHint;
+
+  /// No description provided for @progressFallbackHint.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'（先前的認證已失效，需重新攔截）'**
+  String get progressFallbackHint;
+
+  /// No description provided for @progressFetchingBanner.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'正在抓取：{name}'**
+  String progressFetchingBanner(String name);
+
+  /// No description provided for @progressPageStatus.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'第 {page} 頁，已新增 {count} 筆'**
+  String progressPageStatus(int page, int count);
+
+  /// No description provided for @progressDoneSummary.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'新增 {count} 筆紀錄'**
+  String progressDoneSummary(int count);
+
+  /// No description provided for @progressPartialFailed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'⚠ 部分失敗：{names}'**
+  String progressPartialFailed(String names);
+
+  /// No description provided for @errorAuthExpired.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'認證持續失效，請重新登入遊戲'**
+  String get errorAuthExpired;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'請求過於頻繁，請稍後再試'**
+  String get errorRateLimited;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'伺服器錯誤：{message}'**
+  String errorServer(String message);
+
+  /// No description provided for @errorNoRecords.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'此帳號尚無任何卡池紀錄'**
+  String get errorNoRecords;
+
+  /// No description provided for @pageOverviewTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'綜合數據（全卡池合計）'**
+  String get pageOverviewTitle;
+
+  /// No description provided for @pageBannerRecordList.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'紀錄列表'**
+  String get pageBannerRecordList;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'設定'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'外觀'**
+  String get settingsAppearance;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'主題'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsThemeSystem.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'跟隨系統'**
+  String get settingsThemeSystem;
+
+  /// No description provided for @settingsThemeDark.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'深色'**
+  String get settingsThemeDark;
+
+  /// No description provided for @settingsThemeLight.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'淺色'**
+  String get settingsThemeLight;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'語言'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLocaleSystem.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'跟隨系統'**
+  String get settingsLocaleSystem;
+
+  /// No description provided for @settingsLocaleZhHant.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'繁體中文'**
+  String get settingsLocaleZhHant;
+
+  /// No description provided for @settingsLocaleZhHans.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'简体中文'**
+  String get settingsLocaleZhHans;
+
+  /// No description provided for @settingsLocaleEn.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'English'**
+  String get settingsLocaleEn;
+
+  /// No description provided for @settingsDataManagement.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'資料管理'**
+  String get settingsDataManagement;
+
+  /// No description provided for @settingsAccountManagement.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'帳號管理'**
+  String get settingsAccountManagement;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'關於'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAboutVersion.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'版本 {version}'**
+  String settingsAboutVersion(String version);
+
+  /// No description provided for @settingsPlaceholderPhase2.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'（即將推出）'**
+  String get settingsPlaceholderPhase2;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'zh'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+script codes are specified.
+  switch (locale.languageCode) {
+    case 'zh':
+      {
+        switch (locale.scriptCode) {
+          case 'Hans':
+            return AppLocalizationsZhHans();
+          case 'Hant':
+            return AppLocalizationsZhHant();
+        }
+        break;
+      }
+  }
+
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'zh':
+      return AppLocalizationsZh();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}
