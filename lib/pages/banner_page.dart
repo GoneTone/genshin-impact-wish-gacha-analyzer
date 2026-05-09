@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
@@ -60,6 +62,11 @@ class BannerPage extends ConsumerWidget {
     }
 
     final stats = computeWishStats(records);
+    final fivePity =
+        computePity(records, threshold: type.fiveStarPity);
+    final fourPity =
+        computePity(records, threshold: type.fourStarPity);
+    final isEndedPool = type.gachaType == '100';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -68,7 +75,7 @@ class BannerPage extends ConsumerWidget {
         children: [
           PageHeader(title: type.resolveName(l)),
 
-          // Row 1: 三聯 Stat 卡（Phase 1 還是 placeholder pity，純展示 5★/4★ 數）
+          // Row 1: 三聯 Stat 卡（5★ 和 4★ 用 PityCard，總抽數用 StatCard）
           LayoutBuilder(builder: (context, c) {
             final wide = c.maxWidth >= 1024;
             final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
@@ -80,20 +87,22 @@ class BannerPage extends ConsumerWidget {
                   width: wide
                       ? (c.maxWidth - AppSpacing.m * 2) * 6 / 12
                       : c.maxWidth,
-                  child: StatCard(
-                    label: l.statsFiveStarRate,
-                    value: '${stats.fiveStarCount} / ${type.fiveStarPity}',
+                  child: PityCard(
+                    label: l.pityFiveStar,
+                    pity: fivePity,
                     accent: tokens.fiveStar,
+                    isEndedPool: isEndedPool,
                   ),
                 ),
                 SizedBox(
                   width: wide
                       ? (c.maxWidth - AppSpacing.m * 2) * 3 / 12
                       : (mid ? (c.maxWidth - AppSpacing.m) / 2 : c.maxWidth),
-                  child: StatCard(
-                    label: l.statsFourStarRate,
-                    value: '${stats.fourStarCount}',
+                  child: PityCard(
+                    label: l.pityFourStar,
+                    pity: fourPity,
                     accent: tokens.fourStar,
+                    isEndedPool: isEndedPool,
                   ),
                 ),
                 SizedBox(
