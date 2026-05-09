@@ -38,11 +38,7 @@ class BannerPage extends ConsumerWidget {
         wishRepositoryProvider.select((s) => s.activeData));
 
     if (activeData == null) {
-      return const EmptyState(
-        icon: Icons.cloud_off_outlined,
-        title: '尚未同步任何資料',
-        message: '點右上「更新資料」開始',
-      );
+      return EmptyState.noSync(context);
     }
     final records = activeData.banners[gachaType] ?? const [];
     final stats = computeWishStats(records);
