@@ -4,19 +4,22 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/record_list_table.dart';
 
 class BannerPage extends ConsumerWidget {
   const BannerPage({super.key, required this.gachaType});
@@ -68,6 +71,10 @@ class BannerPage extends ConsumerWidget {
     final fourPity =
         computePity(records, threshold: type.fourStarPity);
     final isEndedPool = type.gachaType == '100';
+
+    final filterState = ref.watch(recordFilterProvider(gachaType));
+    final filtered = sortRecords(
+        filterRecords(records, filterState.filter), filterState.sort);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -162,7 +169,20 @@ class BannerPage extends ConsumerWidget {
           Text(l.pageBannerRecordList,
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: AppSpacing.s),
-          RecordListTable(records: records),
+          SearchFilterBar(
+            state: filterState,
+            onFilterChanged: (f) => ref
+                .read(recordFilterProvider(gachaType).notifier)
+                .setFilter(f),
+            onSortChanged: (s) => ref
+                .read(recordFilterProvider(gachaType).notifier)
+                .setSort(s),
+            onClear: () => ref
+                .read(recordFilterProvider(gachaType).notifier)
+                .clear(),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          SortableTable(records: filtered),
         ],
       ),
     );
