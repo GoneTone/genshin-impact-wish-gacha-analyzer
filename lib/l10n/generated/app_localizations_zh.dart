@@ -113,6 +113,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statsWeaponRate => '武器中獎率';
 
   @override
+  String get statsFiveStarCount => '5★ 件數';
+
+  @override
+  String get statsFourStarCount => '4★ 件數';
+
+  @override
+  String statsShareOfTotal(String rate) {
+    return '佔總抽 $rate%';
+  }
+
+  @override
+  String get statsRarityDistribution => '稀有度分布';
+
+  @override
+  String get statsItemTypeDistribution => '類型分布';
+
+  @override
   String get statsNoData => '無資料';
 
   @override
@@ -518,6 +535,23 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get statsWeaponRate => '武器中奖率';
 
   @override
+  String get statsFiveStarCount => '5★ 件数';
+
+  @override
+  String get statsFourStarCount => '4★ 件数';
+
+  @override
+  String statsShareOfTotal(String rate) {
+    return '占总抽 $rate%';
+  }
+
+  @override
+  String get statsRarityDistribution => '稀有度分布';
+
+  @override
+  String get statsItemTypeDistribution => '类型分布';
+
+  @override
   String get statsNoData => '无数据';
 
   @override
@@ -921,6 +955,23 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get statsWeaponRate => '武器中獎率';
+
+  @override
+  String get statsFiveStarCount => '5★ 件數';
+
+  @override
+  String get statsFourStarCount => '4★ 件數';
+
+  @override
+  String statsShareOfTotal(String rate) {
+    return '佔總抽 $rate%';
+  }
+
+  @override
+  String get statsRarityDistribution => '稀有度分布';
+
+  @override
+  String get statsItemTypeDistribution => '類型分布';
 
   @override
   String get statsNoData => '無資料';

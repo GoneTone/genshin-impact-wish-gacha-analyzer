@@ -45,6 +45,14 @@
   "statsThreeStarRate": "3★ Rate",
   "statsCharacterRate": "Character Rate",
   "statsWeaponRate": "Weapon Rate",
+  "statsFiveStarCount": "5★ Count",
+  "statsFourStarCount": "4★ Count",
+  "statsShareOfTotal": "{rate}% of total",
+  "@statsShareOfTotal": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+  "statsRarityDistribution": "Rarity Distribution",
+  "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
 
   "kindCharacter": "Character",

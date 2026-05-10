@@ -113,6 +113,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsWeaponRate => 'Weapon Rate';
 
   @override
+  String get statsFiveStarCount => '5★ Count';
+
+  @override
+  String get statsFourStarCount => '4★ Count';
+
+  @override
+  String statsShareOfTotal(String rate) {
+    return '$rate% of total';
+  }
+
+  @override
+  String get statsRarityDistribution => 'Rarity Distribution';
+
+  @override
+  String get statsItemTypeDistribution => 'Type Distribution';
+
+  @override
   String get statsNoData => 'No data';
 
   @override

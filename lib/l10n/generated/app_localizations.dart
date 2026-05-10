@@ -304,6 +304,36 @@ abstract class AppLocalizations {
   /// **'武器中獎率'**
   String get statsWeaponRate;
 
+  /// No description provided for @statsFiveStarCount.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'5★ 件數'**
+  String get statsFiveStarCount;
+
+  /// No description provided for @statsFourStarCount.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'4★ 件數'**
+  String get statsFourStarCount;
+
+  /// No description provided for @statsShareOfTotal.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'佔總抽 {rate}%'**
+  String statsShareOfTotal(String rate);
+
+  /// No description provided for @statsRarityDistribution.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'稀有度分布'**
+  String get statsRarityDistribution;
+
+  /// No description provided for @statsItemTypeDistribution.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'類型分布'**
+  String get statsItemTypeDistribution;
+
   /// No description provided for @statsNoData.
   ///
   /// In zh_Hant, this message translates to:

@@ -45,6 +45,14 @@
   "statsThreeStarRate": "3★ 中奖率",
   "statsCharacterRate": "角色中奖率",
   "statsWeaponRate": "武器中奖率",
+  "statsFiveStarCount": "5★ 件数",
+  "statsFourStarCount": "4★ 件数",
+  "statsShareOfTotal": "占总抽 {rate}%",
+  "@statsShareOfTotal": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+  "statsRarityDistribution": "稀有度分布",
+  "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
 
   "kindCharacter": "角色",
