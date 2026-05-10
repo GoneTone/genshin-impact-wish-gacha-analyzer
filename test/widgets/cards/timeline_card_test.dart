@@ -24,7 +24,7 @@ WishRecord _r({
     );
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
         theme: buildDarkTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -32,7 +32,7 @@ void main() {
       );
 
   testWidgets('empty list shows no-records message', (tester) async {
-    await tester.pumpWidget(_wrap(const TimelineCard(records: <WishRecord>[])));
+    await tester.pumpWidget(wrap(const TimelineCard(records: <WishRecord>[])));
     // Localized string for emptiness
     expect(find.byType(TimelineCard), findsOneWidget);
   });
@@ -45,7 +45,7 @@ void main() {
       _r(id: '2', rank: 5, name: '流浪者', time: DateTime(2025, 3, 1)),
       _r(id: '1', rank: 3, name: 'y', time: DateTime(2025, 2, 1)),
     ];
-    await tester.pumpWidget(_wrap(TimelineCard(records: records)));
+    await tester.pumpWidget(wrap(TimelineCard(records: records)));
     expect(find.text('夜蘭'), findsOneWidget);
     expect(find.text('流浪者'), findsOneWidget);
     expect(find.text('煙緋'), findsNothing); // 4★ does not appear

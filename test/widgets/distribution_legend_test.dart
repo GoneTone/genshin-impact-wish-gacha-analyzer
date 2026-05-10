@@ -4,13 +4,13 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
         theme: buildDarkTheme(),
         home: Scaffold(body: SizedBox(width: 320, child: child)),
       );
 
   testWidgets('renders name, count, and rate for each entry', (tester) async {
-    await tester.pumpWidget(_wrap(const DistributionLegend(entries: [
+    await tester.pumpWidget(wrap(const DistributionLegend(entries: [
       DistributionEntry(
           color: Color(0xFFD4A64A), name: '5★', count: 12, rate: 0.0123),
       DistributionEntry(
@@ -25,7 +25,7 @@ void main() {
   });
 
   testWidgets('hides entries with count == 0', (tester) async {
-    await tester.pumpWidget(_wrap(const DistributionLegend(entries: [
+    await tester.pumpWidget(wrap(const DistributionLegend(entries: [
       DistributionEntry(
           color: Color(0xFFD4A64A), name: '5★', count: 12, rate: 0.0123),
       DistributionEntry(
@@ -37,7 +37,7 @@ void main() {
   });
 
   testWidgets('formats rate with two decimals', (tester) async {
-    await tester.pumpWidget(_wrap(const DistributionLegend(entries: [
+    await tester.pumpWidget(wrap(const DistributionLegend(entries: [
       DistributionEntry(
           color: Color(0xFF7EC0D8), name: '角色', count: 1, rate: 0.5),
       DistributionEntry(

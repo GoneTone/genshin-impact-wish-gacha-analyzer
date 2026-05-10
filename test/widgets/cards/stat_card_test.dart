@@ -5,13 +5,13 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
         theme: buildDarkTheme(),
         home: Scaffold(body: child),
       );
 
   testWidgets('renders label and value', (tester) async {
-    await tester.pumpWidget(_wrap(const StatCard(
+    await tester.pumpWidget(wrap(const StatCard(
       label: 'TOTAL',
       value: '428',
     )));
@@ -21,7 +21,7 @@ void main() {
 
   testWidgets('renders subtitle and trailing when provided',
       (tester) async {
-    await tester.pumpWidget(_wrap(const StatCard(
+    await tester.pumpWidget(wrap(const StatCard(
       label: 'PITY',
       value: '73 / 90',
       subtitle: 'distance 17',
@@ -32,7 +32,7 @@ void main() {
   });
 
   testWidgets('accent color shows as left border', (tester) async {
-    await tester.pumpWidget(_wrap(const StatCard(
+    await tester.pumpWidget(wrap(const StatCard(
       label: 'L',
       value: 'V',
       accent: Color(0xFFE6C477),

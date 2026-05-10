@@ -7,7 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 
 void main() {
-  Widget _wrap(Widget child) => MaterialApp(
+  Widget wrap(Widget child) => MaterialApp(
         theme: buildDarkTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -16,7 +16,7 @@ void main() {
 
   testWidgets('renders label and current/threshold', (tester) async {
     final pity = const Pity(current: 12, threshold: 90, lastFiveStarAt: null);
-    await tester.pumpWidget(_wrap(PityCard(
+    await tester.pumpWidget(wrap(PityCard(
       label: '5★ pity',
       pity: pity,
       accent: GachaTokens.dark.fiveStar,
@@ -27,7 +27,7 @@ void main() {
 
   testWidgets('low progress (<70%) shows distance subtitle', (tester) async {
     final pity = const Pity(current: 30, threshold: 90, lastFiveStarAt: null);
-    await tester.pumpWidget(_wrap(PityCard(
+    await tester.pumpWidget(wrap(PityCard(
       label: '5★',
       pity: pity,
       accent: GachaTokens.dark.fiveStar,
@@ -39,7 +39,7 @@ void main() {
 
   testWidgets('beginner ended pool shows ended state', (tester) async {
     final pity = const Pity(current: 20, threshold: 20, lastFiveStarAt: null);
-    await tester.pumpWidget(_wrap(PityCard(
+    await tester.pumpWidget(wrap(PityCard(
       label: 'Beginner',
       pity: pity,
       accent: GachaTokens.dark.fiveStar,
@@ -55,7 +55,7 @@ void main() {
       const Pity(current: 75, threshold: 90, lastFiveStarAt: null), // 83%
       const Pity(current: 90, threshold: 90, lastFiveStarAt: null), // 100%
     ]) {
-      await tester.pumpWidget(_wrap(PityCard(
+      await tester.pumpWidget(wrap(PityCard(
         label: '5★',
         pity: p,
         accent: GachaTokens.dark.fiveStar,

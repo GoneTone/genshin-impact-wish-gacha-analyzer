@@ -25,7 +25,7 @@ WishRecord _r({
     );
 
 void main() {
-  Widget _wrap(Widget child, {double width = 800}) => MaterialApp(
+  Widget wrap(Widget child, {double width = 800}) => MaterialApp(
         theme: buildDarkTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -35,7 +35,7 @@ void main() {
       );
 
   testWidgets('shows empty state when no 5★', (tester) async {
-    await tester.pumpWidget(_wrap(const FiveStarList(banners: <String, List<WishRecord>>{})));
+    await tester.pumpWidget(wrap(const FiveStarList(banners: <String, List<WishRecord>>{})));
     expect(find.byType(FiveStarList), findsOneWidget);
   });
 
@@ -49,7 +49,7 @@ void main() {
         _r(id: '302-1', rank: 5, name: '若水', gachaType: '302', time: DateTime(2025, 3, 15)),
       ],
     };
-    await tester.pumpWidget(_wrap(FiveStarList(banners: banners)));
+    await tester.pumpWidget(wrap(FiveStarList(banners: banners)));
     expect(find.text('夜蘭'), findsOneWidget);
     expect(find.text('若水'), findsOneWidget);
   });
@@ -58,7 +58,7 @@ void main() {
     final banners = <String, List<WishRecord>>{
       '301': [_r(id: '1', rank: 5, name: 'A', gachaType: '301')],
     };
-    await tester.pumpWidget(_wrap(FiveStarList(banners: banners)));
+    await tester.pumpWidget(wrap(FiveStarList(banners: banners)));
     expect(find.byType(FiveStarList), findsOneWidget);
     expect(find.text('A'), findsOneWidget);
   });
