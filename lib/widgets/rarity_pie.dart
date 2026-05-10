@@ -44,8 +44,7 @@ class RarityPie extends StatelessWidget {
 
     if (stats.total == 0) {
       return Center(
-        child: Text(l.statsNoData,
-            style: TextStyle(color: tokens.textMuted)),
+        child: Text(l.statsNoData, style: TextStyle(color: tokens.textMuted)),
       );
     }
     final sections = <PieChartSectionData>[
@@ -55,21 +54,16 @@ class RarityPie extends StatelessWidget {
     ].where((s) => s.value > 0).toList(growable: false);
 
     return PieChart(
-      PieChartData(
-        sections: sections,
-        sectionsSpace: 2,
-        centerSpaceRadius: 32,
-      ),
+      PieChartData(sections: sections, sectionsSpace: 2, centerSpaceRadius: 32),
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOut,
     );
   }
 
-  PieChartSectionData _section(int value, Color color) =>
-      PieChartSectionData(
-        showTitle: false,
-        value: value.toDouble(),
-        color: color,
-        radius: 60,
-      );
+  PieChartSectionData _section(int value, Color color) => PieChartSectionData(
+    showTitle: false,
+    value: value.toDouble(),
+    color: color,
+    radius: 60,
+  );
 }
