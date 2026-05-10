@@ -64,34 +64,55 @@
 
 ## 开发
 
-### 安装依赖套件
+### 前置需求
+
+- 目前仅支持 Windows
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)（最新稳定版）
+- [Rust toolchain](https://rustup.rs/)（stable）
+- 运行 `flutter doctor`，依提示补齐缺少的工具
+
+### 取得源代码并安装依赖
 
 ```bash
-npm install
+git clone https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer.git
+cd genshin-impact-wish-gacha-analyzer
+flutter pub get
+cargo build --manifest-path rust/Cargo.toml
 ```
 
-### 编译并运行 (开发)
+### 开发模式运行
 
 ```bash
-npm run electron:serve
+flutter run -d windows
 ```
 
-### 编译并最小化 (生产)
+### Rust ↔ Dart 桥接代码生成
 
-#### ia32 和 x64
+修改 `rust/src/api/` 内的 Rust 函数后，重新生成桥接代码。第一次使用前先安装 codegen 工具：
 
 ```bash
-npm run electron:build:win
+cargo install flutter_rust_bridge_codegen
 ```
 
-#### ia32
+之后每次修改 API 都运行：
 
 ```bash
-npm run electron:build:win32
+flutter_rust_bridge_codegen generate
 ```
 
-#### x64
+生成的文件位于 `lib/src/rust/`。
+
+### 编译生产版
 
 ```bash
-npm run electron:build:win64
+flutter build windows --release
+```
+
+输出：`build\windows\x64\runner\Release\`
+
+### 运行测试
+
+```bash
+flutter test
+cargo test --manifest-path rust/Cargo.toml
 ```
