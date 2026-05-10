@@ -63,10 +63,12 @@ class _AppShellState extends ConsumerState<AppShell> {
           children: [
             Image.asset(
               'assets/icons/app_icon.png',
-              // 28dp = AppBar 預設高度 56dp 上下各留 14dp padding
-              width: 28,
-              height: 28,
-              filterQuality: FilterQuality.medium,
+              // 40dp = AppBar 預設高度 56dp 上下各留 8dp padding；
+              // multi-resolution 1x/2x/3x = 64/128/256，任何 DPR 下都
+              // 大於 display 物理像素，避免 upscale 模糊。
+              width: 40,
+              height: 40,
+              filterQuality: FilterQuality.high,
             ),
             const SizedBox(width: AppSpacing.s),
             Text('${l.appName} v$version'),
