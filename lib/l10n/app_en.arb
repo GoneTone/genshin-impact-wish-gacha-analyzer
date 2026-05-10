@@ -40,11 +40,6 @@
   "emptyNoFiltered": "No records match the current filter",
 
   "statsTotal": "Total pulls",
-  "statsFiveStarRate": "5★ Rate",
-  "statsFourStarRate": "4★ Rate",
-  "statsThreeStarRate": "3★ Rate",
-  "statsCharacterRate": "Character Rate",
-  "statsWeaponRate": "Weapon Rate",
   "statsFiveStarCount": "5★ Count",
   "statsFourStarCount": "4★ Count",
   "statsShareOfTotal": "{rate}% of total",

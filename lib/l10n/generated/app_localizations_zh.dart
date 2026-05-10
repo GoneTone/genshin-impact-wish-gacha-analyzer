@@ -98,21 +98,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get statsTotal => '總抽數';
 
   @override
-  String get statsFiveStarRate => '5★ 中獎率';
-
-  @override
-  String get statsFourStarRate => '4★ 中獎率';
-
-  @override
-  String get statsThreeStarRate => '3★ 中獎率';
-
-  @override
-  String get statsCharacterRate => '角色中獎率';
-
-  @override
-  String get statsWeaponRate => '武器中獎率';
-
-  @override
   String get statsFiveStarCount => '5★ 件數';
 
   @override
@@ -520,21 +505,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get statsTotal => '总抽数';
 
   @override
-  String get statsFiveStarRate => '5★ 中奖率';
-
-  @override
-  String get statsFourStarRate => '4★ 中奖率';
-
-  @override
-  String get statsThreeStarRate => '3★ 中奖率';
-
-  @override
-  String get statsCharacterRate => '角色中奖率';
-
-  @override
-  String get statsWeaponRate => '武器中奖率';
-
-  @override
   String get statsFiveStarCount => '5★ 件数';
 
   @override
@@ -940,21 +910,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get statsTotal => '總抽數';
-
-  @override
-  String get statsFiveStarRate => '5★ 中獎率';
-
-  @override
-  String get statsFourStarRate => '4★ 中獎率';
-
-  @override
-  String get statsThreeStarRate => '3★ 中獎率';
-
-  @override
-  String get statsCharacterRate => '角色中獎率';
-
-  @override
-  String get statsWeaponRate => '武器中獎率';
 
   @override
   String get statsFiveStarCount => '5★ 件數';

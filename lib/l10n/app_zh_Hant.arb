@@ -40,11 +40,6 @@
   "emptyNoFiltered": "沒有符合條件的紀錄",
 
   "statsTotal": "總抽數",
-  "statsFiveStarRate": "5★ 中獎率",
-  "statsFourStarRate": "4★ 中獎率",
-  "statsThreeStarRate": "3★ 中獎率",
-  "statsCharacterRate": "角色中獎率",
-  "statsWeaponRate": "武器中獎率",
   "statsFiveStarCount": "5★ 件數",
   "statsFourStarCount": "4★ 件數",
   "statsShareOfTotal": "佔總抽 {rate}%",

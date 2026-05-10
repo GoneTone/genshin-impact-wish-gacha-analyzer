@@ -98,21 +98,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsTotal => 'Total pulls';
 
   @override
-  String get statsFiveStarRate => '5★ Rate';
-
-  @override
-  String get statsFourStarRate => '4★ Rate';
-
-  @override
-  String get statsThreeStarRate => '3★ Rate';
-
-  @override
-  String get statsCharacterRate => 'Character Rate';
-
-  @override
-  String get statsWeaponRate => 'Weapon Rate';
-
-  @override
   String get statsFiveStarCount => '5★ Count';
 
   @override

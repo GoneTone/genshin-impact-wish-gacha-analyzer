@@ -40,11 +40,6 @@
   "emptyNoFiltered": "没有符合条件的记录",
 
   "statsTotal": "总抽数",
-  "statsFiveStarRate": "5★ 中奖率",
-  "statsFourStarRate": "4★ 中奖率",
-  "statsThreeStarRate": "3★ 中奖率",
-  "statsCharacterRate": "角色中奖率",
-  "statsWeaponRate": "武器中奖率",
   "statsFiveStarCount": "5★ 件数",
   "statsFourStarCount": "4★ 件数",
   "statsShareOfTotal": "占总抽 {rate}%",
