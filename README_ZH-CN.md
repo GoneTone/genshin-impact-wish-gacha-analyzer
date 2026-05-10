@@ -67,7 +67,7 @@
 ### 前置需求
 
 - 目前仅支持 Windows
-- [Flutter SDK](https://flutter.dev/docs/get-started/install)（最新稳定版）
+- [Flutter SDK](https://docs.flutter.dev/install)（最新稳定版）
 - [Rust toolchain](https://rustup.rs/)（stable）
 - 运行 `flutter doctor`，依提示补齐缺少的工具
 

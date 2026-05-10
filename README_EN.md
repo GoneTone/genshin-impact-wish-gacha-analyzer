@@ -69,7 +69,7 @@ The software may trigger anti-virus software during installation and execution. 
 ### Prerequisites
 
 - Windows only for now
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (latest stable)
+- [Flutter SDK](https://docs.flutter.dev/install) (latest stable)
 - [Rust toolchain](https://rustup.rs/) (stable)
 - Run `flutter doctor` and install anything it flags as missing
 
