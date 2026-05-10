@@ -6,13 +6,11 @@
 
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
 
-It works by reading game web cache file to obtain the wish history website url. Thus, you must start the game and open the wish history page at least once before running this utility.
+When you press *Update*, the utility starts a local proxy server (running only on your computer) and automatically installs a locally generated root certificate, so it can intercept Genshin Impact's webview request to the miHoYo wish history API. You therefore need to open the wish history page in the game *after* pressing *Update*, so the request can be captured. The captured URL is parsed and the resulting parameters are used to call miHoYo's API.
 
-Variables retrieved from the website will be analyzed and used in an API related to Genshin Impact (from miHoYo).
- 
-This program loads your gacha history during initial startup, which may take a while. The resulting data will be stored locally to ensure it not take that much time in the next start, after which it will not be updated until you update it manually. The data will also be automatically updated when there is a version update.
- 
-This program does not tamper with any game resources; thus, there is no risk of being banned for using this software. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
+The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously captured URL and reuses it as long as it's still valid, so you don't have to repeat the capture every time. If the captured URL has expired, the utility will ask you to open the wish history page in the game again to re-capture.
+
+Rest assured: this utility does not read or modify any game file, game memory, or in-game network traffic. It only intercepts the wish history page request that the in-game webview itself makes, so there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
 - 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
@@ -26,9 +24,16 @@ Please help us translate this software.
  
 ## Download Software
  
-The software may trigger anti-virus software during installation and execution. If the software doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
+The software may trigger anti-virus software during installation and execution. This is because it generates and installs a local root certificate, and briefly configures a system proxy when you press *Update* to intercept the in-game webview's wish history request — behavior that resembles malware. However, the utility only intercepts the single `*.hoyoverse.com/getGachaLog` endpoint, and the certificate stays on your computer. If the software doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
 
 <https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
+
+## How to Use
+
+1. Launch Genshin Impact (don't open the wish history page yet).
+2. Open this utility and press *Update*. The utility will start a local proxy server in the background and wait for the request.
+3. Switch back to the game and open *Wish → History* to view the wish history page.
+4. Once captured, the utility automatically shuts down the proxy, restores your system proxy settings, and starts fetching your data. To update again later, just repeat step 2 — the captured URL will be reused if still valid.
 
 ## Functions & To-do List
 
