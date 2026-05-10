@@ -58,6 +58,12 @@
   "tableName": "名稱",
   "tableKind": "類型",
   "tableRarity": "稀有度",
+  "tableTotalIndex": "總抽數",
+  "tableFiveStarPity": "保底內",
+  "tableFiveStarPityTooltip": "距上一次 5★ 的抽數",
+  "sortDirectionDesc": "降序",
+  "sortDirectionAsc": "升序",
+  "sortDirectionNone": "點擊排序",
 
   "progressWaiting": "等待攔截…",
   "progressFetching": "抓取中…",
