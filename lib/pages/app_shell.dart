@@ -58,7 +58,19 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${l.appName} v$version'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/icons/app_icon.png',
+              width: 28,
+              height: 28,
+              filterQuality: FilterQuality.medium,
+            ),
+            const SizedBox(width: AppSpacing.s),
+            Text('${l.appName} v$version'),
+          ],
+        ),
         actions: [
           const UidIndicator(),
           Padding(
