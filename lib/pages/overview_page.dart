@@ -14,6 +14,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 class OverviewPage extends ConsumerWidget {
@@ -53,18 +54,20 @@ class OverviewPage extends ConsumerWidget {
               accent: tokens.accentPrimary,
             );
             final fiveCard = StatCard(
-              label: l.statsFiveStarRate,
+              label: l.statsFiveStarCount,
               value: '${stats.fiveStarCount}',
               accent: tokens.fiveStar,
-              subtitle:
-                  '${(stats.fiveStarRate * 100).toStringAsFixed(2)}%',
+              subtitle: l.statsShareOfTotal(
+                (stats.fiveStarRate * 100).toStringAsFixed(2),
+              ),
             );
             final fourCard = StatCard(
-              label: l.statsFourStarRate,
+              label: l.statsFourStarCount,
               value: '${stats.fourStarCount}',
               accent: tokens.fourStar,
-              subtitle:
-                  '${(stats.fourStarRate * 100).toStringAsFixed(2)}%',
+              subtitle: l.statsShareOfTotal(
+                (stats.fourStarRate * 100).toStringAsFixed(2),
+              ),
             );
 
             if (wide) {
@@ -128,15 +131,21 @@ class OverviewPage extends ConsumerWidget {
                 SizedBox(
                   width: tileWidth,
                   child: ChartCard(
-                    title: '${l.statsFiveStarRate} / ${l.statsFourStarRate} / ${l.statsThreeStarRate}',
+                    title: l.statsRarityDistribution,
                     chart: RarityPie(stats: stats),
+                    legend: DistributionLegend(
+                      entries: rarityDistributionEntries(stats, tokens),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: tileWidth,
                   child: ChartCard(
-                    title: '${l.kindCharacter} / ${l.kindWeapon}',
+                    title: l.statsItemTypeDistribution,
                     chart: ItemTypePie(stats: stats),
+                    legend: DistributionLegend(
+                      entries: itemTypeDistributionEntries(stats, tokens, l),
+                    ),
                   ),
                 ),
                 SizedBox(
