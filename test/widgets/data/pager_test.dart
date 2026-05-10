@@ -65,4 +65,24 @@ void main() {
     expect(last.onPressed, isNull);
     expect(next.onPressed, isNull);
   });
+
+  testWidgets('chevron_right tap fires onChanged with page+1', (tester) async {
+    int? received;
+    await tester.pumpWidget(_wrap(
+      Pager(page: 1, totalPages: 5, onChanged: (p) => received = p),
+    ));
+    await tester.tap(find.widgetWithIcon(IconButton, Icons.chevron_right));
+    await tester.pump();
+    expect(received, 2);
+  });
+
+  testWidgets('first_page tap fires onChanged with 0', (tester) async {
+    int? received;
+    await tester.pumpWidget(_wrap(
+      Pager(page: 3, totalPages: 5, onChanged: (p) => received = p),
+    ));
+    await tester.tap(find.widgetWithIcon(IconButton, Icons.first_page));
+    await tester.pump();
+    expect(received, 0);
+  });
 }
