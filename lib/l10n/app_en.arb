@@ -155,12 +155,6 @@
   "filterSearchHint": "Search name…",
   "filterClear": "Clear filters",
 
-  "sortByTimeDesc": "Time, newest first",
-  "sortByTimeAsc": "Time, oldest first",
-  "sortByRarityDesc": "Rarity, high to low",
-  "sortByRarityAsc": "Rarity, low to high",
-  "sortByName": "Name",
-
   "pagerFirst": "First",
   "pagerLast": "Last",
 

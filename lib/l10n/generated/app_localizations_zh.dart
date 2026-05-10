@@ -325,21 +325,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get filterClear => '清除篩選';
 
   @override
-  String get sortByTimeDesc => '時間由近到遠';
-
-  @override
-  String get sortByTimeAsc => '時間由遠到近';
-
-  @override
-  String get sortByRarityDesc => '稀有度高到低';
-
-  @override
-  String get sortByRarityAsc => '稀有度低到高';
-
-  @override
-  String get sortByName => '名稱';
-
-  @override
   String get pagerFirst => '首頁';
 
   @override
@@ -750,21 +735,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get filterClear => '清除筛选';
 
   @override
-  String get sortByTimeDesc => '时间由近到远';
-
-  @override
-  String get sortByTimeAsc => '时间由远到近';
-
-  @override
-  String get sortByRarityDesc => '稀有度高到低';
-
-  @override
-  String get sortByRarityAsc => '稀有度低到高';
-
-  @override
-  String get sortByName => '名称';
-
-  @override
   String get pagerFirst => '首页';
 
   @override
@@ -1173,21 +1143,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get filterClear => '清除篩選';
-
-  @override
-  String get sortByTimeDesc => '時間由近到遠';
-
-  @override
-  String get sortByTimeAsc => '時間由遠到近';
-
-  @override
-  String get sortByRarityDesc => '稀有度高到低';
-
-  @override
-  String get sortByRarityAsc => '稀有度低到高';
-
-  @override
-  String get sortByName => '名稱';
 
   @override
   String get pagerFirst => '首頁';

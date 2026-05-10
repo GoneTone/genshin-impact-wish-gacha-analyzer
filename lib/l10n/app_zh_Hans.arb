@@ -155,12 +155,6 @@
   "filterSearchHint": "搜索名称…",
   "filterClear": "清除筛选",
 
-  "sortByTimeDesc": "时间由近到远",
-  "sortByTimeAsc": "时间由远到近",
-  "sortByRarityDesc": "稀有度高到低",
-  "sortByRarityAsc": "稀有度低到高",
-  "sortByName": "名称",
-
   "pagerFirst": "首页",
   "pagerLast": "末页",
 

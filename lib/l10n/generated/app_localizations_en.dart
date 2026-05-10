@@ -327,21 +327,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterClear => 'Clear filters';
 
   @override
-  String get sortByTimeDesc => 'Time, newest first';
-
-  @override
-  String get sortByTimeAsc => 'Time, oldest first';
-
-  @override
-  String get sortByRarityDesc => 'Rarity, high to low';
-
-  @override
-  String get sortByRarityAsc => 'Rarity, low to high';
-
-  @override
-  String get sortByName => 'Name';
-
-  @override
   String get pagerFirst => 'First';
 
   @override

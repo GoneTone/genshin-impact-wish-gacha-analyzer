@@ -688,36 +688,6 @@ abstract class AppLocalizations {
   /// **'清除篩選'**
   String get filterClear;
 
-  /// No description provided for @sortByTimeDesc.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'時間由近到遠'**
-  String get sortByTimeDesc;
-
-  /// No description provided for @sortByTimeAsc.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'時間由遠到近'**
-  String get sortByTimeAsc;
-
-  /// No description provided for @sortByRarityDesc.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'稀有度高到低'**
-  String get sortByRarityDesc;
-
-  /// No description provided for @sortByRarityAsc.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'稀有度低到高'**
-  String get sortByRarityAsc;
-
-  /// No description provided for @sortByName.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'名稱'**
-  String get sortByName;
-
   /// No description provided for @pagerFirst.
   ///
   /// In zh_Hant, this message translates to:
