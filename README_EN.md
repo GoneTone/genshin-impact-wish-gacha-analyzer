@@ -66,34 +66,55 @@ The software may trigger anti-virus software during installation and execution. 
 
 ## Development
 
-### Install Packages
+### Prerequisites
+
+- Windows only for now
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (latest stable)
+- [Rust toolchain](https://rustup.rs/) (stable)
+- Run `flutter doctor` and install anything it flags as missing
+
+### Clone and install dependencies
 
 ```bash
-npm install
+git clone https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer.git
+cd genshin-impact-wish-gacha-analyzer
+flutter pub get
+cargo build --manifest-path rust/Cargo.toml
 ```
 
-### Compile and Run (For Development Use)
+### Run in development mode
 
 ```bash
-npm run electron:serve
+flutter run -d windows
 ```
 
-### Compile and Minify (For Production Use)
+### Rust ↔ Dart bridge code generation
 
-#### ia32 and x64
+After changing Rust functions in `rust/src/api/`, regenerate the bridge code. Install the codegen tool on first use:
 
 ```bash
-npm run electron:build:win
+cargo install flutter_rust_bridge_codegen
 ```
 
-#### ia32
+Then run this whenever the API changes:
 
 ```bash
-npm run electron:build:win32
+flutter_rust_bridge_codegen generate
 ```
 
-#### x64
+Generated files live in `lib/src/rust/`.
+
+### Build for release
 
 ```bash
-npm run electron:build:win64
+flutter build windows --release
+```
+
+Output: `build\windows\x64\runner\Release\`
+
+### Run tests
+
+```bash
+flutter test
+cargo test --manifest-path rust/Cargo.toml
 ```
