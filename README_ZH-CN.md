@@ -4,7 +4,8 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-## 通知：由于本人时间有限，暂无法继续维护和开发此项目，故暂停进行，但未来可能会回来继续维护和开发。若有人愿意接手，请联系我 (p29022716@gmail.com)，谢谢。
+> [!IMPORTANT]
+> 目前正在使用 Flutter 将整个项目重写中：https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/pull/59
 
 我开发了一套用来分析祈愿卡池历史记录的软件，一开启各种数据清清楚楚，不用再手动计算啦！
 
