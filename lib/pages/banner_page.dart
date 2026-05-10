@@ -21,6 +21,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
 class BannerPage extends ConsumerWidget {
   const BannerPage({super.key, required this.gachaType});
@@ -171,15 +172,21 @@ class BannerPage extends ConsumerWidget {
                 SizedBox(
                   width: tileWidth,
                   child: ChartCard(
-                    title: l.statsFiveStarRate,
+                    title: l.statsRarityDistribution,
                     chart: RarityPie(stats: stats),
+                    legend: DistributionLegend(
+                      entries: rarityDistributionEntries(stats, tokens),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: tileWidth,
                   child: ChartCard(
-                    title: '${l.kindCharacter} / ${l.kindWeapon}',
+                    title: l.statsItemTypeDistribution,
                     chart: ItemTypePie(stats: stats),
+                    legend: DistributionLegend(
+                      entries: itemTypeDistributionEntries(stats, tokens, l),
+                    ),
                   ),
                 ),
                 SizedBox(
