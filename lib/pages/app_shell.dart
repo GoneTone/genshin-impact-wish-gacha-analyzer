@@ -48,7 +48,6 @@ class _AppShellState extends ConsumerState<AppShell> {
         wishRepositoryProvider.select((s) => s.activeData));
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1180;
-    final showFooter = location != '/settings';
     final version = ref.watch(appVersionProvider);
 
     final isSettingsActive = location == '/settings';
@@ -92,22 +91,21 @@ class _AppShellState extends ConsumerState<AppShell> {
             ],
           ),
         ),
-        if (showFooter)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.l, vertical: AppSpacing.xs * 1.5),
-            color: tokens.surfaceCardHigh,
-            child: Text(
-              activeData == null
-                  ? l.footerNotSynced
-                  : l.footerLastUpdated(
-                      DateFormat('yyyy-MM-dd HH:mm')
-                          .format(activeData.lastUpdated.toLocal()),
-                    ),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.l, vertical: AppSpacing.xs * 1.5),
+          color: tokens.surfaceCardHigh,
+          child: Text(
+            activeData == null
+                ? l.footerNotSynced
+                : l.footerLastUpdated(
+                    DateFormat('yyyy-MM-dd HH:mm')
+                        .format(activeData.lastUpdated.toLocal()),
+                  ),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
+        ),
       ]),
     );
   }
