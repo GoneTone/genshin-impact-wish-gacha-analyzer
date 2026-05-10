@@ -28,12 +28,11 @@ class RecordFilter {
     RarityFilter? rarity,
     KindFilter? kind,
     String? query,
-  }) =>
-      RecordFilter(
-        rarity: rarity ?? this.rarity,
-        kind: kind ?? this.kind,
-        query: query ?? this.query,
-      );
+  }) => RecordFilter(
+    rarity: rarity ?? this.rarity,
+    kind: kind ?? this.kind,
+    query: query ?? this.query,
+  );
 }
 
 enum SortColumn { time, name, kind, rarity, totalIndex, fiveStarPity }
@@ -59,19 +58,22 @@ class TableSort {
 
 List<RecordRow> filterRecordRows(List<RecordRow> rows, RecordFilter f) {
   final q = f.query.trim().toLowerCase();
-  return rows.where((row) {
-    final r = row.record;
-    if (f.rarity == RarityFilter.fiveStar && r.rankType != 5) return false;
-    if (f.rarity == RarityFilter.fourStar && r.rankType != 4) return false;
-    if (f.kind == KindFilter.character && r.kind != WishItemKind.character) {
-      return false;
-    }
-    if (f.kind == KindFilter.weapon && r.kind != WishItemKind.weapon) {
-      return false;
-    }
-    if (q.isNotEmpty && !r.name.toLowerCase().contains(q)) return false;
-    return true;
-  }).toList(growable: false);
+  return rows
+      .where((row) {
+        final r = row.record;
+        if (f.rarity == RarityFilter.fiveStar && r.rankType != 5) return false;
+        if (f.rarity == RarityFilter.fourStar && r.rankType != 4) return false;
+        if (f.kind == KindFilter.character &&
+            r.kind != WishItemKind.character) {
+          return false;
+        }
+        if (f.kind == KindFilter.weapon && r.kind != WishItemKind.weapon) {
+          return false;
+        }
+        if (q.isNotEmpty && !r.name.toLowerCase().contains(q)) return false;
+        return true;
+      })
+      .toList(growable: false);
 }
 
 /// sort == null → 不排序，回傳 [...rows]（保留 records 原 desc by time 順序）。

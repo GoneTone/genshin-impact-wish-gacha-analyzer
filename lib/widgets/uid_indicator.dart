@@ -31,34 +31,37 @@ class UidIndicator extends ConsumerWidget {
         for (final uid in knownUids)
           PopupMenuItem<String>(
             value: uid,
-            child: Row(children: [
-              Icon(
-                uid == activeUid
-                    ? Icons.check
-                    : Icons.radio_button_unchecked,
-                size: 16,
-                color: uid == activeUid
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.transparent,
-              ),
-              const SizedBox(width: AppSpacing.s),
-              Text(uid),
-              if (uid == activeUid) ...[
-                const SizedBox(width: AppSpacing.xs),
-                Text(l.uidActiveSuffix,
-                    style: TextStyle(
-                        fontSize: 11, color: tokens.textMuted)),
+            child: Row(
+              children: [
+                Icon(
+                  uid == activeUid ? Icons.check : Icons.radio_button_unchecked,
+                  size: 16,
+                  color: uid == activeUid
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.transparent,
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Text(uid),
+                if (uid == activeUid) ...[
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    l.uidActiveSuffix,
+                    style: TextStyle(fontSize: 11, color: tokens.textMuted),
+                  ),
+                ],
               ],
-            ]),
+            ),
           ),
         if (knownUids.isNotEmpty) const PopupMenuDivider(),
         PopupMenuItem<String>(
           value: '__recapture__',
-          child: Row(children: [
-            const Icon(Icons.refresh, size: 16),
-            const SizedBox(width: AppSpacing.s),
-            Text(l.uidRecapture),
-          ]),
+          child: Row(
+            children: [
+              const Icon(Icons.refresh, size: 16),
+              const SizedBox(width: AppSpacing.s),
+              Text(l.uidRecapture),
+            ],
+          ),
         ),
       ],
       child: Padding(

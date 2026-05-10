@@ -20,7 +20,8 @@ class UpdateProgressDialog extends ConsumerWidget {
       },
     );
     final progress = ref.watch(
-        wishRepositoryProvider.select((s) => s.progress));
+      wishRepositoryProvider.select((s) => s.progress),
+    );
     final notifier = ref.read(wishRepositoryProvider.notifier);
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
@@ -43,22 +44,17 @@ class UpdateProgressDialog extends ConsumerWidget {
   ) {
     return switch (p) {
       WaitingForCapture() => [
-          TextButton(
-            onPressed: () async {
-              await r.cancelCapture();
-            },
-            child: Text(l.actionCancel),
-          ),
-        ],
+        TextButton(
+          onPressed: () async {
+            await r.cancelCapture();
+          },
+          child: Text(l.actionCancel),
+        ),
+      ],
       FetchingBanner() => const <Widget>[],
-      UpdateCompleted() ||
-      UpdateFailed() =>
-        [
-          TextButton(
-            onPressed: r.clearProgress,
-            child: Text(l.actionClose),
-          ),
-        ],
+      UpdateCompleted() || UpdateFailed() => [
+        TextButton(onPressed: r.clearProgress, child: Text(l.actionClose)),
+      ],
       null => const <Widget>[],
     };
   }
@@ -73,9 +69,21 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, color, text) = switch (progress) {
-      WaitingForCapture() => (Icons.hourglass_top, tokens.textPrimary, l.progressWaiting),
-      FetchingBanner() => (Icons.cloud_download_outlined, tokens.textPrimary, l.progressFetching),
-      UpdateCompleted() => (Icons.check_circle, tokens.stateSuccess, l.progressDone),
+      WaitingForCapture() => (
+        Icons.hourglass_top,
+        tokens.textPrimary,
+        l.progressWaiting,
+      ),
+      FetchingBanner() => (
+        Icons.cloud_download_outlined,
+        tokens.textPrimary,
+        l.progressFetching,
+      ),
+      UpdateCompleted() => (
+        Icons.check_circle,
+        tokens.stateSuccess,
+        l.progressDone,
+      ),
       UpdateFailed() => (Icons.error, tokens.stateDanger, l.progressFailed),
       null => (Icons.info_outline, tokens.textMuted, ''),
     };
@@ -100,28 +108,27 @@ class _Body extends StatelessWidget {
     final tokens = theme.gacha;
 
     String resolveBannerName(String key) => switch (key) {
-          'gachaTypeCharacter' => l.gachaTypeCharacter,
-          'gachaTypeWeapon' => l.gachaTypeWeapon,
-          'gachaTypeChronicled' => l.gachaTypeChronicled,
-          'gachaTypeStandard' => l.gachaTypeStandard,
-          'gachaTypeBeginner' => l.gachaTypeBeginner,
-          _ => key,
-        };
+      'gachaTypeCharacter' => l.gachaTypeCharacter,
+      'gachaTypeWeapon' => l.gachaTypeWeapon,
+      'gachaTypeChronicled' => l.gachaTypeChronicled,
+      'gachaTypeStandard' => l.gachaTypeStandard,
+      'gachaTypeBeginner' => l.gachaTypeBeginner,
+      _ => key,
+    };
 
     return switch (progress) {
       WaitingForCapture(:final isFallback) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const LinearProgressIndicator(),
-            const SizedBox(height: AppSpacing.l),
-            Text(l.progressOpenGameHint),
-            if (isFallback) ...[
-              const SizedBox(height: AppSpacing.s),
-              Text(l.progressFallbackHint,
-                  style: theme.textTheme.bodySmall),
-            ],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const LinearProgressIndicator(),
+          const SizedBox(height: AppSpacing.l),
+          Text(l.progressOpenGameHint),
+          if (isFallback) ...[
+            const SizedBox(height: AppSpacing.s),
+            Text(l.progressFallbackHint, style: theme.textTheme.bodySmall),
           ],
-        ),
+        ],
+      ),
       FetchingBanner(
         :final displayName,
         :final pageIndex,
@@ -134,30 +141,28 @@ class _Body extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
             Text(l.progressFetchingBanner(resolveBannerName(displayName))),
             const SizedBox(height: AppSpacing.xs),
-            Text(l.progressPageStatus(pageIndex, newRecordsSoFar),
-                style: theme.textTheme.bodySmall),
+            Text(
+              l.progressPageStatus(pageIndex, newRecordsSoFar),
+              style: theme.textTheme.bodySmall,
+            ),
           ],
         ),
-      UpdateCompleted(
-        :final totalNewRecords,
-        :final failedBanners,
-      ) =>
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l.progressDoneSummary(totalNewRecords)),
-            if (failedBanners.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.s),
-              Text(
-                l.progressPartialFailed(
-                  failedBanners.map(resolveBannerName).join('、'),
-                ),
-                style: TextStyle(color: tokens.stateDanger),
+      UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.progressDoneSummary(totalNewRecords)),
+          if (failedBanners.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.s),
+            Text(
+              l.progressPartialFailed(
+                failedBanners.map(resolveBannerName).join('、'),
               ),
-            ],
+              style: TextStyle(color: tokens.stateDanger),
+            ),
           ],
-        ),
+        ],
+      ),
       UpdateFailed(:final error) => Text(_resolveError(error, l)),
       null => const SizedBox.shrink(),
     };

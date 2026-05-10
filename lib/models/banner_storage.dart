@@ -28,22 +28,22 @@ class BannerStorage {
   }
 
   Map<String, dynamic> toJson() => {
-        'uid': uid,
-        'last_updated': lastUpdated.toUtc().toIso8601String(),
-        'banners': banners.map(
-          (k, v) => MapEntry(k, v.map((r) => r.toStorageJson()).toList(growable: false)),
-        ),
-      };
+    'uid': uid,
+    'last_updated': lastUpdated.toUtc().toIso8601String(),
+    'banners': banners.map(
+      (k, v) =>
+          MapEntry(k, v.map((r) => r.toStorageJson()).toList(growable: false)),
+    ),
+  };
 
   BannerStorage copyWith({
     DateTime? lastUpdated,
     Map<String, List<WishRecord>>? banners,
-  }) =>
-      BannerStorage(
-        uid: uid,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-        banners: banners ?? this.banners,
-      );
+  }) => BannerStorage(
+    uid: uid,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+    banners: banners ?? this.banners,
+  );
 
   /// 全 banner 串成一條 list（OverviewPage 用）
   List<WishRecord> get allRecords =>

@@ -6,18 +6,17 @@ WishRecord _r({
   required String id,
   required int rank,
   required WishItemKind kind,
-}) =>
-    WishRecord(
-      id: id,
-      uid: '1',
-      gachaType: '301',
-      name: 'x',
-      itemType: kind == WishItemKind.character ? '角色' : '武器',
-      kind: kind,
-      rankType: rank,
-      time: DateTime(2025),
-      lang: 'zh-tw',
-    );
+}) => WishRecord(
+  id: id,
+  uid: '1',
+  gachaType: '301',
+  name: 'x',
+  itemType: kind == WishItemKind.character ? '角色' : '武器',
+  kind: kind,
+  rankType: rank,
+  time: DateTime(2025),
+  lang: 'zh-tw',
+);
 
 void main() {
   group('WishStats', () {

@@ -28,8 +28,7 @@ class DistributionLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
-    final visible =
-        entries.where((e) => e.count > 0).toList(growable: false);
+    final visible = entries.where((e) => e.count > 0).toList(growable: false);
 
     final tabular = const [FontFeature.tabularFigures()];
 
@@ -54,8 +53,9 @@ class DistributionLegend extends StatelessWidget {
                 Expanded(
                   child: Text(
                     e.name,
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: tokens.textPrimary),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: tokens.textPrimary,
+                    ),
                   ),
                 ),
                 SizedBox(

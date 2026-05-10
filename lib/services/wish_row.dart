@@ -33,11 +33,7 @@ List<RecordRow> buildRecordRows(List<WishRecord> records) {
   for (final r in asc) {
     total++;
     pity++;
-    out.add(RecordRow(
-      record: r,
-      totalIndex: total,
-      fiveStarPityIndex: pity,
-    ));
+    out.add(RecordRow(record: r, totalIndex: total, fiveStarPityIndex: pity));
     if (r.rankType == 5) {
       pity = 0;
     }

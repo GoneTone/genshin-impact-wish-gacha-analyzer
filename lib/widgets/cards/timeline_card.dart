@@ -6,11 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 顯示傳入 records 中的 5★ 紀錄；橫向 scrollable，窄寬度改縱向。
 class TimelineCard extends StatelessWidget {
-  const TimelineCard({
-    super.key,
-    required this.records,
-    this.bannerColorOf,
-  });
+  const TimelineCard({super.key, required this.records, this.bannerColorOf});
 
   /// 必須以時間 desc 排序（最新在前）。
   final List<WishRecord> records;
@@ -29,20 +25,31 @@ class TimelineCard extends StatelessWidget {
       return Center(
         child: Text(
           l.timelineNoRecords,
-          style: theme.textTheme.bodyMedium
-              ?.copyWith(color: tokens.textMuted),
+          style: theme.textTheme.bodyMedium?.copyWith(color: tokens.textMuted),
         ),
       );
     }
 
-    return LayoutBuilder(builder: (context, c) {
-      final narrow = c.maxWidth < 320;
-      if (narrow) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        final narrow = c.maxWidth < 320;
+        if (narrow) {
+          return ListView.separated(
+            scrollDirection: Axis.vertical,
+            itemCount: fiveStars.length,
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.xs),
+            itemBuilder: (_, i) => _Chip(
+              entry: fiveStars[i],
+              bannerColorOf: bannerColorOf,
+              tokens: tokens,
+              l: l,
+            ),
+          );
+        }
         return ListView.separated(
-          scrollDirection: Axis.vertical,
+          scrollDirection: Axis.horizontal,
           itemCount: fiveStars.length,
-          separatorBuilder: (_, _) =>
-              const SizedBox(height: AppSpacing.xs),
+          separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
           itemBuilder: (_, i) => _Chip(
             entry: fiveStars[i],
             bannerColorOf: bannerColorOf,
@@ -50,19 +57,8 @@ class TimelineCard extends StatelessWidget {
             l: l,
           ),
         );
-      }
-      return ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: fiveStars.length,
-        separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
-        itemBuilder: (_, i) => _Chip(
-          entry: fiveStars[i],
-          bannerColorOf: bannerColorOf,
-          tokens: tokens,
-          l: l,
-        ),
-      );
-    });
+      },
+    );
   }
 
   /// 從 records 倒序累計，每碰到 5★ 計算「離上一個 5★ 多少抽」。
@@ -74,12 +70,14 @@ class TimelineCard extends StatelessWidget {
     for (final r in asc) {
       pull++;
       if (r.rankType == 5) {
-        out.add(_Entry(
-          name: r.name,
-          gachaType: r.gachaType,
-          time: r.time,
-          pullsSincePrev: pull,
-        ));
+        out.add(
+          _Entry(
+            name: r.name,
+            gachaType: r.gachaType,
+            time: r.time,
+            pullsSincePrev: pull,
+          ),
+        );
         pull = 0;
       }
     }
@@ -119,7 +117,9 @@ class _Chip extends StatelessWidget {
       message: _formatDate(entry.time),
       child: Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.m, vertical: AppSpacing.s),
+          horizontal: AppSpacing.m,
+          vertical: AppSpacing.s,
+        ),
         decoration: BoxDecoration(
           color: tokens.surfaceCardHigh,
           border: Border(left: BorderSide(color: accent, width: 3)),
@@ -131,10 +131,7 @@ class _Chip extends StatelessWidget {
           children: [
             Text(
               entry.name,
-              style: TextStyle(
-                color: accent,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: accent, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
             Text(

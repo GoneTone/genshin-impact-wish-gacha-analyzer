@@ -22,13 +22,13 @@ class GachaType {
   final int fourStarPity;
 
   String resolveName(AppLocalizations l) => switch (nameKey) {
-        'gachaTypeCharacter' => l.gachaTypeCharacter,
-        'gachaTypeWeapon' => l.gachaTypeWeapon,
-        'gachaTypeChronicled' => l.gachaTypeChronicled,
-        'gachaTypeStandard' => l.gachaTypeStandard,
-        'gachaTypeBeginner' => l.gachaTypeBeginner,
-        _ => nameKey,
-      };
+    'gachaTypeCharacter' => l.gachaTypeCharacter,
+    'gachaTypeWeapon' => l.gachaTypeWeapon,
+    'gachaTypeChronicled' => l.gachaTypeChronicled,
+    'gachaTypeStandard' => l.gachaTypeStandard,
+    'gachaTypeBeginner' => l.gachaTypeBeginner,
+    _ => nameKey,
+  };
 }
 
 const gachaTypes = <GachaType>[

@@ -124,7 +124,9 @@ class _Header extends StatelessWidget {
     );
     return Container(
       padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.m, horizontal: AppSpacing.l),
+        vertical: AppSpacing.m,
+        horizontal: AppSpacing.l,
+      ),
       color: tokens.surfaceCardHigh,
       child: DefaultTextStyle.merge(
         style: style ?? const TextStyle(),
@@ -239,11 +241,7 @@ class _HeaderCell extends StatelessWidget {
     }
     final children = <Widget>[
       Flexible(
-        child: Text(
-          label,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
       const SizedBox(width: 4),
       Icon(icon, size: 14, color: iconColor),
@@ -253,8 +251,9 @@ class _HeaderCell extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
-          mainAxisAlignment:
-              alignEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: alignEnd
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           children: children,
         ),
       ),
@@ -297,7 +296,9 @@ class _Row extends StatelessWidget {
     );
     return Container(
       padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.m, horizontal: AppSpacing.l),
+        vertical: AppSpacing.m,
+        horizontal: AppSpacing.l,
+      ),
       color: isStripe ? tokens.surfaceCardHigh : null,
       child: Row(
         children: [
@@ -353,7 +354,9 @@ class _Pill extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.s, vertical: 2),
+          horizontal: AppSpacing.s,
+          vertical: 2,
+        ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.18),
           borderRadius: BorderRadius.circular(99),

@@ -11,8 +11,9 @@ const _capturedUrl =
 void main() {
   group('GachaUrl', () {
     test('parse + build 覆寫 gacha_type/page/size/end_id', () {
-      final url = GachaUrl.parse(_capturedUrl)
-          .build(gachaType: '500', endId: '12345', size: 20);
+      final url = GachaUrl.parse(
+        _capturedUrl,
+      ).build(gachaType: '500', endId: '12345', size: 20);
       final params = url.queryParameters;
 
       expect(params['gacha_type'], '500');
@@ -29,10 +30,9 @@ void main() {
     });
 
     test('default size=20', () {
-      final url = GachaUrl.parse(_capturedUrl).build(
-        gachaType: '301',
-        endId: '0',
-      );
+      final url = GachaUrl.parse(
+        _capturedUrl,
+      ).build(gachaType: '301', endId: '0');
       expect(url.queryParameters['size'], '20');
     });
   });

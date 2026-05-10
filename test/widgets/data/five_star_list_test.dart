@@ -11,42 +11,61 @@ WishRecord _r({
   required String name,
   required String gachaType,
   DateTime? time,
-}) =>
-    WishRecord(
-      id: id,
-      uid: '1',
-      gachaType: gachaType,
-      name: name,
-      itemType: '角色',
-      kind: WishItemKind.character,
-      rankType: rank,
-      time: time ?? DateTime(2025),
-      lang: 'zh-tw',
-    );
+}) => WishRecord(
+  id: id,
+  uid: '1',
+  gachaType: gachaType,
+  name: name,
+  itemType: '角色',
+  kind: WishItemKind.character,
+  rankType: rank,
+  time: time ?? DateTime(2025),
+  lang: 'zh-tw',
+);
 
 void main() {
   Widget wrap(Widget child, {double width = 800}) => MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: SizedBox(width: width, height: 600, child: child),
-        ),
-      );
+    theme: buildDarkTheme(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(
+      body: SizedBox(width: width, height: 600, child: child),
+    ),
+  );
 
   testWidgets('shows empty state when no 5★', (tester) async {
-    await tester.pumpWidget(wrap(const FiveStarList(banners: <String, List<WishRecord>>{})));
+    await tester.pumpWidget(
+      wrap(const FiveStarList(banners: <String, List<WishRecord>>{})),
+    );
     expect(find.byType(FiveStarList), findsOneWidget);
   });
 
   testWidgets('renders 5★ across banners', (tester) async {
     final banners = <String, List<WishRecord>>{
       '301': [
-        _r(id: '301-2', rank: 5, name: '夜蘭', gachaType: '301', time: DateTime(2025, 4, 1)),
-        _r(id: '301-1', rank: 4, name: 'x', gachaType: '301', time: DateTime(2025, 3, 1)),
+        _r(
+          id: '301-2',
+          rank: 5,
+          name: '夜蘭',
+          gachaType: '301',
+          time: DateTime(2025, 4, 1),
+        ),
+        _r(
+          id: '301-1',
+          rank: 4,
+          name: 'x',
+          gachaType: '301',
+          time: DateTime(2025, 3, 1),
+        ),
       ],
       '302': [
-        _r(id: '302-1', rank: 5, name: '若水', gachaType: '302', time: DateTime(2025, 3, 15)),
+        _r(
+          id: '302-1',
+          rank: 5,
+          name: '若水',
+          gachaType: '302',
+          time: DateTime(2025, 3, 15),
+        ),
       ],
     };
     await tester.pumpWidget(wrap(FiveStarList(banners: banners)));

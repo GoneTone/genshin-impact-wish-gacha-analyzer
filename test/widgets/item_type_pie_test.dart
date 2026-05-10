@@ -22,8 +22,7 @@ void main() {
         weaponCount: 62,
         unknownCount: 0,
       );
-      final entries =
-          itemTypeDistributionEntries(stats, GachaTokens.dark, l);
+      final entries = itemTypeDistributionEntries(stats, GachaTokens.dark, l);
       expect(entries, hasLength(2));
       expect(entries[0].name, l.kindCharacter);
       expect(entries[0].count, 38);
@@ -43,8 +42,7 @@ void main() {
         weaponCount: 5,
         unknownCount: 1,
       );
-      final entries =
-          itemTypeDistributionEntries(stats, GachaTokens.dark, l);
+      final entries = itemTypeDistributionEntries(stats, GachaTokens.dark, l);
       expect(entries, hasLength(3));
       expect(entries.last.name, l.kindUnknown);
       expect(entries.last.count, 1);
@@ -62,8 +60,7 @@ void main() {
         weaponCount: 0,
         unknownCount: 0,
       );
-      final entries =
-          itemTypeDistributionEntries(stats, GachaTokens.dark, l);
+      final entries = itemTypeDistributionEntries(stats, GachaTokens.dark, l);
       expect(entries, hasLength(2));
       expect(entries.every((e) => e.rate == 0.0), isTrue);
     });

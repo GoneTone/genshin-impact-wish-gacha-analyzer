@@ -30,23 +30,19 @@ void main() {
   });
 
   test('缺 uid → FormatException', () {
-    expect(
-      () => importJson('{"banners":{}}'),
-      throwsA(isA<FormatException>()),
-    );
+    expect(() => importJson('{"banners":{}}'), throwsA(isA<FormatException>()));
   });
 
   test('uid 不是 string → FormatException', () {
     expect(
-      () => importJson('{"uid":123,"last_updated":"2025-01-01T00:00:00.000Z","banners":{}}'),
+      () => importJson(
+        '{"uid":123,"last_updated":"2025-01-01T00:00:00.000Z","banners":{}}',
+      ),
       throwsA(isA<FormatException>()),
     );
   });
 
   test('非 JSON → FormatException', () {
-    expect(
-      () => importJson('not json'),
-      throwsA(isA<FormatException>()),
-    );
+    expect(() => importJson('not json'), throwsA(isA<FormatException>()));
   });
 }

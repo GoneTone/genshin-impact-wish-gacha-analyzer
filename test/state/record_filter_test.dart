@@ -20,12 +20,16 @@ void main() {
     final notifier = container.read(recordFilterProvider('301').notifier);
 
     notifier.cycleSort(SortColumn.time);
-    expect(container.read(recordFilterProvider('301')).sort,
-        const TableSort(column: SortColumn.time, direction: SortDirection.desc));
+    expect(
+      container.read(recordFilterProvider('301')).sort,
+      const TableSort(column: SortColumn.time, direction: SortDirection.desc),
+    );
 
     notifier.cycleSort(SortColumn.time);
-    expect(container.read(recordFilterProvider('301')).sort,
-        const TableSort(column: SortColumn.time, direction: SortDirection.asc));
+    expect(
+      container.read(recordFilterProvider('301')).sort,
+      const TableSort(column: SortColumn.time, direction: SortDirection.asc),
+    );
 
     notifier.cycleSort(SortColumn.time);
     expect(container.read(recordFilterProvider('301')).sort, isNull);
@@ -36,12 +40,16 @@ void main() {
     addTearDown(container.dispose);
     final notifier = container.read(recordFilterProvider('301').notifier);
 
-    notifier.cycleSort(SortColumn.time);          // time desc
-    notifier.cycleSort(SortColumn.time);          // time asc
-    notifier.cycleSort(SortColumn.totalIndex);    // 換欄 → totalIndex desc
-    expect(container.read(recordFilterProvider('301')).sort,
-        const TableSort(
-            column: SortColumn.totalIndex, direction: SortDirection.desc));
+    notifier.cycleSort(SortColumn.time); // time desc
+    notifier.cycleSort(SortColumn.time); // time asc
+    notifier.cycleSort(SortColumn.totalIndex); // 換欄 → totalIndex desc
+    expect(
+      container.read(recordFilterProvider('301')).sort,
+      const TableSort(
+        column: SortColumn.totalIndex,
+        direction: SortDirection.desc,
+      ),
+    );
   });
 
   test('setFilter / cycleSort 各卡池獨立', () {
@@ -55,14 +63,19 @@ void main() {
         .read(recordFilterProvider('302').notifier)
         .cycleSort(SortColumn.rarity);
 
-    expect(container.read(recordFilterProvider('301')).filter.rarity,
-        RarityFilter.fiveStar);
+    expect(
+      container.read(recordFilterProvider('301')).filter.rarity,
+      RarityFilter.fiveStar,
+    );
     expect(container.read(recordFilterProvider('301')).sort, isNull);
-    expect(container.read(recordFilterProvider('302')).filter.rarity,
-        RarityFilter.all);
-    expect(container.read(recordFilterProvider('302')).sort,
-        const TableSort(
-            column: SortColumn.rarity, direction: SortDirection.desc));
+    expect(
+      container.read(recordFilterProvider('302')).filter.rarity,
+      RarityFilter.all,
+    );
+    expect(
+      container.read(recordFilterProvider('302')).sort,
+      const TableSort(column: SortColumn.rarity, direction: SortDirection.desc),
+    );
   });
 
   test('clear 同時清 filter 與 sort', () {

@@ -29,10 +29,7 @@ class EmptyState extends StatelessWidget {
 
   factory EmptyState.noRecords(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return EmptyState(
-      icon: Icons.inbox_outlined,
-      title: l.emptyNoRecords,
-    );
+    return EmptyState(icon: Icons.inbox_outlined, title: l.emptyNoRecords);
   }
 
   factory EmptyState.noFiltered(BuildContext context, {Widget? action}) {
@@ -57,9 +54,12 @@ class EmptyState extends StatelessWidget {
           Text(title, style: theme.textTheme.titleLarge),
           if (message != null) ...[
             const SizedBox(height: AppSpacing.s),
-            Text(message!,
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: tokens.textMuted)),
+            Text(
+              message!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: tokens.textMuted,
+              ),
+            ),
           ],
           if (action != null) ...[
             const SizedBox(height: AppSpacing.l),

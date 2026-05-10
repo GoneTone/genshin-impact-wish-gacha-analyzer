@@ -11,39 +11,40 @@ const _baseUrl =
     '?authkey=AAAA&lang=zh-tw&region=os_asia&gacha_type=301&page=1&size=20&end_id=0';
 
 Map<String, dynamic> _record({required String id, required String type}) => {
-      'uid': '801057625',
-      'gacha_type': type,
-      'item_id': '',
-      'count': '1',
-      'time': '2025-09-23 21:27:37',
-      'name': 'x',
-      'lang': 'zh-tw',
-      'item_type': '武器',
-      'rank_type': '3',
-      'id': id,
-    };
+  'uid': '801057625',
+  'gacha_type': type,
+  'item_id': '',
+  'count': '1',
+  'time': '2025-09-23 21:27:37',
+  'name': 'x',
+  'lang': 'zh-tw',
+  'item_type': '武器',
+  'rank_type': '3',
+  'id': id,
+};
 
 http.Response _ok(List<Map<String, dynamic>> list) => http.Response(
-      jsonEncode({
-        'retcode': 0,
-        'message': 'OK',
-        'data': {'list': list, 'page': '1', 'size': '20', 'total': '0'},
-      }),
-      200,
-      headers: {'content-type': 'application/json'},
-    );
+  jsonEncode({
+    'retcode': 0,
+    'message': 'OK',
+    'data': {'list': list, 'page': '1', 'size': '20', 'total': '0'},
+  }),
+  200,
+  headers: {'content-type': 'application/json'},
+);
 
 http.Response _err(int retcode) => http.Response(
-      jsonEncode({'retcode': retcode, 'message': 'fail', 'data': null}),
-      200,
-      headers: {'content-type': 'application/json'},
-    );
+  jsonEncode({'retcode': retcode, 'message': 'fail', 'data': null}),
+  200,
+  headers: {'content-type': 'application/json'},
+);
 
 void main() {
   group('WishFetcher.fetchPage', () {
     test('retcode=0 解析 list', () async {
-      final mock =
-          MockClient((req) async => _ok([_record(id: '1', type: '301')]));
+      final mock = MockClient(
+        (req) async => _ok([_record(id: '1', type: '301')]),
+      );
       final fetcher = WishFetcher(mock, rateLimit: Duration.zero);
       final page = await fetcher.fetchPage(
         GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
@@ -69,8 +70,11 @@ void main() {
         hits++;
         return _err(-110);
       });
-      final fetcher =
-          WishFetcher(mock, rateLimit: Duration.zero, retryBackoff: Duration.zero);
+      final fetcher = WishFetcher(
+        mock,
+        rateLimit: Duration.zero,
+        retryBackoff: Duration.zero,
+      );
       await expectLater(
         () => fetcher.fetchPage(
           GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),

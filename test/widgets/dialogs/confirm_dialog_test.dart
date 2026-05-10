@@ -6,29 +6,32 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialo
 void main() {
   testWidgets('delete button disabled until input matches', (tester) async {
     bool confirmed = false;
-    await tester.pumpWidget(MaterialApp(
-      theme: buildDarkTheme(),
-      home: Scaffold(
-        body: Builder(
-          builder: (ctx) => Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                confirmed = await showConfirmTypeDialog(
-                      context: ctx,
-                      title: 'Confirm',
-                      body: 'Type X to confirm',
-                      expectedText: 'X',
-                      cancelLabel: 'Cancel',
-                      confirmLabel: 'Delete',
-                    ) ??
-                    false;
-              },
-              child: const Text('Open'),
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  confirmed =
+                      await showConfirmTypeDialog(
+                        context: ctx,
+                        title: 'Confirm',
+                        body: 'Type X to confirm',
+                        expectedText: 'X',
+                        cancelLabel: 'Cancel',
+                        confirmLabel: 'Delete',
+                      ) ??
+                      false;
+                },
+                child: const Text('Open'),
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
 

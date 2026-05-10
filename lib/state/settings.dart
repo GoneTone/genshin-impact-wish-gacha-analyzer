@@ -34,8 +34,9 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 }
 
-final settingsProvider =
-    NotifierProvider<SettingsNotifier, AppSettings>(SettingsNotifier.new);
+final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(
+  SettingsNotifier.new,
+);
 
 /// 給 MaterialApp 直接吃的 ThemeMode（system → ThemeMode.system）
 final themeModeProvider = Provider<ThemeMode>((ref) {

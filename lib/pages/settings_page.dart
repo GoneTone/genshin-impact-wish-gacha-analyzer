@@ -65,10 +65,7 @@ class SettingsPage extends ConsumerWidget {
                 child: const _AccountManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
-              SectionCard(
-                title: l.settingsAbout,
-                child: _AboutContent(),
-              ),
+              SectionCard(title: l.settingsAbout, child: _AboutContent()),
             ],
           ),
         ),
@@ -132,11 +129,17 @@ class _LocaleDropdown extends StatelessWidget {
       ),
       items: [
         DropdownMenuItem(
-            value: AppLocale.system, child: Text(l.settingsLocaleSystem)),
+          value: AppLocale.system,
+          child: Text(l.settingsLocaleSystem),
+        ),
         DropdownMenuItem(
-            value: AppLocale.zhHant, child: Text(l.settingsLocaleZhHant)),
+          value: AppLocale.zhHant,
+          child: Text(l.settingsLocaleZhHant),
+        ),
         DropdownMenuItem(
-            value: AppLocale.zhHans, child: Text(l.settingsLocaleZhHans)),
+          value: AppLocale.zhHans,
+          child: Text(l.settingsLocaleZhHans),
+        ),
         DropdownMenuItem(value: AppLocale.en, child: Text(l.settingsLocaleEn)),
       ],
       onChanged: (v) {
@@ -223,9 +226,9 @@ class _DataManagement extends ConsumerWidget {
     if (loc == null) return;
     await File(loc.path).writeAsString(exportJson(data));
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-      content: Text(l.settingsExportSuccess(loc.path)),
-    ));
+    ScaffoldMessenger.of(
+      ctx,
+    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
   }
 
   Future<void> _exportCsv(BuildContext ctx, BannerStorage data) async {
@@ -239,9 +242,9 @@ class _DataManagement extends ConsumerWidget {
     if (loc == null) return;
     await File(loc.path).writeAsString(exportCsv(data));
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-      content: Text(l.settingsExportSuccess(loc.path)),
-    ));
+    ScaffoldMessenger.of(
+      ctx,
+    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
   }
 
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
@@ -257,26 +260,27 @@ class _DataManagement extends ConsumerWidget {
       final data = importJson(text);
       await ref.read(wishRepositoryProvider.notifier).importData(data);
       if (!ctx.mounted) return;
-      final count =
-          data.banners.values.fold<int>(0, (n, list) => n + list.length);
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(l.settingsImportSuccess(data.uid, count)),
-      ));
+      final count = data.banners.values.fold<int>(
+        0,
+        (n, list) => n + list.length,
+      );
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(content: Text(l.settingsImportSuccess(data.uid, count))),
+      );
     } on FormatException catch (e) {
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(l.settingsImportFailed(e.message)),
-      ));
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(content: Text(l.settingsImportFailed(e.message))),
+      );
     } catch (e) {
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-        content: Text(l.settingsImportFailed(e.toString())),
-      ));
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(content: Text(l.settingsImportFailed(e.toString()))),
+      );
     }
   }
 
-  Future<void> _clearActive(
-      BuildContext ctx, WidgetRef ref, String uid) async {
+  Future<void> _clearActive(BuildContext ctx, WidgetRef ref, String uid) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
       context: ctx,
@@ -322,8 +326,10 @@ class _AccountManagement extends ConsumerWidget {
         if (uids.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
-            child: Text(l.accountListEmpty,
-                style: TextStyle(color: tokens.textMuted)),
+            child: Text(
+              l.accountListEmpty,
+              style: TextStyle(color: tokens.textMuted),
+            ),
           )
         else
           for (final uid in uids)
@@ -335,44 +341,54 @@ class _AccountManagement extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          Text(
-                            uid,
-                            style: TextStyle(
-                              color: tokens.textPrimary,
-                              fontWeight: FontWeight.w600,
-                              fontFeatures: const [FontFeature.tabularFigures()],
-                            ),
-                          ),
-                          if (uid == state.activeUid) ...[
-                            const SizedBox(width: AppSpacing.s),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.s, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: tokens.accentPrimary
-                                    .withValues(alpha: 0.18),
-                                borderRadius: BorderRadius.circular(99),
+                        Row(
+                          children: [
+                            Text(
+                              uid,
+                              style: TextStyle(
+                                color: tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
                               ),
-                              child: Text(
-                                l.accountActiveTag,
-                                style: TextStyle(
-                                  color: tokens.accentPrimary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
+                            ),
+                            if (uid == state.activeUid) ...[
+                              const SizedBox(width: AppSpacing.s),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.s,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: tokens.accentPrimary.withValues(
+                                    alpha: 0.18,
+                                  ),
+                                  borderRadius: BorderRadius.circular(99),
+                                ),
+                                child: Text(
+                                  l.accountActiveTag,
+                                  style: TextStyle(
+                                    color: tokens.accentPrimary,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ],
-                        ]),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           l.accountLastUpdated(
-                            DateFormat('yyyy-MM-dd HH:mm').format(
-                                state.byUid[uid]!.lastUpdated.toLocal()),
+                            DateFormat(
+                              'yyyy-MM-dd HH:mm',
+                            ).format(state.byUid[uid]!.lastUpdated.toLocal()),
                           ),
                           style: TextStyle(
-                              color: tokens.textMuted, fontSize: 12),
+                            color: tokens.textMuted,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -406,8 +422,7 @@ class _AccountManagement extends ConsumerWidget {
     );
   }
 
-  Future<void> _remove(
-      BuildContext ctx, WidgetRef ref, String uid) async {
+  Future<void> _remove(BuildContext ctx, WidgetRef ref, String uid) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
       context: ctx,

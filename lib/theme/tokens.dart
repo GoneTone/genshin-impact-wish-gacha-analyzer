@@ -20,9 +20,9 @@ abstract class AppRadius {
 /// 字級語意（搭配 ThemeData.textTheme 對應 M3 名稱）。
 abstract class AppFontSize {
   static const double display = 32; // 保底大數字
-  static const double title = 18;   // 頁標 / 卡標
+  static const double title = 18; // 頁標 / 卡標
   static const double body = 14;
-  static const double label = 11;   // uppercase 小寫上標
+  static const double label = 11; // uppercase 小寫上標
 }
 
 /// 卡池 / 應用層級的色 token。透過 ThemeExtension 注入。
@@ -127,32 +127,35 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     Color? stateDanger,
     Color? stateSuccess,
     Color? stateWarning,
-  }) =>
-      GachaTokens(
-        surfaceBackground: surfaceBackground ?? this.surfaceBackground,
-        surfaceCard: surfaceCard ?? this.surfaceCard,
-        surfaceCardHigh: surfaceCardHigh ?? this.surfaceCardHigh,
-        borderSubtle: borderSubtle ?? this.borderSubtle,
-        borderEmphasis: borderEmphasis ?? this.borderEmphasis,
-        textPrimary: textPrimary ?? this.textPrimary,
-        textSecondary: textSecondary ?? this.textSecondary,
-        textMuted: textMuted ?? this.textMuted,
-        fiveStar: fiveStar ?? this.fiveStar,
-        fourStar: fourStar ?? this.fourStar,
-        threeStar: threeStar ?? this.threeStar,
-        character: character ?? this.character,
-        weapon: weapon ?? this.weapon,
-        accentPrimary: accentPrimary ?? this.accentPrimary,
-        stateDanger: stateDanger ?? this.stateDanger,
-        stateSuccess: stateSuccess ?? this.stateSuccess,
-        stateWarning: stateWarning ?? this.stateWarning,
-      );
+  }) => GachaTokens(
+    surfaceBackground: surfaceBackground ?? this.surfaceBackground,
+    surfaceCard: surfaceCard ?? this.surfaceCard,
+    surfaceCardHigh: surfaceCardHigh ?? this.surfaceCardHigh,
+    borderSubtle: borderSubtle ?? this.borderSubtle,
+    borderEmphasis: borderEmphasis ?? this.borderEmphasis,
+    textPrimary: textPrimary ?? this.textPrimary,
+    textSecondary: textSecondary ?? this.textSecondary,
+    textMuted: textMuted ?? this.textMuted,
+    fiveStar: fiveStar ?? this.fiveStar,
+    fourStar: fourStar ?? this.fourStar,
+    threeStar: threeStar ?? this.threeStar,
+    character: character ?? this.character,
+    weapon: weapon ?? this.weapon,
+    accentPrimary: accentPrimary ?? this.accentPrimary,
+    stateDanger: stateDanger ?? this.stateDanger,
+    stateSuccess: stateSuccess ?? this.stateSuccess,
+    stateWarning: stateWarning ?? this.stateWarning,
+  );
 
   @override
   GachaTokens lerp(ThemeExtension<GachaTokens>? other, double t) {
     if (other is! GachaTokens) return this;
     return GachaTokens(
-      surfaceBackground: Color.lerp(surfaceBackground, other.surfaceBackground, t)!,
+      surfaceBackground: Color.lerp(
+        surfaceBackground,
+        other.surfaceBackground,
+        t,
+      )!,
       surfaceCard: Color.lerp(surfaceCard, other.surfaceCard, t)!,
       surfaceCardHigh: Color.lerp(surfaceCardHigh, other.surfaceCardHigh, t)!,
       borderSubtle: Color.lerp(borderSubtle, other.borderSubtle, t)!,

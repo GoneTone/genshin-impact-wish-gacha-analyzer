@@ -23,13 +23,13 @@ class FiveStarListColors {
   final Color fallback;
 
   Color colorFor(String gachaType) => switch (gachaType) {
-        '301' => character,
-        '302' => weapon,
-        '500' => chronicled,
-        '200' => standard,
-        '100' => beginner,
-        _ => fallback,
-      };
+    '301' => character,
+    '302' => weapon,
+    '500' => chronicled,
+    '200' => standard,
+    '100' => beginner,
+    _ => fallback,
+  };
 }
 
 class FiveStarList extends StatelessWidget {
@@ -51,8 +51,9 @@ class FiveStarList extends StatelessWidget {
         child: Center(
           child: Text(
             l.timelineNoRecords,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: tokens.textMuted),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textMuted,
+            ),
           ),
         ),
       );
@@ -98,12 +99,14 @@ class FiveStarList extends StatelessWidget {
       for (final r in asc) {
         pull++;
         if (r.rankType == 5) {
-          out.add(_Entry(
-            name: r.name,
-            gachaType: gachaType,
-            time: r.time,
-            pullsSincePrev: pull,
-          ));
+          out.add(
+            _Entry(
+              name: r.name,
+              gachaType: gachaType,
+              time: r.time,
+              pullsSincePrev: pull,
+            ),
+          );
           pull = 0;
         }
       }
@@ -154,7 +157,9 @@ class _Row extends StatelessWidget {
     );
     return Container(
       padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.m, horizontal: AppSpacing.l),
+        vertical: AppSpacing.m,
+        horizontal: AppSpacing.l,
+      ),
       decoration: BoxDecoration(
         color: isStripe ? tokens.surfaceCardHigh : null,
         border: Border(left: BorderSide(color: accent, width: 3)),

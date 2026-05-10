@@ -39,13 +39,15 @@ Future<void> main() async {
 
   final pkgInfo = await PackageInfo.fromPlatform();
 
-  runApp(ProviderScope(
-    overrides: [
-      wishStorageProvider.overrideWithValue(storage),
-      appVersionProvider.overrideWithValue(pkgInfo.version),
-    ],
-    child: const MainApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        appVersionProvider.overrideWithValue(pkgInfo.version),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends ConsumerStatefulWidget {

@@ -46,9 +46,5 @@ Pity computePity(
     }
     current++;
   }
-  return Pity(
-    current: current,
-    threshold: threshold,
-    lastFiveStarAt: lastAt,
-  );
+  return Pity(current: current, threshold: threshold, lastFiveStarAt: lastAt);
 }

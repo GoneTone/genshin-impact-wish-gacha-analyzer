@@ -42,10 +42,7 @@ class StatCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  label.toUpperCase(),
-                  style: theme.textTheme.labelSmall,
-                ),
+                Text(label.toUpperCase(), style: theme.textTheme.labelSmall),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   value,
@@ -61,8 +58,9 @@ class StatCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     subtitle!,
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: tokens.textMuted),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: tokens.textMuted,
+                    ),
                   ),
                 ],
               ],

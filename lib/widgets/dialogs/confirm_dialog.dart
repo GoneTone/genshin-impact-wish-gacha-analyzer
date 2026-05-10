@@ -82,9 +82,7 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
             backgroundColor: tokens.stateDanger,
             foregroundColor: Colors.white,
           ),
-          onPressed: matches
-              ? () => Navigator.of(context).pop(true)
-              : null,
+          onPressed: matches ? () => Navigator.of(context).pop(true) : null,
           child: Text(widget.confirmLabel),
         ),
       ],

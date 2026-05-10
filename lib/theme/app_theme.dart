@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
-ThemeData buildDarkTheme() => _buildTheme(
-      brightness: Brightness.dark,
-      tokens: GachaTokens.dark,
-    );
+ThemeData buildDarkTheme() =>
+    _buildTheme(brightness: Brightness.dark, tokens: GachaTokens.dark);
 
-ThemeData buildLightTheme() => _buildTheme(
-      brightness: Brightness.light,
-      tokens: GachaTokens.light,
-    );
+ThemeData buildLightTheme() =>
+    _buildTheme(brightness: Brightness.light, tokens: GachaTokens.light);
 
 ThemeData _buildTheme({
   required Brightness brightness,

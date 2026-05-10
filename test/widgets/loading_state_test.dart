@@ -6,12 +6,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 
 void main() {
   testWidgets('renders progress indicator', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      theme: buildDarkTheme(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: const Scaffold(body: LoadingState()),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: LoadingState()),
+      ),
+    );
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }

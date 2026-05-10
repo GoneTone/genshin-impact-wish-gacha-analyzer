@@ -72,7 +72,9 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               prefixIcon: const Icon(Icons.search, size: 18),
               border: const OutlineInputBorder(),
               contentPadding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.m, vertical: AppSpacing.s),
+                horizontal: AppSpacing.m,
+                vertical: AppSpacing.s,
+              ),
               isDense: true,
             ),
             onChanged: _onQueryChanged,
@@ -87,13 +89,17 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           },
           items: [
             DropdownMenuItem(
-                value: RarityFilter.all, child: Text(l.filterRarityAll)),
+              value: RarityFilter.all,
+              child: Text(l.filterRarityAll),
+            ),
             DropdownMenuItem(
-                value: RarityFilter.fiveStar,
-                child: Text(l.filterRarityFiveStar)),
+              value: RarityFilter.fiveStar,
+              child: Text(l.filterRarityFiveStar),
+            ),
             DropdownMenuItem(
-                value: RarityFilter.fourStar,
-                child: Text(l.filterRarityFourStar)),
+              value: RarityFilter.fourStar,
+              child: Text(l.filterRarityFourStar),
+            ),
           ],
         ),
         DropdownButton<KindFilter>(
@@ -105,12 +111,17 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           },
           items: [
             DropdownMenuItem(
-                value: KindFilter.all, child: Text(l.filterKindAll)),
+              value: KindFilter.all,
+              child: Text(l.filterKindAll),
+            ),
             DropdownMenuItem(
-                value: KindFilter.character,
-                child: Text(l.filterKindCharacter)),
+              value: KindFilter.character,
+              child: Text(l.filterKindCharacter),
+            ),
             DropdownMenuItem(
-                value: KindFilter.weapon, child: Text(l.filterKindWeapon)),
+              value: KindFilter.weapon,
+              child: Text(l.filterKindWeapon),
+            ),
           ],
         ),
         if (widget.state.filter.hasAny)

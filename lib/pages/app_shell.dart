@@ -45,14 +45,16 @@ class _AppShellState extends ConsumerState<AppShell> {
     final tokens = Theme.of(context).gacha;
     final location = GoRouterState.of(context).uri.path;
     final activeData = ref.watch(
-        wishRepositoryProvider.select((s) => s.activeData));
+      wishRepositoryProvider.select((s) => s.activeData),
+    );
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1180;
     final version = ref.watch(appVersionProvider);
 
     final isSettingsActive = location == '/settings';
-    final selectedIndex =
-        isSettingsActive ? null : _bannerIndexFromLocation(location);
+    final selectedIndex = isSettingsActive
+        ? null
+        : _bannerIndexFromLocation(location);
 
     final collapsedNoLabel = !extendedRail && width < 800;
 
@@ -77,8 +79,10 @@ class _AppShellState extends ConsumerState<AppShell> {
         actions: [
           const UidIndicator(),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.m,
+              vertical: AppSpacing.s,
+            ),
             child: FilledButton.icon(
               icon: const Icon(Icons.refresh),
               label: Text(l.actionUpdate),
@@ -89,39 +93,44 @@ class _AppShellState extends ConsumerState<AppShell> {
           ),
         ],
       ),
-      body: Column(children: [
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Rail(
-                selectedIndex: selectedIndex,
-                isSettingsActive: isSettingsActive,
-                extended: extendedRail,
-                collapsedNoLabel: collapsedNoLabel,
-                l: l,
-              ),
-              const VerticalDivider(thickness: 1, width: 1),
-              Expanded(child: widget.child),
-            ],
+      body: Column(
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Rail(
+                  selectedIndex: selectedIndex,
+                  isSettingsActive: isSettingsActive,
+                  extended: extendedRail,
+                  collapsedNoLabel: collapsedNoLabel,
+                  l: l,
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(child: widget.child),
+              ],
+            ),
           ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.l, vertical: AppSpacing.xs * 1.5),
-          color: tokens.surfaceCardHigh,
-          child: Text(
-            activeData == null
-                ? l.footerNotSynced
-                : l.footerLastUpdated(
-                    DateFormat('yyyy-MM-dd HH:mm')
-                        .format(activeData.lastUpdated.toLocal()),
-                  ),
-            style: Theme.of(context).textTheme.bodySmall,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.l,
+              vertical: AppSpacing.xs * 1.5,
+            ),
+            color: tokens.surfaceCardHigh,
+            child: Text(
+              activeData == null
+                  ? l.footerNotSynced
+                  : l.footerLastUpdated(
+                      DateFormat(
+                        'yyyy-MM-dd HH:mm',
+                      ).format(activeData.lastUpdated.toLocal()),
+                    ),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -197,8 +206,8 @@ class _Rail extends StatelessWidget {
               labelType: extended
                   ? null
                   : (collapsedNoLabel
-                      ? NavigationRailLabelType.none
-                      : NavigationRailLabelType.all),
+                        ? NavigationRailLabelType.none
+                        : NavigationRailLabelType.all),
               destinations: destinations,
               groupAlignment: -1.0,
             ),
@@ -255,28 +264,41 @@ class _SettingsRailButton extends StatelessWidget {
         onTap: onPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.m, horizontal: AppSpacing.s),
+            vertical: AppSpacing.m,
+            horizontal: AppSpacing.s,
+          ),
           child: extended
-              ? Row(children: [
-                  const SizedBox(width: AppSpacing.xs),
-                  Icon(active ? Icons.settings : Icons.settings_outlined,
-                      color: color),
-                  const SizedBox(width: AppSpacing.m),
-                  Text(label, style: TextStyle(color: color)),
-                ])
+              ? Row(
+                  children: [
+                    const SizedBox(width: AppSpacing.xs),
+                    Icon(
+                      active ? Icons.settings : Icons.settings_outlined,
+                      color: color,
+                    ),
+                    const SizedBox(width: AppSpacing.m),
+                    Text(label, style: TextStyle(color: color)),
+                  ],
+                )
               : (hideLabel
-                  ? Center(
-                      child: Icon(
+                    ? Center(
+                        child: Icon(
                           active ? Icons.settings : Icons.settings_outlined,
-                          color: color),
-                    )
-                  : Column(children: [
-                      Icon(active ? Icons.settings : Icons.settings_outlined,
-                          color: color),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(label,
-                          style: TextStyle(color: color, fontSize: 11)),
-                    ])),
+                          color: color,
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          Icon(
+                            active ? Icons.settings : Icons.settings_outlined,
+                            color: color,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            label,
+                            style: TextStyle(color: color, fontSize: 11),
+                          ),
+                        ],
+                      )),
         ),
       ),
     );

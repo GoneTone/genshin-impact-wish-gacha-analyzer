@@ -3,18 +3,9 @@ enum WishItemKind {
   weapon,
   unknown;
 
-  static const _characterStrings = {
-    '角色',
-    'Character',
-    'キャラクター',
-    '캐릭터',
-  };
+  static const _characterStrings = {'角色', 'Character', 'キャラクター', '캐릭터'};
 
-  static const _weaponStrings = {
-    '武器',
-    'Weapon',
-    '무기',
-  };
+  static const _weaponStrings = {'武器', 'Weapon', '무기'};
 
   static WishItemKind fromItemType(String itemType) {
     if (_characterStrings.contains(itemType)) return WishItemKind.character;

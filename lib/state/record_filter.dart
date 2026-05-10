@@ -5,10 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
 
 @immutable
 class RecordFilterState {
-  const RecordFilterState({
-    required this.filter,
-    required this.sort,
-  });
+  const RecordFilterState({required this.filter, required this.sort});
 
   final RecordFilter filter;
   final TableSort? sort;
@@ -35,8 +32,9 @@ class RecordFilterNotifier extends Notifier<RecordFilterState> {
       TableSort(column: final c, direction: SortDirection.desc)
           when c == column =>
         TableSort(column: column, direction: SortDirection.asc),
-      TableSort(column: final c, direction: SortDirection.asc) when c == column
-        => null,
+      TableSort(column: final c, direction: SortDirection.asc)
+          when c == column =>
+        null,
       _ => TableSort(column: column, direction: SortDirection.desc),
     };
     state = RecordFilterState(filter: state.filter, sort: next);
@@ -47,6 +45,7 @@ class RecordFilterNotifier extends Notifier<RecordFilterState> {
   }
 }
 
-final recordFilterProvider = NotifierProvider.autoDispose.family<
-    RecordFilterNotifier, RecordFilterState, String>(
-        (gachaType) => RecordFilterNotifier());
+final recordFilterProvider = NotifierProvider.autoDispose
+    .family<RecordFilterNotifier, RecordFilterState, String>(
+      (gachaType) => RecordFilterNotifier(),
+    );

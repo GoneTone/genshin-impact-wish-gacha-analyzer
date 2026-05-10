@@ -68,10 +68,7 @@ class _PityCardState extends State<PityCard>
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            widget.label.toUpperCase(),
-            style: theme.textTheme.labelSmall,
-          ),
+          Text(widget.label.toUpperCase(), style: theme.textTheme.labelSmall),
           const SizedBox(height: AppSpacing.xs),
           Text(
             l.pityCurrent(p.current, p.threshold),
@@ -158,10 +155,8 @@ class _ProgressBar extends StatelessWidget {
     if (breath != null && phase == _Phase.close) {
       bar = AnimatedBuilder(
         animation: breath!,
-        builder: (_, child) => Opacity(
-          opacity: 0.7 + 0.3 * breath!.value,
-          child: child,
-        ),
+        builder: (_, child) =>
+            Opacity(opacity: 0.7 + 0.3 * breath!.value, child: child),
         child: bar,
       );
     }
@@ -191,9 +186,10 @@ class _Subtitle extends StatelessWidget {
       _Phase.ended => (l.pityBeginnerEnded, tokens.textMuted),
       _Phase.guaranteed => (l.pityGuaranteed, tokens.stateWarning),
       _Phase.close => (l.pityClose, tokens.stateWarning),
-      _Phase.normal => pity.lastFiveStarAt == null
-          ? (l.pityNoFiveStar, tokens.textMuted)
-          : (l.pityDistance(pity.distance), tokens.textMuted),
+      _Phase.normal =>
+        pity.lastFiveStarAt == null
+            ? (l.pityNoFiveStar, tokens.textMuted)
+            : (l.pityDistance(pity.distance), tokens.textMuted),
     };
 
     return Text(

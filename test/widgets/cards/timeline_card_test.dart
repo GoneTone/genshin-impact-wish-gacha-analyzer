@@ -10,26 +10,25 @@ WishRecord _r({
   required int rank,
   required String name,
   DateTime? time,
-}) =>
-    WishRecord(
-      id: id,
-      uid: '1',
-      gachaType: '301',
-      name: name,
-      itemType: '角色',
-      kind: WishItemKind.character,
-      rankType: rank,
-      time: time ?? DateTime(2025),
-      lang: 'zh-tw',
-    );
+}) => WishRecord(
+  id: id,
+  uid: '1',
+  gachaType: '301',
+  name: name,
+  itemType: '角色',
+  kind: WishItemKind.character,
+  rankType: rank,
+  time: time ?? DateTime(2025),
+  lang: 'zh-tw',
+);
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(body: SizedBox(width: 1000, height: 220, child: child)),
-      );
+    theme: buildDarkTheme(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(body: SizedBox(width: 1000, height: 220, child: child)),
+  );
 
   testWidgets('empty list shows no-records message', (tester) async {
     await tester.pumpWidget(wrap(const TimelineCard(records: <WishRecord>[])));

@@ -14,10 +14,8 @@ class _FakeCapture implements WishCapture {
   final String? _url;
 
   @override
-  CaptureSession start() => CaptureSession(
-        result: Future.value(_url),
-        cancel: () async {},
-      );
+  CaptureSession start() =>
+      CaptureSession(result: Future.value(_url), cancel: () async {});
 }
 
 class _CountingCapture implements WishCapture {
@@ -50,9 +48,11 @@ void main() {
       overrides: [
         wishStorageProvider.overrideWithValue(WishStorage(tempDir)),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider.overrideWithValue(MockClient((_) async {
-          throw 'unreachable';
-        })),
+        httpClientProvider.overrideWithValue(
+          MockClient((_) async {
+            throw 'unreachable';
+          }),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -70,23 +70,28 @@ void main() {
 
   test('bootstrap load 有 2 個 UID 檔 → activeUid = 較新者', () async {
     final storage = WishStorage(tempDir);
-    await storage.save(BannerStorage(
-      uid: 'A',
-      lastUpdated: DateTime.utc(2026, 1, 1),
-      banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
-    ));
-    await storage.save(BannerStorage(
-      uid: 'B',
-      lastUpdated: DateTime.utc(2026, 5, 9), // 較新
-      banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
-    ));
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 1, 1),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.save(
+      BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 5, 9), // 較新
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
 
     final container = ProviderContainer(
       overrides: [
         wishStorageProvider.overrideWithValue(storage),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider
-            .overrideWithValue(MockClient((_) async => http.Response('{}', 200))),
+        httpClientProvider.overrideWithValue(
+          MockClient((_) async => http.Response('{}', 200)),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -102,12 +107,17 @@ void main() {
   test('AuthExpired 連續 2 次 → UpdateFailed with exact message', () async {
     final storage = WishStorage(tempDir);
     // 先 seed 一個 cached URL，讓 update 直接走 fetch path（跳過 MITM 階段）
-    await storage.save(BannerStorage(
-      uid: 'A',
-      lastUpdated: DateTime.utc(2026),
-      banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
-    ));
-    await storage.saveCapturedUrl('A', 'https://example.com/getGachaLog?authkey=expired');
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.saveCapturedUrl(
+      'A',
+      'https://example.com/getGachaLog?authkey=expired',
+    );
 
     var fetcherCalls = 0;
     final mock = MockClient((req) async {
@@ -121,7 +131,9 @@ void main() {
     });
 
     var captureCalls = 0;
-    final fakeCapture = _FakeCapture('https://example.com/getGachaLog?authkey=alsoexpired');
+    final fakeCapture = _FakeCapture(
+      'https://example.com/getGachaLog?authkey=alsoexpired',
+    );
 
     final container = ProviderContainer(
       overrides: [
@@ -157,15 +169,19 @@ void main() {
       overrides: [
         wishStorageProvider.overrideWithValue(WishStorage(tempDir)),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider
-            .overrideWithValue(MockClient((_) async => http.Response('{}', 200))),
+        httpClientProvider.overrideWithValue(
+          MockClient((_) async => http.Response('{}', 200)),
+        ),
       ],
     );
     addTearDown(container.dispose);
 
     final notifier = container.read(wishRepositoryProvider.notifier);
     notifier.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
-    expect(container.read(wishRepositoryProvider).progress, isA<UpdateFailed>());
+    expect(
+      container.read(wishRepositoryProvider).progress,
+      isA<UpdateFailed>(),
+    );
 
     notifier.clearProgress();
     expect(container.read(wishRepositoryProvider).progress, isNull);

@@ -17,9 +17,12 @@ class LoadingState extends StatelessWidget {
         children: [
           const CircularProgressIndicator(),
           const SizedBox(height: AppSpacing.l),
-          Text(l.loadingBootstrap,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: tokens.textMuted)),
+          Text(
+            l.loadingBootstrap,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textMuted,
+            ),
+          ),
         ],
       ),
     );

@@ -31,8 +31,7 @@ class WishState {
   final UpdateProgress? progress;
   final bool isBootstrapping;
 
-  BannerStorage? get activeData =>
-      activeUid == null ? null : byUid[activeUid];
+  BannerStorage? get activeData => activeUid == null ? null : byUid[activeUid];
   Iterable<String> get knownUids => byUid.keys;
 
   WishState copyWith({
@@ -42,13 +41,12 @@ class WishState {
     UpdateProgress? progress,
     bool clearProgress = false,
     bool? isBootstrapping,
-  }) =>
-      WishState(
-        activeUid: clearActiveUid ? null : (activeUid ?? this.activeUid),
-        byUid: byUid ?? this.byUid,
-        progress: clearProgress ? null : (progress ?? this.progress),
-        isBootstrapping: isBootstrapping ?? this.isBootstrapping,
-      );
+  }) => WishState(
+    activeUid: clearActiveUid ? null : (activeUid ?? this.activeUid),
+    byUid: byUid ?? this.byUid,
+    progress: clearProgress ? null : (progress ?? this.progress),
+    isBootstrapping: isBootstrapping ?? this.isBootstrapping,
+  );
 }
 
 // ─── Providers ───
@@ -70,8 +68,9 @@ final wishFetcherProvider = Provider<WishFetcher>((ref) {
   return WishFetcher(ref.read(httpClientProvider));
 });
 
-final wishRepositoryProvider =
-    NotifierProvider<WishRepository, WishState>(WishRepository.new);
+final wishRepositoryProvider = NotifierProvider<WishRepository, WishState>(
+  WishRepository.new,
+);
 
 // ─── Notifier ───
 
@@ -98,10 +97,14 @@ class WishRepository extends Notifier<WishState> {
       state = state.copyWith(byUid: byUid, isBootstrapping: false);
       return;
     }
-    final newest = byUid.values
-        .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
+    final newest = byUid.values.reduce(
+      (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
+    );
     state = state.copyWith(
-        byUid: byUid, activeUid: newest.uid, isBootstrapping: false);
+      byUid: byUid,
+      activeUid: newest.uid,
+      isBootstrapping: false,
+    );
   }
 
   Future<void> setActiveUid(String uid) async {
@@ -179,7 +182,8 @@ class WishRepository extends Notifier<WishState> {
         } on AuthExpiredException {
           if (!ref.mounted) return;
           state = state.copyWith(
-              progress: const UpdateFailed(UpdateErrorAuthExpired()));
+            progress: const UpdateFailed(UpdateErrorAuthExpired()),
+          );
         } catch (e) {
           if (!ref.mounted) return;
           state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
@@ -220,13 +224,12 @@ class WishRepository extends Notifier<WishState> {
     final uid = probe.uid!;
 
     // 載 existing（可能是新 UID 沒有檔）
-    final existing = state.byUid[uid] ??
+    final existing =
+        state.byUid[uid] ??
         BannerStorage(
           uid: uid,
           lastUpdated: DateTime.utc(1970),
-          banners: {
-            for (final t in gachaTypes) t.gachaType: <WishRecord>[],
-          },
+          banners: {for (final t in gachaTypes) t.gachaType: <WishRecord>[]},
         );
 
     final mergedBanners = <String, List<WishRecord>>{};
@@ -311,13 +314,13 @@ class WishRepository extends Notifier<WishState> {
     final storage = ref.read(wishStorageProvider);
     await storage.delete(uid);
     if (!ref.mounted) return;
-    final newByUid = Map<String, BannerStorage>.from(state.byUid)
-      ..remove(uid);
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)..remove(uid);
     if (newByUid.isEmpty) {
       state = state.copyWith(byUid: newByUid, clearActiveUid: true);
     } else {
-      final newest = newByUid.values
-          .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
+      final newest = newByUid.values.reduce(
+        (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
+      );
       state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
     }
   }
@@ -342,14 +345,14 @@ class WishRepository extends Notifier<WishState> {
     final storage = ref.read(wishStorageProvider);
     await storage.delete(uid);
     if (!ref.mounted) return;
-    final newByUid = Map<String, BannerStorage>.from(state.byUid)
-      ..remove(uid);
+    final newByUid = Map<String, BannerStorage>.from(state.byUid)..remove(uid);
     if (state.activeUid == uid) {
       if (newByUid.isEmpty) {
         state = state.copyWith(byUid: newByUid, clearActiveUid: true);
       } else {
-        final newest = newByUid.values
-            .reduce((a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b);
+        final newest = newByUid.values.reduce(
+          (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
+        );
         state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
       }
     } else {
@@ -358,13 +361,13 @@ class WishRepository extends Notifier<WishState> {
   }
 
   UpdateError _friendlyError(Object e) => switch (e) {
-        _NoRecordsException() => const UpdateErrorNoRecords(),
-        FormatException(:final message) => UpdateErrorOther(message),
-        RateLimitedException() => const UpdateErrorRateLimited(),
-        ApiErrorException(:final message) => UpdateErrorServer(message),
-        AuthExpiredException() => const UpdateErrorAuthExpired(),
-        _ => UpdateErrorOther(e.toString()),
-      };
+    _NoRecordsException() => const UpdateErrorNoRecords(),
+    FormatException(:final message) => UpdateErrorOther(message),
+    RateLimitedException() => const UpdateErrorRateLimited(),
+    ApiErrorException(:final message) => UpdateErrorServer(message),
+    AuthExpiredException() => const UpdateErrorAuthExpired(),
+    _ => UpdateErrorOther(e.toString()),
+  };
 
   // ─── debug helpers，僅供測試用 ───
   @visibleForTesting

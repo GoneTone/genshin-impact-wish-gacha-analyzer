@@ -2,11 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 
-WishRecord _r({
-  required String id,
-  required int rank,
-  DateTime? time,
-}) =>
+WishRecord _r({required String id, required int rank, DateTime? time}) =>
     WishRecord(
       id: id,
       uid: '1',

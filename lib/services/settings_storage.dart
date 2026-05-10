@@ -8,10 +8,7 @@ enum AppLocale { system, zhHant, zhHans, en }
 
 @immutable
 class AppSettings {
-  const AppSettings({
-    required this.themeMode,
-    required this.locale,
-  });
+  const AppSettings({required this.themeMode, required this.locale});
 
   final AppThemeMode themeMode;
   final AppLocale locale;
@@ -47,28 +44,28 @@ abstract final class SettingsStorage {
   }
 
   static AppThemeMode _parseThemeMode(String? raw) => switch (raw) {
-        'dark' => AppThemeMode.dark,
-        'light' => AppThemeMode.light,
-        _ => AppThemeMode.system,
-      };
+    'dark' => AppThemeMode.dark,
+    'light' => AppThemeMode.light,
+    _ => AppThemeMode.system,
+  };
 
   static String _themeModeToString(AppThemeMode m) => switch (m) {
-        AppThemeMode.dark => 'dark',
-        AppThemeMode.light => 'light',
-        AppThemeMode.system => 'system',
-      };
+    AppThemeMode.dark => 'dark',
+    AppThemeMode.light => 'light',
+    AppThemeMode.system => 'system',
+  };
 
   static AppLocale _parseLocale(String? raw) => switch (raw) {
-        'zh-Hant' => AppLocale.zhHant,
-        'zh-Hans' => AppLocale.zhHans,
-        'en' => AppLocale.en,
-        _ => AppLocale.system,
-      };
+    'zh-Hant' => AppLocale.zhHant,
+    'zh-Hans' => AppLocale.zhHans,
+    'en' => AppLocale.en,
+    _ => AppLocale.system,
+  };
 
   static String _localeToString(AppLocale l) => switch (l) {
-        AppLocale.zhHant => 'zh-Hant',
-        AppLocale.zhHans => 'zh-Hans',
-        AppLocale.en => 'en',
-        AppLocale.system => 'system',
-      };
+    AppLocale.zhHant => 'zh-Hant',
+    AppLocale.zhHans => 'zh-Hans',
+    AppLocale.en => 'en',
+    AppLocale.system => 'system',
+  };
 }

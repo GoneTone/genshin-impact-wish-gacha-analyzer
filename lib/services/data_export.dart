@@ -16,15 +16,17 @@ String exportCsv(BannerStorage data) {
   }
   all.sort((a, b) => b.time.compareTo(a.time));
   for (final r in all) {
-    buf.writeln([
-      _quote(_iso(r.time)),
-      _quote(r.uid),
-      _quote(r.gachaType),
-      _quote(r.name),
-      _quote(r.itemType),
-      r.rankType.toString(),
-      _quote(r.lang),
-    ].join(','));
+    buf.writeln(
+      [
+        _quote(_iso(r.time)),
+        _quote(r.uid),
+        _quote(r.gachaType),
+        _quote(r.name),
+        _quote(r.itemType),
+        r.rankType.toString(),
+        _quote(r.lang),
+      ].join(','),
+    );
   }
   return buf.toString();
 }

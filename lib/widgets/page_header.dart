@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 class PageHeader extends StatelessWidget {
-  const PageHeader({
-    super.key,
-    required this.title,
-    this.subtitle,
-  });
+  const PageHeader({super.key, required this.title, this.subtitle});
 
   final String title;
   final String? subtitle;
@@ -28,8 +24,9 @@ class PageHeader extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(
               subtitle!,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: tokens.textMuted),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: tokens.textMuted,
+              ),
             ),
           ],
         ],

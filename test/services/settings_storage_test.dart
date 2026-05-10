@@ -16,10 +16,9 @@ void main() {
     });
 
     test('save 後 load 回得到相同值', () async {
-      await SettingsStorage.save(const AppSettings(
-        themeMode: AppThemeMode.dark,
-        locale: AppLocale.en,
-      ));
+      await SettingsStorage.save(
+        const AppSettings(themeMode: AppThemeMode.dark, locale: AppLocale.en),
+      );
       final s = await SettingsStorage.load();
       expect(s.themeMode, AppThemeMode.dark);
       expect(s.locale, AppLocale.en);

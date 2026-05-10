@@ -126,11 +126,13 @@ class WishFetcher {
           break;
         }
       }
-      onProgress(FetchProgress(
-        gachaType: gachaType,
-        pageIndex: pageIndex,
-        newRecordsSoFar: fresh.length,
-      ));
+      onProgress(
+        FetchProgress(
+          gachaType: gachaType,
+          pageIndex: pageIndex,
+          newRecordsSoFar: fresh.length,
+        ),
+      );
 
       if (hitOld) break;
       if (page.length < _pageSize) break;
@@ -152,7 +154,9 @@ class WishFetcher {
       if (primers.isNotEmpty) {
         await Future<void>.delayed(rateLimit);
       }
-      final page = await fetchPage(url.build(gachaType: type.gachaType, endId: '0'));
+      final page = await fetchPage(
+        url.build(gachaType: type.gachaType, endId: '0'),
+      );
       primers[type.gachaType] = page;
       if (page.records.isNotEmpty) {
         return UidProbeResult(

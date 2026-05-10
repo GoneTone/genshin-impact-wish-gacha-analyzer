@@ -6,16 +6,16 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_export.dart';
 
 WishRecord _r(String id) => WishRecord(
-      id: id,
-      uid: '123',
-      gachaType: '301',
-      name: '夜蘭',
-      itemType: '角色',
-      kind: WishItemKind.character,
-      rankType: 5,
-      time: DateTime.utc(2025, 4, 1, 14, 23),
-      lang: 'zh-tw',
-    );
+  id: id,
+  uid: '123',
+  gachaType: '301',
+  name: '夜蘭',
+  itemType: '角色',
+  kind: WishItemKind.character,
+  rankType: 5,
+  time: DateTime.utc(2025, 4, 1, 14, 23),
+  lang: 'zh-tw',
+);
 
 void main() {
   late BannerStorage data;
@@ -39,8 +39,7 @@ void main() {
     final out = exportCsv(data);
     final lines = out.split('\n').where((l) => l.isNotEmpty).toList();
     expect(lines.length, 2);
-    expect(lines[0],
-        'time,uid,gacha_type,name,item_type,rank_type,lang');
+    expect(lines[0], 'time,uid,gacha_type,name,item_type,rank_type,lang');
     expect(lines[1].contains('夜蘭'), isTrue);
     expect(lines[1].contains('123'), isTrue);
     expect(lines[1].contains('301'), isTrue);
@@ -61,7 +60,9 @@ void main() {
     final s = BannerStorage(
       uid: '1',
       lastUpdated: DateTime.utc(2025, 1, 1),
-      banners: {'301': [r]},
+      banners: {
+        '301': [r],
+      },
     );
     final out = exportCsv(s);
     expect(out.contains('"O,K""name"'), isTrue);

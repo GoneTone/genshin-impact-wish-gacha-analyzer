@@ -21,16 +21,16 @@ void main() {
   });
 
   WishRecord makeRecord(String id) => WishRecord(
-        id: id,
-        uid: '801057625',
-        gachaType: '301',
-        name: 'x',
-        itemType: '角色',
-        kind: WishItemKind.character,
-        rankType: 5,
-        time: DateTime(2025, 1, 1),
-        lang: 'zh-tw',
-      );
+    id: id,
+    uid: '801057625',
+    gachaType: '301',
+    name: 'x',
+    itemType: '角色',
+    kind: WishItemKind.character,
+    rankType: 5,
+    time: DateTime(2025, 1, 1),
+    lang: 'zh-tw',
+  );
 
   test('save → load roundtrip', () async {
     final original = BannerStorage(
@@ -68,8 +68,10 @@ void main() {
 
   test('saveCapturedUrl / loadCapturedUrl / deleteCapturedUrl', () async {
     await storage.saveCapturedUrl('801057625', 'https://example.com/gacha');
-    expect(await storage.loadCapturedUrl('801057625'),
-        'https://example.com/gacha');
+    expect(
+      await storage.loadCapturedUrl('801057625'),
+      'https://example.com/gacha',
+    );
 
     await storage.deleteCapturedUrl('801057625');
     expect(await storage.loadCapturedUrl('801057625'), isNull);
@@ -94,7 +96,10 @@ void main() {
       lastUpdated: DateTime.utc(2026, 5, 8),
       banners: {
         '301': [makeRecord('1')],
-        '302': [], '500': [], '200': [], '100': [],
+        '302': [],
+        '500': [],
+        '200': [],
+        '100': [],
       },
     );
     final v2 = BannerStorage(
@@ -102,7 +107,10 @@ void main() {
       lastUpdated: DateTime.utc(2026, 5, 9),
       banners: {
         '301': [makeRecord('2')],
-        '302': [], '500': [], '200': [], '100': [],
+        '302': [],
+        '500': [],
+        '200': [],
+        '100': [],
       },
     );
     await storage.save(v1);
