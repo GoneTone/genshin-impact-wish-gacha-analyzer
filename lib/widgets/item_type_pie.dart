@@ -5,6 +5,37 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+
+const _unknownColor = Color(0xFF9E9E9E);
+
+List<DistributionEntry> itemTypeDistributionEntries(
+  WishStats stats,
+  GachaTokens tokens,
+  AppLocalizations l,
+) {
+  return [
+    DistributionEntry(
+      color: tokens.character,
+      name: l.kindCharacter,
+      count: stats.characterCount,
+      rate: stats.characterRate,
+    ),
+    DistributionEntry(
+      color: tokens.weapon,
+      name: l.kindWeapon,
+      count: stats.weaponCount,
+      rate: stats.weaponRate,
+    ),
+    if (stats.unknownCount > 0)
+      DistributionEntry(
+        color: _unknownColor,
+        name: l.kindUnknown,
+        count: stats.unknownCount,
+        rate: stats.total == 0 ? 0.0 : stats.unknownCount / stats.total,
+      ),
+  ];
+}
 
 class ItemTypePie extends StatelessWidget {
   const ItemTypePie({super.key, required this.stats});
@@ -22,13 +53,10 @@ class ItemTypePie extends StatelessWidget {
       );
     }
     final sections = <PieChartSectionData>[
-      _section('${l.kindCharacter} ${stats.characterCount}',
-          stats.characterCount, tokens.character),
-      _section('${l.kindWeapon} ${stats.weaponCount}',
-          stats.weaponCount, tokens.weapon),
+      _section(stats.characterCount, tokens.character),
+      _section(stats.weaponCount, tokens.weapon),
       if (stats.unknownCount > 0)
-        _section('${l.kindUnknown} ${stats.unknownCount}',
-            stats.unknownCount, const Color(0xFF9E9E9E)),
+        _section(stats.unknownCount, _unknownColor),
     ].where((s) => s.value > 0).toList(growable: false);
 
     return PieChart(
@@ -42,16 +70,11 @@ class ItemTypePie extends StatelessWidget {
     );
   }
 
-  PieChartSectionData _section(String title, int value, Color color) =>
+  PieChartSectionData _section(int value, Color color) =>
       PieChartSectionData(
-        title: title,
+        showTitle: false,
         value: value.toDouble(),
         color: color,
         radius: 60,
-        titleStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
       );
 }
