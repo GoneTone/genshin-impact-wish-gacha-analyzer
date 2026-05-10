@@ -53,11 +53,11 @@ The utility may trigger anti-virus software during installation and execution. T
 - [x] Multi-language ([Help us traslate!](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
 - [x] Switching Between Multi-accounts' records
 - [ ] Share The Record and Analyzed Result Online
-- [ ] Dark mode
+- [x] Dark/Light Theme Toggle
 - [x] Daily Check-in Webpage
 - [x] Teyvat Interactive Map
 - [x] Update Data Without Overwriting The Original Data
-- [ ] Export and Import Data Back-ups (Manual)
+- [x] Export and Import Data Back-ups (Manual)
 
 ## Screenshot
 
