@@ -58,6 +58,12 @@
   "tableName": "Name",
   "tableKind": "Type",
   "tableRarity": "Rarity",
+  "tableTotalIndex": "Total",
+  "tableFiveStarPity": "Pity",
+  "tableFiveStarPityTooltip": "Pulls since the last 5★",
+  "sortDirectionDesc": "Descending",
+  "sortDirectionAsc": "Ascending",
+  "sortDirectionNone": "Click to sort",
 
   "progressWaiting": "Waiting for capture…",
   "progressFetching": "Fetching…",

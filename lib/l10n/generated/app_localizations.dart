@@ -352,6 +352,42 @@ abstract class AppLocalizations {
   /// **'稀有度'**
   String get tableRarity;
 
+  /// No description provided for @tableTotalIndex.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'總抽數'**
+  String get tableTotalIndex;
+
+  /// No description provided for @tableFiveStarPity.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'保底內'**
+  String get tableFiveStarPity;
+
+  /// No description provided for @tableFiveStarPityTooltip.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'距上一次 5★ 的抽數'**
+  String get tableFiveStarPityTooltip;
+
+  /// No description provided for @sortDirectionDesc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'降序'**
+  String get sortDirectionDesc;
+
+  /// No description provided for @sortDirectionAsc.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'升序'**
+  String get sortDirectionAsc;
+
+  /// No description provided for @sortDirectionNone.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'點擊排序'**
+  String get sortDirectionNone;
+
   /// No description provided for @progressWaiting.
   ///
   /// In zh_Hant, this message translates to:

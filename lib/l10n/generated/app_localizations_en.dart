@@ -139,6 +139,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tableRarity => 'Rarity';
 
   @override
+  String get tableTotalIndex => 'Total';
+
+  @override
+  String get tableFiveStarPity => 'Pity';
+
+  @override
+  String get tableFiveStarPityTooltip => 'Pulls since the last 5★';
+
+  @override
+  String get sortDirectionDesc => 'Descending';
+
+  @override
+  String get sortDirectionAsc => 'Ascending';
+
+  @override
+  String get sortDirectionNone => 'Click to sort';
+
+  @override
   String get progressWaiting => 'Waiting for capture…';
 
   @override

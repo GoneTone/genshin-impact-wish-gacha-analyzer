@@ -139,6 +139,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tableRarity => '稀有度';
 
   @override
+  String get tableTotalIndex => '總抽數';
+
+  @override
+  String get tableFiveStarPity => '保底內';
+
+  @override
+  String get tableFiveStarPityTooltip => '距上一次 5★ 的抽數';
+
+  @override
+  String get sortDirectionDesc => '降序';
+
+  @override
+  String get sortDirectionAsc => '升序';
+
+  @override
+  String get sortDirectionNone => '點擊排序';
+
+  @override
   String get progressWaiting => '等待攔截…';
 
   @override
@@ -546,6 +564,24 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get tableRarity => '稀有度';
 
   @override
+  String get tableTotalIndex => '总抽数';
+
+  @override
+  String get tableFiveStarPity => '保底内';
+
+  @override
+  String get tableFiveStarPityTooltip => '距上一次 5★ 的抽数';
+
+  @override
+  String get sortDirectionDesc => '降序';
+
+  @override
+  String get sortDirectionAsc => '升序';
+
+  @override
+  String get sortDirectionNone => '点击排序';
+
+  @override
   String get progressWaiting => '等待拦截…';
 
   @override
@@ -951,6 +987,24 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get tableRarity => '稀有度';
+
+  @override
+  String get tableTotalIndex => '總抽數';
+
+  @override
+  String get tableFiveStarPity => '保底內';
+
+  @override
+  String get tableFiveStarPityTooltip => '距上一次 5★ 的抽數';
+
+  @override
+  String get sortDirectionDesc => '降序';
+
+  @override
+  String get sortDirectionAsc => '升序';
+
+  @override
+  String get sortDirectionNone => '點擊排序';
 
   @override
   String get progressWaiting => '等待攔截…';
