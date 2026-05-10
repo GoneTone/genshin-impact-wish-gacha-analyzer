@@ -48,6 +48,11 @@ void main() {
       (i) => _r(id: '$i', rank: 4, name: 'r$i'),
     );
     await tester.pumpWidget(_wrap(SortableTable(records: records)));
-    expect(find.text('1 / 3'), findsOneWidget);
+    // 改為驗證 dropdown 存在且 items 數 = totalPages
+    final dropdown = tester.widget<DropdownButton<int>>(
+      find.byType(DropdownButton<int>),
+    );
+    expect(dropdown.items, hasLength(3));
+    expect(dropdown.value, 0);
   });
 }

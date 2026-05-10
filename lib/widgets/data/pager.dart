@@ -18,7 +18,6 @@ class Pager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final tokens = Theme.of(context).gacha;
     final canPrev = page > 0;
     final canNext = page + 1 < totalPages;
 
@@ -36,25 +35,16 @@ class Pager extends StatelessWidget {
           icon: const Icon(Icons.chevron_left),
         ),
         const SizedBox(width: AppSpacing.s),
-        if (totalPages > 20)
-          DropdownButton<int>(
-            value: page,
-            onChanged: (v) {
-              if (v != null) onChanged(v);
-            },
-            items: [
-              for (var i = 0; i < totalPages; i++)
-                DropdownMenuItem(value: i, child: Text('${i + 1} / $totalPages')),
-            ],
-          )
-        else
-          Text(
-            '${page + 1} / $totalPages',
-            style: TextStyle(
-              color: tokens.textSecondary,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          ),
+        DropdownButton<int>(
+          value: page,
+          onChanged: (v) {
+            if (v != null) onChanged(v);
+          },
+          items: [
+            for (var i = 0; i < totalPages; i++)
+              DropdownMenuItem(value: i, child: Text('${i + 1} / $totalPages')),
+          ],
+        ),
         const SizedBox(width: AppSpacing.s),
         IconButton(
           tooltip: l.actionNextPage,
