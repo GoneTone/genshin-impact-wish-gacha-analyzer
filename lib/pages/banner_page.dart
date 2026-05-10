@@ -7,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
@@ -78,8 +79,9 @@ class BannerPage extends ConsumerWidget {
     final isEndedPool = type.gachaType == '100';
 
     final filterState = ref.watch(recordFilterProvider(gachaType));
-    final filtered = sortRecords(
-        filterRecords(records, filterState.filter), filterState.sort);
+    final allRows = buildRecordRows(records);
+    final filtered = filterRecordRows(allRows, filterState.filter);
+    final sorted = sortRecordRows(filtered, filterState.sort);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -209,15 +211,17 @@ class BannerPage extends ConsumerWidget {
             onFilterChanged: (f) => ref
                 .read(recordFilterProvider(gachaType).notifier)
                 .setFilter(f),
-            onSortChanged: (s) => ref
-                .read(recordFilterProvider(gachaType).notifier)
-                .setSort(s),
-            onClear: () => ref
-                .read(recordFilterProvider(gachaType).notifier)
-                .clear(),
+            onClear: () =>
+                ref.read(recordFilterProvider(gachaType).notifier).clear(),
           ),
           const SizedBox(height: AppSpacing.m),
-          SortableTable(records: filtered),
+          SortableTable(
+            rows: sorted,
+            sort: filterState.sort,
+            onSortColumnTapped: (col) => ref
+                .read(recordFilterProvider(gachaType).notifier)
+                .cycleSort(col),
+          ),
         ],
       ),
     );

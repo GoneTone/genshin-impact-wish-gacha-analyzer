@@ -16,15 +16,10 @@ Widget _wrap(Widget child) => MaterialApp(
 void main() {
   testWidgets('clear button hidden when no active filter', (tester) async {
     await tester.pumpWidget(_wrap(SearchFilterBar(
-      state: const RecordFilterState(
-        filter: RecordFilter(),
-        sort: RecordSort.timeDesc,
-      ),
+      state: const RecordFilterState(filter: RecordFilter(), sort: null),
       onFilterChanged: (_) {},
-      onSortChanged: (_) {},
       onClear: () {},
     )));
-    // No TextButton present until filter is non-default
     final clearBtn = find.widgetWithIcon(TextButton, Icons.clear);
     expect(clearBtn, findsNothing);
   });
@@ -33,13 +28,23 @@ void main() {
     await tester.pumpWidget(_wrap(SearchFilterBar(
       state: const RecordFilterState(
         filter: RecordFilter(rarity: RarityFilter.fiveStar),
-        sort: RecordSort.timeDesc,
+        sort: null,
       ),
       onFilterChanged: (_) {},
-      onSortChanged: (_) {},
       onClear: () {},
     )));
     final clearBtn = find.widgetWithIcon(TextButton, Icons.clear);
     expect(clearBtn, findsOneWidget);
+  });
+
+  testWidgets('排序 dropdown 已不存在', (tester) async {
+    await tester.pumpWidget(_wrap(SearchFilterBar(
+      state: const RecordFilterState(filter: RecordFilter(), sort: null),
+      onFilterChanged: (_) {},
+      onClear: () {},
+    )));
+    // 只有兩個 dropdown：rarity / kind
+    expect(find.byType(DropdownButton<RarityFilter>), findsOneWidget);
+    expect(find.byType(DropdownButton<KindFilter>), findsOneWidget);
   });
 }

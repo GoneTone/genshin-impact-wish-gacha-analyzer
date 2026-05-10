@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 
 class SortableTable extends StatefulWidget {
-  const SortableTable({super.key, required this.records});
+  const SortableTable({
+    super.key,
+    required this.rows,
+    required this.sort,
+    required this.onSortColumnTapped,
+  });
 
-  /// 已 filter / sort 完的 records；元件本身不做篩選排序。
-  final List<WishRecord> records;
+  /// 已 filter / sort 完的 rows;元件本身不做篩選排序。
+  final List<RecordRow> rows;
+  final TableSort? sort;
+  final ValueChanged<SortColumn> onSortColumnTapped;
 
   @override
   State<SortableTable> createState() => _SortableTableState();
@@ -22,13 +30,15 @@ class _SortableTableState extends State<SortableTable> {
   @override
   void didUpdateWidget(SortableTable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.records.length != widget.records.length) {
+    // 僅在 rows 數量變化時重置頁碼（filter 變化會影響長度）。
+    // sort 變化長度不變，刻意保留使用者當前頁。
+    if (oldWidget.rows.length != widget.rows.length) {
       _page = 0;
     }
   }
 
   int get _totalPages =>
-      (widget.records.length / _pageSize).ceil().clamp(1, 99999);
+      (widget.rows.length / _pageSize).ceil().clamp(1, 99999);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +46,7 @@ class _SortableTableState extends State<SortableTable> {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
 
-    if (widget.records.isEmpty) {
+    if (widget.rows.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Center(
@@ -49,8 +59,8 @@ class _SortableTableState extends State<SortableTable> {
     }
 
     final start = _page * _pageSize;
-    final end = (start + _pageSize).clamp(0, widget.records.length);
-    final slice = widget.records.sublist(start, end);
+    final end = (start + _pageSize).clamp(0, widget.rows.length);
+    final slice = widget.rows.sublist(start, end);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,10 +74,16 @@ class _SortableTableState extends State<SortableTable> {
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
-              _Header(theme: theme, tokens: tokens, l: l),
+              _Header(
+                theme: theme,
+                tokens: tokens,
+                l: l,
+                sort: widget.sort,
+                onTap: widget.onSortColumnTapped,
+              ),
               for (var i = 0; i < slice.length; i++)
                 _Row(
-                  record: slice[i],
+                  row: slice[i],
                   isStripe: i.isOdd,
                   theme: theme,
                   tokens: tokens,
@@ -87,10 +103,18 @@ class _SortableTableState extends State<SortableTable> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.theme, required this.tokens, required this.l});
+  const _Header({
+    required this.theme,
+    required this.tokens,
+    required this.l,
+    required this.sort,
+    required this.onTap,
+  });
   final ThemeData theme;
   final GachaTokens tokens;
   final AppLocalizations l;
+  final TableSort? sort;
+  final ValueChanged<SortColumn> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +130,65 @@ class _Header extends StatelessWidget {
         style: style ?? const TextStyle(),
         child: Row(
           children: [
-            Expanded(flex: 4, child: Text(l.tableTime)),
-            Expanded(flex: 5, child: Text(l.tableName)),
-            Expanded(flex: 2, child: Text(l.tableKind)),
-            Expanded(flex: 2, child: Text(l.tableRarity)),
+            // 與 _Row 內部最左側 stripe 對齊
+            const SizedBox(width: 2 + AppSpacing.s),
+            _HeaderCell(
+              flex: 4,
+              label: l.tableTime,
+              column: SortColumn.time,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+            ),
+            _HeaderCell(
+              flex: 5,
+              label: l.tableName,
+              column: SortColumn.name,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+            ),
+            _HeaderCell(
+              flex: 2,
+              label: l.tableKind,
+              column: SortColumn.kind,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+            ),
+            _HeaderCell(
+              flex: 2,
+              label: l.tableRarity,
+              column: SortColumn.rarity,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+            ),
+            _HeaderCell(
+              flex: 2,
+              label: l.tableTotalIndex,
+              column: SortColumn.totalIndex,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+              alignEnd: true,
+            ),
+            _HeaderCell(
+              flex: 2,
+              label: l.tableFiveStarPity,
+              tooltip: l.tableFiveStarPityTooltip,
+              column: SortColumn.fiveStarPity,
+              sort: sort,
+              tokens: tokens,
+              l: l,
+              onTap: onTap,
+              alignEnd: true,
+            ),
           ],
         ),
       ),
@@ -117,20 +196,93 @@ class _Header extends StatelessWidget {
   }
 }
 
+class _HeaderCell extends StatelessWidget {
+  const _HeaderCell({
+    required this.flex,
+    required this.label,
+    required this.column,
+    required this.sort,
+    required this.tokens,
+    required this.l,
+    required this.onTap,
+    this.tooltip,
+    this.alignEnd = false,
+  });
+  final int flex;
+  final String label;
+  final String? tooltip;
+  final SortColumn column;
+  final TableSort? sort;
+  final GachaTokens tokens;
+  final AppLocalizations l;
+  final ValueChanged<SortColumn> onTap;
+  final bool alignEnd;
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = sort?.column == column;
+    final IconData icon;
+    final Color iconColor;
+    final String tip;
+    if (!isActive || sort == null) {
+      icon = Icons.unfold_more;
+      iconColor = tokens.textMuted;
+      tip = l.sortDirectionNone;
+    } else if (sort!.direction == SortDirection.desc) {
+      icon = Icons.arrow_downward;
+      iconColor = tokens.textSecondary;
+      tip = l.sortDirectionDesc;
+    } else {
+      icon = Icons.arrow_upward;
+      iconColor = tokens.textSecondary;
+      tip = l.sortDirectionAsc;
+    }
+    final children = <Widget>[
+      Flexible(
+        child: Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      const SizedBox(width: 4),
+      Icon(icon, size: 14, color: iconColor),
+    ];
+    final cell = InkWell(
+      onTap: () => onTap(column),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment:
+              alignEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: children,
+        ),
+      ),
+    );
+    return Expanded(
+      flex: flex,
+      child: tooltip == null
+          ? Tooltip(message: tip, child: cell)
+          : Tooltip(message: '${tooltip!} · $tip', child: cell),
+    );
+  }
+}
+
 class _Row extends StatelessWidget {
   const _Row({
-    required this.record,
+    required this.row,
     required this.isStripe,
     required this.theme,
     required this.tokens,
   });
-  final WishRecord record;
+  final RecordRow row;
   final bool isStripe;
   final ThemeData theme;
   final GachaTokens tokens;
 
   @override
   Widget build(BuildContext context) {
+    final record = row.record;
     final accent = switch (record.rankType) {
       5 => tokens.fiveStar,
       4 => tokens.fourStar,
@@ -139,6 +291,10 @@ class _Row extends StatelessWidget {
     final highlight = accent == null
         ? null
         : TextStyle(color: accent, fontWeight: FontWeight.bold);
+    final mutedNum = TextStyle(
+      color: tokens.textMuted,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return Container(
       padding: const EdgeInsets.symmetric(
           vertical: AppSpacing.m, horizontal: AppSpacing.l),
@@ -158,6 +314,22 @@ class _Row extends StatelessWidget {
             child: accent != null
                 ? _Pill(rank: record.rankType, color: accent)
                 : Text('${record.rankType}★'),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${row.totalIndex}',
+              textAlign: TextAlign.end,
+              style: mutedNum,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${row.fiveStarPityIndex}',
+              textAlign: TextAlign.end,
+              style: mutedNum,
+            ),
           ),
         ],
       ),

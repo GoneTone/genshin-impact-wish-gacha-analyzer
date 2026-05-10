@@ -12,13 +12,11 @@ class SearchFilterBar extends StatefulWidget {
     super.key,
     required this.state,
     required this.onFilterChanged,
-    required this.onSortChanged,
     required this.onClear,
   });
 
   final RecordFilterState state;
   final ValueChanged<RecordFilter> onFilterChanged;
-  final ValueChanged<RecordSort> onSortChanged;
   final VoidCallback onClear;
 
   @override
@@ -84,14 +82,12 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           value: widget.state.filter.rarity,
           onChanged: (v) {
             if (v != null) {
-              widget.onFilterChanged(
-                  widget.state.filter.copyWith(rarity: v));
+              widget.onFilterChanged(widget.state.filter.copyWith(rarity: v));
             }
           },
           items: [
             DropdownMenuItem(
-                value: RarityFilter.all,
-                child: Text(l.filterRarityAll)),
+                value: RarityFilter.all, child: Text(l.filterRarityAll)),
             DropdownMenuItem(
                 value: RarityFilter.fiveStar,
                 child: Text(l.filterRarityFiveStar)),
@@ -104,8 +100,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           value: widget.state.filter.kind,
           onChanged: (v) {
             if (v != null) {
-              widget.onFilterChanged(
-                  widget.state.filter.copyWith(kind: v));
+              widget.onFilterChanged(widget.state.filter.copyWith(kind: v));
             }
           },
           items: [
@@ -115,30 +110,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                 value: KindFilter.character,
                 child: Text(l.filterKindCharacter)),
             DropdownMenuItem(
-                value: KindFilter.weapon,
-                child: Text(l.filterKindWeapon)),
-          ],
-        ),
-        DropdownButton<RecordSort>(
-          value: widget.state.sort,
-          onChanged: (v) {
-            if (v != null) widget.onSortChanged(v);
-          },
-          items: [
-            DropdownMenuItem(
-                value: RecordSort.timeDesc,
-                child: Text(l.sortByTimeDesc)),
-            DropdownMenuItem(
-                value: RecordSort.timeAsc,
-                child: Text(l.sortByTimeAsc)),
-            DropdownMenuItem(
-                value: RecordSort.rarityDesc,
-                child: Text(l.sortByRarityDesc)),
-            DropdownMenuItem(
-                value: RecordSort.rarityAsc,
-                child: Text(l.sortByRarityAsc)),
-            DropdownMenuItem(
-                value: RecordSort.name, child: Text(l.sortByName)),
+                value: KindFilter.weapon, child: Text(l.filterKindWeapon)),
           ],
         ),
         if (widget.state.filter.hasAny)

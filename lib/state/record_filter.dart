@@ -11,37 +11,39 @@ class RecordFilterState {
   });
 
   final RecordFilter filter;
-  final RecordSort sort;
+  final TableSort? sort;
 
-  RecordFilterState copyWith({RecordFilter? filter, RecordSort? sort}) =>
-      RecordFilterState(
-        filter: filter ?? this.filter,
-        sort: sort ?? this.sort,
-      );
+  RecordFilterState copyWith({RecordFilter? filter}) =>
+      RecordFilterState(filter: filter ?? this.filter, sort: sort);
 }
 
 class RecordFilterNotifier extends Notifier<RecordFilterState> {
   @override
   RecordFilterState build() {
-    return const RecordFilterState(
-      filter: RecordFilter(),
-      sort: RecordSort.timeDesc,
-    );
+    return const RecordFilterState(filter: RecordFilter(), sort: null);
   }
 
   void setFilter(RecordFilter filter) {
-    state = state.copyWith(filter: filter);
+    state = RecordFilterState(filter: filter, sort: state.sort);
   }
 
-  void setSort(RecordSort sort) {
-    state = state.copyWith(sort: sort);
+  /// 三態循環：null 或其他欄 → desc → asc → null。
+  void cycleSort(SortColumn column) {
+    final cur = state.sort;
+    final next = switch (cur) {
+      null => TableSort(column: column, direction: SortDirection.desc),
+      TableSort(column: final c, direction: SortDirection.desc)
+          when c == column =>
+        TableSort(column: column, direction: SortDirection.asc),
+      TableSort(column: final c, direction: SortDirection.asc) when c == column
+        => null,
+      _ => TableSort(column: column, direction: SortDirection.desc),
+    };
+    state = RecordFilterState(filter: state.filter, sort: next);
   }
 
   void clear() {
-    state = const RecordFilterState(
-      filter: RecordFilter(),
-      sort: RecordSort.timeDesc,
-    );
+    state = const RecordFilterState(filter: RecordFilter(), sort: null);
   }
 }
 
