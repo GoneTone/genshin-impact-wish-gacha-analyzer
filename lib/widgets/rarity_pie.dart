@@ -5,6 +5,33 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+
+List<DistributionEntry> rarityDistributionEntries(
+  WishStats stats,
+  GachaTokens tokens,
+) {
+  return [
+    DistributionEntry(
+      color: tokens.fiveStar,
+      name: '5★',
+      count: stats.fiveStarCount,
+      rate: stats.fiveStarRate,
+    ),
+    DistributionEntry(
+      color: tokens.fourStar,
+      name: '4★',
+      count: stats.fourStarCount,
+      rate: stats.fourStarRate,
+    ),
+    DistributionEntry(
+      color: tokens.threeStar,
+      name: '3★',
+      count: stats.threeStarOrBelowCount,
+      rate: stats.threeStarOrBelowRate,
+    ),
+  ];
+}
 
 class RarityPie extends StatelessWidget {
   const RarityPie({super.key, required this.stats});
@@ -22,10 +49,9 @@ class RarityPie extends StatelessWidget {
       );
     }
     final sections = <PieChartSectionData>[
-      _section('5★ ${stats.fiveStarCount}', stats.fiveStarCount, tokens.fiveStar),
-      _section('4★ ${stats.fourStarCount}', stats.fourStarCount, tokens.fourStar),
-      _section('3★ ${stats.threeStarOrBelowCount}',
-          stats.threeStarOrBelowCount, tokens.threeStar),
+      _section(stats.fiveStarCount, tokens.fiveStar),
+      _section(stats.fourStarCount, tokens.fourStar),
+      _section(stats.threeStarOrBelowCount, tokens.threeStar),
     ].where((s) => s.value > 0).toList(growable: false);
 
     return PieChart(
@@ -39,16 +65,11 @@ class RarityPie extends StatelessWidget {
     );
   }
 
-  PieChartSectionData _section(String title, int value, Color color) =>
+  PieChartSectionData _section(int value, Color color) =>
       PieChartSectionData(
-        title: title,
+        showTitle: false,
         value: value.toDouble(),
         color: color,
         radius: 60,
-        titleStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
       );
 }
