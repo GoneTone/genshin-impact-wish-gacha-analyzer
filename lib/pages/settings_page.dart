@@ -127,8 +127,19 @@ class _LocaleDropdown extends ConsumerWidget {
       data: (metadata) {
         final sorted = metadata.entries.toList()
           ..sort((a, b) => a.value.nativeName.compareTo(b.value.nativeName));
+        final selectableTags = metadata.keys.toSet();
+        // 防禦：使用者過去可能存了 supportedLocales 已不存在的代碼（例如
+        // 整併前的 "pt-BR"）。若 current 不在當前 dropdown 選項裡，顯示為
+        // SystemLanguage 避免 DropdownButtonFormField 因 value 找不到對應
+        // 項目而 assert failed。
+        final effectiveCurrent =
+            current is SystemLanguage ||
+                (current is LocaleLanguage &&
+                    selectableTags.contains((current as LocaleLanguage).code))
+            ? current
+            : const SystemLanguage();
         return DropdownButtonFormField<LanguagePreference>(
-          initialValue: current,
+          initialValue: effectiveCurrent,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

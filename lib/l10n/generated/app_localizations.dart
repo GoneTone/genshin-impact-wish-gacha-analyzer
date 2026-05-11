@@ -105,7 +105,6 @@ abstract class AppLocalizations {
     Locale('fr'),
     Locale('ja'),
     Locale('pt'),
-    Locale('pt', 'BR'),
     Locale('th'),
     Locale('vi'),
     Locale('zh'),
@@ -947,18 +946,6 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
             return AppLocalizationsZhHans();
           case 'Hant':
             return AppLocalizationsZhHant();
-        }
-        break;
-      }
-  }
-
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'pt':
-      {
-        switch (locale.countryCode) {
-          case 'BR':
-            return AppLocalizationsPtBr();
         }
         break;
       }

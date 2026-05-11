@@ -35,16 +35,16 @@ void main() {
       expect(ja.localeNativeName, '日本語');
     });
 
-    test('巴西葡萄牙文 localeNativeName 含 "Brasil" 或 "Portugu"', () async {
-      final pt = await AppLocalizations.delegate.load(const Locale('pt', 'BR'));
+    test('葡萄牙文 localeNativeName 含 "Portugu"', () async {
+      final pt = await AppLocalizations.delegate.load(const Locale('pt'));
       expect(
         pt.localeNativeName.toLowerCase(),
-        anyOf(contains('brasil'), contains('portugu')),
-        reason: 'pt-BR localeNativeName 看起來不像葡萄牙文',
+        contains('portugu'),
+        reason: 'pt localeNativeName 看起來不像葡萄牙文',
       );
     });
 
-    test('supportedLocales 包含 zh_Hant / zh_Hans / en / ja / pt_BR', () {
+    test('supportedLocales 包含 zh_Hant / zh_Hans / en / ja / pt', () {
       final tags = AppLocalizations.supportedLocales
           .map((l) => l.toLanguageTag())
           .toSet();
@@ -52,28 +52,30 @@ void main() {
       expect(tags, contains('zh-Hans'));
       expect(tags, contains('en'));
       expect(tags, contains('ja'));
-      expect(tags, contains('pt-BR'));
+      expect(tags, contains('pt'));
     });
   });
 
   group('localeMetadataProvider', () {
-    test('排除 bare zh / pt（已有 script/country 變體存在）', () async {
+    test('排除 bare zh（已有 zh-Hant / zh-Hans 變體存在）', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final metadata = await container.read(localeMetadataProvider.future);
       final tags = metadata.keys.toSet();
 
-      // bare base locale 應被過濾掉
+      // bare zh 應被過濾掉（有 script 變體存在）
       expect(
         tags,
         isNot(contains('zh')),
         reason: 'bare zh 跟 zh_Hant / zh_Hans 重複，應排除',
       );
-      expect(tags, isNot(contains('pt')), reason: 'bare pt 跟 pt_BR 重複，應排除');
 
-      // 具體變體仍在
-      expect(tags, containsAll(<String>['zh-Hant', 'zh-Hans', 'pt-BR']));
+      // 中文 script 變體保留
+      expect(tags, containsAll(<String>['zh-Hant', 'zh-Hans']));
+
+      // 葡萄牙文只有單一 ARB（已整併 pt_BR），bare pt 不被過濾
+      expect(tags, contains('pt'));
 
       // 沒有變體的單一語言（en/ja/...）保留
       expect(tags, containsAll(<String>['en', 'ja', 'es', 'fr', 'th', 'vi']));
@@ -95,15 +97,14 @@ void main() {
   });
 
   group('localeListResolution', () {
-    // 模擬一份代表性的 supportedLocales：含 bare zh、zh-Hant、zh-Hans、pt-BR、
-    // 以及若干其他 bare locale。
+    // 模擬一份代表性的 supportedLocales：含 bare zh、zh-Hant、zh-Hans、
+    // 單一 pt、以及若干其他 bare locale。
     const supported = <Locale>[
       Locale('en'),
       Locale('es'),
       Locale('fr'),
       Locale('ja'),
       Locale('pt'),
-      Locale('pt', 'BR'),
       Locale('th'),
       Locale('vi'),
       Locale('zh'),
