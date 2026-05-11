@@ -40,9 +40,10 @@ class TimelineHorizontal extends StatelessWidget {
       );
     }
 
-    // 軸線固定在 viewport(timeline 慣例:節點滑過軸線),scroll 由 Row 內容寬度驅動。
+    // 軸線固定在 viewport(timeline 慣例:節點滑過軸線)。
+    // 兩個 Positioned.fill 都拿到 tight constraints,確保 SingleChildScrollView
+    // 的 viewport 寬度 = Stack 寬度,Row 內容 (N × _colWidth) 一旦超過就 scroll。
     return Stack(
-      alignment: Alignment.center,
       children: [
         // 背景軸線:viewport 水平中央,跨整個可見寬度
         Positioned.fill(
@@ -57,17 +58,19 @@ class TimelineHorizontal extends StatelessWidget {
           ),
         ),
         // 內容層:橫向 scroll,Row 寬度 = N × _colWidth
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (nowPulls != null)
-                _NowColumn(nowPulls: nowPulls!, tokens: tokens),
-              for (final entry in entries)
-                _EntryColumn(entry: entry, colors: colors, tokens: tokens),
-            ],
+        Positioned.fill(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (nowPulls != null)
+                  _NowColumn(nowPulls: nowPulls!, tokens: tokens),
+                for (final entry in entries)
+                  _EntryColumn(entry: entry, colors: colors, tokens: tokens),
+              ],
+            ),
           ),
         ),
       ],

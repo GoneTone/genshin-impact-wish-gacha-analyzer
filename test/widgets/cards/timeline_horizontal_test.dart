@@ -118,4 +118,37 @@ void main() {
     final entryLeft = tester.getTopLeft(find.text('夜蘭')).dx;
     expect(nowLeft, lessThan(entryLeft));
   });
+
+  testWidgets('overflowing content is horizontally scrollable', (tester) async {
+    // 20 entries × 90px = 1800px content; viewport is 1000px → must overflow.
+    final entries = [
+      for (var i = 19; i >= 0; i--)
+        _e(
+          'E$i',
+          '301',
+          60 + (19 - i),
+          DateTime(2025, 1, 1).add(Duration(days: i)),
+        ),
+    ];
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+      ),
+    );
+    final scrollableState = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(scrollableState.position.axis, Axis.horizontal);
+    expect(
+      scrollableState.position.maxScrollExtent,
+      greaterThan(0),
+      reason:
+          '20 entries × 90px (1800px) must overflow the test viewport (800px) '
+          'so scroll is enabled. If this fails the timeline lost its '
+          'scrollability.',
+    );
+  });
 }
