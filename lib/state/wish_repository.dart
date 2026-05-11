@@ -391,7 +391,9 @@ class WishRepository extends Notifier<WishState> {
     RateLimitedException() => const UpdateErrorRateLimited(),
     ApiErrorException(:final message) => UpdateErrorServer(message),
     AuthExpiredException() => const UpdateErrorAuthExpired(),
-    http.ClientException(:final message) => UpdateErrorOther(message),
+    http.ClientException(:final message, :final uri) => UpdateErrorOther(
+      uri != null ? '$message ($uri)' : message,
+    ),
     _ => UpdateErrorOther(e.toString()),
   };
 
