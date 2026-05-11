@@ -103,7 +103,7 @@ class TimelineHorizontal extends StatelessWidget {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: MouseRegion(
-                cursor: SystemMouseCursors.move,
+                cursor: SystemMouseCursors.resizeLeftRight,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -175,7 +175,7 @@ class _RowState extends State<_Row> {
             child: Tooltip(
               message: l.accountDragHandleTooltip,
               child: MouseRegion(
-                cursor: SystemMouseCursors.move,
+                cursor: SystemMouseCursors.resizeUpDown,
                 child: Icon(
                   Icons.drag_handle,
                   color: tokens.textMuted,
