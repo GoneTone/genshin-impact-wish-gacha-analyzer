@@ -678,6 +678,165 @@ void main() {
     expect(reloaded.lastActiveUid, 'A');
   });
 
+  test('removeUid（非 active）→ 清 alias/order，lastActiveUid 不變', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.save(
+      BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 1, 1),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    SharedPreferences.setMockInitialValues({
+      'pref.lastActiveUid': 'A',
+      'pref.uidAliases': '{"A":"主","B":"小"}',
+      'pref.uidOrder': '["A","B"]',
+    });
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).removeUid('B');
+    expect(container.read(wishRepositoryProvider).activeUid, 'A');
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, 'A');
+    expect(s.uidAliases, {'A': '主'});
+    expect(s.uidOrder, ['A']);
+  });
+
+  test('removeUid（active）→ fallback 新 active 並寫回 lastActiveUid', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.save(
+      BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 1, 1),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).removeUid('A');
+    expect(container.read(wishRepositoryProvider).activeUid, 'B');
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, 'B');
+  });
+
+  test('removeUid（最後一個）→ activeUid = null 且 lastActiveUid = null', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).removeUid('A');
+    expect(container.read(wishRepositoryProvider).activeUid, isNull);
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, isNull);
+  });
+
+  test('clearActive 委派給 removeUid', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.save(
+      BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 1, 1),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).clearActive();
+    expect(container.read(wishRepositoryProvider).activeUid, 'B');
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, 'B');
+  });
+
   test('setActiveUid 不存在的 UID → 不變、不寫 settings', () async {
     final storage = WishStorage(tempDir);
     await storage.save(

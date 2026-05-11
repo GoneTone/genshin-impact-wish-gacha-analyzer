@@ -360,18 +360,7 @@ class WishRepository extends Notifier<WishState> {
   Future<void> clearActive() async {
     final uid = state.activeUid;
     if (uid == null) return;
-    final storage = ref.read(wishStorageProvider);
-    await storage.delete(uid);
-    if (!ref.mounted) return;
-    final newByUid = Map<String, BannerStorage>.from(state.byUid)..remove(uid);
-    if (newByUid.isEmpty) {
-      state = state.copyWith(byUid: newByUid, clearActiveUid: true);
-    } else {
-      final newest = newByUid.values.reduce(
-        (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
-      );
-      state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
-    }
+    await removeUid(uid);
   }
 
   Future<void> clearAll() async {
@@ -390,20 +379,32 @@ class WishRepository extends Notifier<WishState> {
     state = state.copyWith(byUid: newByUid, activeUid: data.uid);
   }
 
+  String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
+    if (byUid.isEmpty) return null;
+    final order = ref.read(settingsProvider).uidOrder;
+    return mergeUidOrder(
+      knownUids: byUid.keys,
+      customOrder: order,
+      lastUpdatedOf: (u) => byUid[u]!.lastUpdated,
+    ).first;
+  }
+
   Future<void> removeUid(String uid) async {
     final storage = ref.read(wishStorageProvider);
+    final settingsNotifier = ref.read(settingsProvider.notifier);
+
     await storage.delete(uid);
     if (!ref.mounted) return;
+    await settingsNotifier.removeUidFromSettings(uid);
+    if (!ref.mounted) return;
+
     final newByUid = Map<String, BannerStorage>.from(state.byUid)..remove(uid);
     if (state.activeUid == uid) {
-      if (newByUid.isEmpty) {
-        state = state.copyWith(byUid: newByUid, clearActiveUid: true);
-      } else {
-        final newest = newByUid.values.reduce(
-          (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
-        );
-        state = state.copyWith(byUid: newByUid, activeUid: newest.uid);
-      }
+      final next = _pickFallbackActive(newByUid);
+      state = next == null
+          ? state.copyWith(byUid: newByUid, clearActiveUid: true)
+          : state.copyWith(byUid: newByUid, activeUid: next);
+      await settingsNotifier.setLastActiveUid(next);
     } else {
       state = state.copyWith(byUid: newByUid);
     }
