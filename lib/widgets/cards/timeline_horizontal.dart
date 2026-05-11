@@ -40,50 +40,37 @@ class TimelineHorizontal extends StatelessWidget {
       );
     }
 
-    // LayoutBuilder 取得父層高度,確保 Stack 有明確高度可以讓背景軸線 Positioned.fill 正確繪製
-    return LayoutBuilder(
-      builder: (ctx, constraints) {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            height: constraints.maxHeight,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // 背景軸線:水平中央一條 2px 線,左右留 AppSpacing.s 內距
-                Positioned.fill(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.s,
-                    ),
-                    child: Center(
-                      child: Container(
-                        height: 2,
-                        color: tokens.textMuted.withValues(alpha: 0.3),
-                      ),
-                    ),
-                  ),
-                ),
-                // 節點欄:橫向 Row,垂直置中於 Stack
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (nowPulls != null)
-                      _NowColumn(nowPulls: nowPulls!, tokens: tokens),
-                    for (final entry in entries)
-                      _EntryColumn(
-                        entry: entry,
-                        colors: colors,
-                        tokens: tokens,
-                      ),
-                  ],
-                ),
-              ],
+    // 軸線固定在 viewport(timeline 慣例:節點滑過軸線),scroll 由 Row 內容寬度驅動。
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // 背景軸線:viewport 水平中央,跨整個可見寬度
+        Positioned.fill(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+            child: Center(
+              child: Container(
+                height: 2,
+                color: tokens.textMuted.withValues(alpha: 0.3),
+              ),
             ),
           ),
-        );
-      },
+        ),
+        // 內容層:橫向 scroll,Row 寬度 = N × _colWidth
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (nowPulls != null)
+                _NowColumn(nowPulls: nowPulls!, tokens: tokens),
+              for (final entry in entries)
+                _EntryColumn(entry: entry, colors: colors, tokens: tokens),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
