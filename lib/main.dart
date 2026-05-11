@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
@@ -20,6 +22,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
+
+  if (Platform.isWindows) {
+    await windowManager.ensureInitialized();
+    await WindowStateKeeper.bootstrap();
+  }
 
   try {
     final cleaned = await rust_capture.cleanupStaleProxy();
