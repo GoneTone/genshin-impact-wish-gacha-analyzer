@@ -123,6 +123,7 @@ class WishRepository extends Notifier<WishState> {
 
     if (saved != activeUid) {
       await settingsNotifier.setLastActiveUid(activeUid);
+      if (!ref.mounted) return;
     }
   }
 
