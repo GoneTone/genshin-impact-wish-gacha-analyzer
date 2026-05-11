@@ -63,8 +63,11 @@ class AccountManagement extends ConsumerWidget {
                 index: index,
                 lastUpdated: state.byUid[uid]!.lastUpdated,
                 isActive: uid == state.activeUid,
+                alias: settings.uidAliases[uid] ?? '',
                 onSetActive: () => notifier.setActiveUid(uid),
                 onRemove: () => _remove(context, ref, uid),
+                onAliasSubmit: (value) =>
+                    settingsNotifier.setUidAlias(uid, value),
               );
             },
           ),
@@ -97,23 +100,66 @@ class AccountManagement extends ConsumerWidget {
   }
 }
 
-class _Row extends StatelessWidget {
+class _Row extends StatefulWidget {
   const _Row({
     super.key,
     required this.uid,
     required this.index,
     required this.lastUpdated,
     required this.isActive,
+    required this.alias,
     required this.onSetActive,
     required this.onRemove,
+    required this.onAliasSubmit,
   });
 
   final String uid;
   final int index;
   final DateTime lastUpdated;
   final bool isActive;
+  final String alias;
   final VoidCallback onSetActive;
   final VoidCallback onRemove;
+  final ValueChanged<String> onAliasSubmit;
+
+  @override
+  State<_Row> createState() => _RowState();
+}
+
+class _RowState extends State<_Row> {
+  late final TextEditingController _ctrl;
+  late final FocusNode _focus;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = TextEditingController(text: widget.alias);
+    _focus = FocusNode();
+    _focus.addListener(_onFocusChange);
+  }
+
+  @override
+  void didUpdateWidget(covariant _Row oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 外部 alias 變了（例如其他 row 觸發 rebuild）才 sync
+    if (widget.alias != oldWidget.alias && _ctrl.text != widget.alias) {
+      _ctrl.text = widget.alias;
+    }
+  }
+
+  void _onFocusChange() {
+    if (!_focus.hasFocus) {
+      widget.onAliasSubmit(_ctrl.text);
+    }
+  }
+
+  @override
+  void dispose() {
+    _focus.removeListener(_onFocusChange);
+    _focus.dispose();
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,9 +168,10 @@ class _Row extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ReorderableDragStartListener(
-            index: index,
+            index: widget.index,
             child: Tooltip(
               message: l.accountDragHandleTooltip,
               child: Icon(Icons.drag_handle, color: tokens.textMuted, size: 20),
@@ -138,14 +185,14 @@ class _Row extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      uid,
+                      widget.uid,
                       style: TextStyle(
                         color: tokens.textPrimary,
                         fontWeight: FontWeight.w600,
                         fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
-                    if (isActive) ...[
+                    if (widget.isActive) ...[
                       const SizedBox(width: AppSpacing.s),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -173,17 +220,36 @@ class _Row extends StatelessWidget {
                   l.accountLastUpdated(
                     DateFormat(
                       'yyyy-MM-dd HH:mm',
-                    ).format(lastUpdated.toLocal()),
+                    ).format(widget.lastUpdated.toLocal()),
                   ),
                   style: TextStyle(color: tokens.textMuted, fontSize: 12),
+                ),
+                const SizedBox(height: AppSpacing.s),
+                SizedBox(
+                  width: 240,
+                  child: TextField(
+                    controller: _ctrl,
+                    focusNode: _focus,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: widget.onAliasSubmit,
+                    decoration: InputDecoration(
+                      labelText: l.accountAliasLabel,
+                      hintText: l.accountAliasHint,
+                      isDense: true,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          if (!isActive)
-            TextButton(onPressed: onSetActive, child: Text(l.accountSetActive)),
+          if (!widget.isActive)
+            TextButton(
+              onPressed: widget.onSetActive,
+              child: Text(l.accountSetActive),
+            ),
           TextButton(
-            onPressed: onRemove,
+            onPressed: widget.onRemove,
             child: Text(
               l.accountRemove,
               style: TextStyle(color: tokens.stateDanger),

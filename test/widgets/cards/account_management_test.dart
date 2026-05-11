@@ -173,4 +173,83 @@ void main() {
     final reloaded = await tester.runAsync(() => SettingsStorage.load());
     expect(reloaded!.uidOrder, ['B', 'A']);
   });
+
+  testWidgets('編輯別名 onSubmitted → 寫入 setUidAlias', (tester) async {
+    final storage = WishStorage(tempDir);
+    await tester.runAsync(() async {
+      await storage.save(
+        BannerStorage(
+          uid: 'A',
+          lastUpdated: DateTime.utc(2026, 5, 9),
+          banners: const {
+            '301': [],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+          },
+        ),
+      );
+    });
+
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(storage: storage);
+    });
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final field = find.byType(TextField).first;
+    await tester.enterText(field, '主帳號');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final reloaded = await tester.runAsync(() => SettingsStorage.load());
+    expect(reloaded!.uidAliases, {'A': '主帳號'});
+  });
+
+  testWidgets('別名空字串 → 移除', (tester) async {
+    final storage = WishStorage(tempDir);
+    await tester.runAsync(() async {
+      await storage.save(
+        BannerStorage(
+          uid: 'A',
+          lastUpdated: DateTime.utc(2026, 5, 9),
+          banners: const {
+            '301': [],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+          },
+        ),
+      );
+    });
+
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(
+        storage: storage,
+        prefs: {'pref.uidAliases': '{"A":"舊名"}'},
+      );
+    });
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final field = find.byType(TextField).first;
+    await tester.enterText(field, '   ');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final reloaded = await tester.runAsync(() => SettingsStorage.load());
+    expect(reloaded!.uidAliases, isEmpty);
+  });
 }
