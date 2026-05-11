@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
@@ -11,10 +12,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
@@ -197,7 +199,11 @@ class BannerPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.timelineCountFiveStar(stats.fiveStarCount),
-                      chart: TimelineCard(records: records),
+                      chart: TimelineHorizontal(
+                        entries: buildTimelineEntries(records),
+                        colors: BannerColors.fromTokens(tokens),
+                        nowPulls: pullsSinceLastFiveStar(records),
+                      ),
                     ),
                   ),
                 ],
