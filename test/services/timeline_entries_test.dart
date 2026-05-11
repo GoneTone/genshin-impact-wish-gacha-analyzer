@@ -165,5 +165,36 @@ void main() {
     test('empty banners → 0', () {
       expect(pullsSinceLastFiveStarAcrossBanners(const {}), 0);
     });
+
+    test(
+      'same-pool same-second: counts records pulled after the 5★ within the same 10-pull',
+      () {
+        // 10-pull at 2025-04-19 14:32:00, 5★ is record #5 of the 10.
+        // In desc-by-time + id-desc order, the array is: r10, r9, r8, r7, r6, 5★, r4, r3, r2, r1
+        // Records pulled AFTER the 5★: r6, r7, r8, r9, r10 → count == 5
+        final sameSec = DateTime(2025, 4, 19, 14, 32, 0);
+        final banners = {
+          '301': [
+            _r(id: '10', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '9', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '8', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '7', gachaType: '301', rank: 4, time: sameSec),
+            _r(id: '6', gachaType: '301', rank: 3, time: sameSec),
+            _r(
+              id: '5',
+              gachaType: '301',
+              rank: 5,
+              name: 'FiveStar',
+              time: sameSec,
+            ),
+            _r(id: '4', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '3', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '2', gachaType: '301', rank: 3, time: sameSec),
+            _r(id: '1', gachaType: '301', rank: 3, time: sameSec),
+          ],
+        };
+        expect(pullsSinceLastFiveStarAcrossBanners(banners), 5);
+      },
+    );
   });
 }
