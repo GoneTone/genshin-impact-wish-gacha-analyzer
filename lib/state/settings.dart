@@ -98,7 +98,18 @@ final localeProvider = Provider<Locale?>((ref) {
 });
 
 /// 把 BCP-47 dash-form (e.g. "zh-Hant", "pt-BR", "ja") 轉成 Flutter [Locale]。
+///
+/// 第二段若是 4 字元（BCP-47 script code 慣例，如 `Hant` / `Hans` / `Latn`）
+/// 走 [Locale.fromSubtags] 設 `scriptCode`；否則當 region code 用一般建構式。
+/// 這對應 Flutter `gen_l10n` 對 `app_zh_Hant.arb` / `app_zh_Hans.arb` 等
+/// 檔名解析的方式——用 `Locale('zh', 'Hant')` 會把 `Hant` 放進 `countryCode`，
+/// 跟 supportedLocales 內以 `scriptCode='Hant'` 註冊的 entry 不相等，導致
+/// Flutter resolver fallback 到 template 並顯示錯誤語言。
 Locale _localeFromCode(String code) {
   final parts = code.split('-');
-  return parts.length == 1 ? Locale(parts[0]) : Locale(parts[0], parts[1]);
+  if (parts.length == 1) return Locale(parts[0]);
+  if (parts[1].length == 4) {
+    return Locale.fromSubtags(languageCode: parts[0], scriptCode: parts[1]);
+  }
+  return Locale(parts[0], parts[1]);
 }

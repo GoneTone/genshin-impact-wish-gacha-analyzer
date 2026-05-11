@@ -24,15 +24,27 @@ void main() {
     expect(c.read(localeProvider), isNull);
   });
 
-  test('LocaleLanguage("zh-Hant") → Locale("zh", "Hant")', () async {
-    final c = await makeContainer(const LocaleLanguage('zh-Hant'));
-    expect(c.read(localeProvider), const Locale('zh', 'Hant'));
-  });
+  test(
+    'LocaleLanguage("zh-Hant") → Locale.fromSubtags(scriptCode: "Hant")',
+    () async {
+      final c = await makeContainer(const LocaleLanguage('zh-Hant'));
+      expect(
+        c.read(localeProvider),
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+      );
+    },
+  );
 
-  test('LocaleLanguage("zh-Hans") → Locale("zh", "Hans")', () async {
-    final c = await makeContainer(const LocaleLanguage('zh-Hans'));
-    expect(c.read(localeProvider), const Locale('zh', 'Hans'));
-  });
+  test(
+    'LocaleLanguage("zh-Hans") → Locale.fromSubtags(scriptCode: "Hans")',
+    () async {
+      final c = await makeContainer(const LocaleLanguage('zh-Hans'));
+      expect(
+        c.read(localeProvider),
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+    },
+  );
 
   test('LocaleLanguage("pt-BR") → Locale("pt", "BR")', () async {
     final c = await makeContainer(const LocaleLanguage('pt-BR'));
