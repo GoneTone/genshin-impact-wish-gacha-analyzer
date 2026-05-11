@@ -1,8 +1,10 @@
 // lib/widgets/uid_indicator.dart
 import 'package:flutter/material.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
@@ -12,11 +14,24 @@ class UidIndicator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(wishRepositoryProvider);
+    final settings = ref.watch(settingsProvider);
     final notifier = ref.read(wishRepositoryProvider.notifier);
     final activeUid = state.activeUid;
-    final knownUids = state.knownUids.toList(growable: false);
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
+
+    final orderedUids = state.byUid.isEmpty
+        ? const <String>[]
+        : mergeUidOrder(
+            knownUids: state.byUid.keys,
+            customOrder: settings.uidOrder,
+            lastUpdatedOf: (u) => state.byUid[u]!.lastUpdated,
+          );
+
+    String displayName(String uid) {
+      final alias = settings.uidAliases[uid];
+      return alias == null ? uid : '$alias ($uid)';
+    }
 
     return PopupMenuButton<String>(
       tooltip: l.uidSwitchTooltip,
@@ -28,7 +43,7 @@ class UidIndicator extends ConsumerWidget {
         }
       },
       itemBuilder: (context) => [
-        for (final uid in knownUids)
+        for (final uid in orderedUids)
           PopupMenuItem<String>(
             value: uid,
             child: Row(
@@ -41,7 +56,7 @@ class UidIndicator extends ConsumerWidget {
                       : Colors.transparent,
                 ),
                 const SizedBox(width: AppSpacing.s),
-                Text(uid),
+                Text(displayName(uid)),
                 if (uid == activeUid) ...[
                   const SizedBox(width: AppSpacing.xs),
                   Text(
@@ -52,7 +67,7 @@ class UidIndicator extends ConsumerWidget {
               ],
             ),
           ),
-        if (knownUids.isNotEmpty) const PopupMenuDivider(),
+        if (orderedUids.isNotEmpty) const PopupMenuDivider(),
         PopupMenuItem<String>(
           value: '__recapture__',
           child: Row(
@@ -71,7 +86,7 @@ class UidIndicator extends ConsumerWidget {
           children: [
             const Icon(Icons.person_outline, size: 18),
             const SizedBox(width: AppSpacing.xs),
-            Text(activeUid ?? l.uidNotSynced),
+            Text(activeUid == null ? l.uidNotSynced : displayName(activeUid)),
             const Icon(Icons.arrow_drop_down, size: 18),
           ],
         ),
