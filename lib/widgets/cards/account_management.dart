@@ -170,10 +170,10 @@ class _RowState extends State<_Row> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ReorderableDragStartListener(
-            index: widget.index,
-            child: MouseRegion(
-              cursor: SystemMouseCursors.grab,
+          MouseRegion(
+            cursor: SystemMouseCursors.grab,
+            child: ReorderableDragStartListener(
+              index: widget.index,
               child: Tooltip(
                 message: l.accountDragHandleTooltip,
                 child: Icon(

@@ -91,17 +91,17 @@ class TimelineHorizontal extends StatelessWidget {
         // ScrollConfiguration 加入 mouse / trackpad 為 drag devices — 桌面端
         // 預設只接受 touch,沒有這層使用者用滑鼠拖不動 scroll view。
         Positioned.fill(
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: const {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.trackpad,
-                PointerDeviceKind.stylus,
-              },
-            ),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.grab,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.grab,
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                dragDevices: const {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                  PointerDeviceKind.stylus,
+                },
+              ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
