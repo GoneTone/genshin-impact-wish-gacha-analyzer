@@ -282,6 +282,8 @@ class WishRepository extends Notifier<WishState> {
         mergedBanners[t.gachaType] = merged;
       } on AuthExpiredException {
         rethrow;
+      } on http.ClientException {
+        rethrow;
       } catch (e) {
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);

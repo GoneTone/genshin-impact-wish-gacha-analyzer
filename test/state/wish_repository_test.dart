@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
@@ -337,6 +339,9 @@ void main() {
     addTearDown(container.dispose);
 
     final notifier = container.read(wishRepositoryProvider.notifier);
+    // 等 bootstrap 完成，避免 async 工作洩漏到測試邊界後
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
     notifier.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
     expect(
       container.read(wishRepositoryProvider).progress,
@@ -346,4 +351,125 @@ void main() {
     notifier.clearProgress();
     expect(container.read(wishRepositoryProvider).progress, isNull);
   });
+
+  test(
+    'cancelPreparing 在 FetchingBanner 階段也應 clearProgress (非 UpdateCompleted)',
+    () async {
+      final storage = WishStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: 'A',
+          lastUpdated: DateTime.utc(2026),
+          banners: const {
+            '301': [],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+          },
+        ),
+      );
+      await storage.saveCapturedUrl(
+        'A',
+        'https://example.com/getGachaLog?authkey=x',
+      );
+
+      // 第一次 request（probe 第一個 banner，命中 → primer，state 還在 Preparing）
+      // 第二次 request 起會卡住（fetchBannerWithMerge 第二頁的 HTTP），這時 state
+      // 已經被 onProgress 推進到 FetchingBanner。
+      var hits = 0;
+      final block = Completer<http.Response>();
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((req) {
+                hits++;
+                if (hits == 1) {
+                  // primer：20 筆紀錄迫使 fetchBannerWithMerge 進入第二頁
+                  return Future.value(
+                    http.Response(
+                      jsonEncode({
+                        'retcode': 0,
+                        'message': 'OK',
+                        'data': {
+                          'list': List.generate(
+                            20,
+                            (i) => {
+                              'uid': 'A',
+                              'gacha_type': '301',
+                              'item_id': '',
+                              'count': '1',
+                              'time': '2025-09-23 21:27:37',
+                              'name': 'x',
+                              'lang': 'zh-tw',
+                              'item_type': '武器',
+                              'rank_type': '3',
+                              // 19 字元 id，遞減確保 desc 順序
+                              'id': '17${(99 - i).toString().padLeft(17, '0')}',
+                            },
+                          ),
+                          'page': '1',
+                          'size': '20',
+                          'total': '0',
+                        },
+                      }),
+                      200,
+                      headers: {'content-type': 'application/json'},
+                    ),
+                  );
+                }
+                // 後續 request 永遠不 complete
+                return block.future;
+              }),
+              cancel: () {
+                if (!block.isCompleted) {
+                  block.completeError(
+                    http.ClientException('cancelled by test'),
+                  );
+                }
+              },
+            ),
+          ),
+          // 加快 rate limit，免得測試太慢
+          wishFetcherProvider.overrideWithValue(
+            WishFetcher(rateLimit: Duration.zero, retryBackoff: Duration.zero),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final notifier = container.read(wishRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+
+      // 等更長一點，讓 probe 完成（命中第一個 banner）、進入 fetchBannerWithMerge、
+      // 處理 primer（onProgress → state=FetchingBanner）、再 await 第二頁 HTTP（block.future）
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      // 確認此刻已經是 FetchingBanner
+      expect(
+        container.read(wishRepositoryProvider).progress,
+        isA<FetchingBanner>(),
+        reason: '應該已進入 banner fetch 階段',
+      );
+
+      // act：取消
+      notifier.cancelPreparing();
+      await updateFut;
+
+      // assert：progress 應為 null（clean cancel），不是 UpdateCompleted with failedBanners
+      final finalProgress = container.read(wishRepositoryProvider).progress;
+      expect(
+        finalProgress,
+        isNull,
+        reason:
+            'cancel during FetchingBanner 應 clearProgress，不應產生 UpdateCompleted',
+      );
+    },
+  );
 }
