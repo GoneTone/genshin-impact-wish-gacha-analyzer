@@ -150,23 +150,27 @@ class OverviewPage extends ConsumerWidget {
                 // 對齊 Row 1（flex 6/3/3 + 兩個 m gap）：
                 // 第 1 卡寬 = (maxWidth - 24) / 2 = Row 1「總抽數」寬度。
                 final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(width: card1Width, child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(width: card1Width, child: rarityCard),
+                      const SizedBox(width: AppSpacing.m),
+                      Expanded(child: itemTypeCard),
+                    ],
+                  ),
                 );
               }
               if (mid) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: rarityCard),
+                      const SizedBox(width: AppSpacing.m),
+                      Expanded(child: itemTypeCard),
+                    ],
+                  ),
                 );
               }
               return Column(
