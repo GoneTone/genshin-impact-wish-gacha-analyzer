@@ -15,7 +15,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get localeTranslator => 'Mirusausiliq & Boemio';
 
   @override
-  String get appName => 'O analisador de gacha de Genshin Impact\n';
+  String get appName => 'O analisador de gacha de Genshin Impact';
 
   @override
   String get actionUpdate => '更新資料';
@@ -474,7 +474,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get localeTranslator => 'Mirusausiliq & Boemio';
 
   @override
-  String get appName => 'O analisador de gacha de Genshin Impact\n';
+  String get appName => 'O analisador de gacha de Genshin Impact';
 
   @override
   String get actionPrevPage => 'A página anterior';
