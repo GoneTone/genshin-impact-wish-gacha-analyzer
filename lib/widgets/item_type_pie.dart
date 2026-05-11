@@ -66,6 +66,7 @@ class ItemTypePie extends StatelessWidget {
         sections: sections,
         sectionsSpace: 2,
         centerSpaceRadius: _kCenterRadius,
+        pieTouchData: PieTouchData(enabled: false),
       ),
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOut,
