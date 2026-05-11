@@ -638,4 +638,76 @@ void main() {
       );
     },
   );
+
+  test('setActiveUid 寫入 settings.lastActiveUid', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 1, 1),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.save(
+      BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).setActiveUid('A');
+    expect(container.read(wishRepositoryProvider).activeUid, 'A');
+    final reloaded = await SettingsStorage.load();
+    expect(reloaded.lastActiveUid, 'A');
+  });
+
+  test('setActiveUid 不存在的 UID → 不變、不寫 settings', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    final beforeReload = await SettingsStorage.load();
+    await container.read(wishRepositoryProvider.notifier).setActiveUid('GHOST');
+    expect(container.read(wishRepositoryProvider).activeUid, 'A'); // 不變
+    final afterReload = await SettingsStorage.load();
+    expect(afterReload.lastActiveUid, beforeReload.lastActiveUid);
+  });
 }

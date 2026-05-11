@@ -130,6 +130,7 @@ class WishRepository extends Notifier<WishState> {
   Future<void> setActiveUid(String uid) async {
     if (!state.byUid.containsKey(uid)) return;
     state = state.copyWith(activeUid: uid);
+    await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
   }
 
   void clearProgress() {
