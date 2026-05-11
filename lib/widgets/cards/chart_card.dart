@@ -9,7 +9,7 @@ class ChartCard extends StatelessWidget {
     required this.title,
     required this.chart,
     this.legend,
-    this.height = 290,
+    this.height = 380,
   });
 
   final String title;
