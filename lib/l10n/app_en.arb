@@ -223,6 +223,9 @@
   "accountSetActive": "Set active",
   "accountRemove": "Remove",
   "accountRecapture": "Re-capture / add account",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "A friendly name for this account",
+  "accountDragHandleTooltip": "Drag to reorder",
 
   "loadingBootstrap": "Loading…",
 

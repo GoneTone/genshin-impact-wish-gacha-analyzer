@@ -435,6 +435,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountRecapture => 'Re-capture / add account';
 
   @override
+  String get accountAliasLabel => 'Alias';
+
+  @override
+  String get accountAliasHint => 'A friendly name for this account';
+
+  @override
+  String get accountDragHandleTooltip => 'Drag to reorder';
+
+  @override
   String get loadingBootstrap => 'Loading…';
 
   @override

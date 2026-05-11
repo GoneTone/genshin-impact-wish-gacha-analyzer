@@ -862,6 +862,24 @@ abstract class AppLocalizations {
   /// **'重新攔截 / 新增帳號'**
   String get accountRecapture;
 
+  /// No description provided for @accountAliasLabel.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'別名'**
+  String get accountAliasLabel;
+
+  /// No description provided for @accountAliasHint.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'為此帳號取一個好記的名稱'**
+  String get accountAliasHint;
+
+  /// No description provided for @accountDragHandleTooltip.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'拖曳排序'**
+  String get accountDragHandleTooltip;
+
   /// No description provided for @loadingBootstrap.
   ///
   /// In zh_Hant, this message translates to:

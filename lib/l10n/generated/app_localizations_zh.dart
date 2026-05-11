@@ -432,6 +432,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accountRecapture => '重新攔截 / 新增帳號';
 
   @override
+  String get accountAliasLabel => '别名';
+
+  @override
+  String get accountAliasHint => '为此账号取一个好记的名字';
+
+  @override
+  String get accountDragHandleTooltip => '拖动排序';
+
+  @override
   String get loadingBootstrap => '載入中…';
 
   @override
@@ -599,6 +608,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get sortDirectionNone => '点击排序';
+
+  @override
+  String get progressPreparing => '准备中…';
+
+  @override
+  String get progressPreparingHint => '正在准备数据源…';
 
   @override
   String get progressWaiting => '等待拦截…';
@@ -868,6 +883,15 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get accountRecapture => '重新拦截 / 新增账号';
+
+  @override
+  String get accountAliasLabel => '别名';
+
+  @override
+  String get accountAliasHint => '为此账号取一个好记的名字';
+
+  @override
+  String get accountDragHandleTooltip => '拖动排序';
 
   @override
   String get loadingBootstrap => '加载中…';
@@ -1312,6 +1336,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get accountRecapture => '重新攔截 / 新增帳號';
+
+  @override
+  String get accountAliasLabel => '別名';
+
+  @override
+  String get accountAliasHint => '為此帳號取一個好記的名稱';
+
+  @override
+  String get accountDragHandleTooltip => '拖曳排序';
 
   @override
   String get loadingBootstrap => '載入中…';

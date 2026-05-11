@@ -65,6 +65,8 @@
   "sortDirectionAsc": "升序",
   "sortDirectionNone": "点击排序",
 
+  "progressPreparing": "准备中…",
+  "progressPreparingHint": "正在准备数据源…",
   "progressWaiting": "等待拦截…",
   "progressFetching": "抓取中…",
   "progressDone": "更新完成",
@@ -221,6 +223,9 @@
   "accountSetActive": "设为活跃",
   "accountRemove": "移除",
   "accountRecapture": "重新拦截 / 新增账号",
+  "accountAliasLabel": "别名",
+  "accountAliasHint": "为此账号取一个好记的名字",
+  "accountDragHandleTooltip": "拖动排序",
 
   "loadingBootstrap": "加载中…",
 
