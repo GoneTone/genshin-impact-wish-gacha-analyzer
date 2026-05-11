@@ -6,7 +6,53 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppThemeMode { system, dark, light }
 
-enum AppLocale { system, zhHant, zhHans, en }
+/// 使用者偏好的語言：跟隨系統（[SystemLanguage]）或指定 BCP-47 locale
+/// （[LocaleLanguage]，例如 "zh-Hant"、"pt-BR"、"ja"）。
+sealed class LanguagePreference {
+  const LanguagePreference();
+
+  factory LanguagePreference.fromCode(String code) =>
+      code == 'system' ? const SystemLanguage() : LocaleLanguage(code);
+
+  /// 序列化字串（給 SharedPreferences 用），可被 [fromCode] 還原。
+  String toCode();
+}
+
+class SystemLanguage extends LanguagePreference {
+  const SystemLanguage();
+
+  @override
+  String toCode() => 'system';
+
+  @override
+  bool operator ==(Object other) => other is SystemLanguage;
+
+  @override
+  int get hashCode => 0;
+
+  @override
+  String toString() => 'SystemLanguage';
+}
+
+class LocaleLanguage extends LanguagePreference {
+  const LocaleLanguage(this.code);
+
+  /// BCP-47 code，例如 "zh-Hant"、"pt-BR"、"ja"。
+  final String code;
+
+  @override
+  String toCode() => code;
+
+  @override
+  bool operator ==(Object other) =>
+      other is LocaleLanguage && other.code == code;
+
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  String toString() => 'LocaleLanguage($code)';
+}
 
 @immutable
 class AppSettings {
@@ -19,19 +65,19 @@ class AppSettings {
   });
 
   final AppThemeMode themeMode;
-  final AppLocale locale;
+  final LanguagePreference locale;
   final String? lastActiveUid;
   final Map<String, String> uidAliases;
   final List<String> uidOrder;
 
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
-    locale: AppLocale.system,
+    locale: SystemLanguage(),
   );
 
   AppSettings copyWith({
     AppThemeMode? themeMode,
-    AppLocale? locale,
+    LanguagePreference? locale,
     String? lastActiveUid,
     bool clearLastActiveUid = false,
     Map<String, String>? uidAliases,
@@ -68,7 +114,7 @@ abstract final class SettingsStorage {
   static Future<void> save(AppSettings s) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_kThemeMode, _themeModeToString(s.themeMode));
-    await prefs.setString(_kLocale, _localeToString(s.locale));
+    await prefs.setString(_kLocale, s.locale.toCode());
     if (s.lastActiveUid == null) {
       await prefs.remove(_kLastActiveUid);
     } else {
@@ -90,19 +136,10 @@ abstract final class SettingsStorage {
     AppThemeMode.system => 'system',
   };
 
-  static AppLocale _parseLocale(String? raw) => switch (raw) {
-    'zh-Hant' => AppLocale.zhHant,
-    'zh-Hans' => AppLocale.zhHans,
-    'en' => AppLocale.en,
-    _ => AppLocale.system,
-  };
-
-  static String _localeToString(AppLocale l) => switch (l) {
-    AppLocale.zhHant => 'zh-Hant',
-    AppLocale.zhHans => 'zh-Hans',
-    AppLocale.en => 'en',
-    AppLocale.system => 'system',
-  };
+  static LanguagePreference _parseLocale(String? raw) =>
+      (raw == null || raw.isEmpty)
+      ? const SystemLanguage()
+      : LanguagePreference.fromCode(raw);
 
   static Map<String, String> _parseAliases(String? raw) {
     if (raw == null || raw.isEmpty) return const {};

@@ -30,7 +30,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await SettingsStorage.save(state);
   }
 
-  Future<void> setLocale(AppLocale locale) async {
+  Future<void> setLocale(LanguagePreference locale) async {
     state = state.copyWith(locale: locale);
     await SettingsStorage.save(state);
   }
@@ -88,13 +88,17 @@ final themeModeProvider = Provider<ThemeMode>((ref) {
   };
 });
 
-/// 給 MaterialApp 直接吃的 Locale?（system → null）
+/// 給 MaterialApp 直接吃的 Locale?（system → null；其他 BCP-47 code 解析為 Locale）
 final localeProvider = Provider<Locale?>((ref) {
-  final locale = ref.watch(settingsProvider).locale;
-  return switch (locale) {
-    AppLocale.zhHant => const Locale('zh', 'Hant'),
-    AppLocale.zhHans => const Locale('zh', 'Hans'),
-    AppLocale.en => const Locale('en'),
-    AppLocale.system => null,
+  final pref = ref.watch(settingsProvider).locale;
+  return switch (pref) {
+    SystemLanguage() => null,
+    LocaleLanguage(:final code) => _localeFromCode(code),
   };
 });
+
+/// 把 BCP-47 dash-form (e.g. "zh-Hant", "pt-BR", "ja") 轉成 Flutter [Locale]。
+Locale _localeFromCode(String code) {
+  final parts = code.split('-');
+  return parts.length == 1 ? Locale(parts[0]) : Locale(parts[0], parts[1]);
+}

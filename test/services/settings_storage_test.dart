@@ -8,30 +8,110 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
+  group('LanguagePreference', () {
+    test('fromCode("system") 回傳 SystemLanguage', () {
+      expect(LanguagePreference.fromCode('system'), isA<SystemLanguage>());
+    });
+
+    test('fromCode("zh-Hant") 回傳 LocaleLanguage("zh-Hant")', () {
+      final pref = LanguagePreference.fromCode('zh-Hant');
+      expect(pref, isA<LocaleLanguage>());
+      expect((pref as LocaleLanguage).code, 'zh-Hant');
+    });
+
+    test('fromCode("pt-BR") 回傳 LocaleLanguage("pt-BR")', () {
+      final pref = LanguagePreference.fromCode('pt-BR');
+      expect((pref as LocaleLanguage).code, 'pt-BR');
+    });
+
+    test(
+      'toCode roundtrip 在 system / zh-Hant / zh-Hans / en / pt-BR / ja 都保持原值',
+      () {
+        for (final code in [
+          'system',
+          'zh-Hant',
+          'zh-Hans',
+          'en',
+          'pt-BR',
+          'ja',
+        ]) {
+          expect(LanguagePreference.fromCode(code).toCode(), code);
+        }
+      },
+    );
+
+    test('SystemLanguage 相等比較', () {
+      expect(const SystemLanguage() == const SystemLanguage(), isTrue);
+      expect(const SystemLanguage() == const LocaleLanguage('en'), isFalse);
+    });
+
+    test('LocaleLanguage 依 code 相等', () {
+      expect(
+        const LocaleLanguage('zh-Hant') == const LocaleLanguage('zh-Hant'),
+        isTrue,
+      );
+      expect(
+        const LocaleLanguage('zh-Hant') == const LocaleLanguage('zh-Hans'),
+        isFalse,
+      );
+    });
+
+    test('hashCode 與 == 一致', () {
+      expect(
+        const LocaleLanguage('ja').hashCode,
+        const LocaleLanguage('ja').hashCode,
+      );
+      expect(const SystemLanguage().hashCode, const SystemLanguage().hashCode);
+    });
+  });
+
   group('SettingsStorage', () {
-    test('預設回傳 system theme 與 system locale', () async {
+    test('預設回傳 system theme 與 SystemLanguage locale', () async {
       final s = await SettingsStorage.load();
       expect(s.themeMode, AppThemeMode.system);
-      expect(s.locale, AppLocale.system);
+      expect(s.locale, const SystemLanguage());
     });
 
     test('save 後 load 回得到相同值', () async {
       await SettingsStorage.save(
-        const AppSettings(themeMode: AppThemeMode.dark, locale: AppLocale.en),
+        const AppSettings(
+          themeMode: AppThemeMode.dark,
+          locale: LocaleLanguage('en'),
+        ),
       );
       final s = await SettingsStorage.load();
       expect(s.themeMode, AppThemeMode.dark);
-      expect(s.locale, AppLocale.en);
+      expect(s.locale, const LocaleLanguage('en'));
     });
 
-    test('未知 key 值降級為 system', () async {
-      SharedPreferences.setMockInitialValues({
-        'pref.themeMode': 'rainbow',
-        'pref.locale': 'klingon',
-      });
+    test(
+      '未知 themeMode 降級為 system；任意非 system locale 字串為 LocaleLanguage',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'pref.themeMode': 'rainbow',
+          'pref.locale': 'ja',
+        });
+        final s = await SettingsStorage.load();
+        expect(s.themeMode, AppThemeMode.system);
+        expect(s.locale, const LocaleLanguage('ja'));
+      },
+    );
+
+    test('舊資料 "zh-Hant" 仍能正確解析（向後相容）', () async {
+      SharedPreferences.setMockInitialValues({'pref.locale': 'zh-Hant'});
       final s = await SettingsStorage.load();
-      expect(s.themeMode, AppThemeMode.system);
-      expect(s.locale, AppLocale.system);
+      expect(s.locale, const LocaleLanguage('zh-Hant'));
+    });
+
+    test('locale = "system" 字串 解析為 SystemLanguage', () async {
+      SharedPreferences.setMockInitialValues({'pref.locale': 'system'});
+      final s = await SettingsStorage.load();
+      expect(s.locale, const SystemLanguage());
+    });
+
+    test('locale 缺欄位（null）解析為 SystemLanguage', () async {
+      final s = await SettingsStorage.load();
+      expect(s.locale, const SystemLanguage());
     });
 
     test('新欄位預設為 null / 空 map / 空 list', () async {
@@ -45,7 +125,7 @@ void main() {
       await SettingsStorage.save(
         const AppSettings(
           themeMode: AppThemeMode.system,
-          locale: AppLocale.system,
+          locale: SystemLanguage(),
           lastActiveUid: '123456789',
         ),
       );
@@ -57,7 +137,7 @@ void main() {
       await SettingsStorage.save(
         const AppSettings(
           themeMode: AppThemeMode.system,
-          locale: AppLocale.system,
+          locale: SystemLanguage(),
           uidAliases: {'A': '主帳', 'B': '小號'},
         ),
       );
@@ -69,7 +149,7 @@ void main() {
       await SettingsStorage.save(
         const AppSettings(
           themeMode: AppThemeMode.system,
-          locale: AppLocale.system,
+          locale: SystemLanguage(),
           uidOrder: ['C', 'A', 'B'],
         ),
       );

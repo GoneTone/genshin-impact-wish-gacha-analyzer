@@ -115,13 +115,13 @@ class _LocaleDropdown extends StatelessWidget {
     required this.onChanged,
     required this.l,
   });
-  final AppLocale current;
-  final ValueChanged<AppLocale> onChanged;
+  final LanguagePreference current;
+  final ValueChanged<LanguagePreference> onChanged;
   final AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<AppLocale>(
+    return DropdownButtonFormField<LanguagePreference>(
       initialValue: current,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
@@ -129,18 +129,21 @@ class _LocaleDropdown extends StatelessWidget {
       ),
       items: [
         DropdownMenuItem(
-          value: AppLocale.system,
+          value: const SystemLanguage(),
           child: Text(l.settingsLocaleSystem),
         ),
         DropdownMenuItem(
-          value: AppLocale.zhHant,
+          value: const LocaleLanguage('zh-Hant'),
           child: Text(l.settingsLocaleZhHant),
         ),
         DropdownMenuItem(
-          value: AppLocale.zhHans,
+          value: const LocaleLanguage('zh-Hans'),
           child: Text(l.settingsLocaleZhHans),
         ),
-        DropdownMenuItem(value: AppLocale.en, child: Text(l.settingsLocaleEn)),
+        DropdownMenuItem(
+          value: const LocaleLanguage('en'),
+          child: Text(l.settingsLocaleEn),
+        ),
       ],
       onChanged: (v) {
         if (v != null) onChanged(v);

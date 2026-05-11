@@ -19,7 +19,7 @@ void main() {
     await container.read(settingsProvider.notifier).waitForLoad();
     final s = container.read(settingsProvider);
     expect(s.themeMode, AppThemeMode.system);
-    expect(s.locale, AppLocale.system);
+    expect(s.locale, const SystemLanguage());
   });
 
   test('setThemeMode(dark) 後 state 與 prefs 同步', () async {
