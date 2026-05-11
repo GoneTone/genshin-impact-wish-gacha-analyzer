@@ -163,7 +163,32 @@ class _AboutContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final version = ref.watch(appVersionProvider);
-    return Text(l.settingsAboutVersion(version));
+    final translator = l.localeTranslator;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.settingsAboutVersion(version)),
+        if (translator.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.s),
+          Row(
+            children: [
+              Icon(
+                Icons.translate,
+                size: 16,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: AppSpacing.s),
+              Expanded(
+                child: Text(
+                  translator,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
   }
 }
 
