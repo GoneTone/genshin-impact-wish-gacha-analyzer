@@ -39,7 +39,7 @@ class ChartCard extends StatelessWidget {
         mainAxisSize: fixedHeight ? MainAxisSize.max : MainAxisSize.min,
         children: [
           Text(title, style: theme.textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.m),
+          const SizedBox(height: AppSpacing.xl),
           if (fixedHeight) Expanded(child: chart) else chart,
           if (legend != null) ...[
             const SizedBox(height: AppSpacing.s),
