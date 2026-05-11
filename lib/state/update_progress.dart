@@ -6,6 +6,10 @@ sealed class UpdateProgress {
   const UpdateProgress();
 }
 
+class Preparing extends UpdateProgress {
+  const Preparing();
+}
+
 class WaitingForCapture extends UpdateProgress {
   const WaitingForCapture({this.isFallback = false});
   final bool isFallback;

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
@@ -51,12 +52,6 @@ class WishState {
 
 // ─── Providers ───
 
-final httpClientProvider = Provider<http.Client>((ref) {
-  final client = http.Client();
-  ref.onDispose(client.close);
-  return client;
-});
-
 /// 必須在 main.dart 用 overrideWithValue 注入（baseDir 需要 async 取得）
 final wishStorageProvider = Provider<WishStorage>((ref) {
   throw UnimplementedError('wishStorageProvider must be overridden in main()');
@@ -64,9 +59,13 @@ final wishStorageProvider = Provider<WishStorage>((ref) {
 
 final wishCaptureProvider = Provider<WishCapture>((ref) => RustWishCapture());
 
-final wishFetcherProvider = Provider<WishFetcher>((ref) {
-  return WishFetcher(ref.read(httpClientProvider));
-});
+final wishFetcherProvider = Provider<WishFetcher>((ref) => WishFetcher());
+
+/// 每次 update 用一個獨立的 [CancellableHttpClient]（cancel 不會影響其他連線）。
+final cancellableHttpClientFactoryProvider =
+    Provider<CancellableHttpClientFactory>(
+      (ref) => createIoCancellableHttpClient,
+    );
 
 final wishRepositoryProvider = NotifierProvider<WishRepository, WishState>(
   WishRepository.new,
@@ -123,12 +122,15 @@ class WishRepository extends Notifier<WishState> {
   Future<void> _runUpdate({required bool forceRecapture}) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+
     try {
-      final initialActiveUid = state.activeUid; // 快照，避免 mid-update 競爭
+      final initialActiveUid = state.activeUid;
       final storage = ref.read(wishStorageProvider);
       final fetcher = ref.read(wishFetcherProvider);
 
-      // 強制重攔：先刪舊 URL，再進 MITM 流程
       if (forceRecapture && initialActiveUid != null) {
         await storage.deleteCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
@@ -136,33 +138,29 @@ class WishRepository extends Notifier<WishState> {
 
       String? capturedUrl;
 
-      // 1. 解析 cached URL
       if (!forceRecapture && initialActiveUid != null) {
         capturedUrl = await storage.loadCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
       }
 
-      // 2. 沒 cached → MITM
       if (capturedUrl == null) {
         capturedUrl = await _runMitm(isFallback: false);
         if (!ref.mounted) return;
         if (capturedUrl == null) {
-          // 取消
           state = state.copyWith(clearProgress: true);
           return;
         }
       }
 
-      // 3. fetch（含 fallback）
       try {
         await _fetchAllBanners(
           url: capturedUrl,
           fetcher: fetcher,
           storage: storage,
+          client: cancellable.client,
         );
       } on AuthExpiredException {
         if (!ref.mounted) return;
-        // 第一次 auth 失敗 → fallback
         if (initialActiveUid != null) {
           await storage.deleteCapturedUrl(initialActiveUid);
           if (!ref.mounted) return;
@@ -178,6 +176,7 @@ class WishRepository extends Notifier<WishState> {
             url: newUrl,
             fetcher: fetcher,
             storage: storage,
+            client: cancellable.client,
           );
         } on AuthExpiredException {
           if (!ref.mounted) return;
@@ -193,6 +192,8 @@ class WishRepository extends Notifier<WishState> {
         state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
     } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
       _isUpdating = false;
     }
   }
@@ -212,18 +213,17 @@ class WishRepository extends Notifier<WishState> {
     required String url,
     required WishFetcher fetcher,
     required WishStorage storage,
+    required http.Client client,
   }) async {
     final gachaUrl = GachaUrl.parse(url);
 
-    // UID 探測（含 primer pages）
-    final probe = await fetcher.probeUid(url: gachaUrl);
+    final probe = await fetcher.probeUid(url: gachaUrl, client: client);
     if (!ref.mounted) return;
     if (probe.uid == null) {
       throw const _NoRecordsException();
     }
     final uid = probe.uid!;
 
-    // 載 existing（可能是新 UID 沒有檔）
     final existing =
         state.byUid[uid] ??
         BannerStorage(
@@ -243,6 +243,7 @@ class WishRepository extends Notifier<WishState> {
           gachaType: t.gachaType,
           existing: existing.banners[t.gachaType] ?? const [],
           primer: probe.primerPages[t.gachaType],
+          client: client,
           onProgress: (p) {
             if (!ref.mounted) return;
             state = state.copyWith(
@@ -261,15 +262,13 @@ class WishRepository extends Notifier<WishState> {
         totalNew += newCount;
         mergedBanners[t.gachaType] = merged;
       } on AuthExpiredException {
-        rethrow; // 讓上層處理 fallback
+        rethrow;
       } catch (e) {
-        // 該 banner all-or-nothing 失敗 → 保留既有資料
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);
       }
     }
 
-    // 寫檔
     final updatedAt = DateTime.now().toUtc();
     final newData = BannerStorage(
       uid: uid,
@@ -296,6 +295,7 @@ class WishRepository extends Notifier<WishState> {
 
   bool _isUpdating = false;
   Future<void> Function()? _activeCancel;
+  CancellableHttpClient? _activeCancellable;
 
   Future<void> cancelCapture() async {
     final cancel = _activeCancel;

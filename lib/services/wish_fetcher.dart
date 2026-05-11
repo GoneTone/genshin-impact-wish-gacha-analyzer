@@ -44,14 +44,12 @@ class FetchProgress {
 }
 
 class WishFetcher {
-  WishFetcher(
-    this._client, {
+  WishFetcher({
     this.rateLimit = const Duration(milliseconds: 600),
     this.retryBackoff = const Duration(seconds: 5),
     this.timeout = const Duration(seconds: 10),
   });
 
-  final http.Client _client;
   final Duration rateLimit;
   final Duration retryBackoff;
   final Duration timeout;
@@ -60,10 +58,10 @@ class WishFetcher {
   static const _maxRetryOnRateLimit = 3;
 
   /// 抓單頁，retcode 處理：0=ok / -101,-100=AuthExpired / -110=自動退避 / 其他=ApiError
-  Future<FetchedPage> fetchPage(Uri url) async {
+  Future<FetchedPage> fetchPage(Uri url, http.Client client) async {
     var attempt = 0;
     while (true) {
-      final res = await _client.get(url).timeout(timeout);
+      final res = await client.get(url).timeout(timeout);
       final body = jsonDecode(res.body) as Map<String, dynamic>;
       final retcode = body['retcode'] as int;
       if (retcode == 0) {
@@ -95,6 +93,7 @@ class WishFetcher {
     required List<WishRecord> existing,
     required FetchedPage? primer,
     required void Function(FetchProgress) onProgress,
+    required http.Client client,
   }) async {
     final existingMaxId = existing.isEmpty ? '0' : existing.first.id;
     final fresh = <WishRecord>[];
@@ -110,7 +109,10 @@ class WishFetcher {
         if (!isFirstPage) {
           await Future<void>.delayed(rateLimit);
         }
-        page = await fetchPage(url.build(gachaType: gachaType, endId: endId));
+        page = await fetchPage(
+          url.build(gachaType: gachaType, endId: endId),
+          client,
+        );
       }
       isFirstPage = false;
 
@@ -148,7 +150,10 @@ class WishFetcher {
   bool _idGreater(String a, String b) => a.compareTo(b) > 0;
 
   /// UID 探測：依 gachaTypes 順序對每個 banner 抓 1 頁，第一筆非空者回傳
-  Future<UidProbeResult> probeUid({required GachaUrl url}) async {
+  Future<UidProbeResult> probeUid({
+    required GachaUrl url,
+    required http.Client client,
+  }) async {
     final primers = <String, FetchedPage>{};
     for (final type in gachaTypes) {
       if (primers.isNotEmpty) {
@@ -156,6 +161,7 @@ class WishFetcher {
       }
       final page = await fetchPage(
         url.build(gachaType: type.gachaType, endId: '0'),
+        client,
       );
       primers[type.gachaType] = page;
       if (page.records.isNotEmpty) {

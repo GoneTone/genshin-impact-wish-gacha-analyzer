@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
@@ -48,10 +49,13 @@ void main() {
       overrides: [
         wishStorageProvider.overrideWithValue(WishStorage(tempDir)),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider.overrideWithValue(
-          MockClient((_) async {
-            throw 'unreachable';
-          }),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async {
+              throw 'unreachable';
+            }),
+            cancel: () {},
+          ),
         ),
       ],
     );
@@ -89,8 +93,11 @@ void main() {
       overrides: [
         wishStorageProvider.overrideWithValue(storage),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider.overrideWithValue(
-          MockClient((_) async => http.Response('{}', 200)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
         ),
       ],
     );
@@ -142,7 +149,9 @@ void main() {
           // 計數 capture 被呼叫幾次
           return _CountingCapture(fakeCapture, () => captureCalls++);
         }),
-        httpClientProvider.overrideWithValue(mock),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(client: mock, cancel: () {}),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -169,8 +178,11 @@ void main() {
       overrides: [
         wishStorageProvider.overrideWithValue(WishStorage(tempDir)),
         wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
-        httpClientProvider.overrideWithValue(
-          MockClient((_) async => http.Response('{}', 200)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
         ),
       ],
     );

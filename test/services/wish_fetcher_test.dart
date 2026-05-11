@@ -45,9 +45,10 @@ void main() {
       final mock = MockClient(
         (req) async => _ok([_record(id: '1', type: '301')]),
       );
-      final fetcher = WishFetcher(mock, rateLimit: Duration.zero);
+      final fetcher = WishFetcher(rateLimit: Duration.zero);
       final page = await fetcher.fetchPage(
         GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+        mock,
       );
       expect(page.records, hasLength(1));
       expect(page.records.first.id, '1');
@@ -55,10 +56,11 @@ void main() {
 
     test('retcode=-101 throw AuthExpiredException', () async {
       final mock = MockClient((req) async => _err(-101));
-      final fetcher = WishFetcher(mock, rateLimit: Duration.zero);
+      final fetcher = WishFetcher(rateLimit: Duration.zero);
       expect(
         () => fetcher.fetchPage(
           GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+          mock,
         ),
         throwsA(isA<AuthExpiredException>()),
       );
@@ -71,13 +73,13 @@ void main() {
         return _err(-110);
       });
       final fetcher = WishFetcher(
-        mock,
         rateLimit: Duration.zero,
         retryBackoff: Duration.zero,
       );
       await expectLater(
         () => fetcher.fetchPage(
           GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+          mock,
         ),
         throwsA(isA<RateLimitedException>()),
       );
