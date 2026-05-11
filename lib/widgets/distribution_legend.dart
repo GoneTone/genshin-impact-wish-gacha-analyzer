@@ -20,15 +20,25 @@ class DistributionEntry {
 }
 
 class DistributionLegend extends StatelessWidget {
-  const DistributionLegend({super.key, required this.entries});
+  const DistributionLegend({
+    super.key,
+    required this.entries,
+    this.showAllEntries = false,
+  });
 
   final List<DistributionEntry> entries;
+
+  /// false (預設):過濾 count == 0 的條目 — Pie 圖例的慣例
+  /// true:全部顯示 — 適合純色彩說明(如時間軸卡池色票)
+  final bool showAllEntries;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
-    final visible = entries.where((e) => e.count > 0).toList(growable: false);
+    final visible = showAllEntries
+        ? entries
+        : entries.where((e) => e.count > 0).toList(growable: false);
 
     final tabular = const [FontFeature.tabularFigures()];
 

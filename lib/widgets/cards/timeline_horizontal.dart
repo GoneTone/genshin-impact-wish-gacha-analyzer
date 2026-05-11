@@ -13,33 +13,30 @@ const double _nodeSize = 14;
 const double _haloSize = 22;
 
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
-/// [DistributionLegend] 的條目,作為 [TimelineHorizontal] 在
-/// 跨卡池場景下的顏色圖例。依 `gachaTypes` 順序輸出,跳過 0 件的卡池。
+/// [DistributionLegend] (記得搭配 `showAllEntries: true`) 的條目,作為
+/// [TimelineHorizontal] 在跨卡池場景下的顏色圖例。
+///
+/// 一律輸出 `gachaTypes` 列出的全部卡池(包括 count == 0 的),讓使用者
+/// 可以從顏色直接對應卡池;rate 仍以 (count / total) 計算,total = 0 時為 0。
 List<DistributionEntry> bannerDistributionEntries(
   List<TimelineEntry> entries,
   BannerColors colors,
   AppLocalizations l,
 ) {
-  if (entries.isEmpty) return const [];
   final countByGachaType = <String, int>{};
   for (final e in entries) {
     countByGachaType[e.gachaType] = (countByGachaType[e.gachaType] ?? 0) + 1;
   }
   final total = entries.length;
-  final result = <DistributionEntry>[];
-  for (final type in gachaTypes) {
-    final count = countByGachaType[type.gachaType] ?? 0;
-    if (count == 0) continue;
-    result.add(
+  return [
+    for (final type in gachaTypes)
       DistributionEntry(
         color: colors.colorFor(type.gachaType),
         name: type.resolveName(l),
-        count: count,
-        rate: count / total,
+        count: countByGachaType[type.gachaType] ?? 0,
+        rate: total == 0 ? 0 : (countByGachaType[type.gachaType] ?? 0) / total,
       ),
-    );
-  }
-  return result;
+  ];
 }
 
 /// 橫向時間軸(視覺隱喻 A · 變體 1):

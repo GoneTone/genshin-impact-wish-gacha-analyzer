@@ -171,6 +171,7 @@ class OverviewPage extends ConsumerWidget {
                           bannerColors,
                           l,
                         ),
+                        showAllEntries: true,
                       ),
                     ),
                   ),
