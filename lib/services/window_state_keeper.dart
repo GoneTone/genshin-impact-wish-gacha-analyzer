@@ -77,11 +77,6 @@ Rect resolveInitialBounds({
 class WindowStateKeeper with WindowListener {
   WindowStateKeeper._(this._prefs);
 
-  // 保留 keeper 強引用，避免被 GC（雖然 WindowListener 在 plugin 端會持有，
-  // 但顯式持有更清楚表達 lifetime）。
-  // ignore: unused_field
-  static WindowStateKeeper? _instance;
-
   static const _kX = 'window.state.x';
   static const _kY = 'window.state.y';
   static const _kWidth = 'window.state.width';
@@ -125,7 +120,6 @@ class WindowStateKeeper with WindowListener {
     });
 
     windowManager.addListener(keeper);
-    _instance = keeper;
   }
 
   Rect? _loadSaved() {
