@@ -229,5 +229,8 @@
   },
 
   "bannerFiveStarCountTitle": "5★ count per banner",
-  "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★"
+  "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★",
+  "@bannerFiveStarPullsSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  }
 }

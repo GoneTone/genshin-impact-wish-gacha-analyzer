@@ -88,10 +88,10 @@ class _BannerRow extends StatelessWidget {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          width: 96,
+          width:
+              96, // name label column, tuned for longest banner name at bodyMedium
           child: Text(
             name,
             style: theme.textTheme.bodyMedium,
@@ -101,11 +101,11 @@ class _BannerRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.s),
         Expanded(
-          child: _Bar(color: color, ratio: ratio, tokens: tokens),
+          child: _Bar(color: color, ratio: ratio),
         ),
         const SizedBox(width: AppSpacing.s),
         SizedBox(
-          width: 156,
+          width: 156, // count + separator + subtitle (ellipsis) column
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -136,13 +136,13 @@ class _BannerRow extends StatelessWidget {
 }
 
 class _Bar extends StatelessWidget {
-  const _Bar({required this.color, required this.ratio, required this.tokens});
+  const _Bar({required this.color, required this.ratio});
   final Color color;
   final double ratio;
-  final GachaTokens tokens;
 
   @override
   Widget build(BuildContext context) {
+    final tokens = Theme.of(context).gacha;
     return Container(
       height: 10,
       decoration: BoxDecoration(

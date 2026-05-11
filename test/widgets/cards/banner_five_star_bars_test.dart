@@ -135,6 +135,11 @@ void main() {
   testWidgets(
     'bar widthFactor = fiveStarCount / max(fiveStarCount across banners)',
     (tester) async {
+      expect(
+        gachaTypes.map((t) => t.gachaType).toList(),
+        const ['301', '302', '500', '200', '100'],
+        reason: 'test assumes gachaTypes order — update if order changes',
+      );
       final t0 = DateTime(2025, 1, 1);
       // 301: 4×5★; 302: 1×5★; others: 0
       final banners = <String, List<WishRecord>>{
