@@ -8,9 +8,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
 // 與 ItemTypePie 共用，確保兩個 Pie 視覺大小一致。
-// 直徑 = (38 + 22) × 2 = 120px，可在最小 chart slot (~122px) 內安全顯示。
-const double _kRingRadius = 38;
-const double _kCenterRadius = 22;
+// 直徑 = (50 + 25) × 2 = 150px，可在 ChartCard 預設 chart slot (~154px) 內安全顯示。
+const double _kRingRadius = 50;
+const double _kCenterRadius = 25;
 
 List<DistributionEntry> rarityDistributionEntries(
   WishStats stats,
