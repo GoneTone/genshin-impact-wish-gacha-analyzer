@@ -404,6 +404,7 @@ class WishRepository extends Notifier<WishState> {
       state = next == null
           ? state.copyWith(byUid: newByUid, clearActiveUid: true)
           : state.copyWith(byUid: newByUid, activeUid: next);
+      if (!ref.mounted) return;
       await settingsNotifier.setLastActiveUid(next);
     } else {
       state = state.copyWith(byUid: newByUid);
