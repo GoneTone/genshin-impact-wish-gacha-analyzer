@@ -652,6 +652,36 @@ abstract class AppLocalizations {
   /// **'{n} 抽'**
   String timelineSinceLast(int n);
 
+  /// No description provided for @timelineNowLabel.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'現在'**
+  String get timelineNowLabel;
+
+  /// No description provided for @timelineNowPulls.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已 {n} 抽'**
+  String timelineNowPulls(int n);
+
+  /// No description provided for @timelineNowSinceLast.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'距上次 5★ {n} 抽'**
+  String timelineNowSinceLast(int n);
+
+  /// No description provided for @timelineNowSinceCrossPool.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'從上次 5★ 至今 {n} 抽'**
+  String timelineNowSinceCrossPool(int n);
+
+  /// No description provided for @timelineMonthLabel.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{year} / {month}'**
+  String timelineMonthLabel(String year, String month);
+
   /// No description provided for @filterRarityAll.
   ///
   /// In zh_Hant, this message translates to:
@@ -843,12 +873,6 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'5★ × {n}'**
   String timelineCountFiveStar(int n);
-
-  /// No description provided for @timelineLatestEntry.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'最新：{name}（{n} 抽）'**
-  String timelineLatestEntry(String name, int n);
 }
 
 class _AppLocalizationsDelegate

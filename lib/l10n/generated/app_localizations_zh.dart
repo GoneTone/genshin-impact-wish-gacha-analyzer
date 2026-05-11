@@ -307,6 +307,29 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get timelineNowLabel => '現在';
+
+  @override
+  String timelineNowPulls(int n) {
+    return '已 $n 抽';
+  }
+
+  @override
+  String timelineNowSinceLast(int n) {
+    return '距上次 5★ $n 抽';
+  }
+
+  @override
+  String timelineNowSinceCrossPool(int n) {
+    return '從上次 5★ 至今 $n 抽';
+  }
+
+  @override
+  String timelineMonthLabel(String year, String month) {
+    return '$year / $month';
+  }
+
+  @override
   String get filterRarityAll => '全部稀有度';
 
   @override
@@ -412,11 +435,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String timelineCountFiveStar(int n) {
     return '5★ × $n';
-  }
-
-  @override
-  String timelineLatestEntry(String name, int n) {
-    return '最新：$name（$n 抽）';
   }
 }
 
@@ -717,6 +735,29 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
+  String get timelineNowLabel => '现在';
+
+  @override
+  String timelineNowPulls(int n) {
+    return '已 $n 抽';
+  }
+
+  @override
+  String timelineNowSinceLast(int n) {
+    return '距上次 5★ $n 抽';
+  }
+
+  @override
+  String timelineNowSinceCrossPool(int n) {
+    return '从上次 5★ 至今 $n 抽';
+  }
+
+  @override
+  String timelineMonthLabel(String year, String month) {
+    return '$year / $month';
+  }
+
+  @override
   String get filterRarityAll => '全部稀有度';
 
   @override
@@ -822,11 +863,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   @override
   String timelineCountFiveStar(int n) {
     return '5★ × $n';
-  }
-
-  @override
-  String timelineLatestEntry(String name, int n) {
-    return '最新：$name（$n 抽）';
   }
 }
 
@@ -1133,6 +1169,29 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   }
 
   @override
+  String get timelineNowLabel => '現在';
+
+  @override
+  String timelineNowPulls(int n) {
+    return '已 $n 抽';
+  }
+
+  @override
+  String timelineNowSinceLast(int n) {
+    return '距上次 5★ $n 抽';
+  }
+
+  @override
+  String timelineNowSinceCrossPool(int n) {
+    return '從上次 5★ 至今 $n 抽';
+  }
+
+  @override
+  String timelineMonthLabel(String year, String month) {
+    return '$year / $month';
+  }
+
+  @override
   String get filterRarityAll => '全部稀有度';
 
   @override
@@ -1238,10 +1297,5 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String timelineCountFiveStar(int n) {
     return '5★ × $n';
-  }
-
-  @override
-  String timelineLatestEntry(String name, int n) {
-    return '最新：$name（$n 抽）';
   }
 }

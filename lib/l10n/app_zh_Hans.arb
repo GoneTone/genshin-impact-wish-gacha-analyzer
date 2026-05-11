@@ -145,6 +145,26 @@
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "timelineNowLabel": "现在",
+  "timelineNowPulls": "已 {n} 抽",
+  "@timelineNowPulls": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceLast": "距上次 5★ {n} 抽",
+  "@timelineNowSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceCrossPool": "从上次 5★ 至今 {n} 抽",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": { "type": "String" },
+      "month": { "type": "String" }
+    }
+  },
 
   "filterRarityAll": "全部稀有度",
   "filterRarityFiveStar": "只看 5★",
@@ -204,12 +224,5 @@
   "timelineCountFiveStar": "5★ × {n}",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
-  },
-  "timelineLatestEntry": "最新：{name}（{n} 抽）",
-  "@timelineLatestEntry": {
-    "placeholders": {
-      "name": { "type": "String" },
-      "n": { "type": "int" }
-    }
   }
 }

@@ -147,6 +147,26 @@
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "timelineNowLabel": "Now",
+  "timelineNowPulls": "{n} pulls",
+  "@timelineNowPulls": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceLast": "{n} pulls since last 5★",
+  "@timelineNowSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceCrossPool": "{n} pulls since last 5★ across banners",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": { "type": "String" },
+      "month": { "type": "String" }
+    }
+  },
 
   "filterRarityAll": "All rarities",
   "filterRarityFiveStar": "5★ only",
@@ -206,12 +226,5 @@
   "timelineCountFiveStar": "5★ × {n}",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
-  },
-  "timelineLatestEntry": "Latest: {name} ({n} pulls)",
-  "@timelineLatestEntry": {
-    "placeholders": {
-      "name": { "type": "String" },
-      "n": { "type": "int" }
-    }
   }
 }

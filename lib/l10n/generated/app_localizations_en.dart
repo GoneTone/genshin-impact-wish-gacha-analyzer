@@ -309,6 +309,29 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get timelineNowLabel => 'Now';
+
+  @override
+  String timelineNowPulls(int n) {
+    return '$n pulls';
+  }
+
+  @override
+  String timelineNowSinceLast(int n) {
+    return '$n pulls since last 5★';
+  }
+
+  @override
+  String timelineNowSinceCrossPool(int n) {
+    return '$n pulls since last 5★ across banners';
+  }
+
+  @override
+  String timelineMonthLabel(String year, String month) {
+    return '$month / $year';
+  }
+
+  @override
   String get filterRarityAll => 'All rarities';
 
   @override
@@ -415,10 +438,5 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String timelineCountFiveStar(int n) {
     return '5★ × $n';
-  }
-
-  @override
-  String timelineLatestEntry(String name, int n) {
-    return 'Latest: $name ($n pulls)';
   }
 }
