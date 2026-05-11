@@ -1,7 +1,9 @@
 // test/l10n/locale_metadata_test.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 
 void main() {
   group('AppLocalizations locale metadata', () {
@@ -51,6 +53,44 @@ void main() {
       expect(tags, contains('en'));
       expect(tags, contains('ja'));
       expect(tags, contains('pt-BR'));
+    });
+  });
+
+  group('localeMetadataProvider', () {
+    test('排除 bare zh / pt（已有 script/country 變體存在）', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final metadata = await container.read(localeMetadataProvider.future);
+      final tags = metadata.keys.toSet();
+
+      // bare base locale 應被過濾掉
+      expect(
+        tags,
+        isNot(contains('zh')),
+        reason: 'bare zh 跟 zh_Hant / zh_Hans 重複，應排除',
+      );
+      expect(tags, isNot(contains('pt')), reason: 'bare pt 跟 pt_BR 重複，應排除');
+
+      // 具體變體仍在
+      expect(tags, containsAll(<String>['zh-Hant', 'zh-Hans', 'pt-BR']));
+
+      // 沒有變體的單一語言（en/ja/...）保留
+      expect(tags, containsAll(<String>['en', 'ja', 'es', 'fr', 'th', 'vi']));
+    });
+
+    test('每個保留的 locale 都有非空的 nativeName', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final metadata = await container.read(localeMetadataProvider.future);
+      for (final entry in metadata.entries) {
+        expect(
+          entry.value.nativeName,
+          isNotEmpty,
+          reason: '${entry.key} 的 nativeName 不能為空',
+        );
+      }
     });
   });
 }
