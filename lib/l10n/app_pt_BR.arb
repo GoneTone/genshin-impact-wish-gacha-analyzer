@@ -1,0 +1,17 @@
+{
+  "@@locale": "pt_BR",
+  "localeNativeName": "Português (Brasil)",
+  "localeTranslator": "Mirusausiliq & Boemio",
+  "appName": "O analisador de gacha de Genshin Impact\n",
+  "actionPrevPage": "A página anterior",
+  "actionNextPage": "A próxima página",
+  "navCharacter": "O personangem",
+  "navWeapon": "A arma",
+  "kindCharacter": "O personangem",
+  "kindWeapon": "A arma",
+  "tableName": "O nome",
+  "tableKind": "tipo",
+  "statsFiveStarCount": "O número de ganhar um 5 estrelas",
+  "statsFourStarCount": "A quantidade ganha de um 4 estrelas",
+  "settingsAbout": "Cerca de"
+}

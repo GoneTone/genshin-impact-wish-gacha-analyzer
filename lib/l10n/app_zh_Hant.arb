@@ -1,6 +1,16 @@
 {
   "@@locale": "zh_Hant",
 
+  "localeNativeName": "繁體中文",
+  "localeTranslator": "",
+
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+
   "appName": "原神祈願卡池分析",
 
   "actionUpdate": "更新資料",

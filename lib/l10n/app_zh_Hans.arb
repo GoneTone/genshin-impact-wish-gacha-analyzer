@@ -1,6 +1,9 @@
 {
   "@@locale": "zh_Hans",
 
+  "localeNativeName": "简体中文",
+  "localeTranslator": "",
+
   "appName": "原神祈愿卡池分析",
 
   "actionUpdate": "更新数据",

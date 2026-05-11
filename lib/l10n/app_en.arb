@@ -1,6 +1,9 @@
 {
   "@@locale": "en",
 
+  "localeNativeName": "English",
+  "localeTranslator": "Zanah_68, pan93412, Lemon7777",
+
   "appName": "Genshin Wish Analyzer",
 
   "actionUpdate": "Update",

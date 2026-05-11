@@ -9,6 +9,12 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get localeNativeName => 'English';
+
+  @override
+  String get localeTranslator => 'Zanah_68, pan93412, Lemon7777';
+
+  @override
   String get appName => 'Genshin Wish Analyzer';
 
   @override

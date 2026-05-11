@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get localeNativeName => '繁體中文';
+
+  @override
+  String get localeTranslator => '';
+
+  @override
   String get appName => '原神祈願卡池分析';
 
   @override
@@ -462,6 +468,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   AppLocalizationsZhHans() : super('zh_Hans');
 
   @override
+  String get localeNativeName => '简体中文';
+
+  @override
+  String get localeTranslator => '';
+
+  @override
   String get appName => '原神祈愿卡池分析';
 
   @override
@@ -913,6 +925,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 /// The translations for Chinese, using the Han script (`zh_Hant`).
 class AppLocalizationsZhHant extends AppLocalizationsZh {
   AppLocalizationsZhHant() : super('zh_Hant');
+
+  @override
+  String get localeNativeName => '繁體中文';
+
+  @override
+  String get localeTranslator => '';
 
   @override
   String get appName => '原神祈願卡池分析';
