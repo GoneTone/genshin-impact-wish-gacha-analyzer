@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -58,18 +59,30 @@ class TimelineHorizontal extends StatelessWidget {
           ),
         ),
         // 內容層:橫向 scroll,Row 寬度 = N × _colWidth
+        // ScrollConfiguration 加入 mouse / trackpad 為 drag devices — 桌面端
+        // 預設只接受 touch,沒有這層使用者用滑鼠拖不動 scroll view。
         Positioned.fill(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (nowPulls != null)
-                  _NowColumn(nowPulls: nowPulls!, tokens: tokens),
-                for (final entry in entries)
-                  _EntryColumn(entry: entry, colors: colors, tokens: tokens),
-              ],
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: const {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+                PointerDeviceKind.stylus,
+              },
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (nowPulls != null)
+                    _NowColumn(nowPulls: nowPulls!, tokens: tokens),
+                  for (final entry in entries)
+                    _EntryColumn(entry: entry, colors: colors, tokens: tokens),
+                ],
+              ),
             ),
           ),
         ),
