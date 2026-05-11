@@ -100,17 +100,24 @@ class TimelineHorizontal extends StatelessWidget {
                 PointerDeviceKind.stylus,
               },
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (nowPulls != null)
-                    _NowColumn(nowPulls: nowPulls!, tokens: tokens),
-                  for (final entry in entries)
-                    _EntryColumn(entry: entry, colors: colors, tokens: tokens),
-                ],
+            child: MouseRegion(
+              cursor: SystemMouseCursors.grab,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (nowPulls != null)
+                      _NowColumn(nowPulls: nowPulls!, tokens: tokens),
+                    for (final entry in entries)
+                      _EntryColumn(
+                        entry: entry,
+                        colors: colors,
+                        tokens: tokens,
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

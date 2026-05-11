@@ -172,9 +172,16 @@ class _RowState extends State<_Row> {
         children: [
           ReorderableDragStartListener(
             index: widget.index,
-            child: Tooltip(
-              message: l.accountDragHandleTooltip,
-              child: Icon(Icons.drag_handle, color: tokens.textMuted, size: 20),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.grab,
+              child: Tooltip(
+                message: l.accountDragHandleTooltip,
+                child: Icon(
+                  Icons.drag_handle,
+                  color: tokens.textMuted,
+                  size: 20,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.s),
