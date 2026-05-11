@@ -125,37 +125,56 @@ class OverviewPage extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.l),
 
-          // Row 2: 兩 Pie（稀有度 + 物品類型）
+          // Row 2: 兩 Pie（稀有度 + 物品類型）— wide mode 下與 Row 1 邊界對齊
           LayoutBuilder(
             builder: (context, c) {
-              final col = c.maxWidth >= 800 ? 2 : 1;
-              final tileWidth = col == 1
-                  ? c.maxWidth
-                  : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
-              return Wrap(
-                spacing: AppSpacing.m,
-                runSpacing: AppSpacing.m,
+              final wide = c.maxWidth >= 1024;
+              final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+              final rarityCard = ChartCard(
+                title: l.statsRarityDistribution,
+                chart: RarityPie(stats: stats),
+                legend: DistributionLegend(
+                  entries: rarityDistributionEntries(stats, tokens),
+                ),
+              );
+              final itemTypeCard = ChartCard(
+                title: l.statsItemTypeDistribution,
+                chart: ItemTypePie(stats: stats),
+                legend: DistributionLegend(
+                  entries: itemTypeDistributionEntries(stats, tokens, l),
+                ),
+              );
+
+              if (wide) {
+                // 對齊 Row 1（flex 6/3/3 + 兩個 m gap）：
+                // 第 1 卡寬 = (maxWidth - 24) / 2 = Row 1「總抽數」寬度。
+                final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(width: card1Width, child: rarityCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(child: itemTypeCard),
+                  ],
+                );
+              }
+              if (mid) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(child: rarityCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(child: itemTypeCard),
+                  ],
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
-                    width: tileWidth,
-                    child: ChartCard(
-                      title: l.statsRarityDistribution,
-                      chart: RarityPie(stats: stats),
-                      legend: DistributionLegend(
-                        entries: rarityDistributionEntries(stats, tokens),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: tileWidth,
-                    child: ChartCard(
-                      title: l.statsItemTypeDistribution,
-                      chart: ItemTypePie(stats: stats),
-                      legend: DistributionLegend(
-                        entries: itemTypeDistributionEntries(stats, tokens, l),
-                      ),
-                    ),
-                  ),
+                  rarityCard,
+                  const SizedBox(height: AppSpacing.m),
+                  itemTypeCard,
                 ],
               );
             },
