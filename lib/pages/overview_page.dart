@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/five_star_list.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 class OverviewPage extends ConsumerWidget {
@@ -155,9 +157,11 @@ class OverviewPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.timelineCountFiveStar(stats.fiveStarCount),
-                      chart: _LatestFiveStar(
-                        stats: stats,
-                        banners: activeData.banners,
+                      chart: TimelineHorizontal(
+                        entries: buildTimelineEntriesAcrossBanners(
+                          activeData.banners,
+                        ),
+                        colors: BannerColors.fromTokens(tokens),
                       ),
                     ),
                   ),
@@ -172,67 +176,13 @@ class OverviewPage extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: AppSpacing.s),
-          FiveStarList(banners: activeData.banners),
+          TimelineVertical(
+            entries: buildTimelineEntriesAcrossBanners(activeData.banners),
+            colors: BannerColors.fromTokens(tokens),
+            nowPulls: pullsSinceLastFiveStarAcrossBanners(activeData.banners),
+            isAcrossBanners: true,
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _LatestFiveStar extends StatelessWidget {
-  const _LatestFiveStar({required this.stats, required this.banners});
-  final WishStats stats;
-  final Map<String, List<WishRecord>> banners;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final tokens = theme.gacha;
-    final l = AppLocalizations.of(context)!;
-
-    if (stats.fiveStarCount == 0) {
-      return Center(
-        child: Text(
-          l.timelineNoRecords,
-          style: TextStyle(color: tokens.textMuted),
-        ),
-      );
-    }
-
-    // 找跨卡池中最新的一筆 5★
-    WishRecord? latest;
-    var pullsSince = 0;
-    for (final records in banners.values) {
-      // records desc by time → 第一筆 5★ 即該 banner 最新 5★
-      var pull = 0;
-      for (final r in records) {
-        if (r.rankType == 5) {
-          if (latest == null || r.time.isAfter(latest.time)) {
-            latest = r;
-            pullsSince = pull + 1;
-          }
-          break;
-        }
-        pull++;
-      }
-    }
-    if (latest == null) {
-      return Center(
-        child: Text(
-          l.timelineNoRecords,
-          style: TextStyle(color: tokens.textMuted),
-        ),
-      );
-    }
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        child: Text(
-          l.timelineLatestEntry(latest.name, pullsSince),
-          textAlign: TextAlign.center,
-          style: TextStyle(color: tokens.fiveStar, fontWeight: FontWeight.w600),
-        ),
       ),
     );
   }
