@@ -159,21 +159,20 @@ void main() {
           (ctx, colors) => BannerFiveStarBars(banners: banners, colors: colors),
         ),
       );
-      final aligns = tester
-          .widgetList<Align>(
+      final fractions = tester
+          .widgetList<FractionallySizedBox>(
             find.descendant(
               of: find.byType(BannerFiveStarBars),
-              matching: find.byType(Align),
+              matching: find.byType(FractionallySizedBox),
             ),
           )
-          .where((a) => a.widthFactor != null)
           .toList();
-      expect(aligns.length, 5);
-      expect(aligns[0].widthFactor, 1.0);
-      expect(aligns[1].widthFactor, closeTo(0.25, 1e-6));
-      expect(aligns[2].widthFactor, 0.0);
-      expect(aligns[3].widthFactor, 0.0);
-      expect(aligns[4].widthFactor, 0.0);
+      expect(fractions.length, 5);
+      expect(fractions[0].widthFactor, 1.0);
+      expect(fractions[1].widthFactor, closeTo(0.25, 1e-6));
+      expect(fractions[2].widthFactor, 0.0);
+      expect(fractions[3].widthFactor, 0.0);
+      expect(fractions[4].widthFactor, 0.0);
     },
   );
 

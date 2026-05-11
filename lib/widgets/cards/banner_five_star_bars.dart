@@ -151,9 +151,10 @@ class _Bar extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
-        child: Align(
+        child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
           widthFactor: ratio.clamp(0.0, 1.0),
+          heightFactor: 1.0,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
