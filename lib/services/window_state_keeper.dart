@@ -36,3 +36,35 @@ Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
   }
   return raw;
 }
+
+@visibleForTesting
+Rect resolveInitialBounds({
+  required Rect? saved,
+  required List<Rect> displayVisibleRects,
+}) {
+  final primary = displayVisibleRects.isNotEmpty
+      ? displayVisibleRects.first
+      : const Rect.fromLTWH(0, 0, 1280, 720);
+
+  Rect formulaCentered() {
+    final size = computeDefaultWindowSize(primary.size);
+    final dx = primary.left + (primary.width - size.width) / 2;
+    final dy = primary.top + (primary.height - size.height) / 2;
+    return Rect.fromLTWH(dx, dy, size.width, size.height);
+  }
+
+  if (saved == null) return formulaCentered();
+
+  final savedArea = saved.width * saved.height;
+  if (savedArea <= 0) return formulaCentered();
+
+  for (final d in displayVisibleRects) {
+    final overlap = saved.intersect(d);
+    if (overlap.isEmpty) continue;
+    final overlapArea = overlap.width * overlap.height;
+    if (overlapArea / savedArea >= 0.3) {
+      return saved;
+    }
+  }
+  return formulaCentered();
+}
