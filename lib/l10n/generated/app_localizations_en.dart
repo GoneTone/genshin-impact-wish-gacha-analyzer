@@ -157,6 +157,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sortDirectionNone => 'Click to sort';
 
   @override
+  String get progressPreparing => 'Preparing…';
+
+  @override
+  String get progressPreparingHint => 'Preparing data source…';
+
+  @override
   String get progressWaiting => 'Waiting for capture…';
 
   @override

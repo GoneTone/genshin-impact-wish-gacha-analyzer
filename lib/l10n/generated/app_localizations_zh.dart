@@ -157,6 +157,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sortDirectionNone => '點擊排序';
 
   @override
+  String get progressPreparing => '准备中…';
+
+  @override
+  String get progressPreparingHint => '正在准备数据源…';
+
+  @override
   String get progressWaiting => '等待攔截…';
 
   @override
@@ -975,6 +981,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get sortDirectionNone => '點擊排序';
+
+  @override
+  String get progressPreparing => '準備中…';
+
+  @override
+  String get progressPreparingHint => '正在準備資料來源…';
 
   @override
   String get progressWaiting => '等待攔截…';

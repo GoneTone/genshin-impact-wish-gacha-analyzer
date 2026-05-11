@@ -65,6 +65,8 @@
   "sortDirectionAsc": "升序",
   "sortDirectionNone": "點擊排序",
 
+  "progressPreparing": "准备中…",
+  "progressPreparingHint": "正在准备数据源…",
   "progressWaiting": "等待攔截…",
   "progressFetching": "抓取中…",
   "progressDone": "更新完成",

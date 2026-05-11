@@ -43,6 +43,9 @@ class UpdateProgressDialog extends ConsumerWidget {
     AppLocalizations l,
   ) {
     return switch (p) {
+      Preparing() => [
+        TextButton(onPressed: r.cancelPreparing, child: Text(l.actionCancel)),
+      ],
       WaitingForCapture() => [
         TextButton(
           onPressed: () async {
@@ -69,6 +72,11 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, color, text) = switch (progress) {
+      Preparing() => (
+        Icons.hourglass_empty,
+        tokens.textPrimary,
+        l.progressPreparing,
+      ),
       WaitingForCapture() => (
         Icons.hourglass_top,
         tokens.textPrimary,
@@ -117,6 +125,14 @@ class _Body extends StatelessWidget {
     };
 
     return switch (progress) {
+      Preparing() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const LinearProgressIndicator(),
+          const SizedBox(height: AppSpacing.l),
+          Text(l.progressPreparingHint),
+        ],
+      ),
       WaitingForCapture(:final isFallback) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [

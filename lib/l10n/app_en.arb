@@ -65,6 +65,8 @@
   "sortDirectionAsc": "Ascending",
   "sortDirectionNone": "Click to sort",
 
+  "progressPreparing": "Preparing…",
+  "progressPreparingHint": "Preparing data source…",
   "progressWaiting": "Waiting for capture…",
   "progressFetching": "Fetching…",
   "progressDone": "Update complete",

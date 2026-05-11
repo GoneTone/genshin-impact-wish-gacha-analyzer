@@ -388,6 +388,18 @@ abstract class AppLocalizations {
   /// **'點擊排序'**
   String get sortDirectionNone;
 
+  /// No description provided for @progressPreparing.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'準備中…'**
+  String get progressPreparing;
+
+  /// No description provided for @progressPreparingHint.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'正在準備資料來源…'**
+  String get progressPreparingHint;
+
   /// No description provided for @progressWaiting.
   ///
   /// In zh_Hant, this message translates to:
