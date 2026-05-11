@@ -166,7 +166,7 @@ class OverviewPage extends ConsumerWidget {
           // 各卡池 5★ 件數（佔整行，因需足夠寬度容納 5 條水平 bar）
           ChartCard(
             title: l.bannerFiveStarCountTitle,
-            height: 280,
+            height: null,
             chart: BannerFiveStarBars(
               banners: activeData.banners,
               colors: bannerColors,

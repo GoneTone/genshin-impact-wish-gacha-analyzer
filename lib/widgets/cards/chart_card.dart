@@ -15,12 +15,16 @@ class ChartCard extends StatelessWidget {
   final String title;
   final Widget chart;
   final Widget? legend;
-  final double height;
+
+  /// 卡片固定高度；傳 `null` 則改為依內容 shrink-wrap，chart 不會被
+  /// `Expanded` 撐滿（適合非圓形、自身有 intrinsic height 的圖表）。
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
+    final fixedHeight = height != null;
 
     return Container(
       height: height,
@@ -32,10 +36,11 @@ class ChartCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: fixedHeight ? MainAxisSize.max : MainAxisSize.min,
         children: [
           Text(title, style: theme.textTheme.titleLarge),
-          const SizedBox(height: AppSpacing.s),
-          Expanded(child: chart),
+          const SizedBox(height: AppSpacing.m),
+          if (fixedHeight) Expanded(child: chart) else chart,
           if (legend != null) ...[
             const SizedBox(height: AppSpacing.s),
             legend!,
