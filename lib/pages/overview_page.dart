@@ -4,15 +4,20 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_five_star_bars.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 class OverviewPage extends ConsumerWidget {
   const OverviewPage({super.key});
@@ -30,6 +35,8 @@ class OverviewPage extends ConsumerWidget {
     if (activeData == null) {
       return EmptyState.noSync(context);
     }
+    final all = activeData.allRecords;
+    final stats = computeWishStats(all);
     final bannerColors = BannerColors.fromTokens(tokens);
     final timelineEntries = buildTimelineEntriesAcrossBanners(
       activeData.banners,
@@ -42,6 +49,121 @@ class OverviewPage extends ConsumerWidget {
         children: [
           PageHeader(title: l.pageOverviewTitle),
 
+          // Row 1: 三聯 Stat 卡（無保底，因綜合頁不適用）
+          LayoutBuilder(
+            builder: (context, c) {
+              final wide = c.maxWidth >= 1024;
+              final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+              final totalCard = StatCard(
+                label: l.statsTotal,
+                value: '${stats.total}',
+                accent: tokens.accentPrimary,
+              );
+              final fiveCard = StatCard(
+                label: l.statsFiveStarCount,
+                value: '${stats.fiveStarCount}',
+                accent: tokens.fiveStar,
+                subtitle: l.statsShareOfTotal(
+                  (stats.fiveStarRate * 100).toStringAsFixed(2),
+                ),
+              );
+              final fourCard = StatCard(
+                label: l.statsFourStarCount,
+                value: '${stats.fourStarCount}',
+                accent: tokens.fourStar,
+                subtitle: l.statsShareOfTotal(
+                  (stats.fourStarRate * 100).toStringAsFixed(2),
+                ),
+              );
+
+              if (wide) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(flex: 6, child: totalCard),
+                      const SizedBox(width: AppSpacing.m),
+                      Expanded(flex: 3, child: fiveCard),
+                      const SizedBox(width: AppSpacing.m),
+                      Expanded(flex: 3, child: fourCard),
+                    ],
+                  ),
+                );
+              }
+              if (mid) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    totalCard,
+                    const SizedBox(height: AppSpacing.m),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: fiveCard),
+                          const SizedBox(width: AppSpacing.m),
+                          Expanded(child: fourCard),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  totalCard,
+                  const SizedBox(height: AppSpacing.m),
+                  fiveCard,
+                  const SizedBox(height: AppSpacing.m),
+                  fourCard,
+                ],
+              );
+            },
+          ),
+
+          const SizedBox(height: AppSpacing.l),
+
+          // Row 2: 兩 Pie（稀有度 + 物品類型）
+          LayoutBuilder(
+            builder: (context, c) {
+              final col = c.maxWidth >= 800 ? 2 : 1;
+              final tileWidth = col == 1
+                  ? c.maxWidth
+                  : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
+              return Wrap(
+                spacing: AppSpacing.m,
+                runSpacing: AppSpacing.m,
+                children: [
+                  SizedBox(
+                    width: tileWidth,
+                    child: ChartCard(
+                      title: l.statsRarityDistribution,
+                      chart: RarityPie(stats: stats),
+                      legend: DistributionLegend(
+                        entries: rarityDistributionEntries(stats, tokens),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: tileWidth,
+                    child: ChartCard(
+                      title: l.statsItemTypeDistribution,
+                      chart: ItemTypePie(stats: stats),
+                      legend: DistributionLegend(
+                        entries: itemTypeDistributionEntries(stats, tokens, l),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+
+          const SizedBox(height: AppSpacing.m),
+
+          // 各卡池 5★ 件數（佔整行，因需足夠寬度容納 5 條水平 bar）
           ChartCard(
             title: l.bannerFiveStarCountTitle,
             height: 280,
