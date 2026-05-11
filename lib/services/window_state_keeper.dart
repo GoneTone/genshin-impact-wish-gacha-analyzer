@@ -1,10 +1,15 @@
 // lib/services/window_state_keeper.dart
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:screen_retriever/screen_retriever.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
 
 const Size _kMinWindowSize = Size(800, 450);
 const double _kMargin = 100;
+const double _kOnScreenOverlapRatio = 0.3;
 
 @visibleForTesting
 Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
@@ -62,9 +67,115 @@ Rect resolveInitialBounds({
     final overlap = saved.intersect(d);
     if (overlap.isEmpty) continue;
     final overlapArea = overlap.width * overlap.height;
-    if (overlapArea / savedArea >= 0.3) {
+    if (overlapArea / savedArea >= _kOnScreenOverlapRatio) {
       return saved;
     }
   }
   return formulaCentered();
+}
+
+class WindowStateKeeper with WindowListener {
+  WindowStateKeeper._(this._prefs);
+
+  // 保留 keeper 強引用，避免被 GC（雖然 WindowListener 在 plugin 端會持有，
+  // 但顯式持有更清楚表達 lifetime）。
+  // ignore: unused_field
+  static WindowStateKeeper? _instance;
+
+  static const _kX = 'window.state.x';
+  static const _kY = 'window.state.y';
+  static const _kWidth = 'window.state.width';
+  static const _kHeight = 'window.state.height';
+  static const _kMaximized = 'window.state.isMaximized';
+  static const _saveDebounce = Duration(milliseconds: 800);
+
+  final SharedPreferences _prefs;
+  Timer? _debounceTimer;
+
+  /// 初始化視窗：讀取持久化狀態 → 解析初始 bounds → 套用 → 開始監聽。
+  /// 呼叫端負責先 await `windowManager.ensureInitialized()`。
+  static Future<void> bootstrap() async {
+    final prefs = await SharedPreferences.getInstance();
+    final keeper = WindowStateKeeper._(prefs);
+
+    final saved = keeper._loadSaved();
+    final wasMaximized = prefs.getBool(_kMaximized) ?? false;
+
+    final displays = await screenRetriever.getAllDisplays();
+    final visibleRects = displays.map((d) {
+      final pos = d.visiblePosition ?? Offset.zero;
+      final size = d.visibleSize ?? d.size;
+      return Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
+    }).toList();
+
+    final bounds = resolveInitialBounds(
+      saved: saved,
+      displayVisibleRects: visibleRects,
+    );
+
+    const opts = WindowOptions(skipTaskbar: false);
+    await windowManager.waitUntilReadyToShow(opts, () async {
+      await windowManager.setMinimumSize(_kMinWindowSize);
+      await windowManager.setBounds(bounds);
+      if (wasMaximized) {
+        await windowManager.maximize();
+      }
+      await windowManager.show();
+      await windowManager.focus();
+    });
+
+    windowManager.addListener(keeper);
+    _instance = keeper;
+  }
+
+  Rect? _loadSaved() {
+    final x = _prefs.getDouble(_kX);
+    final y = _prefs.getDouble(_kY);
+    final w = _prefs.getDouble(_kWidth);
+    final h = _prefs.getDouble(_kHeight);
+    if (x == null || y == null || w == null || h == null) return null;
+    return Rect.fromLTWH(x, y, w, h);
+  }
+
+  void _scheduleSave() {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(_saveDebounce, () => unawaited(_saveNow()));
+  }
+
+  Future<void> _saveNow() async {
+    final isMax = await windowManager.isMaximized();
+    await _prefs.setBool(_kMaximized, isMax);
+    // 最大化時刻意不覆蓋 x/y/w/h，保留上次「非最大化」的值。
+    if (!isMax) {
+      final b = await windowManager.getBounds();
+      await _prefs.setDouble(_kX, b.left);
+      await _prefs.setDouble(_kY, b.top);
+      await _prefs.setDouble(_kWidth, b.width);
+      await _prefs.setDouble(_kHeight, b.height);
+    }
+  }
+
+  @override
+  void onWindowResize() => _scheduleSave();
+
+  @override
+  void onWindowMove() => _scheduleSave();
+
+  @override
+  void onWindowMaximize() {
+    _debounceTimer?.cancel();
+    unawaited(_saveNow());
+  }
+
+  @override
+  void onWindowUnmaximize() {
+    _debounceTimer?.cancel();
+    unawaited(_saveNow());
+  }
+
+  @override
+  void onWindowClose() async {
+    _debounceTimer?.cancel();
+    await _saveNow();
+  }
 }
