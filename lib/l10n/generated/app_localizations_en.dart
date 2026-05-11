@@ -439,4 +439,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String timelineCountFiveStar(int n) {
     return '5★ Timeline ($n)';
   }
+
+  @override
+  String get bannerFiveStarCountTitle => '5★ count per banner';
+
+  @override
+  String bannerFiveStarPullsSinceLast(int n) {
+    return '$n pulls since last 5★';
+  }
 }

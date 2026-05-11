@@ -226,5 +226,8 @@
   "timelineCountFiveStar": "5★ Timeline ({n})",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
-  }
+  },
+
+  "bannerFiveStarCountTitle": "5★ count per banner",
+  "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★"
 }

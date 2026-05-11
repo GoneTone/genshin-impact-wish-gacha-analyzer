@@ -873,6 +873,18 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'5★ 時間軸 ({n})'**
   String timelineCountFiveStar(int n);
+
+  /// No description provided for @bannerFiveStarCountTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'各卡池 5★ 件數'**
+  String get bannerFiveStarCountTitle;
+
+  /// No description provided for @bannerFiveStarPullsSinceLast.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'距上次 5★ {n} 抽'**
+  String bannerFiveStarPullsSinceLast(int n);
 }
 
 class _AppLocalizationsDelegate
