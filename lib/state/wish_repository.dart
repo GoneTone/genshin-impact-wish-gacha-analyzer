@@ -334,6 +334,8 @@ class WishRepository extends Notifier<WishState> {
         updatedAt: updatedAt,
       ),
     );
+    if (!ref.mounted) return;
+    await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
   }
 
   bool _isUpdating = false;
@@ -367,6 +369,8 @@ class WishRepository extends Notifier<WishState> {
     final storage = ref.read(wishStorageProvider);
     await storage.clearAll();
     if (!ref.mounted) return;
+    await ref.read(settingsProvider.notifier).clearAllUidPreferences();
+    if (!ref.mounted) return;
     state = const WishState(isBootstrapping: false);
   }
 
@@ -377,6 +381,8 @@ class WishRepository extends Notifier<WishState> {
     final newByUid = Map<String, BannerStorage>.from(state.byUid)
       ..[data.uid] = data;
     state = state.copyWith(byUid: newByUid, activeUid: data.uid);
+    if (!ref.mounted) return;
+    await ref.read(settingsProvider.notifier).setLastActiveUid(data.uid);
   }
 
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {

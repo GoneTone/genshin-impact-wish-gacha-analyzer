@@ -837,6 +837,84 @@ void main() {
     expect(s.lastActiveUid, 'B');
   });
 
+  test('clearAll 清掉所有 UID 偏好', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 9),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    SharedPreferences.setMockInitialValues({
+      'pref.lastActiveUid': 'A',
+      'pref.uidAliases': '{"A":"主"}',
+      'pref.uidOrder': '["A"]',
+    });
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).clearAll();
+    expect(container.read(wishRepositoryProvider).activeUid, isNull);
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, isNull);
+    expect(s.uidAliases, isEmpty);
+    expect(s.uidOrder, isEmpty);
+  });
+
+  test('importData 把 lastActiveUid 寫到新 UID', () async {
+    final storage = WishStorage(tempDir);
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container
+        .read(wishRepositoryProvider.notifier)
+        .importData(
+          BannerStorage(
+            uid: 'NEW',
+            lastUpdated: DateTime.utc(2026, 5, 11),
+            banners: const {
+              '301': [],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        );
+    expect(container.read(wishRepositoryProvider).activeUid, 'NEW');
+    final s = await SettingsStorage.load();
+    expect(s.lastActiveUid, 'NEW');
+  });
+
   test('setActiveUid 不存在的 UID → 不變、不寫 settings', () async {
     final storage = WishStorage(tempDir);
     await storage.save(
