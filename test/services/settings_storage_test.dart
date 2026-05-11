@@ -33,5 +33,62 @@ void main() {
       expect(s.themeMode, AppThemeMode.system);
       expect(s.locale, AppLocale.system);
     });
+
+    test('新欄位預設為 null / 空 map / 空 list', () async {
+      final s = await SettingsStorage.load();
+      expect(s.lastActiveUid, isNull);
+      expect(s.uidAliases, isEmpty);
+      expect(s.uidOrder, isEmpty);
+    });
+
+    test('lastActiveUid round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: AppLocale.system,
+          lastActiveUid: '123456789',
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.lastActiveUid, '123456789');
+    });
+
+    test('uidAliases round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: AppLocale.system,
+          uidAliases: {'A': '主帳', 'B': '小號'},
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.uidAliases, {'A': '主帳', 'B': '小號'});
+    });
+
+    test('uidOrder round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: AppLocale.system,
+          uidOrder: ['C', 'A', 'B'],
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.uidOrder, ['C', 'A', 'B']);
+    });
+
+    test('uidAliases JSON 壞掉 → fallback 為空 map', () async {
+      SharedPreferences.setMockInitialValues({
+        'pref.uidAliases': 'not-json-at-all',
+      });
+      final s = await SettingsStorage.load();
+      expect(s.uidAliases, isEmpty);
+    });
+
+    test('uidOrder JSON 壞掉 → fallback 為空 list', () async {
+      SharedPreferences.setMockInitialValues({'pref.uidOrder': '{not-a-list}'});
+      final s = await SettingsStorage.load();
+      expect(s.uidOrder, isEmpty);
+    });
   });
 }
