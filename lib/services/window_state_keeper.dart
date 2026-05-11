@@ -82,7 +82,7 @@ class WindowStateKeeper with WindowListener {
   static const _kWidth = 'window.state.width';
   static const _kHeight = 'window.state.height';
   static const _kMaximized = 'window.state.isMaximized';
-  static const _saveDebounce = Duration(milliseconds: 800);
+  static const _kSaveDebounce = Duration(milliseconds: 800);
 
   final SharedPreferences _prefs;
   Timer? _debounceTimer;
@@ -119,6 +119,7 @@ class WindowStateKeeper with WindowListener {
       await windowManager.focus();
     });
 
+    await windowManager.setPreventClose(true);
     windowManager.addListener(keeper);
   }
 
@@ -133,7 +134,7 @@ class WindowStateKeeper with WindowListener {
 
   void _scheduleSave() {
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(_saveDebounce, () => unawaited(_saveNow()));
+    _debounceTimer = Timer(_kSaveDebounce, () => unawaited(_saveNow()));
   }
 
   Future<void> _saveNow() async {
@@ -170,6 +171,10 @@ class WindowStateKeeper with WindowListener {
   @override
   void onWindowClose() async {
     _debounceTimer?.cancel();
-    await _saveNow();
+    try {
+      await _saveNow();
+    } finally {
+      await windowManager.destroy();
+    }
   }
 }
