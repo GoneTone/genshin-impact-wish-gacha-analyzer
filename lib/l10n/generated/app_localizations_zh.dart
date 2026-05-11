@@ -432,13 +432,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accountRecapture => '重新攔截 / 新增帳號';
 
   @override
-  String get accountAliasLabel => '别名';
+  String get accountAliasLabel => '別名';
 
   @override
-  String get accountAliasHint => '为此账号取一个好记的名字';
+  String get accountAliasHint => '為此帳號取一個好記的名稱';
 
   @override
-  String get accountDragHandleTooltip => '拖动排序';
+  String get accountDragHandleTooltip => '拖曳排序';
 
   @override
   String get loadingBootstrap => '載入中…';

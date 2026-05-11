@@ -223,9 +223,9 @@
   "accountSetActive": "設為活躍",
   "accountRemove": "移除",
   "accountRecapture": "重新攔截 / 新增帳號",
-  "accountAliasLabel": "别名",
-  "accountAliasHint": "为此账号取一个好记的名字",
-  "accountDragHandleTooltip": "拖动排序",
+  "accountAliasLabel": "別名",
+  "accountAliasHint": "為此帳號取一個好記的名稱",
+  "accountDragHandleTooltip": "拖曳排序",
 
   "loadingBootstrap": "載入中…",
 
