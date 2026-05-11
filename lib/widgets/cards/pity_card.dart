@@ -129,6 +129,7 @@ class _ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget bar = Container(
+      width: double.infinity,
       height: 8,
       decoration: BoxDecoration(
         color: tokens.borderSubtle,
@@ -136,9 +137,10 @@ class _ProgressBar extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
-        child: Align(
+        child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
           widthFactor: progress.clamp(0.0, 1.0),
+          heightFactor: 1.0,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
