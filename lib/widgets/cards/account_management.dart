@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -46,12 +48,12 @@ class AccountManagement extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             buildDefaultDragHandles: false,
             itemCount: ordered.length,
-            onReorder: (oldIndex, newIndex) async {
+            onReorder: (oldIndex, newIndex) {
               final next = [...ordered];
               final adjusted = newIndex > oldIndex ? newIndex - 1 : newIndex;
               final item = next.removeAt(oldIndex);
               next.insert(adjusted, item);
-              await settingsNotifier.setUidOrder(next);
+              unawaited(settingsNotifier.setUidOrder(next));
             },
             itemBuilder: (context, index) {
               final uid = ordered[index];
