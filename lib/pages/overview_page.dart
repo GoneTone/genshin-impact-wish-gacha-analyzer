@@ -37,6 +37,10 @@ class OverviewPage extends ConsumerWidget {
     }
     final all = activeData.allRecords;
     final stats = computeWishStats(all);
+    final bannerColors = BannerColors.fromTokens(tokens);
+    final timelineEntries = buildTimelineEntriesAcrossBanners(
+      activeData.banners,
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -121,7 +125,7 @@ class OverviewPage extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.l),
 
-          // Row 2: 兩 Pie + Timeline placeholder（Phase 2 才填 timeline）
+          // Row 2: 兩 Pie + 跨卡池橫向時間軸
           LayoutBuilder(
             builder: (context, c) {
               final wide = c.maxWidth >= 1024;
@@ -158,10 +162,8 @@ class OverviewPage extends ConsumerWidget {
                     child: ChartCard(
                       title: l.timelineCountFiveStar(stats.fiveStarCount),
                       chart: TimelineHorizontal(
-                        entries: buildTimelineEntriesAcrossBanners(
-                          activeData.banners,
-                        ),
-                        colors: BannerColors.fromTokens(tokens),
+                        entries: timelineEntries,
+                        colors: bannerColors,
                       ),
                     ),
                   ),
@@ -177,8 +179,8 @@ class OverviewPage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.s),
           TimelineVertical(
-            entries: buildTimelineEntriesAcrossBanners(activeData.banners),
-            colors: BannerColors.fromTokens(tokens),
+            entries: timelineEntries,
+            colors: bannerColors,
             nowPulls: pullsSinceLastFiveStarAcrossBanners(activeData.banners),
             isAcrossBanners: true,
           ),
