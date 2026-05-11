@@ -221,7 +221,7 @@
 
   "loadingBootstrap": "加载中…",
 
-  "timelineCountFiveStar": "5★ × {n}",
+  "timelineCountFiveStar": "5★ 时间轴 ({n})",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
   }

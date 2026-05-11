@@ -434,7 +434,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String timelineCountFiveStar(int n) {
-    return '5★ × $n';
+    return '5★ 時間軸 ($n)';
   }
 }
 
@@ -862,7 +862,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String timelineCountFiveStar(int n) {
-    return '5★ × $n';
+    return '5★ 时间轴 ($n)';
   }
 }
 
@@ -1296,6 +1296,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String timelineCountFiveStar(int n) {
-    return '5★ × $n';
+    return '5★ 時間軸 ($n)';
   }
 }

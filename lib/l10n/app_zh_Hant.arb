@@ -223,7 +223,7 @@
 
   "loadingBootstrap": "載入中…",
 
-  "timelineCountFiveStar": "5★ × {n}",
+  "timelineCountFiveStar": "5★ 時間軸 ({n})",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
   }

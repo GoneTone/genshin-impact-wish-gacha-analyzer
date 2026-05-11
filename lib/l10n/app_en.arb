@@ -223,7 +223,7 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineCountFiveStar": "5★ × {n}",
+  "timelineCountFiveStar": "5★ Timeline ({n})",
   "@timelineCountFiveStar": {
     "placeholders": { "n": { "type": "int" } }
   }

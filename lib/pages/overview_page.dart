@@ -165,6 +165,13 @@ class OverviewPage extends ConsumerWidget {
                         entries: timelineEntries,
                         colors: bannerColors,
                       ),
+                      legend: DistributionLegend(
+                        entries: bannerDistributionEntries(
+                          timelineEntries,
+                          bannerColors,
+                          l,
+                        ),
+                      ),
                     ),
                   ),
                 ],

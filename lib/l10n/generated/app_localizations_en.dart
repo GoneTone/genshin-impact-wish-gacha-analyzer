@@ -437,6 +437,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String timelineCountFiveStar(int n) {
-    return '5★ × $n';
+    return '5★ Timeline ($n)';
   }
 }

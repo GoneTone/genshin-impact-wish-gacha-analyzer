@@ -871,7 +871,7 @@ abstract class AppLocalizations {
   /// No description provided for @timelineCountFiveStar.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'5★ × {n}'**
+  /// **'5★ 時間軸 ({n})'**
   String timelineCountFiveStar(int n);
 }
 

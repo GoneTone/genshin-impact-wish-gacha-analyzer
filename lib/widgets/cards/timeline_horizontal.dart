@@ -1,14 +1,46 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
 const double _colWidth = 90;
 const double _nodeSize = 14;
 const double _haloSize = 22;
+
+/// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
+/// [DistributionLegend] 的條目,作為 [TimelineHorizontal] 在
+/// 跨卡池場景下的顏色圖例。依 `gachaTypes` 順序輸出,跳過 0 件的卡池。
+List<DistributionEntry> bannerDistributionEntries(
+  List<TimelineEntry> entries,
+  BannerColors colors,
+  AppLocalizations l,
+) {
+  if (entries.isEmpty) return const [];
+  final countByGachaType = <String, int>{};
+  for (final e in entries) {
+    countByGachaType[e.gachaType] = (countByGachaType[e.gachaType] ?? 0) + 1;
+  }
+  final total = entries.length;
+  final result = <DistributionEntry>[];
+  for (final type in gachaTypes) {
+    final count = countByGachaType[type.gachaType] ?? 0;
+    if (count == 0) continue;
+    result.add(
+      DistributionEntry(
+        color: colors.colorFor(type.gachaType),
+        name: type.resolveName(l),
+        count: count,
+        rate: count / total,
+      ),
+    );
+  }
+  return result;
+}
 
 /// 橫向時間軸(視覺隱喻 A · 變體 1):
 /// - 左 → 右 = 新 → 舊
