@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -171,6 +172,153 @@ void main() {
     expect(captureCalls, 1);
     // fetcher 至少被叫過（兩次嘗試都打 mock）
     expect(fetcherCalls, greaterThan(0));
+  });
+
+  test('update() 立刻設定 Preparing（在第一個 await 之前）', () async {
+    final storage = WishStorage(tempDir);
+    // seed cached URL，update 走 fetch 路徑（不進 MITM）
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.saveCapturedUrl(
+      'A',
+      'https://example.com/getGachaLog?authkey=x',
+    );
+
+    // 用一個永遠不 complete 的 Completer 阻塞 HTTP，這樣 _runUpdate
+    // 在進到 probe 階段時會卡住，state 維持在 Preparing
+    final block = Completer<http.Response>();
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) => block.future),
+            cancel: () {
+              if (!block.isCompleted) {
+                block.completeError(http.ClientException('cancelled'));
+              }
+            },
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+
+    final notifier = container.read(wishRepositoryProvider.notifier);
+    final updateFut = notifier.update();
+
+    // 把 microtask 跑一輪，讓 loadCapturedUrl 完成、進到 probe 並 await
+    // mock client 的 future（永遠不 complete），此刻 state.progress 應該是 Preparing
+    await Future<void>.delayed(const Duration(milliseconds: 30));
+
+    expect(
+      container.read(wishRepositoryProvider).progress,
+      isA<Preparing>(),
+      reason: '進入 probe 階段時 state 應該維持在 Preparing',
+    );
+
+    // cleanup
+    notifier.cancelPreparing();
+    await updateFut;
+  });
+
+  test('cancelPreparing → 中斷 HTTP → progress 回到 null', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.saveCapturedUrl(
+      'A',
+      'https://example.com/getGachaLog?authkey=x',
+    );
+
+    final block = Completer<http.Response>();
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) => block.future),
+            cancel: () {
+              if (!block.isCompleted) {
+                block.completeError(http.ClientException('cancelled by test'));
+              }
+            },
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    final notifier = container.read(wishRepositoryProvider.notifier);
+    final updateFut = notifier.update();
+    await Future<void>.delayed(const Duration(milliseconds: 30));
+
+    // act：呼叫 cancelPreparing
+    notifier.cancelPreparing();
+    await updateFut;
+
+    // assert：progress 應為 null（取消），不是 UpdateFailed
+    expect(container.read(wishRepositoryProvider).progress, isNull);
+    // 既有資料保留
+    expect(container.read(wishRepositoryProvider).activeUid, 'A');
+  });
+
+  test('probe 階段真實 ClientException（非取消） → UpdateFailed', () async {
+    final storage = WishStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026),
+        banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
+      ),
+    );
+    await storage.saveCapturedUrl(
+      'A',
+      'https://example.com/getGachaLog?authkey=x',
+    );
+
+    final container = ProviderContainer(
+      overrides: [
+        wishStorageProvider.overrideWithValue(storage),
+        wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((req) {
+              throw http.ClientException('network down', req.url);
+            }),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container.read(wishRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    await container.read(wishRepositoryProvider.notifier).update();
+
+    final progress = container.read(wishRepositoryProvider).progress;
+    expect(progress, isA<UpdateFailed>());
+    expect((progress as UpdateFailed).error, isA<UpdateErrorOther>());
   });
 
   test('clearProgress 把 progress 重設為 null', () async {

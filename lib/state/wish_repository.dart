@@ -122,9 +122,13 @@ class WishRepository extends Notifier<WishState> {
   Future<void> _runUpdate({required bool forceRecapture}) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
+    _cancelTriggered = false;
 
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     _activeCancellable = cancellable;
+
+    // 立刻 set Preparing → ref.listen 立刻觸發 dialog
+    state = state.copyWith(progress: const Preparing());
 
     try {
       final initialActiveUid = state.activeUid;
@@ -183,8 +187,22 @@ class WishRepository extends Notifier<WishState> {
           state = state.copyWith(
             progress: const UpdateFailed(UpdateErrorAuthExpired()),
           );
+        } on http.ClientException catch (e) {
+          if (!ref.mounted) return;
+          if (_cancelTriggered) {
+            state = state.copyWith(clearProgress: true);
+          } else {
+            state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
+          }
         } catch (e) {
           if (!ref.mounted) return;
+          state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
+        }
+      } on http.ClientException catch (e) {
+        if (!ref.mounted) return;
+        if (_cancelTriggered) {
+          state = state.copyWith(clearProgress: true);
+        } else {
           state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
         }
       } catch (e) {
@@ -194,6 +212,7 @@ class WishRepository extends Notifier<WishState> {
     } finally {
       _activeCancellable?.client.close();
       _activeCancellable = null;
+      _cancelTriggered = false;
       _isUpdating = false;
     }
   }
@@ -294,8 +313,14 @@ class WishRepository extends Notifier<WishState> {
   }
 
   bool _isUpdating = false;
+  bool _cancelTriggered = false;
   Future<void> Function()? _activeCancel;
   CancellableHttpClient? _activeCancellable;
+
+  void cancelPreparing() {
+    _cancelTriggered = true;
+    _activeCancellable?.cancel();
+  }
 
   Future<void> cancelCapture() async {
     final cancel = _activeCancel;
@@ -366,6 +391,7 @@ class WishRepository extends Notifier<WishState> {
     RateLimitedException() => const UpdateErrorRateLimited(),
     ApiErrorException(:final message) => UpdateErrorServer(message),
     AuthExpiredException() => const UpdateErrorAuthExpired(),
+    http.ClientException(:final message) => UpdateErrorOther(message),
     _ => UpdateErrorOther(e.toString()),
   };
 
