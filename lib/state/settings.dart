@@ -19,8 +19,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
     state = loaded;
   }
 
-  /// 給 test 用：等首次 load 完。
-  @visibleForTesting
+  /// 等首次 `_load` 完成。
+  ///
+  /// `WishRepository._bootstrapLoad` 會在讀 settings 前 await 此 future，
+  /// 確保 `lastActiveUid` / `uidOrder` 等偏好已就緒；測試也用得到。
   Future<void> waitForLoad() => _loadFuture;
 
   Future<void> setThemeMode(AppThemeMode mode) async {
@@ -30,6 +32,44 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   Future<void> setLocale(AppLocale locale) async {
     state = state.copyWith(locale: locale);
+    await SettingsStorage.save(state);
+  }
+
+  Future<void> setLastActiveUid(String? uid) async {
+    state = state.copyWith(lastActiveUid: uid, clearLastActiveUid: uid == null);
+    await SettingsStorage.save(state);
+  }
+
+  Future<void> setUidAlias(String uid, String? alias) async {
+    final trimmed = alias?.trim();
+    final next = Map<String, String>.from(state.uidAliases);
+    if (trimmed == null || trimmed.isEmpty) {
+      next.remove(uid);
+    } else {
+      next[uid] = trimmed;
+    }
+    state = state.copyWith(uidAliases: next);
+    await SettingsStorage.save(state);
+  }
+
+  Future<void> setUidOrder(List<String> order) async {
+    state = state.copyWith(uidOrder: List.unmodifiable(order));
+    await SettingsStorage.save(state);
+  }
+
+  Future<void> removeUidFromSettings(String uid) async {
+    final aliases = Map<String, String>.from(state.uidAliases)..remove(uid);
+    final order = state.uidOrder.where((u) => u != uid).toList();
+    state = state.copyWith(uidAliases: aliases, uidOrder: order);
+    await SettingsStorage.save(state);
+  }
+
+  Future<void> clearAllUidPreferences() async {
+    state = state.copyWith(
+      clearLastActiveUid: true,
+      uidAliases: const {},
+      uidOrder: const [],
+    );
     await SettingsStorage.save(state);
   }
 }
