@@ -49,3 +49,60 @@ bool _isBareBaseOfSpecificVariant(Locale locale, List<Locale> all) {
         (other.scriptCode != null || other.countryCode != null),
   );
 }
+
+/// `MaterialApp.localeListResolutionCallback`：補足 Flutter
+/// `basicLocaleListResolution` 在中文 region-only locale（例如 OS 只回
+/// `zh-CN` / `zh-TW` 而沒帶 scriptCode）時無法區分繁簡的問題。
+///
+/// 映射：CN / SG / MY → `zh-Hans`；TW / HK / MO → `zh-Hant`。
+/// 對其他語言、或 Chinese 已帶 scriptCode 的情況一律回傳 null，
+/// 落到 Flutter 預設邏輯處理（會正確尊重使用者偏好順序）。
+///
+/// 演算法概念：對每個偏好 locale，若 Flutter 預設能精確匹配
+/// （exact / lang+script / lang+country）就回 null 讓它處理；
+/// 否則若是 Chinese region-only 就介入；否則若 lang-only 可匹配
+/// 也回 null（尊重偏好順序）；都不行才換下一個偏好 locale。
+Locale? localeListResolution(
+  List<Locale>? systemLocales,
+  Iterable<Locale> supportedLocales,
+) {
+  if (systemLocales == null || systemLocales.isEmpty) return null;
+
+  bool hasExact(Locale u) => supportedLocales.any(
+    (s) =>
+        s.languageCode == u.languageCode &&
+        s.scriptCode == u.scriptCode &&
+        s.countryCode == u.countryCode,
+  );
+  bool hasLangScript(Locale u) =>
+      u.scriptCode != null &&
+      supportedLocales.any(
+        (s) => s.languageCode == u.languageCode && s.scriptCode == u.scriptCode,
+      );
+  bool hasLangCountry(Locale u) =>
+      u.countryCode != null &&
+      supportedLocales.any(
+        (s) =>
+            s.languageCode == u.languageCode && s.countryCode == u.countryCode,
+      );
+  bool hasLang(Locale u) =>
+      supportedLocales.any((s) => s.languageCode == u.languageCode);
+
+  const simplifiedRegions = {'CN', 'SG', 'MY'};
+
+  for (final user in systemLocales) {
+    if (hasExact(user) || hasLangScript(user) || hasLangCountry(user)) {
+      return null;
+    }
+    if (user.languageCode == 'zh' &&
+        user.scriptCode == null &&
+        user.countryCode != null) {
+      final wanted = simplifiedRegions.contains(user.countryCode)
+          ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans')
+          : const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant');
+      if (supportedLocales.contains(wanted)) return wanted;
+    }
+    if (hasLang(user)) return null;
+  }
+  return null;
+}

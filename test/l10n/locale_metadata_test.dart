@@ -93,4 +93,122 @@ void main() {
       }
     });
   });
+
+  group('localeListResolution', () {
+    // 模擬一份代表性的 supportedLocales：含 bare zh、zh-Hant、zh-Hans、pt-BR、
+    // 以及若干其他 bare locale。
+    const supported = <Locale>[
+      Locale('en'),
+      Locale('es'),
+      Locale('fr'),
+      Locale('ja'),
+      Locale('pt'),
+      Locale('pt', 'BR'),
+      Locale('th'),
+      Locale('vi'),
+      Locale('zh'),
+      Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+    ];
+
+    test('zh-CN → zh-Hans（region 大陸映射到簡體）', () {
+      final result = localeListResolution([
+        const Locale('zh', 'CN'),
+      ], supported);
+      expect(
+        result,
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+    });
+
+    test('zh-SG / zh-MY → zh-Hans', () {
+      expect(
+        localeListResolution([const Locale('zh', 'SG')], supported),
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+      expect(
+        localeListResolution([const Locale('zh', 'MY')], supported),
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+    });
+
+    test('zh-TW / zh-HK / zh-MO → zh-Hant', () {
+      for (final region in ['TW', 'HK', 'MO']) {
+        expect(
+          localeListResolution([Locale('zh', region)], supported),
+          const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+          reason: 'zh-$region 應映射到 zh-Hant',
+        );
+      }
+    });
+
+    test('zh-Hant-TW (帶 scriptCode) → null，交給 Flutter 預設邏輯', () {
+      final result = localeListResolution([
+        const Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hant',
+          countryCode: 'TW',
+        ),
+      ], supported);
+      expect(result, isNull);
+    });
+
+    test('en-US (其他語言) → null', () {
+      expect(
+        localeListResolution([const Locale('en', 'US')], supported),
+        isNull,
+      );
+    });
+
+    test('ja-JP / pt-BR / de-DE (其他語言) → null', () {
+      expect(
+        localeListResolution([const Locale('ja', 'JP')], supported),
+        isNull,
+      );
+      expect(
+        localeListResolution([const Locale('pt', 'BR')], supported),
+        isNull,
+      );
+      expect(
+        localeListResolution([const Locale('de', 'DE')], supported),
+        isNull,
+      );
+    });
+
+    test('使用者偏好順序：[en-US, zh-CN] → null（en 先匹配到，尊重順序）', () {
+      final result = localeListResolution([
+        const Locale('en', 'US'),
+        const Locale('zh', 'CN'),
+      ], supported);
+      expect(result, isNull);
+    });
+
+    test('[yue-HK, zh-CN] → zh-Hans (yue 不支援，繼續處理 zh-CN)', () {
+      final result = localeListResolution([
+        const Locale('yue', 'HK'),
+        const Locale('zh', 'CN'),
+      ], supported);
+      expect(
+        result,
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+    });
+
+    test('裸 zh (no script no country) → null', () {
+      // 沒有 region 資訊無法判定，交給 Flutter 預設（會 fallback 到 bare zh / template）
+      expect(localeListResolution([const Locale('zh')], supported), isNull);
+    });
+
+    test('空 / null systemLocales → null', () {
+      expect(localeListResolution(null, supported), isNull);
+      expect(localeListResolution(const [], supported), isNull);
+    });
+
+    test('完全不支援的語言 [ko-KR] → null', () {
+      expect(
+        localeListResolution([const Locale('ko', 'KR')], supported),
+        isNull,
+      );
+    });
+  });
 }
