@@ -619,8 +619,8 @@ abstract class AppLocalizations {
   /// No description provided for @pityClose.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'快保底了！'**
-  String get pityClose;
+  /// **'快保底了！剩餘 {n} 抽'**
+  String pityClose(int n);
 
   /// No description provided for @pityGuaranteed.
   ///

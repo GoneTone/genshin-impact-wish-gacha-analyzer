@@ -287,7 +287,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get pityClose => '快保底了！';
+  String pityClose(int n) {
+    return '快保底了！剩餘 $n 抽';
+  }
 
   @override
   String get pityGuaranteed => '保底中';
@@ -723,7 +725,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get pityClose => '快保底了！';
+  String pityClose(int n) {
+    return '快保底了！剩余 $n 抽';
+  }
 
   @override
   String get pityGuaranteed => '保底中';
@@ -1165,7 +1169,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   }
 
   @override
-  String get pityClose => '快保底了！';
+  String pityClose(int n) {
+    return '快保底了！剩餘 $n 抽';
+  }
 
   @override
   String get pityGuaranteed => '保底中';

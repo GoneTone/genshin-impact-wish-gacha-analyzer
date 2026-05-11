@@ -137,7 +137,10 @@
   "@pityDistance": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityClose": "Close to guaranteed!",
+  "pityClose": "Close to guaranteed! {n} pulls left",
+  "@pityClose": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "pityGuaranteed": "Guaranteed soon",
   "pityNoFiveStar": "No 5★ yet",
   "pityBeginnerEnded": "Ended",

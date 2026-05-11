@@ -135,7 +135,10 @@
   "@pityDistance": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityClose": "快保底了！",
+  "pityClose": "快保底了！剩余 {n} 抽",
+  "@pityClose": {
+    "placeholders": { "n": { "type": "int" } }
+  },
   "pityGuaranteed": "保底中",
   "pityNoFiveStar": "暂无 5★",
   "pityBeginnerEnded": "已结束",

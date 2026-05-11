@@ -103,9 +103,11 @@ class _PityCardState extends State<PityCard>
 
   _Phase _phase(Pity p) {
     if (widget.isEndedPool) return _Phase.ended;
-    final ratio = p.progress;
-    if (ratio >= 1.0 || p.distance == 0) return _Phase.guaranteed;
-    if (ratio >= 0.7) return _Phase.close;
+    if (p.progress >= 1.0 || p.distance == 0) return _Phase.guaranteed;
+    // 5★ 池（threshold 90）：剩餘 20 抽以內顯示「快保底」。
+    // 4★ 池（threshold 10）等較小的池子用 30% 作為比例門檻。
+    final closeAt = p.threshold > 20 ? 20 : (p.threshold * 0.3).ceil();
+    if (p.distance <= closeAt) return _Phase.close;
     return _Phase.normal;
   }
 }
@@ -187,7 +189,7 @@ class _Subtitle extends StatelessWidget {
     final (text, color) = switch (phase) {
       _Phase.ended => (l.pityBeginnerEnded, tokens.textMuted),
       _Phase.guaranteed => (l.pityGuaranteed, tokens.stateWarning),
-      _Phase.close => (l.pityClose, tokens.stateWarning),
+      _Phase.close => (l.pityClose(pity.distance), tokens.stateWarning),
       _Phase.normal =>
         pity.lastFiveStarAt == null
             ? (l.pityNoFiveStar, tokens.textMuted)

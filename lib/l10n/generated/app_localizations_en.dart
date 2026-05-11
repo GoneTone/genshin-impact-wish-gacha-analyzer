@@ -289,7 +289,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get pityClose => 'Close to guaranteed!';
+  String pityClose(int n) {
+    return 'Close to guaranteed! $n pulls left';
+  }
 
   @override
   String get pityGuaranteed => 'Guaranteed soon';
