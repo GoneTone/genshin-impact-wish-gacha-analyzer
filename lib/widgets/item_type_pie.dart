@@ -7,6 +7,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
+// 與 RarityPie 共用，確保兩個 Pie 視覺大小一致。
+// 直徑 = (38 + 22) × 2 = 120px，可在最小 chart slot (~122px) 內安全顯示。
+const double _kRingRadius = 38;
+const double _kCenterRadius = 22;
+
 const _unknownColor = Color(0xFF9E9E9E);
 
 List<DistributionEntry> itemTypeDistributionEntries(
@@ -51,42 +56,26 @@ class ItemTypePie extends StatelessWidget {
         child: Text(l.statsNoData, style: TextStyle(color: tokens.textMuted)),
       );
     }
-    return LayoutBuilder(
-      builder: (context, c) {
-        final available = _available(c);
-        final outer = available / 2;
-        final centerRadius = outer * 0.36;
-        final ringRadius = outer - centerRadius;
-        final sections = <PieChartSectionData>[
-          _section(stats.characterCount, tokens.character, ringRadius),
-          _section(stats.weaponCount, tokens.weapon, ringRadius),
-          if (stats.unknownCount > 0)
-            _section(stats.unknownCount, _unknownColor, ringRadius),
-        ].where((s) => s.value > 0).toList(growable: false);
-        return PieChart(
-          PieChartData(
-            sections: sections,
-            sectionsSpace: 2,
-            centerSpaceRadius: centerRadius,
-          ),
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeOut,
-        );
-      },
+    final sections = <PieChartSectionData>[
+      _section(stats.characterCount, tokens.character),
+      _section(stats.weaponCount, tokens.weapon),
+      if (stats.unknownCount > 0) _section(stats.unknownCount, _unknownColor),
+    ].where((s) => s.value > 0).toList(growable: false);
+    return PieChart(
+      PieChartData(
+        sections: sections,
+        sectionsSpace: 2,
+        centerSpaceRadius: _kCenterRadius,
+      ),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOut,
     );
   }
 
-  double _available(BoxConstraints c) {
-    final w = c.maxWidth.isFinite ? c.maxWidth : 140.0;
-    final h = c.maxHeight.isFinite ? c.maxHeight : 140.0;
-    return w < h ? w : h;
-  }
-
-  PieChartSectionData _section(int value, Color color, double radius) =>
-      PieChartSectionData(
-        showTitle: false,
-        value: value.toDouble(),
-        color: color,
-        radius: radius,
-      );
+  PieChartSectionData _section(int value, Color color) => PieChartSectionData(
+    showTitle: false,
+    value: value.toDouble(),
+    color: color,
+    radius: _kRingRadius,
+  );
 }
