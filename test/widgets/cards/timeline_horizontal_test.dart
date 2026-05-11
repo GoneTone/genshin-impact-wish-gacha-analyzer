@@ -98,4 +98,24 @@ void main() {
     expect(find.text(l.timelineNowLabel), findsOneWidget);
     expect(find.text(l.timelineNoRecords), findsNothing);
   });
+
+  testWidgets('Now column appears leftmost (before entry columns)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineHorizontal(
+          entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+          colors: colors,
+          nowPulls: 28,
+        ),
+      ),
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineHorizontal)),
+    )!;
+    final nowLeft = tester.getTopLeft(find.text(l.timelineNowLabel)).dx;
+    final entryLeft = tester.getTopLeft(find.text('夜蘭')).dx;
+    expect(nowLeft, lessThan(entryLeft));
+  });
 }

@@ -70,7 +70,7 @@ class TimelineHorizontal extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     if (nowPulls != null)
-                      _NowColumn(nowPulls: nowPulls!, tokens: tokens, l: l),
+                      _NowColumn(nowPulls: nowPulls!, tokens: tokens),
                     for (final entry in entries)
                       _EntryColumn(
                         entry: entry,
@@ -98,7 +98,7 @@ class _EntryColumn extends StatelessWidget {
   final BannerColors colors;
   final GachaTokens tokens;
 
-  String _formatShortDate(DateTime t) {
+  static String _formatShortDate(DateTime t) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(t.month)}/${two(t.day)}';
   }
@@ -145,48 +145,46 @@ class _EntryColumn extends StatelessWidget {
 }
 
 class _NowColumn extends StatelessWidget {
-  const _NowColumn({
-    required this.nowPulls,
-    required this.tokens,
-    required this.l,
-  });
+  const _NowColumn({required this.nowPulls, required this.tokens});
   final int nowPulls;
   final GachaTokens tokens;
-  final AppLocalizations l;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: _colWidth,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          l.timelineNowLabel,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: tokens.accentPrimary,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return SizedBox(
+      width: _colWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            l.timelineNowLabel,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: tokens.accentPrimary,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        _Node(color: tokens.accentPrimary, tokens: tokens, hollow: true),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          l.timelineNowPulls(nowPulls),
-          maxLines: 1,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: tokens.textMuted,
-            fontSize: 10,
-            fontFeatures: const [FontFeature.tabularFigures()],
+          const SizedBox(height: AppSpacing.xs),
+          _Node(color: tokens.accentPrimary, tokens: tokens, hollow: true),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l.timelineNowPulls(nowPulls),
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: tokens.textMuted,
+              fontSize: 10,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 class _Node extends StatelessWidget {
