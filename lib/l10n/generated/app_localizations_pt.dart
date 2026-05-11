@@ -251,15 +251,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsLocaleSystem => '跟隨系統';
 
   @override
-  String get settingsLocaleZhHant => '繁體中文';
-
-  @override
-  String get settingsLocaleZhHans => '简体中文';
-
-  @override
-  String get settingsLocaleEn => 'English';
-
-  @override
   String get settingsDataManagement => '資料管理';
 
   @override

@@ -253,15 +253,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLocaleSystem => 'Follow system';
 
   @override
-  String get settingsLocaleZhHant => '繁體中文';
-
-  @override
-  String get settingsLocaleZhHans => '简体中文';
-
-  @override
-  String get settingsLocaleEn => 'English';
-
-  @override
   String get settingsDataManagement => 'Data management';
 
   @override

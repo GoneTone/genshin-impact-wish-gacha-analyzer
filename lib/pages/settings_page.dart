@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
@@ -109,7 +110,7 @@ class _ThemeRadios extends StatelessWidget {
   }
 }
 
-class _LocaleDropdown extends StatelessWidget {
+class _LocaleDropdown extends ConsumerWidget {
   const _LocaleDropdown({
     required this.current,
     required this.onChanged,
@@ -120,34 +121,39 @@ class _LocaleDropdown extends StatelessWidget {
   final AppLocalizations l;
 
   @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<LanguagePreference>(
-      initialValue: current,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-      items: [
-        DropdownMenuItem(
-          value: const SystemLanguage(),
-          child: Text(l.settingsLocaleSystem),
-        ),
-        DropdownMenuItem(
-          value: const LocaleLanguage('zh-Hant'),
-          child: Text(l.settingsLocaleZhHant),
-        ),
-        DropdownMenuItem(
-          value: const LocaleLanguage('zh-Hans'),
-          child: Text(l.settingsLocaleZhHans),
-        ),
-        DropdownMenuItem(
-          value: const LocaleLanguage('en'),
-          child: Text(l.settingsLocaleEn),
-        ),
-      ],
-      onChanged: (v) {
-        if (v != null) onChanged(v);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncMeta = ref.watch(localeMetadataProvider);
+    return asyncMeta.when(
+      data: (metadata) {
+        final sorted = metadata.entries.toList()
+          ..sort((a, b) => a.value.nativeName.compareTo(b.value.nativeName));
+        return DropdownButtonFormField<LanguagePreference>(
+          initialValue: current,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: [
+            DropdownMenuItem(
+              value: const SystemLanguage(),
+              child: Text(l.settingsLocaleSystem),
+            ),
+            for (final entry in sorted)
+              DropdownMenuItem(
+                value: LocaleLanguage(entry.key),
+                child: Text(entry.value.nativeName),
+              ),
+          ],
+          onChanged: (v) {
+            if (v != null) onChanged(v);
+          },
+        );
       },
+      loading: () => const SizedBox(
+        height: 56,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, st) => Text('Failed to load locale metadata: $e'),
     );
   }
 }

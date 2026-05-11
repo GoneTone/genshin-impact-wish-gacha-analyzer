@@ -569,24 +569,6 @@ abstract class AppLocalizations {
   /// **'跟隨系統'**
   String get settingsLocaleSystem;
 
-  /// No description provided for @settingsLocaleZhHant.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'繁體中文'**
-  String get settingsLocaleZhHant;
-
-  /// No description provided for @settingsLocaleZhHans.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'简体中文'**
-  String get settingsLocaleZhHans;
-
-  /// No description provided for @settingsLocaleEn.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'English'**
-  String get settingsLocaleEn;
-
   /// No description provided for @settingsDataManagement.
   ///
   /// In zh_Hant, this message translates to:
