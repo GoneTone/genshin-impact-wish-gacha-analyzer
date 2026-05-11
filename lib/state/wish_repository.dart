@@ -7,8 +7,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
 
@@ -82,6 +84,10 @@ class WishRepository extends Notifier<WishState> {
 
   Future<void> _bootstrapLoad() async {
     final storage = ref.read(wishStorageProvider);
+    final settingsNotifier = ref.read(settingsProvider.notifier);
+    await settingsNotifier.waitForLoad();
+    if (!ref.mounted) return;
+
     final uids = await storage.listKnownUids();
     if (!ref.mounted) return;
 
@@ -96,14 +102,28 @@ class WishRepository extends Notifier<WishState> {
       state = state.copyWith(byUid: byUid, isBootstrapping: false);
       return;
     }
-    final newest = byUid.values.reduce(
-      (a, b) => a.lastUpdated.isAfter(b.lastUpdated) ? a : b,
+
+    final settings = ref.read(settingsProvider);
+    final ordered = mergeUidOrder(
+      knownUids: byUid.keys,
+      customOrder: settings.uidOrder,
+      lastUpdatedOf: (u) => byUid[u]!.lastUpdated,
     );
+
+    final saved = settings.lastActiveUid;
+    final activeUid = (saved != null && byUid.containsKey(saved))
+        ? saved
+        : ordered.first;
+
     state = state.copyWith(
       byUid: byUid,
-      activeUid: newest.uid,
+      activeUid: activeUid,
       isBootstrapping: false,
     );
+
+    if (saved != activeUid) {
+      await settingsNotifier.setLastActiveUid(activeUid);
+    }
   }
 
   Future<void> setActiveUid(String uid) async {
