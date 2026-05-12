@@ -2,10 +2,10 @@
 ;
 ; Genshin Impact Wish Gacha Analyzer — Inno Setup 安裝檔
 ;
-; 編譯方式:
+; 編譯方式：
 ;   ISCC.exe /DMyAppVersion=1.0.0 scripts\installer.iss
 ;
-; AppId 為固定 GUID,任何情況下不得變更(會破壞升級路徑)。
+; AppId 為固定 GUID，任何情況下不得變更（會破壞升級路徑）。
 
 #define MyAppId       "{50C50DF7-CB14-4D51-9618-0E5116DDA065}"
 #define MyAppName     "Genshin Impact Wish Gacha Analyzer"
@@ -65,7 +65,7 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 const
   UninstallPath = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall';
   DisplayNameNeedle = 'Genshin Impact Wish Gacha Analyzer';
-  // 新版自己的 Inno Setup 卸載 key 名稱(用於排除),格式固定為 "{AppId}_is1"
+  // 新版自己的 Inno Setup 卸載 key 名稱（用於排除），格式固定為 "{AppId}_is1"
   SelfUninstKey = '{#MyAppId}_is1';
 
 // 收集所有判定為「舊版」的 UninstallString
@@ -105,7 +105,7 @@ begin
   CollectOldUninstallers(HKCU,   UninstallPath, Result);
 end;
 
-// 解析 UninstallString,拆出 exe 路徑與額外參數
+// 解析 UninstallString，拆出 exe 路徑與額外參數
 procedure ParseUninstallCommand(const Cmd: String; var ExePath, ExtraArgs: String);
 var
   Trimmed: String;
@@ -136,11 +136,11 @@ var
   ResultCode: Integer;
 begin
   ParseUninstallCommand(UninstallString, ExePath, ExtraArgs);
-  // NSIS 靜默卸載 + 全機器;若舊版 uninstaller 不認得,參數會被忽略
+  // NSIS 靜默卸載 + 全機器；若舊版 uninstaller 不認得，參數會被忽略
   Params := '/S /allusers';
   if ExtraArgs <> '' then
     Params := ExtraArgs + ' ' + Params;
-  // 用 runas verb 提權(舊版是 perMachine,需要 admin 才能完整卸載)
+  // 用 runas verb 提權 (舊版是 perMachine，需要 admin 才能完整卸載)
   Result := ShellExec('runas', ExePath, Params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
@@ -171,9 +171,9 @@ begin
 
     for i := 0 to Olds.Count - 1 do
       RunOldUninstaller(Olds[i]);
-    // 不檢查每個 RunOldUninstaller 的回傳:
-    // - 若 uninstaller 不存在(殘留註冊表項)→ ShellExec 失敗,但舊版已壞,讓新版蓋過去
-    // - 若使用者在 UAC 按否 → 同上邏輯,繼續安裝
+    // 不檢查每個 RunOldUninstaller 的回傳：
+    // - 若 uninstaller 不存在（殘留註冊表項）→ ShellExec 失敗，但舊版已壞，讓新版蓋過去
+    // - 若使用者在 UAC 按否 → 同上邏輯，繼續安裝
   finally
     Olds.Free;
   end;
