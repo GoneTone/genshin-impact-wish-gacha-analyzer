@@ -19,7 +19,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_managem
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -67,7 +66,7 @@ class SettingsPage extends ConsumerWidget {
                 child: const AccountManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
-              SectionCard(title: l.settingsAbout, child: _AboutContent()),
+              SectionCard(title: l.settingsAbout, child: const _AboutContent()),
             ],
           ),
         ),
@@ -170,35 +169,15 @@ class _LocaleDropdown extends ConsumerWidget {
 }
 
 class _AboutContent extends ConsumerWidget {
+  const _AboutContent();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final version = ref.watch(appVersionProvider);
-    final translator = l.localeTranslator;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(l.settingsAboutVersion(version)),
-        if (translator.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.s),
-          Row(
-            children: [
-              Icon(
-                Icons.translate,
-                size: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: AppSpacing.s),
-              Expanded(
-                child: TranslatorText(
-                  raw: translator,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ],
+      children: [Text(l.settingsAboutVersion(version))],
     );
   }
 }
