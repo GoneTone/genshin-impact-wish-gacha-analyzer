@@ -4,11 +4,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:http/http.dart' as http;
@@ -947,4 +949,222 @@ void main() {
     final afterReload = await SettingsStorage.load();
     expect(afterReload.lastActiveUid, beforeReload.lastActiveUid);
   });
+
+  test(
+    'importAllAccounts: per-UID overwrite preserves non-imported accounts',
+    () async {
+      final storage = WishStorage(tempDir);
+      // Existing: A (old data), C (untouched)
+      await storage.save(
+        BannerStorage(
+          uid: 'A',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+      await storage.save(
+        BannerStorage(
+          uid: 'C',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final newA = BannerStorage(
+        uid: 'A',
+        lastUpdated: DateTime.utc(2026, 5, 12),
+        banners: const {'301': [], '302': []},
+      );
+      final newB = BannerStorage(
+        uid: 'B',
+        lastUpdated: DateTime.utc(2026, 5, 12),
+        banners: const {'301': []},
+      );
+      final bundle = AllAccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: 'A',
+        accounts: [
+          ExportedAccount(data: newA, alias: '主號'),
+          ExportedAccount(data: newB),
+        ],
+      );
+
+      final result = await container
+          .read(wishRepositoryProvider.notifier)
+          .importAllAccounts(bundle);
+
+      expect(result.failedUids, isEmpty);
+      expect(result.successAccounts, 2);
+
+      final state = container.read(wishRepositoryProvider);
+      expect(state.byUid.keys.toSet(), {'A', 'B', 'C'});
+      // A overwritten
+      expect(state.byUid['A']!.lastUpdated, DateTime.utc(2026, 5, 12));
+      // C preserved
+      expect(state.byUid['C']!.lastUpdated, DateTime.utc(2026, 1, 1));
+      expect(state.activeUid, 'A');
+
+      // Settings: alias on A, no alias on B/C; order = [A, B, ...]
+      final settings = container.read(settingsProvider);
+      expect(settings.uidAliases, {'A': '主號'});
+      expect(settings.uidOrder.take(2).toList(), ['A', 'B']);
+      expect(settings.lastActiveUid, 'A');
+    },
+  );
+
+  test(
+    'importAllAccounts: uidOrder merges imported order first, then remaining',
+    () async {
+      final storage = WishStorage(tempDir);
+      for (final uid in ['A', 'C', 'D']) {
+        await storage.save(
+          BannerStorage(
+            uid: uid,
+            lastUpdated: DateTime.utc(2026, 1, 1),
+            banners: const {'301': []},
+          ),
+        );
+      }
+
+      SharedPreferences.setMockInitialValues({
+        'pref.uidOrder': jsonEncode(['D', 'A', 'C']),
+      });
+
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final bundle = AllAccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: 'B',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+          ),
+          ExportedAccount(
+            data: BannerStorage(
+              uid: 'A',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+          ),
+        ],
+      );
+
+      await container
+          .read(wishRepositoryProvider.notifier)
+          .importAllAccounts(bundle);
+
+      final order = container.read(settingsProvider).uidOrder;
+      // imported [B, A] first, then remaining custom order minus imported = [D, C]
+      expect(order, ['B', 'A', 'D', 'C']);
+    },
+  );
+
+  test(
+    'importAllAccounts: storage write failure marks UID failed and skips it',
+    () async {
+      // Inject a storage that fails on UID == "B"
+      final storage = _FailingStorage(tempDir, failOnUid: 'B');
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final bundle = AllAccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: 'B',
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: 'A',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+            alias: '主號',
+          ),
+          ExportedAccount(
+            data: BannerStorage(
+              uid: 'B',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+          ),
+        ],
+      );
+
+      final result = await container
+          .read(wishRepositoryProvider.notifier)
+          .importAllAccounts(bundle);
+
+      expect(result.failedUids, ['B']);
+      expect(result.successAccounts, 1);
+
+      final state = container.read(wishRepositoryProvider);
+      expect(state.byUid.keys, ['A']);
+      // lastActiveUid asked for B (failed) → falls back to A
+      expect(state.activeUid, 'A');
+      // uidOrder doesn't contain failed B
+      expect(container.read(settingsProvider).uidOrder.contains('B'), isFalse);
+    },
+  );
+}
+
+class _FailingStorage extends WishStorage {
+  _FailingStorage(super.baseDir, {required this.failOnUid});
+  final String failOnUid;
+
+  @override
+  Future<void> save(BannerStorage data) async {
+    if (data.uid == failOnUid) {
+      throw Exception('simulated failure');
+    }
+    return super.save(data);
+  }
 }

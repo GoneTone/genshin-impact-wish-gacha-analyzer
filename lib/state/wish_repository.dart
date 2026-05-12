@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
@@ -18,6 +19,18 @@ export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
 class _NoRecordsException implements Exception {
   const _NoRecordsException();
+}
+
+class ImportAllResult {
+  const ImportAllResult({
+    required this.successAccounts,
+    required this.totalRecords,
+    required this.failedUids,
+  });
+
+  final int successAccounts;
+  final int totalRecords;
+  final List<String> failedUids;
 }
 
 @immutable
@@ -383,6 +396,95 @@ class WishRepository extends Notifier<WishState> {
     state = state.copyWith(byUid: newByUid, activeUid: data.uid);
     if (!ref.mounted) return;
     await ref.read(settingsProvider.notifier).setLastActiveUid(data.uid);
+  }
+
+  Future<ImportAllResult> importAllAccounts(AllAccountsBundle bundle) async {
+    final storage = ref.read(wishStorageProvider);
+    final settingsNotifier = ref.read(settingsProvider.notifier);
+
+    final newByUid = Map<String, BannerStorage>.from(state.byUid);
+    final failed = <String>[];
+    var totalRecords = 0;
+    var successCount = 0;
+
+    for (final account in bundle.accounts) {
+      try {
+        await storage.save(account.data);
+        if (!ref.mounted) {
+          return ImportAllResult(
+            successAccounts: successCount,
+            totalRecords: totalRecords,
+            failedUids: failed,
+          );
+        }
+        newByUid[account.data.uid] = account.data;
+        successCount++;
+        for (final list in account.data.banners.values) {
+          totalRecords += list.length;
+        }
+      } catch (_) {
+        failed.add(account.data.uid);
+      }
+    }
+
+    final currentSettings = ref.read(settingsProvider);
+    final mergedAliases = Map<String, String>.from(currentSettings.uidAliases);
+    for (final account in bundle.accounts) {
+      if (failed.contains(account.data.uid)) continue;
+      final a = account.alias?.trim();
+      if (a == null || a.isEmpty) {
+        mergedAliases.remove(account.data.uid);
+      } else {
+        mergedAliases[account.data.uid] = a;
+      }
+    }
+
+    final exportedOrder = bundle.accounts
+        .where((a) => !failed.contains(a.data.uid))
+        .map((a) => a.data.uid)
+        .toList();
+    final exportedSet = exportedOrder.toSet();
+    final remaining = currentSettings.uidOrder
+        .where((u) => !exportedSet.contains(u))
+        .toList();
+    final newOrder = [...exportedOrder, ...remaining];
+
+    final desiredActive = bundle.lastActiveUid;
+    final fallback =
+        state.activeUid != null && newByUid.containsKey(state.activeUid)
+        ? state.activeUid
+        : (newByUid.isEmpty
+              ? null
+              : (newOrder.isEmpty ? newByUid.keys.first : newOrder.first));
+    final newActive =
+        (desiredActive != null && newByUid.containsKey(desiredActive))
+        ? desiredActive
+        : fallback;
+
+    await settingsNotifier.applyImportedPreferences(
+      aliases: mergedAliases,
+      uidOrder: newOrder,
+      lastActiveUid: newActive,
+    );
+    if (!ref.mounted) {
+      return ImportAllResult(
+        successAccounts: successCount,
+        totalRecords: totalRecords,
+        failedUids: failed,
+      );
+    }
+
+    state = state.copyWith(
+      byUid: newByUid,
+      activeUid: newActive,
+      clearActiveUid: newActive == null,
+    );
+
+    return ImportAllResult(
+      successAccounts: successCount,
+      totalRecords: totalRecords,
+      failedUids: failed,
+    );
   }
 
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
