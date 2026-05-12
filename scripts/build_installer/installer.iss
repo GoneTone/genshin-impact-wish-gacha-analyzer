@@ -1,9 +1,9 @@
-; scripts/installer.iss
+; scripts/build_installer/installer.iss
 ;
 ; Genshin Impact Wish Gacha Analyzer — Inno Setup 安裝檔
 ;
 ; 編譯方式：
-;   ISCC.exe /DMyAppVersion=1.0.0 scripts\installer.iss
+;   ISCC.exe /DMyAppVersion=1.0.0 scripts\build_installer\installer.iss
 ;
 ; AppId 為固定 GUID，任何情況下不得變更（會破壞升級路徑）。
 
@@ -31,13 +31,13 @@ DefaultGroupName={#MyAppName}
 DisableDirPage=no
 PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64compatible
-SetupIconFile=..\windows\runner\resources\app_icon.ico
+SetupIconFile=..\..\windows\runner\resources\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
 Compression=lzma2/ultra
 SolidCompression=yes
 WizardStyle=modern
-OutputDir=..\build\installer
+OutputDir=..\..\build\installer
 OutputBaseFilename=Genshin_Impact_Wish_Gacha_Analyzer-Setup-{#MyAppVersion}
 
 [Languages]
@@ -78,7 +78,7 @@ Name: "tradchinese"; MessagesFile: "ChineseTraditional.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkedonce
 
 [Files]
-Source: "..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; \
+Source: "..\..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; \
     Flags: recursesubdirs createallsubdirs ignoreversion
 
 [Icons]

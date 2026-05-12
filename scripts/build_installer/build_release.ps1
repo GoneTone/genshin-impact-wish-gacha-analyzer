@@ -1,4 +1,4 @@
-# scripts/build_release.ps1
+# scripts/build_installer/build_release.ps1
 #
 # Genshin Impact Wish Gacha Analyzer — Windows 一鍵打包腳本
 #
@@ -10,12 +10,12 @@
 #   5. 報告產物路徑
 #
 # 用法：
-#   .\scripts\build_release.ps1
+#   .\scripts\build_installer\build_release.ps1
 
 $ErrorActionPreference = 'Stop'
 
 # 切到專案根目錄（以本腳本為基準往上一層）
-$ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+$ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 Set-Location $ProjectRoot
 
 # --- 1. 讀版本號 -------------------------------------------------------------
@@ -86,7 +86,7 @@ if ($LASTEXITCODE -ne 0) { throw "flutter build 失敗" }
 $InstallerDir = Join-Path $ProjectRoot 'build\installer'
 New-Item -ItemType Directory -Force $InstallerDir | Out-Null
 
-$IssPath = Join-Path $ProjectRoot 'scripts\installer.iss'
+$IssPath = Join-Path $ProjectRoot 'scripts\build_installer\installer.iss'
 
 Write-Host ""
 Write-Host "==> ISCC compile" -ForegroundColor Green
