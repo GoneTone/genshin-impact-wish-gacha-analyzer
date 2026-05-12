@@ -7,6 +7,7 @@
 #   2. 偵測 Inno Setup 6 是否安裝
 #   3. flutter pub get + flutter build windows --release
 #   4. 呼叫 ISCC.exe 編譯 installer.iss
+#   5. 報告產物路徑
 #
 # 用法:
 #   .\scripts\build_release.ps1
