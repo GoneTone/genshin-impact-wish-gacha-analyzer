@@ -64,7 +64,6 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 [Code]
 const
   UninstallPath = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall';
-  Wow64UninstallPath = 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall';
   DisplayNameNeedle = 'Genshin Impact Wish Gacha Analyzer';
   // 新版自己的 Inno Setup 卸載 key 名稱(用於排除),格式固定為 "{AppId}_is1"
   SelfUninstKey = '{#MyAppId}_is1';
@@ -103,7 +102,6 @@ begin
   Result.Sorted := True;
   CollectOldUninstallers(HKLM32, UninstallPath, Result);
   CollectOldUninstallers(HKLM64, UninstallPath, Result);
-  CollectOldUninstallers(HKLM32, Wow64UninstallPath, Result);
   CollectOldUninstallers(HKCU,   UninstallPath, Result);
 end;
 
