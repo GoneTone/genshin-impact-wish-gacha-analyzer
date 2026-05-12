@@ -94,8 +94,9 @@ void main() {
           matching: find.byType(RichText),
         ),
       );
-      final root = richText.text as TextSpan;
-      final spans = root.children!.cast<TextSpan>();
+      final wrapper = richText.text as TextSpan;
+      final ourSpan = wrapper.children!.single as TextSpan;
+      final spans = ourSpan.children!.cast<TextSpan>();
 
       final linkSpan = spans.firstWhere((s) => s.text == '世界へいわ');
       expect(linkSpan.style?.decoration, TextDecoration.underline);
@@ -118,8 +119,10 @@ void main() {
           matching: find.byType(RichText),
         ),
       );
-      final root = richText.text as TextSpan;
-      for (final span in root.children!.cast<TextSpan>()) {
+      final wrapper = richText.text as TextSpan;
+      final ourSpan = wrapper.children!.single as TextSpan;
+      final spans = ourSpan.children!.cast<TextSpan>();
+      for (final span in spans) {
         expect(span.recognizer, isNull);
       }
     });

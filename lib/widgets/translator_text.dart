@@ -120,8 +120,8 @@ class _TranslatorTextState extends State<TranslatorText> {
     final linkColor = Theme.of(context).colorScheme.primary;
 
     var linkIndex = 0;
-    return RichText(
-      text: TextSpan(
+    return Text.rich(
+      TextSpan(
         children: [
           for (final seg in _segments)
             if (seg is TextSegment)
