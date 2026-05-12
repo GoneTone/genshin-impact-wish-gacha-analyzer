@@ -69,3 +69,31 @@ if (-not $ISCC) {
     exit 1
 }
 Write-Host "Inno Setup:$ISCC" -ForegroundColor Cyan
+
+# --- 3. Flutter build --------------------------------------------------------
+Write-Host ""
+Write-Host "==> flutter pub get" -ForegroundColor Green
+flutter pub get
+if ($LASTEXITCODE -ne 0) { throw "flutter pub get 失敗" }
+
+Write-Host ""
+Write-Host "==> flutter build windows --release" -ForegroundColor Green
+flutter build windows --release
+if ($LASTEXITCODE -ne 0) { throw "flutter build 失敗" }
+
+# --- 4. 編譯安裝檔 ----------------------------------------------------------
+$InstallerDir = Join-Path $ProjectRoot 'build\installer'
+New-Item -ItemType Directory -Force $InstallerDir | Out-Null
+
+$IssPath = Join-Path $ProjectRoot 'scripts\installer.iss'
+
+Write-Host ""
+Write-Host "==> ISCC compile" -ForegroundColor Green
+& $ISCC "/DMyAppVersion=$Version" $IssPath
+if ($LASTEXITCODE -ne 0) { throw "ISCC 編譯失敗" }
+
+# --- 5. 報告產物 -------------------------------------------------------------
+$Output = Join-Path $InstallerDir "Genshin_Impact_Wish_Gacha_Analyzer-Setup-$Version.exe"
+Write-Host ""
+Write-Host "完成!產物:" -ForegroundColor Green
+Write-Host "  $Output" -ForegroundColor Cyan
