@@ -171,8 +171,7 @@ begin
     for i := 0 to Olds.Count - 1 do
       RunOldUninstaller(Olds[i]);
     // 不檢查每個 RunOldUninstaller 的回傳：
-    // - 若 uninstaller 不存在（殘留註冊表項）→ ShellExec 失敗，但舊版已壞，讓新版蓋過去
-    // - 若使用者在 UAC 按否 → 同上邏輯，繼續安裝
+    // 若 uninstaller 不存在（殘留註冊表項）→ ShellExec 失敗，但舊版已壞，讓新版蓋過去
   finally
     Olds.Free;
   end;
