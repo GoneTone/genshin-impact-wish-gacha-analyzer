@@ -101,6 +101,7 @@ void main() {
       final linkSpan = spans.firstWhere((s) => s.text == '世界へいわ');
       expect(linkSpan.style?.decoration, TextDecoration.underline);
       expect(linkSpan.recognizer, isNotNull);
+      expect(linkSpan.mouseCursor, SystemMouseCursors.click);
 
       final textSpan = spans.firstWhere((s) => s.text == 'jj、');
       expect(textSpan.recognizer, isNull);

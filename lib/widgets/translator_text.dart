@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 /// 把 localeTranslator 字串拆成可渲染段落。
 ///
@@ -104,13 +104,7 @@ class _TranslatorTextState extends State<TranslatorText> {
     _recognizers.clear();
   }
 
-  Future<void> _open(Uri uri) async {
-    if (!await canLaunchUrl(uri)) {
-      debugPrint('TranslatorText: cannot launch $uri');
-      return;
-    }
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
+  Future<void> _open(Uri uri) => openExternalUrl(uri);
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +125,7 @@ class _TranslatorTextState extends State<TranslatorText> {
                   color: linkColor,
                   decoration: TextDecoration.underline,
                 ),
+                mouseCursor: SystemMouseCursors.click,
                 recognizer: _recognizers[linkIndex++],
               ),
         ],
