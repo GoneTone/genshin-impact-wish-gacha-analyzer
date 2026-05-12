@@ -19,6 +19,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_managem
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -190,8 +191,8 @@ class _AboutContent extends ConsumerWidget {
               ),
               const SizedBox(width: AppSpacing.s),
               Expanded(
-                child: Text(
-                  translator,
+                child: TranslatorText(
+                  raw: translator,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
