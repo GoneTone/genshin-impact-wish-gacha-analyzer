@@ -157,7 +157,7 @@ begin
       Exit;
 
     if ActiveLanguage() = 'tradchinese' then
-      Msg := '偵測到已安裝的舊版本(Electron 版),是否要先移除舊版本再繼續安裝新版本?' + #13#10#13#10 +
+      Msg := '偵測到已安裝的舊版本 (Electron 版)，是否要先移除舊版本再繼續安裝新版本？' + #13#10#13#10 +
              '按「否」將取消安裝。'
     else
       Msg := 'An older version (Electron-based) was detected. Uninstall it before continuing?' + #13#10#13#10 +
