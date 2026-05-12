@@ -212,4 +212,24 @@ void main() {
       );
     });
   });
+
+  group('sortedLocaleMetadata', () {
+    test('依 nativeName 字典序排列', () {
+      final input = <String, LocaleMetadata>{
+        'b': const LocaleMetadata(nativeName: 'Banana', translator: ''),
+        'a': const LocaleMetadata(nativeName: 'Apple', translator: ''),
+        'c': const LocaleMetadata(nativeName: 'Cherry', translator: ''),
+      };
+      final sorted = sortedLocaleMetadata(input);
+      expect(sorted.map((e) => e.value.nativeName), [
+        'Apple',
+        'Banana',
+        'Cherry',
+      ]);
+    });
+
+    test('空 Map → 空 List', () {
+      expect(sortedLocaleMetadata(const {}), isEmpty);
+    });
+  });
 }

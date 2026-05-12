@@ -106,3 +106,11 @@ Locale? localeListResolution(
   }
   return null;
 }
+
+/// 將 `localeMetadataProvider` 的結果依 `nativeName` 字典序排序，
+/// `SettingsPage._LocaleDropdown` 與 `ContributorsPage._LanguageList` 共用。
+List<MapEntry<String, LocaleMetadata>> sortedLocaleMetadata(
+  Map<String, LocaleMetadata> meta,
+) =>
+    meta.entries.toList()
+      ..sort((a, b) => a.value.nativeName.compareTo(b.value.nativeName));

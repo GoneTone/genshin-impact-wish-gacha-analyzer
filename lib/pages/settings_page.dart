@@ -126,8 +126,7 @@ class _LocaleDropdown extends ConsumerWidget {
     final asyncMeta = ref.watch(localeMetadataProvider);
     return asyncMeta.when(
       data: (metadata) {
-        final sorted = metadata.entries.toList()
-          ..sort((a, b) => a.value.nativeName.compareTo(b.value.nativeName));
+        final sorted = sortedLocaleMetadata(metadata);
         final selectableTags = metadata.keys.toSet();
         // 防禦：使用者過去可能存了 supportedLocales 已不存在的代碼（例如
         // 整併前的 "pt-BR"）。若 current 不在當前 dropdown 選項裡，顯示為
