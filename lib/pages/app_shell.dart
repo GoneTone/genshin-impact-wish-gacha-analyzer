@@ -52,7 +52,8 @@ class _AppShellState extends ConsumerState<AppShell> {
     final version = ref.watch(appVersionProvider);
 
     final isSettingsActive = location == '/settings';
-    final selectedIndex = isSettingsActive
+    final isContributorsActive = location == '/contributors';
+    final selectedIndex = (isSettingsActive || isContributorsActive)
         ? null
         : _bannerIndexFromLocation(location);
 
@@ -102,6 +103,7 @@ class _AppShellState extends ConsumerState<AppShell> {
                 _Rail(
                   selectedIndex: selectedIndex,
                   isSettingsActive: isSettingsActive,
+                  isContributorsActive: isContributorsActive,
                   extended: extendedRail,
                   collapsedNoLabel: collapsedNoLabel,
                   l: l,
@@ -149,12 +151,14 @@ class _Rail extends StatelessWidget {
   const _Rail({
     required this.selectedIndex,
     required this.isSettingsActive,
+    required this.isContributorsActive,
     required this.extended,
     required this.collapsedNoLabel,
     required this.l,
   });
   final int? selectedIndex;
   final bool isSettingsActive;
+  final bool isContributorsActive;
   final bool extended;
   final bool collapsedNoLabel;
   final AppLocalizations l;
@@ -212,12 +216,24 @@ class _Rail extends StatelessWidget {
               groupAlignment: -1.0,
             ),
           ),
-          // 設定入口（與其他 destination 視覺分隔，固定在底部，與 rail 同寬）
-          _SettingsRailButton(
+          // 貢獻者入口
+          _BottomRailButton(
+            active: isContributorsActive,
+            extended: extended,
+            hideLabel: collapsedNoLabel,
+            label: l.navContributors,
+            iconActive: Icons.volunteer_activism,
+            iconInactive: Icons.volunteer_activism_outlined,
+            onPressed: () => context.go('/contributors'),
+          ),
+          // 設定入口（固定在底部）
+          _BottomRailButton(
             active: isSettingsActive,
             extended: extended,
             hideLabel: collapsedNoLabel,
             label: l.navSettings,
+            iconActive: Icons.settings,
+            iconInactive: Icons.settings_outlined,
             onPressed: () => context.go('/settings'),
           ),
           const SizedBox(height: AppSpacing.s),
@@ -236,18 +252,22 @@ class _Rail extends StatelessWidget {
   }
 }
 
-class _SettingsRailButton extends StatelessWidget {
-  const _SettingsRailButton({
+class _BottomRailButton extends StatelessWidget {
+  const _BottomRailButton({
     required this.active,
     required this.extended,
     required this.hideLabel,
     required this.label,
+    required this.iconActive,
+    required this.iconInactive,
     required this.onPressed,
   });
   final bool active;
   final bool extended;
   final bool hideLabel;
   final String label;
+  final IconData iconActive;
+  final IconData iconInactive;
   final VoidCallback onPressed;
 
   @override
@@ -256,6 +276,7 @@ class _SettingsRailButton extends StatelessWidget {
     final color = active
         ? Theme.of(context).colorScheme.primary
         : tokens.textSecondary;
+    final icon = Icon(active ? iconActive : iconInactive, color: color);
     return Container(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: tokens.borderSubtle)),
@@ -271,27 +292,16 @@ class _SettingsRailButton extends StatelessWidget {
               ? Row(
                   children: [
                     const SizedBox(width: AppSpacing.xs),
-                    Icon(
-                      active ? Icons.settings : Icons.settings_outlined,
-                      color: color,
-                    ),
+                    icon,
                     const SizedBox(width: AppSpacing.m),
                     Text(label, style: TextStyle(color: color)),
                   ],
                 )
               : (hideLabel
-                    ? Center(
-                        child: Icon(
-                          active ? Icons.settings : Icons.settings_outlined,
-                          color: color,
-                        ),
-                      )
+                    ? Center(child: icon)
                     : Column(
                         children: [
-                          Icon(
-                            active ? Icons.settings : Icons.settings_outlined,
-                            color: color,
-                          ),
+                          icon,
                           const SizedBox(height: AppSpacing.xs),
                           Text(
                             label,
