@@ -27,13 +27,10 @@ bool FlutterWindow::OnCreate() {
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
-    this->Show();
-  });
-
-  // Flutter can complete the first frame before the "show window" callback is
-  // registered. The following call ensures a frame is pending to ensure the
-  // window is shown. It is a no-op if the first frame hasn't completed yet.
+  // 視窗顯示交由 Dart 端 windowManager.show() 控制（在 WindowStateKeeper.bootstrap
+  // 還原 maximize/normal bounds 之後才呼叫），避免 engine 在 first frame ready 時
+  // 自行 ShowWindow(SW_SHOWNORMAL) 把已套用的 maximize 狀態打回 normal、造成「白畫
+  // 面 + 沒最大化、要再點一次才正常」。
   flutter_controller_->ForceRedraw();
 
   return true;
