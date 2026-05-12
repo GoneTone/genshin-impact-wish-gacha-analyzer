@@ -265,7 +265,7 @@ abstract class AppLocalizations {
   /// No description provided for @uidRecapture.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'重新攔截 / 切換帳號'**
+  /// **'新增帳號'**
   String get uidRecapture;
 
   /// No description provided for @emptyNoSyncTitle.
@@ -865,7 +865,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountRecapture.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'重新攔截 / 新增帳號'**
+  /// **'新增帳號'**
   String get accountRecapture;
 
   /// No description provided for @accountAliasLabel.

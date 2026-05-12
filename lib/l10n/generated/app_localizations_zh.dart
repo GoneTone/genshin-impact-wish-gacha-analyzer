@@ -86,7 +86,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get uidActiveSuffix => '（活躍）';
 
   @override
-  String get uidRecapture => '重新攔截 / 切換帳號';
+  String get uidRecapture => '新增帳號';
 
   @override
   String get emptyNoSyncTitle => '尚未同步任何資料';
@@ -426,7 +426,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get accountRemove => '移除';
 
   @override
-  String get accountRecapture => '重新攔截 / 新增帳號';
+  String get accountRecapture => '新增帳號';
 
   @override
   String get accountAliasLabel => '別名';
@@ -536,7 +536,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get uidActiveSuffix => '（活跃）';
 
   @override
-  String get uidRecapture => '重新拦截 / 切换账号';
+  String get uidRecapture => '新增账号';
 
   @override
   String get emptyNoSyncTitle => '尚未同步任何数据';
@@ -876,7 +876,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get accountRemove => '移除';
 
   @override
-  String get accountRecapture => '重新拦截 / 新增账号';
+  String get accountRecapture => '新增账号';
 
   @override
   String get accountAliasLabel => '别名';
@@ -986,7 +986,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get uidActiveSuffix => '（活躍）';
 
   @override
-  String get uidRecapture => '重新攔截 / 切換帳號';
+  String get uidRecapture => '新增帳號';
 
   @override
   String get emptyNoSyncTitle => '尚未同步任何資料';
@@ -1326,7 +1326,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get accountRemove => '移除';
 
   @override
-  String get accountRecapture => '重新攔截 / 新增帳號';
+  String get accountRecapture => '新增帳號';
 
   @override
   String get accountAliasLabel => '別名';

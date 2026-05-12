@@ -35,7 +35,7 @@
   "uidSwitchTooltip": "Switch account",
   "uidNotSynced": "Not synced",
   "uidActiveSuffix": " (active)",
-  "uidRecapture": "Re-capture / switch account",
+  "uidRecapture": "Add account",
 
   "emptyNoSyncTitle": "No data synced yet",
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
@@ -222,7 +222,7 @@
   "accountActiveTag": "Active",
   "accountSetActive": "Set active",
   "accountRemove": "Remove",
-  "accountRecapture": "Re-capture / add account",
+  "accountRecapture": "Add account",
   "accountAliasLabel": "Alias",
   "accountAliasHint": "A friendly name for this account",
   "accountDragHandleTooltip": "Drag to reorder",

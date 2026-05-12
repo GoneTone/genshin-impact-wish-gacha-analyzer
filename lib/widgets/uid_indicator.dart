@@ -72,7 +72,7 @@ class UidIndicator extends ConsumerWidget {
           value: '__recapture__',
           child: Row(
             children: [
-              const Icon(Icons.refresh, size: 16),
+              const Icon(Icons.person_add_alt, size: 16),
               const SizedBox(width: AppSpacing.s),
               Text(l.uidRecapture),
             ],

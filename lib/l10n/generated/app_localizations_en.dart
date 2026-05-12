@@ -86,7 +86,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uidActiveSuffix => ' (active)';
 
   @override
-  String get uidRecapture => 'Re-capture / switch account';
+  String get uidRecapture => 'Add account';
 
   @override
   String get emptyNoSyncTitle => 'No data synced yet';
@@ -429,7 +429,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountRemove => 'Remove';
 
   @override
-  String get accountRecapture => 'Re-capture / add account';
+  String get accountRecapture => 'Add account';
 
   @override
   String get accountAliasLabel => 'Alias';

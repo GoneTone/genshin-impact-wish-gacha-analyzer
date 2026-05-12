@@ -86,7 +86,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get uidActiveSuffix => '（活躍）';
 
   @override
-  String get uidRecapture => '重新攔截 / 切換帳號';
+  String get uidRecapture => '新增帳號';
 
   @override
   String get emptyNoSyncTitle => '尚未同步任何資料';
@@ -426,7 +426,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get accountRemove => '移除';
 
   @override
-  String get accountRecapture => '重新攔截 / 新增帳號';
+  String get accountRecapture => '新增帳號';
 
   @override
   String get accountAliasLabel => '別名';

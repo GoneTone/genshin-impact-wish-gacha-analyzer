@@ -77,7 +77,7 @@ class AccountManagement extends ConsumerWidget {
           alignment: Alignment.centerLeft,
           child: FilledButton.icon(
             onPressed: () => notifier.forceRecaptureAndUpdate(),
-            icon: const Icon(Icons.refresh, size: 18),
+            icon: const Icon(Icons.person_add_alt, size: 18),
             label: Text(l.accountRecapture),
           ),
         ),
