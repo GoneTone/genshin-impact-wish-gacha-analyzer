@@ -79,4 +79,24 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('已翻譯語言 SectionCard 顯示繁體中文 / 簡體中文 / English', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('繁體中文'), findsOneWidget);
+    expect(find.text('简体中文'), findsOneWidget);
+    expect(find.textContaining('English'), findsWidgets);
+  });
+
+  testWidgets('已翻譯語言 SectionCard 含協助翻譯說明與 Crowdin 連結', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('沒有您的語言嗎'), findsOneWidget);
+    expect(
+      find.text(
+        'https://crowdin.com/project/genshin-impact-wish-gacha-analyzer',
+      ),
+      findsOneWidget,
+    );
+  });
 }

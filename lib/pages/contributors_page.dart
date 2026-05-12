@@ -1,9 +1,11 @@
 // lib/pages/contributors_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/contributors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -52,7 +54,19 @@ class ContributorsPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsTranslatedLanguages,
-                child: const SizedBox.shrink(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const _LanguageList(),
+                    const SizedBox(height: AppSpacing.m),
+                    Text(l.contributorsHelpTranslate),
+                    const SizedBox(height: AppSpacing.s),
+                    const TranslatorText(
+                      raw:
+                          '<a href="$translationCrowdinUrl">$translationCrowdinUrl</a>',
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -101,5 +115,44 @@ class _ContributorChips extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+}
+
+class _LanguageList extends ConsumerWidget {
+  const _LanguageList();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncMeta = ref.watch(localeMetadataProvider);
+    return asyncMeta.when(
+      data: (metadata) {
+        final sorted = sortedLocaleMetadata(metadata);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final entry in sorted)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: entry.value.translator.isEmpty
+                    ? Text(entry.value.nativeName)
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${entry.value.nativeName} — '),
+                          Expanded(
+                            child: TranslatorText(raw: entry.value.translator),
+                          ),
+                        ],
+                      ),
+              ),
+          ],
+        );
+      },
+      loading: () => const SizedBox(
+        height: 56,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, _) => Text('Failed to load locale metadata: $e'),
+    );
   }
 }
