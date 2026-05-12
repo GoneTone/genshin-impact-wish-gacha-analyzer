@@ -34,4 +34,49 @@ void main() {
     expect(find.text('已翻譯語言'), findsOneWidget);
     expect(find.text('專案授權'), findsOneWidget);
   });
+
+  testWidgets('專案負責人 SectionCard 顯示 GoneTone 並包成 InkWell', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('GoneTone'), findsOneWidget);
+    expect(
+      find.ancestor(of: find.text('GoneTone'), matching: find.byType(InkWell)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('測試人員 SectionCard 顯示兩位 testers', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('世界へいわ'), findsWidgets);
+    expect(find.text('Zhi'), findsOneWidget);
+  });
+
+  testWidgets('翻譯審稿人 SectionCard 顯示三人；pan93412 / Lemon7777 為純文字（無 url）', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('pan93412'), findsOneWidget);
+    expect(find.text('Lemon7777'), findsOneWidget);
+    expect(
+      find.ancestor(of: find.text('pan93412'), matching: find.byType(InkWell)),
+      findsNothing,
+    );
+    expect(
+      find.ancestor(of: find.text('Lemon7777'), matching: find.byType(InkWell)),
+      findsNothing,
+    );
+  });
+
+  testWidgets('GitHub 貢獻者 SectionCard 顯示完整 URL', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/graphs/contributors',
+      ),
+      findsOneWidget,
+    );
+  });
 }
