@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/app_shell.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/banner_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/overview_page.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/pages/contributors_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/settings_page.dart';
 
 GoRouter buildAppRouter() => GoRouter(
@@ -18,6 +19,10 @@ GoRouter buildAppRouter() => GoRouter(
           path: '/banner/:type',
           pageBuilder: (_, state) =>
               _fade(BannerPage(gachaType: state.pathParameters['type']!)),
+        ),
+        GoRoute(
+          path: '/contributors',
+          pageBuilder: (_, _) => _fade(const ContributorsPage()),
         ),
         GoRoute(
           path: '/settings',
