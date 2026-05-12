@@ -20,14 +20,12 @@ Set-Location $ProjectRoot
 # --- 1. 讀版本號 -------------------------------------------------------------
 $PubspecPath = Join-Path $ProjectRoot 'pubspec.yaml'
 if (-not (Test-Path $PubspecPath)) {
-    Write-Error "找不到 pubspec.yaml:$PubspecPath"
-    exit 1
+    throw "找不到 pubspec.yaml:$PubspecPath"
 }
 
 $VersionLine = Select-String -Path $PubspecPath -Pattern '^version:\s*([^\s+]+)' | Select-Object -First 1
 if (-not $VersionLine) {
-    Write-Error "無法從 pubspec.yaml 抓到 version"
-    exit 1
+    throw "無法從 pubspec.yaml 抓到 version"
 }
 $Version = $VersionLine.Matches[0].Groups[1].Value
 Write-Host "版本號:$Version" -ForegroundColor Cyan
