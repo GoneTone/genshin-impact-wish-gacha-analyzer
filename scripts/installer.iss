@@ -26,11 +26,10 @@ AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppCopyright=Copyright (C) 2020-{#GetDateTimeString('yyyy','','')} {#MyAppPublisher}
-DefaultDirName={userpf}\Genshin_Impact_Wish_Gacha_Analyzer
+DefaultDirName={commonpf}\Genshin_Impact_Wish_Gacha_Analyzer
 DefaultGroupName={#MyAppName}
 DisableDirPage=no
-PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+PrivilegesRequired=admin
 ArchitecturesInstallIn64BitMode=x64compatible
 SetupIconFile=..\windows\runner\resources\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
@@ -55,7 +54,7 @@ Source: "..\build\windows\x64\runner\Release\*"; DestDir: "{app}"; \
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; \
@@ -140,8 +139,8 @@ begin
   Params := '/S /allusers';
   if ExtraArgs <> '' then
     Params := ExtraArgs + ' ' + Params;
-  // 用 runas verb 提權 (舊版是 perMachine，需要 admin 才能完整卸載)
-  Result := ShellExec('runas', ExePath, Params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  // 新版本身已 admin，直接執行舊版 uninstaller 不需要再提權
+  Result := ShellExec('', ExePath, Params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
 function InitializeSetup(): Boolean;
