@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/data_export.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/data_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
@@ -189,7 +189,6 @@ class _DataManagement extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final state = ref.watch(wishRepositoryProvider);
-    final activeData = state.activeData;
     final hasData = state.byUid.isNotEmpty;
 
     return Wrap(
@@ -197,23 +196,14 @@ class _DataManagement extends ConsumerWidget {
       runSpacing: AppSpacing.s,
       children: [
         OutlinedButton.icon(
-          onPressed: activeData == null
-              ? null
-              : () => _exportJson(context, activeData),
+          onPressed: !hasData ? null : () => _exportAll(context, ref),
           icon: const Icon(Icons.download_outlined, size: 18),
-          label: Text(l.settingsExportJson),
+          label: Text(l.settingsExportAll),
         ),
         OutlinedButton.icon(
-          onPressed: activeData == null
-              ? null
-              : () => _exportCsv(context, activeData),
-          icon: const Icon(Icons.table_chart_outlined, size: 18),
-          label: Text(l.settingsExportCsv),
-        ),
-        OutlinedButton.icon(
-          onPressed: () => _import(context, ref),
+          onPressed: () => _importAll(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
-          label: Text(l.settingsImportJson),
+          label: Text(l.settingsImportAll),
         ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -239,39 +229,41 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  Future<void> _exportJson(BuildContext ctx, BannerStorage data) async {
+  Future<void> _exportAll(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
+    final wish = ref.read(wishRepositoryProvider);
+    final settings = ref.read(settingsProvider);
+    final appVersion = ref.read(appVersionProvider);
+
+    final now = DateTime.now();
+    final stamp =
+        '${now.year}-${_two(now.month)}-${_two(now.day)}_'
+        '${_two(now.hour)}${_two(now.minute)}${_two(now.second)}';
+
     final loc = await getSaveLocation(
-      suggestedName: 'wish_${data.uid}.json',
+      suggestedName: 'genshin_wish_backup_$stamp.json',
       acceptedTypeGroups: const [
         XTypeGroup(label: 'JSON', extensions: ['json']),
       ],
     );
     if (loc == null) return;
-    await File(loc.path).writeAsString(exportJson(data));
-    if (!ctx.mounted) return;
-    ScaffoldMessenger.of(
-      ctx,
-    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
-  }
 
-  Future<void> _exportCsv(BuildContext ctx, BannerStorage data) async {
-    final l = AppLocalizations.of(ctx)!;
-    final loc = await getSaveLocation(
-      suggestedName: 'wish_${data.uid}.csv',
-      acceptedTypeGroups: const [
-        XTypeGroup(label: 'CSV', extensions: ['csv']),
-      ],
+    final text = exportAllAccounts(
+      byUid: wish.byUid,
+      uidOrder: settings.uidOrder,
+      uidAliases: settings.uidAliases,
+      lastActiveUid: settings.lastActiveUid,
+      appVersion: appVersion,
+      now: now,
     );
-    if (loc == null) return;
-    await File(loc.path).writeAsString(exportCsv(data));
+    await File(loc.path).writeAsString(text);
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(
-      ctx,
-    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
+    ScaffoldMessenger.of(ctx).showSnackBar(
+      SnackBar(content: Text(l.settingsExportAllSuccess(loc.path))),
+    );
   }
 
-  Future<void> _import(BuildContext ctx, WidgetRef ref) async {
+  Future<void> _importAll(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final file = await openFile(
       acceptedTypeGroups: const [
@@ -279,29 +271,108 @@ class _DataManagement extends ConsumerWidget {
       ],
     );
     if (file == null) return;
-    final text = await file.readAsString();
+
+    final String text;
     try {
-      final data = importJson(text);
-      await ref.read(wishRepositoryProvider.notifier).importData(data);
-      if (!ctx.mounted) return;
-      final count = data.banners.values.fold<int>(
-        0,
-        (n, list) => n + list.length,
-      );
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportSuccess(data.uid, count))),
-      );
-    } on FormatException catch (e) {
-      if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportFailed(e.message))),
-      );
+      text = await file.readAsString();
     } catch (e) {
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportFailed(e.toString()))),
+        SnackBar(content: Text(l.settingsImportAllFailed(e.toString()))),
+      );
+      return;
+    }
+
+    final AllAccountsBundle bundle;
+    try {
+      bundle = importAllAccounts(text);
+    } on FormatException catch (e) {
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(content: Text(l.settingsImportAllFailed(e.message))),
+      );
+      return;
+    }
+
+    // Build dialog body.
+    final existing = ref.read(wishRepositoryProvider).byUid.keys.toSet();
+    final incoming = bundle.accounts.map((a) => a.data.uid).toList();
+    final conflicts = incoming.where(existing.contains).toList();
+    final preserved = existing.where((u) => !incoming.contains(u)).toList()
+      ..sort();
+
+    var totalRecords = 0;
+    for (final a in bundle.accounts) {
+      for (final list in a.data.banners.values) {
+        totalRecords += list.length;
+      }
+    }
+
+    final buf = StringBuffer()
+      ..writeln(l.settingsImportConfirmIntro(incoming.length, totalRecords));
+    for (final a in bundle.accounts) {
+      final alias = a.alias;
+      buf.writeln(
+        alias == null || alias.isEmpty
+            ? '  • ${a.data.uid}'
+            : '  • ${a.data.uid} ($alias)',
       );
     }
+    buf.writeln();
+    if (conflicts.isEmpty) {
+      buf.writeln(l.settingsImportConfirmNoConflict);
+    } else {
+      buf.writeln(l.settingsImportConfirmOverwriteHeader);
+      for (final uid in conflicts) {
+        buf.writeln('  • $uid');
+      }
+    }
+    if (preserved.isNotEmpty) {
+      buf.writeln();
+      buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
+    }
+    buf.writeln();
+    buf.write(l.settingsImportConfirmWarning);
+
+    if (!ctx.mounted) return;
+    final ok = await showConfirmTypeDialog(
+      context: ctx,
+      title: l.settingsImportConfirmTitle,
+      body: buf.toString(),
+      expectedText: 'IMPORT',
+      cancelLabel: l.confirmCancel,
+      confirmLabel: l.confirmDelete,
+    );
+    if (ok != true) return;
+    if (!ctx.mounted) return;
+
+    final result = await ref
+        .read(wishRepositoryProvider.notifier)
+        .importAllAccounts(bundle);
+    if (!ctx.mounted) return;
+
+    final SnackBar snack;
+    if (result.failedUids.isEmpty) {
+      snack = SnackBar(
+        content: Text(
+          l.settingsImportAllSuccess(
+            result.successAccounts,
+            result.totalRecords,
+          ),
+        ),
+      );
+    } else {
+      snack = SnackBar(
+        content: Text(
+          l.settingsImportAllPartial(
+            result.successAccounts,
+            bundle.accounts.length,
+            result.failedUids.join(', '),
+          ),
+        ),
+      );
+    }
+    ScaffoldMessenger.of(ctx).showSnackBar(snack);
   }
 
   Future<void> _clearActive(BuildContext ctx, WidgetRef ref, String uid) async {
@@ -332,3 +403,5 @@ class _DataManagement extends ConsumerWidget {
     await ref.read(wishRepositoryProvider.notifier).clearAll();
   }
 }
+
+String _two(int n) => n.toString().padLeft(2, '0');

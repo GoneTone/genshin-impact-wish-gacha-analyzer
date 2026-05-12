@@ -387,17 +387,6 @@ class WishRepository extends Notifier<WishState> {
     state = const WishState(isBootstrapping: false);
   }
 
-  Future<void> importData(BannerStorage data) async {
-    final storage = ref.read(wishStorageProvider);
-    await storage.save(data);
-    if (!ref.mounted) return;
-    final newByUid = Map<String, BannerStorage>.from(state.byUid)
-      ..[data.uid] = data;
-    state = state.copyWith(byUid: newByUid, activeUid: data.uid);
-    if (!ref.mounted) return;
-    await ref.read(settingsProvider.notifier).setLastActiveUid(data.uid);
-  }
-
   Future<ImportAllResult> importAllAccounts(AllAccountsBundle bundle) async {
     final storage = ref.read(wishStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
