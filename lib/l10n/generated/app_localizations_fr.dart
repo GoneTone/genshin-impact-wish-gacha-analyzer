@@ -54,6 +54,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navSettings => '設定';
 
   @override
+  String get navContributors => '貢獻者';
+
+  @override
   String get gachaTypeCharacter => '角色活動祈願';
 
   @override
@@ -266,6 +269,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsPlaceholderPhase2 => '（即將推出）';
+
+  @override
+  String get contributorsTitle => '貢獻名單';
+
+  @override
+  String get contributorsSubtitle => '感謝以下為此軟體貢獻的夥伴！';
+
+  @override
+  String get contributorsProjectLeader => '專案負責人';
+
+  @override
+  String get contributorsTesters => '測試人員';
+
+  @override
+  String get contributorsGithubContributors => 'GitHub 貢獻者';
+
+  @override
+  String get contributorsTranslationReviewer => '翻譯審稿人';
+
+  @override
+  String get contributorsTranslatedLanguages => '已翻譯語言';
+
+  @override
+  String get contributorsHelpTranslate => '沒有您的語言嗎？協助我們翻譯！';
+
+  @override
+  String get contributorsProjectLicense => '專案授權';
 
   @override
   String get pityFiveStar => '5★ 保底';

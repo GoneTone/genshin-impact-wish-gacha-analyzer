@@ -44,6 +44,22 @@ void main() {
       );
     });
 
+    test('zh_Hant 提供全部 contributors keys（fallback 模板必填）', () async {
+      final l = await AppLocalizations.delegate.load(
+        const Locale('zh', 'Hant'),
+      );
+      expect(l.navContributors, isNotEmpty);
+      expect(l.contributorsTitle, isNotEmpty);
+      expect(l.contributorsSubtitle, isNotEmpty);
+      expect(l.contributorsProjectLeader, isNotEmpty);
+      expect(l.contributorsTesters, isNotEmpty);
+      expect(l.contributorsGithubContributors, isNotEmpty);
+      expect(l.contributorsTranslationReviewer, isNotEmpty);
+      expect(l.contributorsTranslatedLanguages, isNotEmpty);
+      expect(l.contributorsHelpTranslate, isNotEmpty);
+      expect(l.contributorsProjectLicense, isNotEmpty);
+    });
+
     test('supportedLocales 包含 zh_Hant / zh_Hans / en / ja / pt', () {
       final tags = AppLocalizations.supportedLocales
           .map((l) => l.toLanguageTag())

@@ -26,6 +26,7 @@
   "navStandard": "常駐",
   "navBeginner": "新手",
   "navSettings": "設定",
+  "navContributors": "貢獻者",
 
   "gachaTypeCharacter": "角色活動祈願",
   "gachaTypeWeapon": "武器活動祈願",
@@ -130,6 +131,16 @@
     "placeholders": { "version": { "type": "String" } }
   },
   "settingsPlaceholderPhase2": "（即將推出）",
+
+  "contributorsTitle": "貢獻名單",
+  "contributorsSubtitle": "感謝以下為此軟體貢獻的夥伴！",
+  "contributorsProjectLeader": "專案負責人",
+  "contributorsTesters": "測試人員",
+  "contributorsGithubContributors": "GitHub 貢獻者",
+  "contributorsTranslationReviewer": "翻譯審稿人",
+  "contributorsTranslatedLanguages": "已翻譯語言",
+  "contributorsHelpTranslate": "沒有您的語言嗎？協助我們翻譯！",
+  "contributorsProjectLicense": "專案授權",
 
   "pityFiveStar": "5★ 保底",
   "pityFourStar": "4★ 保底",

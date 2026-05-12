@@ -202,6 +202,12 @@ abstract class AppLocalizations {
   /// **'設定'**
   String get navSettings;
 
+  /// No description provided for @navContributors.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'貢獻者'**
+  String get navContributors;
+
   /// No description provided for @gachaTypeCharacter.
   ///
   /// In zh_Hant, this message translates to:
@@ -597,6 +603,60 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'（即將推出）'**
   String get settingsPlaceholderPhase2;
+
+  /// No description provided for @contributorsTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'貢獻名單'**
+  String get contributorsTitle;
+
+  /// No description provided for @contributorsSubtitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'感謝以下為此軟體貢獻的夥伴！'**
+  String get contributorsSubtitle;
+
+  /// No description provided for @contributorsProjectLeader.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'專案負責人'**
+  String get contributorsProjectLeader;
+
+  /// No description provided for @contributorsTesters.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'測試人員'**
+  String get contributorsTesters;
+
+  /// No description provided for @contributorsGithubContributors.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'GitHub 貢獻者'**
+  String get contributorsGithubContributors;
+
+  /// No description provided for @contributorsTranslationReviewer.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'翻譯審稿人'**
+  String get contributorsTranslationReviewer;
+
+  /// No description provided for @contributorsTranslatedLanguages.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已翻譯語言'**
+  String get contributorsTranslatedLanguages;
+
+  /// No description provided for @contributorsHelpTranslate.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'沒有您的語言嗎？協助我們翻譯！'**
+  String get contributorsHelpTranslate;
+
+  /// No description provided for @contributorsProjectLicense.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'專案授權'**
+  String get contributorsProjectLicense;
 
   /// No description provided for @pityFiveStar.
   ///
