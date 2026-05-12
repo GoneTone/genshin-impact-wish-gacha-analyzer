@@ -183,26 +183,8 @@
   "pagerFirst": "First",
   "pagerLast": "Last",
 
-  "settingsExportJson": "Export JSON",
-  "settingsExportCsv": "Export CSV",
-  "settingsImportJson": "Import JSON",
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
-  "settingsExportSuccess": "Exported to {path}",
-  "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
-  },
-  "settingsImportSuccess": "Imported {count} records for UID {uid}",
-  "@settingsImportSuccess": {
-    "placeholders": {
-      "uid": { "type": "String" },
-      "count": { "type": "int" }
-    }
-  },
-  "settingsImportFailed": "Import failed: {reason}",
-  "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
-  },
 
   "settingsExportAll": "Export all data",
   "settingsImportAll": "Import all data",

@@ -808,24 +808,6 @@ abstract class AppLocalizations {
   /// **'末頁'**
   String get pagerLast;
 
-  /// No description provided for @settingsExportJson.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'匯出 JSON'**
-  String get settingsExportJson;
-
-  /// No description provided for @settingsExportCsv.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'匯出 CSV'**
-  String get settingsExportCsv;
-
-  /// No description provided for @settingsImportJson.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'匯入 JSON'**
-  String get settingsImportJson;
-
   /// No description provided for @settingsClearActive.
   ///
   /// In zh_Hant, this message translates to:
@@ -837,24 +819,6 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'清除所有資料'**
   String get settingsClearAll;
-
-  /// No description provided for @settingsExportSuccess.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'已匯出至 {path}'**
-  String settingsExportSuccess(String path);
-
-  /// No description provided for @settingsImportSuccess.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'成功匯入 UID {uid} 的 {count} 筆紀錄'**
-  String settingsImportSuccess(String uid, int count);
-
-  /// No description provided for @settingsImportFailed.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'匯入失敗：{reason}'**
-  String settingsImportFailed(String reason);
 
   /// No description provided for @settingsExportAll.
   ///

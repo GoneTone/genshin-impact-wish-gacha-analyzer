@@ -389,34 +389,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pagerLast => '末頁';
 
   @override
-  String get settingsExportJson => '匯出 JSON';
-
-  @override
-  String get settingsExportCsv => '匯出 CSV';
-
-  @override
-  String get settingsImportJson => '匯入 JSON';
-
-  @override
   String get settingsClearActive => '清除目前帳號資料';
 
   @override
   String get settingsClearAll => '清除所有資料';
-
-  @override
-  String settingsExportSuccess(String path) {
-    return '已匯出至 $path';
-  }
-
-  @override
-  String settingsImportSuccess(String uid, int count) {
-    return '成功匯入 UID $uid 的 $count 筆紀錄';
-  }
-
-  @override
-  String settingsImportFailed(String reason) {
-    return '匯入失敗：$reason';
-  }
 
   @override
   String get settingsExportAll => '匯出全部資料';
@@ -917,34 +893,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get pagerLast => '末页';
 
   @override
-  String get settingsExportJson => '导出 JSON';
-
-  @override
-  String get settingsExportCsv => '导出 CSV';
-
-  @override
-  String get settingsImportJson => '导入 JSON';
-
-  @override
   String get settingsClearActive => '清除当前账号数据';
 
   @override
   String get settingsClearAll => '清除所有数据';
-
-  @override
-  String settingsExportSuccess(String path) {
-    return '已导出至 $path';
-  }
-
-  @override
-  String settingsImportSuccess(String uid, int count) {
-    return '成功导入 UID $uid 的 $count 条记录';
-  }
-
-  @override
-  String settingsImportFailed(String reason) {
-    return '导入失败：$reason';
-  }
 
   @override
   String get settingsExportAll => '导出全部数据';
@@ -1445,34 +1397,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get pagerLast => '末頁';
 
   @override
-  String get settingsExportJson => '匯出 JSON';
-
-  @override
-  String get settingsExportCsv => '匯出 CSV';
-
-  @override
-  String get settingsImportJson => '匯入 JSON';
-
-  @override
   String get settingsClearActive => '清除目前帳號資料';
 
   @override
   String get settingsClearAll => '清除所有資料';
-
-  @override
-  String settingsExportSuccess(String path) {
-    return '已匯出至 $path';
-  }
-
-  @override
-  String settingsImportSuccess(String uid, int count) {
-    return '成功匯入 UID $uid 的 $count 筆紀錄';
-  }
-
-  @override
-  String settingsImportFailed(String reason) {
-    return '匯入失敗：$reason';
-  }
 
   @override
   String get settingsExportAll => '匯出全部資料';

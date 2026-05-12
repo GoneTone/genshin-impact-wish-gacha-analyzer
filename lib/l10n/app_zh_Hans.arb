@@ -183,26 +183,8 @@
   "pagerFirst": "首页",
   "pagerLast": "末页",
 
-  "settingsExportJson": "导出 JSON",
-  "settingsExportCsv": "导出 CSV",
-  "settingsImportJson": "导入 JSON",
   "settingsClearActive": "清除当前账号数据",
   "settingsClearAll": "清除所有数据",
-  "settingsExportSuccess": "已导出至 {path}",
-  "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
-  },
-  "settingsImportSuccess": "成功导入 UID {uid} 的 {count} 条记录",
-  "@settingsImportSuccess": {
-    "placeholders": {
-      "uid": { "type": "String" },
-      "count": { "type": "int" }
-    }
-  },
-  "settingsImportFailed": "导入失败：{reason}",
-  "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
-  },
 
   "settingsExportAll": "导出全部数据",
   "settingsImportAll": "导入全部数据",

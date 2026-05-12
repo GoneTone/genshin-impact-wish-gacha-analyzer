@@ -201,26 +201,8 @@
   "pagerFirst": "首頁",
   "pagerLast": "末頁",
 
-  "settingsExportJson": "匯出 JSON",
-  "settingsExportCsv": "匯出 CSV",
-  "settingsImportJson": "匯入 JSON",
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",
-  "settingsExportSuccess": "已匯出至 {path}",
-  "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
-  },
-  "settingsImportSuccess": "成功匯入 UID {uid} 的 {count} 筆紀錄",
-  "@settingsImportSuccess": {
-    "placeholders": {
-      "uid": { "type": "String" },
-      "count": { "type": "int" }
-    }
-  },
-  "settingsImportFailed": "匯入失敗：{reason}",
-  "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
-  },
 
   "settingsExportAll": "匯出全部資料",
   "settingsImportAll": "匯入全部資料",

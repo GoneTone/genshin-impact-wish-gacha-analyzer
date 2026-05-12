@@ -393,34 +393,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pagerLast => 'Last';
 
   @override
-  String get settingsExportJson => 'Export JSON';
-
-  @override
-  String get settingsExportCsv => 'Export CSV';
-
-  @override
-  String get settingsImportJson => 'Import JSON';
-
-  @override
   String get settingsClearActive => 'Clear current account data';
 
   @override
   String get settingsClearAll => 'Clear all data';
-
-  @override
-  String settingsExportSuccess(String path) {
-    return 'Exported to $path';
-  }
-
-  @override
-  String settingsImportSuccess(String uid, int count) {
-    return 'Imported $count records for UID $uid';
-  }
-
-  @override
-  String settingsImportFailed(String reason) {
-    return 'Import failed: $reason';
-  }
 
   @override
   String get settingsExportAll => 'Export all data';
