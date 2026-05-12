@@ -71,7 +71,9 @@ class ContributorsPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsProjectLicense,
-                child: const SizedBox.shrink(),
+                child: const TranslatorText(
+                  raw: '<a href="$licenseUrl">MIT License</a>',
+                ),
               ),
             ],
           ),

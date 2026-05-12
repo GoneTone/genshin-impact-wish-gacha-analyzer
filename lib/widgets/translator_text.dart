@@ -53,8 +53,6 @@ class LinkSegment extends TranslatorSegment {
 }
 
 /// 把帶有 `<a href>` 標籤的字串顯示為可點擊文字。
-///
-/// 僅用於設定頁 About 區塊的譯者署名。
 class TranslatorText extends StatefulWidget {
   const TranslatorText({super.key, required this.raw, this.style});
 

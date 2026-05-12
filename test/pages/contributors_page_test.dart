@@ -99,4 +99,10 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('專案授權 SectionCard 顯示「MIT License」', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('MIT License'), findsOneWidget);
+  });
 }
