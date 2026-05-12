@@ -7,17 +7,13 @@
   "appName": "原神祈愿卡池分析",
 
   "actionUpdate": "更新数据",
-  "actionCancel": "取消",
   "actionClose": "关闭",
   "actionPrevPage": "上一页",
   "actionNextPage": "下一页",
 
   "navOverview": "综合",
-  "navCharacter": "角色",
-  "navWeapon": "武器",
   "navChronicled": "集录",
   "navStandard": "常驻",
-  "navBeginner": "新手",
   "navSettings": "设置",
 
   "gachaTypeCharacter": "角色活动祈愿",
@@ -26,14 +22,12 @@
   "gachaTypeStandard": "常驻祈愿",
   "gachaTypeBeginner": "新手祈愿",
 
-  "footerNotSynced": "尚未同步",
   "footerLastUpdated": "最后更新：{time}",
   "@footerLastUpdated": {
     "placeholders": { "time": { "type": "String" } }
   },
 
   "uidSwitchTooltip": "切换账号",
-  "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活跃）",
   "uidRecapture": "新增账号",
 
@@ -49,34 +43,24 @@
   "@statsShareOfTotal": {
     "placeholders": { "rate": { "type": "String" } }
   },
-  "statsRarityDistribution": "稀有度分布",
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
 
-  "kindCharacter": "角色",
-  "kindWeapon": "武器",
-  "kindUnknown": "未知",
 
   "tableTime": "时间",
   "tableName": "名称",
   "tableKind": "类型",
-  "tableRarity": "稀有度",
   "tableTotalIndex": "总抽数",
   "tableFiveStarPity": "保底内",
   "tableFiveStarPityTooltip": "距上一次 5★ 的抽数",
-  "sortDirectionDesc": "降序",
-  "sortDirectionAsc": "升序",
   "sortDirectionNone": "点击排序",
 
   "progressPreparing": "准备中…",
   "progressPreparingHint": "正在准备数据源…",
   "progressWaiting": "等待拦截…",
-  "progressFetching": "抓取中…",
-  "progressDone": "更新完成",
   "progressFailed": "失败",
   "progressOpenGameHint": "请打开原神 → 卡池 → 历史记录",
   "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
-  "progressFetchingBanner": "正在抓取：{name}",
   "@progressFetchingBanner": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -111,29 +95,23 @@
   "settingsAppearance": "外观",
   "settingsTheme": "主题",
   "settingsThemeSystem": "跟随系统",
-  "settingsThemeDark": "深色",
   "settingsThemeLight": "浅色",
   "settingsLanguage": "语言",
   "settingsLocaleSystem": "跟随系统",
   "settingsDataManagement": "数据管理",
   "settingsAccountManagement": "账号管理",
   "settingsAbout": "关于",
-  "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
   "settingsPlaceholderPhase2": "（即将推出）",
 
-  "pityFiveStar": "5★ 保底",
-  "pityFourStar": "4★ 保底",
-  "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },
       "threshold": { "type": "int" }
     }
   },
-  "pityDistance": "距下次保底 {n} 抽",
   "@pityDistance": {
     "placeholders": { "n": { "type": "int" } }
   },
@@ -141,21 +119,17 @@
   "@pityClose": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityGuaranteed": "保底中",
   "pityNoFiveStar": "暂无 5★",
   "pityBeginnerEnded": "已结束",
 
   "timelineNoRecords": "暂无 5★ 记录",
-  "timelineSinceLast": "{n} 抽",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
   "timelineNowLabel": "现在",
-  "timelineNowPulls": "已 {n} 抽",
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "距上次 5★ {n} 抽",
   "@timelineNowSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
@@ -163,7 +137,6 @@
   "@timelineNowSinceCrossPool": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {
     "placeholders": {
       "year": { "type": "String" },
@@ -171,12 +144,7 @@
     }
   },
 
-  "filterRarityAll": "全部稀有度",
-  "filterRarityFiveStar": "只看 5★",
-  "filterRarityFourStar": "只看 4★",
   "filterKindAll": "全部类型",
-  "filterKindCharacter": "只看角色",
-  "filterKindWeapon": "只看武器",
   "filterSearchHint": "搜索名称…",
   "filterClear": "清除筛选",
 
@@ -234,7 +202,6 @@
   },
   "confirmClearAllBody": "这会永久删除所有账号的祈愿记录。输入 DELETE 确认：",
   "confirmTypeMismatch": "输入不符，操作已取消",
-  "confirmCancel": "取消",
   "confirmDelete": "删除",
   "confirmImport": "导入",
 
@@ -245,7 +212,6 @@
   },
   "accountActiveTag": "活跃",
   "accountSetActive": "设为活跃",
-  "accountRemove": "移除",
   "accountRecapture": "新增账号",
   "accountAliasLabel": "别名",
   "accountAliasHint": "为此账号取一个好记的名字",
@@ -259,7 +225,6 @@
   },
 
   "bannerFiveStarCountTitle": "各卡池 5★ 件数",
-  "bannerFiveStarPullsSinceLast": "距上次 5★ {n} 抽",
   "@bannerFiveStarPullsSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },

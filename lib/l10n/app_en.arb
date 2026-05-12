@@ -126,7 +126,6 @@
 
   "pityFiveStar": "5★ pity",
   "pityFourStar": "4★ pity",
-  "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },

@@ -528,9 +528,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get actionUpdate => '更新数据';
 
   @override
-  String get actionCancel => '取消';
-
-  @override
   String get actionClose => '关闭';
 
   @override
@@ -543,19 +540,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get navOverview => '综合';
 
   @override
-  String get navCharacter => '角色';
-
-  @override
-  String get navWeapon => '武器';
-
-  @override
   String get navChronicled => '集录';
 
   @override
   String get navStandard => '常驻';
-
-  @override
-  String get navBeginner => '新手';
 
   @override
   String get navSettings => '设置';
@@ -579,18 +567,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get gachaTypeBeginner => '新手祈愿';
 
   @override
-  String get footerNotSynced => '尚未同步';
-
-  @override
   String footerLastUpdated(String time) {
     return '最后更新：$time';
   }
 
   @override
   String get uidSwitchTooltip => '切换账号';
-
-  @override
-  String get uidNotSynced => '未同步';
 
   @override
   String get uidActiveSuffix => '（活跃）';
@@ -625,22 +607,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get statsRarityDistribution => '稀有度分布';
-
-  @override
   String get statsItemTypeDistribution => '类型分布';
 
   @override
   String get statsNoData => '无数据';
-
-  @override
-  String get kindCharacter => '角色';
-
-  @override
-  String get kindWeapon => '武器';
-
-  @override
-  String get kindUnknown => '未知';
 
   @override
   String get tableTime => '时间';
@@ -652,9 +622,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get tableKind => '类型';
 
   @override
-  String get tableRarity => '稀有度';
-
-  @override
   String get tableTotalIndex => '总抽数';
 
   @override
@@ -662,12 +629,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get tableFiveStarPityTooltip => '距上一次 5★ 的抽数';
-
-  @override
-  String get sortDirectionDesc => '降序';
-
-  @override
-  String get sortDirectionAsc => '升序';
 
   @override
   String get sortDirectionNone => '点击排序';
@@ -682,12 +643,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get progressWaiting => '等待拦截…';
 
   @override
-  String get progressFetching => '抓取中…';
-
-  @override
-  String get progressDone => '更新完成';
-
-  @override
   String get progressFailed => '失败';
 
   @override
@@ -695,11 +650,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get progressFallbackHint => '（先前的认证已失效，需重新拦截）';
-
-  @override
-  String progressFetchingBanner(String name) {
-    return '正在抓取：$name';
-  }
 
   @override
   String progressPageStatus(int page, int count) {
@@ -749,9 +699,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get settingsThemeSystem => '跟随系统';
 
   @override
-  String get settingsThemeDark => '深色';
-
-  @override
   String get settingsThemeLight => '浅色';
 
   @override
@@ -768,11 +715,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get settingsAbout => '关于';
-
-  @override
-  String settingsAboutVersion(String version) {
-    return '版本 $version';
-  }
 
   @override
   String get settingsPlaceholderPhase2 => '（即将推出）';
@@ -805,28 +747,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get contributorsProjectLicense => '专案许可证';
 
   @override
-  String get pityFiveStar => '5★ 保底';
-
-  @override
-  String get pityFourStar => '4★ 保底';
-
-  @override
-  String pityCurrent(int current, int threshold) {
-    return '$current / $threshold';
-  }
-
-  @override
-  String pityDistance(int n) {
-    return '距下次保底 $n 抽';
-  }
-
-  @override
   String pityClose(int n) {
     return '快保底了！剩余 $n 抽';
   }
-
-  @override
-  String get pityGuaranteed => '保底中';
 
   @override
   String get pityNoFiveStar => '暂无 5★';
@@ -838,22 +761,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get timelineNoRecords => '暂无 5★ 记录';
 
   @override
-  String timelineSinceLast(int n) {
-    return '$n 抽';
-  }
-
-  @override
   String get timelineNowLabel => '现在';
-
-  @override
-  String timelineNowPulls(int n) {
-    return '已 $n 抽';
-  }
-
-  @override
-  String timelineNowSinceLast(int n) {
-    return '距上次 5★ $n 抽';
-  }
 
   @override
   String timelineNowSinceCrossPool(int n) {
@@ -861,27 +769,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String timelineMonthLabel(String year, String month) {
-    return '$year / $month';
-  }
-
-  @override
-  String get filterRarityAll => '全部稀有度';
-
-  @override
-  String get filterRarityFiveStar => '只看 5★';
-
-  @override
-  String get filterRarityFourStar => '只看 4★';
-
-  @override
   String get filterKindAll => '全部类型';
-
-  @override
-  String get filterKindCharacter => '只看角色';
-
-  @override
-  String get filterKindWeapon => '只看武器';
 
   @override
   String get filterSearchHint => '搜索名称…';
@@ -964,9 +852,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get confirmTypeMismatch => '输入不符，操作已取消';
 
   @override
-  String get confirmCancel => '取消';
-
-  @override
   String get confirmDelete => '删除';
 
   @override
@@ -985,9 +870,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get accountSetActive => '设为活跃';
-
-  @override
-  String get accountRemove => '移除';
 
   @override
   String get accountRecapture => '新增账号';
@@ -1011,11 +893,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get bannerFiveStarCountTitle => '各卡池 5★ 件数';
-
-  @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '距上次 5★ $n 抽';
-  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
