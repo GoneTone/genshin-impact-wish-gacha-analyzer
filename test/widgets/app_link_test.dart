@@ -92,4 +92,25 @@ void main() {
     await tester.tap(find.text('hi'));
     await tester.pumpAndSettle();
   });
+
+  testWidgets('AppLink 內的 GestureDetector 有連上 onTap', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: AppLink(url: 'https://example.test', child: Text('hi')),
+        ),
+      ),
+    );
+
+    final detector = tester.widget<GestureDetector>(
+      find
+          .descendant(
+            of: find.byType(AppLink),
+            matching: find.byType(GestureDetector),
+          )
+          .first,
+    );
+    expect(detector.onTap, isNotNull);
+  });
 }
