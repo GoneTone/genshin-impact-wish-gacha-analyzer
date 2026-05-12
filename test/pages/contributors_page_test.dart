@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/contributors_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 Widget _wrap(Widget child) => ProviderScope(
   child: MaterialApp(
@@ -35,12 +36,12 @@ void main() {
     expect(find.text('專案授權'), findsOneWidget);
   });
 
-  testWidgets('專案負責人 SectionCard 顯示 GoneTone 並包成 InkWell', (tester) async {
+  testWidgets('專案負責人 SectionCard 顯示 GoneTone 並包成 AppLink', (tester) async {
     await tester.pumpWidget(_wrap(const ContributorsPage()));
     await tester.pumpAndSettle();
     expect(find.text('GoneTone'), findsOneWidget);
     expect(
-      find.ancestor(of: find.text('GoneTone'), matching: find.byType(InkWell)),
+      find.ancestor(of: find.text('GoneTone'), matching: find.byType(AppLink)),
       findsOneWidget,
     );
   });
@@ -60,11 +61,11 @@ void main() {
     expect(find.text('pan93412'), findsOneWidget);
     expect(find.text('Lemon7777'), findsOneWidget);
     expect(
-      find.ancestor(of: find.text('pan93412'), matching: find.byType(InkWell)),
+      find.ancestor(of: find.text('pan93412'), matching: find.byType(AppLink)),
       findsNothing,
     );
     expect(
-      find.ancestor(of: find.text('Lemon7777'), matching: find.byType(InkWell)),
+      find.ancestor(of: find.text('Lemon7777'), matching: find.byType(AppLink)),
       findsNothing,
     );
   });

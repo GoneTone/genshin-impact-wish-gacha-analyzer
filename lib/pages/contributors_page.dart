@@ -1,12 +1,12 @@
 // lib/pages/contributors_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/contributors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
@@ -89,7 +89,6 @@ class _ContributorChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final linkColor = Theme.of(context).colorScheme.primary;
     return Wrap(
       spacing: AppSpacing.m,
       runSpacing: AppSpacing.s,
@@ -98,25 +97,9 @@ class _ContributorChips extends StatelessWidget {
           if (c.url == null)
             Text(c.name)
           else
-            InkWell(
-              onTap: () => _open(c.url!),
-              child: Text(
-                c.name,
-                style: TextStyle(
-                  color: linkColor,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
+            AppLink(url: c.url!, child: Text(c.name)),
       ],
     );
-  }
-
-  Future<void> _open(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 }
 
