@@ -119,8 +119,12 @@ class WindowStateKeeper with WindowListener {
       await windowManager.focus();
     });
 
-    await windowManager.setPreventClose(true);
     windowManager.addListener(keeper);
+  }
+
+  void _flushNow() {
+    _debounceTimer?.cancel();
+    unawaited(_saveNow());
   }
 
   Rect? _loadSaved() {
@@ -156,25 +160,16 @@ class WindowStateKeeper with WindowListener {
   @override
   void onWindowMove() => _scheduleSave();
 
+  /// 拖拉縮放結束時立即 flush，避免依賴 debounce 而漏寫最後一次狀態。
   @override
-  void onWindowMaximize() {
-    _debounceTimer?.cancel();
-    unawaited(_saveNow());
-  }
+  void onWindowResized() => _flushNow();
 
   @override
-  void onWindowUnmaximize() {
-    _debounceTimer?.cancel();
-    unawaited(_saveNow());
-  }
+  void onWindowMoved() => _flushNow();
 
   @override
-  void onWindowClose() async {
-    _debounceTimer?.cancel();
-    try {
-      await _saveNow();
-    } finally {
-      await windowManager.destroy();
-    }
-  }
+  void onWindowMaximize() => _flushNow();
+
+  @override
+  void onWindowUnmaximize() => _flushNow();
 }
