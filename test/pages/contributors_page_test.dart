@@ -105,4 +105,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('MIT License'), findsOneWidget);
   });
+
+  testWidgets('繁體中文（localeTranslator 空字串）只顯示語言名稱，不含破折號', (tester) async {
+    await tester.pumpWidget(_wrap(const ContributorsPage()));
+    await tester.pumpAndSettle();
+    // zh_Hant ARB 的 localeTranslator 為空字串，_LanguageList 應跳過 Row 分支，
+    // 只顯示純 Text(nativeName)，畫面上不該出現 "繁體中文 — "。
+    expect(find.textContaining('繁體中文 —'), findsNothing);
+  });
 }
