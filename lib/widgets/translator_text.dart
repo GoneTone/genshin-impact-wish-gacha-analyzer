@@ -92,7 +92,9 @@ class _TranslatorTextState extends State<TranslatorText> {
     _segments = parseTranslatorMarkup(widget.raw);
     for (final seg in _segments) {
       if (seg is LinkSegment) {
-        _recognizers.add(TapGestureRecognizer()..onTap = () => _open(seg.uri));
+        _recognizers.add(
+          TapGestureRecognizer()..onTap = () => openExternalUrl(seg.uri),
+        );
       }
     }
   }
@@ -103,8 +105,6 @@ class _TranslatorTextState extends State<TranslatorText> {
     }
     _recognizers.clear();
   }
-
-  Future<void> _open(Uri uri) => openExternalUrl(uri);
 
   @override
   Widget build(BuildContext context) {
