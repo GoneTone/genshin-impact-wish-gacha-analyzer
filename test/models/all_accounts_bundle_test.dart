@@ -20,7 +20,6 @@ void main() {
     'toJson / fromJson roundtrip preserves order, alias, last_active_uid',
     () {
       final bundle = AllAccountsBundle(
-        schemaVersion: 1,
         exportedAt: DateTime.utc(2026, 5, 12, 8, 30),
         appVersion: '1.2.3',
         lastActiveUid: 'A',
@@ -80,7 +79,13 @@ void main() {
   test('missing schema_version throws', () {
     expect(
       () => AllAccountsBundle.fromJson({'accounts': []}),
-      throwsA(isA<FormatException>()),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          contains('schema_version'),
+        ),
+      ),
     );
   });
 

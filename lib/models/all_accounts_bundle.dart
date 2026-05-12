@@ -7,11 +7,8 @@ class ExportedAccount {
   final String? alias;
 
   Map<String, dynamic> toJson() {
-    final base = data.toJson();
-    if (alias != null && alias!.isNotEmpty) {
-      base['alias'] = alias;
-    }
-    return base;
+    final a = alias;
+    return {...data.toJson(), if (a != null && a.isNotEmpty) 'alias': a};
   }
 
   factory ExportedAccount.fromJson(Map<String, dynamic> json) {
@@ -25,7 +22,6 @@ class ExportedAccount {
 
 class AllAccountsBundle {
   const AllAccountsBundle({
-    required this.schemaVersion,
     required this.exportedAt,
     required this.appVersion,
     required this.lastActiveUid,
@@ -34,7 +30,8 @@ class AllAccountsBundle {
 
   static const int currentSchemaVersion = 1;
 
-  final int schemaVersion;
+  int get schemaVersion => currentSchemaVersion;
+
   final DateTime exportedAt;
   final String appVersion;
   final String? lastActiveUid;
@@ -89,10 +86,10 @@ class AllAccountsBundle {
       try {
         parsedExportedAt = DateTime.parse(rawExportedAt);
       } catch (_) {
-        parsedExportedAt = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+        parsedExportedAt = DateTime.now().toUtc();
       }
     } else {
-      parsedExportedAt = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+      parsedExportedAt = DateTime.now().toUtc();
     }
 
     final rawAppVersion = json['app_version'];
@@ -102,7 +99,6 @@ class AllAccountsBundle {
     final lastActiveUid = rawLastActive is String ? rawLastActive : null;
 
     return AllAccountsBundle(
-      schemaVersion: version,
       exportedAt: parsedExportedAt,
       appVersion: appVersion,
       lastActiveUid: lastActiveUid,
