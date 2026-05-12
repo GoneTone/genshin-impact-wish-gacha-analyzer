@@ -204,6 +204,47 @@
     "placeholders": { "reason": { "type": "String" } }
   },
 
+  "settingsExportAll": "导出全部数据",
+  "settingsImportAll": "导入全部数据",
+  "settingsExportAllSuccess": "已导出至 {path}",
+  "@settingsExportAllSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "导入确认",
+  "settingsImportConfirmIntro": "即将导入 {accounts} 个账号（共 {records} 条记录）：",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "下列 UID 已有数据，将被覆盖：",
+  "settingsImportConfirmNoConflict": "无数据冲突。",
+  "settingsImportConfirmPreserveFooter": "其他现有账号（{uids}）将保留。",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "此操作无法撤销。请输入 IMPORT 以确认。",
+  "settingsImportAllSuccess": "已成功导入 {accounts} 个账号（{records} 条记录）",
+  "@settingsImportAllSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportAllPartial": "已导入 {success}/{total} 个账号；失败：{failedUids}",
+  "@settingsImportAllPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportAllFailed": "导入失败：{reason}",
+  "@settingsImportAllFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
   "confirmTitle": "确认操作",
   "confirmClearActiveBody": "这会永久删除 UID {uid} 的所有祈愿记录。输入 UID 确认：",
   "@confirmClearActiveBody": {

@@ -204,6 +204,47 @@
     "placeholders": { "reason": { "type": "String" } }
   },
 
+  "settingsExportAll": "Export all data",
+  "settingsImportAll": "Import all data",
+  "settingsExportAllSuccess": "Exported to {path}",
+  "@settingsExportAllSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "Import confirmation",
+  "settingsImportConfirmIntro": "About to import {accounts} accounts ({records} records total):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "The following UIDs already have data and will be overwritten:",
+  "settingsImportConfirmNoConflict": "No data conflicts.",
+  "settingsImportConfirmPreserveFooter": "Other existing accounts ({uids}) will be preserved.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "This action cannot be undone. Type IMPORT to confirm.",
+  "settingsImportAllSuccess": "Successfully imported {accounts} accounts ({records} records)",
+  "@settingsImportAllSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportAllPartial": "Imported {success}/{total} accounts; failed: {failedUids}",
+  "@settingsImportAllPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportAllFailed": "Import failed: {reason}",
+  "@settingsImportAllFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
   "confirmTitle": "Confirm",
   "confirmClearActiveBody": "This will permanently delete all wish records for UID {uid}. Type the UID to confirm:",
   "@confirmClearActiveBody": {

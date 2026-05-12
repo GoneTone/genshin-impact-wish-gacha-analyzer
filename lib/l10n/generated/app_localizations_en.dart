@@ -423,6 +423,56 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsExportAll => 'Export all data';
+
+  @override
+  String get settingsImportAll => 'Import all data';
+
+  @override
+  String settingsExportAllSuccess(String path) {
+    return 'Exported to $path';
+  }
+
+  @override
+  String get settingsImportConfirmTitle => 'Import confirmation';
+
+  @override
+  String settingsImportConfirmIntro(int accounts, int records) {
+    return 'About to import $accounts accounts ($records records total):';
+  }
+
+  @override
+  String get settingsImportConfirmOverwriteHeader =>
+      'The following UIDs already have data and will be overwritten:';
+
+  @override
+  String get settingsImportConfirmNoConflict => 'No data conflicts.';
+
+  @override
+  String settingsImportConfirmPreserveFooter(String uids) {
+    return 'Other existing accounts ($uids) will be preserved.';
+  }
+
+  @override
+  String get settingsImportConfirmWarning =>
+      'This action cannot be undone. Type IMPORT to confirm.';
+
+  @override
+  String settingsImportAllSuccess(int accounts, int records) {
+    return 'Successfully imported $accounts accounts ($records records)';
+  }
+
+  @override
+  String settingsImportAllPartial(int success, int total, String failedUids) {
+    return 'Imported $success/$total accounts; failed: $failedUids';
+  }
+
+  @override
+  String settingsImportAllFailed(String reason) {
+    return 'Import failed: $reason';
+  }
+
+  @override
   String get confirmTitle => 'Confirm';
 
   @override

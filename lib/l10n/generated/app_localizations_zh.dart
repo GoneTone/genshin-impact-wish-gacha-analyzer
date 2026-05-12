@@ -419,6 +419,54 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get settingsExportAll => '匯出全部資料';
+
+  @override
+  String get settingsImportAll => '匯入全部資料';
+
+  @override
+  String settingsExportAllSuccess(String path) {
+    return '已匯出至 $path';
+  }
+
+  @override
+  String get settingsImportConfirmTitle => '匯入確認';
+
+  @override
+  String settingsImportConfirmIntro(int accounts, int records) {
+    return '即將匯入 $accounts 個帳號（共 $records 筆紀錄）：';
+  }
+
+  @override
+  String get settingsImportConfirmOverwriteHeader => '下列 UID 已有資料，將被覆蓋：';
+
+  @override
+  String get settingsImportConfirmNoConflict => '無資料衝突。';
+
+  @override
+  String settingsImportConfirmPreserveFooter(String uids) {
+    return '其他現有帳號（$uids）將保留。';
+  }
+
+  @override
+  String get settingsImportConfirmWarning => '此操作無法復原。請輸入 IMPORT 以確認。';
+
+  @override
+  String settingsImportAllSuccess(int accounts, int records) {
+    return '已成功匯入 $accounts 個帳號（$records 筆紀錄）';
+  }
+
+  @override
+  String settingsImportAllPartial(int success, int total, String failedUids) {
+    return '已匯入 $success/$total 個帳號；失敗：$failedUids';
+  }
+
+  @override
+  String settingsImportAllFailed(String reason) {
+    return '匯入失敗：$reason';
+  }
+
+  @override
   String get confirmTitle => '確認操作';
 
   @override
@@ -899,6 +947,54 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
+  String get settingsExportAll => '导出全部数据';
+
+  @override
+  String get settingsImportAll => '导入全部数据';
+
+  @override
+  String settingsExportAllSuccess(String path) {
+    return '已导出至 $path';
+  }
+
+  @override
+  String get settingsImportConfirmTitle => '导入确认';
+
+  @override
+  String settingsImportConfirmIntro(int accounts, int records) {
+    return '即将导入 $accounts 个账号（共 $records 条记录）：';
+  }
+
+  @override
+  String get settingsImportConfirmOverwriteHeader => '下列 UID 已有数据，将被覆盖：';
+
+  @override
+  String get settingsImportConfirmNoConflict => '无数据冲突。';
+
+  @override
+  String settingsImportConfirmPreserveFooter(String uids) {
+    return '其他现有账号（$uids）将保留。';
+  }
+
+  @override
+  String get settingsImportConfirmWarning => '此操作无法撤销。请输入 IMPORT 以确认。';
+
+  @override
+  String settingsImportAllSuccess(int accounts, int records) {
+    return '已成功导入 $accounts 个账号（$records 条记录）';
+  }
+
+  @override
+  String settingsImportAllPartial(int success, int total, String failedUids) {
+    return '已导入 $success/$total 个账号；失败：$failedUids';
+  }
+
+  @override
+  String settingsImportAllFailed(String reason) {
+    return '导入失败：$reason';
+  }
+
+  @override
   String get confirmTitle => '确认操作';
 
   @override
@@ -1375,6 +1471,54 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String settingsImportFailed(String reason) {
+    return '匯入失敗：$reason';
+  }
+
+  @override
+  String get settingsExportAll => '匯出全部資料';
+
+  @override
+  String get settingsImportAll => '匯入全部資料';
+
+  @override
+  String settingsExportAllSuccess(String path) {
+    return '已匯出至 $path';
+  }
+
+  @override
+  String get settingsImportConfirmTitle => '匯入確認';
+
+  @override
+  String settingsImportConfirmIntro(int accounts, int records) {
+    return '即將匯入 $accounts 個帳號（共 $records 筆紀錄）：';
+  }
+
+  @override
+  String get settingsImportConfirmOverwriteHeader => '下列 UID 已有資料，將被覆蓋：';
+
+  @override
+  String get settingsImportConfirmNoConflict => '無資料衝突。';
+
+  @override
+  String settingsImportConfirmPreserveFooter(String uids) {
+    return '其他現有帳號（$uids）將保留。';
+  }
+
+  @override
+  String get settingsImportConfirmWarning => '此操作無法復原。請輸入 IMPORT 以確認。';
+
+  @override
+  String settingsImportAllSuccess(int accounts, int records) {
+    return '已成功匯入 $accounts 個帳號（$records 筆紀錄）';
+  }
+
+  @override
+  String settingsImportAllPartial(int success, int total, String failedUids) {
+    return '已匯入 $success/$total 個帳號；失敗：$failedUids';
+  }
+
+  @override
+  String settingsImportAllFailed(String reason) {
     return '匯入失敗：$reason';
   }
 

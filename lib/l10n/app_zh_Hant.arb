@@ -222,6 +222,47 @@
     "placeholders": { "reason": { "type": "String" } }
   },
 
+  "settingsExportAll": "匯出全部資料",
+  "settingsImportAll": "匯入全部資料",
+  "settingsExportAllSuccess": "已匯出至 {path}",
+  "@settingsExportAllSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "匯入確認",
+  "settingsImportConfirmIntro": "即將匯入 {accounts} 個帳號（共 {records} 筆紀錄）：",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "下列 UID 已有資料，將被覆蓋：",
+  "settingsImportConfirmNoConflict": "無資料衝突。",
+  "settingsImportConfirmPreserveFooter": "其他現有帳號（{uids}）將保留。",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "此操作無法復原。請輸入 IMPORT 以確認。",
+  "settingsImportAllSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
+  "@settingsImportAllSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportAllPartial": "已匯入 {success}/{total} 個帳號；失敗：{failedUids}",
+  "@settingsImportAllPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportAllFailed": "匯入失敗：{reason}",
+  "@settingsImportAllFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
   "confirmTitle": "確認操作",
   "confirmClearActiveBody": "這會永久刪除 UID {uid} 的所有祈願紀錄。輸入 UID 確認：",
   "@confirmClearActiveBody": {

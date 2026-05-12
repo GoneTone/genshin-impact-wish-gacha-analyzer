@@ -856,6 +856,78 @@ abstract class AppLocalizations {
   /// **'匯入失敗：{reason}'**
   String settingsImportFailed(String reason);
 
+  /// No description provided for @settingsExportAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯出全部資料'**
+  String get settingsExportAll;
+
+  /// No description provided for @settingsImportAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入全部資料'**
+  String get settingsImportAll;
+
+  /// No description provided for @settingsExportAllSuccess.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已匯出至 {path}'**
+  String settingsExportAllSuccess(String path);
+
+  /// No description provided for @settingsImportConfirmTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入確認'**
+  String get settingsImportConfirmTitle;
+
+  /// No description provided for @settingsImportConfirmIntro.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'即將匯入 {accounts} 個帳號（共 {records} 筆紀錄）：'**
+  String settingsImportConfirmIntro(int accounts, int records);
+
+  /// No description provided for @settingsImportConfirmOverwriteHeader.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'下列 UID 已有資料，將被覆蓋：'**
+  String get settingsImportConfirmOverwriteHeader;
+
+  /// No description provided for @settingsImportConfirmNoConflict.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'無資料衝突。'**
+  String get settingsImportConfirmNoConflict;
+
+  /// No description provided for @settingsImportConfirmPreserveFooter.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'其他現有帳號（{uids}）將保留。'**
+  String settingsImportConfirmPreserveFooter(String uids);
+
+  /// No description provided for @settingsImportConfirmWarning.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'此操作無法復原。請輸入 IMPORT 以確認。'**
+  String get settingsImportConfirmWarning;
+
+  /// No description provided for @settingsImportAllSuccess.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已成功匯入 {accounts} 個帳號（{records} 筆紀錄）'**
+  String settingsImportAllSuccess(int accounts, int records);
+
+  /// No description provided for @settingsImportAllPartial.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已匯入 {success}/{total} 個帳號；失敗：{failedUids}'**
+  String settingsImportAllPartial(int success, int total, String failedUids);
+
+  /// No description provided for @settingsImportAllFailed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入失敗：{reason}'**
+  String settingsImportAllFailed(String reason);
+
   /// No description provided for @confirmTitle.
   ///
   /// In zh_Hant, this message translates to:
