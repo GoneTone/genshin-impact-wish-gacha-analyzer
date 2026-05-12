@@ -22,5 +22,13 @@
   "statsFourStarCount": "★4獲得数",
   "statsNoData": "データがありません",
   "pageOverviewTitle": "総合データチャート",
-  "settingsAbout": "このツールについて"
+  "settingsAbout": "このツールについて",
+
+  "navContributors": "貢献",
+  "contributorsProjectLeader": "プロジェクトマネージャー",
+  "contributorsTesters": "テストスタッフ",
+  "contributorsGithubContributors": "GitHub コントリビューター",
+  "contributorsTranslationReviewer": "翻訳レビュアー",
+  "contributorsTranslatedLanguages": "翻訳済み言語",
+  "contributorsProjectLicense": "プロジェクトライセンス"
 }

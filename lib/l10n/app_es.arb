@@ -22,5 +22,16 @@
   "statsFourStarCount": "Numero de articulos 4-Estrellas",
   "statsNoData": "Datos no encontrados",
   "pageOverviewTitle": "Cuadro de datos globales",
-  "settingsAbout": "Sobre"
+  "settingsAbout": "Sobre",
+
+  "navContributors": "Contribucion",
+  "contributorsTitle": "Contribuidores",
+  "contributorsSubtitle": "¡Agradecemos especialmente a los siguientes socios que han contribuido al desarrollo de este software!",
+  "contributorsProjectLeader": "Moderador del proyecto",
+  "contributorsTesters": "Testers",
+  "contributorsGithubContributors": "Contribuidores en GitHub",
+  "contributorsTranslationReviewer": "Correctores de traduccion",
+  "contributorsTranslatedLanguages": "Ha sido traducido a",
+  "contributorsHelpTranslate": "¡¿No esta tu lenguaje? Ayudanos a traducirlo!",
+  "contributorsProjectLicense": "Licencia del proyecto"
 }

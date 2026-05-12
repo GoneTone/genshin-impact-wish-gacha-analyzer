@@ -54,7 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navSettings => '設定';
 
   @override
-  String get navContributors => '貢獻者';
+  String get navContributors => '贡献';
 
   @override
   String get gachaTypeCharacter => '角色活動祈願';
@@ -271,31 +271,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsPlaceholderPhase2 => '（即將推出）';
 
   @override
-  String get contributorsTitle => '貢獻名單';
+  String get contributorsTitle => '贡献名单';
 
   @override
-  String get contributorsSubtitle => '感謝以下為此軟體貢獻的夥伴！';
+  String get contributorsSubtitle => '感谢以下为此软件贡献的伙伴！';
 
   @override
-  String get contributorsProjectLeader => '專案負責人';
+  String get contributorsProjectLeader => '专案负责人';
 
   @override
-  String get contributorsTesters => '測試人員';
+  String get contributorsTesters => '测试人员';
 
   @override
-  String get contributorsGithubContributors => 'GitHub 貢獻者';
+  String get contributorsGithubContributors => 'GitHub 贡献者';
 
   @override
-  String get contributorsTranslationReviewer => '翻譯審稿人';
+  String get contributorsTranslationReviewer => '翻译审稿人';
 
   @override
-  String get contributorsTranslatedLanguages => '已翻譯語言';
+  String get contributorsTranslatedLanguages => '已翻译语言';
 
   @override
-  String get contributorsHelpTranslate => '沒有您的語言嗎？協助我們翻譯！';
+  String get contributorsHelpTranslate => '没有您的语言吗？帮助我们翻译！';
 
   @override
-  String get contributorsProjectLicense => '專案授權';
+  String get contributorsProjectLicense => '专案许可证';
 
   @override
   String get pityFiveStar => '5★ 保底';
@@ -534,6 +534,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get navSettings => '设置';
 
   @override
+  String get navContributors => '贡献';
+
+  @override
   String get gachaTypeCharacter => '角色活动祈愿';
 
   @override
@@ -746,6 +749,33 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get settingsPlaceholderPhase2 => '（即将推出）';
+
+  @override
+  String get contributorsTitle => '贡献名单';
+
+  @override
+  String get contributorsSubtitle => '感谢以下为此软件贡献的伙伴！';
+
+  @override
+  String get contributorsProjectLeader => '专案负责人';
+
+  @override
+  String get contributorsTesters => '测试人员';
+
+  @override
+  String get contributorsGithubContributors => 'GitHub 贡献者';
+
+  @override
+  String get contributorsTranslationReviewer => '翻译审稿人';
+
+  @override
+  String get contributorsTranslatedLanguages => '已翻译语言';
+
+  @override
+  String get contributorsHelpTranslate => '没有您的语言吗？帮助我们翻译！';
+
+  @override
+  String get contributorsProjectLicense => '专案许可证';
 
   @override
   String get pityFiveStar => '5★ 保底';

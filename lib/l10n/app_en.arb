@@ -238,5 +238,16 @@
   "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★",
   "@bannerFiveStarPullsSinceLast": {
     "placeholders": { "n": { "type": "int" } }
-  }
+  },
+
+  "navContributors": "Contribution",
+  "contributorsTitle": "Contributors",
+  "contributorsSubtitle": "Special thanks to the following partners who have contributed to the development of this software!",
+  "contributorsProjectLeader": "Project moderator",
+  "contributorsTesters": "Testers",
+  "contributorsGithubContributors": "GitHub Contributors",
+  "contributorsTranslationReviewer": "Translation proofreaders",
+  "contributorsTranslatedLanguages": "Available languages",
+  "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
+  "contributorsProjectLicense": "Project License"
 }

@@ -20,5 +20,9 @@
   "statsFourStarCount": "Nombre d'objets 4★ obtenu",
   "statsNoData": "Données introuvables",
   "pageOverviewTitle": "Données globales",
-  "settingsAbout": "Sur"
+  "settingsAbout": "Sur",
+
+  "navContributors": "Contribution",
+  "contributorsTitle": "Contributeurs",
+  "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!"
 }

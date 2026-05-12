@@ -54,7 +54,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
-  String get navContributors => '貢獻者';
+  String get navContributors => 'Contribution';
 
   @override
   String get gachaTypeCharacter => 'Character Event Wish';
@@ -273,31 +273,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPlaceholderPhase2 => '(Coming soon)';
 
   @override
-  String get contributorsTitle => '貢獻名單';
+  String get contributorsTitle => 'Contributors';
 
   @override
-  String get contributorsSubtitle => '感謝以下為此軟體貢獻的夥伴！';
+  String get contributorsSubtitle =>
+      'Special thanks to the following partners who have contributed to the development of this software!';
 
   @override
-  String get contributorsProjectLeader => '專案負責人';
+  String get contributorsProjectLeader => 'Project moderator';
 
   @override
-  String get contributorsTesters => '測試人員';
+  String get contributorsTesters => 'Testers';
 
   @override
-  String get contributorsGithubContributors => 'GitHub 貢獻者';
+  String get contributorsGithubContributors => 'GitHub Contributors';
 
   @override
-  String get contributorsTranslationReviewer => '翻譯審稿人';
+  String get contributorsTranslationReviewer => 'Translation proofreaders';
 
   @override
-  String get contributorsTranslatedLanguages => '已翻譯語言';
+  String get contributorsTranslatedLanguages => 'Available languages';
 
   @override
-  String get contributorsHelpTranslate => '沒有您的語言嗎？協助我們翻譯！';
+  String get contributorsHelpTranslate =>
+      'Unavailable in your preferred languages? Help us translate it!';
 
   @override
-  String get contributorsProjectLicense => '專案授權';
+  String get contributorsProjectLicense => 'Project License';
 
   @override
   String get pityFiveStar => '5★ pity';

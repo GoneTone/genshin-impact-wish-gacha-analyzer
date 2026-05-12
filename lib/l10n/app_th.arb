@@ -22,5 +22,16 @@
   "statsFourStarCount": "จำนวนไอเทม 4 ดาวที่ดรอป",
   "statsNoData": "ไม่มีข้อมูล",
   "pageOverviewTitle": "กราฟข้อมูลโดยรวม",
-  "settingsAbout": "เกี่ยวกับ"
+  "settingsAbout": "เกี่ยวกับ",
+
+  "navContributors": "ผลงาน",
+  "contributorsTitle": "รายชื่อผู้ให้การสนับสนุน",
+  "contributorsSubtitle": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!",
+  "contributorsProjectLeader": "หัวหน้าโปรเจค",
+  "contributorsTesters": "ผู้ทดสอบ",
+  "contributorsGithubContributors": "ผู้ร่วมให้ข้อมูล GitHub",
+  "contributorsTranslationReviewer": "ผู้ตรวจสอบการแปล",
+  "contributorsTranslatedLanguages": "ภาษาที่แปล",
+  "contributorsHelpTranslate": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
+  "contributorsProjectLicense": "ใบอนุญาตโปรเจค"
 }

@@ -55,7 +55,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navSettings => '設定';
 
   @override
-  String get navContributors => '貢獻者';
+  String get navContributors => '貢献';
 
   @override
   String get gachaTypeCharacter => '角色活動祈願';
@@ -278,25 +278,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get contributorsSubtitle => '感謝以下為此軟體貢獻的夥伴！';
 
   @override
-  String get contributorsProjectLeader => '專案負責人';
+  String get contributorsProjectLeader => 'プロジェクトマネージャー';
 
   @override
-  String get contributorsTesters => '測試人員';
+  String get contributorsTesters => 'テストスタッフ';
 
   @override
-  String get contributorsGithubContributors => 'GitHub 貢獻者';
+  String get contributorsGithubContributors => 'GitHub コントリビューター';
 
   @override
-  String get contributorsTranslationReviewer => '翻譯審稿人';
+  String get contributorsTranslationReviewer => '翻訳レビュアー';
 
   @override
-  String get contributorsTranslatedLanguages => '已翻譯語言';
+  String get contributorsTranslatedLanguages => '翻訳済み言語';
 
   @override
   String get contributorsHelpTranslate => '沒有您的語言嗎？協助我們翻譯！';
 
   @override
-  String get contributorsProjectLicense => '專案授權';
+  String get contributorsProjectLicense => 'プロジェクトライセンス';
 
   @override
   String get pityFiveStar => '5★ 保底';

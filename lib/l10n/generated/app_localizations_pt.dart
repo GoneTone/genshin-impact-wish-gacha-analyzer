@@ -277,13 +277,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get contributorsSubtitle => '感謝以下為此軟體貢獻的夥伴！';
 
   @override
-  String get contributorsProjectLeader => '專案負責人';
+  String get contributorsProjectLeader => 'O líder do projeto';
 
   @override
-  String get contributorsTesters => '測試人員';
+  String get contributorsTesters => 'Os testadores';
 
   @override
-  String get contributorsGithubContributors => 'GitHub 貢獻者';
+  String get contributorsGithubContributors => 'Os contribuintes de Github';
 
   @override
   String get contributorsTranslationReviewer => '翻譯審稿人';

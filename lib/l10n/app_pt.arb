@@ -13,5 +13,9 @@
   "tableKind": "tipo",
   "statsFiveStarCount": "O número de ganhar um 5 estrelas",
   "statsFourStarCount": "A quantidade ganha de um 4 estrelas",
-  "settingsAbout": "Cerca de"
+  "settingsAbout": "Cerca de",
+
+  "contributorsProjectLeader": "O líder do projeto",
+  "contributorsTesters": "Os testadores",
+  "contributorsGithubContributors": "Os contribuintes de Github"
 }

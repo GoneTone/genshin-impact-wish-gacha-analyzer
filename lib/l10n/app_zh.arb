@@ -1,3 +1,14 @@
 {
-  "@@locale": "zh"
+  "@@locale": "zh",
+
+  "navContributors": "贡献",
+  "contributorsTitle": "贡献名单",
+  "contributorsSubtitle": "感谢以下为此软件贡献的伙伴！",
+  "contributorsProjectLeader": "专案负责人",
+  "contributorsTesters": "测试人员",
+  "contributorsGithubContributors": "GitHub 贡献者",
+  "contributorsTranslationReviewer": "翻译审稿人",
+  "contributorsTranslatedLanguages": "已翻译语言",
+  "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
+  "contributorsProjectLicense": "专案许可证"
 }
