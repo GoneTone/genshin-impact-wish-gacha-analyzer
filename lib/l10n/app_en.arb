@@ -236,6 +236,7 @@
   "confirmTypeMismatch": "Input did not match. Operation cancelled.",
   "confirmCancel": "Cancel",
   "confirmDelete": "Delete",
+  "confirmImport": "Import",
 
   "accountListEmpty": "No accounts yet",
   "accountLastUpdated": "Last updated {time}",

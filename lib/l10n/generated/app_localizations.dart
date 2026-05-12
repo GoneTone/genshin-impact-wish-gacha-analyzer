@@ -928,6 +928,12 @@ abstract class AppLocalizations {
   /// **'刪除'**
   String get confirmDelete;
 
+  /// No description provided for @confirmImport.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯入'**
+  String get confirmImport;
+
   /// No description provided for @accountListEmpty.
   ///
   /// In zh_Hant, this message translates to:

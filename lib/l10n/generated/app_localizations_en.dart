@@ -470,6 +470,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDelete => 'Delete';
 
   @override
+  String get confirmImport => 'Import';
+
+  @override
   String get accountListEmpty => 'No accounts yet';
 
   @override

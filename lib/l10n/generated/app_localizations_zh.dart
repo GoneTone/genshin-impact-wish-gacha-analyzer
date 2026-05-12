@@ -463,6 +463,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirmDelete => '刪除';
 
   @override
+  String get confirmImport => '匯入';
+
+  @override
   String get accountListEmpty => '目前沒有任何帳號';
 
   @override
@@ -967,6 +970,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get confirmDelete => '删除';
 
   @override
+  String get confirmImport => '导入';
+
+  @override
   String get accountListEmpty => '目前没有任何账号';
 
   @override
@@ -1469,6 +1475,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get confirmDelete => '刪除';
+
+  @override
+  String get confirmImport => '匯入';
 
   @override
   String get accountListEmpty => '目前沒有任何帳號';

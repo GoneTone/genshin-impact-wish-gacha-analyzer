@@ -254,6 +254,7 @@
   "confirmTypeMismatch": "輸入不符，操作已取消",
   "confirmCancel": "取消",
   "confirmDelete": "刪除",
+  "confirmImport": "匯入",
 
   "accountListEmpty": "目前沒有任何帳號",
   "accountLastUpdated": "最後更新 {time}",

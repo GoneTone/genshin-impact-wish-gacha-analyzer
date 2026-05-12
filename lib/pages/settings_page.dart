@@ -341,7 +341,7 @@ class _DataManagement extends ConsumerWidget {
       body: buf.toString(),
       expectedText: 'IMPORT',
       cancelLabel: l.confirmCancel,
-      confirmLabel: l.confirmDelete,
+      confirmLabel: l.confirmImport,
     );
     if (ok != true) return;
     if (!ctx.mounted) return;

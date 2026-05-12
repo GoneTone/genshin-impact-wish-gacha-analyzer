@@ -236,6 +236,7 @@
   "confirmTypeMismatch": "输入不符，操作已取消",
   "confirmCancel": "取消",
   "confirmDelete": "删除",
+  "confirmImport": "导入",
 
   "accountListEmpty": "目前没有任何账号",
   "accountLastUpdated": "最后更新 {time}",

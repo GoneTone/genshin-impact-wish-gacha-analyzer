@@ -463,6 +463,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get confirmDelete => '刪除';
 
   @override
+  String get confirmImport => '匯入';
+
+  @override
   String get accountListEmpty => '目前沒有任何帳號';
 
   @override

@@ -930,6 +930,9 @@ void main() {
           banners: const {'301': []},
         ),
       );
+      SharedPreferences.setMockInitialValues({
+        'pref.uidAliases': jsonEncode({'C': '另一支'}),
+      });
 
       final container = ProviderContainer(
         overrides: [
@@ -982,9 +985,9 @@ void main() {
       expect(state.byUid['C']!.lastUpdated, DateTime.utc(2026, 1, 1));
       expect(state.activeUid, 'A');
 
-      // Settings: alias on A, no alias on B/C; order = [A, B, ...]
+      // Settings: alias on A (from bundle), alias on C (pre-existing, preserved)
       final settings = container.read(settingsProvider);
-      expect(settings.uidAliases, {'A': '主號'});
+      expect(settings.uidAliases, {'A': '主號', 'C': '另一支'});
       expect(settings.uidOrder.take(2).toList(), ['A', 'B']);
       expect(settings.lastActiveUid, 'A');
     },
@@ -1113,6 +1116,62 @@ void main() {
       expect(state.activeUid, 'A');
       // uidOrder doesn't contain failed B
       expect(container.read(settingsProvider).uidOrder.contains('B'), isFalse);
+    },
+  );
+
+  test(
+    'importAllAccounts: bundle lastActiveUid switches active to it when imported',
+    () async {
+      final storage = WishStorage(tempDir);
+      // Existing active = X (will remain after import)
+      await storage.save(
+        BannerStorage(
+          uid: 'X',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+      SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'X'});
+
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(container.read(wishRepositoryProvider).activeUid, 'X');
+
+      final bundle = AllAccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: 'Y',
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: 'Y',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+          ),
+        ],
+      );
+
+      await container
+          .read(wishRepositoryProvider.notifier)
+          .importAllAccounts(bundle);
+
+      expect(container.read(wishRepositoryProvider).activeUid, 'Y');
+      expect(container.read(settingsProvider).lastActiveUid, 'Y');
     },
   );
 }
