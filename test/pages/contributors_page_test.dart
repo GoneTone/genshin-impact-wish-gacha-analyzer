@@ -44,6 +44,10 @@ void main() {
       find.ancestor(of: find.text('GoneTone'), matching: find.byType(AppLink)),
       findsOneWidget,
     );
+    final link = tester.widget<AppLink>(
+      find.ancestor(of: find.text('GoneTone'), matching: find.byType(AppLink)),
+    );
+    expect(link.url, 'https://github.com/GoneTone');
   });
 
   testWidgets('測試人員 SectionCard 顯示兩位 testers', (tester) async {
@@ -51,6 +55,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('世界へいわ'), findsWidgets);
     expect(find.text('Zhi'), findsOneWidget);
+    expect(
+      find.ancestor(of: find.text('Zhi'), matching: find.byType(AppLink)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('翻譯審稿人 SectionCard 顯示三人；pan93412 / Lemon7777 為純文字（無 url）', (
