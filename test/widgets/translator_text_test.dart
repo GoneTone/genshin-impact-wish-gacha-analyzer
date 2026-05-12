@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
@@ -70,6 +71,57 @@ void main() {
 
     test('空字串 → 空 list', () {
       expect(parseTranslatorMarkup(''), isEmpty);
+    });
+  });
+
+  group('TranslatorText widget', () {
+    testWidgets('含連結時：連結 span 有 underline 與 recognizer，純文字 span 沒有', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: TranslatorText(
+              raw: 'jj、<a href="https://example.test">世界へいわ</a>',
+            ),
+          ),
+        ),
+      );
+
+      final richText = tester.widget<RichText>(
+        find.descendant(
+          of: find.byType(TranslatorText),
+          matching: find.byType(RichText),
+        ),
+      );
+      final root = richText.text as TextSpan;
+      final spans = root.children!.cast<TextSpan>();
+
+      final linkSpan = spans.firstWhere((s) => s.text == '世界へいわ');
+      expect(linkSpan.style?.decoration, TextDecoration.underline);
+      expect(linkSpan.recognizer, isNotNull);
+
+      final textSpan = spans.firstWhere((s) => s.text == 'jj、');
+      expect(textSpan.recognizer, isNull);
+    });
+
+    testWidgets('純文字輸入：所有 span 都沒有 recognizer', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: TranslatorText(raw: 'Alice, Bob')),
+        ),
+      );
+
+      final richText = tester.widget<RichText>(
+        find.descendant(
+          of: find.byType(TranslatorText),
+          matching: find.byType(RichText),
+        ),
+      );
+      final root = richText.text as TextSpan;
+      for (final span in root.children!.cast<TextSpan>()) {
+        expect(span.recognizer, isNull);
+      }
     });
   });
 }
