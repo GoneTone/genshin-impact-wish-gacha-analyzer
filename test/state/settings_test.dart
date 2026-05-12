@@ -147,4 +147,48 @@ void main() {
     expect(s.uidAliases, isEmpty);
     expect(s.uidOrder, isEmpty);
   });
+
+  test('applyImportedPreferences updates aliases + uidOrder + lastActiveUid '
+      'and persists once', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).waitForLoad();
+
+    await container
+        .read(settingsProvider.notifier)
+        .applyImportedPreferences(
+          aliases: const {'A': '主號', 'C': '小號'},
+          uidOrder: const ['A', 'C', 'B'],
+          lastActiveUid: 'A',
+        );
+
+    final state = container.read(settingsProvider);
+    expect(state.uidAliases, {'A': '主號', 'C': '小號'});
+    expect(state.uidOrder, ['A', 'C', 'B']);
+    expect(state.lastActiveUid, 'A');
+
+    final reloaded = await SettingsStorage.load();
+    expect(reloaded.uidAliases, {'A': '主號', 'C': '小號'});
+    expect(reloaded.uidOrder, ['A', 'C', 'B']);
+    expect(reloaded.lastActiveUid, 'A');
+  });
+
+  test('applyImportedPreferences with null lastActiveUid clears it', () async {
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'OLD'});
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).waitForLoad();
+
+    await container
+        .read(settingsProvider.notifier)
+        .applyImportedPreferences(
+          aliases: const {},
+          uidOrder: const [],
+          lastActiveUid: null,
+        );
+
+    expect(container.read(settingsProvider).lastActiveUid, isNull);
+    final reloaded = await SettingsStorage.load();
+    expect(reloaded.lastActiveUid, isNull);
+  });
 }

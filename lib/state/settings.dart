@@ -72,6 +72,22 @@ class SettingsNotifier extends Notifier<AppSettings> {
     );
     await SettingsStorage.save(state);
   }
+
+  /// 一次性把匯入後的偏好寫入：aliases、uidOrder、lastActiveUid。
+  /// 三個欄位合併寫入單次 [SettingsStorage.save]，避免中途失敗造成裂腦狀態。
+  Future<void> applyImportedPreferences({
+    required Map<String, String> aliases,
+    required List<String> uidOrder,
+    required String? lastActiveUid,
+  }) async {
+    state = state.copyWith(
+      uidAliases: Map.unmodifiable(aliases),
+      uidOrder: List.unmodifiable(uidOrder),
+      lastActiveUid: lastActiveUid,
+      clearLastActiveUid: lastActiveUid == null,
+    );
+    await SettingsStorage.save(state);
+  }
 }
 
 final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(
