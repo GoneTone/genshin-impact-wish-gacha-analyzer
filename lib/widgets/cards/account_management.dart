@@ -18,17 +18,21 @@ class AccountManagement extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final state = ref.watch(wishRepositoryProvider);
-    final settings = ref.watch(settingsProvider);
+    final byUid = ref.watch(wishRepositoryProvider.select((s) => s.byUid));
+    final activeUid = ref.watch(
+      wishRepositoryProvider.select((s) => s.activeUid),
+    );
+    final uidAliases = ref.watch(settingsProvider.select((s) => s.uidAliases));
+    final uidOrder = ref.watch(settingsProvider.select((s) => s.uidOrder));
     final notifier = ref.read(wishRepositoryProvider.notifier);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
-    final ordered = state.byUid.isEmpty
+    final ordered = byUid.isEmpty
         ? const <String>[]
         : mergeUidOrder(
-            knownUids: state.byUid.keys,
-            customOrder: settings.uidOrder,
-            lastUpdatedOf: (u) => state.byUid[u]!.lastUpdated,
+            knownUids: byUid.keys,
+            customOrder: uidOrder,
+            lastUpdatedOf: (u) => byUid[u]!.lastUpdated,
           );
 
     return Column(
@@ -61,9 +65,9 @@ class AccountManagement extends ConsumerWidget {
                 key: ValueKey(uid),
                 uid: uid,
                 index: index,
-                lastUpdated: state.byUid[uid]!.lastUpdated,
-                isActive: uid == state.activeUid,
-                alias: settings.uidAliases[uid] ?? '',
+                lastUpdated: byUid[uid]!.lastUpdated,
+                isActive: uid == activeUid,
+                alias: uidAliases[uid] ?? '',
                 onSetActive: () => notifier.setActiveUid(uid),
                 onRemove: () => _remove(context, ref, uid),
                 onAliasSubmit: (value) =>

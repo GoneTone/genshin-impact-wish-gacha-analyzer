@@ -31,7 +31,8 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
-    final settings = ref.watch(settingsProvider);
+    final themeMode = ref.watch(settingsProvider.select((s) => s.themeMode));
+    final localePref = ref.watch(settingsProvider.select((s) => s.locale));
     final notifier = ref.read(settingsProvider.notifier);
 
     return SingleChildScrollView(
@@ -47,7 +48,7 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsAppearance,
                 icon: Icons.palette_outlined,
                 child: _ThemeRadios(
-                  current: settings.themeMode,
+                  current: themeMode,
                   onChanged: notifier.setThemeMode,
                   l: l,
                 ),
@@ -57,7 +58,7 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsLanguage,
                 icon: Icons.language,
                 child: _LocaleDropdown(
-                  current: settings.locale,
+                  current: localePref,
                   onChanged: notifier.setLocale,
                   l: l,
                 ),
@@ -231,8 +232,12 @@ class _DataManagement extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
-    final state = ref.watch(wishRepositoryProvider);
-    final hasData = state.byUid.isNotEmpty;
+    final hasData = ref.watch(
+      wishRepositoryProvider.select((s) => s.byUid.isNotEmpty),
+    );
+    final activeUid = ref.watch(
+      wishRepositoryProvider.select((s) => s.activeUid),
+    );
 
     return Wrap(
       spacing: AppSpacing.s,
@@ -253,9 +258,9 @@ class _DataManagement extends ConsumerWidget {
             backgroundColor: Theme.of(context).gacha.stateDanger,
             foregroundColor: Colors.white,
           ),
-          onPressed: state.activeUid == null
+          onPressed: activeUid == null
               ? null
-              : () => _clearActive(context, ref, state.activeUid!),
+              : () => _clearActive(context, ref, activeUid),
           icon: const Icon(Icons.delete_outline, size: 18),
           label: Text(l.settingsClearActive),
         ),
