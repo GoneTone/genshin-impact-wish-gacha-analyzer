@@ -41,9 +41,10 @@ class SettingsPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              PageHeader(title: l.settingsTitle),
+              PageHeader(title: l.settingsTitle, icon: Icons.settings_outlined),
               SectionCard(
                 title: l.settingsAppearance,
+                icon: Icons.palette_outlined,
                 child: _ThemeRadios(
                   current: settings.themeMode,
                   onChanged: notifier.setThemeMode,
@@ -53,6 +54,7 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsLanguage,
+                icon: Icons.language,
                 child: _LocaleDropdown(
                   current: settings.locale,
                   onChanged: notifier.setLocale,
@@ -62,15 +64,21 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsDataManagement,
+                icon: Icons.folder_outlined,
                 child: const _DataManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsAccountManagement,
+                icon: Icons.manage_accounts_outlined,
                 child: const AccountManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
-              SectionCard(title: l.settingsAbout, child: const _AboutContent()),
+              SectionCard(
+                title: l.settingsAbout,
+                icon: Icons.info_outline,
+                child: const _AboutContent(),
+              ),
             ],
           ),
         ),
