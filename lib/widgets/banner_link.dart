@@ -23,17 +23,24 @@ class _BannerLinkState extends State<BannerLink> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
-      child: AnimatedOpacity(
-        opacity: _hovering ? 0.85 : 1.0,
-        duration: const Duration(milliseconds: 120),
-        child: Image.asset(
-          widget.assetPath,
-          height: widget.height,
-          fit: BoxFit.contain,
+    return Tooltip(
+      message: widget.semanticLabel,
+      child: Semantics(
+        button: true,
+        label: widget.semanticLabel,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          onEnter: (_) => setState(() => _hovering = true),
+          onExit: (_) => setState(() => _hovering = false),
+          child: AnimatedOpacity(
+            opacity: _hovering ? 0.85 : 1.0,
+            duration: const Duration(milliseconds: 120),
+            child: Image.asset(
+              widget.assetPath,
+              height: widget.height,
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
     );

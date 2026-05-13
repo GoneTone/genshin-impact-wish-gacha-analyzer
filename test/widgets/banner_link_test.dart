@@ -40,15 +40,16 @@ void main() {
       ),
     );
 
-    final region = tester.widget<MouseRegion>(
-      find
-          .descendant(
-            of: find.byType(BannerLink),
-            matching: find.byType(MouseRegion),
-          )
-          .first,
+    final mouseRegions = tester.widgetList<MouseRegion>(
+      find.descendant(
+        of: find.byType(BannerLink),
+        matching: find.byType(MouseRegion),
+      ),
     );
-    expect(region.cursor, SystemMouseCursors.click);
+    expect(
+      mouseRegions.any((r) => r.cursor == SystemMouseCursors.click),
+      isTrue,
+    );
   });
 
   testWidgets('hover 時 AnimatedOpacity 變為 0.85,離開後變回 1.0', (tester) async {
@@ -87,5 +88,45 @@ void main() {
     await gesture.moveTo(Offset.zero);
     await tester.pump();
     expect(readOpacity(), 1.0);
+  });
+
+  testWidgets('Tooltip 使用 semanticLabel 作為 message', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: BannerLink(
+            assetPath: 'assets/banners/gonetone_banner.png',
+            url: 'https://example.test',
+            semanticLabel: '旋風之音 GoneTone',
+            height: 64,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byTooltip('旋風之音 GoneTone'), findsOneWidget);
+  });
+
+  testWidgets('提供 Semantics button label 給螢幕閱讀器', (tester) async {
+    final handle = tester.ensureSemantics();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: BannerLink(
+            assetPath: 'assets/banners/gonetone_banner.png',
+            url: 'https://example.test',
+            semanticLabel: '旋風之音 GoneTone',
+            height: 64,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.bySemanticsLabel('旋風之音 GoneTone'), findsAtLeastNWidgets(1));
+
+    handle.dispose();
   });
 }
