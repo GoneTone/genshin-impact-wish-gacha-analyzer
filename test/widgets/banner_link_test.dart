@@ -25,6 +25,35 @@ void main() {
     expect(image.fit, BoxFit.contain);
   });
 
+  testWidgets('指定 cacheHeight 為 height × devicePixelRatio', (tester) async {
+    // 用一個明確的 dpr 確保斷言可預期；MediaQuery 預設 dpr=1.0。
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: MediaQuery(
+          data: const MediaQueryData(devicePixelRatio: 2.0),
+          child: const Scaffold(
+            body: BannerLink(
+              assetPath: 'assets/banners/gonetone_banner.png',
+              url: 'https://example.test',
+              semanticLabel: 'test banner',
+              height: 64,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final image = tester.widget<Image>(find.byType(Image));
+    // height=64, dpr=2.0 → cacheHeight=128
+    expect(image, isA<Image>());
+    expect(
+      (image.image as ResizeImage).height,
+      128,
+      reason: 'cacheHeight 應為 height(64) × devicePixelRatio(2.0) = 128',
+    );
+  });
+
   testWidgets('hover 時 cursor 為 SystemMouseCursors.click', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

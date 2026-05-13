@@ -33,6 +33,7 @@ class _BannerLinkState extends State<BannerLink> {
 
   @override
   Widget build(BuildContext context) {
+    final dpr = MediaQuery.devicePixelRatioOf(context);
     return Tooltip(
       message: widget.semanticLabel,
       child: Semantics(
@@ -52,6 +53,9 @@ class _BannerLinkState extends State<BannerLink> {
                 widget.assetPath,
                 height: widget.height,
                 fit: BoxFit.contain,
+                // 只設 cacheHeight，寬度按比例縮，避免 banner 變形。
+                // 用 MediaQuery 的 dpr 而非寫死，正確支援高 DPI 螢幕。
+                cacheHeight: (widget.height * dpr).round(),
               ),
             ),
           ),
