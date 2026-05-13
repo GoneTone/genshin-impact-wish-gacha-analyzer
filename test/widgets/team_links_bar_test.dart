@@ -48,6 +48,19 @@ void main() {
     }
   });
 
+  testWidgets('每個社群 IconButton 的 mouseCursor 為 SystemMouseCursors.click', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrap(const TeamLinksBar()));
+
+    final buttons = tester
+        .widgetList<IconButton>(find.byType(IconButton))
+        .toList();
+    for (final b in buttons) {
+      expect(b.mouseCursor, SystemMouseCursors.click);
+    }
+  });
+
   testWidgets('團隊名稱被 AppLink 包住且 URL 為 TeamInfo.websiteUrl', (tester) async {
     await tester.pumpWidget(_wrap(const TeamLinksBar()));
 

@@ -73,8 +73,9 @@ class _IconLink extends StatelessWidget {
       tooltip: tooltip,
       iconSize: 16,
       visualDensity: VisualDensity.compact,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+      constraints: const BoxConstraints(minWidth: 40, minHeight: 32),
+      mouseCursor: SystemMouseCursors.click,
       icon: FaIcon(icon, color: tokens.textSecondary),
       onPressed: () {
         final uri = Uri.tryParse(url);
