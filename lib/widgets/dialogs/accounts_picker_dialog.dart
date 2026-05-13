@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 
 class AccountPickerEntry {
   const AccountPickerEntry({
@@ -157,7 +159,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
   }
 }
 
-class _PickerRow extends StatelessWidget {
+class _PickerRow extends ConsumerWidget {
   const _PickerRow({
     required this.entry,
     required this.selected,
@@ -169,16 +171,18 @@ class _PickerRow extends StatelessWidget {
   final ValueChanged<bool?> onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(clockTickProvider);
+
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
     final alias = entry.alias;
     final title = (alias != null && alias.isNotEmpty)
         ? '${entry.uid} ($alias)'
         : entry.uid;
-    final lastUpdated = DateFormat(
-      'yyyy-MM-dd HH:mm',
-    ).format(entry.lastUpdated.toLocal());
+    final lastUpdatedText = l.accountLastUpdated(
+      relativeTime(entry.lastUpdated, l),
+    );
     final badge = entry.badge;
     return CheckboxListTile(
       value: selected,
@@ -206,9 +210,19 @@ class _PickerRow extends StatelessWidget {
             ),
         ],
       ),
-      subtitle: Text(
-        '${l.accountLastUpdated(lastUpdated)} ・ ${l.accountRecordCount(entry.recordCount)}',
+      subtitle: DefaultTextStyle.merge(
         style: TextStyle(color: tokens.textMuted, fontSize: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Tooltip(
+              message: formatAbsoluteDateTime(entry.lastUpdated),
+              child: Text(lastUpdatedText),
+            ),
+            const Text(' ・ '),
+            Text(l.accountRecordCount(entry.recordCount)),
+          ],
+        ),
       ),
     );
   }

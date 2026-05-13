@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -39,25 +40,27 @@ Future<void> _open(
   _result = null;
   _completed = false;
   await tester.pumpWidget(
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('zh', 'Hant'),
-      theme: buildDarkTheme(),
-      home: Scaffold(
-        body: Builder(
-          builder: (ctx) => Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                _result = await showAccountsPickerDialog(
-                  context: ctx,
-                  title: '選擇要匯出的帳號',
-                  confirmLabel: '匯出',
-                  entries: entries ?? _entries,
-                );
-                _completed = true;
-              },
-              child: const Text('open'),
+    ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh', 'Hant'),
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  _result = await showAccountsPickerDialog(
+                    context: ctx,
+                    title: '選擇要匯出的帳號',
+                    confirmLabel: '匯出',
+                    entries: entries ?? _entries,
+                  );
+                  _completed = true;
+                },
+                child: const Text('open'),
+              ),
             ),
           ),
         ),
