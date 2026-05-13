@@ -151,4 +151,180 @@ void main() {
           'scrollability.',
     );
   });
+
+  // ---- Scroll affordance (fade + arrows) ----
+
+  List<TimelineEntry> manyEntries(int n) => [
+    for (var i = n - 1; i >= 0; i--)
+      _e(
+        'E$i',
+        '301',
+        60 + (n - 1 - i),
+        DateTime(2025, 1, 1).add(Duration(days: i)),
+      ),
+  ];
+
+  testWidgets('overflow + offset=0 → right arrow visible, left hidden', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) =>
+            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_left), findsNothing);
+  });
+
+  testWidgets('overflow + offset=middle → both arrows visible', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) =>
+            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    scrollable.position.jumpTo(scrollable.position.maxScrollExtent / 2);
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_left), findsOneWidget);
+  });
+
+  testWidgets('overflow + offset=max → left arrow visible, right hidden', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) =>
+            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    scrollable.position.jumpTo(scrollable.position.maxScrollExtent);
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.chevron_left), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_right), findsNothing);
+  });
+
+  testWidgets('no overflow (2 entries) → no arrows on either side', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineHorizontal(
+          entries: [
+            _e('夜蘭', '301', 87, DateTime(2025, 4, 1)),
+            _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
+          ],
+          colors: colors,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.chevron_left), findsNothing);
+    expect(find.byIcon(Icons.chevron_right), findsNothing);
+  });
+
+  testWidgets('tap right arrow → scrolls by one column (90 px)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) =>
+            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(scrollable.position.pixels, 0);
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+    expect(scrollable.position.pixels, closeTo(90, 0.5));
+  });
+
+  testWidgets(
+    'tap right arrow repeatedly → clamps at maxScrollExtent and hides right arrow',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          (ctx, colors) =>
+              TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final scrollable = tester.state<ScrollableState>(
+        find.descendant(
+          of: find.byType(TimelineHorizontal),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      // 1800 - 1000 = 800 px max; 90 px/tap → 10 taps is plenty
+      for (var i = 0; i < 12; i++) {
+        await tester.tap(find.byIcon(Icons.chevron_right));
+        await tester.pumpAndSettle();
+      }
+      expect(
+        scrollable.position.pixels,
+        closeTo(scrollable.position.maxScrollExtent, 0.5),
+      );
+      expect(find.byIcon(Icons.chevron_right), findsNothing);
+      expect(find.byIcon(Icons.chevron_left), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'entries shrink from overflow to non-overflow → arrows disappear',
+    (tester) async {
+      Widget makeWidget(List<TimelineEntry> entries) => _wrap(
+        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+      );
+      await tester.pumpWidget(makeWidget(manyEntries(20)));
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+
+      await tester.pumpWidget(
+        makeWidget([
+          _e('夜蘭', '301', 87, DateTime(2025, 4, 1)),
+          _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
+        ]),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.chevron_right), findsNothing);
+      expect(find.byIcon(Icons.chevron_left), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'empty + no nowPulls → no scroll affordance even if widget renders',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          (ctx, colors) =>
+              TimelineHorizontal(entries: const [], colors: colors),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.chevron_left), findsNothing);
+      expect(find.byIcon(Icons.chevron_right), findsNothing);
+    },
+  );
 }

@@ -12,6 +12,12 @@ const double _colWidth = 90;
 const double _nodeSize = 14;
 const double _haloSize = 22;
 
+const double _edgeFadeWidth = 32;
+const Duration _scrollDuration = Duration(milliseconds: 240);
+const Curve _scrollCurve = Curves.easeOutCubic;
+
+enum _ScrollSide { left, right }
+
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
 /// [DistributionLegend] (記得搭配 `showAllEntries: true`) 的條目,作為
 /// [TimelineHorizontal] 在跨卡池場景下的顏色圖例。
@@ -43,7 +49,7 @@ List<DistributionEntry> bannerDistributionEntries(
 /// - 左 → 右 = 新 → 舊
 /// - 每欄 3 行:名稱 / 節點(軸線居中) / `MM/dd · N抽`
 /// - `nowPulls != null` 時最左欄為「現在」(中空節點 + 同色 halo)
-class TimelineHorizontal extends StatelessWidget {
+class TimelineHorizontal extends StatefulWidget {
   const TimelineHorizontal({
     super.key,
     required this.entries,
@@ -56,12 +62,66 @@ class TimelineHorizontal extends StatelessWidget {
   final int? nowPulls;
 
   @override
+  State<TimelineHorizontal> createState() => _TimelineHorizontalState();
+}
+
+class _TimelineHorizontalState extends State<TimelineHorizontal> {
+  late final ScrollController _controller;
+  bool _hasLeft = false;
+  bool _hasRight = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController()..addListener(_updateAffordance);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateAffordance());
+  }
+
+  @override
+  void didUpdateWidget(covariant TimelineHorizontal old) {
+    super.didUpdateWidget(old);
+    if (old.entries != widget.entries || old.nowPulls != widget.nowPulls) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateAffordance());
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _updateAffordance() {
+    if (!mounted || !_controller.hasClients) return;
+    final pos = _controller.position;
+    final hasLeft = _controller.offset > 1;
+    final hasRight = _controller.offset < pos.maxScrollExtent - 1;
+    if (hasLeft != _hasLeft || hasRight != _hasRight) {
+      setState(() {
+        _hasLeft = hasLeft;
+        _hasRight = hasRight;
+      });
+    }
+  }
+
+  void _scrollBy(double delta) {
+    if (!_controller.hasClients) return;
+    final pos = _controller.position;
+    final target = (_controller.offset + delta).clamp(0.0, pos.maxScrollExtent);
+    _controller.animateTo(
+      target,
+      duration: _scrollDuration,
+      curve: _scrollCurve,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final l = AppLocalizations.of(context)!;
 
-    if (entries.isEmpty && nowPulls == null) {
+    if (widget.entries.isEmpty && widget.nowPulls == null) {
       return Center(
         child: Text(
           l.timelineNoRecords,
@@ -70,12 +130,9 @@ class TimelineHorizontal extends StatelessWidget {
       );
     }
 
-    // 軸線固定在 viewport(timeline 慣例:節點滑過軸線)。
-    // 兩個 Positioned.fill 都拿到 tight constraints,確保 SingleChildScrollView
-    // 的 viewport 寬度 = Stack 寬度,Row 內容 (N × _colWidth) 一旦超過就 scroll。
     return Stack(
       children: [
-        // 背景軸線:viewport 水平中央,跨整個可見寬度
+        // 背景軸線
         Positioned.fill(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
@@ -87,9 +144,7 @@ class TimelineHorizontal extends StatelessWidget {
             ),
           ),
         ),
-        // 內容層:橫向 scroll,Row 寬度 = N × _colWidth
-        // ScrollConfiguration 加入 mouse / trackpad 為 drag devices — 桌面端
-        // 預設只接受 touch,沒有這層使用者用滑鼠拖不動 scroll view。
+        // 內容層 (橫向 scroll)
         Positioned.fill(
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(
@@ -101,6 +156,7 @@ class TimelineHorizontal extends StatelessWidget {
               },
             ),
             child: SingleChildScrollView(
+              controller: _controller,
               scrollDirection: Axis.horizontal,
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeLeftRight,
@@ -108,12 +164,12 @@ class TimelineHorizontal extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (nowPulls != null)
-                      _NowColumn(nowPulls: nowPulls!, tokens: tokens),
-                    for (final entry in entries)
+                    if (widget.nowPulls != null)
+                      _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens),
+                    for (final entry in widget.entries)
                       _EntryColumn(
                         entry: entry,
-                        colors: colors,
+                        colors: widget.colors,
                         tokens: tokens,
                       ),
                   ],
@@ -122,6 +178,56 @@ class TimelineHorizontal extends StatelessWidget {
             ),
           ),
         ),
+        // 左 fade + 左箭頭
+        if (_hasLeft) ...[
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: _edgeFadeWidth,
+            child: const IgnorePointer(
+              child: _EdgeFade(side: _ScrollSide.left),
+            ),
+          ),
+          Positioned(
+            left: 4,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: _ArrowButton(
+                icon: Icons.chevron_left,
+                tooltip: l.timelineScrollLeft,
+                tokens: tokens,
+                onPressed: () => _scrollBy(-_colWidth),
+              ),
+            ),
+          ),
+        ],
+        // 右 fade + 右箭頭
+        if (_hasRight) ...[
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: _edgeFadeWidth,
+            child: const IgnorePointer(
+              child: _EdgeFade(side: _ScrollSide.right),
+            ),
+          ),
+          Positioned(
+            right: 4,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: _ArrowButton(
+                icon: Icons.chevron_right,
+                tooltip: l.timelineScrollRight,
+                tokens: tokens,
+                onPressed: () => _scrollBy(_colWidth),
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -249,6 +355,72 @@ class _Node extends StatelessWidget {
           shape: BoxShape.circle,
           color: hollow ? tokens.surfaceCard : color,
           border: Border.all(color: color, width: 2),
+        ),
+      ),
+    );
+  }
+}
+
+class _EdgeFade extends StatelessWidget {
+  const _EdgeFade({required this.side});
+  final _ScrollSide side;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardColor = Theme.of(context).gacha.surfaceCard;
+    final isLeft = side == _ScrollSide.left;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: isLeft ? Alignment.centerLeft : Alignment.centerRight,
+          end: isLeft ? Alignment.centerRight : Alignment.centerLeft,
+          colors: [cardColor, cardColor.withValues(alpha: 0)],
+        ),
+      ),
+    );
+  }
+}
+
+class _ArrowButton extends StatelessWidget {
+  const _ArrowButton({
+    required this.icon,
+    required this.tooltip,
+    required this.tokens,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final GachaTokens tokens;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: tooltip,
+      child: Tooltip(
+        message: tooltip,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Material(
+            color: tokens.surfaceCard.withValues(alpha: 0.85),
+            shape: CircleBorder(
+              side: BorderSide(
+                color: tokens.textMuted.withValues(alpha: 0.25),
+                width: 1,
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onPressed,
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: Icon(icon, size: 16, color: tokens.textPrimary),
+              ),
+            ),
+          ),
         ),
       ),
     );
