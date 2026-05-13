@@ -11,6 +11,7 @@ Future<bool?> showConfirmTypeDialog({
   required String expectedText,
   required String cancelLabel,
   required String confirmLabel,
+  required IconData confirmIcon,
 }) {
   return showDialog<bool>(
     context: context,
@@ -21,6 +22,7 @@ Future<bool?> showConfirmTypeDialog({
       expectedText: expectedText,
       cancelLabel: cancelLabel,
       confirmLabel: confirmLabel,
+      confirmIcon: confirmIcon,
     ),
   );
 }
@@ -32,12 +34,14 @@ class _ConfirmDialog extends StatefulWidget {
     required this.expectedText,
     required this.cancelLabel,
     required this.confirmLabel,
+    required this.confirmIcon,
   });
   final String title;
   final String body;
   final String expectedText;
   final String cancelLabel;
   final String confirmLabel;
+  final IconData confirmIcon;
 
   @override
   State<_ConfirmDialog> createState() => _ConfirmDialogState();
@@ -84,7 +88,7 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
             foregroundColor: Colors.white,
           ),
           onPressed: matches ? () => Navigator.of(context).pop(true) : null,
-          icon: const Icon(Icons.delete_outline, size: 18),
+          icon: Icon(widget.confirmIcon, size: 18),
           label: Text(widget.confirmLabel),
         ),
       ],

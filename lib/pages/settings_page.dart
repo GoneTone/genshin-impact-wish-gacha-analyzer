@@ -471,6 +471,7 @@ class _DataManagement extends ConsumerWidget {
       expectedText: 'IMPORT',
       cancelLabel: l.confirmCancel,
       confirmLabel: l.confirmImport,
+      confirmIcon: Icons.check,
     );
     if (ok != true) return;
     if (!ctx.mounted) return;
@@ -510,6 +511,7 @@ class _DataManagement extends ConsumerWidget {
       expectedText: uid,
       cancelLabel: l.confirmCancel,
       confirmLabel: l.confirmDelete,
+      confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
     await ref.read(wishRepositoryProvider.notifier).clearActive();
@@ -524,6 +526,7 @@ class _DataManagement extends ConsumerWidget {
       expectedText: 'DELETE',
       cancelLabel: l.confirmCancel,
       confirmLabel: l.confirmDelete,
+      confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
     await ref.read(wishRepositoryProvider.notifier).clearAll();

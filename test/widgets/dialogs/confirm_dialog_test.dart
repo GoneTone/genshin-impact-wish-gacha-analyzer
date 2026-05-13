@@ -22,6 +22,7 @@ void main() {
                         expectedText: 'X',
                         cancelLabel: 'Cancel',
                         confirmLabel: 'Delete',
+                        confirmIcon: Icons.delete_outline,
                       ) ??
                       false;
                 },
@@ -62,6 +63,7 @@ void main() {
                   expectedText: 'X',
                   cancelLabel: 'Cancel',
                   confirmLabel: 'Delete',
+                  confirmIcon: Icons.delete_outline,
                 ),
                 child: const Text('Open'),
               ),
@@ -75,5 +77,36 @@ void main() {
 
     expect(find.byIcon(Icons.close), findsOneWidget);
     expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+  });
+
+  testWidgets('confirmIcon controls the confirm button icon', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () => showConfirmTypeDialog(
+                  context: ctx,
+                  title: 'Confirm',
+                  body: 'Type X',
+                  expectedText: 'X',
+                  cancelLabel: 'Cancel',
+                  confirmLabel: 'Import',
+                  confirmIcon: Icons.check,
+                ),
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.check), findsOneWidget);
+    expect(find.byIcon(Icons.delete_outline), findsNothing);
   });
 }

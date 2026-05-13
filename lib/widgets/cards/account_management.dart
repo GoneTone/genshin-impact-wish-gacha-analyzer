@@ -94,6 +94,7 @@ class AccountManagement extends ConsumerWidget {
       expectedText: uid,
       cancelLabel: l.confirmCancel,
       confirmLabel: l.confirmDelete,
+      confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
     await ref.read(wishRepositoryProvider.notifier).removeUid(uid);
