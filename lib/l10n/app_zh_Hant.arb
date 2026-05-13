@@ -204,10 +204,10 @@
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",
 
-  "settingsExportAll": "匯出全部資料",
-  "settingsImportAll": "匯入全部資料",
-  "settingsExportAllSuccess": "已匯出至 {path}",
-  "@settingsExportAllSuccess": {
+  "settingsExportAccounts": "匯出資料",
+  "settingsImportAccounts": "匯入資料",
+  "settingsExportSuccess": "已匯出至 {path}",
+  "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
   },
   "settingsImportConfirmTitle": "匯入確認",
@@ -225,24 +225,33 @@
     "placeholders": { "uids": { "type": "String" } }
   },
   "settingsImportConfirmWarning": "此操作無法復原。請輸入 IMPORT 以確認。",
-  "settingsImportAllSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
-  "@settingsImportAllSuccess": {
+  "settingsImportSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
+  "@settingsImportSuccess": {
     "placeholders": {
       "accounts": { "type": "int" },
       "records": { "type": "int" }
     }
   },
-  "settingsImportAllPartial": "已匯入 {success}/{total} 個帳號；失敗：{failedUids}",
-  "@settingsImportAllPartial": {
+  "settingsImportPartial": "已匯入 {success}/{total} 個帳號；失敗：{failedUids}",
+  "@settingsImportPartial": {
     "placeholders": {
       "success": { "type": "int" },
       "total": { "type": "int" },
       "failedUids": { "type": "String" }
     }
   },
-  "settingsImportAllFailed": "匯入失敗：{reason}",
-  "@settingsImportAllFailed": {
+  "settingsImportFailed": "匯入失敗：{reason}",
+  "@settingsImportFailed": {
     "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "選擇要匯出的帳號",
+  "settingsImportSelectTitle": "選擇要匯入的帳號",
+  "settingsImportOverwriteBadge": "覆蓋",
+  "accountsPickerSelectAll": "全選",
+  "accountRecordCount": "{n} 筆紀錄",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
   },
 
   "confirmTitle": "確認操作",
@@ -255,6 +264,8 @@
   "confirmCancel": "取消",
   "confirmDelete": "刪除",
   "confirmImport": "匯入",
+  "confirmExport": "匯出",
+  "confirmContinue": "繼續",
 
   "accountListEmpty": "目前沒有任何帳號",
   "accountLastUpdated": "最後更新 {time}",

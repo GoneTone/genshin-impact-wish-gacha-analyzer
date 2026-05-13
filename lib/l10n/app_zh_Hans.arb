@@ -154,10 +154,10 @@
   "settingsClearActive": "清除当前账号数据",
   "settingsClearAll": "清除所有数据",
 
-  "settingsExportAll": "导出全部数据",
-  "settingsImportAll": "导入全部数据",
-  "settingsExportAllSuccess": "已导出至 {path}",
-  "@settingsExportAllSuccess": {
+  "settingsExportAccounts": "导出数据",
+  "settingsImportAccounts": "导入数据",
+  "settingsExportSuccess": "已导出至 {path}",
+  "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
   },
   "settingsImportConfirmTitle": "导入确认",
@@ -175,24 +175,33 @@
     "placeholders": { "uids": { "type": "String" } }
   },
   "settingsImportConfirmWarning": "此操作无法撤销。请输入 IMPORT 以确认。",
-  "settingsImportAllSuccess": "已成功导入 {accounts} 个账号（{records} 条记录）",
-  "@settingsImportAllSuccess": {
+  "settingsImportSuccess": "已成功导入 {accounts} 个账号（{records} 条记录）",
+  "@settingsImportSuccess": {
     "placeholders": {
       "accounts": { "type": "int" },
       "records": { "type": "int" }
     }
   },
-  "settingsImportAllPartial": "已导入 {success}/{total} 个账号；失败：{failedUids}",
-  "@settingsImportAllPartial": {
+  "settingsImportPartial": "已导入 {success}/{total} 个账号；失败：{failedUids}",
+  "@settingsImportPartial": {
     "placeholders": {
       "success": { "type": "int" },
       "total": { "type": "int" },
       "failedUids": { "type": "String" }
     }
   },
-  "settingsImportAllFailed": "导入失败：{reason}",
-  "@settingsImportAllFailed": {
+  "settingsImportFailed": "导入失败：{reason}",
+  "@settingsImportFailed": {
     "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "选择要导出的账号",
+  "settingsImportSelectTitle": "选择要导入的账号",
+  "settingsImportOverwriteBadge": "覆盖",
+  "accountsPickerSelectAll": "全选",
+  "accountRecordCount": "{n} 条记录",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
   },
 
   "confirmTitle": "确认操作",
@@ -204,6 +213,8 @@
   "confirmTypeMismatch": "输入不符，操作已取消",
   "confirmDelete": "删除",
   "confirmImport": "导入",
+  "confirmExport": "导出",
+  "confirmContinue": "继续",
 
   "accountListEmpty": "目前没有任何账号",
   "accountLastUpdated": "最后更新 {time}",

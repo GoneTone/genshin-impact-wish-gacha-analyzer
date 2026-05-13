@@ -198,12 +198,12 @@ class _DataManagement extends ConsumerWidget {
         OutlinedButton.icon(
           onPressed: !hasData ? null : () => _export(context, ref),
           icon: const Icon(Icons.download_outlined, size: 18),
-          label: Text(l.settingsExportAll),
+          label: Text(l.settingsExportAccounts),
         ),
         OutlinedButton.icon(
           onPressed: () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
-          label: Text(l.settingsImportAll),
+          label: Text(l.settingsImportAccounts),
         ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -258,9 +258,9 @@ class _DataManagement extends ConsumerWidget {
     );
     await File(loc.path).writeAsString(text);
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).showSnackBar(
-      SnackBar(content: Text(l.settingsExportAllSuccess(loc.path))),
-    );
+    ScaffoldMessenger.of(
+      ctx,
+    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
   }
 
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
@@ -278,7 +278,7 @@ class _DataManagement extends ConsumerWidget {
     } catch (e) {
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportAllFailed(e.toString()))),
+        SnackBar(content: Text(l.settingsImportFailed(e.toString()))),
       );
       return;
     }
@@ -289,7 +289,7 @@ class _DataManagement extends ConsumerWidget {
     } on FormatException catch (e) {
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportAllFailed(e.message))),
+        SnackBar(content: Text(l.settingsImportFailed(e.message))),
       );
       return;
     }
@@ -355,16 +355,13 @@ class _DataManagement extends ConsumerWidget {
     if (result.failedUids.isEmpty) {
       snack = SnackBar(
         content: Text(
-          l.settingsImportAllSuccess(
-            result.successAccounts,
-            result.totalRecords,
-          ),
+          l.settingsImportSuccess(result.successAccounts, result.totalRecords),
         ),
       );
     } else {
       snack = SnackBar(
         content: Text(
-          l.settingsImportAllPartial(
+          l.settingsImportPartial(
             result.successAccounts,
             bundle.accounts.length,
             result.failedUids.join(', '),

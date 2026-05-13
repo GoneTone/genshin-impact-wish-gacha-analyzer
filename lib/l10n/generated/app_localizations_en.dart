@@ -399,13 +399,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsClearAll => 'Clear all data';
 
   @override
-  String get settingsExportAll => 'Export all data';
+  String get settingsExportAccounts => 'Export data';
 
   @override
-  String get settingsImportAll => 'Import all data';
+  String get settingsImportAccounts => 'Import data';
 
   @override
-  String settingsExportAllSuccess(String path) {
+  String settingsExportSuccess(String path) {
     return 'Exported to $path';
   }
 
@@ -434,18 +434,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'This action cannot be undone. Type IMPORT to confirm.';
 
   @override
-  String settingsImportAllSuccess(int accounts, int records) {
+  String settingsImportSuccess(int accounts, int records) {
     return 'Successfully imported $accounts accounts ($records records)';
   }
 
   @override
-  String settingsImportAllPartial(int success, int total, String failedUids) {
+  String settingsImportPartial(int success, int total, String failedUids) {
     return 'Imported $success/$total accounts; failed: $failedUids';
   }
 
   @override
-  String settingsImportAllFailed(String reason) {
+  String settingsImportFailed(String reason) {
     return 'Import failed: $reason';
+  }
+
+  @override
+  String get settingsExportSelectTitle => 'Select accounts to export';
+
+  @override
+  String get settingsImportSelectTitle => 'Select accounts to import';
+
+  @override
+  String get settingsImportOverwriteBadge => 'Overwrite';
+
+  @override
+  String get accountsPickerSelectAll => 'Select all';
+
+  @override
+  String accountRecordCount(int n) {
+    return '$n records';
   }
 
   @override
@@ -471,6 +488,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmImport => 'Import';
+
+  @override
+  String get confirmExport => 'Export';
+
+  @override
+  String get confirmContinue => 'Continue';
 
   @override
   String get accountListEmpty => 'No accounts yet';

@@ -820,23 +820,23 @@ abstract class AppLocalizations {
   /// **'清除所有資料'**
   String get settingsClearAll;
 
-  /// No description provided for @settingsExportAll.
+  /// No description provided for @settingsExportAccounts.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'匯出全部資料'**
-  String get settingsExportAll;
+  /// **'匯出資料'**
+  String get settingsExportAccounts;
 
-  /// No description provided for @settingsImportAll.
+  /// No description provided for @settingsImportAccounts.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'匯入全部資料'**
-  String get settingsImportAll;
+  /// **'匯入資料'**
+  String get settingsImportAccounts;
 
-  /// No description provided for @settingsExportAllSuccess.
+  /// No description provided for @settingsExportSuccess.
   ///
   /// In zh_Hant, this message translates to:
   /// **'已匯出至 {path}'**
-  String settingsExportAllSuccess(String path);
+  String settingsExportSuccess(String path);
 
   /// No description provided for @settingsImportConfirmTitle.
   ///
@@ -874,23 +874,53 @@ abstract class AppLocalizations {
   /// **'此操作無法復原。請輸入 IMPORT 以確認。'**
   String get settingsImportConfirmWarning;
 
-  /// No description provided for @settingsImportAllSuccess.
+  /// No description provided for @settingsImportSuccess.
   ///
   /// In zh_Hant, this message translates to:
   /// **'已成功匯入 {accounts} 個帳號（{records} 筆紀錄）'**
-  String settingsImportAllSuccess(int accounts, int records);
+  String settingsImportSuccess(int accounts, int records);
 
-  /// No description provided for @settingsImportAllPartial.
+  /// No description provided for @settingsImportPartial.
   ///
   /// In zh_Hant, this message translates to:
   /// **'已匯入 {success}/{total} 個帳號；失敗：{failedUids}'**
-  String settingsImportAllPartial(int success, int total, String failedUids);
+  String settingsImportPartial(int success, int total, String failedUids);
 
-  /// No description provided for @settingsImportAllFailed.
+  /// No description provided for @settingsImportFailed.
   ///
   /// In zh_Hant, this message translates to:
   /// **'匯入失敗：{reason}'**
-  String settingsImportAllFailed(String reason);
+  String settingsImportFailed(String reason);
+
+  /// No description provided for @settingsExportSelectTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'選擇要匯出的帳號'**
+  String get settingsExportSelectTitle;
+
+  /// No description provided for @settingsImportSelectTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'選擇要匯入的帳號'**
+  String get settingsImportSelectTitle;
+
+  /// No description provided for @settingsImportOverwriteBadge.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'覆蓋'**
+  String get settingsImportOverwriteBadge;
+
+  /// No description provided for @accountsPickerSelectAll.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'全選'**
+  String get accountsPickerSelectAll;
+
+  /// No description provided for @accountRecordCount.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{n} 筆紀錄'**
+  String accountRecordCount(int n);
 
   /// No description provided for @confirmTitle.
   ///
@@ -933,6 +963,18 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'匯入'**
   String get confirmImport;
+
+  /// No description provided for @confirmExport.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'匯出'**
+  String get confirmExport;
+
+  /// No description provided for @confirmContinue.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'繼續'**
+  String get confirmContinue;
 
   /// No description provided for @accountListEmpty.
   ///

@@ -397,13 +397,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsClearAll => '清除所有資料';
 
   @override
-  String get settingsExportAll => '匯出全部資料';
+  String get settingsExportAccounts => '匯出資料';
 
   @override
-  String get settingsImportAll => '匯入全部資料';
+  String get settingsImportAccounts => '匯入資料';
 
   @override
-  String settingsExportAllSuccess(String path) {
+  String settingsExportSuccess(String path) {
     return '已匯出至 $path';
   }
 
@@ -430,18 +430,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsImportConfirmWarning => '此操作無法復原。請輸入 IMPORT 以確認。';
 
   @override
-  String settingsImportAllSuccess(int accounts, int records) {
+  String settingsImportSuccess(int accounts, int records) {
     return '已成功匯入 $accounts 個帳號（$records 筆紀錄）';
   }
 
   @override
-  String settingsImportAllPartial(int success, int total, String failedUids) {
+  String settingsImportPartial(int success, int total, String failedUids) {
     return '已匯入 $success/$total 個帳號；失敗：$failedUids';
   }
 
   @override
-  String settingsImportAllFailed(String reason) {
+  String settingsImportFailed(String reason) {
     return '匯入失敗：$reason';
+  }
+
+  @override
+  String get settingsExportSelectTitle => '選擇要匯出的帳號';
+
+  @override
+  String get settingsImportSelectTitle => '選擇要匯入的帳號';
+
+  @override
+  String get settingsImportOverwriteBadge => '覆蓋';
+
+  @override
+  String get accountsPickerSelectAll => '全選';
+
+  @override
+  String accountRecordCount(int n) {
+    return '$n 筆紀錄';
   }
 
   @override
@@ -466,6 +483,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get confirmImport => '匯入';
+
+  @override
+  String get confirmExport => '匯出';
+
+  @override
+  String get confirmContinue => '繼續';
 
   @override
   String get accountListEmpty => '目前沒有任何帳號';

@@ -185,10 +185,10 @@
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
 
-  "settingsExportAll": "Export all data",
-  "settingsImportAll": "Import all data",
-  "settingsExportAllSuccess": "Exported to {path}",
-  "@settingsExportAllSuccess": {
+  "settingsExportAccounts": "Export data",
+  "settingsImportAccounts": "Import data",
+  "settingsExportSuccess": "Exported to {path}",
+  "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
   },
   "settingsImportConfirmTitle": "Import confirmation",
@@ -206,24 +206,33 @@
     "placeholders": { "uids": { "type": "String" } }
   },
   "settingsImportConfirmWarning": "This action cannot be undone. Type IMPORT to confirm.",
-  "settingsImportAllSuccess": "Successfully imported {accounts} accounts ({records} records)",
-  "@settingsImportAllSuccess": {
+  "settingsImportSuccess": "Successfully imported {accounts} accounts ({records} records)",
+  "@settingsImportSuccess": {
     "placeholders": {
       "accounts": { "type": "int" },
       "records": { "type": "int" }
     }
   },
-  "settingsImportAllPartial": "Imported {success}/{total} accounts; failed: {failedUids}",
-  "@settingsImportAllPartial": {
+  "settingsImportPartial": "Imported {success}/{total} accounts; failed: {failedUids}",
+  "@settingsImportPartial": {
     "placeholders": {
       "success": { "type": "int" },
       "total": { "type": "int" },
       "failedUids": { "type": "String" }
     }
   },
-  "settingsImportAllFailed": "Import failed: {reason}",
-  "@settingsImportAllFailed": {
+  "settingsImportFailed": "Import failed: {reason}",
+  "@settingsImportFailed": {
     "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "Select accounts to export",
+  "settingsImportSelectTitle": "Select accounts to import",
+  "settingsImportOverwriteBadge": "Overwrite",
+  "accountsPickerSelectAll": "Select all",
+  "accountRecordCount": "{n} records",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
   },
 
   "confirmTitle": "Confirm",
@@ -236,6 +245,8 @@
   "confirmCancel": "Cancel",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
+  "confirmExport": "Export",
+  "confirmContinue": "Continue",
 
   "accountListEmpty": "No accounts yet",
   "accountLastUpdated": "Last updated {time}",
