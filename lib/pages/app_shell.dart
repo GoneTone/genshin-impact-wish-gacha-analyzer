@@ -6,11 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
@@ -73,8 +72,6 @@ class _AppShellState extends ConsumerState<AppShell> {
     final activeData = ref.watch(
       wishRepositoryProvider.select((s) => s.activeData),
     );
-    // 訂閱 30 秒 tick 讓 footer 相對時間自動更新。
-    ref.watch(clockTickProvider);
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1180;
     final version = ref.watch(appVersionProvider);
@@ -157,17 +154,11 @@ class _AppShellState extends ConsumerState<AppShell> {
                           style: Theme.of(context).textTheme.bodySmall,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : Tooltip(
-                          message: formatAbsoluteDateTime(
-                            activeData.lastUpdated,
-                          ),
-                          child: Text(
-                            l.footerLastUpdated(
-                              relativeTime(activeData.lastUpdated, l),
-                            ),
-                            style: Theme.of(context).textTheme.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      : RelativeTimeText(
+                          time: activeData.lastUpdated,
+                          templateBuilder: l.footerLastUpdated,
+                          style: Theme.of(context).textTheme.bodySmall,
+                          overflow: TextOverflow.ellipsis,
                         ),
                 ),
                 const SizedBox(width: AppSpacing.s),

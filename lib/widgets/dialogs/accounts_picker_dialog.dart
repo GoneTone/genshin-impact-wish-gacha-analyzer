@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
 class AccountPickerEntry {
   const AccountPickerEntry({
@@ -159,7 +157,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
   }
 }
 
-class _PickerRow extends ConsumerWidget {
+class _PickerRow extends StatelessWidget {
   const _PickerRow({
     required this.entry,
     required this.selected,
@@ -171,18 +169,13 @@ class _PickerRow extends ConsumerWidget {
   final ValueChanged<bool?> onChanged;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(clockTickProvider);
-
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
     final alias = entry.alias;
     final title = (alias != null && alias.isNotEmpty)
         ? '${entry.uid} ($alias)'
         : entry.uid;
-    final lastUpdatedText = l.accountLastUpdated(
-      relativeTime(entry.lastUpdated, l),
-    );
     final badge = entry.badge;
     return CheckboxListTile(
       value: selected,
@@ -215,9 +208,9 @@ class _PickerRow extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Tooltip(
-              message: formatAbsoluteDateTime(entry.lastUpdated),
-              child: Text(lastUpdatedText),
+            RelativeTimeText(
+              time: entry.lastUpdated,
+              templateBuilder: l.accountLastUpdated,
             ),
             const Text(' ・ '),
             Text(l.accountRecordCount(entry.recordCount)),

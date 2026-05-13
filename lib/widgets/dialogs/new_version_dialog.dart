@@ -4,10 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
 class NewVersionDialog extends ConsumerWidget {
   const NewVersionDialog({super.key, required this.releases});
@@ -91,17 +90,15 @@ MarkdownConfig _markdownConfig(ThemeData theme) {
   );
 }
 
-class _ReleaseCard extends ConsumerWidget {
+class _ReleaseCard extends StatelessWidget {
   const _ReleaseCard({required this.release, required this.l});
   final AppRelease release;
   final AppLocalizations l;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(clockTickProvider);
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
-    final dateText = relativeTime(release.publishedAt, l);
 
     return Card(
       margin: EdgeInsets.zero,
@@ -122,13 +119,12 @@ class _ReleaseCard extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.s),
-                Tooltip(
-                  message: formatAbsoluteDate(release.publishedAt),
-                  child: Text(
-                    l.updateReleasedAt(dateText),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: tokens.textMuted,
-                    ),
+                RelativeTimeText(
+                  time: release.publishedAt,
+                  templateBuilder: l.updateReleasedAt,
+                  useDateOnly: true,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: tokens.textMuted,
                   ),
                 ),
               ],
