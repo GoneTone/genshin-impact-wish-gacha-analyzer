@@ -14,6 +14,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -47,7 +48,10 @@ class OverviewPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PageHeader(title: l.pageOverviewTitle),
+          PageHeader(
+            title: l.pageOverviewTitle,
+            icon: Icons.dashboard_outlined,
+          ),
 
           // Row 1: 三聯 Stat 卡（無保底，因綜合頁不適用）
           LayoutBuilder(
@@ -133,6 +137,7 @@ class OverviewPage extends ConsumerWidget {
 
               final rarityCard = ChartCard(
                 title: l.statsRarityDistribution,
+                icon: Icons.pie_chart_outline,
                 chart: RarityPie(stats: stats),
                 legend: DistributionLegend(
                   entries: rarityDistributionEntries(stats, tokens),
@@ -140,6 +145,7 @@ class OverviewPage extends ConsumerWidget {
               );
               final itemTypeCard = ChartCard(
                 title: l.statsItemTypeDistribution,
+                icon: Icons.donut_small_outlined,
                 chart: ItemTypePie(stats: stats),
                 legend: DistributionLegend(
                   entries: itemTypeDistributionEntries(stats, tokens, l),
@@ -189,6 +195,7 @@ class OverviewPage extends ConsumerWidget {
           // 各卡池 5★ 件數（佔整行，因需足夠寬度容納 5 條水平 bar）
           ChartCard(
             title: l.bannerFiveStarCountTitle,
+            icon: Icons.bar_chart,
             height: null,
             chart: BannerFiveStarBars(
               banners: activeData.banners,
@@ -197,9 +204,9 @@ class OverviewPage extends ConsumerWidget {
           ),
 
           const SizedBox(height: AppSpacing.xl),
-          Text(
-            l.timelineCountFiveStar(timelineEntries.length),
-            style: Theme.of(context).textTheme.titleLarge,
+          InlineSectionTitle(
+            icon: Icons.timeline,
+            title: l.timelineCountFiveStar(timelineEntries.length),
           ),
           const SizedBox(height: AppSpacing.s),
           TimelineVertical(
