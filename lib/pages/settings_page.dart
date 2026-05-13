@@ -196,12 +196,12 @@ class _DataManagement extends ConsumerWidget {
       runSpacing: AppSpacing.s,
       children: [
         OutlinedButton.icon(
-          onPressed: !hasData ? null : () => _exportAll(context, ref),
+          onPressed: !hasData ? null : () => _export(context, ref),
           icon: const Icon(Icons.download_outlined, size: 18),
           label: Text(l.settingsExportAll),
         ),
         OutlinedButton.icon(
-          onPressed: () => _importAll(context, ref),
+          onPressed: () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportAll),
         ),
@@ -229,7 +229,7 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  Future<void> _exportAll(BuildContext ctx, WidgetRef ref) async {
+  Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final wish = ref.read(wishRepositoryProvider);
     final settings = ref.read(settingsProvider);
@@ -263,7 +263,7 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  Future<void> _importAll(BuildContext ctx, WidgetRef ref) async {
+  Future<void> _import(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final file = await openFile(
       acceptedTypeGroups: const [
