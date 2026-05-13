@@ -41,7 +41,7 @@ class TeamLinksBar extends StatelessWidget {
           url: appGithubUrl,
         ),
         const SizedBox(width: AppSpacing.xs),
-        Container(width: 1, height: 16, color: tokens.borderSubtle),
+        Container(width: 1, height: 16, color: tokens.textMuted),
         const SizedBox(width: AppSpacing.s),
         AppLink(
           url: TeamInfo.websiteUrl,
