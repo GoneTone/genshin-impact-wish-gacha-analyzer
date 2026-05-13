@@ -193,4 +193,24 @@ void main() {
     final state = container.read(appReleaseProvider);
     expect((state as ReleaseCheckFailed).reason, 'rateLimited');
   });
+
+  test('check 在 ReleaseChecking 期間 re-entrant 呼叫不會重複觸發', () async {
+    var callCount = 0;
+    final client = MockClient((_) async {
+      callCount++;
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      return _ok([]);
+    });
+    final container = _container(currentVersion: '1.0.0', client: client);
+    await container.read(settingsProvider.notifier).waitForLoad();
+
+    final notifier = container.read(appReleaseProvider.notifier);
+    // 並行呼叫兩次：第二次應在第一次完成前被擋下
+    final f1 = notifier.check(manual: true);
+    final f2 = notifier.check(manual: true);
+    await Future.wait([f1, f2]);
+
+    expect(callCount, 1);
+    expect(container.read(appReleaseProvider), isA<ReleaseUpToDate>());
+  });
 }

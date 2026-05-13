@@ -42,13 +42,18 @@ class ReleaseCheckFailed extends ReleaseCheckState {
 }
 
 /// 預設 `http.Client()`；測試 override 用 `MockClient`。
-final httpClientProvider = Provider<http.Client>((_) => http.Client());
+final httpClientProvider = Provider<http.Client>((ref) {
+  final client = http.Client();
+  ref.onDispose(client.close);
+  return client;
+});
 
 class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
   @override
   ReleaseCheckState build() => const ReleaseIdle();
 
   Future<void> check({required bool manual}) async {
+    if (state is ReleaseChecking) return; // 防 re-entrancy
     state = const ReleaseChecking();
     final currentVersion = ref.read(appVersionProvider);
     final client = ref.read(httpClientProvider);
