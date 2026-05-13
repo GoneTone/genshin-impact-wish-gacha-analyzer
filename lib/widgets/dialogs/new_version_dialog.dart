@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 class NewVersionDialog extends ConsumerWidget {
   const NewVersionDialog({super.key, required this.releases});
@@ -65,10 +64,7 @@ class NewVersionDialog extends ConsumerWidget {
           icon: const Icon(Icons.download),
           label: Text(l.updateButtonDownload),
           onPressed: () async {
-            await launchUrl(
-              Uri.parse(latest.htmlUrl),
-              mode: LaunchMode.externalApplication,
-            );
+            await openExternalUrl(Uri.parse(latest.htmlUrl));
             if (context.mounted) Navigator.of(context).pop();
           },
         ),

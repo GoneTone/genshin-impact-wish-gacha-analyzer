@@ -112,7 +112,7 @@ void main() {
     expect(container.read(appReleaseProvider), isA<ReleaseAvailable>());
   });
 
-  test('check — 空 list → ReleaseUpToDate', () async {
+  test('check(manual: true) — 空 list → ReleaseUpToDate', () async {
     final container = _container(
       currentVersion: '1.0.0',
       client: MockClient((_) async => _ok([])),
@@ -123,6 +123,21 @@ void main() {
 
     expect(container.read(appReleaseProvider), isA<ReleaseUpToDate>());
   });
+
+  test(
+    'check(manual: false) — 空 list → 維持 ReleaseIdle (auto path 靜默)',
+    () async {
+      final container = _container(
+        currentVersion: '1.0.0',
+        client: MockClient((_) async => _ok([])),
+      );
+      await container.read(settingsProvider.notifier).waitForLoad();
+
+      await container.read(appReleaseProvider.notifier).check(manual: false);
+
+      expect(container.read(appReleaseProvider), isA<ReleaseIdle>());
+    },
+  );
 
   test('check(manual: true) error → ReleaseCheckFailed (含 token)', () async {
     final container = _container(

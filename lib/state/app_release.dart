@@ -75,7 +75,7 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
     }
 
     if (releases.isEmpty) {
-      state = const ReleaseUpToDate();
+      state = manual ? const ReleaseUpToDate() : const ReleaseIdle();
       return;
     }
 
