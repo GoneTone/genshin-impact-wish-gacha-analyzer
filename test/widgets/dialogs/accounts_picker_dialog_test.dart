@@ -200,4 +200,11 @@ void main() {
     expect(_completed, isTrue);
     expect(_result, ['100000001', '100000002', '100000003']);
   });
+
+  testWidgets('action buttons render with icons', (tester) async {
+    await _open(tester);
+
+    expect(find.byIcon(Icons.close), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
+  });
 }

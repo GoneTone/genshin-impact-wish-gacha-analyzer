@@ -134,11 +134,12 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
         ),
       ),
       actions: [
-        TextButton(
+        TextButton.icon(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(l.confirmCancel),
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(l.confirmCancel),
         ),
-        FilledButton(
+        FilledButton.icon(
           onPressed: _selected.isEmpty
               ? null
               : () {
@@ -148,7 +149,8 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
                   ];
                   Navigator.of(context).pop(ordered);
                 },
-          child: Text(widget.confirmLabel),
+          icon: const Icon(Icons.check, size: 18),
+          label: Text(widget.confirmLabel),
         ),
       ],
     );
