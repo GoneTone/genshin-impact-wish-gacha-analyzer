@@ -16,6 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
@@ -176,10 +177,32 @@ class _AboutContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final version = ref.watch(appVersionProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text(l.settingsAboutVersion(version))],
+      children: [
+        Text(l.settingsAboutVersion(version)),
+        const SizedBox(height: AppSpacing.xs),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Icon(Icons.code, size: 16, color: theme.gacha.textSecondary),
+            const SizedBox(width: AppSpacing.xs),
+            const Text('Developed by '),
+            const AppLink(
+              url: 'https://github.com/GoneTone',
+              child: Text('GoneTone'),
+            ),
+            const Text(' ('),
+            const AppLink(
+              url: 'https://genshininfo.reh.tw/',
+              child: Text('原神資訊站 Genshin Impact Info'),
+            ),
+            const Text(')'),
+          ],
+        ),
+      ],
     );
   }
 }
