@@ -37,9 +37,10 @@ class NewVersionDialog extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                for (final r in releases) ...[
-                  _ReleaseCard(release: r, l: l),
-                  const SizedBox(height: AppSpacing.m),
+                for (int i = 0; i < releases.length; i++) ...[
+                  _ReleaseCard(release: releases[i], l: l),
+                  if (i < releases.length - 1)
+                    const SizedBox(height: AppSpacing.m),
                 ],
               ],
             ),
