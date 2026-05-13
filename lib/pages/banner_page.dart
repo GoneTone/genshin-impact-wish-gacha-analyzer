@@ -20,6 +20,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizo
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -63,7 +64,10 @@ class BannerPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PageHeader(title: type.resolveName(l)),
+            PageHeader(
+              title: type.resolveName(l),
+              icon: _iconForGachaType(type),
+            ),
             SizedBox(height: 320, child: EmptyState.noRecords(context)),
           ],
         ),
@@ -89,7 +93,7 @@ class BannerPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PageHeader(title: type.resolveName(l)),
+          PageHeader(title: type.resolveName(l), icon: _iconForGachaType(type)),
 
           // Row 1: 三聯 Stat 卡（5★ 和 4★ 用 PityCard，總抽數用 StatCard）
           LayoutBuilder(
@@ -179,6 +183,7 @@ class BannerPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.statsRarityDistribution,
+                      icon: Icons.pie_chart_outline,
                       chart: RarityPie(stats: stats),
                       legend: DistributionLegend(
                         entries: rarityDistributionEntries(stats, tokens),
@@ -189,6 +194,7 @@ class BannerPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.statsItemTypeDistribution,
+                      icon: Icons.donut_small_outlined,
                       chart: ItemTypePie(stats: stats),
                       legend: DistributionLegend(
                         entries: itemTypeDistributionEntries(stats, tokens, l),
@@ -199,6 +205,7 @@ class BannerPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.timelineCountFiveStar(stats.fiveStarCount),
+                      icon: Icons.timeline,
                       chart: TimelineHorizontal(
                         entries: buildTimelineEntries(records),
                         colors: BannerColors.fromTokens(tokens),
@@ -212,9 +219,9 @@ class BannerPage extends ConsumerWidget {
           ),
 
           const SizedBox(height: AppSpacing.xl),
-          Text(
-            l.pageBannerRecordList,
-            style: Theme.of(context).textTheme.titleLarge,
+          InlineSectionTitle(
+            icon: Icons.table_chart_outlined,
+            title: l.pageBannerRecordList,
           ),
           const SizedBox(height: AppSpacing.s),
           SearchFilterBar(
@@ -236,4 +243,15 @@ class BannerPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+IconData _iconForGachaType(GachaType type) {
+  return switch (type.nameKey) {
+    'gachaTypeCharacter' => Icons.person_outline,
+    'gachaTypeWeapon' => Icons.shield_outlined,
+    'gachaTypeChronicled' => Icons.collections_bookmark_outlined,
+    'gachaTypeStandard' => Icons.history,
+    'gachaTypeBeginner' => Icons.school_outlined,
+    _ => Icons.casino_outlined,
+  };
 }
