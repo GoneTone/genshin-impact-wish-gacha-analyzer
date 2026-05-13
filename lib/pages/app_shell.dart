@@ -9,6 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
 
@@ -120,15 +121,24 @@ class _AppShellState extends ConsumerState<AppShell> {
               vertical: AppSpacing.xs * 1.5,
             ),
             color: tokens.surfaceCardHigh,
-            child: Text(
-              activeData == null
-                  ? l.footerNotSynced
-                  : l.footerLastUpdated(
-                      DateFormat(
-                        'yyyy-MM-dd HH:mm',
-                      ).format(activeData.lastUpdated.toLocal()),
-                    ),
-              style: Theme.of(context).textTheme.bodySmall,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    activeData == null
+                        ? l.footerNotSynced
+                        : l.footerLastUpdated(
+                            DateFormat(
+                              'yyyy-MM-dd HH:mm',
+                            ).format(activeData.lastUpdated.toLocal()),
+                          ),
+                    style: Theme.of(context).textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                const TeamLinksBar(),
+              ],
             ),
           ),
         ],
