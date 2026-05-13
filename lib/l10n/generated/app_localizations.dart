@@ -748,6 +748,18 @@ abstract class AppLocalizations {
   /// **'{year} / {month}'**
   String timelineMonthLabel(String year, String month);
 
+  /// No description provided for @timelineScrollLeft.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'往左捲動'**
+  String get timelineScrollLeft;
+
+  /// No description provided for @timelineScrollRight.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'往右捲動'**
+  String get timelineScrollRight;
+
   /// No description provided for @filterRarityAll.
   ///
   /// In zh_Hant, this message translates to:

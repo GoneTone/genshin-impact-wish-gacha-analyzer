@@ -359,6 +359,12 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get timelineScrollLeft => '往左捲動';
+
+  @override
+  String get timelineScrollRight => '往右捲動';
+
+  @override
   String get filterRarityAll => '全部稀有度';
 
   @override
@@ -790,6 +796,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String timelineNowSinceCrossPool(int n) {
     return '从上次 5★ 至今 $n 抽';
   }
+
+  @override
+  String get timelineScrollLeft => '往左滚动';
+
+  @override
+  String get timelineScrollRight => '往右滚动';
 
   @override
   String get filterKindAll => '全部类型';
@@ -1294,6 +1306,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String timelineMonthLabel(String year, String month) {
     return '$year / $month';
   }
+
+  @override
+  String get timelineScrollLeft => '往左捲動';
+
+  @override
+  String get timelineScrollRight => '往右捲動';
 
   @override
   String get filterRarityAll => '全部稀有度';

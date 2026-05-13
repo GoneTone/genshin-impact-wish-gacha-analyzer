@@ -359,6 +359,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get timelineScrollLeft => '往左捲動';
+
+  @override
+  String get timelineScrollRight => '往右捲動';
+
+  @override
   String get filterRarityAll => '全部稀有度';
 
   @override

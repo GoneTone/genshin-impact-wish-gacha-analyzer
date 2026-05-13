@@ -363,6 +363,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get timelineScrollLeft => 'Scroll left';
+
+  @override
+  String get timelineScrollRight => 'Scroll right';
+
+  @override
   String get filterRarityAll => 'All rarities';
 
   @override

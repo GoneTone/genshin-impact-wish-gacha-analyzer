@@ -170,6 +170,9 @@
     }
   },
 
+  "timelineScrollLeft": "Scroll left",
+  "timelineScrollRight": "Scroll right",
+
   "filterRarityAll": "All rarities",
   "filterRarityFiveStar": "5★ only",
   "filterRarityFourStar": "4★ only",

@@ -189,6 +189,9 @@
     }
   },
 
+  "timelineScrollLeft": "往左捲動",
+  "timelineScrollRight": "往右捲動",
+
   "filterRarityAll": "全部稀有度",
   "filterRarityFiveStar": "只看 5★",
   "filterRarityFourStar": "只看 4★",
