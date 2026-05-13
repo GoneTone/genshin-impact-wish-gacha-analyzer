@@ -336,15 +336,51 @@ class _DataManagement extends ConsumerWidget {
       return;
     }
 
-    // Build dialog body.
+    // Picker：列出檔案內的帳號讓使用者勾選。
     final existing = ref.read(wishRepositoryProvider).byUid.keys.toSet();
-    final incoming = bundle.accounts.map((a) => a.data.uid).toList();
-    final conflicts = incoming.where(existing.contains).toList();
-    final preserved = existing.where((u) => !incoming.contains(u)).toList()
-      ..sort();
+    final entries = [
+      for (final a in bundle.accounts)
+        AccountPickerEntry(
+          uid: a.data.uid,
+          alias: a.alias,
+          lastUpdated: a.data.lastUpdated,
+          recordCount: a.data.allRecords.length,
+          badge: existing.contains(a.data.uid)
+              ? l.settingsImportOverwriteBadge
+              : null,
+        ),
+    ];
+    if (!ctx.mounted) return;
+    final picked = await showAccountsPickerDialog(
+      context: ctx,
+      title: l.settingsImportSelectTitle,
+      confirmLabel: l.confirmContinue,
+      entries: entries,
+    );
+    if (picked == null || picked.isEmpty) return;
+    if (!ctx.mounted) return;
+
+    final pickedSet = picked.toSet();
+    final filteredBundle = AccountsBundle(
+      exportedAt: bundle.exportedAt,
+      appVersion: bundle.appVersion,
+      lastActiveUid: pickedSet.contains(bundle.lastActiveUid)
+          ? bundle.lastActiveUid
+          : null,
+      accounts: bundle.accounts
+          .where((a) => pickedSet.contains(a.data.uid))
+          .toList(growable: false),
+    );
+
+    // Confirm dialog：以 filteredBundle 重新計算 incoming / conflicts / preserved。
+    final incoming = filteredBundle.accounts
+        .map((a) => a.data.uid)
+        .toList(growable: false);
+    final conflicts = incoming.where(existing.contains).toList(growable: false);
+    final preserved = (existing.toSet()..removeAll(incoming)).toList()..sort();
 
     var totalRecords = 0;
-    for (final a in bundle.accounts) {
+    for (final a in filteredBundle.accounts) {
       for (final list in a.data.banners.values) {
         totalRecords += list.length;
       }
@@ -352,7 +388,7 @@ class _DataManagement extends ConsumerWidget {
 
     final buf = StringBuffer()
       ..writeln(l.settingsImportConfirmIntro(incoming.length, totalRecords));
-    for (final a in bundle.accounts) {
+    for (final a in filteredBundle.accounts) {
       final alias = a.alias;
       buf.writeln(
         alias == null || alias.isEmpty
@@ -376,7 +412,6 @@ class _DataManagement extends ConsumerWidget {
     buf.writeln();
     buf.write(l.settingsImportConfirmWarning);
 
-    if (!ctx.mounted) return;
     final ok = await showConfirmTypeDialog(
       context: ctx,
       title: l.settingsImportConfirmTitle,
@@ -390,7 +425,7 @@ class _DataManagement extends ConsumerWidget {
 
     final result = await ref
         .read(wishRepositoryProvider.notifier)
-        .importAccounts(bundle);
+        .importAccounts(filteredBundle);
     if (!ctx.mounted) return;
 
     final SnackBar snack;
@@ -405,7 +440,7 @@ class _DataManagement extends ConsumerWidget {
         content: Text(
           l.settingsImportPartial(
             result.successAccounts,
-            bundle.accounts.length,
+            filteredBundle.accounts.length,
             result.failedUids.join(', '),
           ),
         ),
