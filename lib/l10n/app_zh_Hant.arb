@@ -40,6 +40,32 @@
     "placeholders": { "time": { "type": "String" } }
   },
 
+  "relativeNow": "現在",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMinutesAgo": "{count} 分鐘前",
+  "@relativeMinutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeHoursAgo": "{count} 小時前",
+  "@relativeHoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeDaysAgo": "{count} 天前",
+  "@relativeDaysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMonthsAgo": "{count} 個月前",
+  "@relativeMonthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "uidSwitchTooltip": "切換帳號",
   "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活躍）",

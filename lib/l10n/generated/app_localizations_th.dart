@@ -80,6 +80,39 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String get relativeNow => 'ตอนนี้';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count วินาทีที่แล้ว';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count นาทีที่แล้ว';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count ชั่วโมงที่แล้ว';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count วันที่แล้ว';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count เดือนที่แล้ว';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count ปีที่แล้ว';
+  }
+
+  @override
   String get uidSwitchTooltip => '切換帳號';
 
   @override

@@ -81,6 +81,39 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get relativeNow => 'たった今';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count 秒前';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count 分前';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count 時間前';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count 日前';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count か月前';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count 年前';
+  }
+
+  @override
   String get uidSwitchTooltip => '切換帳號';
 
   @override

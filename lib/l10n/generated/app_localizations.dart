@@ -250,6 +250,48 @@ abstract class AppLocalizations {
   /// **'最後更新：{time}'**
   String footerLastUpdated(String time);
 
+  /// No description provided for @relativeNow.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'現在'**
+  String get relativeNow;
+
+  /// No description provided for @relativeSecondsAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 秒前'**
+  String relativeSecondsAgo(int count);
+
+  /// No description provided for @relativeMinutesAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 分鐘前'**
+  String relativeMinutesAgo(int count);
+
+  /// No description provided for @relativeHoursAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 小時前'**
+  String relativeHoursAgo(int count);
+
+  /// No description provided for @relativeDaysAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 天前'**
+  String relativeDaysAgo(int count);
+
+  /// No description provided for @relativeMonthsAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 個月前'**
+  String relativeMonthsAgo(int count);
+
+  /// No description provided for @relativeYearsAgo.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'{count} 年前'**
+  String relativeYearsAgo(int count);
+
   /// No description provided for @uidSwitchTooltip.
   ///
   /// In zh_Hant, this message translates to:

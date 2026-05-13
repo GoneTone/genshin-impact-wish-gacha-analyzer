@@ -27,6 +27,20 @@
     "placeholders": { "time": { "type": "String" } }
   },
 
+  "relativeNow": "现在",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMinutesAgo": "{count} 分钟前",
+  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeHoursAgo": "{count} 小时前",
+  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeDaysAgo": "{count} 天前",
+  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMonthsAgo": "{count} 个月前",
+  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
+
   "uidSwitchTooltip": "切换账号",
   "uidActiveSuffix": "（活跃）",
   "uidRecapture": "新增账号",

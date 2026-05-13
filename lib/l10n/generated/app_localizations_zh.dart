@@ -80,6 +80,39 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get relativeNow => '现在';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count 秒前';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count 分钟前';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count 小时前';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count 天前';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count 个月前';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count 年前';
+  }
+
+  @override
   String get uidSwitchTooltip => '切換帳號';
 
   @override
@@ -651,6 +684,39 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
+  String get relativeNow => '现在';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count 秒前';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count 分钟前';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count 小时前';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count 天前';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count 个月前';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count 年前';
+  }
+
+  @override
   String get uidSwitchTooltip => '切换账号';
 
   @override
@@ -1076,6 +1142,39 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String footerLastUpdated(String time) {
     return '最後更新：$time';
+  }
+
+  @override
+  String get relativeNow => '現在';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count 秒前';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count 分鐘前';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count 小時前';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count 天前';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count 個月前';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count 年前';
   }
 
   @override

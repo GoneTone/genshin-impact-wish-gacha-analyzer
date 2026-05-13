@@ -24,5 +24,19 @@
 
   "navContributors": "Contribution",
   "contributorsTitle": "Contributeurs",
-  "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!"
+  "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!",
+
+  "relativeNow": "À l'instant",
+  "relativeSecondsAgo": "{count, plural, =1{Il y a 1 seconde} other{Il y a {count} secondes}}",
+  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
+  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
+  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
+  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
+  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
+  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } }
 }

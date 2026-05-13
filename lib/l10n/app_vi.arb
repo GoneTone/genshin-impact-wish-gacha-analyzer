@@ -6,5 +6,19 @@
   "navWeapon": "Vũ Khí",
   "kindCharacter": "Nhân Vật",
   "kindWeapon": "Vũ Khí",
-  "tableName": "Tên"
+  "tableName": "Tên",
+
+  "relativeNow": "Vừa xong",
+  "relativeSecondsAgo": "{count} giây trước",
+  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMinutesAgo": "{count} phút trước",
+  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeHoursAgo": "{count} giờ trước",
+  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeDaysAgo": "{count} ngày trước",
+  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMonthsAgo": "{count} tháng trước",
+  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeYearsAgo": "{count} năm trước",
+  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } }
 }

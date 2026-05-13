@@ -80,6 +80,39 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get relativeNow => 'Vừa xong';
+
+  @override
+  String relativeSecondsAgo(int count) {
+    return '$count giây trước';
+  }
+
+  @override
+  String relativeMinutesAgo(int count) {
+    return '$count phút trước';
+  }
+
+  @override
+  String relativeHoursAgo(int count) {
+    return '$count giờ trước';
+  }
+
+  @override
+  String relativeDaysAgo(int count) {
+    return '$count ngày trước';
+  }
+
+  @override
+  String relativeMonthsAgo(int count) {
+    return '$count tháng trước';
+  }
+
+  @override
+  String relativeYearsAgo(int count) {
+    return '$count năm trước';
+  }
+
+  @override
   String get uidSwitchTooltip => '切換帳號';
 
   @override

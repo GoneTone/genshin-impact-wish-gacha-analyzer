@@ -17,5 +17,19 @@
 
   "contributorsProjectLeader": "O líder do projeto",
   "contributorsTesters": "Os testadores",
-  "contributorsGithubContributors": "Os contribuintes de Github"
+  "contributorsGithubContributors": "Os contribuintes de Github",
+
+  "relativeNow": "Agora",
+  "relativeSecondsAgo": "{count, plural, =1{Há 1 segundo} other{Há {count} segundos}}",
+  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMinutesAgo": "{count, plural, =1{Há 1 minuto} other{Há {count} minutos}}",
+  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeHoursAgo": "{count, plural, =1{Há 1 hora} other{Há {count} horas}}",
+  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeDaysAgo": "{count, plural, =1{Há 1 dia} other{Há {count} dias}}",
+  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMonthsAgo": "{count, plural, =1{Há 1 mês} other{Há {count} meses}}",
+  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeYearsAgo": "{count, plural, =1{Há 1 ano} other{Há {count} anos}}",
+  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } }
 }
