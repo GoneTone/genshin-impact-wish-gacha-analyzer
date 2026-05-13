@@ -58,15 +58,18 @@ void main() {
       expect(rt(now.subtract(const Duration(days: 29))), '29 天前');
     });
 
-    test('30 天~364 天回傳「X 個月前」(以 30 天/月)', () {
+    test('30 天~359 天回傳「X 個月前」(以 30 天/月)', () {
       expect(rt(now.subtract(const Duration(days: 30))), '1 個月前');
       expect(rt(now.subtract(const Duration(days: 90))), '3 個月前');
       expect(rt(now.subtract(const Duration(days: 359))), '11 個月前');
     });
 
-    test('365 天以上回傳「X 年前」', () {
+    test('360 天以上回傳「X 年前」(以 360 天/年)', () {
+      expect(rt(now.subtract(const Duration(days: 360))), '1 年前');
+      expect(rt(now.subtract(const Duration(days: 364))), '1 年前');
       expect(rt(now.subtract(const Duration(days: 365))), '1 年前');
-      expect(rt(now.subtract(const Duration(days: 365 * 5))), '5 年前');
+      expect(rt(now.subtract(const Duration(days: 720))), '2 年前');
+      expect(rt(now.subtract(const Duration(days: 360 * 5))), '5 年前');
     });
   });
 

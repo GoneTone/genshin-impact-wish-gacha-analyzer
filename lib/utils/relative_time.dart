@@ -11,7 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 /// - `< 24h` → `relativeHoursAgo(n)`
 /// - `< 30 天` → `relativeDaysAgo(n)`
 /// - `< 12 個月`(以 30 天/月近似) → `relativeMonthsAgo(n)`
-/// - 其他(以 365 天/年近似) → `relativeYearsAgo(n)`
+/// - 其他(以 30 天/月 × 12 = 360 天/年近似) → `relativeYearsAgo(n)`
 ///
 /// [now] 預設 `DateTime.now()`,僅用於測試注入。
 String relativeTime(DateTime t, AppLocalizations l, {DateTime? now}) {
@@ -33,7 +33,7 @@ String relativeTime(DateTime t, AppLocalizations l, {DateTime? now}) {
   final diffMonth = diffDay ~/ 30;
   if (diffMonth < 12) return l.relativeMonthsAgo(diffMonth);
 
-  final diffYear = diffDay ~/ 365;
+  final diffYear = diffMonth ~/ 12;
   return l.relativeYearsAgo(diffYear);
 }
 
