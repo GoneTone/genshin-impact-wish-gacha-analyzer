@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
@@ -204,10 +205,7 @@ class _AboutContent extends ConsumerWidget {
               child: Text('GoneTone'),
             ),
             const Text(' ('),
-            const AppLink(
-              url: 'https://genshininfo.reh.tw/',
-              child: Text('原神資訊站 Genshin Impact Info'),
-            ),
+            const AppLink(url: TeamInfo.websiteUrl, child: Text(TeamInfo.name)),
             const Text(')'),
           ],
         ),
@@ -225,8 +223,8 @@ class _AboutContent extends ConsumerWidget {
             ),
             BannerLink(
               assetPath: 'assets/banners/genshin_info_banner.png',
-              url: 'https://genshininfo.reh.tw/',
-              semanticLabel: '原神資訊站 Genshin Impact Info',
+              url: TeamInfo.websiteUrl,
+              semanticLabel: TeamInfo.name,
               height: 64,
             ),
           ],
