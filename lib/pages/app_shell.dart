@@ -246,7 +246,6 @@ class _Rail extends StatelessWidget {
             iconInactive: Icons.settings_outlined,
             onPressed: () => context.go('/settings'),
           ),
-          const SizedBox(height: AppSpacing.s),
         ],
       ),
     );
