@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 
 class SortableTable extends StatefulWidget {
@@ -87,6 +88,7 @@ class _SortableTableState extends State<SortableTable> {
                   isStripe: i.isOdd,
                   theme: theme,
                   tokens: tokens,
+                  l: l,
                 ),
             ],
           ),
@@ -273,11 +275,13 @@ class _Row extends StatelessWidget {
     required this.isStripe,
     required this.theme,
     required this.tokens,
+    required this.l,
   });
   final RecordRow row;
   final bool isStripe;
   final ThemeData theme;
   final GachaTokens tokens;
+  final AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +311,13 @@ class _Row extends StatelessWidget {
           else
             const SizedBox(width: 2),
           const SizedBox(width: AppSpacing.s),
-          Expanded(flex: 4, child: Text(_formatTime(record.time))),
+          Expanded(
+            flex: 4,
+            child: Text(
+              '${formatAbsoluteDateTime(record.time)}'
+              ' (${relativeTime(record.time, l)})',
+            ),
+          ),
           Expanded(flex: 5, child: Text(record.name, style: highlight)),
           Expanded(flex: 2, child: Text(record.itemType)),
           Expanded(
@@ -335,11 +345,6 @@ class _Row extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  static String _formatTime(DateTime t) {
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${t.year}-${two(t.month)}-${two(t.day)} ${two(t.hour)}:${two(t.minute)}';
   }
 }
 
