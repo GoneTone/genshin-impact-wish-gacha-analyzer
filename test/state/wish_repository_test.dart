@@ -912,7 +912,7 @@ void main() {
   });
 
   test(
-    'importAllAccounts: per-UID overwrite preserves non-imported accounts',
+    'importAccounts: per-UID overwrite preserves non-imported accounts',
     () async {
       final storage = WishStorage(tempDir);
       // Existing: A (old data), C (untouched)
@@ -972,7 +972,7 @@ void main() {
 
       final result = await container
           .read(wishRepositoryProvider.notifier)
-          .importAllAccounts(bundle);
+          .importAccounts(bundle);
 
       expect(result.failedUids, isEmpty);
       expect(result.successAccounts, 2);
@@ -994,7 +994,7 @@ void main() {
   );
 
   test(
-    'importAllAccounts: uidOrder merges imported order first, then remaining',
+    'importAccounts: uidOrder merges imported order first, then remaining',
     () async {
       final storage = WishStorage(tempDir);
       for (final uid in ['A', 'C', 'D']) {
@@ -1051,7 +1051,7 @@ void main() {
 
       await container
           .read(wishRepositoryProvider.notifier)
-          .importAllAccounts(bundle);
+          .importAccounts(bundle);
 
       final order = container.read(settingsProvider).uidOrder;
       // imported [B, A] first, then remaining custom order minus imported = [D, C]
@@ -1060,7 +1060,7 @@ void main() {
   );
 
   test(
-    'importAllAccounts: storage write failure marks UID failed and skips it',
+    'importAccounts: storage write failure marks UID failed and skips it',
     () async {
       // Inject a storage that fails on UID == "B"
       final storage = _FailingStorage(tempDir, failOnUid: 'B');
@@ -1105,7 +1105,7 @@ void main() {
 
       final result = await container
           .read(wishRepositoryProvider.notifier)
-          .importAllAccounts(bundle);
+          .importAccounts(bundle);
 
       expect(result.failedUids, ['B']);
       expect(result.successAccounts, 1);
@@ -1120,7 +1120,7 @@ void main() {
   );
 
   test(
-    'importAllAccounts: bundle lastActiveUid switches active to it when imported',
+    'importAccounts: bundle lastActiveUid switches active to it when imported',
     () async {
       final storage = WishStorage(tempDir);
       // Existing active = X (will remain after import)
@@ -1168,7 +1168,7 @@ void main() {
 
       await container
           .read(wishRepositoryProvider.notifier)
-          .importAllAccounts(bundle);
+          .importAccounts(bundle);
 
       expect(container.read(wishRepositoryProvider).activeUid, 'Y');
       expect(container.read(settingsProvider).lastActiveUid, 'Y');

@@ -348,7 +348,7 @@ class _DataManagement extends ConsumerWidget {
 
     final result = await ref
         .read(wishRepositoryProvider.notifier)
-        .importAllAccounts(bundle);
+        .importAccounts(bundle);
     if (!ctx.mounted) return;
 
     final SnackBar snack;

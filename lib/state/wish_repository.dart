@@ -21,8 +21,8 @@ class _NoRecordsException implements Exception {
   const _NoRecordsException();
 }
 
-class ImportAllResult {
-  const ImportAllResult({
+class ImportResult {
+  const ImportResult({
     required this.successAccounts,
     required this.totalRecords,
     required this.failedUids,
@@ -387,7 +387,7 @@ class WishRepository extends Notifier<WishState> {
     state = const WishState(isBootstrapping: false);
   }
 
-  Future<ImportAllResult> importAllAccounts(AccountsBundle bundle) async {
+  Future<ImportResult> importAccounts(AccountsBundle bundle) async {
     final storage = ref.read(wishStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
@@ -400,7 +400,7 @@ class WishRepository extends Notifier<WishState> {
       try {
         await storage.save(account.data);
         if (!ref.mounted) {
-          return ImportAllResult(
+          return ImportResult(
             successAccounts: successCount,
             totalRecords: totalRecords,
             failedUids: failed,
@@ -456,7 +456,7 @@ class WishRepository extends Notifier<WishState> {
       lastActiveUid: newActive,
     );
     if (!ref.mounted) {
-      return ImportAllResult(
+      return ImportResult(
         successAccounts: successCount,
         totalRecords: totalRecords,
         failedUids: failed,
@@ -469,7 +469,7 @@ class WishRepository extends Notifier<WishState> {
       clearActiveUid: newActive == null,
     );
 
-    return ImportAllResult(
+    return ImportResult(
       successAccounts: successCount,
       totalRecords: totalRecords,
       failedUids: failed,
