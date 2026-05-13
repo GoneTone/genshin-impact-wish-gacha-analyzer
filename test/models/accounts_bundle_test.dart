@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 
@@ -19,7 +19,7 @@ void main() {
   test(
     'toJson / fromJson roundtrip preserves order, alias, last_active_uid',
     () {
-      final bundle = AllAccountsBundle(
+      final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12, 8, 30),
         appVersion: '1.2.3',
         lastActiveUid: 'A',
@@ -45,7 +45,7 @@ void main() {
       );
 
       final json = bundle.toJson();
-      final back = AllAccountsBundle.fromJson(json);
+      final back = AccountsBundle.fromJson(json);
 
       expect(back.schemaVersion, 1);
       expect(back.lastActiveUid, 'A');
@@ -65,7 +65,7 @@ void main() {
       'accounts': <Map<String, dynamic>>[],
     };
     expect(
-      () => AllAccountsBundle.fromJson(json),
+      () => AccountsBundle.fromJson(json),
       throwsA(
         isA<FormatException>().having(
           (e) => e.message,
@@ -78,7 +78,7 @@ void main() {
 
   test('missing schema_version throws', () {
     expect(
-      () => AllAccountsBundle.fromJson({'accounts': []}),
+      () => AccountsBundle.fromJson({'accounts': []}),
       throwsA(
         isA<FormatException>().having(
           (e) => e.message,
@@ -91,8 +91,7 @@ void main() {
 
   test('accounts must be an array', () {
     expect(
-      () =>
-          AllAccountsBundle.fromJson({'schema_version': 1, 'accounts': 'nope'}),
+      () => AccountsBundle.fromJson({'schema_version': 1, 'accounts': 'nope'}),
       throwsA(isA<FormatException>()),
     );
   });
@@ -104,7 +103,7 @@ void main() {
       banners: const {'301': []},
     ).toJson();
     expect(
-      () => AllAccountsBundle.fromJson({
+      () => AccountsBundle.fromJson({
         'schema_version': 1,
         'accounts': [accountJson, accountJson],
       }),
@@ -119,7 +118,7 @@ void main() {
   });
 
   test('alias empty string is read back as null', () {
-    final bundle = AllAccountsBundle.fromJson({
+    final bundle = AccountsBundle.fromJson({
       'schema_version': 1,
       'accounts': [
         {

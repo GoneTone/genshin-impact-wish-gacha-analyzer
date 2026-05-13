@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 
-/// 把目前狀態打包成 [AllAccountsBundle] 並序列化成 pretty-printed JSON 字串。
+/// 把目前狀態打包成 [AccountsBundle] 並序列化成 pretty-printed JSON 字串。
 ///
 /// 帳號順序套用 [mergeUidOrder]，與設定頁顯示順序一致。
 String exportAllAccounts({
@@ -26,7 +26,7 @@ String exportAllAccounts({
       ExportedAccount(data: byUid[uid]!, alias: uidAliases[uid]),
   ];
 
-  final bundle = AllAccountsBundle(
+  final bundle = AccountsBundle(
     exportedAt: now.toUtc(),
     appVersion: appVersion,
     lastActiveUid: lastActiveUid,

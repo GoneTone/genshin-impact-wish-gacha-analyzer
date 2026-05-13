@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
@@ -283,7 +283,7 @@ class _DataManagement extends ConsumerWidget {
       return;
     }
 
-    final AllAccountsBundle bundle;
+    final AccountsBundle bundle;
     try {
       bundle = importAllAccounts(text);
     } on FormatException catch (e) {

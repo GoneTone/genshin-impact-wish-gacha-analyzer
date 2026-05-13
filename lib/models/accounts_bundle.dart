@@ -20,8 +20,8 @@ class ExportedAccount {
   }
 }
 
-class AllAccountsBundle {
-  const AllAccountsBundle({
+class AccountsBundle {
+  const AccountsBundle({
     required this.exportedAt,
     required this.appVersion,
     required this.lastActiveUid,
@@ -45,7 +45,7 @@ class AllAccountsBundle {
     'accounts': accounts.map((a) => a.toJson()).toList(growable: false),
   };
 
-  factory AllAccountsBundle.fromJson(Map<String, dynamic> json) {
+  factory AccountsBundle.fromJson(Map<String, dynamic> json) {
     final version = json['schema_version'];
     if (version is! int) {
       throw const FormatException('Missing or invalid "schema_version"');
@@ -98,7 +98,7 @@ class AllAccountsBundle {
     final rawLastActive = json['last_active_uid'];
     final lastActiveUid = rawLastActive is String ? rawLastActive : null;
 
-    return AllAccountsBundle(
+    return AccountsBundle(
       exportedAt: parsedExportedAt,
       appVersion: appVersion,
       lastActiveUid: lastActiveUid,

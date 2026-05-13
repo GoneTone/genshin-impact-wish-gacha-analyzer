@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
@@ -960,7 +960,7 @@ void main() {
         lastUpdated: DateTime.utc(2026, 5, 12),
         banners: const {'301': []},
       );
-      final bundle = AllAccountsBundle(
+      final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
         lastActiveUid: 'A',
@@ -1027,7 +1027,7 @@ void main() {
       container.read(wishRepositoryProvider);
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      final bundle = AllAccountsBundle(
+      final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
         lastActiveUid: null,
@@ -1080,7 +1080,7 @@ void main() {
       container.read(wishRepositoryProvider);
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      final bundle = AllAccountsBundle(
+      final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
         lastActiveUid: 'B',
@@ -1151,7 +1151,7 @@ void main() {
 
       expect(container.read(wishRepositoryProvider).activeUid, 'X');
 
-      final bundle = AllAccountsBundle(
+      final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
         lastActiveUid: 'Y',

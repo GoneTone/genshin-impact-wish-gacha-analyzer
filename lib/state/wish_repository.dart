@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/all_accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
@@ -387,7 +387,7 @@ class WishRepository extends Notifier<WishState> {
     state = const WishState(isBootstrapping: false);
   }
 
-  Future<ImportAllResult> importAllAccounts(AllAccountsBundle bundle) async {
+  Future<ImportAllResult> importAllAccounts(AccountsBundle bundle) async {
     final storage = ref.read(wishStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
