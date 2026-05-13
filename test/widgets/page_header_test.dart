@@ -27,6 +27,29 @@ void main() {
     expect(find.text('all banners'), findsOneWidget);
   });
 
+  testWidgets('renders leading icon when icon is provided', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: PageHeader(title: 'Overview', icon: Icons.dashboard_outlined),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.dashboard_outlined), findsOneWidget);
+    expect(find.text('Overview'), findsOneWidget);
+  });
+
+  testWidgets('renders no icon when icon is null', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(body: PageHeader(title: 'Overview')),
+      ),
+    );
+    expect(find.byType(Icon), findsNothing);
+  });
+
   for (final entry in <(String, ThemeData)>[
     ('dark', buildDarkTheme()),
     ('light', buildLightTheme()),
