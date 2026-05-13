@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BannerLink extends StatelessWidget {
+class BannerLink extends StatefulWidget {
   const BannerLink({
     super.key,
     required this.assetPath,
@@ -15,7 +15,27 @@ class BannerLink extends StatelessWidget {
   final double height;
 
   @override
+  State<BannerLink> createState() => _BannerLinkState();
+}
+
+class _BannerLinkState extends State<BannerLink> {
+  bool _hovering = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Image.asset(assetPath, height: height, fit: BoxFit.contain);
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: AnimatedOpacity(
+        opacity: _hovering ? 0.85 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        child: Image.asset(
+          widget.assetPath,
+          height: widget.height,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
   }
 }
