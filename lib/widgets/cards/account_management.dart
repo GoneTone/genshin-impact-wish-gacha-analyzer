@@ -252,13 +252,19 @@ class _RowState extends State<_Row> {
             ),
           ),
           if (!widget.isActive)
-            TextButton(
+            TextButton.icon(
               onPressed: widget.onSetActive,
-              child: Text(l.accountSetActive),
+              icon: const Icon(Icons.check_circle_outline, size: 18),
+              label: Text(l.accountSetActive),
             ),
-          TextButton(
+          TextButton.icon(
             onPressed: widget.onRemove,
-            child: Text(
+            icon: Icon(
+              Icons.delete_outline,
+              size: 18,
+              color: tokens.stateDanger,
+            ),
+            label: Text(
               l.accountRemove,
               style: TextStyle(color: tokens.stateDanger),
             ),
