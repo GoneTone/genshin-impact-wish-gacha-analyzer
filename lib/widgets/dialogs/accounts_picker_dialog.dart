@@ -119,7 +119,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: widget.entries.length,
-                separatorBuilder: (_, index) => const Divider(height: 1),
+                separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (context, i) {
                   final e = widget.entries[i];
                   return _PickerRow(
