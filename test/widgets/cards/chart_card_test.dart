@@ -20,4 +20,36 @@ void main() {
     expect(find.text('Rarity'), findsOneWidget);
     expect(find.text('chart-content'), findsOneWidget);
   });
+
+  testWidgets('renders leading icon when provided', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: ChartCard(
+            title: 'Rarity',
+            icon: Icons.pie_chart_outline,
+            chart: Center(child: Text('chart-content')),
+          ),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.pie_chart_outline), findsOneWidget);
+    expect(find.text('Rarity'), findsOneWidget);
+  });
+
+  testWidgets('renders no icon when icon is null', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: ChartCard(
+            title: 'Rarity',
+            chart: Center(child: Text('chart-content')),
+          ),
+        ),
+      ),
+    );
+    expect(find.byType(Icon), findsNothing);
+  });
 }

@@ -10,6 +10,7 @@ class ChartCard extends StatelessWidget {
     required this.chart,
     this.legend,
     this.height = 380,
+    this.icon,
   });
 
   final String title;
@@ -20,11 +21,14 @@ class ChartCard extends StatelessWidget {
   /// `Expanded` 撐滿（適合非圓形、自身有 intrinsic height 的圖表）。
   final double? height;
 
+  final IconData? icon;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final fixedHeight = height != null;
+    final titleText = Text(title, style: theme.textTheme.titleLarge);
 
     return Container(
       height: height,
@@ -38,7 +42,18 @@ class ChartCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: fixedHeight ? MainAxisSize.max : MainAxisSize.min,
         children: [
-          Text(title, style: theme.textTheme.titleLarge),
+          if (icon == null)
+            titleText
+          else
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(icon, size: 20, color: tokens.textPrimary),
+                const SizedBox(width: AppSpacing.s),
+                Flexible(child: titleText),
+              ],
+            ),
           const SizedBox(height: AppSpacing.l),
           if (fixedHeight) Expanded(child: chart) else chart,
           if (legend != null) ...[
