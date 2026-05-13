@@ -17,4 +17,33 @@ void main() {
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('inside'), findsOneWidget);
   });
+
+  testWidgets('renders leading icon when provided', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: SectionCard(
+            title: 'Theme',
+            icon: Icons.palette_outlined,
+            child: Text('inside'),
+          ),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.palette_outlined), findsOneWidget);
+    expect(find.text('Theme'), findsOneWidget);
+  });
+
+  testWidgets('renders no icon when icon is null', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: SectionCard(title: 'Theme', child: Text('inside')),
+        ),
+      ),
+    );
+    expect(find.byType(Icon), findsNothing);
+  });
 }
