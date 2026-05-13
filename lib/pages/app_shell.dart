@@ -12,6 +12,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
 
 class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.child});
@@ -23,6 +25,16 @@ class AppShell extends ConsumerStatefulWidget {
 
 class _AppShellState extends ConsumerState<AppShell> {
   bool _dialogOpen = false;
+  bool _releaseDialogOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(appReleaseProvider.notifier).check(manual: false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +53,18 @@ class _AppShellState extends ConsumerState<AppShell> {
         }
       },
     );
+
+    ref.listen<ReleaseCheckState>(appReleaseProvider, (prev, next) {
+      if (next is ReleaseAvailable && !_releaseDialogOpen) {
+        _releaseDialogOpen = true;
+        showDialog(
+          context: context,
+          builder: (_) => NewVersionDialog(releases: next.releases),
+        ).whenComplete(() {
+          _releaseDialogOpen = false;
+        });
+      }
+    });
 
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
