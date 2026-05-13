@@ -44,19 +44,28 @@ class UpdateProgressDialog extends ConsumerWidget {
   ) {
     return switch (p) {
       Preparing() => [
-        TextButton(onPressed: r.cancelPreparing, child: Text(l.actionCancel)),
+        TextButton.icon(
+          onPressed: r.cancelPreparing,
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(l.actionCancel),
+        ),
       ],
       WaitingForCapture() => [
-        TextButton(
+        TextButton.icon(
           onPressed: () async {
             await r.cancelCapture();
           },
-          child: Text(l.actionCancel),
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(l.actionCancel),
         ),
       ],
       FetchingBanner() => const <Widget>[],
       UpdateCompleted() || UpdateFailed() => [
-        TextButton(onPressed: r.clearProgress, child: Text(l.actionClose)),
+        TextButton.icon(
+          onPressed: r.clearProgress,
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(l.actionClose),
+        ),
       ],
       null => const <Widget>[],
     };
