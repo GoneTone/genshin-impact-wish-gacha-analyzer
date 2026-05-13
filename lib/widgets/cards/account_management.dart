@@ -2,13 +2,14 @@ import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 
 class AccountManagement extends ConsumerWidget {
@@ -105,7 +106,7 @@ class AccountManagement extends ConsumerWidget {
   }
 }
 
-class _Row extends StatefulWidget {
+class _Row extends ConsumerStatefulWidget {
   const _Row({
     super.key,
     required this.uid,
@@ -128,10 +129,10 @@ class _Row extends StatefulWidget {
   final ValueChanged<String> onAliasSubmit;
 
   @override
-  State<_Row> createState() => _RowState();
+  ConsumerState<_Row> createState() => _RowState();
 }
 
-class _RowState extends State<_Row> {
+class _RowState extends ConsumerState<_Row> {
   late final TextEditingController _ctrl;
   late final FocusNode _focus;
 
@@ -170,6 +171,7 @@ class _RowState extends State<_Row> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
+    ref.watch(clockTickProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(
@@ -228,13 +230,12 @@ class _RowState extends State<_Row> {
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  l.accountLastUpdated(
-                    DateFormat(
-                      'yyyy-MM-dd HH:mm',
-                    ).format(widget.lastUpdated.toLocal()),
+                Tooltip(
+                  message: formatAbsoluteDateTime(widget.lastUpdated),
+                  child: Text(
+                    l.accountLastUpdated(relativeTime(widget.lastUpdated, l)),
+                    style: TextStyle(color: tokens.textMuted, fontSize: 12),
                   ),
-                  style: TextStyle(color: tokens.textMuted, fontSize: 12),
                 ),
                 const SizedBox(height: AppSpacing.s),
                 SizedBox(
