@@ -12,7 +12,3 @@ class TeamInfo {
   static const String discordUrl = 'https://genshininfo.reh.tw/discord';
   static const String lineUrl = 'https://genshininfo.reh.tw/line';
 }
-
-/// 專案 GitHub repo。對齊 master `configs.app.githubUrl`（屬於 app 而非 team）。
-const String appGithubUrl =
-    'https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer';

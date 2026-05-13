@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
@@ -38,7 +39,7 @@ class TeamLinksBar extends StatelessWidget {
         _IconLink(
           icon: FontAwesomeIcons.github,
           tooltip: 'GitHub',
-          url: appGithubUrl,
+          url: AppRepo.githubUrl,
         ),
         const SizedBox(width: AppSpacing.xs),
         Container(width: 1, height: 16, color: tokens.textMuted),

@@ -32,12 +32,4 @@ void main() {
       expect(uri.host, isNotEmpty);
     });
   });
-
-  group('appGithubUrl', () {
-    test('是 https URL 且指向 github.com', () {
-      final uri = Uri.parse(appGithubUrl);
-      expect(uri.scheme, 'https');
-      expect(uri.host, contains('github.com'));
-    });
-  });
 }
