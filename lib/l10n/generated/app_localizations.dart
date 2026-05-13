@@ -1065,6 +1065,90 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'距上次 5★ {n} 抽'**
   String bannerFiveStarPullsSinceLast(int n);
+
+  /// No description provided for @updateTitle.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'有新版本 {version} 可用'**
+  String updateTitle(String version);
+
+  /// No description provided for @updateReleasedAt.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'發布於 {date}'**
+  String updateReleasedAt(String date);
+
+  /// No description provided for @updateButtonDownload.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'前往下載'**
+  String get updateButtonDownload;
+
+  /// No description provided for @updateButtonSkip.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'跳過此版本'**
+  String get updateButtonSkip;
+
+  /// No description provided for @updateButtonLater.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'稍後再說'**
+  String get updateButtonLater;
+
+  /// No description provided for @updateCheckButton.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'檢查更新'**
+  String get updateCheckButton;
+
+  /// No description provided for @updateChecking.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'檢查中…'**
+  String get updateChecking;
+
+  /// No description provided for @updateAlreadyLatest.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'已是最新版本'**
+  String get updateAlreadyLatest;
+
+  /// No description provided for @updateCheckFailed.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'檢查更新失敗：{reason}'**
+  String updateCheckFailed(String reason);
+
+  /// No description provided for @updateErrorNetwork.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'無法連線，請檢查網路'**
+  String get updateErrorNetwork;
+
+  /// No description provided for @updateErrorTimeout.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'請求逾時'**
+  String get updateErrorTimeout;
+
+  /// No description provided for @updateErrorRateLimited.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'GitHub API 配額用盡，請稍後再試'**
+  String get updateErrorRateLimited;
+
+  /// No description provided for @updateErrorServer.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'伺服器錯誤 (HTTP {status})'**
+  String updateErrorServer(String status);
+
+  /// No description provided for @updateErrorFormat.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'回應格式異常'**
+  String get updateErrorFormat;
 }
 
 class _AppLocalizationsDelegate

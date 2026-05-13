@@ -540,4 +540,54 @@ class AppLocalizationsTh extends AppLocalizations {
   String bannerFiveStarPullsSinceLast(int n) {
     return '距上次 5★ $n 抽';
   }
+
+  @override
+  String updateTitle(String version) {
+    return '有新版本 $version 可用';
+  }
+
+  @override
+  String updateReleasedAt(String date) {
+    return '發布於 $date';
+  }
+
+  @override
+  String get updateButtonDownload => '前往下載';
+
+  @override
+  String get updateButtonSkip => '跳過此版本';
+
+  @override
+  String get updateButtonLater => '稍後再說';
+
+  @override
+  String get updateCheckButton => '檢查更新';
+
+  @override
+  String get updateChecking => '檢查中…';
+
+  @override
+  String get updateAlreadyLatest => '已是最新版本';
+
+  @override
+  String updateCheckFailed(String reason) {
+    return '檢查更新失敗：$reason';
+  }
+
+  @override
+  String get updateErrorNetwork => '無法連線，請檢查網路';
+
+  @override
+  String get updateErrorTimeout => '請求逾時';
+
+  @override
+  String get updateErrorRateLimited => 'GitHub API 配額用盡，請稍後再試';
+
+  @override
+  String updateErrorServer(String status) {
+    return '伺服器錯誤 (HTTP $status)';
+  }
+
+  @override
+  String get updateErrorFormat => '回應格式異常';
 }

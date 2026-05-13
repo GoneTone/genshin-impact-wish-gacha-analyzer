@@ -294,5 +294,32 @@
   "bannerFiveStarPullsSinceLast": "距上次 5★ {n} 抽",
   "@bannerFiveStarPullsSinceLast": {
     "placeholders": { "n": { "type": "int" } }
-  }
+  },
+
+  "updateTitle": "有新版本 {version} 可用",
+  "@updateTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "updateReleasedAt": "發布於 {date}",
+  "@updateReleasedAt": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "updateButtonDownload": "前往下載",
+  "updateButtonSkip": "跳過此版本",
+  "updateButtonLater": "稍後再說",
+  "updateCheckButton": "檢查更新",
+  "updateChecking": "檢查中…",
+  "updateAlreadyLatest": "已是最新版本",
+  "updateCheckFailed": "檢查更新失敗：{reason}",
+  "@updateCheckFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "updateErrorNetwork": "無法連線，請檢查網路",
+  "updateErrorTimeout": "請求逾時",
+  "updateErrorRateLimited": "GitHub API 配額用盡，請稍後再試",
+  "updateErrorServer": "伺服器錯誤 (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "updateErrorFormat": "回應格式異常"
 }
