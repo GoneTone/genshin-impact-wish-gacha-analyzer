@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
@@ -181,10 +182,48 @@ class _AboutContent extends ConsumerWidget {
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final version = ref.watch(appVersionProvider);
+
+    ref.listen<ReleaseCheckState>(appReleaseProvider, (prev, next) {
+      if (next is ReleaseUpToDate) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l.updateAlreadyLatest)));
+      } else if (next is ReleaseCheckFailed) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l.updateCheckFailed(_resolveReason(l, next.reason))),
+          ),
+        );
+      }
+    });
+
+    final releaseState = ref.watch(appReleaseProvider);
+    final checking = releaseState is ReleaseChecking;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l.settingsAboutVersion(version)),
+        Row(
+          children: [
+            Expanded(child: Text(l.settingsAboutVersion(version))),
+            const SizedBox(width: AppSpacing.s),
+            OutlinedButton.icon(
+              onPressed: checking
+                  ? null
+                  : () => ref
+                        .read(appReleaseProvider.notifier)
+                        .check(manual: true),
+              icon: checking
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.refresh, size: 18),
+              label: Text(checking ? l.updateChecking : l.updateCheckButton),
+            ),
+          ],
+        ),
         const SizedBox(height: AppSpacing.xs),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -223,6 +262,22 @@ class _AboutContent extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  /// 把 notifier 給的 token 轉成 i18n 字串。
+  /// Token 格式：
+  ///   - "network" / "timeout" / "rateLimited" / "format"
+  ///   - "server:&lt;status&gt;"（status 為 HTTP code）
+  String _resolveReason(AppLocalizations l, String token) {
+    if (token == 'network') return l.updateErrorNetwork;
+    if (token == 'timeout') return l.updateErrorTimeout;
+    if (token == 'rateLimited') return l.updateErrorRateLimited;
+    if (token == 'format') return l.updateErrorFormat;
+    if (token.startsWith('server:')) {
+      final status = token.substring('server:'.length);
+      return l.updateErrorServer(status);
+    }
+    return token;
   }
 }
 
