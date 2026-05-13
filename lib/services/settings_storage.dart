@@ -62,6 +62,7 @@ class AppSettings {
     this.lastActiveUid,
     this.uidAliases = const {},
     this.uidOrder = const [],
+    this.skippedReleaseTag,
   });
 
   final AppThemeMode themeMode;
@@ -69,6 +70,7 @@ class AppSettings {
   final String? lastActiveUid;
   final Map<String, String> uidAliases;
   final List<String> uidOrder;
+  final String? skippedReleaseTag;
 
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -82,6 +84,8 @@ class AppSettings {
     bool clearLastActiveUid = false,
     Map<String, String>? uidAliases,
     List<String>? uidOrder,
+    String? skippedReleaseTag,
+    bool clearSkippedReleaseTag = false,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -90,6 +94,9 @@ class AppSettings {
         : (lastActiveUid ?? this.lastActiveUid),
     uidAliases: uidAliases ?? this.uidAliases,
     uidOrder: uidOrder ?? this.uidOrder,
+    skippedReleaseTag: clearSkippedReleaseTag
+        ? null
+        : (skippedReleaseTag ?? this.skippedReleaseTag),
   );
 }
 
@@ -99,6 +106,7 @@ abstract final class SettingsStorage {
   static const _kLastActiveUid = 'pref.lastActiveUid';
   static const _kUidAliases = 'pref.uidAliases';
   static const _kUidOrder = 'pref.uidOrder';
+  static const _kSkippedReleaseTag = 'pref.skippedReleaseTag';
 
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -108,6 +116,7 @@ abstract final class SettingsStorage {
       lastActiveUid: prefs.getString(_kLastActiveUid),
       uidAliases: _parseAliases(prefs.getString(_kUidAliases)),
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
+      skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
     );
   }
 
@@ -122,6 +131,11 @@ abstract final class SettingsStorage {
     }
     await prefs.setString(_kUidAliases, jsonEncode(s.uidAliases));
     await prefs.setString(_kUidOrder, jsonEncode(s.uidOrder));
+    if (s.skippedReleaseTag == null) {
+      await prefs.remove(_kSkippedReleaseTag);
+    } else {
+      await prefs.setString(_kSkippedReleaseTag, s.skippedReleaseTag!);
+    }
   }
 
   static AppThemeMode _parseThemeMode(String? raw) => switch (raw) {

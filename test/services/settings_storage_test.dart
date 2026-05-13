@@ -119,6 +119,7 @@ void main() {
       expect(s.lastActiveUid, isNull);
       expect(s.uidAliases, isEmpty);
       expect(s.uidOrder, isEmpty);
+      expect(s.skippedReleaseTag, isNull);
     });
 
     test('lastActiveUid round-trip', () async {
@@ -169,6 +170,38 @@ void main() {
       SharedPreferences.setMockInitialValues({'pref.uidOrder': '{not-a-list}'});
       final s = await SettingsStorage.load();
       expect(s.uidOrder, isEmpty);
+    });
+
+    test('skippedReleaseTag round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: SystemLanguage(),
+          skippedReleaseTag: 'v1.2.0',
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.skippedReleaseTag, 'v1.2.0');
+    });
+
+    test('skippedReleaseTag null 表清除（save 後 load 取得 null）', () async {
+      SharedPreferences.setMockInitialValues({
+        'pref.skippedReleaseTag': 'v1.0.0',
+      });
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: SystemLanguage(),
+          skippedReleaseTag: null,
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.skippedReleaseTag, isNull);
+    });
+
+    test('預設 skippedReleaseTag 為 null', () async {
+      final s = await SettingsStorage.load();
+      expect(s.skippedReleaseTag, isNull);
     });
   });
 }
