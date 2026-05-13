@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_export.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
@@ -248,7 +248,7 @@ class _DataManagement extends ConsumerWidget {
     );
     if (loc == null) return;
 
-    final text = exportAllAccounts(
+    final text = exportAccounts(
       byUid: wish.byUid,
       uidOrder: settings.uidOrder,
       uidAliases: settings.uidAliases,
@@ -285,7 +285,7 @@ class _DataManagement extends ConsumerWidget {
 
     final AccountsBundle bundle;
     try {
-      bundle = importAllAccounts(text);
+      bundle = importAccounts(text);
     } on FormatException catch (e) {
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(

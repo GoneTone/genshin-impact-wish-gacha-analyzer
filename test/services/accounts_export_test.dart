@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 
 BannerStorage _bs(String uid, DateTime updated) => BannerStorage(
   uid: uid,
@@ -17,7 +17,7 @@ void main() {
       'B': _bs('B', DateTime.utc(2026, 5, 12)),
       'C': _bs('C', DateTime.utc(2026, 5, 11)),
     };
-    final out = exportAllAccounts(
+    final out = exportAccounts(
       byUid: byUid,
       uidOrder: const [
         'C',

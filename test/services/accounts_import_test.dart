@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/all_accounts_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 
 void main() {
   test('parses a minimal valid bundle', () {
@@ -12,14 +12,14 @@ void main() {
   "accounts": []
 }
 ''';
-    final bundle = importAllAccounts(text);
+    final bundle = importAccounts(text);
     expect(bundle.schemaVersion, 1);
     expect(bundle.accounts, isEmpty);
   });
 
   test('not JSON → FormatException("Invalid JSON")', () {
     expect(
-      () => importAllAccounts('definitely not json'),
+      () => importAccounts('definitely not json'),
       throwsA(
         isA<FormatException>().having(
           (e) => e.message,
@@ -32,7 +32,7 @@ void main() {
 
   test('top-level array → FormatException', () {
     expect(
-      () => importAllAccounts('[]'),
+      () => importAccounts('[]'),
       throwsA(
         isA<FormatException>().having(
           (e) => e.message,

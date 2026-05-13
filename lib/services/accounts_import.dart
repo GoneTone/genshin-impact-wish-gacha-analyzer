@@ -4,7 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 
 /// 把 JSON 文字解析回 [AccountsBundle]。任何結構或型別不符都會
 /// 統一拋出 [FormatException]，給 UI 顯示用。
-AccountsBundle importAllAccounts(String text) {
+AccountsBundle importAccounts(String text) {
   Object? raw;
   try {
     raw = jsonDecode(text);

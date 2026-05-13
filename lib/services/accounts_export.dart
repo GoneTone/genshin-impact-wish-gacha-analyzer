@@ -7,7 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 /// 把目前狀態打包成 [AccountsBundle] 並序列化成 pretty-printed JSON 字串。
 ///
 /// 帳號順序套用 [mergeUidOrder]，與設定頁顯示順序一致。
-String exportAllAccounts({
+String exportAccounts({
   required Map<String, BannerStorage> byUid,
   required List<String> uidOrder,
   required Map<String, String> uidAliases,
