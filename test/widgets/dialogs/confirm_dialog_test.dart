@@ -46,4 +46,34 @@ void main() {
     await tester.pumpAndSettle();
     expect(confirmed, isTrue);
   });
+
+  testWidgets('action buttons render with icons', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () => showConfirmTypeDialog(
+                  context: ctx,
+                  title: 'Confirm',
+                  body: 'Type X',
+                  expectedText: 'X',
+                  cancelLabel: 'Cancel',
+                  confirmLabel: 'Delete',
+                ),
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.close), findsOneWidget);
+    expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+  });
 }

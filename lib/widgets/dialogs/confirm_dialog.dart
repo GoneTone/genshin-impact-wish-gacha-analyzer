@@ -73,17 +73,19 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
         ],
       ),
       actions: [
-        TextButton(
+        TextButton.icon(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(widget.cancelLabel),
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(widget.cancelLabel),
         ),
-        FilledButton(
+        FilledButton.icon(
           style: FilledButton.styleFrom(
             backgroundColor: tokens.stateDanger,
             foregroundColor: Colors.white,
           ),
           onPressed: matches ? () => Navigator.of(context).pop(true) : null,
-          child: Text(widget.confirmLabel),
+          icon: const Icon(Icons.delete_outline, size: 18),
+          label: Text(widget.confirmLabel),
         ),
       ],
     );
