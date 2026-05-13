@@ -135,48 +135,39 @@ class _LocaleDropdown extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncMeta = ref.watch(localeMetadataProvider);
-    return asyncMeta.when(
-      data: (metadata) {
-        final sorted = sortedLocaleMetadata(metadata);
-        final selectableTags = metadata.keys.toSet();
-        // 防禦：使用者過去可能存了 supportedLocales 已不存在的代碼（例如
-        // 整併前的 "pt-BR"）。若 current 不在當前 dropdown 選項裡，顯示為
-        // SystemLanguage 避免 DropdownButtonFormField 因 value 找不到對應
-        // 項目而 assert failed。
-        final effectiveCurrent =
-            current is SystemLanguage ||
-                (current is LocaleLanguage &&
-                    selectableTags.contains((current as LocaleLanguage).code))
-            ? current
-            : const SystemLanguage();
-        return DropdownButtonFormField<LanguagePreference>(
-          initialValue: effectiveCurrent,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          items: [
-            DropdownMenuItem(
-              value: const SystemLanguage(),
-              child: Text(l.settingsLocaleSystem),
-            ),
-            for (final entry in sorted)
-              DropdownMenuItem(
-                value: LocaleLanguage(entry.key),
-                child: Text(entry.value.nativeName),
-              ),
-          ],
-          onChanged: (v) {
-            if (v != null) onChanged(v);
-          },
-        );
-      },
-      loading: () => const SizedBox(
-        height: 56,
-        child: Center(child: CircularProgressIndicator()),
+    final metadata = ref.watch(localeMetadataProvider);
+    final sorted = sortedLocaleMetadata(metadata);
+    final selectableTags = metadata.keys.toSet();
+    // 防禦：使用者過去可能存了 supportedLocales 已不存在的代碼（例如
+    // 整併前的 "pt-BR"）。若 current 不在當前 dropdown 選項裡，顯示為
+    // SystemLanguage 避免 DropdownButtonFormField 因 value 找不到對應
+    // 項目而 assert failed。
+    final effectiveCurrent =
+        current is SystemLanguage ||
+            (current is LocaleLanguage &&
+                selectableTags.contains((current as LocaleLanguage).code))
+        ? current
+        : const SystemLanguage();
+    return DropdownButtonFormField<LanguagePreference>(
+      initialValue: effectiveCurrent,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
-      error: (e, st) => Text('Failed to load locale metadata: $e'),
+      items: [
+        DropdownMenuItem(
+          value: const SystemLanguage(),
+          child: Text(l.settingsLocaleSystem),
+        ),
+        for (final entry in sorted)
+          DropdownMenuItem(
+            value: LocaleLanguage(entry.key),
+            child: Text(entry.value.nativeName),
+          ),
+      ],
+      onChanged: (v) {
+        if (v != null) onChanged(v);
+      },
     );
   }
 }

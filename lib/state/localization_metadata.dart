@@ -16,27 +16,31 @@ class LocaleMetadata {
 }
 
 /// 一次性 load 所有 [AppLocalizations.supportedLocales] 的 metadata；
-/// Settings 語言選單與 About 區塊讀此 provider。
+/// Settings 語言選單與 About / Contributors 區塊讀此 provider。
 ///
 /// `delegate.load` 對 gen_l10n 編譯後的 const 內容回傳 [SynchronousFuture]，
-/// 所以 FutureProvider 幾乎沒有等待時間（同 microtask 內完成）。
+/// 所以 `.then` callback 在同個 stack frame 內同步觸發、無 microtask 跳轉，
+/// 也就不會多畫一個 `AsyncLoading` frame（避免設定頁進入時的 spinner 閃）。
 ///
 /// 自動排除 gen_l10n 為支援 script/country 變體而生成的「裸」base locale
 /// （如 `zh` 是 `zh_Hant` + `zh_Hans` 的 fallback base、`pt` 是 `pt_BR` 的
 /// fallback base）——這些 bare locale 沒有獨立的 `localeNativeName`，在
 /// dropdown 會跟具體變體重複顯示。
-final localeMetadataProvider = FutureProvider<Map<String, LocaleMetadata>>((
-  ref,
-) async {
+///
+/// 註：此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
+/// 的實作慣例。若未來 gen_l10n 改變 (例如改 async load asset)，此 provider
+/// 內 `result` 會空，需退回 FutureProvider。
+final localeMetadataProvider = Provider<Map<String, LocaleMetadata>>((ref) {
   final all = AppLocalizations.supportedLocales;
   final result = <String, LocaleMetadata>{};
   for (final locale in all) {
     if (_isBareBaseOfSpecificVariant(locale, all)) continue;
-    final l = await AppLocalizations.delegate.load(locale);
-    result[locale.toLanguageTag()] = LocaleMetadata(
-      nativeName: l.localeNativeName,
-      translator: l.localeTranslator,
-    );
+    AppLocalizations.delegate.load(locale).then((l) {
+      result[locale.toLanguageTag()] = LocaleMetadata(
+        nativeName: l.localeNativeName,
+        translator: l.localeTranslator,
+      );
+    });
   }
   return result;
 });

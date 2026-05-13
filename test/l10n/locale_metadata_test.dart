@@ -73,11 +73,11 @@ void main() {
   });
 
   group('localeMetadataProvider', () {
-    test('排除 bare zh（已有 zh-Hant / zh-Hans 變體存在）', () async {
+    test('排除 bare zh（已有 zh-Hant / zh-Hans 變體存在）', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final metadata = await container.read(localeMetadataProvider.future);
+      final metadata = container.read(localeMetadataProvider);
       final tags = metadata.keys.toSet();
 
       // bare zh 應被過濾掉（有 script 變體存在）
@@ -97,11 +97,11 @@ void main() {
       expect(tags, containsAll(<String>['en', 'ja', 'es', 'fr', 'th', 'vi']));
     });
 
-    test('每個保留的 locale 都有非空的 nativeName', () async {
+    test('每個保留的 locale 都有非空的 nativeName', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final metadata = await container.read(localeMetadataProvider.future);
+      final metadata = container.read(localeMetadataProvider);
       for (final entry in metadata.entries) {
         expect(
           entry.value.nativeName,

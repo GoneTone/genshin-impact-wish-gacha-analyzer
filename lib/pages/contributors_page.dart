@@ -115,36 +115,27 @@ class _LanguageList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncMeta = ref.watch(localeMetadataProvider);
-    return asyncMeta.when(
-      data: (metadata) {
-        final sorted = sortedLocaleMetadata(metadata);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final entry in sorted)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                child: entry.value.translator.isEmpty
-                    ? Text(entry.value.nativeName)
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${entry.value.nativeName} — '),
-                          Expanded(
-                            child: TranslatorText(raw: entry.value.translator),
-                          ),
-                        ],
+    final metadata = ref.watch(localeMetadataProvider);
+    final sorted = sortedLocaleMetadata(metadata);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final entry in sorted)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: entry.value.translator.isEmpty
+                ? Text(entry.value.nativeName)
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${entry.value.nativeName} — '),
+                      Expanded(
+                        child: TranslatorText(raw: entry.value.translator),
                       ),
-              ),
-          ],
-        );
-      },
-      loading: () => const SizedBox(
-        height: 56,
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (e, _) => Text('Failed to load locale metadata: $e'),
+                    ],
+                  ),
+          ),
+      ],
     );
   }
 }
