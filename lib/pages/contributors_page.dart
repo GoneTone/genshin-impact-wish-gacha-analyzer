@@ -28,19 +28,23 @@ class ContributorsPage extends StatelessWidget {
               PageHeader(
                 title: l.contributorsTitle,
                 subtitle: l.contributorsSubtitle,
+                icon: Icons.volunteer_activism_outlined,
               ),
               SectionCard(
                 title: l.contributorsProjectLeader,
+                icon: Icons.workspace_premium_outlined,
                 child: const _ContributorChips(projectLeaders),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsTesters,
+                icon: Icons.bug_report_outlined,
                 child: const _ContributorChips(testers),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsGithubContributors,
+                icon: Icons.groups_outlined,
                 child: const TranslatorText(
                   raw:
                       '<a href="$githubContributorsUrl">$githubContributorsUrl</a>',
@@ -49,11 +53,13 @@ class ContributorsPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsTranslationReviewer,
+                icon: Icons.translate,
                 child: const _ContributorChips(translationReviewers),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsTranslatedLanguages,
+                icon: Icons.public,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -71,6 +77,7 @@ class ContributorsPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.contributorsProjectLicense,
+                icon: Icons.gavel_outlined,
                 child: const TranslatorText(
                   raw: '<a href="$licenseUrl">MIT License</a>',
                 ),
