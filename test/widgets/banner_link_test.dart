@@ -129,4 +129,50 @@ void main() {
 
     handle.dispose();
   });
+
+  testWidgets('BannerLink 內的 GestureDetector 有連上 onTap', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: BannerLink(
+            assetPath: 'assets/banners/gonetone_banner.png',
+            url: 'https://example.test',
+            semanticLabel: 'test banner',
+            height: 64,
+          ),
+        ),
+      ),
+    );
+
+    final detector = tester.widget<GestureDetector>(
+      find
+          .descendant(
+            of: find.byType(BannerLink),
+            matching: find.byType(GestureDetector),
+          )
+          .first,
+    );
+    expect(detector.onTap, isNotNull);
+    expect(detector.behavior, HitTestBehavior.opaque);
+  });
+
+  testWidgets('點擊 BannerLink 不會丟例外', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(
+          body: BannerLink(
+            assetPath: 'assets/banners/gonetone_banner.png',
+            url: 'https://example.test',
+            semanticLabel: 'test banner',
+            height: 64,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(BannerLink), warnIfMissed: false);
+    await tester.pumpAndSettle();
+  });
 }
