@@ -203,10 +203,10 @@ class _AboutContent extends ConsumerWidget {
             const Text(')'),
           ],
         ),
-        const SizedBox(height: AppSpacing.s),
+        const SizedBox(height: AppSpacing.l),
         Wrap(
-          spacing: AppSpacing.s,
-          runSpacing: AppSpacing.s,
+          spacing: AppSpacing.l,
+          runSpacing: AppSpacing.l,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: const [
             BannerLink(
