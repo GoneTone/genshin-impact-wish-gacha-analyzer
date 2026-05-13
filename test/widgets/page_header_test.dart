@@ -26,4 +26,16 @@ void main() {
     );
     expect(find.text('all banners'), findsOneWidget);
   });
+
+  testWidgets('title renders at pageTitle font size (22 px)', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(body: PageHeader(title: 'Overview')),
+      ),
+    );
+
+    final titleText = tester.widget<Text>(find.text('Overview'));
+    expect(titleText.style?.fontSize, 22);
+  });
 }

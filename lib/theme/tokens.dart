@@ -20,7 +20,8 @@ abstract class AppRadius {
 /// 字級語意（搭配 ThemeData.textTheme 對應 M3 名稱）。
 abstract class AppFontSize {
   static const double display = 32; // 保底大數字
-  static const double title = 18; // 頁標 / 卡標
+  static const double pageTitle = 22; // 頁標
+  static const double title = 18; // 卡標
   static const double body = 14;
   static const double label = 11; // uppercase 小寫上標
 }

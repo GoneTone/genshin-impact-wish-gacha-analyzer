@@ -19,7 +19,7 @@ class PageHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: theme.textTheme.titleLarge),
+          Text(title, style: theme.textTheme.headlineSmall),
           if (subtitle != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(

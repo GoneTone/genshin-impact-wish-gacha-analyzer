@@ -43,6 +43,11 @@ ThemeData _buildTheme({
       margin: EdgeInsets.zero,
     ),
     textTheme: base.textTheme.copyWith(
+      headlineSmall: base.textTheme.headlineSmall?.copyWith(
+        fontSize: AppFontSize.pageTitle,
+        fontWeight: FontWeight.w700,
+        color: tokens.textPrimary,
+      ),
       titleLarge: base.textTheme.titleLarge?.copyWith(
         fontSize: AppFontSize.title,
         fontWeight: FontWeight.w700,
