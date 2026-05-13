@@ -59,6 +59,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         _releaseDialogOpen = true;
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (_) => NewVersionDialog(releases: next.releases),
         ).whenComplete(() {
           _releaseDialogOpen = false;

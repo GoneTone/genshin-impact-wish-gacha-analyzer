@@ -73,6 +73,23 @@ class NewVersionDialog extends ConsumerWidget {
   }
 }
 
+MarkdownConfig _markdownConfig(ThemeData theme) {
+  final base = theme.brightness == Brightness.dark
+      ? MarkdownConfig.darkConfig
+      : MarkdownConfig.defaultConfig;
+  return base.copy(
+    configs: [
+      LinkConfig(
+        style: TextStyle(
+          color: theme.colorScheme.primary,
+          decoration: TextDecoration.underline,
+          decorationColor: theme.colorScheme.primary,
+        ),
+      ),
+    ],
+  );
+}
+
 class _ReleaseCard extends StatelessWidget {
   const _ReleaseCard({required this.release, required this.l});
   final AppRelease release;
@@ -94,11 +111,14 @@ class _ReleaseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
                   release.tagName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: tokens.textPrimary,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.s),
@@ -111,7 +131,10 @@ class _ReleaseCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.s),
-            if (release.body.isNotEmpty) MarkdownBlock(data: release.body),
+            Divider(height: 1, color: tokens.borderSubtle),
+            const SizedBox(height: AppSpacing.s),
+            if (release.body.isNotEmpty)
+              MarkdownBlock(data: release.body, config: _markdownConfig(theme)),
           ],
         ),
       ),
