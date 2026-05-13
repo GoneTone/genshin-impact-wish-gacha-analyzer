@@ -27,15 +27,25 @@ void main() {
     expect(find.text('all banners'), findsOneWidget);
   });
 
-  testWidgets('title renders at pageTitle font size (22 px)', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: buildDarkTheme(),
-        home: const Scaffold(body: PageHeader(title: 'Overview')),
-      ),
-    );
+  for (final entry in <(String, ThemeData)>[
+    ('dark', buildDarkTheme()),
+    ('light', buildLightTheme()),
+  ]) {
+    final themeName = entry.$1;
+    final theme = entry.$2;
 
-    final titleText = tester.widget<Text>(find.text('Overview'));
-    expect(titleText.style?.fontSize, 22);
-  });
+    testWidgets('title renders at pageTitle font size (22 px) [$themeName]', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: theme,
+          home: const Scaffold(body: PageHeader(title: 'Overview')),
+        ),
+      );
+
+      final titleText = tester.widget<Text>(find.text('Overview'));
+      expect(titleText.style?.fontSize, 22);
+    });
+  }
 }
