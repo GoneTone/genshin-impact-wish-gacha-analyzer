@@ -110,6 +110,30 @@ void main() {
       expect(result.map((r) => r.tagName), ['1.2.0']);
       expect(result[0].version, '1.2.0');
     });
+
+    test('currentVersion 帶 build metadata → 與相同 SemVer tag 視為相等', () async {
+      final client = MockClient(
+        (_) async =>
+            _ok([_release(tag: 'v1.0.0', published: '2026-05-13T00:00:00Z')]),
+      );
+      final result = await fetchNewerReleases(
+        currentVersion: '1.0.0+1',
+        client: client,
+      );
+      expect(result, isEmpty);
+    });
+
+    test('currentVersion 帶 build metadata → 真正較新的 tag 仍被偵測', () async {
+      final client = MockClient(
+        (_) async =>
+            _ok([_release(tag: 'v1.0.1', published: '2026-05-13T00:00:00Z')]),
+      );
+      final result = await fetchNewerReleases(
+        currentVersion: '1.0.0+1',
+        client: client,
+      );
+      expect(result.map((r) => r.tagName), ['v1.0.1']);
+    });
   });
 
   group('fetchNewerReleases — errors', () {
@@ -139,6 +163,16 @@ void main() {
       } on ReleaseCheckServer catch (e) {
         expect(e.status, 503);
       }
+    });
+
+    test('429 → ReleaseCheckRateLimited (secondary rate limit)', () async {
+      final client = MockClient(
+        (_) async => http.Response('rate limited', 429),
+      );
+      expect(
+        () => fetchNewerReleases(currentVersion: '1.0.0', client: client),
+        throwsA(isA<ReleaseCheckRateLimited>()),
+      );
     });
 
     test('403 + x-ratelimit-remaining: 0 → ReleaseCheckRateLimited', () async {

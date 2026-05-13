@@ -66,6 +66,16 @@ Version? _parseTag(String tag) {
   }
 }
 
+/// 抓 GitHub Releases API，過濾 prerelease/draft，回傳比 [currentVersion]
+/// 新的 release（新到舊）。空 list = 無更新。
+///
+/// [currentVersion] 可帶 SemVer build metadata（例如 `1.0.0+1`，這是
+/// Flutter `pubspec.yaml` / `PackageInfo.version` 的標準格式）；依 SemVer
+/// 2.0 build metadata 不影響比較。本專案 GitHub release tag 慣例為純
+/// `vX.Y.Z`（不含 build metadata），因此 `1.0.0+1` 與 tag `v1.0.0` 視為
+/// 相等、不會被誤判為「有新版本」。
+///
+/// 失敗時拋 [ReleaseCheckError] 的具體子類。
 Future<List<AppRelease>> fetchNewerReleases({
   required String currentVersion,
   required http.Client client,
@@ -91,7 +101,9 @@ Future<List<AppRelease>> fetchNewerReleases({
     throw const ReleaseCheckNetwork();
   }
 
-  if (resp.statusCode == 403 && resp.headers['x-ratelimit-remaining'] == '0') {
+  if (resp.statusCode == 429 ||
+      (resp.statusCode == 403 &&
+          resp.headers['x-ratelimit-remaining'] == '0')) {
     throw const ReleaseCheckRateLimited();
   }
   if (resp.statusCode != 200) {
