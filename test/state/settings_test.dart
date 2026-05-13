@@ -191,4 +191,32 @@ void main() {
     final reloaded = await SettingsStorage.load();
     expect(reloaded.lastActiveUid, isNull);
   });
+
+  test('setSkippedReleaseTag 寫入 state 與 prefs', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).waitForLoad();
+
+    await container
+        .read(settingsProvider.notifier)
+        .setSkippedReleaseTag('v1.2.0');
+    expect(container.read(settingsProvider).skippedReleaseTag, 'v1.2.0');
+    final reloaded = await SettingsStorage.load();
+    expect(reloaded.skippedReleaseTag, 'v1.2.0');
+  });
+
+  test('setSkippedReleaseTag(null) 清掉 state 與 prefs', () async {
+    SharedPreferences.setMockInitialValues({
+      'pref.skippedReleaseTag': 'v1.2.0',
+    });
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).waitForLoad();
+    expect(container.read(settingsProvider).skippedReleaseTag, 'v1.2.0');
+
+    await container.read(settingsProvider.notifier).setSkippedReleaseTag(null);
+    expect(container.read(settingsProvider).skippedReleaseTag, isNull);
+    final reloaded = await SettingsStorage.load();
+    expect(reloaded.skippedReleaseTag, isNull);
+  });
 }

@@ -57,6 +57,14 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await SettingsStorage.save(state);
   }
 
+  Future<void> setSkippedReleaseTag(String? tag) async {
+    state = state.copyWith(
+      skippedReleaseTag: tag,
+      clearSkippedReleaseTag: tag == null,
+    );
+    await SettingsStorage.save(state);
+  }
+
   Future<void> removeUidFromSettings(String uid) async {
     final aliases = Map<String, String>.from(state.uidAliases)..remove(uid);
     final order = state.uidOrder.where((u) => u != uid).toList();
