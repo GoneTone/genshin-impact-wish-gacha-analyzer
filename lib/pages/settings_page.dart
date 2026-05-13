@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
@@ -200,6 +201,26 @@ class _AboutContent extends ConsumerWidget {
               child: Text('原神資訊站 Genshin Impact Info'),
             ),
             const Text(')'),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.s),
+        Wrap(
+          spacing: AppSpacing.s,
+          runSpacing: AppSpacing.s,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: const [
+            BannerLink(
+              assetPath: 'assets/banners/gonetone_banner.png',
+              url: 'https://blog.reh.tw/',
+              semanticLabel: '旋風之音 GoneTone',
+              height: 64,
+            ),
+            BannerLink(
+              assetPath: 'assets/banners/genshin_info_banner.png',
+              url: 'https://genshininfo.reh.tw/',
+              semanticLabel: '原神資訊站 Genshin Impact Info',
+              height: 64,
+            ),
           ],
         ),
       ],
