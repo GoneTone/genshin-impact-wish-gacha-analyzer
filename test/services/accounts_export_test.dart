@@ -44,4 +44,24 @@ void main() {
     // pretty-printed → contains newlines + 2-space indent
     expect(out.contains('\n  '), isTrue);
   });
+
+  test('exports only the byUid subset it was given', () {
+    // byUid 只塞兩個，模擬 picker 過濾後的子集
+    final byUid = {
+      'A': _bs('A', DateTime.utc(2026, 5, 10)),
+      'C': _bs('C', DateTime.utc(2026, 5, 11)),
+    };
+    final out = exportAccounts(
+      byUid: byUid,
+      uidOrder: const ['A', 'C'],
+      uidAliases: const {'A': '主號'},
+      lastActiveUid: null,
+      appVersion: '9.9.9',
+      now: DateTime.utc(2026, 5, 12),
+    );
+    final decoded = jsonDecode(out) as Map<String, dynamic>;
+    final accounts = decoded['accounts'] as List<dynamic>;
+    expect(accounts.map((a) => a['uid']).toList(), ['A', 'C']);
+    expect(decoded['last_active_uid'], isNull);
+  });
 }

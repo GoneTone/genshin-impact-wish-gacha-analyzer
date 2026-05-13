@@ -15,8 +15,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.d
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 
@@ -235,6 +237,30 @@ class _DataManagement extends ConsumerWidget {
     final settings = ref.read(settingsProvider);
     final appVersion = ref.read(appVersionProvider);
 
+    final ordered = mergeUidOrder(
+      knownUids: wish.byUid.keys,
+      customOrder: settings.uidOrder,
+      lastUpdatedOf: (u) => wish.byUid[u]!.lastUpdated,
+    );
+
+    final entries = [
+      for (final uid in ordered)
+        AccountPickerEntry(
+          uid: uid,
+          alias: settings.uidAliases[uid],
+          lastUpdated: wish.byUid[uid]!.lastUpdated,
+          recordCount: wish.byUid[uid]!.allRecords.length,
+        ),
+    ];
+    final picked = await showAccountsPickerDialog(
+      context: ctx,
+      title: l.settingsExportSelectTitle,
+      confirmLabel: l.confirmExport,
+      entries: entries,
+    );
+    if (picked == null || picked.isEmpty) return;
+    if (!ctx.mounted) return;
+
     final now = DateTime.now();
     final stamp =
         '${now.year}-${_two(now.month)}-${_two(now.day)}_'
@@ -248,11 +274,27 @@ class _DataManagement extends ConsumerWidget {
     );
     if (loc == null) return;
 
+    final pickedSet = picked.toSet();
+    final filteredByUid = {
+      for (final e in wish.byUid.entries)
+        if (pickedSet.contains(e.key)) e.key: e.value,
+    };
+    final filteredAliases = {
+      for (final e in settings.uidAliases.entries)
+        if (pickedSet.contains(e.key)) e.key: e.value,
+    };
+    final filteredOrder = settings.uidOrder
+        .where(pickedSet.contains)
+        .toList(growable: false);
+    final lastActive = pickedSet.contains(settings.lastActiveUid)
+        ? settings.lastActiveUid
+        : null;
+
     final text = exportAccounts(
-      byUid: wish.byUid,
-      uidOrder: settings.uidOrder,
-      uidAliases: settings.uidAliases,
-      lastActiveUid: settings.lastActiveUid,
+      byUid: filteredByUid,
+      uidOrder: filteredOrder,
+      uidAliases: filteredAliases,
+      lastActiveUid: lastActive,
       appVersion: appVersion,
       now: now,
     );
