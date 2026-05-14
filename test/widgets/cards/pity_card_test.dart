@@ -15,7 +15,13 @@ void main() {
   );
 
   testWidgets('renders label and current/threshold', (tester) async {
-    final pity = const Pity(current: 12, threshold: 90, lastRecordAt: null);
+    final pity = const Pity(
+      current: 12,
+      threshold: 90,
+      lastRecordAt: null,
+      averageInterval: null,
+      hitCount: 0,
+    );
     await tester.pumpWidget(
       wrap(
         PityCard(
@@ -31,7 +37,13 @@ void main() {
   });
 
   testWidgets('low progress (<70%) shows distance subtitle', (tester) async {
-    final pity = const Pity(current: 30, threshold: 90, lastRecordAt: null);
+    final pity = const Pity(
+      current: 30,
+      threshold: 90,
+      lastRecordAt: null,
+      averageInterval: null,
+      hitCount: 0,
+    );
     await tester.pumpWidget(
       wrap(
         PityCard(
@@ -48,7 +60,13 @@ void main() {
   });
 
   testWidgets('beginner ended pool shows ended state', (tester) async {
-    final pity = const Pity(current: 20, threshold: 20, lastRecordAt: null);
+    final pity = const Pity(
+      current: 20,
+      threshold: 20,
+      lastRecordAt: null,
+      averageInterval: null,
+      hitCount: 0,
+    );
     await tester.pumpWidget(
       wrap(
         PityCard(
@@ -65,9 +83,27 @@ void main() {
 
   testWidgets('renders value text across all phase boundaries', (tester) async {
     for (final p in [
-      const Pity(current: 60, threshold: 90, lastRecordAt: null), // 67%
-      const Pity(current: 75, threshold: 90, lastRecordAt: null), // 83%
-      const Pity(current: 90, threshold: 90, lastRecordAt: null), // 100%
+      const Pity(
+        current: 60,
+        threshold: 90,
+        lastRecordAt: null,
+        averageInterval: null,
+        hitCount: 0,
+      ), // 67%
+      const Pity(
+        current: 75,
+        threshold: 90,
+        lastRecordAt: null,
+        averageInterval: null,
+        hitCount: 0,
+      ), // 83%
+      const Pity(
+        current: 90,
+        threshold: 90,
+        lastRecordAt: null,
+        averageInterval: null,
+        hitCount: 0,
+      ), // 100%
     ]) {
       await tester.pumpWidget(
         wrap(

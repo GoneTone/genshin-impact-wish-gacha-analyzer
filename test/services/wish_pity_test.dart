@@ -145,5 +145,101 @@ void main() {
       expect(p.current, 3);
       expect(p.lastRecordAt, DateTime(2025, 1, 2));
     });
+
+    test('空 list → hitCount=0、averageInterval=null', () {
+      final p = computePity(const [], threshold: 90);
+      expect(p.hitCount, 0);
+      expect(p.averageInterval, isNull);
+    });
+
+    test('有抽但無命中 → hitCount=0、averageInterval=null', () {
+      final records = List.generate(
+        10,
+        (i) => _r(id: '$i', rank: 4, time: DateTime(2025, 1, 1 + i)),
+      ).reversed.toList(growable: false);
+      final p = computePity(records, threshold: 90, rank: 5);
+      expect(p.hitCount, 0);
+      expect(p.averageInterval, isNull);
+    });
+
+    test('最舊抽即 5★ → averageInterval=1.0', () {
+      // records (新→舊): 4×未中, 5★
+      final records = [
+        _r(id: '5', rank: 4, time: DateTime(2025, 1, 5)),
+        _r(id: '4', rank: 4, time: DateTime(2025, 1, 4)),
+        _r(id: '3', rank: 4, time: DateTime(2025, 1, 3)),
+        _r(id: '2', rank: 4, time: DateTime(2025, 1, 2)),
+        _r(id: '1', rank: 5, time: DateTime(2025, 1, 1)),
+      ];
+      final p = computePity(records, threshold: 90);
+      expect(p.current, 4);
+      expect(p.hitCount, 1);
+      expect(p.averageInterval, 1.0);
+    });
+
+    test('兩件命中 → averageInterval=4.5', () {
+      // records (新→舊): 未中×3, 5★, 未中×7, 5★
+      final records = [
+        for (var i = 0; i < 3; i++)
+          _r(id: 'top-$i', rank: 4, time: DateTime(2025, 2, 12 - i)),
+        _r(id: 'hit-new', rank: 5, time: DateTime(2025, 2, 9)),
+        for (var i = 0; i < 7; i++)
+          _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 2, 8 - i)),
+        _r(id: 'hit-old', rank: 5, time: DateTime(2025, 2, 1)),
+      ];
+      final p = computePity(records, threshold: 90);
+      expect(p.current, 3);
+      expect(p.hitCount, 2);
+      expect(p.averageInterval, 4.5);
+    });
+
+    test('最新抽即 5★ + 5 抽歷史 → averageInterval=6.0', () {
+      // records (新→舊): 5★, 未中×5
+      final records = [
+        _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 6)),
+        for (var i = 0; i < 5; i++)
+          _r(id: 'old-$i', rank: 4, time: DateTime(2025, 1, 5 - i)),
+      ];
+      final p = computePity(records, threshold: 90);
+      expect(p.current, 0);
+      expect(p.hitCount, 1);
+      expect(p.averageInterval, 6.0);
+    });
+
+    test('rank=4 查詢 → 只算 4★ 命中', () {
+      // records (新→舊): 未中×3, 4★, 未中×2, 5★
+      // 對 rank=4: current=3, hitCount=1, completed=4, avg=4.0
+      final records = [
+        for (var i = 0; i < 3; i++)
+          _r(id: 'top-$i', rank: 3, time: DateTime(2025, 2, 7 - i)),
+        _r(id: 'four', rank: 4, time: DateTime(2025, 2, 4)),
+        for (var i = 0; i < 2; i++)
+          _r(id: 'mid-$i', rank: 3, time: DateTime(2025, 2, 3 - i)),
+        _r(id: 'five', rank: 5, time: DateTime(2025, 2, 1)),
+      ];
+      final p = computePity(records, threshold: 10, rank: 4);
+      expect(p.current, 3);
+      expect(p.hitCount, 1);
+      expect(p.averageInterval, 4.0);
+    });
+
+    test('帶小數 → averageInterval≈3.333…', () {
+      // records (新→舊): 5★, 未中×3, 5★, 未中×4, 5★
+      // current=0, hitCount=3, completed=10, avg=10/3
+      final records = [
+        _r(id: 'hit3', rank: 5, time: DateTime(2025, 2, 10)),
+        for (var i = 0; i < 3; i++)
+          _r(id: 'mid-${9 - i}', rank: 4, time: DateTime(2025, 2, 9 - i)),
+        _r(id: 'hit2', rank: 5, time: DateTime(2025, 2, 6)),
+        for (var i = 0; i < 4; i++)
+          _r(id: 'mid-${5 - i}', rank: 4, time: DateTime(2025, 2, 5 - i)),
+        _r(id: 'hit1', rank: 5, time: DateTime(2025, 2, 1)),
+      ];
+      final p = computePity(records, threshold: 90);
+      expect(p.current, 0);
+      expect(p.hitCount, 3);
+      expect(p.averageInterval, closeTo(10 / 3, 1e-9));
+      expect(p.averageInterval!.toStringAsFixed(2), '3.33');
+    });
   });
 }
