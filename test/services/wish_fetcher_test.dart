@@ -92,4 +92,46 @@ void main() {
       expect(hits, greaterThan(1));
     });
   });
+
+  group('WishFetcher.fetchBannerWithMerge', () {
+    test('endpoint=wish 走 getGachaLog', () async {
+      final paths = <String>[];
+      final client = MockClient((req) async {
+        paths.add(req.url.path);
+        return _ok(const []);
+      });
+      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      await fetcher.fetchBannerWithMerge(
+        url: GachaUrl.parse(_baseUrl),
+        gachaType: '301',
+        endpoint: GachaEndpoint.wish,
+        existing: const [],
+        primer: null,
+        onProgress: (_) {},
+        client: client,
+      );
+      expect(paths, isNotEmpty);
+      expect(paths.every((p) => p.endsWith('/getGachaLog')), isTrue);
+    });
+
+    test('endpoint=odes 走 getBeyondGachaLog', () async {
+      final paths = <String>[];
+      final client = MockClient((req) async {
+        paths.add(req.url.path);
+        return _ok(const []);
+      });
+      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      await fetcher.fetchBannerWithMerge(
+        url: GachaUrl.parse(_baseUrl),
+        gachaType: '2000',
+        endpoint: GachaEndpoint.odes,
+        existing: const [],
+        primer: null,
+        onProgress: (_) {},
+        client: client,
+      );
+      expect(paths, isNotEmpty);
+      expect(paths.every((p) => p.endsWith('/getBeyondGachaLog')), isTrue);
+    });
+  });
 }

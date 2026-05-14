@@ -90,6 +90,7 @@ class WishFetcher {
   Future<List<WishRecord>> fetchBannerWithMerge({
     required GachaUrl url,
     required String gachaType,
+    required GachaEndpoint endpoint,
     required List<WishRecord> existing,
     required FetchedPage? primer,
     required void Function(FetchProgress) onProgress,
@@ -110,11 +111,7 @@ class WishFetcher {
           await Future<void>.delayed(rateLimit);
         }
         page = await fetchPage(
-          url.build(
-            gachaType: gachaType,
-            endId: endId,
-            endpoint: GachaEndpoint.wish,
-          ),
+          url.build(gachaType: gachaType, endId: endId, endpoint: endpoint),
           client,
         );
       }
@@ -153,33 +150,43 @@ class WishFetcher {
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序
   bool _idGreater(String a, String b) => a.compareTo(b) > 0;
 
-  /// UID 探測：依 gachaTypes 順序對每個 banner 抓 1 頁，第一筆非空者回傳
+  /// UID 探測：先掃所有 wish banner，若全部空白再掃所有 odes banner。
+  /// 第一筆非空者回傳該 UID + 已累積的 primer pages。
   Future<UidProbeResult> probeUid({
     required GachaUrl url,
     required http.Client client,
   }) async {
     final primers = <String, FetchedPage>{};
-    for (final type in gachaTypes) {
-      if (primers.isNotEmpty) {
-        await Future<void>.delayed(rateLimit);
-      }
-      final page = await fetchPage(
-        url.build(
-          gachaType: type.gachaType,
-          endId: '0',
-          endpoint: GachaEndpoint.wish,
-        ),
-        client,
-      );
-      primers[type.gachaType] = page;
-      if (page.records.isNotEmpty) {
-        return UidProbeResult(
-          uid: page.records.first.uid,
-          primerPages: primers,
+
+    Future<UidProbeResult?> tryCategory(GachaCategory cat) async {
+      final endpoint = switch (cat) {
+        GachaCategory.wish => GachaEndpoint.wish,
+        GachaCategory.odes => GachaEndpoint.odes,
+      };
+      for (final type in gachaTypes.where((t) => t.category == cat)) {
+        if (primers.isNotEmpty) {
+          await Future<void>.delayed(rateLimit);
+        }
+        final page = await fetchPage(
+          url.build(gachaType: type.gachaType, endId: '0', endpoint: endpoint),
+          client,
         );
+        primers[type.gachaType] = page;
+        if (page.records.isNotEmpty) {
+          return UidProbeResult(
+            uid: page.records.first.uid,
+            primerPages: primers,
+          );
+        }
       }
+      return null;
     }
-    return const UidProbeResult(uid: null, primerPages: {});
+
+    final wishHit = await tryCategory(GachaCategory.wish);
+    if (wishHit != null) return wishHit;
+    final odesHit = await tryCategory(GachaCategory.odes);
+    if (odesHit != null) return odesHit;
+    return UidProbeResult(uid: null, primerPages: primers);
   }
 }
 

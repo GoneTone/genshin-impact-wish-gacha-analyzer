@@ -295,6 +295,7 @@ class WishRepository extends Notifier<WishState> {
         final merged = await fetcher.fetchBannerWithMerge(
           url: gachaUrl,
           gachaType: t.gachaType,
+          endpoint: GachaEndpoint.wish,
           existing: existing.banners[t.gachaType] ?? const [],
           primer: probe.primerPages[t.gachaType],
           client: client,
