@@ -12,12 +12,17 @@ class SortableTable extends StatefulWidget {
     super.key,
     required this.rows,
     required this.sort,
+    required this.mainRank,
     required this.onSortColumnTapped,
   });
 
   /// 已 filter / sort 完的 rows;元件本身不做篩選排序。
   final List<RecordRow> rows;
   final TableSort? sort;
+
+  /// 該卡池的主稀有度 rank（祈願預設 5、常駐頌願 4），用於「保底內」欄
+  /// 標題與 tooltip 中的 N★。
+  final int mainRank;
   final ValueChanged<SortColumn> onSortColumnTapped;
 
   @override
@@ -80,6 +85,7 @@ class _SortableTableState extends State<SortableTable> {
                 tokens: tokens,
                 l: l,
                 sort: widget.sort,
+                mainRank: widget.mainRank,
                 onTap: widget.onSortColumnTapped,
               ),
               for (var i = 0; i < slice.length; i++)
@@ -110,12 +116,14 @@ class _Header extends StatelessWidget {
     required this.tokens,
     required this.l,
     required this.sort,
+    required this.mainRank,
     required this.onTap,
   });
   final ThemeData theme;
   final GachaTokens tokens;
   final AppLocalizations l;
   final TableSort? sort;
+  final int mainRank;
   final ValueChanged<SortColumn> onTap;
 
   @override
@@ -184,9 +192,9 @@ class _Header extends StatelessWidget {
             ),
             _HeaderCell(
               flex: 2,
-              label: l.tableFiveStarPity,
-              tooltip: l.tableFiveStarPityTooltip,
-              column: SortColumn.fiveStarPity,
+              label: l.tableMainPity,
+              tooltip: l.tableMainPityTooltip(mainRank),
+              column: SortColumn.mainPity,
               sort: sort,
               tokens: tokens,
               l: l,
@@ -337,7 +345,7 @@ class _Row extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              '${row.fiveStarPityIndex}',
+              '${row.mainPityIndex}',
               textAlign: TextAlign.end,
               style: mutedNum,
             ),

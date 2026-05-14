@@ -72,6 +72,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gachaTypeBeginner => 'Beginners\' Wish';
 
   @override
+  String get gachaTypeOdesEvent => 'Event Odes';
+
+  @override
+  String get gachaTypeOdesStandard => 'Standard Odes';
+
+  @override
+  String get navOdesEvent => 'Event Odes';
+
+  @override
+  String get navOdesStandard => 'Standard Odes';
+
+  @override
+  String get navSectionWish => 'Wish';
+
+  @override
+  String get navSectionOdes => 'Odes';
+
+  @override
   String get footerNotSynced => 'Not synced';
 
   @override
@@ -173,6 +191,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyNoFiltered => 'No records match the current filter';
 
   @override
+  String get emptyNoOdesRecords => 'No Odes records yet';
+
+  @override
   String get statsTotal => 'Total pulls';
 
   @override
@@ -196,10 +217,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsNoData => 'No data';
 
   @override
-  String get kindCharacter => 'Character';
+  String get statsThreeStarCount => '3★ Count';
 
   @override
-  String get kindWeapon => 'Weapon';
+  String get statsTwoStarCount => '2★ Count';
 
   @override
   String get kindUnknown => 'Unknown';
@@ -220,10 +241,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tableTotalIndex => 'Total';
 
   @override
-  String get tableFiveStarPity => 'Pity';
+  String get tableMainPity => 'Pity';
 
   @override
-  String get tableFiveStarPityTooltip => 'Pulls since the last 5★';
+  String tableMainPityTooltip(int rank) {
+    return 'Pulls since the last $rank★';
+  }
 
   @override
   String get sortDirectionDesc => 'Descending';
@@ -296,6 +319,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pageOverviewTitle => 'Overview (all banners)';
+
+  @override
+  String get pageOverviewWishSection => 'Wish Overview';
+
+  @override
+  String get pageOverviewOdesSection => 'Odes Overview';
 
   @override
   String get pageBannerRecordList => 'Record list';
@@ -377,6 +406,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pityFourStar => '4★ pity';
 
   @override
+  String get pityThreeStar => '3★ pity';
+
+  @override
   String pityCurrent(int current, int threshold) {
     return '$current / $threshold';
   }
@@ -395,13 +427,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pityGuaranteed => 'Guaranteed soon';
 
   @override
-  String get pityNoFiveStar => 'No 5★ yet';
+  String pityNoMainRarity(int rank) {
+    return 'No $rank★ yet';
+  }
 
   @override
   String get pityBeginnerEnded => 'Ended';
 
   @override
-  String get timelineNoRecords => 'No 5★ records';
+  String timelineNoRecordsForRank(int rank) {
+    return 'No $rank★ records';
+  }
 
   @override
   String timelineSinceLast(int n) {
@@ -417,13 +453,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String timelineNowSinceLast(int n) {
-    return '$n pulls since last 5★';
+  String timelineNowSinceLast(int rank, int n) {
+    return '$n pulls since last $rank★';
   }
 
   @override
-  String timelineNowSinceCrossPool(int n) {
-    return '$n pulls since last 5★ across banners';
+  String timelineNowSinceCrossPool(int rank, int n) {
+    return '$n pulls since last $rank★ across banners';
   }
 
   @override
@@ -448,12 +484,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterKindAll => 'All kinds';
-
-  @override
-  String get filterKindCharacter => 'Characters only';
-
-  @override
-  String get filterKindWeapon => 'Weapons only';
 
   @override
   String get filterSearchHint => 'Search name…';
@@ -603,16 +633,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingBootstrap => 'Loading…';
 
   @override
-  String timelineCountFiveStar(int n) {
-    return '5★ Timeline ($n)';
+  String timelineCountTopRarity(int rank, int n) {
+    return '$rank★ Timeline ($n)';
   }
 
   @override
-  String get bannerFiveStarCountTitle => '5★ count per banner';
+  String get bannerTopRarityCountTitle => 'Highest rarity count per banner';
 
   @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '$n pulls since last 5★';
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '$n pulls since last $rank★';
   }
 
   @override

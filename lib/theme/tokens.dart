@@ -26,7 +26,10 @@ abstract class AppFontSize {
   static const double label = 11; // uppercase 小寫上標
 }
 
-/// 卡池 / 應用層級的色 token。透過 ThemeExtension 注入。
+/// 應用層級的色 token。透過 ThemeExtension 注入。
+///
+/// 卡池配色不放在這裡（見 [BannerColors]）— 那組顏色刻意跟稀有度脫鉤，
+/// 自成一套 palette。
 @immutable
 class GachaTokens extends ThemeExtension<GachaTokens> {
   const GachaTokens({
@@ -41,8 +44,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     required this.fiveStar,
     required this.fourStar,
     required this.threeStar,
-    required this.character,
-    required this.weapon,
+    required this.twoStar,
     required this.accentPrimary,
     required this.stateDanger,
     required this.stateSuccess,
@@ -60,8 +62,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
   final Color fiveStar;
   final Color fourStar;
   final Color threeStar;
-  final Color character;
-  final Color weapon;
+  final Color twoStar;
   final Color accentPrimary;
   final Color stateDanger;
   final Color stateSuccess;
@@ -80,8 +81,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: Color(0xFFE6C477),
     fourStar: Color(0xFFA385E0),
     threeStar: Color(0xFF5B9BD5),
-    character: Color(0xFF46B07A),
-    weapon: Color(0xFFE6736B),
+    twoStar: Color(0xFF6A7080),
     accentPrimary: Color(0xFFE6C477),
     stateDanger: Color(0xFFE6736B),
     stateSuccess: Color(0xFF46B07A),
@@ -101,8 +101,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: Color(0xFFB8860B),
     fourStar: Color(0xFF7A4FB8),
     threeStar: Color(0xFF2E7CC2),
-    character: Color(0xFF2E7D32),
-    weapon: Color(0xFFC62828),
+    twoStar: Color(0xFF8A92A6),
     accentPrimary: Color(0xFFB8860B),
     stateDanger: Color(0xFFC62828),
     stateSuccess: Color(0xFF2E7D32),
@@ -122,8 +121,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     Color? fiveStar,
     Color? fourStar,
     Color? threeStar,
-    Color? character,
-    Color? weapon,
+    Color? twoStar,
     Color? accentPrimary,
     Color? stateDanger,
     Color? stateSuccess,
@@ -140,8 +138,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: fiveStar ?? this.fiveStar,
     fourStar: fourStar ?? this.fourStar,
     threeStar: threeStar ?? this.threeStar,
-    character: character ?? this.character,
-    weapon: weapon ?? this.weapon,
+    twoStar: twoStar ?? this.twoStar,
     accentPrimary: accentPrimary ?? this.accentPrimary,
     stateDanger: stateDanger ?? this.stateDanger,
     stateSuccess: stateSuccess ?? this.stateSuccess,
@@ -167,8 +164,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
       fiveStar: Color.lerp(fiveStar, other.fiveStar, t)!,
       fourStar: Color.lerp(fourStar, other.fourStar, t)!,
       threeStar: Color.lerp(threeStar, other.threeStar, t)!,
-      character: Color.lerp(character, other.character, t)!,
-      weapon: Color.lerp(weapon, other.weapon, t)!,
+      twoStar: Color.lerp(twoStar, other.twoStar, t)!,
       accentPrimary: Color.lerp(accentPrimary, other.accentPrimary, t)!,
       stateDanger: Color.lerp(stateDanger, other.stateDanger, t)!,
       stateSuccess: Color.lerp(stateSuccess, other.stateSuccess, t)!,

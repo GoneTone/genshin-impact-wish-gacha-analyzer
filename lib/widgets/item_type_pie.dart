@@ -12,32 +12,44 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.d
 const double _kRingRadius = 75;
 const double _kCenterRadius = 40;
 
-const _unknownColor = Color(0xFF9E9E9E);
+// 物品類型 chart 專屬配色：與 GachaTokens 內既有的 character/weapon/rarity 等
+// token 視覺脫鉤，避免「綠色 = 角色 / 紅色 = 武器」這類隨資料順序變動的誤判。
+// 6 色色相均勻分布、跟稀有度三色（金/紫/藍）也不會撞色。
+const _paletteDark = <Color>[
+  Color(0xFF6BC5E5), // 天藍
+  Color(0xFFF2849A), // 珊瑚粉
+  Color(0xFFF5B66B), // 杏橘
+  Color(0xFF85D6A8), // 薄荷綠
+  Color(0xFFB59FE5), // 薰衣草紫
+  Color(0xFF5EB8B0), // 青綠
+];
+
+const _paletteLight = <Color>[
+  Color(0xFF1E6AA8), // 鋼藍
+  Color(0xFFC2627A), // 玫瑰
+  Color(0xFFB87742), // 焦橘
+  Color(0xFF3A8A66), // 森林薄荷
+  Color(0xFF6E5BAB), // 靛紫
+  Color(0xFF3A7A75), // 深青
+];
+
+List<Color> _itemTypePalette(Brightness b) =>
+    b == Brightness.dark ? _paletteDark : _paletteLight;
 
 List<DistributionEntry> itemTypeDistributionEntries(
   WishStats stats,
-  GachaTokens tokens,
+  Brightness brightness,
   AppLocalizations l,
 ) {
+  final palette = _itemTypePalette(brightness);
+  final sorted = stats.sortedItemTypes();
   return [
-    DistributionEntry(
-      color: tokens.character,
-      name: l.kindCharacter,
-      count: stats.characterCount,
-      rate: stats.characterRate,
-    ),
-    DistributionEntry(
-      color: tokens.weapon,
-      name: l.kindWeapon,
-      count: stats.weaponCount,
-      rate: stats.weaponRate,
-    ),
-    if (stats.unknownCount > 0)
+    for (final (i, e) in sorted.indexed)
       DistributionEntry(
-        color: _unknownColor,
-        name: l.kindUnknown,
-        count: stats.unknownCount,
-        rate: stats.total == 0 ? 0.0 : stats.unknownCount / stats.total,
+        color: palette[i % palette.length],
+        name: e.key.isEmpty ? l.kindUnknown : e.key,
+        count: e.value,
+        rate: stats.total == 0 ? 0.0 : e.value / stats.total,
       ),
   ];
 }
@@ -49,17 +61,23 @@ class ItemTypePie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final tokens = Theme.of(context).gacha;
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
 
     if (stats.total == 0) {
       return Center(
         child: Text(l.statsNoData, style: TextStyle(color: tokens.textMuted)),
       );
     }
+    final palette = _itemTypePalette(theme.brightness);
     final sections = <PieChartSectionData>[
-      _section(stats.characterCount, tokens.character),
-      _section(stats.weaponCount, tokens.weapon),
-      if (stats.unknownCount > 0) _section(stats.unknownCount, _unknownColor),
+      for (final (i, e) in stats.sortedItemTypes().indexed)
+        PieChartSectionData(
+          showTitle: false,
+          value: e.value.toDouble(),
+          color: palette[i % palette.length],
+          radius: _kRingRadius,
+        ),
     ].where((s) => s.value > 0).toList(growable: false);
     return PieChart(
       PieChartData(
@@ -72,11 +90,4 @@ class ItemTypePie extends StatelessWidget {
       curve: Curves.easeOut,
     );
   }
-
-  PieChartSectionData _section(int value, Color color) => PieChartSectionData(
-    showTitle: false,
-    value: value.toDouble(),
-    color: color,
-    radius: _kRingRadius,
-  );
 }

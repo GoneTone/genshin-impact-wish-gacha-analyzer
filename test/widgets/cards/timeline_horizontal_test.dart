@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
 
@@ -27,7 +26,7 @@ Widget _wrap(Widget Function(BuildContext ctx, BannerColors colors) build) =>
           height: 160,
           child: Builder(
             builder: (ctx) {
-              final colors = BannerColors.fromTokens(Theme.of(ctx).gacha);
+              final colors = BannerColors.of(Theme.of(ctx).brightness);
               return build(ctx, colors);
             },
           ),
@@ -39,13 +38,17 @@ void main() {
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: const [], colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: const [],
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
-    expect(find.text(l.timelineNoRecords), findsOneWidget);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsOneWidget);
   });
 
   testWidgets('renders one column per entry', (tester) async {
@@ -57,6 +60,7 @@ void main() {
             _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
           ],
           colors: colors,
+          targetRank: 5,
         ),
       ),
     );
@@ -73,6 +77,7 @@ void main() {
           entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
           colors: colors,
           nowPulls: 28,
+          targetRank: 5,
         ),
       ),
     );
@@ -88,15 +93,19 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: const [], colors: colors, nowPulls: 5),
+        (ctx, colors) => TimelineHorizontal(
+          entries: const [],
+          colors: colors,
+          nowPulls: 5,
+          targetRank: 5,
+        ),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
     expect(find.text(l.timelineNowLabel), findsOneWidget);
-    expect(find.text(l.timelineNoRecords), findsNothing);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
   });
 
   testWidgets('Now column appears leftmost (before entry columns)', (
@@ -108,6 +117,7 @@ void main() {
           entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
           colors: colors,
           nowPulls: 28,
+          targetRank: 5,
         ),
       ),
     );
@@ -132,7 +142,8 @@ void main() {
     ];
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+        (ctx, colors) =>
+            TimelineHorizontal(entries: entries, colors: colors, targetRank: 5),
       ),
     );
     final scrollableState = tester.state<ScrollableState>(
@@ -169,8 +180,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -181,8 +195,11 @@ void main() {
   testWidgets('overflow + offset=middle → both arrows visible', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -203,8 +220,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -231,6 +251,7 @@ void main() {
             _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
           ],
           colors: colors,
+          targetRank: 5,
         ),
       ),
     );
@@ -244,8 +265,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -266,8 +290,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         _wrap(
-          (ctx, colors) =>
-              TimelineHorizontal(entries: manyEntries(20), colors: colors),
+          (ctx, colors) => TimelineHorizontal(
+            entries: manyEntries(20),
+            colors: colors,
+            targetRank: 5,
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -295,7 +322,8 @@ void main() {
     'entries shrink from overflow to non-overflow → arrows disappear',
     (tester) async {
       Widget makeWidget(List<TimelineEntry> entries) => _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+        (ctx, colors) =>
+            TimelineHorizontal(entries: entries, colors: colors, targetRank: 5),
       );
       await tester.pumpWidget(makeWidget(manyEntries(20)));
       await tester.pumpAndSettle();
@@ -318,8 +346,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         _wrap(
-          (ctx, colors) =>
-              TimelineHorizontal(entries: const [], colors: colors),
+          (ctx, colors) => TimelineHorizontal(
+            entries: const [],
+            colors: colors,
+            targetRank: 5,
+          ),
         ),
       );
       await tester.pumpAndSettle();

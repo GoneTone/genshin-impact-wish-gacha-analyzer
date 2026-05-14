@@ -4,54 +4,64 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 
-class BannerFiveStarBars extends StatelessWidget {
-  const BannerFiveStarBars({
+/// 卡池主稀有度件數長條圖。
+///
+/// 每個 [GachaType] 依其 `primaryPity.rank` 決定該池要計數的稀有度（祈願是
+/// 5★、頌願常駐是 4★），bar 長度為各池件數相對最大值的比例。
+class BannerTopRarityBars extends StatelessWidget {
+  const BannerTopRarityBars({
     super.key,
+    required this.types,
     required this.banners,
     required this.colors,
   });
 
+  final List<GachaType> types;
   final Map<String, List<WishRecord>> banners;
   final BannerColors colors;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+
     final counts = <String, int>{
-      for (final t in gachaTypes)
-        t.gachaType: computeWishStats(
-          banners[t.gachaType] ?? const [],
-        ).fiveStarCount,
+      for (final t in types)
+        t.gachaType: (banners[t.gachaType] ?? const [])
+            .where((r) => r.rankType == t.primaryPity.rank)
+            .length,
     };
     final maxCount = counts.values.fold<int>(0, (m, v) => v > m ? v : m);
 
-    final rows = gachaTypes
+    final rows = types
         .map((type) {
           final records = banners[type.gachaType] ?? const <WishRecord>[];
-          final fiveStarCount = counts[type.gachaType]!;
+          final topCount = counts[type.gachaType]!;
           final isEnded = type.gachaType == '100';
           final String subtitle;
           if (isEnded) {
             subtitle = l.pityBeginnerEnded;
-          } else if (fiveStarCount == 0) {
-            subtitle = l.pityNoFiveStar;
+          } else if (topCount == 0) {
+            subtitle = l.pityNoMainRarity(type.primaryPity.rank);
           } else {
             final pity = computePity(
               records,
-              threshold: type.fiveStarPity,
+              threshold: type.primaryPity.threshold,
+              rank: type.primaryPity.rank,
             ).current;
-            subtitle = l.bannerFiveStarPullsSinceLast(pity);
+            subtitle = l.bannerTopRarityPullsSinceLast(
+              type.primaryPity.rank,
+              pity,
+            );
           }
           return _BannerRow(
             name: type.resolveName(l),
             color: colors.colorFor(type.gachaType),
-            fiveStarCount: fiveStarCount,
+            topCount: topCount,
             subtitle: subtitle,
-            ratio: maxCount == 0 ? 0.0 : fiveStarCount / maxCount,
+            ratio: maxCount == 0 ? 0.0 : topCount / maxCount,
           );
         })
         .toList(growable: false);
@@ -72,14 +82,14 @@ class _BannerRow extends StatelessWidget {
   const _BannerRow({
     required this.name,
     required this.color,
-    required this.fiveStarCount,
+    required this.topCount,
     required this.subtitle,
     required this.ratio,
   });
 
   final String name;
   final Color color;
-  final int fiveStarCount;
+  final int topCount;
   final String subtitle;
   final double ratio;
 
@@ -110,7 +120,7 @@ class _BannerRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '$fiveStarCount',
+                '$topCount',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),

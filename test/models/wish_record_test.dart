@@ -3,26 +3,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 
 void main() {
-  group('WishItemKind', () {
-    test('zh-tw 角色 → character', () {
-      expect(WishItemKind.fromItemType('角色'), WishItemKind.character);
-    });
-
-    test('zh-tw 武器 → weapon', () {
-      expect(WishItemKind.fromItemType('武器'), WishItemKind.weapon);
-    });
-
-    test('en Character → character', () {
-      expect(WishItemKind.fromItemType('Character'), WishItemKind.character);
-    });
-
-    test('未知字串 → unknown', () {
-      expect(WishItemKind.fromItemType('???'), WishItemKind.unknown);
-    });
-  });
-
   group('WishRecord.fromApiJson', () {
-    test('解析典型 zh-tw API 回傳', () {
+    test('解析典型祈願 zh-tw API 回傳', () {
       final json = {
         'uid': '801057625',
         'gacha_type': '200',
@@ -35,16 +17,43 @@ void main() {
         'rank_type': '3',
         'id': '1758632760000221425',
       };
-      final record = WishRecord.fromApiJson(json);
+      final record = WishRecord.fromApiJson(json, gachaType: '200');
       expect(record.id, '1758632760000221425');
       expect(record.uid, '801057625');
       expect(record.gachaType, '200');
       expect(record.name, '討龍英傑譚');
       expect(record.itemType, '武器');
-      expect(record.kind, WishItemKind.weapon);
       expect(record.rankType, 3);
       expect(record.lang, 'zh-tw');
       expect(record.time, DateTime(2025, 9, 23, 21, 27, 37));
+    });
+
+    test('解析頌願 API 回傳：item_name → name，op_gacha_type 忽略改用查詢值', () {
+      // 真實 getBeyondGachaLog 回傳 schema：item_name / op_gacha_type / 無 lang
+      final json = {
+        'id': '1761240000000038925',
+        'region': 'os_asia',
+        'uid': '801057625',
+        'schedule_id': '20',
+        'item_type': '裝扮套裝',
+        'item_id': '265044',
+        'item_name': '女性裝扮·「燭影狂歡夜」',
+        'rank_type': '5',
+        'is_up': '0',
+        'time': '2025-10-24 01:51:25',
+        'op_gacha_type': '20021',
+      };
+      final record = WishRecord.fromApiJson(json, gachaType: '2000');
+      expect(record.id, '1761240000000038925');
+      expect(record.uid, '801057625');
+      // 用查詢的 banner 級 gacha_type，不取 op_gacha_type
+      expect(record.gachaType, '2000');
+      expect(record.name, '女性裝扮·「燭影狂歡夜」');
+      expect(record.itemType, '裝扮套裝');
+      expect(record.rankType, 5);
+      // 頌願沒有 lang 欄位，預期空字串
+      expect(record.lang, '');
+      expect(record.time, DateTime(2025, 10, 24, 1, 51, 25));
     });
   });
 
@@ -56,7 +65,6 @@ void main() {
         gachaType: '200',
         name: '討龍英傑譚',
         itemType: '武器',
-        kind: WishItemKind.weapon,
         rankType: 3,
         time: DateTime(2025, 9, 23, 21, 27, 37),
         lang: 'zh-tw',
@@ -70,7 +78,7 @@ void main() {
 
       final restored = WishRecord.fromStorageJson(json);
       expect(restored.id, original.id);
-      expect(restored.kind, original.kind);
+      expect(restored.itemType, original.itemType);
       expect(restored.time, original.time);
     });
   });
@@ -83,7 +91,6 @@ void main() {
         gachaType: '301',
         name: '雷電將軍',
         itemType: '角色',
-        kind: WishItemKind.character,
         rankType: 5,
         time: DateTime(2025, 9, 23, 21, 27, 37),
         lang: 'zh-tw',

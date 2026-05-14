@@ -238,6 +238,42 @@ abstract class AppLocalizations {
   /// **'新手祈願'**
   String get gachaTypeBeginner;
 
+  /// No description provided for @gachaTypeOdesEvent.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'活動頌願'**
+  String get gachaTypeOdesEvent;
+
+  /// No description provided for @gachaTypeOdesStandard.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'常駐頌願'**
+  String get gachaTypeOdesStandard;
+
+  /// No description provided for @navOdesEvent.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'活動頌願'**
+  String get navOdesEvent;
+
+  /// No description provided for @navOdesStandard.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'常駐頌願'**
+  String get navOdesStandard;
+
+  /// No description provided for @navSectionWish.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'祈願'**
+  String get navSectionWish;
+
+  /// No description provided for @navSectionOdes.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'頌願'**
+  String get navSectionOdes;
+
   /// No description provided for @footerNotSynced.
   ///
   /// In zh_Hant, this message translates to:
@@ -340,6 +376,12 @@ abstract class AppLocalizations {
   /// **'沒有符合條件的紀錄'**
   String get emptyNoFiltered;
 
+  /// No description provided for @emptyNoOdesRecords.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'尚無頌願記錄'**
+  String get emptyNoOdesRecords;
+
   /// No description provided for @statsTotal.
   ///
   /// In zh_Hant, this message translates to:
@@ -382,17 +424,17 @@ abstract class AppLocalizations {
   /// **'無資料'**
   String get statsNoData;
 
-  /// No description provided for @kindCharacter.
+  /// No description provided for @statsThreeStarCount.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'角色'**
-  String get kindCharacter;
+  /// **'3★ 件數'**
+  String get statsThreeStarCount;
 
-  /// No description provided for @kindWeapon.
+  /// No description provided for @statsTwoStarCount.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'武器'**
-  String get kindWeapon;
+  /// **'2★ 件數'**
+  String get statsTwoStarCount;
 
   /// No description provided for @kindUnknown.
   ///
@@ -430,17 +472,17 @@ abstract class AppLocalizations {
   /// **'總抽數'**
   String get tableTotalIndex;
 
-  /// No description provided for @tableFiveStarPity.
+  /// No description provided for @tableMainPity.
   ///
   /// In zh_Hant, this message translates to:
   /// **'保底內'**
-  String get tableFiveStarPity;
+  String get tableMainPity;
 
-  /// No description provided for @tableFiveStarPityTooltip.
+  /// No description provided for @tableMainPityTooltip.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上一次 5★ 的抽數'**
-  String get tableFiveStarPityTooltip;
+  /// **'距上一次 {rank}★ 的抽數'**
+  String tableMainPityTooltip(int rank);
 
   /// No description provided for @sortDirectionDesc.
   ///
@@ -561,6 +603,18 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'綜合數據（全卡池合計）'**
   String get pageOverviewTitle;
+
+  /// No description provided for @pageOverviewWishSection.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'祈願綜合'**
+  String get pageOverviewWishSection;
+
+  /// No description provided for @pageOverviewOdesSection.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'頌願綜合'**
+  String get pageOverviewOdesSection;
 
   /// No description provided for @pageBannerRecordList.
   ///
@@ -712,6 +766,12 @@ abstract class AppLocalizations {
   /// **'4★ 保底'**
   String get pityFourStar;
 
+  /// No description provided for @pityThreeStar.
+  ///
+  /// In zh_Hant, this message translates to:
+  /// **'3★ 保底'**
+  String get pityThreeStar;
+
   /// No description provided for @pityCurrent.
   ///
   /// In zh_Hant, this message translates to:
@@ -736,11 +796,11 @@ abstract class AppLocalizations {
   /// **'保底中'**
   String get pityGuaranteed;
 
-  /// No description provided for @pityNoFiveStar.
+  /// No description provided for @pityNoMainRarity.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'暫無 5★'**
-  String get pityNoFiveStar;
+  /// **'暫無 {rank}★'**
+  String pityNoMainRarity(int rank);
 
   /// No description provided for @pityBeginnerEnded.
   ///
@@ -748,11 +808,11 @@ abstract class AppLocalizations {
   /// **'已結束'**
   String get pityBeginnerEnded;
 
-  /// No description provided for @timelineNoRecords.
+  /// No description provided for @timelineNoRecordsForRank.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'暫無 5★ 紀錄'**
-  String get timelineNoRecords;
+  /// **'暫無 {rank}★ 紀錄'**
+  String timelineNoRecordsForRank(int rank);
 
   /// No description provided for @timelineSinceLast.
   ///
@@ -775,14 +835,14 @@ abstract class AppLocalizations {
   /// No description provided for @timelineNowSinceLast.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上次 5★ {n} 抽'**
-  String timelineNowSinceLast(int n);
+  /// **'距上次 {rank}★ {n} 抽'**
+  String timelineNowSinceLast(int rank, int n);
 
   /// No description provided for @timelineNowSinceCrossPool.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'從上次 5★ 至今 {n} 抽'**
-  String timelineNowSinceCrossPool(int n);
+  /// **'從上次 {rank}★ 至今 {n} 抽'**
+  String timelineNowSinceCrossPool(int rank, int n);
 
   /// No description provided for @timelineMonthLabel.
   ///
@@ -825,18 +885,6 @@ abstract class AppLocalizations {
   /// In zh_Hant, this message translates to:
   /// **'全部類型'**
   String get filterKindAll;
-
-  /// No description provided for @filterKindCharacter.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'只看角色'**
-  String get filterKindCharacter;
-
-  /// No description provided for @filterKindWeapon.
-  ///
-  /// In zh_Hant, this message translates to:
-  /// **'只看武器'**
-  String get filterKindWeapon;
 
   /// No description provided for @filterSearchHint.
   ///
@@ -1090,23 +1138,23 @@ abstract class AppLocalizations {
   /// **'載入中…'**
   String get loadingBootstrap;
 
-  /// No description provided for @timelineCountFiveStar.
+  /// No description provided for @timelineCountTopRarity.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'5★ 時間軸 ({n})'**
-  String timelineCountFiveStar(int n);
+  /// **'{rank}★ 時間軸 ({n})'**
+  String timelineCountTopRarity(int rank, int n);
 
-  /// No description provided for @bannerFiveStarCountTitle.
+  /// No description provided for @bannerTopRarityCountTitle.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'各卡池 5★ 件數'**
-  String get bannerFiveStarCountTitle;
+  /// **'各卡池最高稀有度件數'**
+  String get bannerTopRarityCountTitle;
 
-  /// No description provided for @bannerFiveStarPullsSinceLast.
+  /// No description provided for @bannerTopRarityPullsSinceLast.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上次 5★ {n} 抽'**
-  String bannerFiveStarPullsSinceLast(int n);
+  /// **'距上次 {rank}★ {n} 抽'**
+  String bannerTopRarityPullsSinceLast(int rank, int n);
 
   /// No description provided for @updateTitle.
   ///

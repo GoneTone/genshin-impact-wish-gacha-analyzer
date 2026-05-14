@@ -25,6 +25,13 @@
   "gachaTypeChronicled": "Chronicled Wish",
   "gachaTypeStandard": "Standard Wish",
   "gachaTypeBeginner": "Beginners' Wish",
+  "gachaTypeOdesEvent": "Event Odes",
+  "gachaTypeOdesStandard": "Standard Odes",
+
+  "navOdesEvent": "Event Odes",
+  "navOdesStandard": "Standard Odes",
+  "navSectionWish": "Wish",
+  "navSectionOdes": "Odes",
 
   "footerNotSynced": "Not synced",
   "footerLastUpdated": "Last updated: {time}",
@@ -55,6 +62,7 @@
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
   "emptyNoRecords": "No records for this banner",
   "emptyNoFiltered": "No records match the current filter",
+  "emptyNoOdesRecords": "No Odes records yet",
 
   "statsTotal": "Total pulls",
   "statsFiveStarCount": "5★ Count",
@@ -66,9 +74,9 @@
   "statsRarityDistribution": "Rarity Distribution",
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
+  "statsThreeStarCount": "3★ Count",
+  "statsTwoStarCount": "2★ Count",
 
-  "kindCharacter": "Character",
-  "kindWeapon": "Weapon",
   "kindUnknown": "Unknown",
 
   "tableTime": "Time",
@@ -76,8 +84,11 @@
   "tableKind": "Type",
   "tableRarity": "Rarity",
   "tableTotalIndex": "Total",
-  "tableFiveStarPity": "Pity",
-  "tableFiveStarPityTooltip": "Pulls since the last 5★",
+  "tableMainPity": "Pity",
+  "tableMainPityTooltip": "Pulls since the last {rank}★",
+  "@tableMainPityTooltip": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "sortDirectionDesc": "Descending",
   "sortDirectionAsc": "Ascending",
   "sortDirectionNone": "Click to sort",
@@ -119,6 +130,8 @@
   "errorNoRecords": "This account has no wish records yet",
 
   "pageOverviewTitle": "Overview (all banners)",
+  "pageOverviewWishSection": "Wish Overview",
+  "pageOverviewOdesSection": "Odes Overview",
   "pageBannerRecordList": "Record list",
 
   "settingsTitle": "Settings",
@@ -140,6 +153,7 @@
 
   "pityFiveStar": "5★ pity",
   "pityFourStar": "4★ pity",
+  "pityThreeStar": "3★ pity",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },
@@ -155,10 +169,16 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "Guaranteed soon",
-  "pityNoFiveStar": "No 5★ yet",
+  "pityNoMainRarity": "No {rank}★ yet",
+  "@pityNoMainRarity": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "pityBeginnerEnded": "Ended",
 
-  "timelineNoRecords": "No 5★ records",
+  "timelineNoRecordsForRank": "No {rank}★ records",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "timelineSinceLast": "{n} pulls",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
@@ -168,13 +188,19 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "{n} pulls since last 5★",
+  "timelineNowSinceLast": "{n} pulls since last {rank}★",
   "@timelineNowSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
-  "timelineNowSinceCrossPool": "{n} pulls since last 5★ across banners",
+  "timelineNowSinceCrossPool": "{n} pulls since last {rank}★ across banners",
   "@timelineNowSinceCrossPool": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
   "timelineMonthLabel": "{month} / {year}",
   "@timelineMonthLabel": {
@@ -191,8 +217,6 @@
   "filterRarityFiveStar": "5★ only",
   "filterRarityFourStar": "4★ only",
   "filterKindAll": "All kinds",
-  "filterKindCharacter": "Characters only",
-  "filterKindWeapon": "Weapons only",
   "filterSearchHint": "Search name…",
   "filterClear": "Clear filters",
 
@@ -280,15 +304,21 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineCountFiveStar": "5★ Timeline ({n})",
-  "@timelineCountFiveStar": {
-    "placeholders": { "n": { "type": "int" } }
+  "timelineCountTopRarity": "{rank}★ Timeline ({n})",
+  "@timelineCountTopRarity": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
-  "bannerFiveStarCountTitle": "5★ count per banner",
-  "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★",
-  "@bannerFiveStarPullsSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+  "bannerTopRarityCountTitle": "Highest rarity count per banner",
+  "bannerTopRarityPullsSinceLast": "{n} pulls since last {rank}★",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
   "navContributors": "Contribution",

@@ -19,6 +19,7 @@ void main() {
       _wrap(
         SearchFilterBar(
           state: const RecordFilterState(filter: RecordFilter(), sort: null),
+          availableItemTypes: const ['角色', '武器'],
           onFilterChanged: (_) {},
           onClear: () {},
         ),
@@ -36,6 +37,7 @@ void main() {
             filter: RecordFilter(rarity: RarityFilter.fiveStar),
             sort: null,
           ),
+          availableItemTypes: const ['角色', '武器'],
           onFilterChanged: (_) {},
           onClear: () {},
         ),
@@ -45,18 +47,44 @@ void main() {
     expect(clearBtn, findsOneWidget);
   });
 
-  testWidgets('排序 dropdown 已不存在', (tester) async {
+  testWidgets('itemType dropdown 依 availableItemTypes 動態列舉', (tester) async {
     await tester.pumpWidget(
       _wrap(
         SearchFilterBar(
           state: const RecordFilterState(filter: RecordFilter(), sort: null),
+          availableItemTypes: const ['角色', '武器', '裝扮'],
           onFilterChanged: (_) {},
           onClear: () {},
         ),
       ),
     );
-    // 只有兩個 dropdown：rarity / kind
+    // rarity dropdown + itemType dropdown 共兩個
     expect(find.byType(DropdownButton<RarityFilter>), findsOneWidget);
-    expect(find.byType(DropdownButton<KindFilter>), findsOneWidget);
+    expect(find.byType(DropdownButton<String?>), findsOneWidget);
+  });
+
+  testWidgets('選擇 itemType → onFilterChanged 收到新的 itemType', (tester) async {
+    RecordFilter? captured;
+    await tester.pumpWidget(
+      _wrap(
+        SearchFilterBar(
+          state: const RecordFilterState(filter: RecordFilter(), sort: null),
+          availableItemTypes: const ['角色', '武器'],
+          onFilterChanged: (f) => captured = f,
+          onClear: () {},
+        ),
+      ),
+    );
+
+    // 開 dropdown
+    await tester.tap(find.byType(DropdownButton<String?>));
+    await tester.pumpAndSettle();
+    // 點 '角色' 選項（dropdown 開啟後菜單會有兩個 '角色' Text：一個 closed item，一個 menu item）
+    final characterItems = find.text('角色');
+    expect(characterItems, findsWidgets);
+    await tester.tap(characterItems.last);
+    await tester.pumpAndSettle();
+
+    expect(captured?.itemType, '角色');
   });
 }

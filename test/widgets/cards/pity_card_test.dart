@@ -15,11 +15,12 @@ void main() {
   );
 
   testWidgets('renders label and current/threshold', (tester) async {
-    final pity = const Pity(current: 12, threshold: 90, lastFiveStarAt: null);
+    final pity = const Pity(current: 12, threshold: 90, lastRecordAt: null);
     await tester.pumpWidget(
       wrap(
         PityCard(
           label: '5★ pity',
+          rank: 5,
           pity: pity,
           accent: GachaTokens.dark.fiveStar,
         ),
@@ -30,23 +31,29 @@ void main() {
   });
 
   testWidgets('low progress (<70%) shows distance subtitle', (tester) async {
-    final pity = const Pity(current: 30, threshold: 90, lastFiveStarAt: null);
+    final pity = const Pity(current: 30, threshold: 90, lastRecordAt: null);
     await tester.pumpWidget(
       wrap(
-        PityCard(label: '5★', pity: pity, accent: GachaTokens.dark.fiveStar),
+        PityCard(
+          label: '5★',
+          rank: 5,
+          pity: pity,
+          accent: GachaTokens.dark.fiveStar,
+        ),
       ),
     );
-    // distance = 60. "暫無 5★" 應該不會出現（lastFiveStarAt is null but spec
+    // distance = 60. "暫無 5★" 應該不會出現（lastRecordAt is null but spec
     // says no-5★ branch — ensure 30/90 renders correctly).
     expect(find.text('30 / 90'), findsOneWidget);
   });
 
   testWidgets('beginner ended pool shows ended state', (tester) async {
-    final pity = const Pity(current: 20, threshold: 20, lastFiveStarAt: null);
+    final pity = const Pity(current: 20, threshold: 20, lastRecordAt: null);
     await tester.pumpWidget(
       wrap(
         PityCard(
           label: 'Beginner',
+          rank: 5,
           pity: pity,
           accent: GachaTokens.dark.fiveStar,
           isEndedPool: true,
@@ -58,12 +65,19 @@ void main() {
 
   testWidgets('renders value text across all phase boundaries', (tester) async {
     for (final p in [
-      const Pity(current: 60, threshold: 90, lastFiveStarAt: null), // 67%
-      const Pity(current: 75, threshold: 90, lastFiveStarAt: null), // 83%
-      const Pity(current: 90, threshold: 90, lastFiveStarAt: null), // 100%
+      const Pity(current: 60, threshold: 90, lastRecordAt: null), // 67%
+      const Pity(current: 75, threshold: 90, lastRecordAt: null), // 83%
+      const Pity(current: 90, threshold: 90, lastRecordAt: null), // 100%
     ]) {
       await tester.pumpWidget(
-        wrap(PityCard(label: '5★', pity: p, accent: GachaTokens.dark.fiveStar)),
+        wrap(
+          PityCard(
+            label: '5★',
+            rank: 5,
+            pity: p,
+            accent: GachaTokens.dark.fiveStar,
+          ),
+        ),
       );
       expect(find.text('${p.current} / ${p.threshold}'), findsOneWidget);
       await tester.pump(const Duration(milliseconds: 100));

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
-
-/// 卡池配色表,給 Timeline 系列 widget 共用。
+/// 卡池配色表，給 Timeline 系列 widget 共用。
+///
+/// 配色刻意跟稀有度 token（5★ 金、4★ 紫、3★ 藍、2★ 灰）保持距離，避免使用者
+/// 看到時間軸節點的顏色誤判為稀有度。每個 banner 一個獨特色相，dark / light
+/// 各一組對應飽和度。
 @immutable
 class BannerColors {
   const BannerColors({
@@ -11,18 +13,35 @@ class BannerColors {
     required this.chronicled,
     required this.standard,
     required this.beginner,
+    required this.odesEvent,
+    required this.odesStandard,
     required this.fallback,
   });
 
-  /// 從 [GachaTokens] 推導預設配色;
-  /// 邏輯與原 `FiveStarListColors` 一致。
-  factory BannerColors.fromTokens(GachaTokens tokens) => BannerColors(
-    character: tokens.character,
-    weapon: tokens.weapon,
-    chronicled: tokens.accentPrimary,
-    standard: tokens.threeStar,
-    beginner: tokens.textMuted,
-    fallback: tokens.textMuted,
+  /// 依當前 [Brightness] 取得 dark / light palette。
+  factory BannerColors.of(Brightness brightness) =>
+      brightness == Brightness.dark ? _dark : _light;
+
+  static const _dark = BannerColors(
+    character: Color(0xFF46B07A), // 森林綠
+    weapon: Color(0xFFE6736B), // 珊瑚紅
+    chronicled: Color(0xFFFF9F40), // 鮮橘
+    standard: Color(0xFF26A69A), // 青綠
+    beginner: Color(0xFF7A8AAD), // 灰藍
+    odesEvent: Color(0xFFEC4899), // 桃紅
+    odesStandard: Color(0xFFB59574), // 棕褐
+    fallback: Color(0xFF8A92A6), // 中性
+  );
+
+  static const _light = BannerColors(
+    character: Color(0xFF2E7D32),
+    weapon: Color(0xFFC62828),
+    chronicled: Color(0xFFE07B22),
+    standard: Color(0xFF00897B),
+    beginner: Color(0xFF5A6680),
+    odesEvent: Color(0xFFC2185B),
+    odesStandard: Color(0xFF7A5F40),
+    fallback: Color(0xFF6A7080),
   );
 
   final Color character;
@@ -30,6 +49,8 @@ class BannerColors {
   final Color chronicled;
   final Color standard;
   final Color beginner;
+  final Color odesEvent;
+  final Color odesStandard;
   final Color fallback;
 
   Color colorFor(String gachaType) => switch (gachaType) {
@@ -38,6 +59,8 @@ class BannerColors {
     '500' => chronicled,
     '200' => standard,
     '100' => beginner,
+    '2000' => odesEvent,
+    '1000' => odesStandard,
     _ => fallback,
   };
 }

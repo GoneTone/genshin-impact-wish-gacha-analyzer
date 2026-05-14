@@ -20,12 +20,18 @@ class TimelineVertical extends StatelessWidget {
     super.key,
     required this.entries,
     required this.colors,
+    required this.targetRank,
     this.nowPulls,
     this.isAcrossBanners = false,
   });
 
   final List<TimelineEntry> entries;
   final BannerColors colors;
+
+  /// 主要顯示稀有度（5 或 4）。用於「暫無 N★ 紀錄」、「距上次 N★ X 抽」等文案。
+  /// 跨卡池且 banner 各自主稀有度不同（頌願綜合）時，傳入「最具代表性的那個」
+  /// （目前以 types.first.primaryPity.rank 為準）。
+  final int targetRank;
   final int? nowPulls;
   final bool isAcrossBanners;
 
@@ -54,7 +60,7 @@ class TimelineVertical extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
           child: Center(
             child: Text(
-              l.timelineNoRecords,
+              l.timelineNoRecordsForRank(targetRank),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: tokens.textMuted,
               ),
@@ -91,6 +97,7 @@ class TimelineVertical extends StatelessWidget {
               if (nowPulls != null)
                 _NowRow(
                   nowPulls: nowPulls!,
+                  targetRank: targetRank,
                   isAcrossBanners: isAcrossBanners,
                   tokens: tokens,
                 ),
@@ -133,8 +140,11 @@ class _EntryRow extends StatelessWidget {
         orElse: () => GachaType(
           gachaType: gachaType,
           nameKey: gachaType,
-          fiveStarPity: 90,
-          fourStarPity: 10,
+          category: GachaCategory.wish,
+          pities: const [
+            PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar'),
+            PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar'),
+          ],
         ),
       )
       .resolveName(l);
@@ -175,36 +185,51 @@ class _EntryRow extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
           ),
-          // 節點圓
-          SizedBox(
-            width: _haloSize,
-            child: Center(
-              child: _Node(color: accent, tokens: tokens),
+          // 節點圓 (tooltip 目標 = halo 大小，會顯示在節點正上方)
+          Tooltip(
+            message: entry.name,
+            preferBelow: false,
+            waitDuration: const Duration(milliseconds: 100),
+            child: SizedBox(
+              width: _haloSize,
+              child: Center(
+                child: _Node(color: accent, tokens: tokens),
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.m),
-          // 主內容
+          // 名稱 + meta (各自 tooltip，目標 = 文字本身寬度)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    entry.name,
-                    style: TextStyle(
-                      color: accent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  Tooltip(
+                    message: entry.name,
+                    preferBelow: false,
+                    waitDuration: const Duration(milliseconds: 100),
+                    child: Text(
+                      entry.name,
+                      style: TextStyle(
+                        color: accent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(
-                    '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
-                    style: TextStyle(
-                      color: tokens.textMuted,
-                      fontSize: 12,
-                      fontFeatures: const [FontFeature.tabularFigures()],
+                  Tooltip(
+                    message: entry.name,
+                    preferBelow: false,
+                    waitDuration: const Duration(milliseconds: 100),
+                    child: Text(
+                      '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
+                      style: TextStyle(
+                        color: tokens.textMuted,
+                        fontSize: 12,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
                     ),
                   ),
                 ],
@@ -220,11 +245,13 @@ class _EntryRow extends StatelessWidget {
 class _NowRow extends StatelessWidget {
   const _NowRow({
     required this.nowPulls,
+    required this.targetRank,
     required this.isAcrossBanners,
     required this.tokens,
   });
 
   final int nowPulls;
+  final int targetRank;
   final bool isAcrossBanners;
   final GachaTokens tokens;
 
@@ -232,8 +259,8 @@ class _NowRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final meta = isAcrossBanners
-        ? l.timelineNowSinceCrossPool(nowPulls)
-        : l.timelineNowSinceLast(nowPulls);
+        ? l.timelineNowSinceCrossPool(targetRank, nowPulls)
+        : l.timelineNowSinceLast(targetRank, nowPulls);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.m),
       child: Row(

@@ -1,19 +1,3 @@
-enum WishItemKind {
-  character,
-  weapon,
-  unknown;
-
-  static const _characterStrings = {'角色', 'Character', 'キャラクター', '캐릭터'};
-
-  static const _weaponStrings = {'武器', 'Weapon', '무기'};
-
-  static WishItemKind fromItemType(String itemType) {
-    if (_characterStrings.contains(itemType)) return WishItemKind.character;
-    if (_weaponStrings.contains(itemType)) return WishItemKind.weapon;
-    return WishItemKind.unknown;
-  }
-}
-
 class WishRecord {
   const WishRecord({
     required this.id,
@@ -21,7 +5,6 @@ class WishRecord {
     required this.gachaType,
     required this.name,
     required this.itemType,
-    required this.kind,
     required this.rankType,
     required this.time,
     required this.lang,
@@ -32,46 +15,50 @@ class WishRecord {
   final String gachaType;
   final String name;
   final String itemType;
-  final WishItemKind kind;
   final int rankType;
   final DateTime time;
   final String lang;
 
-  /// 從 hoyoverse getGachaLog API 回傳的 list 元素解析
-  factory WishRecord.fromApiJson(Map<String, dynamic> json) {
-    final lang = json['lang'] as String;
-    final itemType = json['item_type'] as String;
+  /// 從 hoyoverse getGachaLog / getBeyondGachaLog API 回傳的 list 元素解析。
+  ///
+  /// 兩個 endpoint 的 schema 不一致：
+  /// - 祈願 (getGachaLog): `name` / `gacha_type` / `lang`
+  /// - 頌願 (getBeyondGachaLog): `item_name` / `op_gacha_type`（值為 schedule 級
+  ///   ID 如 20021，跟我們查詢的 banner 級 gacha_type 2000/1000 不同）；無 `lang`
+  ///
+  /// 為了讓存檔 schema 對齊查詢的 banner（mergedBanners key 是 query 用的
+  /// gacha_type），這裡用呼叫端傳入的 [gachaType] 覆寫，不取回傳的 op_gacha_type。
+  factory WishRecord.fromApiJson(
+    Map<String, dynamic> json, {
+    required String gachaType,
+  }) {
     return WishRecord(
       id: json['id'] as String,
       uid: json['uid'] as String,
-      gachaType: json['gacha_type'] as String,
-      name: json['name'] as String,
-      itemType: itemType,
-      kind: WishItemKind.fromItemType(itemType),
+      gachaType: gachaType,
+      name: (json['name'] ?? json['item_name']) as String,
+      itemType: json['item_type'] as String,
       rankType: int.parse(json['rank_type'] as String),
       time: DateTime.parse((json['time'] as String).replaceFirst(' ', 'T')),
-      lang: lang,
+      lang: (json['lang'] as String?) ?? '',
     );
   }
 
-  /// 從本地存檔的 JSON 還原（kind 重新推導，不從 JSON 讀）
+  /// 從本地存檔的 JSON 還原
   factory WishRecord.fromStorageJson(Map<String, dynamic> json) {
-    final lang = json['lang'] as String;
-    final itemType = json['item_type'] as String;
     return WishRecord(
       id: json['id'] as String,
       uid: json['uid'] as String,
       gachaType: json['gacha_type'] as String,
       name: json['name'] as String,
-      itemType: itemType,
-      kind: WishItemKind.fromItemType(itemType),
+      itemType: json['item_type'] as String,
       rankType: json['rank_type'] as int,
       time: DateTime.parse((json['time'] as String).replaceFirst(' ', 'T')),
-      lang: lang,
+      lang: json['lang'] as String,
     );
   }
 
-  /// 寫入本地存檔（不存 kind，因為可從 itemType+lang 重新推導）
+  /// 寫入本地存檔
   Map<String, dynamic> toStorageJson() {
     final t = time;
     final timeStr =

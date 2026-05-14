@@ -72,6 +72,24 @@ class AppLocalizationsVi extends AppLocalizations {
   String get gachaTypeBeginner => '新手祈願';
 
   @override
+  String get gachaTypeOdesEvent => '活動頌願';
+
+  @override
+  String get gachaTypeOdesStandard => '常駐頌願';
+
+  @override
+  String get navOdesEvent => '活動頌願';
+
+  @override
+  String get navOdesStandard => '常駐頌願';
+
+  @override
+  String get navSectionWish => '祈願';
+
+  @override
+  String get navSectionOdes => '頌願';
+
+  @override
   String get footerNotSynced => '尚未同步';
 
   @override
@@ -137,6 +155,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get emptyNoFiltered => '沒有符合條件的紀錄';
 
   @override
+  String get emptyNoOdesRecords => '尚無頌願記錄';
+
+  @override
   String get statsTotal => '總抽數';
 
   @override
@@ -160,10 +181,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get statsNoData => '無資料';
 
   @override
-  String get kindCharacter => 'Nhân Vật';
+  String get statsThreeStarCount => '3★ 件數';
 
   @override
-  String get kindWeapon => 'Vũ Khí';
+  String get statsTwoStarCount => '2★ 件數';
 
   @override
   String get kindUnknown => '未知';
@@ -184,10 +205,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tableTotalIndex => '總抽數';
 
   @override
-  String get tableFiveStarPity => '保底內';
+  String get tableMainPity => '保底內';
 
   @override
-  String get tableFiveStarPityTooltip => '距上一次 5★ 的抽數';
+  String tableMainPityTooltip(int rank) {
+    return '距上一次 $rank★ 的抽數';
+  }
 
   @override
   String get sortDirectionDesc => '降序';
@@ -258,6 +281,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pageOverviewTitle => '綜合數據（全卡池合計）';
+
+  @override
+  String get pageOverviewWishSection => '祈願綜合';
+
+  @override
+  String get pageOverviewOdesSection => '頌願綜合';
 
   @override
   String get pageBannerRecordList => '紀錄列表';
@@ -337,6 +366,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pityFourStar => '4★ 保底';
 
   @override
+  String get pityThreeStar => '3★ 保底';
+
+  @override
   String pityCurrent(int current, int threshold) {
     return '$current / $threshold';
   }
@@ -355,13 +387,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pityGuaranteed => '保底中';
 
   @override
-  String get pityNoFiveStar => '暫無 5★';
+  String pityNoMainRarity(int rank) {
+    return '暫無 $rank★';
+  }
 
   @override
   String get pityBeginnerEnded => '已結束';
 
   @override
-  String get timelineNoRecords => '暫無 5★ 紀錄';
+  String timelineNoRecordsForRank(int rank) {
+    return '暫無 $rank★ 紀錄';
+  }
 
   @override
   String timelineSinceLast(int n) {
@@ -377,13 +413,13 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String timelineNowSinceLast(int n) {
-    return '距上次 5★ $n 抽';
+  String timelineNowSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
   }
 
   @override
-  String timelineNowSinceCrossPool(int n) {
-    return '從上次 5★ 至今 $n 抽';
+  String timelineNowSinceCrossPool(int rank, int n) {
+    return '從上次 $rank★ 至今 $n 抽';
   }
 
   @override
@@ -408,12 +444,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get filterKindAll => '全部類型';
-
-  @override
-  String get filterKindCharacter => '只看角色';
-
-  @override
-  String get filterKindWeapon => '只看武器';
 
   @override
   String get filterSearchHint => '搜尋名稱…';
@@ -560,16 +590,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get loadingBootstrap => '載入中…';
 
   @override
-  String timelineCountFiveStar(int n) {
-    return '5★ 時間軸 ($n)';
+  String timelineCountTopRarity(int rank, int n) {
+    return '$rank★ 時間軸 ($n)';
   }
 
   @override
-  String get bannerFiveStarCountTitle => '各卡池 5★ 件數';
+  String get bannerTopRarityCountTitle => '各卡池最高稀有度件數';
 
   @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '距上次 5★ $n 抽';
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
   }
 
   @override

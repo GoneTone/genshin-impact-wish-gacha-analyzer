@@ -9,7 +9,7 @@ void main() {
     addTearDown(container.dispose);
     final state = container.read(recordFilterProvider('301'));
     expect(state.filter.rarity, RarityFilter.all);
-    expect(state.filter.kind, KindFilter.all);
+    expect(state.filter.itemType, isNull);
     expect(state.filter.query, '');
     expect(state.sort, isNull);
   });

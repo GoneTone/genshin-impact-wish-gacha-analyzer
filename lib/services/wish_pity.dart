@@ -7,7 +7,7 @@ class Pity {
   const Pity({
     required this.current,
     required this.threshold,
-    required this.lastFiveStarAt,
+    required this.lastRecordAt,
   });
 
   /// 距上次符合 [computePity.rank] 的紀錄已抽幾抽。沒有則 = 總抽數。
@@ -16,8 +16,8 @@ class Pity {
   /// 該卡池的保底閾值。
   final int threshold;
 
-  /// 上次符合 rank 的紀錄時間（雖以 fiveStarAt 命名，4★ pity 也會放上次 4★ 時間）。
-  final DateTime? lastFiveStarAt;
+  /// 上次符合 rank 的紀錄時間。
+  final DateTime? lastRecordAt;
 
   double get progress {
     if (threshold <= 0) return 0;
@@ -46,5 +46,5 @@ Pity computePity(
     }
     current++;
   }
-  return Pity(current: current, threshold: threshold, lastFiveStarAt: lastAt);
+  return Pity(current: current, threshold: threshold, lastRecordAt: lastAt);
 }

@@ -33,6 +33,13 @@
   "gachaTypeChronicled": "集錄祈願",
   "gachaTypeStandard": "常駐祈願",
   "gachaTypeBeginner": "新手祈願",
+  "gachaTypeOdesEvent": "活動頌願",
+  "gachaTypeOdesStandard": "常駐頌願",
+
+  "navOdesEvent": "活動頌願",
+  "navOdesStandard": "常駐頌願",
+  "navSectionWish": "祈願",
+  "navSectionOdes": "頌願",
 
   "footerNotSynced": "尚未同步",
   "footerLastUpdated": "最後更新：{time}",
@@ -75,6 +82,7 @@
   "emptyNoSyncMessage": "點右上「更新資料」開始",
   "emptyNoRecords": "此卡池無紀錄",
   "emptyNoFiltered": "沒有符合條件的紀錄",
+  "emptyNoOdesRecords": "尚無頌願記錄",
 
   "statsTotal": "總抽數",
   "statsFiveStarCount": "5★ 件數",
@@ -86,9 +94,9 @@
   "statsRarityDistribution": "稀有度分布",
   "statsItemTypeDistribution": "類型分布",
   "statsNoData": "無資料",
+  "statsThreeStarCount": "3★ 件數",
+  "statsTwoStarCount": "2★ 件數",
 
-  "kindCharacter": "角色",
-  "kindWeapon": "武器",
   "kindUnknown": "未知",
 
   "tableTime": "時間",
@@ -96,8 +104,11 @@
   "tableKind": "類型",
   "tableRarity": "稀有度",
   "tableTotalIndex": "總抽數",
-  "tableFiveStarPity": "保底內",
-  "tableFiveStarPityTooltip": "距上一次 5★ 的抽數",
+  "tableMainPity": "保底內",
+  "tableMainPityTooltip": "距上一次 {rank}★ 的抽數",
+  "@tableMainPityTooltip": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "sortDirectionDesc": "降序",
   "sortDirectionAsc": "升序",
   "sortDirectionNone": "點擊排序",
@@ -139,6 +150,8 @@
   "errorNoRecords": "此帳號尚無任何卡池紀錄",
 
   "pageOverviewTitle": "綜合數據（全卡池合計）",
+  "pageOverviewWishSection": "祈願綜合",
+  "pageOverviewOdesSection": "頌願綜合",
   "pageBannerRecordList": "紀錄列表",
 
   "settingsTitle": "設定",
@@ -170,6 +183,7 @@
 
   "pityFiveStar": "5★ 保底",
   "pityFourStar": "4★ 保底",
+  "pityThreeStar": "3★ 保底",
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
@@ -186,10 +200,16 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "保底中",
-  "pityNoFiveStar": "暫無 5★",
+  "pityNoMainRarity": "暫無 {rank}★",
+  "@pityNoMainRarity": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "pityBeginnerEnded": "已結束",
 
-  "timelineNoRecords": "暫無 5★ 紀錄",
+  "timelineNoRecordsForRank": "暫無 {rank}★ 紀錄",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "timelineSinceLast": "{n} 抽",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
@@ -199,13 +219,19 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "距上次 5★ {n} 抽",
+  "timelineNowSinceLast": "距上次 {rank}★ {n} 抽",
   "@timelineNowSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
-  "timelineNowSinceCrossPool": "從上次 5★ 至今 {n} 抽",
+  "timelineNowSinceCrossPool": "從上次 {rank}★ 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
   "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {
@@ -222,8 +248,6 @@
   "filterRarityFiveStar": "只看 5★",
   "filterRarityFourStar": "只看 4★",
   "filterKindAll": "全部類型",
-  "filterKindCharacter": "只看角色",
-  "filterKindWeapon": "只看武器",
   "filterSearchHint": "搜尋名稱…",
   "filterClear": "清除篩選",
 
@@ -311,15 +335,21 @@
 
   "loadingBootstrap": "載入中…",
 
-  "timelineCountFiveStar": "5★ 時間軸 ({n})",
-  "@timelineCountFiveStar": {
-    "placeholders": { "n": { "type": "int" } }
+  "timelineCountTopRarity": "{rank}★ 時間軸 ({n})",
+  "@timelineCountTopRarity": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
-  "bannerFiveStarCountTitle": "各卡池 5★ 件數",
-  "bannerFiveStarPullsSinceLast": "距上次 5★ {n} 抽",
-  "@bannerFiveStarPullsSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+  "bannerTopRarityCountTitle": "各卡池最高稀有度件數",
+  "bannerTopRarityPullsSinceLast": "距上次 {rank}★ {n} 抽",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
   "updateTitle": "有新版本 {version} 可用",
