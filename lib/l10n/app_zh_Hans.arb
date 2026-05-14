@@ -21,6 +21,13 @@
   "gachaTypeChronicled": "集录祈愿",
   "gachaTypeStandard": "常驻祈愿",
   "gachaTypeBeginner": "新手祈愿",
+  "gachaTypeOdesEvent": "活动颂愿",
+  "gachaTypeOdesStandard": "常驻颂愿",
+
+  "navOdesEvent": "活动颂愿",
+  "navOdesStandard": "常驻颂愿",
+  "navSectionWish": "祈愿",
+  "navSectionOdes": "颂愿",
 
   "footerLastUpdated": "最后更新：{time}",
   "@footerLastUpdated": {
@@ -49,6 +56,7 @@
   "emptyNoSyncMessage": "点右上「更新数据」开始",
   "emptyNoRecords": "此卡池无记录",
   "emptyNoFiltered": "没有符合条件的记录",
+  "emptyNoOdesRecords": "暂无颂愿记录",
 
   "statsTotal": "总抽数",
   "statsFiveStarCount": "5★ 件数",
@@ -59,6 +67,8 @@
   },
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
+  "statsThreeStarCount": "3★ 件数",
+  "statsTwoStarCount": "2★ 件数",
 
 
   "tableTime": "时间",
@@ -103,6 +113,8 @@
   "errorNoRecords": "此账号尚无任何卡池记录",
 
   "pageOverviewTitle": "综合数据（全卡池合计）",
+  "pageOverviewWishSection": "祈愿综合",
+  "pageOverviewOdesSection": "颂愿综合",
   "pageBannerRecordList": "记录列表",
 
   "settingsTitle": "设置",
@@ -120,6 +132,7 @@
   },
   "settingsPlaceholderPhase2": "（即将推出）",
 
+  "pityThreeStar": "3★ 保底",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },
@@ -247,12 +260,15 @@
 
   "loadingBootstrap": "加载中…",
 
-  "timelineCountFiveStar": "5★ 时间轴 ({n})",
-  "@timelineCountFiveStar": {
-    "placeholders": { "n": { "type": "int" } }
+  "timelineCountTopRarity": "{rank}★ 时间轴 ({n})",
+  "@timelineCountTopRarity": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
-  "bannerFiveStarCountTitle": "各卡池 5★ 件数",
+  "bannerTopRarityCountTitle": "各卡池主稀有度件数",
   "@bannerFiveStarPullsSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },

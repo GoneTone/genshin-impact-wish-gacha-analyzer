@@ -47,9 +47,7 @@ Widget _wrap(Widget Function(BuildContext ctx, BannerColors colors) build) =>
     );
 
 void main() {
-  testWidgets('empty banners → still renders 5 banner name rows', (
-    tester,
-  ) async {
+  testWidgets('empty banners → renders one row per gachaType', (tester) async {
     await tester.pumpWidget(
       _wrap(
         (ctx, colors) => BannerFiveStarBars(banners: const {}, colors: colors),
@@ -61,12 +59,12 @@ void main() {
     for (final t in gachaTypes) {
       expect(find.text(t.resolveName(l)), findsOneWidget);
     }
-    // 5 row 中 4 個非新手池都顯示「暫無 5★」，新手池顯示「已結束」
-    expect(find.text(l.pityNoFiveStar), findsNWidgets(4));
+    // 除新手池 (100) 顯示「已結束」外，其餘所有池都顯示「暫無 5★」
+    expect(find.text(l.pityNoFiveStar), findsNWidgets(gachaTypes.length - 1));
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
-    // 件數全為 0；分隔點「·」出現 5 次
-    expect(find.text('0'), findsNWidgets(5));
-    expect(find.text('·'), findsNWidgets(5));
+    // 件數全為 0；分隔點「·」出現 N 次
+    expect(find.text('0'), findsNWidgets(gachaTypes.length));
+    expect(find.text('·'), findsNWidgets(gachaTypes.length));
   });
 
   testWidgets('renders 5★ count and "距上次 5★" subtitle correctly', (
@@ -127,8 +125,8 @@ void main() {
     // Beginner pool count = 1; subtitle still "已結束" (not "暫無 5★")
     expect(find.text('1'), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
-    // Other 4 pools still show "暫無 5★"
-    expect(find.text(l.pityNoFiveStar), findsNWidgets(4));
+    // 其他所有池仍顯示「暫無 5★」
+    expect(find.text(l.pityNoFiveStar), findsNWidgets(gachaTypes.length - 1));
   });
 
   testWidgets(
@@ -136,7 +134,7 @@ void main() {
     (tester) async {
       expect(
         gachaTypes.map((t) => t.gachaType).toList(),
-        const ['301', '302', '500', '200', '100'],
+        const ['301', '302', '500', '200', '100', '2000', '1000'],
         reason: 'test assumes gachaTypes order — update if order changes',
       );
       final t0 = DateTime(2025, 1, 1);
@@ -166,12 +164,12 @@ void main() {
             ),
           )
           .toList();
-      expect(fractions.length, 5);
+      expect(fractions.length, gachaTypes.length);
       expect(fractions[0].widthFactor, 1.0);
       expect(fractions[1].widthFactor, closeTo(0.25, 1e-6));
-      expect(fractions[2].widthFactor, 0.0);
-      expect(fractions[3].widthFactor, 0.0);
-      expect(fractions[4].widthFactor, 0.0);
+      for (var i = 2; i < fractions.length; i++) {
+        expect(fractions[i].widthFactor, 0.0);
+      }
     },
   );
 

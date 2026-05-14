@@ -25,6 +25,13 @@
   "gachaTypeChronicled": "Chronicled Wish",
   "gachaTypeStandard": "Standard Wish",
   "gachaTypeBeginner": "Beginners' Wish",
+  "gachaTypeOdesEvent": "Event Odes",
+  "gachaTypeOdesStandard": "Standard Odes",
+
+  "navOdesEvent": "Event Odes",
+  "navOdesStandard": "Standard Odes",
+  "navSectionWish": "Wish",
+  "navSectionOdes": "Odes",
 
   "footerNotSynced": "Not synced",
   "footerLastUpdated": "Last updated: {time}",
@@ -55,6 +62,7 @@
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
   "emptyNoRecords": "No records for this banner",
   "emptyNoFiltered": "No records match the current filter",
+  "emptyNoOdesRecords": "No Odes records yet",
 
   "statsTotal": "Total pulls",
   "statsFiveStarCount": "5★ Count",
@@ -66,9 +74,9 @@
   "statsRarityDistribution": "Rarity Distribution",
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
+  "statsThreeStarCount": "3★ count",
+  "statsTwoStarCount": "2★ count",
 
-  "kindCharacter": "Character",
-  "kindWeapon": "Weapon",
   "kindUnknown": "Unknown",
 
   "tableTime": "Time",
@@ -119,6 +127,8 @@
   "errorNoRecords": "This account has no wish records yet",
 
   "pageOverviewTitle": "Overview (all banners)",
+  "pageOverviewWishSection": "Wish overview",
+  "pageOverviewOdesSection": "Odes overview",
   "pageBannerRecordList": "Record list",
 
   "settingsTitle": "Settings",
@@ -140,6 +150,7 @@
 
   "pityFiveStar": "5★ pity",
   "pityFourStar": "4★ pity",
+  "pityThreeStar": "3★ pity",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },
@@ -191,8 +202,6 @@
   "filterRarityFiveStar": "5★ only",
   "filterRarityFourStar": "4★ only",
   "filterKindAll": "All kinds",
-  "filterKindCharacter": "Characters only",
-  "filterKindWeapon": "Weapons only",
   "filterSearchHint": "Search name…",
   "filterClear": "Clear filters",
 
@@ -280,12 +289,15 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineCountFiveStar": "5★ Timeline ({n})",
-  "@timelineCountFiveStar": {
-    "placeholders": { "n": { "type": "int" } }
+  "timelineCountTopRarity": "{rank}★ timeline ({n})",
+  "@timelineCountTopRarity": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
-  "bannerFiveStarCountTitle": "5★ count per banner",
+  "bannerTopRarityCountTitle": "Top-rarity count per banner",
   "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★",
   "@bannerFiveStarPullsSinceLast": {
     "placeholders": { "n": { "type": "int" } }

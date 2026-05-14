@@ -217,7 +217,7 @@ class BannerPage extends ConsumerWidget {
                   SizedBox(
                     width: tileWidth,
                     child: ChartCard(
-                      title: l.timelineCountFiveStar(stats.fiveStarCount),
+                      title: l.timelineCountTopRarity(5, stats.fiveStarCount),
                       icon: Icons.timeline,
                       chart: TimelineHorizontal(
                         entries: buildTimelineEntries(records),

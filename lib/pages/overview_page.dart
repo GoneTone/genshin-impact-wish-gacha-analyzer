@@ -195,7 +195,7 @@ class OverviewPage extends ConsumerWidget {
 
           // 各卡池 5★ 件數（佔整行，因需足夠寬度容納 5 條水平 bar）
           ChartCard(
-            title: l.bannerFiveStarCountTitle,
+            title: l.bannerTopRarityCountTitle,
             icon: Icons.bar_chart,
             height: null,
             chart: BannerFiveStarBars(
@@ -207,7 +207,7 @@ class OverviewPage extends ConsumerWidget {
           const SizedBox(height: AppSpacing.xl),
           InlineSectionTitle(
             icon: Icons.timeline,
-            title: l.timelineCountFiveStar(timelineEntries.length),
+            title: l.timelineCountTopRarity(5, timelineEntries.length),
           ),
           const SizedBox(height: AppSpacing.s),
           TimelineVertical(

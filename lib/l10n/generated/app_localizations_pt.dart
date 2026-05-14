@@ -72,6 +72,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get gachaTypeBeginner => '新手祈願';
 
   @override
+  String get gachaTypeOdesEvent => '活動頌願';
+
+  @override
+  String get gachaTypeOdesStandard => '常駐頌願';
+
+  @override
+  String get navOdesEvent => '活動頌願';
+
+  @override
+  String get navOdesStandard => '常駐頌願';
+
+  @override
+  String get navSectionWish => '祈願';
+
+  @override
+  String get navSectionOdes => '頌願';
+
+  @override
   String get footerNotSynced => '尚未同步';
 
   @override
@@ -173,6 +191,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get emptyNoFiltered => '沒有符合條件的紀錄';
 
   @override
+  String get emptyNoOdesRecords => '尚無頌願記錄';
+
+  @override
   String get statsTotal => '總抽數';
 
   @override
@@ -196,10 +217,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statsNoData => '無資料';
 
   @override
-  String get kindCharacter => 'O personangem';
+  String get statsThreeStarCount => '3★ 件數';
 
   @override
-  String get kindWeapon => 'A arma';
+  String get statsTwoStarCount => '2★ 件數';
 
   @override
   String get kindUnknown => '未知';
@@ -296,6 +317,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pageOverviewTitle => '綜合數據（全卡池合計）';
 
   @override
+  String get pageOverviewWishSection => '祈願綜合';
+
+  @override
+  String get pageOverviewOdesSection => '頌願綜合';
+
+  @override
   String get pageBannerRecordList => '紀錄列表';
 
   @override
@@ -373,6 +400,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pityFourStar => '4★ 保底';
 
   @override
+  String get pityThreeStar => '3★ 保底';
+
+  @override
   String pityCurrent(int current, int threshold) {
     return '$current / $threshold';
   }
@@ -444,12 +474,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get filterKindAll => '全部類型';
-
-  @override
-  String get filterKindCharacter => '只看角色';
-
-  @override
-  String get filterKindWeapon => '只看武器';
 
   @override
   String get filterSearchHint => '搜尋名稱…';
@@ -596,12 +620,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loadingBootstrap => '載入中…';
 
   @override
-  String timelineCountFiveStar(int n) {
-    return '5★ 時間軸 ($n)';
+  String timelineCountTopRarity(int rank, int n) {
+    return '$rank★ 時間軸 ($n)';
   }
 
   @override
-  String get bannerFiveStarCountTitle => '各卡池 5★ 件數';
+  String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
 
   @override
   String bannerFiveStarPullsSinceLast(int n) {

@@ -47,5 +47,42 @@ void main() {
       final beginner = gachaTypes.firstWhere((t) => t.gachaType == '100');
       expect(beginner.primaryPity.threshold, 20);
     });
+
+    test('2 個頌願 type 是 odes category', () {
+      const odesTypes = {'2000', '1000'};
+      for (final t in gachaTypes) {
+        if (odesTypes.contains(t.gachaType)) {
+          expect(t.category, GachaCategory.odes);
+        }
+      }
+    });
+
+    test('活動頌願 (2000): 5★ 70 / 4★ 10', () {
+      final t = gachaTypes.firstWhere((g) => g.gachaType == '2000');
+      expect(t.primaryPity.rank, 5);
+      expect(t.primaryPity.threshold, 70);
+      expect(t.secondaryPity!.rank, 4);
+      expect(t.secondaryPity!.threshold, 10);
+    });
+
+    test('常駐頌願 (1000): 4★ 70 / 3★ 5（無 5★）', () {
+      final t = gachaTypes.firstWhere((g) => g.gachaType == '1000');
+      expect(t.primaryPity.rank, 4);
+      expect(t.primaryPity.threshold, 70);
+      expect(t.secondaryPity!.rank, 3);
+      expect(t.secondaryPity!.threshold, 5);
+    });
+
+    test('總共 7 個 type (5 wish + 2 odes)', () {
+      expect(gachaTypes.length, 7);
+      expect(
+        gachaTypes.where((t) => t.category == GachaCategory.wish).length,
+        5,
+      );
+      expect(
+        gachaTypes.where((t) => t.category == GachaCategory.odes).length,
+        2,
+      );
+    });
   });
 }

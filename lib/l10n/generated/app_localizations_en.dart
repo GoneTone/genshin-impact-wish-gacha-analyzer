@@ -72,6 +72,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gachaTypeBeginner => 'Beginners\' Wish';
 
   @override
+  String get gachaTypeOdesEvent => 'Event Odes';
+
+  @override
+  String get gachaTypeOdesStandard => 'Standard Odes';
+
+  @override
+  String get navOdesEvent => 'Event Odes';
+
+  @override
+  String get navOdesStandard => 'Standard Odes';
+
+  @override
+  String get navSectionWish => 'Wish';
+
+  @override
+  String get navSectionOdes => 'Odes';
+
+  @override
   String get footerNotSynced => 'Not synced';
 
   @override
@@ -173,6 +191,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyNoFiltered => 'No records match the current filter';
 
   @override
+  String get emptyNoOdesRecords => 'No Odes records yet';
+
+  @override
   String get statsTotal => 'Total pulls';
 
   @override
@@ -196,10 +217,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsNoData => 'No data';
 
   @override
-  String get kindCharacter => 'Character';
+  String get statsThreeStarCount => '3★ count';
 
   @override
-  String get kindWeapon => 'Weapon';
+  String get statsTwoStarCount => '2★ count';
 
   @override
   String get kindUnknown => 'Unknown';
@@ -298,6 +319,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pageOverviewTitle => 'Overview (all banners)';
 
   @override
+  String get pageOverviewWishSection => 'Wish overview';
+
+  @override
+  String get pageOverviewOdesSection => 'Odes overview';
+
+  @override
   String get pageBannerRecordList => 'Record list';
 
   @override
@@ -377,6 +404,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pityFourStar => '4★ pity';
 
   @override
+  String get pityThreeStar => '3★ pity';
+
+  @override
   String pityCurrent(int current, int threshold) {
     return '$current / $threshold';
   }
@@ -448,12 +478,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterKindAll => 'All kinds';
-
-  @override
-  String get filterKindCharacter => 'Characters only';
-
-  @override
-  String get filterKindWeapon => 'Weapons only';
 
   @override
   String get filterSearchHint => 'Search name…';
@@ -603,12 +627,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingBootstrap => 'Loading…';
 
   @override
-  String timelineCountFiveStar(int n) {
-    return '5★ Timeline ($n)';
+  String timelineCountTopRarity(int rank, int n) {
+    return '$rank★ timeline ($n)';
   }
 
   @override
-  String get bannerFiveStarCountTitle => '5★ count per banner';
+  String get bannerTopRarityCountTitle => 'Top-rarity count per banner';
 
   @override
   String bannerFiveStarPullsSinceLast(int n) {

@@ -44,14 +44,19 @@ class GachaType {
     'gachaTypeChronicled' => l.gachaTypeChronicled,
     'gachaTypeStandard' => l.gachaTypeStandard,
     'gachaTypeBeginner' => l.gachaTypeBeginner,
+    'gachaTypeOdesEvent' => l.gachaTypeOdesEvent,
+    'gachaTypeOdesStandard' => l.gachaTypeOdesStandard,
     _ => nameKey,
   };
 }
 
 const _pityFive90 = PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar');
 const _pityFive80 = PityRule(rank: 5, threshold: 80, labelKey: 'pityFiveStar');
+const _pityFive70 = PityRule(rank: 5, threshold: 70, labelKey: 'pityFiveStar');
 const _pityFive20 = PityRule(rank: 5, threshold: 20, labelKey: 'pityFiveStar');
+const _pityFour70 = PityRule(rank: 4, threshold: 70, labelKey: 'pityFourStar');
 const _pityFour10 = PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar');
+const _pityThree5 = PityRule(rank: 3, threshold: 5, labelKey: 'pityThreeStar');
 
 const gachaTypes = <GachaType>[
   GachaType(
@@ -83,5 +88,17 @@ const gachaTypes = <GachaType>[
     nameKey: 'gachaTypeBeginner',
     category: GachaCategory.wish,
     pities: [_pityFive20, _pityFour10],
+  ),
+  GachaType(
+    gachaType: '2000',
+    nameKey: 'gachaTypeOdesEvent',
+    category: GachaCategory.odes,
+    pities: [_pityFive70, _pityFour10],
+  ),
+  GachaType(
+    gachaType: '1000',
+    nameKey: 'gachaTypeOdesStandard',
+    category: GachaCategory.odes,
+    pities: [_pityFour70, _pityThree5],
   ),
 ];
