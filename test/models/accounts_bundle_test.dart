@@ -9,7 +9,6 @@ WishRecord _r(String id, {String uid = '1'}) => WishRecord(
   gachaType: '301',
   name: '夜蘭',
   itemType: '角色',
-  kind: WishItemKind.character,
   rankType: 5,
   time: DateTime.utc(2025, 4, 1, 14, 23),
   lang: 'zh-tw',

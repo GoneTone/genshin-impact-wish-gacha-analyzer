@@ -32,8 +32,8 @@ List<DistributionEntry> rarityDistributionEntries(
     DistributionEntry(
       color: tokens.threeStar,
       name: '3★',
-      count: stats.threeStarOrBelowCount,
-      rate: stats.threeStarOrBelowRate,
+      count: stats.threeStarCount + stats.twoStarCount,
+      rate: stats.threeStarRate + stats.twoStarRate,
     ),
   ];
 }
@@ -55,7 +55,7 @@ class RarityPie extends StatelessWidget {
     final sections = <PieChartSectionData>[
       _section(stats.fiveStarCount, tokens.fiveStar),
       _section(stats.fourStarCount, tokens.fourStar),
-      _section(stats.threeStarOrBelowCount, tokens.threeStar),
+      _section(stats.threeStarCount + stats.twoStarCount, tokens.threeStar),
     ].where((s) => s.value > 0).toList(growable: false);
     return PieChart(
       PieChartData(

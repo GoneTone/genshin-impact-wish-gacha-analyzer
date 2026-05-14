@@ -3,24 +3,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 
 void main() {
-  group('WishItemKind', () {
-    test('zh-tw 角色 → character', () {
-      expect(WishItemKind.fromItemType('角色'), WishItemKind.character);
-    });
-
-    test('zh-tw 武器 → weapon', () {
-      expect(WishItemKind.fromItemType('武器'), WishItemKind.weapon);
-    });
-
-    test('en Character → character', () {
-      expect(WishItemKind.fromItemType('Character'), WishItemKind.character);
-    });
-
-    test('未知字串 → unknown', () {
-      expect(WishItemKind.fromItemType('???'), WishItemKind.unknown);
-    });
-  });
-
   group('WishRecord.fromApiJson', () {
     test('解析典型 zh-tw API 回傳', () {
       final json = {
@@ -41,7 +23,6 @@ void main() {
       expect(record.gachaType, '200');
       expect(record.name, '討龍英傑譚');
       expect(record.itemType, '武器');
-      expect(record.kind, WishItemKind.weapon);
       expect(record.rankType, 3);
       expect(record.lang, 'zh-tw');
       expect(record.time, DateTime(2025, 9, 23, 21, 27, 37));
@@ -56,7 +37,6 @@ void main() {
         gachaType: '200',
         name: '討龍英傑譚',
         itemType: '武器',
-        kind: WishItemKind.weapon,
         rankType: 3,
         time: DateTime(2025, 9, 23, 21, 27, 37),
         lang: 'zh-tw',
@@ -70,7 +50,7 @@ void main() {
 
       final restored = WishRecord.fromStorageJson(json);
       expect(restored.id, original.id);
-      expect(restored.kind, original.kind);
+      expect(restored.itemType, original.itemType);
       expect(restored.time, original.time);
     });
   });
@@ -83,7 +63,6 @@ void main() {
         gachaType: '301',
         name: '雷電將軍',
         itemType: '角色',
-        kind: WishItemKind.character,
         rankType: 5,
         time: DateTime(2025, 9, 23, 21, 27, 37),
         lang: 'zh-tw',

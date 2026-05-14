@@ -9,7 +9,6 @@ WishRecord _r({required String id, required int rank, DateTime? time}) =>
       gachaType: '301',
       name: 'x',
       itemType: '角色',
-      kind: WishItemKind.character,
       rankType: rank,
       time: time ?? DateTime(2025, 1, int.parse(id)),
       lang: 'zh-tw',

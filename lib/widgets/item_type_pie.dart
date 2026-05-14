@@ -12,32 +12,30 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.d
 const double _kRingRadius = 75;
 const double _kCenterRadius = 40;
 
-const _unknownColor = Color(0xFF9E9E9E);
+List<Color> _itemTypePalette(GachaTokens t) => [
+  t.character,
+  t.weapon,
+  t.accentPrimary,
+  t.threeStar,
+  t.fourStar,
+  t.fiveStar,
+  t.textMuted,
+];
 
 List<DistributionEntry> itemTypeDistributionEntries(
   WishStats stats,
   GachaTokens tokens,
   AppLocalizations l,
 ) {
+  final palette = _itemTypePalette(tokens);
+  final sorted = stats.sortedItemTypes();
   return [
-    DistributionEntry(
-      color: tokens.character,
-      name: l.kindCharacter,
-      count: stats.characterCount,
-      rate: stats.characterRate,
-    ),
-    DistributionEntry(
-      color: tokens.weapon,
-      name: l.kindWeapon,
-      count: stats.weaponCount,
-      rate: stats.weaponRate,
-    ),
-    if (stats.unknownCount > 0)
+    for (final (i, e) in sorted.indexed)
       DistributionEntry(
-        color: _unknownColor,
-        name: l.kindUnknown,
-        count: stats.unknownCount,
-        rate: stats.total == 0 ? 0.0 : stats.unknownCount / stats.total,
+        color: palette[i % palette.length],
+        name: e.key.isEmpty ? l.kindUnknown : e.key,
+        count: e.value,
+        rate: stats.total == 0 ? 0.0 : e.value / stats.total,
       ),
   ];
 }
@@ -56,10 +54,15 @@ class ItemTypePie extends StatelessWidget {
         child: Text(l.statsNoData, style: TextStyle(color: tokens.textMuted)),
       );
     }
+    final palette = _itemTypePalette(tokens);
     final sections = <PieChartSectionData>[
-      _section(stats.characterCount, tokens.character),
-      _section(stats.weaponCount, tokens.weapon),
-      if (stats.unknownCount > 0) _section(stats.unknownCount, _unknownColor),
+      for (final (i, e) in stats.sortedItemTypes().indexed)
+        PieChartSectionData(
+          showTitle: false,
+          value: e.value.toDouble(),
+          color: palette[i % palette.length],
+          radius: _kRingRadius,
+        ),
     ].where((s) => s.value > 0).toList(growable: false);
     return PieChart(
       PieChartData(
@@ -72,11 +75,4 @@ class ItemTypePie extends StatelessWidget {
       curve: Curves.easeOut,
     );
   }
-
-  PieChartSectionData _section(int value, Color color) => PieChartSectionData(
-    showTitle: false,
-    value: value.toDouble(),
-    color: color,
-    radius: _kRingRadius,
-  );
 }

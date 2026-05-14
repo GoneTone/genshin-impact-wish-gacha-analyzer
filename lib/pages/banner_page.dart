@@ -93,6 +93,13 @@ class BannerPage extends ConsumerWidget {
     final allRows = buildRecordRows(records);
     final filtered = filterRecordRows(allRows, filterState.filter);
     final sorted = sortRecordRows(filtered, filterState.sort);
+    final availableItemTypes =
+        records
+            .map((r) => r.itemType)
+            .where((s) => s.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -232,6 +239,7 @@ class BannerPage extends ConsumerWidget {
           const SizedBox(height: AppSpacing.s),
           SearchFilterBar(
             state: filterState,
+            availableItemTypes: availableItemTypes,
             onFilterChanged: (f) =>
                 ref.read(recordFilterProvider(gachaType).notifier).setFilter(f),
             onClear: () =>

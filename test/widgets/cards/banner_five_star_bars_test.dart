@@ -22,7 +22,6 @@ WishRecord _r({
   gachaType: gachaType,
   name: name,
   itemType: itemType,
-  kind: WishItemKind.fromItemType(itemType),
   rankType: rank,
   time: time,
   lang: 'zh-tw',

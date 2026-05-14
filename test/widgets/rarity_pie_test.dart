@@ -10,10 +10,9 @@ void main() {
         total: 100,
         fiveStarCount: 1,
         fourStarCount: 9,
-        threeStarOrBelowCount: 90,
-        characterCount: 0,
-        weaponCount: 0,
-        unknownCount: 0,
+        threeStarCount: 90,
+        twoStarCount: 0,
+        byItemType: {},
       );
       final entries = rarityDistributionEntries(stats, GachaTokens.dark);
       expect(entries, hasLength(3));
@@ -27,15 +26,29 @@ void main() {
       expect(entries[2].count, 90);
     });
 
+    test('3★ slice 合併 2★ 計數', () {
+      const stats = WishStats(
+        total: 100,
+        fiveStarCount: 0,
+        fourStarCount: 0,
+        threeStarCount: 80,
+        twoStarCount: 20,
+        byItemType: {},
+      );
+      final entries = rarityDistributionEntries(stats, GachaTokens.dark);
+      expect(entries[2].name, '3★');
+      expect(entries[2].count, 100);
+      expect(entries[2].rate, closeTo(1.0, 1e-9));
+    });
+
     test('keeps zero-count entries (legend filters them itself)', () {
       const stats = WishStats(
         total: 0,
         fiveStarCount: 0,
         fourStarCount: 0,
-        threeStarOrBelowCount: 0,
-        characterCount: 0,
-        weaponCount: 0,
-        unknownCount: 0,
+        threeStarCount: 0,
+        twoStarCount: 0,
+        byItemType: {},
       );
       final entries = rarityDistributionEntries(stats, GachaTokens.dark);
       expect(entries, hasLength(3));

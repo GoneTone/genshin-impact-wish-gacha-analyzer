@@ -1,38 +1,38 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 
 enum RarityFilter { all, fiveStar, fourStar }
-
-enum KindFilter { all, character, weapon }
 
 @immutable
 class RecordFilter {
   const RecordFilter({
     this.rarity = RarityFilter.all,
-    this.kind = KindFilter.all,
+    this.itemType,
     this.query = '',
   });
 
   final RarityFilter rarity;
-  final KindFilter kind;
+  final String? itemType;
   final String query;
 
   bool get hasAny =>
-      rarity != RarityFilter.all ||
-      kind != KindFilter.all ||
-      query.trim().isNotEmpty;
+      rarity != RarityFilter.all || itemType != null || query.trim().isNotEmpty;
 
+  /// 用 sentinel 區分「不改 itemType」與「把 itemType 設為 null」。
   RecordFilter copyWith({
     RarityFilter? rarity,
-    KindFilter? kind,
+    Object? itemType = _sentinel,
     String? query,
   }) => RecordFilter(
     rarity: rarity ?? this.rarity,
-    kind: kind ?? this.kind,
+    itemType: identical(itemType, _sentinel)
+        ? this.itemType
+        : itemType as String?,
     query: query ?? this.query,
   );
+
+  static const _sentinel = Object();
 }
 
 enum SortColumn { time, name, kind, rarity, totalIndex, fiveStarPity }
@@ -63,13 +63,7 @@ List<RecordRow> filterRecordRows(List<RecordRow> rows, RecordFilter f) {
         final r = row.record;
         if (f.rarity == RarityFilter.fiveStar && r.rankType != 5) return false;
         if (f.rarity == RarityFilter.fourStar && r.rankType != 4) return false;
-        if (f.kind == KindFilter.character &&
-            r.kind != WishItemKind.character) {
-          return false;
-        }
-        if (f.kind == KindFilter.weapon && r.kind != WishItemKind.weapon) {
-          return false;
-        }
+        if (f.itemType != null && r.itemType != f.itemType) return false;
         if (q.isNotEmpty && !r.name.toLowerCase().contains(q)) return false;
         return true;
       })

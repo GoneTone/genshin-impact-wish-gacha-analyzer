@@ -26,7 +26,6 @@ void main() {
     gachaType: '301',
     name: 'x',
     itemType: '角色',
-    kind: WishItemKind.character,
     rankType: 5,
     time: DateTime(2025, 1, 1),
     lang: 'zh-tw',

@@ -14,7 +14,6 @@ WishRecord _r({
   gachaType: gachaType,
   name: name,
   itemType: '角色',
-  kind: WishItemKind.character,
   rankType: rank,
   time: time,
   lang: 'zh-tw',

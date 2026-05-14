@@ -11,11 +11,15 @@ class SearchFilterBar extends StatefulWidget {
   const SearchFilterBar({
     super.key,
     required this.state,
+    required this.availableItemTypes,
     required this.onFilterChanged,
     required this.onClear,
   });
 
   final RecordFilterState state;
+
+  /// 當前 banner 出現過的 itemType 字串集合（已排序、去重），用來建構動態 dropdown。
+  final List<String> availableItemTypes;
   final ValueChanged<RecordFilter> onFilterChanged;
   final VoidCallback onClear;
 
@@ -102,26 +106,18 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
             ),
           ],
         ),
-        DropdownButton<KindFilter>(
-          value: widget.state.filter.kind,
+        DropdownButton<String?>(
+          value: widget.state.filter.itemType,
           onChanged: (v) {
-            if (v != null) {
-              widget.onFilterChanged(widget.state.filter.copyWith(kind: v));
-            }
+            widget.onFilterChanged(widget.state.filter.copyWith(itemType: v));
           },
           items: [
-            DropdownMenuItem(
-              value: KindFilter.all,
+            DropdownMenuItem<String?>(
+              value: null,
               child: Text(l.filterKindAll),
             ),
-            DropdownMenuItem(
-              value: KindFilter.character,
-              child: Text(l.filterKindCharacter),
-            ),
-            DropdownMenuItem(
-              value: KindFilter.weapon,
-              child: Text(l.filterKindWeapon),
-            ),
+            for (final t in widget.availableItemTypes)
+              DropdownMenuItem<String?>(value: t, child: Text(t)),
           ],
         ),
         if (widget.state.filter.hasAny)

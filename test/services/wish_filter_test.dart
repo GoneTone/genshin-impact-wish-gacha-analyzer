@@ -6,7 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
 WishRecord _r({
   required String id,
   required int rank,
-  required WishItemKind kind,
+  required String itemType,
   required String name,
   DateTime? time,
 }) => WishRecord(
@@ -14,8 +14,7 @@ WishRecord _r({
   uid: '1',
   gachaType: '301',
   name: name,
-  itemType: kind == WishItemKind.character ? '角色' : '武器',
-  kind: kind,
+  itemType: itemType,
   rankType: rank,
   time: time ?? DateTime(2025),
   lang: 'zh-tw',
@@ -28,39 +27,65 @@ void main() {
       _r(
         id: '5',
         rank: 5,
-        kind: WishItemKind.character,
+        itemType: '角色',
         name: '夜蘭',
         time: DateTime(2025, 5, 1),
       ),
       _r(
         id: '4',
         rank: 4,
-        kind: WishItemKind.weapon,
+        itemType: '武器',
         name: '匣裡龍吟',
         time: DateTime(2025, 4, 1),
       ),
       _r(
         id: '3',
         rank: 3,
-        kind: WishItemKind.weapon,
+        itemType: '武器',
         name: '黑纓槍',
         time: DateTime(2025, 3, 1),
       ),
       _r(
         id: '2',
         rank: 4,
-        kind: WishItemKind.character,
+        itemType: '角色',
         name: '煙緋',
         time: DateTime(2025, 2, 1),
       ),
       _r(
         id: '1',
         rank: 5,
-        kind: WishItemKind.weapon,
+        itemType: '武器',
         name: '若水',
         time: DateTime(2025, 1, 1),
       ),
     ];
+  });
+
+  group('RecordFilter', () {
+    test('預設 itemType 為 null，hasAny=false', () {
+      const f = RecordFilter();
+      expect(f.itemType, isNull);
+      expect(f.hasAny, isFalse);
+    });
+
+    test('itemType 非 null → hasAny=true', () {
+      const f = RecordFilter(itemType: '角色');
+      expect(f.hasAny, isTrue);
+    });
+
+    test('copyWith：itemType=null 真的把它清掉（用 sentinel 區分）', () {
+      const original = RecordFilter(itemType: '武器');
+      final cleared = original.copyWith(itemType: null);
+      expect(cleared.itemType, isNull);
+    });
+
+    test('copyWith：未傳 itemType 時保留原值', () {
+      const original = RecordFilter(itemType: '武器', query: 'x');
+      final updated = original.copyWith(query: 'y');
+      expect(updated.itemType, '武器');
+      expect(updated.query, 'y');
+    });
   });
 
   group('filterRecordRows', () {
@@ -72,15 +97,22 @@ void main() {
     test('5★ + 武器 → 只剩 1 row，且 totalIndex / pity 不變', () {
       final out = filterRecordRows(
         rows,
-        const RecordFilter(
-          rarity: RarityFilter.fiveStar,
-          kind: KindFilter.weapon,
-        ),
+        const RecordFilter(rarity: RarityFilter.fiveStar, itemType: '武器'),
       );
       expect(out.length, 1);
       expect(out.first.record.id, '1');
       // id '1' 是最舊一筆 → totalIndex = 1
       expect(out.first.totalIndex, 1);
+    });
+
+    test('itemType="角色" → 只剩 character 條目', () {
+      final out = filterRecordRows(rows, const RecordFilter(itemType: '角色'));
+      expect(out.map((r) => r.record.id).toSet(), {'5', '2'});
+    });
+
+    test('itemType=null → 不過濾 itemType', () {
+      final out = filterRecordRows(rows, const RecordFilter());
+      expect(out.length, rows.length);
     });
 
     test('搜尋 query 過濾 row 集', () {

@@ -5,61 +5,55 @@ class WishStats {
     required this.total,
     required this.fiveStarCount,
     required this.fourStarCount,
-    required this.threeStarOrBelowCount,
-    required this.characterCount,
-    required this.weaponCount,
-    required this.unknownCount,
+    required this.threeStarCount,
+    required this.twoStarCount,
+    required this.byItemType,
   });
 
   final int total;
   final int fiveStarCount;
   final int fourStarCount;
-  final int threeStarOrBelowCount;
-  final int characterCount;
-  final int weaponCount;
-  final int unknownCount;
+  final int threeStarCount;
+  final int twoStarCount;
+  final Map<String, int> byItemType;
 
   double _rate(int n) => total == 0 ? 0.0 : n / total;
 
   double get fiveStarRate => _rate(fiveStarCount);
   double get fourStarRate => _rate(fourStarCount);
-  double get threeStarOrBelowRate => _rate(threeStarOrBelowCount);
-  double get characterRate => _rate(characterCount);
-  double get weaponRate => _rate(weaponCount);
+  double get threeStarRate => _rate(threeStarCount);
+  double get twoStarRate => _rate(twoStarCount);
+
+  /// 依 count desc 排序的 entries（給 pie / legend 用）。
+  List<MapEntry<String, int>> sortedItemTypes() {
+    final list = byItemType.entries.toList();
+    list.sort((a, b) => b.value.compareTo(a.value));
+    return list;
+  }
 }
 
 WishStats computeWishStats(List<WishRecord> records) {
-  var five = 0, four = 0, three = 0;
-  var ch = 0, wp = 0, un = 0;
+  var five = 0, four = 0, three = 0, two = 0;
+  final byItemType = <String, int>{};
   for (final r in records) {
     switch (r.rankType) {
       case 5:
         five++;
-        break;
       case 4:
         four++;
-        break;
-      default:
+      case 3:
         three++;
+      case 2:
+        two++;
     }
-    switch (r.kind) {
-      case WishItemKind.character:
-        ch++;
-        break;
-      case WishItemKind.weapon:
-        wp++;
-        break;
-      case WishItemKind.unknown:
-        un++;
-    }
+    byItemType[r.itemType] = (byItemType[r.itemType] ?? 0) + 1;
   }
   return WishStats(
     total: records.length,
     fiveStarCount: five,
     fourStarCount: four,
-    threeStarOrBelowCount: three,
-    characterCount: ch,
-    weaponCount: wp,
-    unknownCount: un,
+    threeStarCount: three,
+    twoStarCount: two,
+    byItemType: byItemType,
   );
 }
