@@ -154,6 +154,10 @@
     "placeholders": { "rank": { "type": "int" } }
   },
   "pityBeginnerEnded": "已结束",
+  "pityAverageInterval": "平均 {n} 抽出",
+  "@pityAverageInterval": {
+    "placeholders": { "n": { "type": "String" } }
+  },
 
   "timelineNoRecordsForRank": "暂无 {rank}★ 记录",
   "@timelineNoRecordsForRank": {
