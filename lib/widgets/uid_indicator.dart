@@ -51,10 +51,12 @@ class UidIndicator extends ConsumerWidget {
                       : Colors.transparent,
                 ),
                 const SizedBox(width: AppSpacing.s),
-                AccountMenuLabel(
-                  uid: uid,
-                  alias: settings.uidAliases[uid],
-                  isActive: uid == activeUid,
+                Expanded(
+                  child: AccountMenuLabel(
+                    uid: uid,
+                    alias: settings.uidAliases[uid],
+                    isActive: uid == activeUid,
+                  ),
                 ),
               ],
             ),
@@ -149,7 +151,6 @@ class AccountMenuLabel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
                 child: Text(
