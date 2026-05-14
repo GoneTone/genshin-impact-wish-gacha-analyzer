@@ -29,7 +29,7 @@ void main() {
       expect(find.text('123456789'), findsOneWidget);
     });
 
-    testWidgets('無 alias:只渲染 UID 主標(沒有副標)', (tester) async {
+    testWidgets('無 alias:只渲染 UID(findsOneWidget 隱含無副標)', (tester) async {
       await tester.pumpWidget(
         _wrap(
           const AccountMenuLabel(
