@@ -41,10 +41,18 @@ class TimelineVertical extends StatefulWidget {
 
 class _TimelineVerticalState extends State<TimelineVertical> {
   static const int _initialPageSize = 10;
+  static const int _pageStep = 10;
 
-  // mutated by `_loadMore` in setState (added in next task); not final.
-  // ignore: prefer_final_fields
   int _visibleCount = _initialPageSize;
+
+  void _loadMore() {
+    setState(() {
+      _visibleCount = (_visibleCount + _pageStep).clamp(
+        0,
+        widget.entries.length,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,38 +107,62 @@ class _TimelineVerticalState extends State<TimelineVertical> {
       prevYearMonth = ym;
     }
 
+    final remaining = entries.length - effectiveCount;
+
     return container(
-      Stack(
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 背景軸線
-          Positioned(
-            left: _railLeft,
-            top: 0,
-            bottom: 0,
-            width: 2,
-            child: Container(color: tokens.textMuted.withValues(alpha: 0.3)),
-          ),
-          // 前景:Column of rows
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+          Stack(
             children: [
-              if (nowPulls != null)
-                _NowRow(
-                  nowPulls: nowPulls,
-                  targetRank: targetRank,
-                  isAcrossBanners: isAcrossBanners,
-                  tokens: tokens,
+              // 背景軸線
+              Positioned(
+                left: _railLeft,
+                top: 0,
+                bottom: 0,
+                width: 2,
+                child: Container(
+                  color: tokens.textMuted.withValues(alpha: 0.3),
                 ),
-              for (var i = 0; i < visibleEntries.length; i++)
-                _EntryRow(
-                  entry: visibleEntries[i],
-                  showMonthTag: monthFlag[i],
-                  colors: colors,
-                  tokens: tokens,
-                ),
+              ),
+              // 前景:Column of rows
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (nowPulls != null)
+                    _NowRow(
+                      nowPulls: nowPulls,
+                      targetRank: targetRank,
+                      isAcrossBanners: isAcrossBanners,
+                      tokens: tokens,
+                    ),
+                  for (var i = 0; i < visibleEntries.length; i++)
+                    _EntryRow(
+                      entry: visibleEntries[i],
+                      showMonthTag: monthFlag[i],
+                      colors: colors,
+                      tokens: tokens,
+                    ),
+                ],
+              ),
             ],
           ),
+          if (remaining > 0)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.s),
+              child: Center(
+                child: TextButton.icon(
+                  onPressed: _loadMore,
+                  icon: const Icon(Icons.expand_more),
+                  label: Text(l.timelineLoadMore(remaining)),
+                  style: TextButton.styleFrom(
+                    foregroundColor: tokens.textSecondary,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

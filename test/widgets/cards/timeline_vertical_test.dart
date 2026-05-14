@@ -149,4 +149,94 @@ void main() {
     expect(find.text('item-9'), findsOneWidget);
     expect(find.text('item-10'), findsNothing);
   });
+
+  testWidgets('entries=11 → load more button shows; tap reveals all', (
+    tester,
+  ) async {
+    final entries = List<TimelineEntry>.generate(
+      11,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+    );
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    final ctx = tester.element(find.byType(TimelineVertical));
+    final l = AppLocalizations.of(ctx)!;
+
+    // 預設 10 筆 + 按鈕（剩 1 筆）
+    expect(find.text('item-10'), findsNothing);
+    expect(find.text(l.timelineLoadMore(1)), findsOneWidget);
+
+    // 捲動到按鈕再點擊 → 11 筆全顯示，按鈕消失
+    await tester.ensureVisible(find.text(l.timelineLoadMore(1)));
+    await tester.tap(find.text(l.timelineLoadMore(1)));
+    await tester.pumpAndSettle();
+    expect(find.text('item-10'), findsOneWidget);
+    expect(find.byIcon(Icons.expand_more), findsNothing);
+  });
+
+  testWidgets('entries=10 → no load more button', (tester) async {
+    final entries = List<TimelineEntry>.generate(
+      10,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+    );
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.expand_more), findsNothing);
+  });
+
+  testWidgets('entries=25 → two taps fully expand', (tester) async {
+    final entries = List<TimelineEntry>.generate(
+      25,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+    );
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    final ctx = tester.element(find.byType(TimelineVertical));
+    final l = AppLocalizations.of(ctx)!;
+
+    // 預設 10 筆 + 按鈕（剩 15）
+    expect(find.text(l.timelineLoadMore(15)), findsOneWidget);
+
+    // 第一次點擊 → 20 筆 + 按鈕（剩 5）
+    await tester.ensureVisible(find.text(l.timelineLoadMore(15)));
+    await tester.tap(find.text(l.timelineLoadMore(15)));
+    await tester.pumpAndSettle();
+    expect(find.text('item-19'), findsOneWidget);
+    expect(find.text('item-20'), findsNothing);
+    expect(find.text(l.timelineLoadMore(5)), findsOneWidget);
+
+    // 第二次點擊 → 25 筆全顯示，按鈕消失
+    await tester.ensureVisible(find.text(l.timelineLoadMore(5)));
+    await tester.tap(find.text(l.timelineLoadMore(5)));
+    await tester.pumpAndSettle();
+    expect(find.text('item-24'), findsOneWidget);
+    expect(find.byIcon(Icons.expand_more), findsNothing);
+  });
 }
