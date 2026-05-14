@@ -36,7 +36,9 @@ fn is_target(uri: &Uri) -> bool {
         .host()
         .map(|h| h == "hoyoverse.com" || h.ends_with(".hoyoverse.com"))
         .unwrap_or(false);
-    let path_ok = uri.path().ends_with("/getGachaLog");
+    let path = uri.path();
+    let path_ok = path.ends_with("/getGachaLog")
+        || path.ends_with("/getBeyondGachaLog");
     host_ok && path_ok
 }
 
@@ -72,7 +74,7 @@ impl HttpHandler for LogHandler {
         let host = parts.uri.host().unwrap_or("").to_string();
         let timestamp_ms = chrono::Utc::now().timestamp_millis();
 
-        tracing::info!(target: "mitm", "hit getGachaLog: {} {}", method, url);
+        tracing::info!(target: "mitm", "hit gacha endpoint: {} {}", method, url);
 
         let _ = self.sink.add(CapturedRequest {
             method,
