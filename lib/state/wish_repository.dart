@@ -291,11 +291,15 @@ class WishRepository extends Notifier<WishState> {
     var totalNew = 0;
 
     for (final t in gachaTypes) {
+      final endpoint = switch (t.category) {
+        GachaCategory.wish => GachaEndpoint.wish,
+        GachaCategory.odes => GachaEndpoint.odes,
+      };
       try {
         final merged = await fetcher.fetchBannerWithMerge(
           url: gachaUrl,
           gachaType: t.gachaType,
-          endpoint: GachaEndpoint.wish,
+          endpoint: endpoint,
           existing: existing.banners[t.gachaType] ?? const [],
           primer: probe.primerPages[t.gachaType],
           client: client,
