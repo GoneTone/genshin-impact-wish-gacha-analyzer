@@ -217,10 +217,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsNoData => 'No data';
 
   @override
-  String get statsThreeStarCount => '3★ count';
+  String get statsThreeStarCount => '3★ Count';
 
   @override
-  String get statsTwoStarCount => '2★ count';
+  String get statsTwoStarCount => '2★ Count';
 
   @override
   String get kindUnknown => 'Unknown';
@@ -319,10 +319,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pageOverviewTitle => 'Overview (all banners)';
 
   @override
-  String get pageOverviewWishSection => 'Wish overview';
+  String get pageOverviewWishSection => 'Wish Overview';
 
   @override
-  String get pageOverviewOdesSection => 'Odes overview';
+  String get pageOverviewOdesSection => 'Odes Overview';
 
   @override
   String get pageBannerRecordList => 'Record list';
@@ -628,7 +628,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String timelineCountTopRarity(int rank, int n) {
-    return '$rank★ timeline ($n)';
+    return '$rank★ Timeline ($n)';
   }
 
   @override

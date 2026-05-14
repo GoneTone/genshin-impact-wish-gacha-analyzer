@@ -74,8 +74,8 @@
   "statsRarityDistribution": "Rarity Distribution",
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
-  "statsThreeStarCount": "3★ count",
-  "statsTwoStarCount": "2★ count",
+  "statsThreeStarCount": "3★ Count",
+  "statsTwoStarCount": "2★ Count",
 
   "kindUnknown": "Unknown",
 
@@ -127,8 +127,8 @@
   "errorNoRecords": "This account has no wish records yet",
 
   "pageOverviewTitle": "Overview (all banners)",
-  "pageOverviewWishSection": "Wish overview",
-  "pageOverviewOdesSection": "Odes overview",
+  "pageOverviewWishSection": "Wish Overview",
+  "pageOverviewOdesSection": "Odes Overview",
   "pageBannerRecordList": "Record list",
 
   "settingsTitle": "Settings",
@@ -289,7 +289,7 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineCountTopRarity": "{rank}★ timeline ({n})",
+  "timelineCountTopRarity": "{rank}★ Timeline ({n})",
   "@timelineCountTopRarity": {
     "placeholders": {
       "rank": { "type": "int" },
