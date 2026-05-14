@@ -1,4 +1,6 @@
 // lib/widgets/dialogs/new_version_dialog.dart
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_widget/markdown_widget.dart';
@@ -18,7 +20,10 @@ class NewVersionDialog extends ConsumerWidget {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final latest = releases.first;
-    final maxHeight = MediaQuery.of(context).size.height * 0.6;
+    final mq = MediaQuery.of(context);
+    // AlertDialog 預設左右 insetPadding 共 80,先扣掉再卡 720 上限,避免窄視窗撐爆。
+    final dialogWidth = math.min(720.0, mq.size.width - 80);
+    final maxHeight = mq.size.height * 0.6;
 
     return AlertDialog(
       title: Row(
@@ -31,7 +36,7 @@ class NewVersionDialog extends ConsumerWidget {
       content: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxHeight),
         child: SizedBox(
-          width: 560,
+          width: dialogWidth,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
