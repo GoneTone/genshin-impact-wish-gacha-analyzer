@@ -635,8 +635,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bannerTopRarityCountTitle => 'Top-rarity count per banner';
 
   @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '$n pulls since last 5★';
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '$n pulls since last $rank★';
   }
 
   @override

@@ -51,7 +51,10 @@ class BannerTopRarityBars extends StatelessWidget {
               threshold: type.primaryPity.threshold,
               rank: type.primaryPity.rank,
             ).current;
-            subtitle = l.bannerFiveStarPullsSinceLast(pity);
+            subtitle = l.bannerTopRarityPullsSinceLast(
+              type.primaryPity.rank,
+              pity,
+            );
           }
           return _BannerRow(
             name: type.resolveName(l),

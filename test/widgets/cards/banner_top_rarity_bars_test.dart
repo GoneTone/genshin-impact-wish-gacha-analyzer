@@ -112,7 +112,7 @@ void main() {
     )!;
     // count = 1 appears once (others are 0)
     expect(find.text('1'), findsOneWidget);
-    expect(find.text(l.bannerFiveStarPullsSinceLast(2)), findsOneWidget);
+    expect(find.text(l.bannerTopRarityPullsSinceLast(5, 2)), findsOneWidget);
   });
 
   testWidgets('100 (beginner) → subtitle always "已結束" even with 5★ records', (

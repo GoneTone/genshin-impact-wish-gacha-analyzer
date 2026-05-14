@@ -592,8 +592,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
 
   @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '距上次 5★ $n 抽';
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
   }
 
   @override
@@ -1127,6 +1127,11 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get bannerTopRarityCountTitle => '各卡池主稀有度件数';
+
+  @override
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
+  }
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -1717,8 +1722,8 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
 
   @override
-  String bannerFiveStarPullsSinceLast(int n) {
-    return '距上次 5★ $n 抽';
+  String bannerTopRarityPullsSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
   }
 
   @override

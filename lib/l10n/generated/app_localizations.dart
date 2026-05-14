@@ -1150,11 +1150,11 @@ abstract class AppLocalizations {
   /// **'各卡池主稀有度件數'**
   String get bannerTopRarityCountTitle;
 
-  /// No description provided for @bannerFiveStarPullsSinceLast.
+  /// No description provided for @bannerTopRarityPullsSinceLast.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上次 5★ {n} 抽'**
-  String bannerFiveStarPullsSinceLast(int n);
+  /// **'距上次 {rank}★ {n} 抽'**
+  String bannerTopRarityPullsSinceLast(int rank, int n);
 
   /// No description provided for @updateTitle.
   ///

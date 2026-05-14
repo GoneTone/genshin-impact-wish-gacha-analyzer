@@ -298,9 +298,12 @@
   },
 
   "bannerTopRarityCountTitle": "Top-rarity count per banner",
-  "bannerFiveStarPullsSinceLast": "{n} pulls since last 5★",
-  "@bannerFiveStarPullsSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+  "bannerTopRarityPullsSinceLast": "{n} pulls since last {rank}★",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
   "navContributors": "Contribution",

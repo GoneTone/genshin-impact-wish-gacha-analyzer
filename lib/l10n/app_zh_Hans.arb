@@ -269,8 +269,12 @@
   },
 
   "bannerTopRarityCountTitle": "各卡池主稀有度件数",
-  "@bannerFiveStarPullsSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+  "bannerTopRarityPullsSinceLast": "距上次 {rank}★ {n} 抽",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
 
   "navContributors": "贡献",
