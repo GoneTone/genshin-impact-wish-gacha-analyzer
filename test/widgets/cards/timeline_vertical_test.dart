@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 
@@ -23,7 +22,7 @@ Widget _wrap(Widget Function(BuildContext, BannerColors) build) => MaterialApp(
   home: Scaffold(
     body: Builder(
       builder: (ctx) {
-        final colors = BannerColors.fromTokens(Theme.of(ctx).gacha);
+        final colors = BannerColors.of(Theme.of(ctx).brightness);
         return SizedBox(width: 600, child: build(ctx, colors));
       },
     ),

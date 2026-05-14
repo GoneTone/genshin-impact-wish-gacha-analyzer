@@ -246,7 +246,7 @@ class BannerPage extends ConsumerWidget {
                           records,
                           targetRank: primary.rank,
                         ),
-                        colors: BannerColors.fromTokens(tokens),
+                        colors: BannerColors.of(Theme.of(context).brightness),
                         nowPulls: pullsSinceLastRanked(
                           records,
                           rank: primary.rank,

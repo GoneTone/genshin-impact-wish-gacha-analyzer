@@ -5,7 +5,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
 
@@ -38,7 +37,7 @@ Widget _wrap(Widget Function(BuildContext ctx, BannerColors colors) build) =>
           height: 280,
           child: Builder(
             builder: (ctx) {
-              final colors = BannerColors.fromTokens(Theme.of(ctx).gacha);
+              final colors = BannerColors.of(Theme.of(ctx).brightness);
               return build(ctx, colors);
             },
           ),
@@ -212,8 +211,8 @@ void main() {
         ),
       ),
     );
-    final colors = BannerColors.fromTokens(
-      Theme.of(tester.element(find.byType(BannerTopRarityBars))).gacha,
+    final colors = BannerColors.of(
+      Theme.of(tester.element(find.byType(BannerTopRarityBars))).brightness,
     );
     final containers = tester
         .widgetList<Container>(

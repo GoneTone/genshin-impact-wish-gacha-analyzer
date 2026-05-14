@@ -58,7 +58,7 @@ class OverviewPage extends ConsumerWidget {
     final odesAll = odesBanners.values.expand((r) => r).toList(growable: false);
     final wishStats = computeWishStats(wishAll);
     final odesStats = computeWishStats(odesAll);
-    final bannerColors = BannerColors.fromTokens(tokens);
+    final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
     final wishStatCards = <Widget>[
       StatCard(
