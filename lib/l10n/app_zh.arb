@@ -1,28 +1,3 @@
 {
-  "@@locale": "zh",
-
-  "navContributors": "贡献",
-  "contributorsTitle": "贡献名单",
-  "contributorsSubtitle": "感谢以下为此软件贡献的伙伴！",
-  "contributorsProjectLeader": "专案负责人",
-  "contributorsTesters": "测试人员",
-  "contributorsGithubContributors": "GitHub 贡献者",
-  "contributorsTranslationReviewer": "翻译审稿人",
-  "contributorsTranslatedLanguages": "已翻译语言",
-  "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
-  "contributorsProjectLicense": "专案许可证",
-
-  "relativeNow": "现在",
-  "relativeSecondsAgo": "{count} 秒前",
-  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMinutesAgo": "{count} 分钟前",
-  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeHoursAgo": "{count} 小时前",
-  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeDaysAgo": "{count} 天前",
-  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMonthsAgo": "{count} 个月前",
-  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeYearsAgo": "{count} 年前",
-  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } }
+  "@@locale": "zh"
 }
