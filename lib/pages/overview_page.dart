@@ -61,11 +61,11 @@ class OverviewPage extends ConsumerWidget {
     final odesStats = computeWishStats(odesAll);
     final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
-    final wish5StarAvg = crossBannerAverageInterval(
+    final wish5StarAvg = averageIntervalAcrossBanners(
       wishBanners,
       rankFor: (_) => 5,
     );
-    final wish4StarAvg = crossBannerAverageInterval(
+    final wish4StarAvg = averageIntervalAcrossBanners(
       wishBanners,
       rankFor: (_) => 4,
     );

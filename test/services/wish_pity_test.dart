@@ -243,9 +243,9 @@ void main() {
     });
   });
 
-  group('crossBannerAverageInterval', () {
+  group('averageIntervalAcrossBanners', () {
     test('全空 banners → null', () {
-      final result = crossBannerAverageInterval(const {
+      final result = averageIntervalAcrossBanners(const {
         '301': <WishRecord>[],
         '302': <WishRecord>[],
       }, rankFor: (_) => 5);
@@ -262,7 +262,7 @@ void main() {
           _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 2, 8 - i)),
         _r(id: 'hit-old', rank: 5, time: DateTime(2025, 2, 1)),
       ];
-      final result = crossBannerAverageInterval({
+      final result = averageIntervalAcrossBanners({
         '301': records,
       }, rankFor: (_) => 5);
       expect(result, 4.5);
@@ -284,7 +284,7 @@ void main() {
           _r(id: '302-mid-$i', rank: 4, time: DateTime(2025, 2, 8 - i)),
         _r(id: '302-hit-old', rank: 5, time: DateTime(2025, 2, 1)),
       ];
-      final result = crossBannerAverageInterval({
+      final result = averageIntervalAcrossBanners({
         '301': r301,
         '302': r302,
       }, rankFor: (_) => 5);
@@ -297,7 +297,7 @@ void main() {
           _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 1, 5 - i)),
         _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 1)),
       ];
-      final result = crossBannerAverageInterval({
+      final result = averageIntervalAcrossBanners({
         '301': const <WishRecord>[],
         '302': r302,
       }, rankFor: (_) => 5);
@@ -311,7 +311,7 @@ void main() {
         _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 1)),
       ];
       // 該 records 沒有 rank=3 命中
-      final result = crossBannerAverageInterval({
+      final result = averageIntervalAcrossBanners({
         '301': r301,
       }, rankFor: (_) => 3);
       expect(result, isNull);
