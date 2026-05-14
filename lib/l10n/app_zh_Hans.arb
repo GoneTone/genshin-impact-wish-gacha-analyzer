@@ -194,6 +194,11 @@
   "timelineScrollLeft": "往左滚动",
   "timelineScrollRight": "往右滚动",
 
+  "timelineLoadMore": "加载更多（剩余 {n} 项）",
+  "@timelineLoadMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
   "filterKindAll": "全部类型",
   "filterSearchHint": "搜索名称…",
   "filterClear": "清除筛选",

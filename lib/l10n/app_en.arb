@@ -217,6 +217,11 @@
   "timelineScrollLeft": "Scroll left",
   "timelineScrollRight": "Scroll right",
 
+  "timelineLoadMore": "Load more ({n} remaining)",
+  "@timelineLoadMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
   "filterRarityAll": "All rarities",
   "filterRarityFiveStar": "5★ only",
   "filterRarityFourStar": "4★ only",
