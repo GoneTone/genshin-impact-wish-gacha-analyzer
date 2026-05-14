@@ -11,6 +11,8 @@ class BannerColors {
     required this.chronicled,
     required this.standard,
     required this.beginner,
+    required this.odesEvent,
+    required this.odesStandard,
     required this.fallback,
   });
 
@@ -22,6 +24,8 @@ class BannerColors {
     chronicled: tokens.accentPrimary,
     standard: tokens.threeStar,
     beginner: tokens.textMuted,
+    odesEvent: tokens.odesEvent,
+    odesStandard: tokens.odesStandard,
     fallback: tokens.textMuted,
   );
 
@@ -30,6 +34,8 @@ class BannerColors {
   final Color chronicled;
   final Color standard;
   final Color beginner;
+  final Color odesEvent;
+  final Color odesStandard;
   final Color fallback;
 
   Color colorFor(String gachaType) => switch (gachaType) {
@@ -38,6 +44,8 @@ class BannerColors {
     '500' => chronicled,
     '200' => standard,
     '100' => beginner,
+    '2000' => odesEvent,
+    '1000' => odesStandard,
     _ => fallback,
   };
 }

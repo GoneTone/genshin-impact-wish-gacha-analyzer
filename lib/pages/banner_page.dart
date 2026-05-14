@@ -266,6 +266,8 @@ IconData _iconForGachaType(GachaType type) {
     'gachaTypeChronicled' => Icons.collections_bookmark_outlined,
     'gachaTypeStandard' => Icons.history,
     'gachaTypeBeginner' => Icons.school_outlined,
+    'gachaTypeOdesEvent' => Icons.auto_awesome,
+    'gachaTypeOdesStandard' => Icons.auto_awesome_motion,
     _ => Icons.casino_outlined,
   };
 }

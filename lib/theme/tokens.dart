@@ -44,6 +44,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     required this.twoStar,
     required this.character,
     required this.weapon,
+    required this.odesEvent,
+    required this.odesStandard,
     required this.accentPrimary,
     required this.stateDanger,
     required this.stateSuccess,
@@ -64,6 +66,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
   final Color twoStar;
   final Color character;
   final Color weapon;
+  final Color odesEvent;
+  final Color odesStandard;
   final Color accentPrimary;
   final Color stateDanger;
   final Color stateSuccess;
@@ -85,6 +89,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     twoStar: Color(0xFF6A7080),
     character: Color(0xFF46B07A),
     weapon: Color(0xFFE6736B),
+    odesEvent: Color(0xFFD9A3E6),
+    odesStandard: Color(0xFF8A92A6),
     accentPrimary: Color(0xFFE6C477),
     stateDanger: Color(0xFFE6736B),
     stateSuccess: Color(0xFF46B07A),
@@ -107,6 +113,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     twoStar: Color(0xFF8A92A6),
     character: Color(0xFF2E7D32),
     weapon: Color(0xFFC62828),
+    odesEvent: Color(0xFFAB47BC),
+    odesStandard: Color(0xFF6A7080),
     accentPrimary: Color(0xFFB8860B),
     stateDanger: Color(0xFFC62828),
     stateSuccess: Color(0xFF2E7D32),
@@ -129,6 +137,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     Color? twoStar,
     Color? character,
     Color? weapon,
+    Color? odesEvent,
+    Color? odesStandard,
     Color? accentPrimary,
     Color? stateDanger,
     Color? stateSuccess,
@@ -148,6 +158,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     twoStar: twoStar ?? this.twoStar,
     character: character ?? this.character,
     weapon: weapon ?? this.weapon,
+    odesEvent: odesEvent ?? this.odesEvent,
+    odesStandard: odesStandard ?? this.odesStandard,
     accentPrimary: accentPrimary ?? this.accentPrimary,
     stateDanger: stateDanger ?? this.stateDanger,
     stateSuccess: stateSuccess ?? this.stateSuccess,
@@ -176,6 +188,8 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
       twoStar: Color.lerp(twoStar, other.twoStar, t)!,
       character: Color.lerp(character, other.character, t)!,
       weapon: Color.lerp(weapon, other.weapon, t)!,
+      odesEvent: Color.lerp(odesEvent, other.odesEvent, t)!,
+      odesStandard: Color.lerp(odesStandard, other.odesStandard, t)!,
       accentPrimary: Color.lerp(accentPrimary, other.accentPrimary, t)!,
       stateDanger: Color.lerp(stateDanger, other.stateDanger, t)!,
       stateSuccess: Color.lerp(stateSuccess, other.stateSuccess, t)!,
