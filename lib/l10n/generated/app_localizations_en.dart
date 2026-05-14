@@ -241,10 +241,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tableTotalIndex => 'Total';
 
   @override
-  String get tableFiveStarPity => 'Pity';
+  String get tableMainPity => 'Pity';
 
   @override
-  String get tableFiveStarPityTooltip => 'Pulls since the last 5★';
+  String tableMainPityTooltip(int rank) {
+    return 'Pulls since the last $rank★';
+  }
 
   @override
   String get sortDirectionDesc => 'Descending';
@@ -425,13 +427,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pityGuaranteed => 'Guaranteed soon';
 
   @override
-  String get pityNoFiveStar => 'No 5★ yet';
+  String pityNoMainRarity(int rank) {
+    return 'No $rank★ yet';
+  }
 
   @override
   String get pityBeginnerEnded => 'Ended';
 
   @override
-  String get timelineNoRecords => 'No 5★ records';
+  String timelineNoRecordsForRank(int rank) {
+    return 'No $rank★ records';
+  }
 
   @override
   String timelineSinceLast(int n) {
@@ -447,13 +453,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String timelineNowSinceLast(int n) {
-    return '$n pulls since last 5★';
+  String timelineNowSinceLast(int rank, int n) {
+    return '$n pulls since last $rank★';
   }
 
   @override
-  String timelineNowSinceCrossPool(int n) {
-    return '$n pulls since last 5★ across banners';
+  String timelineNowSinceCrossPool(int rank, int n) {
+    return '$n pulls since last $rank★ across banners';
   }
 
   @override

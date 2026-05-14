@@ -44,7 +44,7 @@ class BannerTopRarityBars extends StatelessWidget {
           if (isEnded) {
             subtitle = l.pityBeginnerEnded;
           } else if (topCount == 0) {
-            subtitle = l.pityNoFiveStar;
+            subtitle = l.pityNoMainRarity(type.primaryPity.rank);
           } else {
             final pity = computePity(
               records,

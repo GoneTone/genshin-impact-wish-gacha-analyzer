@@ -34,14 +34,14 @@ void main() {
       expect(rows.map((r) => r.totalIndex).toList(), [5, 4, 3, 2, 1]);
     });
 
-    test('全無 5★ → fiveStarPityIndex == totalIndex', () {
+    test('全無 5★ → mainPityIndex == totalIndex', () {
       final records = [
         _r(id: '3', rank: 4),
         _r(id: '2', rank: 3),
         _r(id: '1', rank: 4),
       ];
       final rows = buildRecordRows(records);
-      expect(rows.map((r) => r.fiveStarPityIndex).toList(), [3, 2, 1]);
+      expect(rows.map((r) => r.mainPityIndex).toList(), [3, 2, 1]);
     });
 
     test('5★ 那一抽 = 抵達該 5★ 的累積值，下一抽從 1 重新累計', () {
@@ -58,18 +58,18 @@ void main() {
       final rows = buildRecordRows(records);
       // 以 id 對應驗證 pity
       final byId = {for (final r in rows) r.record.id: r};
-      expect(byId['1']!.fiveStarPityIndex, 1);
-      expect(byId['2']!.fiveStarPityIndex, 2);
-      expect(byId['3']!.fiveStarPityIndex, 3);
-      expect(byId['4']!.fiveStarPityIndex, 1);
-      expect(byId['5']!.fiveStarPityIndex, 2);
+      expect(byId['1']!.mainPityIndex, 1);
+      expect(byId['2']!.mainPityIndex, 2);
+      expect(byId['3']!.mainPityIndex, 3);
+      expect(byId['4']!.mainPityIndex, 1);
+      expect(byId['5']!.mainPityIndex, 2);
     });
 
     test('首抽即 5★ → 該抽 pity = 1', () {
       final records = [_r(id: '1', rank: 5)];
       final rows = buildRecordRows(records);
       expect(rows.first.totalIndex, 1);
-      expect(rows.first.fiveStarPityIndex, 1);
+      expect(rows.first.mainPityIndex, 1);
     });
   });
 }

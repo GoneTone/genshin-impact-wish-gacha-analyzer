@@ -40,7 +40,14 @@ void main() {
     ];
     final rows = buildRecordRows(records);
     await tester.pumpWidget(
-      _wrap(SortableTable(rows: rows, sort: null, onSortColumnTapped: (_) {})),
+      _wrap(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+      ),
     );
     expect(find.text('A'), findsOneWidget);
     expect(find.text('5★'), findsOneWidget);
@@ -59,7 +66,14 @@ void main() {
     );
     final rows = buildRecordRows(records);
     await tester.pumpWidget(
-      _wrap(SortableTable(rows: rows, sort: null, onSortColumnTapped: (_) {})),
+      _wrap(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+      ),
     );
     final dropdown = tester.widget<DropdownButton<int>>(
       find.byType(DropdownButton<int>),
@@ -77,6 +91,7 @@ void main() {
         SortableTable(
           rows: rows,
           sort: null,
+          mainRank: 5,
           onSortColumnTapped: (c) => tapped = c,
         ),
       ),
@@ -91,7 +106,7 @@ void main() {
     expect(tapped, SortColumn.totalIndex);
 
     await tester.tap(find.text('保底內'));
-    expect(tapped, SortColumn.fiveStarPity);
+    expect(tapped, SortColumn.mainPity);
   });
 
   testWidgets('當前排序欄顯示 arrow_downward；其他欄維持 unfold_more', (tester) async {
@@ -105,6 +120,7 @@ void main() {
             column: SortColumn.rarity,
             direction: SortDirection.desc,
           ),
+          mainRank: 5,
           onSortColumnTapped: (_) {},
         ),
       ),

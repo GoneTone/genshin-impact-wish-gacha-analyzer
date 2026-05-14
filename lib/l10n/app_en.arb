@@ -84,8 +84,11 @@
   "tableKind": "Type",
   "tableRarity": "Rarity",
   "tableTotalIndex": "Total",
-  "tableFiveStarPity": "Pity",
-  "tableFiveStarPityTooltip": "Pulls since the last 5★",
+  "tableMainPity": "Pity",
+  "tableMainPityTooltip": "Pulls since the last {rank}★",
+  "@tableMainPityTooltip": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "sortDirectionDesc": "Descending",
   "sortDirectionAsc": "Ascending",
   "sortDirectionNone": "Click to sort",
@@ -166,10 +169,16 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "Guaranteed soon",
-  "pityNoFiveStar": "No 5★ yet",
+  "pityNoMainRarity": "No {rank}★ yet",
+  "@pityNoMainRarity": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "pityBeginnerEnded": "Ended",
 
-  "timelineNoRecords": "No 5★ records",
+  "timelineNoRecordsForRank": "No {rank}★ records",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "timelineSinceLast": "{n} pulls",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
@@ -179,13 +188,19 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "{n} pulls since last 5★",
+  "timelineNowSinceLast": "{n} pulls since last {rank}★",
   "@timelineNowSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
-  "timelineNowSinceCrossPool": "{n} pulls since last 5★ across banners",
+  "timelineNowSinceCrossPool": "{n} pulls since last {rank}★ across banners",
   "@timelineNowSinceCrossPool": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
   "timelineMonthLabel": "{month} / {year}",
   "@timelineMonthLabel": {

@@ -472,17 +472,17 @@ abstract class AppLocalizations {
   /// **'總抽數'**
   String get tableTotalIndex;
 
-  /// No description provided for @tableFiveStarPity.
+  /// No description provided for @tableMainPity.
   ///
   /// In zh_Hant, this message translates to:
   /// **'保底內'**
-  String get tableFiveStarPity;
+  String get tableMainPity;
 
-  /// No description provided for @tableFiveStarPityTooltip.
+  /// No description provided for @tableMainPityTooltip.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上一次 5★ 的抽數'**
-  String get tableFiveStarPityTooltip;
+  /// **'距上一次 {rank}★ 的抽數'**
+  String tableMainPityTooltip(int rank);
 
   /// No description provided for @sortDirectionDesc.
   ///
@@ -796,11 +796,11 @@ abstract class AppLocalizations {
   /// **'保底中'**
   String get pityGuaranteed;
 
-  /// No description provided for @pityNoFiveStar.
+  /// No description provided for @pityNoMainRarity.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'暫無 5★'**
-  String get pityNoFiveStar;
+  /// **'暫無 {rank}★'**
+  String pityNoMainRarity(int rank);
 
   /// No description provided for @pityBeginnerEnded.
   ///
@@ -808,11 +808,11 @@ abstract class AppLocalizations {
   /// **'已結束'**
   String get pityBeginnerEnded;
 
-  /// No description provided for @timelineNoRecords.
+  /// No description provided for @timelineNoRecordsForRank.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'暫無 5★ 紀錄'**
-  String get timelineNoRecords;
+  /// **'暫無 {rank}★ 紀錄'**
+  String timelineNoRecordsForRank(int rank);
 
   /// No description provided for @timelineSinceLast.
   ///
@@ -835,14 +835,14 @@ abstract class AppLocalizations {
   /// No description provided for @timelineNowSinceLast.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'距上次 5★ {n} 抽'**
-  String timelineNowSinceLast(int n);
+  /// **'距上次 {rank}★ {n} 抽'**
+  String timelineNowSinceLast(int rank, int n);
 
   /// No description provided for @timelineNowSinceCrossPool.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'從上次 5★ 至今 {n} 抽'**
-  String timelineNowSinceCrossPool(int n);
+  /// **'從上次 {rank}★ 至今 {n} 抽'**
+  String timelineNowSinceCrossPool(int rank, int n);
 
   /// No description provided for @timelineMonthLabel.
   ///

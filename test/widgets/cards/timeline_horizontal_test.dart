@@ -38,13 +38,17 @@ void main() {
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: const [], colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: const [],
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
-    expect(find.text(l.timelineNoRecords), findsOneWidget);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsOneWidget);
   });
 
   testWidgets('renders one column per entry', (tester) async {
@@ -56,6 +60,7 @@ void main() {
             _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
           ],
           colors: colors,
+          targetRank: 5,
         ),
       ),
     );
@@ -72,6 +77,7 @@ void main() {
           entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
           colors: colors,
           nowPulls: 28,
+          targetRank: 5,
         ),
       ),
     );
@@ -87,15 +93,19 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: const [], colors: colors, nowPulls: 5),
+        (ctx, colors) => TimelineHorizontal(
+          entries: const [],
+          colors: colors,
+          nowPulls: 5,
+          targetRank: 5,
+        ),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
     expect(find.text(l.timelineNowLabel), findsOneWidget);
-    expect(find.text(l.timelineNoRecords), findsNothing);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
   });
 
   testWidgets('Now column appears leftmost (before entry columns)', (
@@ -107,6 +117,7 @@ void main() {
           entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
           colors: colors,
           nowPulls: 28,
+          targetRank: 5,
         ),
       ),
     );
@@ -131,7 +142,8 @@ void main() {
     ];
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+        (ctx, colors) =>
+            TimelineHorizontal(entries: entries, colors: colors, targetRank: 5),
       ),
     );
     final scrollableState = tester.state<ScrollableState>(
@@ -168,8 +180,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -180,8 +195,11 @@ void main() {
   testWidgets('overflow + offset=middle → both arrows visible', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -202,8 +220,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -230,6 +251,7 @@ void main() {
             _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
           ],
           colors: colors,
+          targetRank: 5,
         ),
       ),
     );
@@ -243,8 +265,11 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineHorizontal(entries: manyEntries(20), colors: colors),
+        (ctx, colors) => TimelineHorizontal(
+          entries: manyEntries(20),
+          colors: colors,
+          targetRank: 5,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -265,8 +290,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         _wrap(
-          (ctx, colors) =>
-              TimelineHorizontal(entries: manyEntries(20), colors: colors),
+          (ctx, colors) => TimelineHorizontal(
+            entries: manyEntries(20),
+            colors: colors,
+            targetRank: 5,
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -294,7 +322,8 @@ void main() {
     'entries shrink from overflow to non-overflow → arrows disappear',
     (tester) async {
       Widget makeWidget(List<TimelineEntry> entries) => _wrap(
-        (ctx, colors) => TimelineHorizontal(entries: entries, colors: colors),
+        (ctx, colors) =>
+            TimelineHorizontal(entries: entries, colors: colors, targetRank: 5),
       );
       await tester.pumpWidget(makeWidget(manyEntries(20)));
       await tester.pumpAndSettle();
@@ -317,8 +346,11 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         _wrap(
-          (ctx, colors) =>
-              TimelineHorizontal(entries: const [], colors: colors),
+          (ctx, colors) => TimelineHorizontal(
+            entries: const [],
+            colors: colors,
+            targetRank: 5,
+          ),
         ),
       );
       await tester.pumpAndSettle();

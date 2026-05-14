@@ -75,8 +75,11 @@
   "tableName": "名称",
   "tableKind": "类型",
   "tableTotalIndex": "总抽数",
-  "tableFiveStarPity": "保底内",
-  "tableFiveStarPityTooltip": "距上一次 5★ 的抽数",
+  "tableMainPity": "保底内",
+  "tableMainPityTooltip": "距上一次 {rank}★ 的抽数",
+  "@tableMainPityTooltip": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "sortDirectionNone": "点击排序",
 
   "progressPreparing": "准备中…",
@@ -146,10 +149,16 @@
   "@pityClose": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityNoFiveStar": "暂无 5★",
+  "pityNoMainRarity": "暂无 {rank}★",
+  "@pityNoMainRarity": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "pityBeginnerEnded": "已结束",
 
-  "timelineNoRecords": "暂无 5★ 记录",
+  "timelineNoRecordsForRank": "暂无 {rank}★ 记录",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
@@ -157,12 +166,19 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
+  "timelineNowSinceLast": "距上次 {rank}★ {n} 抽",
   "@timelineNowSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
-  "timelineNowSinceCrossPool": "从上次 5★ 至今 {n} 抽",
+  "timelineNowSinceCrossPool": "从上次 {rank}★ 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
   "@timelineMonthLabel": {
     "placeholders": {

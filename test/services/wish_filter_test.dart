@@ -196,7 +196,7 @@ void main() {
       final out = sortRecordRows(
         rows,
         const TableSort(
-          column: SortColumn.fiveStarPity,
+          column: SortColumn.mainPity,
           direction: SortDirection.asc,
         ),
       );

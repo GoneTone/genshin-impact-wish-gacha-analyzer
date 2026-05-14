@@ -35,7 +35,7 @@ class RecordFilter {
   static const _sentinel = Object();
 }
 
-enum SortColumn { time, name, kind, rarity, totalIndex, fiveStarPity }
+enum SortColumn { time, name, kind, rarity, totalIndex, mainPity }
 
 enum SortDirection { asc, desc }
 
@@ -87,8 +87,8 @@ List<RecordRow> sortRecordRows(List<RecordRow> rows, TableSort? sort) {
       cmp = (a, b) => a.record.rankType.compareTo(b.record.rankType);
     case SortColumn.totalIndex:
       cmp = (a, b) => a.totalIndex.compareTo(b.totalIndex);
-    case SortColumn.fiveStarPity:
-      cmp = (a, b) => a.fiveStarPityIndex.compareTo(b.fiveStarPityIndex);
+    case SortColumn.mainPity:
+      cmp = (a, b) => a.mainPityIndex.compareTo(b.mainPityIndex);
   }
   out.sort((a, b) {
     final primary = sort.direction == SortDirection.asc ? cmp(a, b) : cmp(b, a);

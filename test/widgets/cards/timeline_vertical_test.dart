@@ -33,13 +33,14 @@ void main() {
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) => TimelineVertical(entries: const [], colors: colors),
+        (ctx, colors) =>
+            TimelineVertical(entries: const [], colors: colors, targetRank: 5),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
-    expect(find.text(l.timelineNoRecords), findsOneWidget);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsOneWidget);
   });
 
   testWidgets('renders entries with month tag per month group', (tester) async {
@@ -52,6 +53,7 @@ void main() {
             _e('流浪者', '301', 74, DateTime(2025, 3, 1)),
           ],
           colors: colors,
+          targetRank: 5,
         ),
       ),
     );
@@ -72,6 +74,7 @@ void main() {
           (ctx, colors) => TimelineVertical(
             entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
             colors: colors,
+            targetRank: 5,
             nowPulls: 12,
             isAcrossBanners: true,
           ),
@@ -81,8 +84,8 @@ void main() {
         tester.element(find.byType(TimelineVertical)),
       )!;
       expect(find.text(l.timelineNowLabel), findsOneWidget);
-      expect(find.text(l.timelineNowSinceCrossPool(12)), findsOneWidget);
-      expect(find.text(l.timelineNowSinceLast(12)), findsNothing);
+      expect(find.text(l.timelineNowSinceCrossPool(5, 12)), findsOneWidget);
+      expect(find.text(l.timelineNowSinceLast(5, 12)), findsNothing);
     },
   );
 
@@ -94,6 +97,7 @@ void main() {
           (ctx, colors) => TimelineVertical(
             entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
             colors: colors,
+            targetRank: 5,
             nowPulls: 28,
           ),
         ),
@@ -101,7 +105,7 @@ void main() {
       final l = AppLocalizations.of(
         tester.element(find.byType(TimelineVertical)),
       )!;
-      expect(find.text(l.timelineNowSinceLast(28)), findsOneWidget);
+      expect(find.text(l.timelineNowSinceLast(5, 28)), findsOneWidget);
     },
   );
 
@@ -110,14 +114,18 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrap(
-        (ctx, colors) =>
-            TimelineVertical(entries: const [], colors: colors, nowPulls: 5),
+        (ctx, colors) => TimelineVertical(
+          entries: const [],
+          colors: colors,
+          targetRank: 5,
+          nowPulls: 5,
+        ),
       ),
     );
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
     expect(find.text(l.timelineNowLabel), findsOneWidget);
-    expect(find.text(l.timelineNoRecords), findsNothing);
+    expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
   });
 }

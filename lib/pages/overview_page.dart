@@ -330,6 +330,7 @@ class _OverviewSection extends StatelessWidget {
         TimelineVertical(
           entries: timelineEntries,
           colors: bannerColors,
+          targetRank: timelineRank,
           nowPulls: timelineNowPulls,
           isAcrossBanners: true,
         ),

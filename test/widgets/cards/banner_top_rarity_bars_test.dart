@@ -62,8 +62,13 @@ void main() {
     for (final t in gachaTypes) {
       expect(find.text(t.resolveName(l)), findsOneWidget);
     }
-    // 除新手池 (100) 顯示「已結束」外，其餘所有池都顯示「暫無 5★」
-    expect(find.text(l.pityNoFiveStar), findsNWidgets(gachaTypes.length - 1));
+    // 除新手池 (100) 顯示「已結束」、常駐頌願 (1000) 主稀有度為 4★ 顯示
+    // 「暫無 4★」外，其餘 5 池主稀有度為 5★ 顯示「暫無 5★」
+    final wishAndEventOdes = gachaTypes
+        .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
+        .length;
+    expect(find.text(l.pityNoMainRarity(5)), findsNWidgets(wishAndEventOdes));
+    expect(find.text(l.pityNoMainRarity(4)), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
     // 件數全為 0；分隔點「·」出現 N 次
     expect(find.text('0'), findsNWidgets(gachaTypes.length));
@@ -136,8 +141,12 @@ void main() {
     // Beginner pool count = 1; subtitle still "已結束" (not "暫無 5★")
     expect(find.text('1'), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
-    // 其他所有池仍顯示「暫無 5★」
-    expect(find.text(l.pityNoFiveStar), findsNWidgets(gachaTypes.length - 1));
+    // 其他主稀有度 5★ 的池仍顯示「暫無 5★」；常駐頌願 (1000) 主稀有度為 4★
+    final wishAndEventOdes = gachaTypes
+        .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
+        .length;
+    expect(find.text(l.pityNoMainRarity(5)), findsNWidgets(wishAndEventOdes));
+    expect(find.text(l.pityNoMainRarity(4)), findsOneWidget);
   });
 
   testWidgets('bar widthFactor = topCount / max(topCount across banners)', (

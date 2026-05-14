@@ -104,8 +104,11 @@
   "tableKind": "類型",
   "tableRarity": "稀有度",
   "tableTotalIndex": "總抽數",
-  "tableFiveStarPity": "保底內",
-  "tableFiveStarPityTooltip": "距上一次 5★ 的抽數",
+  "tableMainPity": "保底內",
+  "tableMainPityTooltip": "距上一次 {rank}★ 的抽數",
+  "@tableMainPityTooltip": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "sortDirectionDesc": "降序",
   "sortDirectionAsc": "升序",
   "sortDirectionNone": "點擊排序",
@@ -197,10 +200,16 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "保底中",
-  "pityNoFiveStar": "暫無 5★",
+  "pityNoMainRarity": "暫無 {rank}★",
+  "@pityNoMainRarity": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "pityBeginnerEnded": "已結束",
 
-  "timelineNoRecords": "暫無 5★ 紀錄",
+  "timelineNoRecordsForRank": "暫無 {rank}★ 紀錄",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "timelineSinceLast": "{n} 抽",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
@@ -210,13 +219,19 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "距上次 5★ {n} 抽",
+  "timelineNowSinceLast": "距上次 {rank}★ {n} 抽",
   "@timelineNowSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
-  "timelineNowSinceCrossPool": "從上次 5★ 至今 {n} 抽",
+  "timelineNowSinceCrossPool": "從上次 {rank}★ 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "rank": { "type": "int" },
+      "n": { "type": "int" }
+    }
   },
   "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {

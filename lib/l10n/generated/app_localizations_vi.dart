@@ -205,10 +205,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tableTotalIndex => '總抽數';
 
   @override
-  String get tableFiveStarPity => '保底內';
+  String get tableMainPity => '保底內';
 
   @override
-  String get tableFiveStarPityTooltip => '距上一次 5★ 的抽數';
+  String tableMainPityTooltip(int rank) {
+    return '距上一次 $rank★ 的抽數';
+  }
 
   @override
   String get sortDirectionDesc => '降序';
@@ -385,13 +387,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pityGuaranteed => '保底中';
 
   @override
-  String get pityNoFiveStar => '暫無 5★';
+  String pityNoMainRarity(int rank) {
+    return '暫無 $rank★';
+  }
 
   @override
   String get pityBeginnerEnded => '已結束';
 
   @override
-  String get timelineNoRecords => '暫無 5★ 紀錄';
+  String timelineNoRecordsForRank(int rank) {
+    return '暫無 $rank★ 紀錄';
+  }
 
   @override
   String timelineSinceLast(int n) {
@@ -407,13 +413,13 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String timelineNowSinceLast(int n) {
-    return '距上次 5★ $n 抽';
+  String timelineNowSinceLast(int rank, int n) {
+    return '距上次 $rank★ $n 抽';
   }
 
   @override
-  String timelineNowSinceCrossPool(int n) {
-    return '從上次 5★ 至今 $n 抽';
+  String timelineNowSinceCrossPool(int rank, int n) {
+    return '從上次 $rank★ 至今 $n 抽';
   }
 
   @override

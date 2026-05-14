@@ -54,11 +54,15 @@ class TimelineHorizontal extends StatefulWidget {
     super.key,
     required this.entries,
     required this.colors,
+    required this.targetRank,
     this.nowPulls,
   });
 
   final List<TimelineEntry> entries;
   final BannerColors colors;
+
+  /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案。
+  final int targetRank;
   final int? nowPulls;
 
   @override
@@ -124,7 +128,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
     if (widget.entries.isEmpty && widget.nowPulls == null) {
       return Center(
         child: Text(
-          l.timelineNoRecords,
+          l.timelineNoRecordsForRank(widget.targetRank),
           style: theme.textTheme.bodyMedium?.copyWith(color: tokens.textMuted),
         ),
       );

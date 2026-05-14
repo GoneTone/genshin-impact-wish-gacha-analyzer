@@ -8,12 +8,17 @@ class PityCard extends StatefulWidget {
   const PityCard({
     super.key,
     required this.label,
+    required this.rank,
     required this.pity,
     required this.accent,
     this.isEndedPool = false,
   });
 
   final String label;
+
+  /// 該 pity 對應的稀有度（5 / 4 / 3 / 2）。
+  /// 用來決定「暫無 N★」副文字裡的 N。
+  final int rank;
   final Pity pity;
   final Color accent;
 
@@ -92,6 +97,7 @@ class _PityCardState extends State<PityCard>
           _Subtitle(
             phase: phase,
             pity: p,
+            rank: widget.rank,
             isEndedPool: widget.isEndedPool,
             tokens: tokens,
             l: l,
@@ -172,12 +178,14 @@ class _Subtitle extends StatelessWidget {
   const _Subtitle({
     required this.phase,
     required this.pity,
+    required this.rank,
     required this.isEndedPool,
     required this.tokens,
     required this.l,
   });
   final _Phase phase;
   final Pity pity;
+  final int rank;
   final bool isEndedPool;
   final GachaTokens tokens;
   final AppLocalizations l;
@@ -191,8 +199,8 @@ class _Subtitle extends StatelessWidget {
       _Phase.guaranteed => (l.pityGuaranteed, tokens.stateWarning),
       _Phase.close => (l.pityClose(pity.distance), tokens.stateWarning),
       _Phase.normal =>
-        pity.lastFiveStarAt == null
-            ? (l.pityNoFiveStar, tokens.textMuted)
+        pity.lastRecordAt == null
+            ? (l.pityNoMainRarity(rank), tokens.textMuted)
             : (l.pityDistance(pity.distance), tokens.textMuted),
     };
 

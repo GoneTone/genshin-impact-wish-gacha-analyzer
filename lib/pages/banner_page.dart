@@ -96,7 +96,7 @@ class BannerPage extends ConsumerWidget {
     final isEndedPool = type.gachaType == '100';
 
     final filterState = ref.watch(recordFilterProvider(gachaType));
-    final allRows = buildRecordRows(records);
+    final allRows = buildRecordRows(records, mainRank: primary.rank);
     final filtered = filterRecordRows(allRows, filterState.filter);
     final sorted = sortRecordRows(filtered, filterState.sort);
     final availableItemTypes =
@@ -122,6 +122,7 @@ class BannerPage extends ConsumerWidget {
 
               final primaryCard = PityCard(
                 label: _pityLabel(primary.labelKey, l),
+                rank: primary.rank,
                 pity: primaryPityData,
                 accent: accentForRank(primary.rank, tokens),
                 isEndedPool: isEndedPool,
@@ -131,6 +132,7 @@ class BannerPage extends ConsumerWidget {
                   ? null
                   : PityCard(
                       label: _pityLabel(secondary.labelKey, l),
+                      rank: secondary.rank,
                       pity: secondaryPityData,
                       accent: accentForRank(secondary.rank, tokens),
                       isEndedPool: isEndedPool,
@@ -247,6 +249,7 @@ class BannerPage extends ConsumerWidget {
                           targetRank: primary.rank,
                         ),
                         colors: BannerColors.of(Theme.of(context).brightness),
+                        targetRank: primary.rank,
                         nowPulls: pullsSinceLastRanked(
                           records,
                           rank: primary.rank,
@@ -277,6 +280,7 @@ class BannerPage extends ConsumerWidget {
           SortableTable(
             rows: sorted,
             sort: filterState.sort,
+            mainRank: primary.rank,
             onSortColumnTapped: (col) => ref
                 .read(recordFilterProvider(gachaType).notifier)
                 .cycleSort(col),
