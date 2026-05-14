@@ -242,4 +242,79 @@ void main() {
       expect(p.averageInterval!.toStringAsFixed(2), '3.33');
     });
   });
+
+  group('crossBannerAverageInterval', () {
+    test('全空 banners → null', () {
+      final result = crossBannerAverageInterval(const {
+        '301': <WishRecord>[],
+        '302': <WishRecord>[],
+      }, rankFor: (_) => 5);
+      expect(result, isNull);
+    });
+
+    test('單卡池有命中 → 與 single-banner averageInterval 相同', () {
+      // '301': 未中×3, 5★, 未中×7, 5★ → completed=9, hits=2 → 4.5
+      final records = [
+        for (var i = 0; i < 3; i++)
+          _r(id: 'top-$i', rank: 4, time: DateTime(2025, 2, 12 - i)),
+        _r(id: 'hit-new', rank: 5, time: DateTime(2025, 2, 9)),
+        for (var i = 0; i < 7; i++)
+          _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 2, 8 - i)),
+        _r(id: 'hit-old', rank: 5, time: DateTime(2025, 2, 1)),
+      ];
+      final result = crossBannerAverageInterval({
+        '301': records,
+      }, rankFor: (_) => 5);
+      expect(result, 4.5);
+    });
+
+    test('多卡池合併分子分母 → (1+9)/(1+2)≈3.333', () {
+      // '301': 未中×4, 5★ → completed=1, hits=1
+      // '302': 未中×3, 5★, 未中×7, 5★ → completed=9, hits=2
+      final r301 = [
+        for (var i = 0; i < 4; i++)
+          _r(id: '301-mid-$i', rank: 4, time: DateTime(2025, 1, 5 - i)),
+        _r(id: '301-hit', rank: 5, time: DateTime(2025, 1, 1)),
+      ];
+      final r302 = [
+        for (var i = 0; i < 3; i++)
+          _r(id: '302-top-$i', rank: 4, time: DateTime(2025, 2, 12 - i)),
+        _r(id: '302-hit-new', rank: 5, time: DateTime(2025, 2, 9)),
+        for (var i = 0; i < 7; i++)
+          _r(id: '302-mid-$i', rank: 4, time: DateTime(2025, 2, 8 - i)),
+        _r(id: '302-hit-old', rank: 5, time: DateTime(2025, 2, 1)),
+      ];
+      final result = crossBannerAverageInterval({
+        '301': r301,
+        '302': r302,
+      }, rankFor: (_) => 5);
+      expect(result, closeTo(10 / 3, 1e-9));
+    });
+
+    test('空卡池被略過 → 只計入有資料的卡池', () {
+      final r302 = [
+        for (var i = 0; i < 4; i++)
+          _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 1, 5 - i)),
+        _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 1)),
+      ];
+      final result = crossBannerAverageInterval({
+        '301': const <WishRecord>[],
+        '302': r302,
+      }, rankFor: (_) => 5);
+      expect(result, 1.0);
+    });
+
+    test('rankFor 切換 rank → 無命中時回傳 null', () {
+      final r301 = [
+        for (var i = 0; i < 4; i++)
+          _r(id: 'mid-$i', rank: 4, time: DateTime(2025, 1, 5 - i)),
+        _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 1)),
+      ];
+      // 該 records 沒有 rank=3 命中
+      final result = crossBannerAverageInterval({
+        '301': r301,
+      }, rankFor: (_) => 3);
+      expect(result, isNull);
+    });
+  });
 }

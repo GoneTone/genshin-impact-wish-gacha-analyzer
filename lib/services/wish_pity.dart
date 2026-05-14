@@ -67,3 +67,21 @@ Pity computePity(
     hitCount: hitCount,
   );
 }
+
+/// 跨卡池合併平均:對每個卡池各自算 (records.length − current) 與 hitCount,
+/// 把分子分母分別累加再相除。與單卡池 [Pity.averageInterval] 語意一致,
+/// 每個卡池各算各的 `current`,不會把多個卡池「未命中當前 pity」合計進分子。
+double? crossBannerAverageInterval(
+  Map<String, List<WishRecord>> banners, {
+  required int Function(String gachaType) rankFor,
+}) {
+  var sumCompleted = 0;
+  var sumHits = 0;
+  for (final entry in banners.entries) {
+    // threshold: 0 — 跨卡池場景不需要 pity progress/distance,此參數被忽略。
+    final p = computePity(entry.value, threshold: 0, rank: rankFor(entry.key));
+    sumCompleted += entry.value.length - p.current;
+    sumHits += p.hitCount;
+  }
+  return sumHits > 0 ? sumCompleted / sumHits : null;
+}
