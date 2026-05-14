@@ -18,7 +18,6 @@ class UidIndicator extends ConsumerWidget {
     final notifier = ref.read(wishRepositoryProvider.notifier);
     final activeUid = state.activeUid;
     final l = AppLocalizations.of(context)!;
-    final tokens = Theme.of(context).gacha;
 
     final orderedUids = state.byUid.isEmpty
         ? const <String>[]
@@ -27,11 +26,6 @@ class UidIndicator extends ConsumerWidget {
             customOrder: settings.uidOrder,
             lastUpdatedOf: (u) => state.byUid[u]!.lastUpdated,
           );
-
-    String displayName(String uid) {
-      final alias = settings.uidAliases[uid];
-      return alias == null ? uid : '$alias ($uid)';
-    }
 
     return PopupMenuButton<String>(
       tooltip: l.uidSwitchTooltip,
@@ -47,6 +41,7 @@ class UidIndicator extends ConsumerWidget {
           PopupMenuItem<String>(
             value: uid,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   uid == activeUid ? Icons.check : Icons.radio_button_unchecked,
@@ -56,14 +51,11 @@ class UidIndicator extends ConsumerWidget {
                       : Colors.transparent,
                 ),
                 const SizedBox(width: AppSpacing.s),
-                Text(displayName(uid)),
-                if (uid == activeUid) ...[
-                  const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    l.uidActiveSuffix,
-                    style: TextStyle(fontSize: 11, color: tokens.textMuted),
-                  ),
-                ],
+                AccountMenuLabel(
+                  uid: uid,
+                  alias: settings.uidAliases[uid],
+                  isActive: uid == activeUid,
+                ),
               ],
             ),
           ),
@@ -81,14 +73,9 @@ class UidIndicator extends ConsumerWidget {
       ],
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.person_outline, size: 18),
-            const SizedBox(width: AppSpacing.xs),
-            Text(activeUid == null ? l.uidNotSynced : displayName(activeUid)),
-            const Icon(Icons.arrow_drop_down, size: 18),
-          ],
+        child: AccountTriggerLabel(
+          activeUid: activeUid,
+          alias: activeUid == null ? null : settings.uidAliases[activeUid],
         ),
       ),
     );
