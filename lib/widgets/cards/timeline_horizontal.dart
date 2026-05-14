@@ -258,23 +258,24 @@ class _EntryColumn extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Tooltip(
-            message: entry.name,
-            waitDuration: const Duration(milliseconds: 300),
-            child: Text(
-              entry.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: accent,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
+          Text(
+            entry.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: accent,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          _Node(color: accent, tokens: tokens),
+          Tooltip(
+            message: entry.name,
+            preferBelow: false,
+            waitDuration: const Duration(milliseconds: 100),
+            child: _Node(color: accent, tokens: tokens),
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             '${_formatShortDate(entry.time)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',

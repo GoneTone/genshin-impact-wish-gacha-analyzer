@@ -182,7 +182,12 @@ class _EntryRow extends StatelessWidget {
           SizedBox(
             width: _haloSize,
             child: Center(
-              child: _Node(color: accent, tokens: tokens),
+              child: Tooltip(
+                message: entry.name,
+                preferBelow: false,
+                waitDuration: const Duration(milliseconds: 100),
+                child: _Node(color: accent, tokens: tokens),
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.m),
@@ -193,16 +198,12 @@ class _EntryRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Tooltip(
-                    message: entry.name,
-                    waitDuration: const Duration(milliseconds: 300),
-                    child: Text(
-                      entry.name,
-                      style: TextStyle(
-                        color: accent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                  Text(
+                    entry.name,
+                    style: TextStyle(
+                      color: accent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 2),
