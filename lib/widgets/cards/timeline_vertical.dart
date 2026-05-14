@@ -45,6 +45,10 @@ class _TimelineVerticalState extends State<TimelineVertical> {
 
   int _visibleCount = _initialPageSize;
 
+  /// Dataset-change detection: resets [_visibleCount] when **both** length and
+  /// first-entry time differ. OR logic would be overly aggressive — appending
+  /// new records changes length but not firstTime, and should not reset the
+  /// user's expand state.
   @override
   void didUpdateWidget(TimelineVertical oldWidget) {
     super.didUpdateWidget(oldWidget);
