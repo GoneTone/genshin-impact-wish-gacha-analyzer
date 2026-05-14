@@ -32,6 +32,7 @@ Future<List<String>?> showAccountsPickerDialog({
 }) {
   return showDialog<List<String>>(
     context: context,
+    barrierDismissible: false,
     builder: (_) => _AccountsPickerDialog(
       title: title,
       confirmLabel: confirmLabel,
