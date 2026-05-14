@@ -130,6 +130,8 @@ class _Body extends StatelessWidget {
       'gachaTypeChronicled' => l.gachaTypeChronicled,
       'gachaTypeStandard' => l.gachaTypeStandard,
       'gachaTypeBeginner' => l.gachaTypeBeginner,
+      'gachaTypeOdesEvent' => l.gachaTypeOdesEvent,
+      'gachaTypeOdesStandard' => l.gachaTypeOdesStandard,
       _ => key,
     };
 

@@ -150,42 +150,36 @@ class WishFetcher {
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序
   bool _idGreater(String a, String b) => a.compareTo(b) > 0;
 
-  /// UID 探測：先掃所有 wish banner，若全部空白再掃所有 odes banner。
+  /// UID 探測：只掃 [url] 所對應的 endpoint 類別的 banner。
+  /// hoyoverse authkey 是 endpoint-scoped — 拿祈願 URL 去打 getBeyondGachaLog
+  /// 會被拒絕（retcode != 0），所以只能掃跟 captured endpoint 同類的 banner。
   /// 第一筆非空者回傳該 UID + 已累積的 primer pages。
   Future<UidProbeResult> probeUid({
     required GachaUrl url,
     required http.Client client,
   }) async {
+    final endpoint = url.endpoint;
+    final category = endpoint == GachaEndpoint.wish
+        ? GachaCategory.wish
+        : GachaCategory.odes;
     final primers = <String, FetchedPage>{};
 
-    Future<UidProbeResult?> tryCategory(GachaCategory cat) async {
-      final endpoint = switch (cat) {
-        GachaCategory.wish => GachaEndpoint.wish,
-        GachaCategory.odes => GachaEndpoint.odes,
-      };
-      for (final type in gachaTypes.where((t) => t.category == cat)) {
-        if (primers.isNotEmpty) {
-          await Future<void>.delayed(rateLimit);
-        }
-        final page = await fetchPage(
-          url.build(gachaType: type.gachaType, endId: '0', endpoint: endpoint),
-          client,
-        );
-        primers[type.gachaType] = page;
-        if (page.records.isNotEmpty) {
-          return UidProbeResult(
-            uid: page.records.first.uid,
-            primerPages: primers,
-          );
-        }
+    for (final type in gachaTypes.where((t) => t.category == category)) {
+      if (primers.isNotEmpty) {
+        await Future<void>.delayed(rateLimit);
       }
-      return null;
+      final page = await fetchPage(
+        url.build(gachaType: type.gachaType, endId: '0', endpoint: endpoint),
+        client,
+      );
+      primers[type.gachaType] = page;
+      if (page.records.isNotEmpty) {
+        return UidProbeResult(
+          uid: page.records.first.uid,
+          primerPages: primers,
+        );
+      }
     }
-
-    final wishHit = await tryCategory(GachaCategory.wish);
-    if (wishHit != null) return wishHit;
-    final odesHit = await tryCategory(GachaCategory.odes);
-    if (odesHit != null) return odesHit;
     return UidProbeResult(uid: null, primerPages: primers);
   }
 }
