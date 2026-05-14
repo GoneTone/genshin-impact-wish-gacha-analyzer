@@ -178,48 +178,50 @@ class _EntryRow extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
           ),
-          // 節點 + 主內容（共用 tooltip）
+          // 節點圓 (tooltip 目標 = halo 大小，會顯示在節點正上方)
+          Tooltip(
+            message: entry.name,
+            preferBelow: false,
+            waitDuration: const Duration(milliseconds: 100),
+            child: SizedBox(
+              width: _haloSize,
+              child: Center(
+                child: _Node(color: accent, tokens: tokens),
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.m),
+          // 名稱 + meta (各自 tooltip，目標 = 文字本身寬度)
           Expanded(
-            child: Tooltip(
-              message: entry.name,
-              preferBelow: false,
-              waitDuration: const Duration(milliseconds: 100),
-              child: Row(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: _haloSize,
-                    child: Center(
-                      child: _Node(color: accent, tokens: tokens),
+                  Tooltip(
+                    message: entry.name,
+                    preferBelow: false,
+                    waitDuration: const Duration(milliseconds: 100),
+                    child: Text(
+                      entry.name,
+                      style: TextStyle(
+                        color: accent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.m),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            entry.name,
-                            style: TextStyle(
-                              color: accent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
-                            style: TextStyle(
-                              color: tokens.textMuted,
-                              fontSize: 12,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                          ),
-                        ],
+                  const SizedBox(height: 2),
+                  Tooltip(
+                    message: entry.name,
+                    preferBelow: false,
+                    waitDuration: const Duration(milliseconds: 100),
+                    child: Text(
+                      '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
+                      style: TextStyle(
+                        color: tokens.textMuted,
+                        fontSize: 12,
+                        fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
                   ),
