@@ -204,9 +204,25 @@ class _Subtitle extends StatelessWidget {
             : (l.pityDistance(pity.distance), tokens.textMuted),
     };
 
-    return Text(
-      text,
-      style: theme.textTheme.bodyMedium?.copyWith(color: color),
+    final baseStyle = theme.textTheme.bodyMedium;
+    final avg = pity.averageInterval;
+    final showAverage = pity.hitCount >= 1 && avg != null;
+
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: text,
+            style: baseStyle?.copyWith(color: color),
+          ),
+          if (showAverage)
+            TextSpan(
+              text: ' · ${l.pityAverageInterval(avg.toStringAsFixed(2))}',
+              style: baseStyle?.copyWith(color: tokens.textMuted),
+            ),
+        ],
+      ),
+      style: baseStyle,
     );
   }
 }

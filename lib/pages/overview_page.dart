@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
@@ -60,6 +61,20 @@ class OverviewPage extends ConsumerWidget {
     final odesStats = computeWishStats(odesAll);
     final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
+    final wish5StarAvg = averageIntervalAcrossBanners(
+      wishBanners,
+      rankFor: (_) => 5,
+    );
+    final wish4StarAvg = averageIntervalAcrossBanners(
+      wishBanners,
+      rankFor: (_) => 4,
+    );
+
+    String shareWithAvg(String shareText, double? avg) {
+      if (avg == null) return shareText;
+      return '$shareText · ${l.pityAverageInterval(avg.toStringAsFixed(2))}';
+    }
+
     final wishStatCards = <Widget>[
       StatCard(
         label: l.statsTotal,
@@ -70,16 +85,22 @@ class OverviewPage extends ConsumerWidget {
         label: l.statsFiveStarCount,
         value: '${wishStats.fiveStarCount}',
         accent: tokens.fiveStar,
-        subtitle: l.statsShareOfTotal(
-          (wishStats.fiveStarRate * 100).toStringAsFixed(2),
+        subtitle: shareWithAvg(
+          l.statsShareOfTotal(
+            (wishStats.fiveStarRate * 100).toStringAsFixed(2),
+          ),
+          wish5StarAvg,
         ),
       ),
       StatCard(
         label: l.statsFourStarCount,
         value: '${wishStats.fourStarCount}',
         accent: tokens.fourStar,
-        subtitle: l.statsShareOfTotal(
-          (wishStats.fourStarRate * 100).toStringAsFixed(2),
+        subtitle: shareWithAvg(
+          l.statsShareOfTotal(
+            (wishStats.fourStarRate * 100).toStringAsFixed(2),
+          ),
+          wish4StarAvg,
         ),
       ),
     ];
