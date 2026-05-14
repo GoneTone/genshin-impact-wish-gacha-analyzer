@@ -26,33 +26,70 @@ void main() {
       expect(entries[2].count, 90);
     });
 
-    test('3★ slice 合併 2★ 計數', () {
+    test('包含 2★ 當 twoStarCount > 0', () {
       const stats = WishStats(
-        total: 100,
-        fiveStarCount: 0,
-        fourStarCount: 0,
-        threeStarCount: 80,
-        twoStarCount: 20,
+        total: 10,
+        fiveStarCount: 1,
+        fourStarCount: 2,
+        threeStarCount: 5,
+        twoStarCount: 2,
         byItemType: {},
       );
       final entries = rarityDistributionEntries(stats, GachaTokens.dark);
-      expect(entries[2].name, '3★');
-      expect(entries[2].count, 100);
-      expect(entries[2].rate, closeTo(1.0, 1e-9));
+      expect(entries.map((e) => e.name).toList(), ['5★', '4★', '3★', '2★']);
+      expect(entries.last.count, 2);
+      expect(entries.last.rate, closeTo(0.2, 1e-9));
+      expect(entries.last.color, GachaTokens.dark.twoStar);
     });
 
-    test('keeps zero-count entries (legend filters them itself)', () {
+    test('略過 2★ 當 twoStarCount == 0', () {
       const stats = WishStats(
-        total: 0,
-        fiveStarCount: 0,
-        fourStarCount: 0,
-        threeStarCount: 0,
+        total: 8,
+        fiveStarCount: 1,
+        fourStarCount: 2,
+        threeStarCount: 5,
         twoStarCount: 0,
         byItemType: {},
       );
       final entries = rarityDistributionEntries(stats, GachaTokens.dark);
-      expect(entries, hasLength(3));
-      expect(entries.every((e) => e.count == 0), isTrue);
+      expect(entries.map((e) => e.name).toList(), ['5★', '4★', '3★']);
     });
+
+    test('threeStarCount 不再包含 2★（獨立計算）', () {
+      // 之前是 threeStarCount + twoStarCount 合併渲染 — 現在獨立
+      const stats = WishStats(
+        total: 6,
+        fiveStarCount: 0,
+        fourStarCount: 1,
+        threeStarCount: 3,
+        twoStarCount: 2,
+        byItemType: {},
+      );
+      final entries = rarityDistributionEntries(stats, GachaTokens.dark);
+      final three = entries.firstWhere((e) => e.name == '3★');
+      expect(three.count, 3); // 不是 5
+      expect(three.rate, closeTo(3 / 6, 1e-9));
+      final two = entries.firstWhere((e) => e.name == '2★');
+      expect(two.count, 2);
+      expect(two.rate, closeTo(2 / 6, 1e-9));
+    });
+
+    test(
+      'keeps zero-count entries when twoStar absent (legend filters them itself)',
+      () {
+        const stats = WishStats(
+          total: 0,
+          fiveStarCount: 0,
+          fourStarCount: 0,
+          threeStarCount: 0,
+          twoStarCount: 0,
+          byItemType: {},
+        );
+        final entries = rarityDistributionEntries(stats, GachaTokens.dark);
+        // twoStarCount == 0 不應該出現
+        expect(entries, hasLength(3));
+        expect(entries.every((e) => e.count == 0), isTrue);
+      },
+    );
   });
 }

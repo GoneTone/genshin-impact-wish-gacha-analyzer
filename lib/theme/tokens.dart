@@ -41,6 +41,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     required this.fiveStar,
     required this.fourStar,
     required this.threeStar,
+    required this.twoStar,
     required this.character,
     required this.weapon,
     required this.accentPrimary,
@@ -60,6 +61,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
   final Color fiveStar;
   final Color fourStar;
   final Color threeStar;
+  final Color twoStar;
   final Color character;
   final Color weapon;
   final Color accentPrimary;
@@ -80,6 +82,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: Color(0xFFE6C477),
     fourStar: Color(0xFFA385E0),
     threeStar: Color(0xFF5B9BD5),
+    twoStar: Color(0xFF6A7080),
     character: Color(0xFF46B07A),
     weapon: Color(0xFFE6736B),
     accentPrimary: Color(0xFFE6C477),
@@ -101,6 +104,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: Color(0xFFB8860B),
     fourStar: Color(0xFF7A4FB8),
     threeStar: Color(0xFF2E7CC2),
+    twoStar: Color(0xFF8A92A6),
     character: Color(0xFF2E7D32),
     weapon: Color(0xFFC62828),
     accentPrimary: Color(0xFFB8860B),
@@ -122,6 +126,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     Color? fiveStar,
     Color? fourStar,
     Color? threeStar,
+    Color? twoStar,
     Color? character,
     Color? weapon,
     Color? accentPrimary,
@@ -140,6 +145,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     fiveStar: fiveStar ?? this.fiveStar,
     fourStar: fourStar ?? this.fourStar,
     threeStar: threeStar ?? this.threeStar,
+    twoStar: twoStar ?? this.twoStar,
     character: character ?? this.character,
     weapon: weapon ?? this.weapon,
     accentPrimary: accentPrimary ?? this.accentPrimary,
@@ -167,6 +173,7 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
       fiveStar: Color.lerp(fiveStar, other.fiveStar, t)!,
       fourStar: Color.lerp(fourStar, other.fourStar, t)!,
       threeStar: Color.lerp(threeStar, other.threeStar, t)!,
+      twoStar: Color.lerp(twoStar, other.twoStar, t)!,
       character: Color.lerp(character, other.character, t)!,
       weapon: Color.lerp(weapon, other.weapon, t)!,
       accentPrimary: Color.lerp(accentPrimary, other.accentPrimary, t)!,
