@@ -231,7 +231,11 @@ class _Rail extends StatelessWidget {
         .where((t) => t.category == GachaCategory.odes)
         .toList(growable: false);
 
-    return IntrinsicWidth(
+    // 對齊 NavigationRail 預設寬度：collapsed 72dp，extended 256dp。
+    final railWidth = extended ? 256.0 : 72.0;
+
+    return SizedBox(
+      width: railWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -394,7 +398,7 @@ class _RailDestinationTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.xs,
-        vertical: AppSpacing.xs,
+        vertical: AppSpacing.xs / 2,
       ),
       child: Material(
         color: Colors.transparent,
@@ -404,10 +408,9 @@ class _RailDestinationTile extends StatelessWidget {
           child: Container(
             decoration: indicator,
             padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.s,
+              horizontal: AppSpacing.xs,
               vertical: AppSpacing.s,
             ),
-            constraints: const BoxConstraints(minWidth: 56),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
