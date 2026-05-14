@@ -224,67 +224,12 @@ class _Rail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelType = extended
-        ? null
-        : (collapsedNoLabel
-              ? NavigationRailLabelType.none
-              : NavigationRailLabelType.all);
-
     final wishTypes = gachaTypes
         .where((t) => t.category == GachaCategory.wish)
         .toList(growable: false);
     final odesTypes = gachaTypes
         .where((t) => t.category == GachaCategory.odes)
         .toList(growable: false);
-
-    final topRail = NavigationRail(
-      selectedIndex: selection.topIndex,
-      onDestinationSelected: (_) => context.go('/'),
-      extended: extended,
-      labelType: labelType,
-      groupAlignment: -1.0,
-      destinations: [
-        NavigationRailDestination(
-          icon: const Icon(Icons.dashboard_outlined),
-          selectedIcon: const Icon(Icons.dashboard),
-          label: Text(l.navOverview),
-        ),
-      ],
-    );
-
-    final wishRail = NavigationRail(
-      selectedIndex: selection.wishIndex,
-      onDestinationSelected: (i) =>
-          context.go('/banner/${wishTypes[i].gachaType}'),
-      extended: extended,
-      labelType: labelType,
-      groupAlignment: -1.0,
-      destinations: [
-        for (final t in wishTypes)
-          NavigationRailDestination(
-            icon: Icon(_railIconInactive(t.nameKey)),
-            selectedIcon: Icon(_railIconActive(t.nameKey)),
-            label: Text(_railLabel(t.nameKey, l)),
-          ),
-      ],
-    );
-
-    final odesRail = NavigationRail(
-      selectedIndex: selection.odesIndex,
-      onDestinationSelected: (i) =>
-          context.go('/banner/${odesTypes[i].gachaType}'),
-      extended: extended,
-      labelType: labelType,
-      groupAlignment: -1.0,
-      destinations: [
-        for (final t in odesTypes)
-          NavigationRailDestination(
-            icon: Icon(_railIconInactive(t.nameKey)),
-            selectedIcon: Icon(_railIconActive(t.nameKey)),
-            label: Text(_railLabel(t.nameKey, l)),
-          ),
-      ],
-    );
 
     return IntrinsicWidth(
       child: Column(
@@ -295,19 +240,49 @@ class _Rail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  topRail,
+                  const SizedBox(height: AppSpacing.s),
+                  _RailDestinationTile(
+                    iconInactive: Icons.dashboard_outlined,
+                    iconActive: Icons.dashboard,
+                    label: l.navOverview,
+                    selected: selection.topIndex == 0,
+                    onTap: () => context.go('/'),
+                    extended: extended,
+                    hideLabel: collapsedNoLabel,
+                  ),
                   _SectionLabel(
                     label: l.navSectionWish,
                     extended: extended,
                     hideLabel: collapsedNoLabel,
                   ),
-                  wishRail,
+                  for (var i = 0; i < wishTypes.length; i++)
+                    _RailDestinationTile(
+                      iconInactive: _railIconInactive(wishTypes[i].nameKey),
+                      iconActive: _railIconActive(wishTypes[i].nameKey),
+                      label: _railLabel(wishTypes[i].nameKey, l),
+                      selected: selection.wishIndex == i,
+                      onTap: () =>
+                          context.go('/banner/${wishTypes[i].gachaType}'),
+                      extended: extended,
+                      hideLabel: collapsedNoLabel,
+                    ),
                   _SectionLabel(
                     label: l.navSectionOdes,
                     extended: extended,
                     hideLabel: collapsedNoLabel,
                   ),
-                  odesRail,
+                  for (var i = 0; i < odesTypes.length; i++)
+                    _RailDestinationTile(
+                      iconInactive: _railIconInactive(odesTypes[i].nameKey),
+                      iconActive: _railIconActive(odesTypes[i].nameKey),
+                      label: _railLabel(odesTypes[i].nameKey, l),
+                      selected: selection.odesIndex == i,
+                      onTap: () =>
+                          context.go('/banner/${odesTypes[i].gachaType}'),
+                      extended: extended,
+                      hideLabel: collapsedNoLabel,
+                    ),
+                  const SizedBox(height: AppSpacing.s),
                 ],
               ),
             ),
@@ -333,6 +308,124 @@ class _Rail extends StatelessWidget {
             onPressed: () => context.go('/settings'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 自製的 rail 項目，取代 NavigationRailDestination。
+///
+/// NavigationRail 內部使用 `MainAxisSize.max` 的 Column，無法在
+/// `SingleChildScrollView`（垂直無界）內佈局，會導致
+/// 「Cannot hit test a render box that has never been laid out.」
+/// 自己刻一個有限高度的 tile，就沒有這個問題。
+class _RailDestinationTile extends StatelessWidget {
+  const _RailDestinationTile({
+    required this.iconInactive,
+    required this.iconActive,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    required this.extended,
+    required this.hideLabel,
+  });
+
+  final IconData iconInactive;
+  final IconData iconActive;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final bool extended;
+  final bool hideLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    final colorScheme = theme.colorScheme;
+
+    final fgColor = selected ? colorScheme.primary : tokens.textSecondary;
+    final icon = Icon(selected ? iconActive : iconInactive, color: fgColor);
+    final indicator = BoxDecoration(
+      color: selected ? colorScheme.secondaryContainer : Colors.transparent,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+    );
+
+    if (extended) {
+      // Extended：icon + label 橫向並列，整列寬度
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.s,
+          vertical: AppSpacing.xs,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            onTap: onTap,
+            child: Container(
+              decoration: indicator,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.m,
+                vertical: AppSpacing.s,
+              ),
+              child: Row(
+                children: [
+                  icon,
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: fgColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Collapsed：icon 置中，依需求顯示下方小字 label
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: AppSpacing.xs,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          onTap: onTap,
+          child: Container(
+            decoration: indicator,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.s,
+              vertical: AppSpacing.s,
+            ),
+            constraints: const BoxConstraints(minWidth: 56),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon,
+                if (!hideLabel) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    label,
+                    style: theme.textTheme.labelSmall?.copyWith(color: fgColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
