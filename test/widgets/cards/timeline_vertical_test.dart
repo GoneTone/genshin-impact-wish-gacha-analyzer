@@ -239,4 +239,80 @@ void main() {
     expect(find.text('item-24'), findsOneWidget);
     expect(find.byIcon(Icons.expand_more), findsNothing);
   });
+
+  testWidgets(
+    'signature changed (different dataset) → resets visibleCount to 10',
+    (tester) async {
+      final entriesA = List<TimelineEntry>.generate(
+        25,
+        (i) => _e('a-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+      );
+      final entriesB = List<TimelineEntry>.generate(
+        15,
+        (i) => _e('b-$i', '301', 10, DateTime(2024, 12, 20 - i)),
+      );
+      Widget host(List<TimelineEntry> entries) => _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(host(entriesA));
+      final ctx = tester.element(find.byType(TimelineVertical));
+      final l = AppLocalizations.of(ctx)!;
+
+      // 點一次展開到 20
+      await tester.ensureVisible(find.text(l.timelineLoadMore(15)));
+      await tester.tap(find.text(l.timelineLoadMore(15)));
+      await tester.pumpAndSettle();
+      expect(find.text('a-19'), findsOneWidget);
+
+      // 換 dataset B（length 與 firstTime 都不同）→ reset
+      await tester.pumpWidget(host(entriesB));
+      await tester.pumpAndSettle();
+
+      expect(find.text('b-9'), findsOneWidget); // 第 10 筆
+      expect(find.text('b-10'), findsNothing); // 第 11 筆已不顯示
+      expect(find.text(l.timelineLoadMore(5)), findsOneWidget); // 剩 15-10=5
+    },
+  );
+
+  testWidgets(
+    'same entries reference / signature → keeps expanded state, only clamps',
+    (tester) async {
+      final entries = List<TimelineEntry>.generate(
+        25,
+        (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+      );
+      Widget host() => _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(host());
+      final ctx = tester.element(find.byType(TimelineVertical));
+      final l = AppLocalizations.of(ctx)!;
+
+      // 展開到 20
+      await tester.ensureVisible(find.text(l.timelineLoadMore(15)));
+      await tester.tap(find.text(l.timelineLoadMore(15)));
+      await tester.pumpAndSettle();
+      expect(find.text('item-19'), findsOneWidget);
+
+      // 用同樣 entries rebuild — 視為純視覺更新（signature 不變）→ 保持 20
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      expect(find.text('item-19'), findsOneWidget);
+      expect(find.text(l.timelineLoadMore(5)), findsOneWidget);
+    },
+  );
 }

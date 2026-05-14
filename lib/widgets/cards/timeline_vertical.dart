@@ -45,6 +45,33 @@ class _TimelineVerticalState extends State<TimelineVertical> {
 
   int _visibleCount = _initialPageSize;
 
+  @override
+  void didUpdateWidget(TimelineVertical oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldFirstTime = oldWidget.entries.isNotEmpty
+        ? oldWidget.entries.first.time
+        : null;
+    final newFirstTime = widget.entries.isNotEmpty
+        ? widget.entries.first.time
+        : null;
+    final lengthChanged = oldWidget.entries.length != widget.entries.length;
+    final firstTimeChanged = oldFirstTime != newFirstTime;
+    if (lengthChanged && firstTimeChanged) {
+      // length + firstTime 同時不同 → 視為不同資料集，reset
+      setState(() {
+        _visibleCount = _initialPageSize;
+      });
+    } else {
+      // 同資料集（或局部變動）→ 只做 clamp
+      final clamped = _visibleCount.clamp(0, widget.entries.length);
+      if (clamped != _visibleCount) {
+        setState(() {
+          _visibleCount = clamped;
+        });
+      }
+    }
+  }
+
   void _loadMore() {
     setState(() {
       _visibleCount = (_visibleCount + _pageStep).clamp(
