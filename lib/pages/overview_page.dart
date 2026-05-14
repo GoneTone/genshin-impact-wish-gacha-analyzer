@@ -41,6 +41,7 @@ class OverviewPage extends ConsumerWidget {
     final bannerColors = BannerColors.fromTokens(tokens);
     final timelineEntries = buildTimelineEntriesAcrossBanners(
       activeData.banners,
+      rankFor: (_) => 5,
     );
 
     return SingleChildScrollView(
@@ -212,7 +213,10 @@ class OverviewPage extends ConsumerWidget {
           TimelineVertical(
             entries: timelineEntries,
             colors: bannerColors,
-            nowPulls: pullsSinceLastFiveStarAcrossBanners(activeData.banners),
+            nowPulls: pullsSinceLastRankedAcrossBanners(
+              activeData.banners,
+              rankFor: (_) => 5,
+            ),
             isAcrossBanners: true,
           ),
         ],

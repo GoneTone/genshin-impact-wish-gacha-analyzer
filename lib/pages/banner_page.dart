@@ -222,7 +222,7 @@ class BannerPage extends ConsumerWidget {
                       chart: TimelineHorizontal(
                         entries: buildTimelineEntries(records),
                         colors: BannerColors.fromTokens(tokens),
-                        nowPulls: pullsSinceLastFiveStar(records),
+                        nowPulls: pullsSinceLastRanked(records, rank: 5),
                       ),
                     ),
                   ),
