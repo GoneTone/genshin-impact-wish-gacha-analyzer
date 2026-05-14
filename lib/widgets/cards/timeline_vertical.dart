@@ -15,7 +15,7 @@ const double _railLeft = _monthColumnWidth + (_haloSize / 2);
 /// - 上 → 下 = 新 → 舊
 /// - 軸線一條連續貫穿;月份標籤貼於軸線左外側(獨立左欄,不打斷軸線)
 /// - `nowPulls != null` 時最頂端為「現在」row;`isAcrossBanners` 決定 i18n 文案
-class TimelineVertical extends StatelessWidget {
+class TimelineVertical extends StatefulWidget {
   const TimelineVertical({
     super.key,
     required this.entries,
@@ -36,6 +36,16 @@ class TimelineVertical extends StatelessWidget {
   final bool isAcrossBanners;
 
   @override
+  State<TimelineVertical> createState() => _TimelineVerticalState();
+}
+
+class _TimelineVerticalState extends State<TimelineVertical> {
+  static const int _initialPageSize = 10;
+
+  // ignore: prefer_final_fields
+  int _visibleCount = _initialPageSize;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
@@ -54,6 +64,12 @@ class TimelineVertical extends StatelessWidget {
       child: child,
     );
 
+    final entries = widget.entries;
+    final nowPulls = widget.nowPulls;
+    final colors = widget.colors;
+    final targetRank = widget.targetRank;
+    final isAcrossBanners = widget.isAcrossBanners;
+
     if (entries.isEmpty && nowPulls == null) {
       return container(
         Padding(
@@ -70,10 +86,13 @@ class TimelineVertical extends StatelessWidget {
       );
     }
 
-    // 計算每個 entry 是否為月份分組首 row
+    final effectiveCount = _visibleCount.clamp(0, entries.length);
+    final visibleEntries = entries.take(effectiveCount).toList(growable: false);
+
+    // 計算每個 visible entry 是否為月份分組首 row
     final monthFlag = <bool>[];
     int? prevYearMonth;
-    for (final entry in entries) {
+    for (final entry in visibleEntries) {
       final ym = entry.time.year * 12 + entry.time.month;
       monthFlag.add(prevYearMonth != ym);
       prevYearMonth = ym;
@@ -93,17 +112,18 @@ class TimelineVertical extends StatelessWidget {
           // 前景:Column of rows
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (nowPulls != null)
                 _NowRow(
-                  nowPulls: nowPulls!,
+                  nowPulls: nowPulls,
                   targetRank: targetRank,
                   isAcrossBanners: isAcrossBanners,
                   tokens: tokens,
                 ),
-              for (var i = 0; i < entries.length; i++)
+              for (var i = 0; i < visibleEntries.length; i++)
                 _EntryRow(
-                  entry: entries[i],
+                  entry: visibleEntries[i],
                   showMonthTag: monthFlag[i],
                   colors: colors,
                   tokens: tokens,

@@ -128,4 +128,25 @@ void main() {
     expect(find.text(l.timelineNowLabel), findsOneWidget);
     expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
   });
+
+  testWidgets('entries=11 → defaults to first 10 entries only', (tester) async {
+    final entries = List<TimelineEntry>.generate(
+      11,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 20 - i)),
+    );
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SingleChildScrollView(
+          child: TimelineVertical(
+            entries: entries,
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    expect(find.text('item-0'), findsOneWidget);
+    expect(find.text('item-9'), findsOneWidget);
+    expect(find.text('item-10'), findsNothing);
+  });
 }
