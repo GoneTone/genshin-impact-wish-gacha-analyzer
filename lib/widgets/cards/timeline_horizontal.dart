@@ -252,43 +252,43 @@ class _EntryColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final accent = colors.colorFor(entry.gachaType);
     final l = AppLocalizations.of(context)!;
-    return SizedBox(
-      width: _colWidth,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            entry.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: accent,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+    return Tooltip(
+      message: entry.name,
+      preferBelow: false,
+      waitDuration: const Duration(milliseconds: 100),
+      child: SizedBox(
+        width: _colWidth,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              entry.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: accent,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Tooltip(
-            message: entry.name,
-            preferBelow: false,
-            waitDuration: const Duration(milliseconds: 100),
-            child: _Node(color: accent, tokens: tokens),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            '${_formatShortDate(entry.time)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: tokens.textMuted,
-              fontSize: 10,
-              fontFeatures: const [FontFeature.tabularFigures()],
+            const SizedBox(height: AppSpacing.xs),
+            _Node(color: accent, tokens: tokens),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              '${_formatShortDate(entry.time)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: tokens.textMuted,
+                fontSize: 10,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

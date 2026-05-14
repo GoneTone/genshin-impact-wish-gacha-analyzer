@@ -178,41 +178,49 @@ class _EntryRow extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
           ),
-          // 節點圓
-          SizedBox(
-            width: _haloSize,
-            child: Center(
-              child: Tooltip(
-                message: entry.name,
-                preferBelow: false,
-                waitDuration: const Duration(milliseconds: 100),
-                child: _Node(color: accent, tokens: tokens),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.m),
-          // 主內容
+          // 節點 + 主內容（共用 tooltip）
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Column(
+            child: Tooltip(
+              message: entry.name,
+              preferBelow: false,
+              waitDuration: const Duration(milliseconds: 100),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    entry.name,
-                    style: TextStyle(
-                      color: accent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  SizedBox(
+                    width: _haloSize,
+                    child: Center(
+                      child: _Node(color: accent, tokens: tokens),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
-                    style: TextStyle(
-                      color: tokens.textMuted,
-                      fontSize: 12,
-                      fontFeatures: const [FontFeature.tabularFigures()],
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            entry.name,
+                            style: TextStyle(
+                              color: accent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_formatShortDate(entry.time)} · ${_bannerName(entry.gachaType, l)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
+                            style: TextStyle(
+                              color: tokens.textMuted,
+                              fontSize: 12,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
