@@ -95,6 +95,46 @@ class UidIndicator extends ConsumerWidget {
   }
 }
 
+/// AppBar 觸發鈕的單行顯示:alias (uid),alias 過長 ellipsis;
+/// 無 alias 顯示 UID;activeUid==null 顯示「未同步」。
+class AccountTriggerLabel extends StatelessWidget {
+  const AccountTriggerLabel({super.key, this.activeUid, this.alias});
+
+  final String? activeUid;
+  final String? alias;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final uid = activeUid;
+    if (uid == null) {
+      return _row([
+        const Icon(Icons.person_outline, size: 18),
+        const SizedBox(width: AppSpacing.xs),
+        Text(l.uidNotSynced),
+        const Icon(Icons.arrow_drop_down, size: 18),
+      ]);
+    }
+    final hasAlias = alias != null && alias!.isNotEmpty;
+    return _row([
+      const Icon(Icons.person_outline, size: 18),
+      const SizedBox(width: AppSpacing.xs),
+      if (hasAlias) ...[
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 160),
+          child: Text(alias!, maxLines: 1, overflow: TextOverflow.ellipsis),
+        ),
+        Text(' ($uid)'),
+      ] else
+        Text(uid),
+      const Icon(Icons.arrow_drop_down, size: 18),
+    ]);
+  }
+
+  Widget _row(List<Widget> children) =>
+      Row(mainAxisSize: MainAxisSize.min, children: children);
+}
+
 /// 選單項目顯示:alias 主標 + UID 副標。沒 alias 時退化為 UID 單行。
 class AccountMenuLabel extends StatelessWidget {
   const AccountMenuLabel({

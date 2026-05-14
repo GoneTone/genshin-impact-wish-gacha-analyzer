@@ -70,4 +70,45 @@ void main() {
       expect(aliasText.maxLines, 1);
     });
   });
+
+  group('AccountTriggerLabel', () {
+    testWidgets('activeUid=null:顯示「未同步」', (tester) async {
+      await tester.pumpWidget(
+        _wrap(const AccountTriggerLabel(activeUid: null, alias: null)),
+      );
+      expect(find.text('未同步'), findsOneWidget);
+    });
+
+    testWidgets('有 alias:顯示 alias + 完整 UID', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountTriggerLabel(activeUid: '123456789', alias: 'MainAcc'),
+        ),
+      );
+      expect(find.text('MainAcc'), findsOneWidget);
+      // UID 用 " (123456789)" 形式接在 alias 後
+      expect(find.text(' (123456789)'), findsOneWidget);
+    });
+
+    testWidgets('無 alias:只顯示 UID', (tester) async {
+      await tester.pumpWidget(
+        _wrap(const AccountTriggerLabel(activeUid: '987654321', alias: null)),
+      );
+      expect(find.text('987654321'), findsOneWidget);
+    });
+
+    testWidgets('alias Text:overflow=ellipsis、maxLines=1', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountTriggerLabel(
+            activeUid: '123456789',
+            alias: 'VeryLongAliasName',
+          ),
+        ),
+      );
+      final aliasText = tester.widget<Text>(find.text('VeryLongAliasName'));
+      expect(aliasText.overflow, TextOverflow.ellipsis);
+      expect(aliasText.maxLines, 1);
+    });
+  });
 }
