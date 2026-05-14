@@ -94,3 +94,54 @@ class UidIndicator extends ConsumerWidget {
     );
   }
 }
+
+/// 選單項目顯示:alias 主標 + UID 副標。沒 alias 時退化為 UID 單行。
+class AccountMenuLabel extends StatelessWidget {
+  const AccountMenuLabel({
+    super.key,
+    required this.uid,
+    required this.isActive,
+    this.alias,
+  });
+
+  final String uid;
+  final String? alias;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = Theme.of(context).gacha;
+    final l = AppLocalizations.of(context)!;
+    final hasAlias = alias != null && alias!.isNotEmpty;
+    final primary = hasAlias ? alias! : uid;
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 280),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  primary,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (isActive)
+                Text(
+                  l.uidActiveSuffix,
+                  style: TextStyle(fontSize: 11, color: tokens.textMuted),
+                ),
+            ],
+          ),
+          if (hasAlias)
+            Text(uid, style: TextStyle(fontSize: 12, color: tokens.textMuted)),
+        ],
+      ),
+    );
+  }
+}
