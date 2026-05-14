@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
@@ -19,6 +20,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 class OverviewPage extends ConsumerWidget {
@@ -37,13 +39,76 @@ class OverviewPage extends ConsumerWidget {
     if (activeData == null) {
       return EmptyState.noSync(context);
     }
-    final all = activeData.allRecords;
-    final stats = computeWishStats(all);
+
+    final wishTypes = gachaTypes
+        .where((t) => t.category == GachaCategory.wish)
+        .toList(growable: false);
+    final odesTypes = gachaTypes
+        .where((t) => t.category == GachaCategory.odes)
+        .toList(growable: false);
+    final wishBanners = <String, List<WishRecord>>{
+      for (final t in wishTypes)
+        t.gachaType: activeData.banners[t.gachaType] ?? const <WishRecord>[],
+    };
+    final odesBanners = <String, List<WishRecord>>{
+      for (final t in odesTypes)
+        t.gachaType: activeData.banners[t.gachaType] ?? const <WishRecord>[],
+    };
+    final wishAll = wishBanners.values.expand((r) => r).toList(growable: false);
+    final odesAll = odesBanners.values.expand((r) => r).toList(growable: false);
+    final wishStats = computeWishStats(wishAll);
+    final odesStats = computeWishStats(odesAll);
     final bannerColors = BannerColors.fromTokens(tokens);
-    final timelineEntries = buildTimelineEntriesAcrossBanners(
-      activeData.banners,
-      rankFor: (_) => 5,
-    );
+
+    final wishStatCards = <Widget>[
+      StatCard(
+        label: l.statsTotal,
+        value: '${wishStats.total}',
+        accent: tokens.accentPrimary,
+      ),
+      StatCard(
+        label: l.statsFiveStarCount,
+        value: '${wishStats.fiveStarCount}',
+        accent: tokens.fiveStar,
+        subtitle: l.statsShareOfTotal(
+          (wishStats.fiveStarRate * 100).toStringAsFixed(2),
+        ),
+      ),
+      StatCard(
+        label: l.statsFourStarCount,
+        value: '${wishStats.fourStarCount}',
+        accent: tokens.fourStar,
+        subtitle: l.statsShareOfTotal(
+          (wishStats.fourStarRate * 100).toStringAsFixed(2),
+        ),
+      ),
+    ];
+
+    final odesEventType = odesTypes.firstWhere((t) => t.gachaType == '2000');
+    final odesStandardType = odesTypes.firstWhere((t) => t.gachaType == '1000');
+    final odesEventFiveCount = (odesBanners['2000'] ?? const <WishRecord>[])
+        .where((r) => r.rankType == 5)
+        .length;
+    final odesStandardFourCount = (odesBanners['1000'] ?? const <WishRecord>[])
+        .where((r) => r.rankType == 4)
+        .length;
+    final odesStatCards = <Widget>[
+      StatCard(
+        label: l.statsTotal,
+        value: '${odesStats.total}',
+        accent: tokens.accentPrimary,
+      ),
+      StatCard(
+        label: '${odesEventType.resolveName(l)} 5★',
+        value: '$odesEventFiveCount',
+        accent: accentForRank(5, tokens),
+      ),
+      StatCard(
+        label: '${odesStandardType.resolveName(l)} 4★',
+        value: '$odesStandardFourCount',
+        accent: accentForRank(4, tokens),
+      ),
+    ];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -54,175 +119,217 @@ class OverviewPage extends ConsumerWidget {
             title: l.pageOverviewTitle,
             icon: Icons.dashboard_outlined,
           ),
-
-          // Row 1: 三聯 Stat 卡（無保底，因綜合頁不適用）
-          LayoutBuilder(
-            builder: (context, c) {
-              final wide = c.maxWidth >= 1024;
-              final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-
-              final totalCard = StatCard(
-                label: l.statsTotal,
-                value: '${stats.total}',
-                accent: tokens.accentPrimary,
-              );
-              final fiveCard = StatCard(
-                label: l.statsFiveStarCount,
-                value: '${stats.fiveStarCount}',
-                accent: tokens.fiveStar,
-                subtitle: l.statsShareOfTotal(
-                  (stats.fiveStarRate * 100).toStringAsFixed(2),
-                ),
-              );
-              final fourCard = StatCard(
-                label: l.statsFourStarCount,
-                value: '${stats.fourStarCount}',
-                accent: tokens.fourStar,
-                subtitle: l.statsShareOfTotal(
-                  (stats.fourStarRate * 100).toStringAsFixed(2),
-                ),
-              );
-
-              if (wide) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(flex: 6, child: totalCard),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(flex: 3, child: fiveCard),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(flex: 3, child: fourCard),
-                    ],
-                  ),
-                );
-              }
-              if (mid) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    totalCard,
-                    const SizedBox(height: AppSpacing.m),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(child: fiveCard),
-                          const SizedBox(width: AppSpacing.m),
-                          Expanded(child: fourCard),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  totalCard,
-                  const SizedBox(height: AppSpacing.m),
-                  fiveCard,
-                  const SizedBox(height: AppSpacing.m),
-                  fourCard,
-                ],
-              );
-            },
+          _OverviewSection(
+            title: l.pageOverviewWishSection,
+            types: wishTypes,
+            banners: wishBanners,
+            stats: wishStats,
+            bannerColors: bannerColors,
+            statCards: wishStatCards,
           ),
-
-          const SizedBox(height: AppSpacing.l),
-
-          // Row 2: 兩 Pie（稀有度 + 物品類型）— wide mode 下與 Row 1 邊界對齊
-          LayoutBuilder(
-            builder: (context, c) {
-              final wide = c.maxWidth >= 1024;
-              final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-
-              final rarityCard = ChartCard(
-                title: l.statsRarityDistribution,
-                icon: Icons.pie_chart_outline,
-                chart: RarityPie(stats: stats),
-                legend: DistributionLegend(
-                  entries: rarityDistributionEntries(stats, tokens),
-                ),
-              );
-              final itemTypeCard = ChartCard(
-                title: l.statsItemTypeDistribution,
-                icon: Icons.donut_small_outlined,
-                chart: ItemTypePie(stats: stats),
-                legend: DistributionLegend(
-                  entries: itemTypeDistributionEntries(stats, tokens, l),
-                ),
-              );
-
-              if (wide) {
-                // 對齊 Row 1（flex 6/3/3 + 兩個 m gap）：
-                // 第 1 卡寬 = (maxWidth - 24) / 2 = Row 1「總抽數」寬度。
-                final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(width: card1Width, child: rarityCard),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(child: itemTypeCard),
-                    ],
-                  ),
-                );
-              }
-              if (mid) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: rarityCard),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(child: itemTypeCard),
-                    ],
-                  ),
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  rarityCard,
-                  const SizedBox(height: AppSpacing.m),
-                  itemTypeCard,
-                ],
-              );
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.m),
-
-          // 各卡池 5★ 件數（佔整行，因需足夠寬度容納 5 條水平 bar）
-          ChartCard(
-            title: l.bannerTopRarityCountTitle,
-            icon: Icons.bar_chart,
-            height: null,
-            chart: BannerTopRarityBars(
-              types: gachaTypes,
-              banners: activeData.banners,
-              colors: bannerColors,
-            ),
-          ),
-
           const SizedBox(height: AppSpacing.xl),
-          InlineSectionTitle(
-            icon: Icons.timeline,
-            title: l.timelineCountTopRarity(5, timelineEntries.length),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          TimelineVertical(
-            entries: timelineEntries,
-            colors: bannerColors,
-            nowPulls: pullsSinceLastRankedAcrossBanners(
-              activeData.banners,
-              rankFor: (_) => 5,
+          if (odesAll.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.l),
+              child: EmptyState.noOdesRecords(context),
+            )
+          else
+            _OverviewSection(
+              title: l.pageOverviewOdesSection,
+              types: odesTypes,
+              banners: odesBanners,
+              stats: odesStats,
+              bannerColors: bannerColors,
+              statCards: odesStatCards,
             ),
-            isAcrossBanners: true,
-          ),
         ],
       ),
+    );
+  }
+}
+
+class _OverviewSection extends StatelessWidget {
+  const _OverviewSection({
+    required this.title,
+    required this.types,
+    required this.banners,
+    required this.stats,
+    required this.bannerColors,
+    required this.statCards,
+  });
+
+  final String title;
+  final List<GachaType> types;
+  final Map<String, List<WishRecord>> banners;
+  final WishStats stats;
+  final BannerColors bannerColors;
+  final List<Widget> statCards;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final tokens = Theme.of(context).gacha;
+    final typesByGt = <String, GachaType>{
+      for (final t in types) t.gachaType: t,
+    };
+
+    final timelineEntries = buildTimelineEntriesAcrossBanners(
+      banners,
+      rankFor: (gt) => typesByGt[gt]!.primaryPity.rank,
+    );
+    final timelineNowPulls = pullsSinceLastRankedAcrossBanners(
+      banners,
+      rankFor: (gt) => typesByGt[gt]!.primaryPity.rank,
+    );
+    final timelineRank = types.first.primaryPity.rank;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
+        const SizedBox(height: AppSpacing.m),
+
+        // Stat row: 三聯卡片（無保底）
+        LayoutBuilder(
+          builder: (context, c) {
+            final wide = c.maxWidth >= 1024;
+            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+            if (wide) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 6, child: statCards[0]),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: statCards[1]),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(flex: 3, child: statCards[2]),
+                  ],
+                ),
+              );
+            }
+            if (mid) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  statCards[0],
+                  const SizedBox(height: AppSpacing.m),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: statCards[1]),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: statCards[2]),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < statCards.length; i++) ...[
+                  if (i > 0) const SizedBox(height: AppSpacing.m),
+                  statCards[i],
+                ],
+              ],
+            );
+          },
+        ),
+
+        const SizedBox(height: AppSpacing.l),
+
+        // Pie row: 稀有度 + 物品類型
+        LayoutBuilder(
+          builder: (context, c) {
+            final wide = c.maxWidth >= 1024;
+            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+            final rarityCard = ChartCard(
+              title: l.statsRarityDistribution,
+              icon: Icons.pie_chart_outline,
+              chart: RarityPie(stats: stats),
+              legend: DistributionLegend(
+                entries: rarityDistributionEntries(stats, tokens),
+              ),
+            );
+            final itemTypeCard = ChartCard(
+              title: l.statsItemTypeDistribution,
+              icon: Icons.donut_small_outlined,
+              chart: ItemTypePie(stats: stats),
+              legend: DistributionLegend(
+                entries: itemTypeDistributionEntries(stats, tokens, l),
+              ),
+            );
+
+            if (wide) {
+              // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
+              // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
+              final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(width: card1Width, child: rarityCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(child: itemTypeCard),
+                  ],
+                ),
+              );
+            }
+            if (mid) {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(child: rarityCard),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(child: itemTypeCard),
+                  ],
+                ),
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                rarityCard,
+                const SizedBox(height: AppSpacing.m),
+                itemTypeCard,
+              ],
+            );
+          },
+        ),
+
+        const SizedBox(height: AppSpacing.m),
+
+        // 各卡池主稀有度件數
+        ChartCard(
+          title: l.bannerTopRarityCountTitle,
+          icon: Icons.bar_chart,
+          height: null,
+          chart: BannerTopRarityBars(
+            types: types,
+            banners: banners,
+            colors: bannerColors,
+          ),
+        ),
+
+        const SizedBox(height: AppSpacing.xl),
+        InlineSectionTitle(
+          icon: Icons.timeline,
+          title: l.timelineCountTopRarity(timelineRank, timelineEntries.length),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        TimelineVertical(
+          entries: timelineEntries,
+          colors: bannerColors,
+          nowPulls: timelineNowPulls,
+          isAcrossBanners: true,
+        ),
+      ],
     );
   }
 }
