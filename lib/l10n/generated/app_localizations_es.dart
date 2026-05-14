@@ -627,7 +627,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
+  String get bannerTopRarityCountTitle => '各卡池最高稀有度件數';
 
   @override
   String bannerTopRarityPullsSinceLast(int rank, int n) {

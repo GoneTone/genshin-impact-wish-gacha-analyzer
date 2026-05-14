@@ -1147,7 +1147,7 @@ abstract class AppLocalizations {
   /// No description provided for @bannerTopRarityCountTitle.
   ///
   /// In zh_Hant, this message translates to:
-  /// **'各卡池主稀有度件數'**
+  /// **'各卡池最高稀有度件數'**
   String get bannerTopRarityCountTitle;
 
   /// No description provided for @bannerTopRarityPullsSinceLast.

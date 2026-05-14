@@ -297,7 +297,7 @@
     }
   },
 
-  "bannerTopRarityCountTitle": "Top-rarity count per banner",
+  "bannerTopRarityCountTitle": "Highest rarity count per banner",
   "bannerTopRarityPullsSinceLast": "{n} pulls since last {rank}★",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {

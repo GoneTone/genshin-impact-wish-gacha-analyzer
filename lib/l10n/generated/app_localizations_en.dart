@@ -632,7 +632,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bannerTopRarityCountTitle => 'Top-rarity count per banner';
+  String get bannerTopRarityCountTitle => 'Highest rarity count per banner';
 
   @override
   String bannerTopRarityPullsSinceLast(int rank, int n) {

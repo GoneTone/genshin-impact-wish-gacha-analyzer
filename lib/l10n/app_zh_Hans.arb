@@ -268,7 +268,7 @@
     }
   },
 
-  "bannerTopRarityCountTitle": "各卡池主稀有度件数",
+  "bannerTopRarityCountTitle": "各卡池最高稀有度件数",
   "bannerTopRarityPullsSinceLast": "距上次 {rank}★ {n} 抽",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {

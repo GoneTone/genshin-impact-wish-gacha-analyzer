@@ -589,7 +589,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
+  String get bannerTopRarityCountTitle => '各卡池最高稀有度件數';
 
   @override
   String bannerTopRarityPullsSinceLast(int rank, int n) {
@@ -1126,7 +1126,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   }
 
   @override
-  String get bannerTopRarityCountTitle => '各卡池主稀有度件数';
+  String get bannerTopRarityCountTitle => '各卡池最高稀有度件数';
 
   @override
   String bannerTopRarityPullsSinceLast(int rank, int n) {
@@ -1719,7 +1719,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   }
 
   @override
-  String get bannerTopRarityCountTitle => '各卡池主稀有度件數';
+  String get bannerTopRarityCountTitle => '各卡池最高稀有度件數';
 
   @override
   String bannerTopRarityPullsSinceLast(int rank, int n) {
