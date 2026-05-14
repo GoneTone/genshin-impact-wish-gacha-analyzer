@@ -24,6 +24,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
@@ -78,15 +79,20 @@ class BannerPage extends ConsumerWidget {
     }
 
     final stats = computeWishStats(records);
-    final fivePity = computePity(
+    final primary = type.primaryPity;
+    final secondary = type.secondaryPity;
+    final primaryPityData = computePity(
       records,
-      threshold: type.primaryPity.threshold,
+      threshold: primary.threshold,
+      rank: primary.rank,
     );
-    final fourPity = computePity(
-      records,
-      threshold: type.secondaryPity!.threshold,
-      rank: 4,
-    );
+    final secondaryPityData = secondary == null
+        ? null
+        : computePity(
+            records,
+            threshold: secondary.threshold,
+            rank: secondary.rank,
+          );
     final isEndedPool = type.gachaType == '100';
 
     final filterState = ref.watch(recordFilterProvider(gachaType));
@@ -108,24 +114,27 @@ class BannerPage extends ConsumerWidget {
         children: [
           PageHeader(title: type.resolveName(l), icon: _iconForGachaType(type)),
 
-          // Row 1: 三聯 Stat 卡（5★ 和 4★ 用 PityCard，總抽數用 StatCard）
+          // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
           LayoutBuilder(
             builder: (context, c) {
               final wide = c.maxWidth >= 1024;
               final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
 
-              final fiveCard = PityCard(
-                label: l.pityFiveStar,
-                pity: fivePity,
-                accent: tokens.fiveStar,
+              final primaryCard = PityCard(
+                label: _pityLabel(primary.labelKey, l),
+                pity: primaryPityData,
+                accent: accentForRank(primary.rank, tokens),
                 isEndedPool: isEndedPool,
               );
-              final fourCard = PityCard(
-                label: l.pityFourStar,
-                pity: fourPity,
-                accent: tokens.fourStar,
-                isEndedPool: isEndedPool,
-              );
+              final secondaryCard =
+                  (secondary == null || secondaryPityData == null)
+                  ? null
+                  : PityCard(
+                      label: _pityLabel(secondary.labelKey, l),
+                      pity: secondaryPityData,
+                      accent: accentForRank(secondary.rank, tokens),
+                      isEndedPool: isEndedPool,
+                    );
               final totalCard = StatCard(
                 label: l.statsTotal,
                 value: '${stats.total}',
@@ -137,9 +146,11 @@ class BannerPage extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(flex: 6, child: fiveCard),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(flex: 3, child: fourCard),
+                      Expanded(flex: 6, child: primaryCard),
+                      if (secondaryCard != null) ...[
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(flex: 3, child: secondaryCard),
+                      ],
                       const SizedBox(width: AppSpacing.m),
                       Expanded(flex: 3, child: totalCard),
                     ],
@@ -150,14 +161,16 @@ class BannerPage extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    fiveCard,
+                    primaryCard,
                     const SizedBox(height: AppSpacing.m),
                     IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(child: fourCard),
-                          const SizedBox(width: AppSpacing.m),
+                          if (secondaryCard != null) ...[
+                            Expanded(child: secondaryCard),
+                            const SizedBox(width: AppSpacing.m),
+                          ],
                           Expanded(child: totalCard),
                         ],
                       ),
@@ -168,10 +181,12 @@ class BannerPage extends ConsumerWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  fiveCard,
+                  primaryCard,
                   const SizedBox(height: AppSpacing.m),
-                  fourCard,
-                  const SizedBox(height: AppSpacing.m),
+                  if (secondaryCard != null) ...[
+                    secondaryCard,
+                    const SizedBox(height: AppSpacing.m),
+                  ],
                   totalCard,
                 ],
               );
@@ -217,12 +232,21 @@ class BannerPage extends ConsumerWidget {
                   SizedBox(
                     width: tileWidth,
                     child: ChartCard(
-                      title: l.timelineCountTopRarity(5, stats.fiveStarCount),
+                      title: l.timelineCountTopRarity(
+                        primary.rank,
+                        _countAtRank(stats, primary.rank),
+                      ),
                       icon: Icons.timeline,
                       chart: TimelineHorizontal(
-                        entries: buildTimelineEntries(records),
+                        entries: buildTimelineEntries(
+                          records,
+                          targetRank: primary.rank,
+                        ),
                         colors: BannerColors.fromTokens(tokens),
-                        nowPulls: pullsSinceLastRanked(records, rank: 5),
+                        nowPulls: pullsSinceLastRanked(
+                          records,
+                          rank: primary.rank,
+                        ),
                       ),
                     ),
                   ),
@@ -258,6 +282,23 @@ class BannerPage extends ConsumerWidget {
     );
   }
 }
+
+/// 將 [PityRule.labelKey] 解析為對應的 i18n 字串。
+String _pityLabel(String labelKey, AppLocalizations l) => switch (labelKey) {
+  'pityFiveStar' => l.pityFiveStar,
+  'pityFourStar' => l.pityFourStar,
+  'pityThreeStar' => l.pityThreeStar,
+  _ => labelKey,
+};
+
+/// 取 [WishStats] 中對應稀有度的件數，作為 timeline 標題的 N。
+int _countAtRank(WishStats stats, int rank) => switch (rank) {
+  5 => stats.fiveStarCount,
+  4 => stats.fourStarCount,
+  3 => stats.threeStarCount,
+  2 => stats.twoStarCount,
+  _ => 0,
+};
 
 IconData _iconForGachaType(GachaType type) {
   return switch (type.nameKey) {
