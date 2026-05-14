@@ -42,6 +42,7 @@ class TimelineVertical extends StatefulWidget {
 class _TimelineVerticalState extends State<TimelineVertical> {
   static const int _initialPageSize = 10;
 
+  // mutated by `_loadMore` in setState (added in next task); not final.
   // ignore: prefer_final_fields
   int _visibleCount = _initialPageSize;
 
