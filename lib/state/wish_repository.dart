@@ -286,28 +286,20 @@ class WishRepository extends Notifier<WishState> {
           banners: {for (final t in gachaTypes) t.gachaType: <WishRecord>[]},
         );
 
-    // 捕獲的 URL 只對它自己原本的 endpoint 有效（authkey endpoint-scoped）；
-    // 跨 endpoint 抓會被拒。因此只更新跟 captured endpoint 同類的 banner，
-    // 其餘 category 沿用舊資料（使用者之後可以從另一個歷史紀錄頁面再 capture
-    // 一次來更新另一類）。
-    final capturedEndpoint = gachaUrl.endpoint;
-    final capturedCategory = capturedEndpoint == GachaEndpoint.wish
-        ? GachaCategory.wish
-        : GachaCategory.odes;
-
-    final mergedBanners = <String, List<WishRecord>>{
-      for (final t in gachaTypes)
-        t.gachaType: existing.banners[t.gachaType] ?? const <WishRecord>[],
-    };
+    final mergedBanners = <String, List<WishRecord>>{};
     final failed = <String>[];
     var totalNew = 0;
 
-    for (final t in gachaTypes.where((t) => t.category == capturedCategory)) {
+    for (final t in gachaTypes) {
+      final endpoint = switch (t.category) {
+        GachaCategory.wish => GachaEndpoint.wish,
+        GachaCategory.odes => GachaEndpoint.odes,
+      };
       try {
         final merged = await fetcher.fetchBannerWithMerge(
           url: gachaUrl,
           gachaType: t.gachaType,
-          endpoint: capturedEndpoint,
+          endpoint: endpoint,
           existing: existing.banners[t.gachaType] ?? const [],
           primer: probe.primerPages[t.gachaType],
           client: client,
