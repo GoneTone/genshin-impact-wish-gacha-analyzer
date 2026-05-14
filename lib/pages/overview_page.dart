@@ -261,7 +261,11 @@ class _OverviewSection extends StatelessWidget {
               icon: Icons.donut_small_outlined,
               chart: ItemTypePie(stats: stats),
               legend: DistributionLegend(
-                entries: itemTypeDistributionEntries(stats, tokens, l),
+                entries: itemTypeDistributionEntries(
+                  stats,
+                  Theme.of(context).brightness,
+                  l,
+                ),
               ),
             );
 
