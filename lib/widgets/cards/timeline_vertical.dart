@@ -193,12 +193,16 @@ class _EntryRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    entry.name,
-                    style: TextStyle(
-                      color: accent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  Tooltip(
+                    message: entry.name,
+                    waitDuration: const Duration(milliseconds: 300),
+                    child: Text(
+                      entry.name,
+                      style: TextStyle(
+                        color: accent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 2),
