@@ -42,7 +42,7 @@ class BannerFiveStarBars extends StatelessWidget {
           } else {
             final pity = computePity(
               records,
-              threshold: type.fiveStarPity,
+              threshold: type.primaryPity.threshold,
             ).current;
             subtitle = l.bannerFiveStarPullsSinceLast(pity);
           }

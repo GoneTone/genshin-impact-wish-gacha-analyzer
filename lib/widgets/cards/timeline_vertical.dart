@@ -133,8 +133,11 @@ class _EntryRow extends StatelessWidget {
         orElse: () => GachaType(
           gachaType: gachaType,
           nameKey: gachaType,
-          fiveStarPity: 90,
-          fourStarPity: 10,
+          category: GachaCategory.wish,
+          pities: const [
+            PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar'),
+            PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar'),
+          ],
         ),
       )
       .resolveName(l);

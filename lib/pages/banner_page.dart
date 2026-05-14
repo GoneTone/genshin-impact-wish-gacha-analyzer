@@ -37,8 +37,11 @@ class BannerPage extends ConsumerWidget {
     orElse: () => GachaType(
       gachaType: gachaType,
       nameKey: gachaType,
-      fiveStarPity: 90,
-      fourStarPity: 10,
+      category: GachaCategory.wish,
+      pities: const [
+        PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar'),
+        PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar'),
+      ],
     ),
   );
 
@@ -75,10 +78,13 @@ class BannerPage extends ConsumerWidget {
     }
 
     final stats = computeWishStats(records);
-    final fivePity = computePity(records, threshold: type.fiveStarPity);
+    final fivePity = computePity(
+      records,
+      threshold: type.primaryPity.threshold,
+    );
     final fourPity = computePity(
       records,
-      threshold: type.fourStarPity,
+      threshold: type.secondaryPity!.threshold,
       rank: 4,
     );
     final isEndedPool = type.gachaType == '100';
