@@ -110,7 +110,11 @@ class WishFetcher {
           await Future<void>.delayed(rateLimit);
         }
         page = await fetchPage(
-          url.build(gachaType: gachaType, endId: endId),
+          url.build(
+            gachaType: gachaType,
+            endId: endId,
+            endpoint: GachaEndpoint.wish,
+          ),
           client,
         );
       }
@@ -160,7 +164,11 @@ class WishFetcher {
         await Future<void>.delayed(rateLimit);
       }
       final page = await fetchPage(
-        url.build(gachaType: type.gachaType, endId: '0'),
+        url.build(
+          gachaType: type.gachaType,
+          endId: '0',
+          endpoint: GachaEndpoint.wish,
+        ),
         client,
       );
       primers[type.gachaType] = page;

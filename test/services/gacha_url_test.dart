@@ -11,9 +11,12 @@ const _capturedUrl =
 void main() {
   group('GachaUrl', () {
     test('parse + build 覆寫 gacha_type/page/size/end_id', () {
-      final url = GachaUrl.parse(
-        _capturedUrl,
-      ).build(gachaType: '500', endId: '12345', size: 20);
+      final url = GachaUrl.parse(_capturedUrl).build(
+        gachaType: '500',
+        endId: '12345',
+        size: 20,
+        endpoint: GachaEndpoint.wish,
+      );
       final params = url.queryParameters;
 
       expect(params['gacha_type'], '500');
@@ -32,8 +35,64 @@ void main() {
     test('default size=20', () {
       final url = GachaUrl.parse(
         _capturedUrl,
-      ).build(gachaType: '301', endId: '0');
+      ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish);
       expect(url.queryParameters['size'], '20');
+    });
+
+    test('build with endpoint=wish 保留 getGachaLog path', () {
+      final url = GachaUrl.parse(
+        'https://example.com/gacha_info/api/getGachaLog?authkey=AAA&gacha_type=301&end_id=0',
+      );
+      final built = url.build(
+        gachaType: '301',
+        endId: '0',
+        endpoint: GachaEndpoint.wish,
+      );
+      expect(built.path, '/gacha_info/api/getGachaLog');
+    });
+
+    test('build with endpoint=odes 替換為 getBeyondGachaLog', () {
+      final url = GachaUrl.parse(
+        'https://example.com/gacha_info/api/getGachaLog?authkey=AAA&gacha_type=301&end_id=0',
+      );
+      final built = url.build(
+        gachaType: '2000',
+        endId: '0',
+        endpoint: GachaEndpoint.odes,
+      );
+      expect(built.path, '/gacha_info/api/getBeyondGachaLog');
+    });
+
+    test('build 從 odes URL 解析後也能切回 wish', () {
+      final url = GachaUrl.parse(
+        'https://example.com/gacha_info/api/getBeyondGachaLog?authkey=AAA&gacha_type=2000&end_id=0',
+      );
+      final built = url.build(
+        gachaType: '301',
+        endId: '0',
+        endpoint: GachaEndpoint.wish,
+      );
+      expect(built.path, '/gacha_info/api/getGachaLog');
+    });
+
+    test('build 保留 query params 包含 authkey', () {
+      final url = GachaUrl.parse(
+        'https://example.com/gacha_info/api/getGachaLog?authkey=COMPLEX_TOKEN&lang=zh-tw&game_biz=hk4e_global&gacha_type=301&end_id=0',
+      );
+      final built = url.build(
+        gachaType: '2000',
+        endId: 'xyz',
+        endpoint: GachaEndpoint.odes,
+        page: 3,
+        size: 5,
+      );
+      expect(built.queryParameters['authkey'], 'COMPLEX_TOKEN');
+      expect(built.queryParameters['lang'], 'zh-tw');
+      expect(built.queryParameters['game_biz'], 'hk4e_global');
+      expect(built.queryParameters['gacha_type'], '2000');
+      expect(built.queryParameters['end_id'], 'xyz');
+      expect(built.queryParameters['page'], '3');
+      expect(built.queryParameters['size'], '5');
     });
   });
 }

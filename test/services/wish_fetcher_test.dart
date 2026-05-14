@@ -47,7 +47,9 @@ void main() {
       );
       final fetcher = WishFetcher(rateLimit: Duration.zero);
       final page = await fetcher.fetchPage(
-        GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
         mock,
       );
       expect(page.records, hasLength(1));
@@ -59,7 +61,9 @@ void main() {
       final fetcher = WishFetcher(rateLimit: Duration.zero);
       expect(
         () => fetcher.fetchPage(
-          GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+          GachaUrl.parse(
+            _baseUrl,
+          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
           mock,
         ),
         throwsA(isA<AuthExpiredException>()),
@@ -78,7 +82,9 @@ void main() {
       );
       await expectLater(
         () => fetcher.fetchPage(
-          GachaUrl.parse(_baseUrl).build(gachaType: '301', endId: '0'),
+          GachaUrl.parse(
+            _baseUrl,
+          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
           mock,
         ),
         throwsA(isA<RateLimitedException>()),
