@@ -78,9 +78,11 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     final isSettingsActive = location == '/settings';
     final isContributorsActive = location == '/contributors';
-    final selectedIndex = (isSettingsActive || isContributorsActive)
-        ? null
-        : _bannerIndexFromLocation(location);
+    final selection = _resolveRailSelection(
+      location,
+      isSettings: isSettingsActive,
+      isContributors: isContributorsActive,
+    );
 
     final collapsedNoLabel = !extendedRail && width < 800;
 
@@ -126,7 +128,7 @@ class _AppShellState extends ConsumerState<AppShell> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _Rail(
-                  selectedIndex: selectedIndex,
+                  selection: selection,
                   isSettingsActive: isSettingsActive,
                   isContributorsActive: isContributorsActive,
                   extended: extendedRail,
@@ -171,27 +173,49 @@ class _AppShellState extends ConsumerState<AppShell> {
     );
   }
 
-  int _bannerIndexFromLocation(String path) {
-    if (path == '/') return 0;
+  _RailSelection _resolveRailSelection(
+    String path, {
+    required bool isSettings,
+    required bool isContributors,
+  }) {
+    if (isSettings || isContributors) return _RailSelection.none;
+    if (path == '/') return const _RailSelection(topIndex: 0);
     if (path.startsWith('/banner/')) {
       final type = path.substring('/banner/'.length);
-      final i = gachaTypes.indexWhere((t) => t.gachaType == type);
-      return i < 0 ? 0 : i + 1;
+      final wishTypes = gachaTypes
+          .where((t) => t.category == GachaCategory.wish)
+          .toList(growable: false);
+      final wi = wishTypes.indexWhere((t) => t.gachaType == type);
+      if (wi >= 0) return _RailSelection(wishIndex: wi);
+      final odesTypes = gachaTypes
+          .where((t) => t.category == GachaCategory.odes)
+          .toList(growable: false);
+      final oi = odesTypes.indexWhere((t) => t.gachaType == type);
+      if (oi >= 0) return _RailSelection(odesIndex: oi);
     }
-    return 0;
+    return const _RailSelection(topIndex: 0);
   }
+}
+
+class _RailSelection {
+  const _RailSelection({this.topIndex, this.wishIndex, this.odesIndex});
+  final int? topIndex;
+  final int? wishIndex;
+  final int? odesIndex;
+
+  static const none = _RailSelection();
 }
 
 class _Rail extends StatelessWidget {
   const _Rail({
-    required this.selectedIndex,
+    required this.selection,
     required this.isSettingsActive,
     required this.isContributorsActive,
     required this.extended,
     required this.collapsedNoLabel,
     required this.l,
   });
-  final int? selectedIndex;
+  final _RailSelection selection;
   final bool isSettingsActive;
   final bool isContributorsActive;
   final bool extended;
@@ -200,55 +224,92 @@ class _Rail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destinations = <NavigationRailDestination>[
-      NavigationRailDestination(
-        icon: const Icon(Icons.dashboard_outlined),
-        selectedIcon: const Icon(Icons.dashboard),
-        label: Text(l.navOverview),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.person_outline),
-        selectedIcon: const Icon(Icons.person),
-        label: Text(l.navCharacter),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.shield_outlined),
-        selectedIcon: const Icon(Icons.shield),
-        label: Text(l.navWeapon),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.collections_bookmark_outlined),
-        selectedIcon: const Icon(Icons.collections_bookmark),
-        label: Text(l.navChronicled),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.history),
-        selectedIcon: const Icon(Icons.history_toggle_off),
-        label: Text(l.navStandard),
-      ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.school_outlined),
-        selectedIcon: const Icon(Icons.school),
-        label: Text(l.navBeginner),
-      ),
-    ];
+    final labelType = extended
+        ? null
+        : (collapsedNoLabel
+              ? NavigationRailLabelType.none
+              : NavigationRailLabelType.all);
+
+    final wishTypes = gachaTypes
+        .where((t) => t.category == GachaCategory.wish)
+        .toList(growable: false);
+    final odesTypes = gachaTypes
+        .where((t) => t.category == GachaCategory.odes)
+        .toList(growable: false);
+
+    final topRail = NavigationRail(
+      selectedIndex: selection.topIndex,
+      onDestinationSelected: (_) => context.go('/'),
+      extended: extended,
+      labelType: labelType,
+      groupAlignment: -1.0,
+      destinations: [
+        NavigationRailDestination(
+          icon: const Icon(Icons.dashboard_outlined),
+          selectedIcon: const Icon(Icons.dashboard),
+          label: Text(l.navOverview),
+        ),
+      ],
+    );
+
+    final wishRail = NavigationRail(
+      selectedIndex: selection.wishIndex,
+      onDestinationSelected: (i) =>
+          context.go('/banner/${wishTypes[i].gachaType}'),
+      extended: extended,
+      labelType: labelType,
+      groupAlignment: -1.0,
+      destinations: [
+        for (final t in wishTypes)
+          NavigationRailDestination(
+            icon: Icon(_railIconInactive(t.nameKey)),
+            selectedIcon: Icon(_railIconActive(t.nameKey)),
+            label: Text(_railLabel(t.nameKey, l)),
+          ),
+      ],
+    );
+
+    final odesRail = NavigationRail(
+      selectedIndex: selection.odesIndex,
+      onDestinationSelected: (i) =>
+          context.go('/banner/${odesTypes[i].gachaType}'),
+      extended: extended,
+      labelType: labelType,
+      groupAlignment: -1.0,
+      destinations: [
+        for (final t in odesTypes)
+          NavigationRailDestination(
+            icon: Icon(_railIconInactive(t.nameKey)),
+            selectedIcon: Icon(_railIconActive(t.nameKey)),
+            label: Text(_railLabel(t.nameKey, l)),
+          ),
+      ],
+    );
 
     return IntrinsicWidth(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: NavigationRail(
-              selectedIndex: selectedIndex,
-              onDestinationSelected: (i) => _go(context, i),
-              extended: extended,
-              labelType: extended
-                  ? null
-                  : (collapsedNoLabel
-                        ? NavigationRailLabelType.none
-                        : NavigationRailLabelType.all),
-              destinations: destinations,
-              groupAlignment: -1.0,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  topRail,
+                  _SectionLabel(
+                    label: l.navSectionWish,
+                    extended: extended,
+                    hideLabel: collapsedNoLabel,
+                  ),
+                  wishRail,
+                  _SectionLabel(
+                    label: l.navSectionOdes,
+                    extended: extended,
+                    hideLabel: collapsedNoLabel,
+                  ),
+                  odesRail,
+                ],
+              ),
             ),
           ),
           // 貢獻者入口
@@ -275,16 +336,82 @@ class _Rail extends StatelessWidget {
       ),
     );
   }
+}
 
-  void _go(BuildContext context, int i) {
-    if (i == 0) {
-      context.go('/');
-    } else {
-      final type = gachaTypes[i - 1].gachaType;
-      context.go('/banner/$type');
-    }
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({
+    required this.label,
+    required this.extended,
+    required this.hideLabel,
+  });
+
+  final String label;
+  final bool extended;
+  final bool hideLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.m,
+        vertical: AppSpacing.xs,
+      ),
+      child: hideLabel
+          ? Divider(height: 1, color: tokens.borderSubtle)
+          : Row(
+              children: [
+                Expanded(child: Divider(color: tokens.borderSubtle)),
+                if (extended) ...[
+                  const SizedBox(width: AppSpacing.s),
+                  Text(
+                    label,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: tokens.textMuted,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(child: Divider(color: tokens.borderSubtle)),
+                ],
+              ],
+            ),
+    );
   }
 }
+
+String _railLabel(String nameKey, AppLocalizations l) => switch (nameKey) {
+  'gachaTypeCharacter' => l.navCharacter,
+  'gachaTypeWeapon' => l.navWeapon,
+  'gachaTypeChronicled' => l.navChronicled,
+  'gachaTypeStandard' => l.navStandard,
+  'gachaTypeBeginner' => l.navBeginner,
+  'gachaTypeOdesEvent' => l.navOdesEvent,
+  'gachaTypeOdesStandard' => l.navOdesStandard,
+  _ => nameKey,
+};
+
+IconData _railIconInactive(String nameKey) => switch (nameKey) {
+  'gachaTypeCharacter' => Icons.person_outline,
+  'gachaTypeWeapon' => Icons.shield_outlined,
+  'gachaTypeChronicled' => Icons.collections_bookmark_outlined,
+  'gachaTypeStandard' => Icons.history,
+  'gachaTypeBeginner' => Icons.school_outlined,
+  'gachaTypeOdesEvent' => Icons.auto_awesome_outlined,
+  'gachaTypeOdesStandard' => Icons.auto_awesome_motion_outlined,
+  _ => Icons.casino_outlined,
+};
+
+IconData _railIconActive(String nameKey) => switch (nameKey) {
+  'gachaTypeCharacter' => Icons.person,
+  'gachaTypeWeapon' => Icons.shield,
+  'gachaTypeChronicled' => Icons.collections_bookmark,
+  'gachaTypeStandard' => Icons.history_toggle_off,
+  'gachaTypeBeginner' => Icons.school,
+  'gachaTypeOdesEvent' => Icons.auto_awesome,
+  'gachaTypeOdesStandard' => Icons.auto_awesome_motion,
+  _ => Icons.casino,
+};
 
 class _BottomRailButton extends StatelessWidget {
   const _BottomRailButton({
