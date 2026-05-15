@@ -1,4 +1,4 @@
-﻿{
+{
   "@@locale": "zh_Hans",
 
   "localeNativeName": "简体中文",
@@ -316,7 +316,7 @@
 ,
   "settingsLogs": "日志调试",
   "@settingsLogs": {},
-  "settingsLogsHint": "留下运行记录，协助报告问题时找出原因。",
+  "settingsLogsHint": "遇到问题时，可导出 log 给开发者协助排查。",
   "@settingsLogsHint": {},
   "settingsLogsExport": "导出日志文件",
   "@settingsLogsExport": {},

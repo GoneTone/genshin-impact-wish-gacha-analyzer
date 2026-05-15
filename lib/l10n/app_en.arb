@@ -1,4 +1,4 @@
-﻿{
+{
   "@@locale": "en",
 
   "localeNativeName": "English",
@@ -344,7 +344,7 @@
 ,
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
-  "settingsLogsHint": "Records app activity to help diagnose issues when reporting bugs.",
+  "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
   "@settingsLogsHint": {},
   "settingsLogsExport": "Export logs",
   "@settingsLogsExport": {},

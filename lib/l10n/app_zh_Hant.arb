@@ -1,4 +1,4 @@
-﻿{
+{
   "@@locale": "zh_Hant",
 
   "localeNativeName": "繁體中文",
@@ -391,7 +391,7 @@
 ,
   "settingsLogs": "Log 偵錯",
   "@settingsLogs": {},
-  "settingsLogsHint": "留下執行紀錄，協助回報問題時找出原因。",
+  "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",
   "@settingsLogsHint": {},
   "settingsLogsExport": "匯出 log 檔",
   "@settingsLogsExport": {},
