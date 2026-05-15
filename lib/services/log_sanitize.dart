@@ -30,3 +30,23 @@ String sanitizeUid(String uid) {
   if (uid.length < 6) return '***';
   return '${uid.substring(0, 3)}****${uid.substring(uid.length - 3)}';
 }
+
+/// 把檔案路徑內的 home 段 username 換成 `***`，避免 log 洩漏使用者名稱。
+///
+/// - Windows：`C:\Users\<name>\...` → `C:\Users\***\...`（drive letter 大小寫不敏感）
+/// - macOS：`/Users/<name>/...` → `/Users/***/...`
+/// - Linux：`/home/<name>/...` → `/home/***/...`
+/// - 其他路徑（如 `C:\Tools\...`、`/tmp/...`）原樣返回。
+String sanitizeFsPath(String raw) {
+  // 三種 home prefix 各對一個 anchored regex；group(1) = prefix（保留），group(2) = username（換成 ***）
+  for (final re in [
+    RegExp(r'^([A-Za-z]:\\Users\\)([^\\]+)'),
+    RegExp(r'^(/Users/)([^/]+)'),
+    RegExp(r'^(/home/)([^/]+)'),
+  ]) {
+    if (re.hasMatch(raw)) {
+      return raw.replaceFirstMapped(re, (m) => '${m.group(1)}***');
+    }
+  }
+  return raw;
+}

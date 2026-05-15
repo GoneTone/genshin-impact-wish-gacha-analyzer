@@ -64,4 +64,50 @@ void main() {
       expect(sanitizeUid(''), equals('***'));
     });
   });
+
+  group('sanitizeFsPath', () {
+    test('redacts Windows home directory username (backslash)', () {
+      expect(
+        sanitizeFsPath(r'C:\Users\Alice\Downloads\foo.json'),
+        equals(r'C:\Users\***\Downloads\foo.json'),
+      );
+    });
+
+    test('Windows home redaction is case-insensitive on drive letter', () {
+      expect(
+        sanitizeFsPath(r'd:\Users\Bob\file.log'),
+        equals(r'd:\Users\***\file.log'),
+      );
+    });
+
+    test('redacts macOS home directory username', () {
+      expect(
+        sanitizeFsPath('/Users/Alice/Downloads/foo.json'),
+        equals('/Users/***/Downloads/foo.json'),
+      );
+    });
+
+    test('redacts Linux home directory username', () {
+      expect(
+        sanitizeFsPath('/home/alice/Downloads/foo.json'),
+        equals('/home/***/Downloads/foo.json'),
+      );
+    });
+
+    test('passes through non-home Windows path unchanged', () {
+      expect(
+        sanitizeFsPath(r'C:\Tools\foo.json'),
+        equals(r'C:\Tools\foo.json'),
+      );
+    });
+
+    test('passes through non-home Unix path unchanged', () {
+      expect(sanitizeFsPath('/tmp/foo.log'), equals('/tmp/foo.log'));
+      expect(sanitizeFsPath('/var/log/x.log'), equals('/var/log/x.log'));
+    });
+
+    test('passes through empty string unchanged', () {
+      expect(sanitizeFsPath(''), equals(''));
+    });
+  });
 }
