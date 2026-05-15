@@ -4,8 +4,11 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
@@ -69,6 +72,12 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsLogs,
+                icon: Icons.bug_report_outlined,
+                child: const _LogsSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -579,6 +588,155 @@ class _DataManagement extends ConsumerWidget {
     );
     if (ok != true) return;
     await ref.read(wishRepositoryProvider.notifier).clearAll();
+  }
+}
+
+class _LogsSection extends ConsumerWidget {
+  const _LogsSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final currentLevel = ref.watch(settingsProvider.select((s) => s.logLevel));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l.settingsLogsHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.gacha.textMuted,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        _LogLevelDropdown(current: currentLevel),
+        const SizedBox(height: AppSpacing.m),
+        Wrap(
+          spacing: AppSpacing.s,
+          runSpacing: AppSpacing.s,
+          children: [
+            OutlinedButton.icon(
+              onPressed: () => _export(context, ref),
+              icon: const Icon(Icons.download_outlined, size: 18),
+              label: Text(l.settingsLogsExport),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => _openFolder(context, ref),
+              icon: const Icon(Icons.folder_open_outlined, size: 18),
+              label: Text(l.settingsLogsOpenFolder),
+            ),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: theme.gacha.stateDanger,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () => _clear(context, ref),
+              icon: const Icon(Icons.delete_outline, size: 18),
+              label: Text(l.settingsLogsClear),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _export(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final log = ref.read(logServiceProvider);
+    final appVersion = ref.read(appVersionProvider);
+    final settings = ref.read(settingsProvider);
+
+    final now = DateTime.now();
+    final stamp =
+        '${now.year}-${_two(now.month)}-${_two(now.day)}_'
+        '${_two(now.hour)}${_two(now.minute)}${_two(now.second)}';
+
+    final loc = await getSaveLocation(
+      suggestedName: 'gwga_logs_$stamp.log',
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'Log', extensions: ['log']),
+      ],
+    );
+    if (loc == null) return;
+
+    final bundle = await log.buildExportBundle(
+      appVersion: appVersion,
+      osDescription:
+          '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
+      localeTag: Platform.localeName,
+      themeMode: settings.themeMode.name,
+    );
+    await File(loc.path).writeAsString(bundle);
+    Logger(
+      'accounts.io',
+    ).info('logs exported: ${loc.path} (${bundle.length} bytes)');
+    if (!ctx.mounted) return;
+    ScaffoldMessenger.of(ctx).showSnackBar(
+      SnackBar(content: Text(l.settingsLogsExportSuccess(loc.path))),
+    );
+  }
+
+  Future<void> _openFolder(BuildContext ctx, WidgetRef ref) async {
+    final log = ref.read(logServiceProvider);
+    final uri = Uri.file(log.logsDir.path);
+    if (!await launchUrl(uri)) {
+      Logger('ui.link').warning('openLogsFolder: launchUrl returned false');
+    }
+  }
+
+  Future<void> _clear(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showConfirmTypeDialog(
+      context: ctx,
+      title: l.confirmTitle,
+      body: l.settingsLogsClearConfirmBody,
+      expectedText: 'CLEAR',
+      cancelLabel: l.confirmCancel,
+      confirmLabel: l.confirmDelete,
+      confirmIcon: Icons.delete_outline,
+    );
+    if (ok != true) return;
+    if (!ctx.mounted) return;
+    await ref.read(logServiceProvider).clearAll();
+    Logger('accounts.io').info('logs cleared by user');
+  }
+}
+
+class _LogLevelDropdown extends ConsumerWidget {
+  const _LogLevelDropdown({required this.current});
+  final String current;
+
+  static const _options = ['OFF', 'SEVERE', 'WARNING', 'INFO', 'FINE'];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    String label(String v) => switch (v) {
+      'OFF' => l.settingsLogsLevelOff,
+      'SEVERE' => l.settingsLogsLevelSevere,
+      'WARNING' => l.settingsLogsLevelWarning,
+      'INFO' => l.settingsLogsLevelInfo,
+      'FINE' => l.settingsLogsLevelFine,
+      _ => v,
+    };
+    return DropdownButtonFormField<String>(
+      initialValue: current,
+      decoration: InputDecoration(
+        labelText: l.settingsLogsLevel,
+        border: const OutlineInputBorder(),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      items: [
+        for (final v in _options)
+          DropdownMenuItem(value: v, child: Text(label(v))),
+      ],
+      onChanged: (v) {
+        if (v != null) {
+          ref.read(settingsProvider.notifier).setLogLevel(v);
+        }
+      },
+    );
   }
 }
 
