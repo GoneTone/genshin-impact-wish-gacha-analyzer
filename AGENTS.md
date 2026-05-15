@@ -5,6 +5,7 @@
 - **專案要好維護**：讓其他協助開發者可以清楚了解程式碼在做什麼，架構清楚，如有需要可以引入套件撰寫更加簡潔好維護的程式碼，不要自行造輪子。
 - **風格體驗要一致**：應用程式的 UI/UX 要一致，避免混亂，任何設計都要考慮到 RWD 和元件內容是否會超出邊界等等的情況。
 - **Dialog 高度上限**：`AlertDialog` 內容可能很長時，content 外面包一層 `ConstrainedBox(maxHeight: MediaQuery.of(context).size.height * 0.6)` 並讓內部自行滾動，避免吃滿整個視窗。
+- **新功能要埋 log**：實作新功能或修改既有業務邏輯時，在關鍵節點（I/O、錯誤分支、外部 API、Rust bridge 互動等）加上適當等級的 `Logger('xxx').info/warning/severe(...)` 呼叫，內容要帶足夠 context（uid、banner、retcode、脫敏 URL 等）讓使用者匯出 log 後能直接定位問題，而不是「失敗了」這種沒有上下文的訊息。Logger 命名對齊既有樹（例如 `wish.*`、`app.*`、`rust.*`）。敏感資料一律經 `sanitizeUrl` / `sanitizeUid` 後再寫入。
 
 ## 提交前品質檢查
 
