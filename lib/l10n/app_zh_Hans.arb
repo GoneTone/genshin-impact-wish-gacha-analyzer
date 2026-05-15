@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "zh_Hans",
 
   "localeNativeName": "简体中文",
@@ -313,4 +313,34 @@
   "contributorsTranslatedLanguages": "已翻译语言",
   "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
   "contributorsProjectLicense": "专案许可证"
+,
+  "settingsLogs": "日志调试",
+  "@settingsLogs": {},
+  "settingsLogsHint": "留下运行记录，协助报告问题时找出原因。",
+  "@settingsLogsHint": {},
+  "settingsLogsExport": "导出日志文件",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "打开日志文件夹",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "清除所有日志",
+  "@settingsLogsClear": {},
+  "settingsLogsLevel": "记录等级",
+  "@settingsLogsLevel": {},
+  "settingsLogsLevelOff": "关闭",
+  "@settingsLogsLevelOff": {},
+  "settingsLogsLevelSevere": "严重",
+  "@settingsLogsLevelSevere": {},
+  "settingsLogsLevelWarning": "警告",
+  "@settingsLogsLevelWarning": {},
+  "settingsLogsLevelInfo": "一般（默认）",
+  "@settingsLogsLevelInfo": {},
+  "settingsLogsLevelFine": "详细",
+  "@settingsLogsLevelFine": {},
+  "settingsLogsExportSuccess": "已导出日志：{path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要日志，请先导出。输入 CLEAR 确认。"
 }

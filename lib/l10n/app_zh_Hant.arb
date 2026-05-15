@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "zh_Hant",
 
   "localeNativeName": "繁體中文",
@@ -388,4 +388,34 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常"
+,
+  "settingsLogs": "Log 偵錯",
+  "@settingsLogs": {},
+  "settingsLogsHint": "留下執行紀錄，協助回報問題時找出原因。",
+  "@settingsLogsHint": {},
+  "settingsLogsExport": "匯出 log 檔",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "開啟 log 資料夾",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "清除所有 log",
+  "@settingsLogsClear": {},
+  "settingsLogsLevel": "紀錄等級",
+  "@settingsLogsLevel": {},
+  "settingsLogsLevelOff": "關閉",
+  "@settingsLogsLevelOff": {},
+  "settingsLogsLevelSevere": "嚴重",
+  "@settingsLogsLevelSevere": {},
+  "settingsLogsLevelWarning": "警告",
+  "@settingsLogsLevelWarning": {},
+  "settingsLogsLevelInfo": "一般（預設）",
+  "@settingsLogsLevelInfo": {},
+  "settingsLogsLevelFine": "詳細",
+  "@settingsLogsLevelFine": {},
+  "settingsLogsExportSuccess": "已匯出 log：{path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 log，請先匯出。輸入 CLEAR 確認。"
 }

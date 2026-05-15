@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "en",
 
   "localeNativeName": "English",
@@ -341,4 +341,34 @@
   "contributorsTranslatedLanguages": "Available languages",
   "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
   "contributorsProjectLicense": "Project License"
+,
+  "settingsLogs": "Debug logs",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Records app activity to help diagnose issues when reporting bugs.",
+  "@settingsLogsHint": {},
+  "settingsLogsExport": "Export logs",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Open logs folder",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Clear all logs",
+  "@settingsLogsClear": {},
+  "settingsLogsLevel": "Log level",
+  "@settingsLogsLevel": {},
+  "settingsLogsLevelOff": "Off",
+  "@settingsLogsLevelOff": {},
+  "settingsLogsLevelSevere": "Severe",
+  "@settingsLogsLevelSevere": {},
+  "settingsLogsLevelWarning": "Warning",
+  "@settingsLogsLevelWarning": {},
+  "settingsLogsLevelInfo": "Info (default)",
+  "@settingsLogsLevelInfo": {},
+  "settingsLogsLevelFine": "Fine",
+  "@settingsLogsLevelFine": {},
+  "settingsLogsExportSuccess": "Logs exported: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsClearConfirmBody": "This will permanently delete all files in logs/. Export them first if you need them for bug reports. Type CLEAR to confirm."
 }
