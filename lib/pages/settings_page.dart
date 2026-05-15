@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
@@ -626,6 +627,11 @@ class _LogsSection extends ConsumerWidget {
           runSpacing: AppSpacing.s,
           children: [
             OutlinedButton.icon(
+              onPressed: () => _reportIssue(),
+              icon: const Icon(Icons.bug_report_outlined, size: 18),
+              label: Text(l.settingsLogsReport),
+            ),
+            OutlinedButton.icon(
               onPressed: () => _export(context, ref),
               icon: const Icon(Icons.download_outlined, size: 18),
               label: Text(l.settingsLogsExport),
@@ -691,6 +697,13 @@ class _LogsSection extends ConsumerWidget {
     final uri = Uri.file(log.logsDir.path);
     if (!await launchUrl(uri)) {
       Logger('ui.link').warning('openLogsFolder: launchUrl returned false');
+    }
+  }
+
+  Future<void> _reportIssue() async {
+    final uri = Uri.parse('${AppRepo.githubUrl}/issues/new/choose');
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      Logger('ui.link').warning('reportIssue: launchUrl returned false');
     }
   }
 

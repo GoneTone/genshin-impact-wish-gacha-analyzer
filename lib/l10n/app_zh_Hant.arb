@@ -393,6 +393,8 @@
   "@settingsLogs": {},
   "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",
   "@settingsLogsHint": {},
+  "settingsLogsReport": "回報問題",
+  "@settingsLogsReport": {},
   "settingsLogsExport": "匯出 log 檔",
   "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "開啟 log 資料夾",

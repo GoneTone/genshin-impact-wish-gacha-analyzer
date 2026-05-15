@@ -346,6 +346,8 @@
   "@settingsLogs": {},
   "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
   "@settingsLogsHint": {},
+  "settingsLogsReport": "Report an issue",
+  "@settingsLogsReport": {},
   "settingsLogsExport": "Export logs",
   "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "Open logs folder",

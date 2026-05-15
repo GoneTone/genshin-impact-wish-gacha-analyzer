@@ -318,6 +318,8 @@
   "@settingsLogs": {},
   "settingsLogsHint": "遇到问题时，可导出 log 给开发者协助排查。",
   "@settingsLogsHint": {},
+  "settingsLogsReport": "报告问题",
+  "@settingsLogsReport": {},
   "settingsLogsExport": "导出日志文件",
   "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "打开日志文件夹",
