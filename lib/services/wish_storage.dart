@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
+
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 class WishStorage {
   WishStorage(this.baseDir);
+
+  static final _log = Logger('wish.storage');
 
   /// `<applicationSupportDirectory>/wish_data/`，main.dart 創建後傳入
   final Directory baseDir;
@@ -15,13 +20,25 @@ class WishStorage {
   Future<BannerStorage?> load(String uid) async {
     final f = _dataFile(uid);
     if (!await f.exists()) return null;
-    final text = await f.readAsString();
-    final json = jsonDecode(text) as Map<String, dynamic>;
-    return BannerStorage.fromJson(json);
+    try {
+      final text = await f.readAsString();
+      final json = jsonDecode(text) as Map<String, dynamic>;
+      return BannerStorage.fromJson(json);
+    } catch (e, st) {
+      _log.severe('load failed for uid=${sanitizeUid(uid)}', e, st);
+      rethrow;
+    }
   }
 
   Future<void> save(BannerStorage data) async {
-    await _atomicWrite(_dataFile(data.uid), jsonEncode(data.toJson()));
+    try {
+      await _atomicWrite(_dataFile(data.uid), jsonEncode(data.toJson()));
+      final total = data.banners.values.fold<int>(0, (a, b) => a + b.length);
+      _log.fine('saved uid=${sanitizeUid(data.uid)} records=$total');
+    } catch (e, st) {
+      _log.severe('save failed for uid=${sanitizeUid(data.uid)}', e, st);
+      rethrow;
+    }
   }
 
   Future<List<String>> listKnownUids() async {
@@ -53,17 +70,22 @@ class WishStorage {
       'captured_at': DateTime.now().toUtc().toIso8601String(),
     };
     await _atomicWrite(_urlFile(uid), jsonEncode(json));
+    _log.fine('saved captured url for uid=${sanitizeUid(uid)}');
   }
 
   Future<void> deleteCapturedUrl(String uid) async {
     final f = _urlFile(uid);
-    if (await f.exists()) await f.delete();
+    if (await f.exists()) {
+      await f.delete();
+      _log.fine('deleted captured url for uid=${sanitizeUid(uid)}');
+    }
   }
 
   Future<void> delete(String uid) async {
     final f = _dataFile(uid);
     if (await f.exists()) await f.delete();
     await deleteCapturedUrl(uid);
+    _log.info('delete uid=${sanitizeUid(uid)}');
   }
 
   Future<void> clearAll() async {
@@ -74,6 +96,7 @@ class WishStorage {
         await e.delete();
       }
     }
+    _log.info('clear all wish data');
   }
 
   Future<void> _atomicWrite(File target, String content) async {
