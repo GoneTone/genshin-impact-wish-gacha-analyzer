@@ -1,9 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
 class AccountPickerEntry {
@@ -101,48 +100,38 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final mq = MediaQuery.of(context);
-    // AlertDialog 預設左右 insetPadding 共 80,先扣掉再卡 480 上限,避免窄視窗撐爆。
-    final dialogWidth = math.min(480.0, mq.size.width - 80);
-    final maxHeight = mq.size.height * 0.6;
-
-    return AlertDialog(
+    return AppDialog(
+      size: AppDialogSize.md,
       title: Text(widget.title),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxHeight),
-        child: SizedBox(
-          width: dialogWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CheckboxListTile(
-                tristate: true,
-                value: _selectAllValue,
-                title: Text(l.accountsPickerSelectAll),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-                onChanged: (_) => _onSelectAllTap(),
-              ),
-              const Divider(height: 1),
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: widget.entries.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, i) {
-                    final e = widget.entries[i];
-                    return _PickerRow(
-                      entry: e,
-                      selected: _selected.contains(e.uid),
-                      onChanged: (v) => _toggle(e.uid, v ?? false),
-                    );
-                  },
-                ),
-              ),
-            ],
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CheckboxListTile(
+            tristate: true,
+            value: _selectAllValue,
+            title: Text(l.accountsPickerSelectAll),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            onChanged: (_) => _onSelectAllTap(),
           ),
-        ),
+          const Divider(height: 1),
+          Flexible(
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: widget.entries.length,
+              separatorBuilder: (_, _) => const Divider(height: 1),
+              itemBuilder: (context, i) {
+                final e = widget.entries[i];
+                return _PickerRow(
+                  entry: e,
+                  selected: _selected.contains(e.uid),
+                  onChanged: (v) => _toggle(e.uid, v ?? false),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       actions: [
         TextButton.icon(
