@@ -1,4 +1,5 @@
 // lib/pages/settings_page.dart
+import 'dart:async' show unawaited;
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -15,6 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
@@ -418,6 +420,7 @@ class _DataManagement extends ConsumerWidget {
     ScaffoldMessenger.of(
       ctx,
     ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
+    unawaited(revealInFileManager(loc.path));
   }
 
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
