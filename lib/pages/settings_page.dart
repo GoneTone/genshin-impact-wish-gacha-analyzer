@@ -698,10 +698,7 @@ class _LogsSection extends ConsumerWidget {
 
   Future<void> _openFolder(BuildContext ctx, WidgetRef ref) async {
     final log = ref.read(logServiceProvider);
-    final uri = Uri.file(log.logsDir.path);
-    if (!await launchUrl(uri)) {
-      Logger('ui.link').warning('openLogsFolder: launchUrl returned false');
-    }
+    await openFolder(log.logsDir.path);
   }
 
   Future<void> _reportIssue() async {
