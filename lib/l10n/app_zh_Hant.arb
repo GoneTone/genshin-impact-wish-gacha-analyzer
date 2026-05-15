@@ -389,23 +389,23 @@
   },
   "updateErrorFormat": "回應格式異常"
 ,
-  "settingsLogs": "Log 偵錯",
+  "settingsLogs": "Logs 偵錯",
   "@settingsLogs": {},
   "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",
   "@settingsLogsHint": {},
   "settingsLogsReport": "回報問題",
   "@settingsLogsReport": {},
-  "settingsLogsExport": "匯出 log 檔",
+  "settingsLogsExport": "匯出 logs",
   "@settingsLogsExport": {},
-  "settingsLogsOpenFolder": "開啟 log 資料夾",
+  "settingsLogsOpenFolder": "開啟 logs 資料夾",
   "@settingsLogsOpenFolder": {},
-  "settingsLogsClear": "清除所有 log",
+  "settingsLogsClear": "清除所有 logs",
   "@settingsLogsClear": {},
-  "settingsLogsExportSuccess": "已匯出 log：{path}",
+  "settingsLogsExportSuccess": "已匯出 logs：{path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
       "path": { "type": "String" }
     }
   },
-  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 log，請先匯出。輸入 CLEAR 確認。"
+  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。"
 }
