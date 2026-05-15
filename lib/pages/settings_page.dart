@@ -610,7 +610,6 @@ class _LogsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final currentLevel = ref.watch(settingsProvider.select((s) => s.logLevel));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -621,8 +620,6 @@ class _LogsSection extends ConsumerWidget {
             color: theme.gacha.textMuted,
           ),
         ),
-        const SizedBox(height: AppSpacing.m),
-        _LogLevelDropdown(current: currentLevel),
         const SizedBox(height: AppSpacing.m),
         Wrap(
           spacing: AppSpacing.s,
@@ -712,43 +709,6 @@ class _LogsSection extends ConsumerWidget {
     if (!ctx.mounted) return;
     await ref.read(logServiceProvider).clearAll();
     Logger('accounts.io').info('logs cleared by user');
-  }
-}
-
-class _LogLevelDropdown extends ConsumerWidget {
-  const _LogLevelDropdown({required this.current});
-  final String current;
-
-  static const _options = ['OFF', 'SEVERE', 'WARNING', 'INFO', 'FINE'];
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
-    String label(String v) => switch (v) {
-      'OFF' => l.settingsLogsLevelOff,
-      'SEVERE' => l.settingsLogsLevelSevere,
-      'WARNING' => l.settingsLogsLevelWarning,
-      'INFO' => l.settingsLogsLevelInfo,
-      'FINE' => l.settingsLogsLevelFine,
-      _ => v,
-    };
-    return DropdownButtonFormField<String>(
-      initialValue: current,
-      decoration: InputDecoration(
-        labelText: l.settingsLogsLevel,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-      items: [
-        for (final v in _options)
-          DropdownMenuItem(value: v, child: Text(label(v))),
-      ],
-      onChanged: (v) {
-        if (v != null) {
-          ref.read(settingsProvider.notifier).setLogLevel(v);
-        }
-      },
-    );
   }
 }
 

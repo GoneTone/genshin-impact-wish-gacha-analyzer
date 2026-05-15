@@ -399,18 +399,6 @@
   "@settingsLogsOpenFolder": {},
   "settingsLogsClear": "清除所有 log",
   "@settingsLogsClear": {},
-  "settingsLogsLevel": "紀錄等級",
-  "@settingsLogsLevel": {},
-  "settingsLogsLevelOff": "關閉",
-  "@settingsLogsLevelOff": {},
-  "settingsLogsLevelSevere": "嚴重",
-  "@settingsLogsLevelSevere": {},
-  "settingsLogsLevelWarning": "警告",
-  "@settingsLogsLevelWarning": {},
-  "settingsLogsLevelInfo": "一般（預設）",
-  "@settingsLogsLevelInfo": {},
-  "settingsLogsLevelFine": "詳細",
-  "@settingsLogsLevelFine": {},
   "settingsLogsExportSuccess": "已匯出 log：{path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {

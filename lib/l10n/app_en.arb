@@ -352,18 +352,6 @@
   "@settingsLogsOpenFolder": {},
   "settingsLogsClear": "Clear all logs",
   "@settingsLogsClear": {},
-  "settingsLogsLevel": "Log level",
-  "@settingsLogsLevel": {},
-  "settingsLogsLevelOff": "Off",
-  "@settingsLogsLevelOff": {},
-  "settingsLogsLevelSevere": "Severe",
-  "@settingsLogsLevelSevere": {},
-  "settingsLogsLevelWarning": "Warning",
-  "@settingsLogsLevelWarning": {},
-  "settingsLogsLevelInfo": "Info (default)",
-  "@settingsLogsLevelInfo": {},
-  "settingsLogsLevelFine": "Fine",
-  "@settingsLogsLevelFine": {},
   "settingsLogsExportSuccess": "Logs exported: {path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {

@@ -324,18 +324,6 @@
   "@settingsLogsOpenFolder": {},
   "settingsLogsClear": "清除所有日志",
   "@settingsLogsClear": {},
-  "settingsLogsLevel": "记录等级",
-  "@settingsLogsLevel": {},
-  "settingsLogsLevelOff": "关闭",
-  "@settingsLogsLevelOff": {},
-  "settingsLogsLevelSevere": "严重",
-  "@settingsLogsLevelSevere": {},
-  "settingsLogsLevelWarning": "警告",
-  "@settingsLogsLevelWarning": {},
-  "settingsLogsLevelInfo": "一般（默认）",
-  "@settingsLogsLevelInfo": {},
-  "settingsLogsLevelFine": "详细",
-  "@settingsLogsLevelFine": {},
   "settingsLogsExportSuccess": "已导出日志：{path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
