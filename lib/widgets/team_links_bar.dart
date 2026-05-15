@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
@@ -81,7 +82,7 @@ class _IconLink extends StatelessWidget {
       onPressed: () {
         final uri = Uri.tryParse(url);
         if (uri == null) {
-          debugPrint('TeamLinksBar: invalid url "$url"');
+          Logger('ui.link').warning('TeamLinksBar: invalid url "$url"');
           return;
         }
         openExternalUrl(uri);

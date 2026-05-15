@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 class BannerLink extends StatefulWidget {
@@ -25,7 +26,7 @@ class _BannerLinkState extends State<BannerLink> {
   Future<void> _handleTap() async {
     final uri = Uri.tryParse(widget.url);
     if (uri == null) {
-      debugPrint('BannerLink: invalid url "${widget.url}"');
+      Logger('ui.link').warning('BannerLink: invalid url "${widget.url}"');
       return;
     }
     await openExternalUrl(uri);

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 /// 把 localeTranslator 字串拆成可渲染段落。
@@ -24,7 +25,9 @@ List<TranslatorSegment> parseTranslatorMarkup(String raw) {
     if (uri != null && (uri.scheme == 'http' || uri.scheme == 'https')) {
       segments.add(LinkSegment(label, uri));
     } else {
-      debugPrint('TranslatorText: dropping invalid href "$href"');
+      Logger(
+        'ui.link',
+      ).warning('TranslatorText: dropping invalid href "$href"');
       segments.add(TextSegment(label));
     }
     cursor = match.end;

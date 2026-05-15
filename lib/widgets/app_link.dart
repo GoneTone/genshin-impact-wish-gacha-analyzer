@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppLink extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AppLinkState extends State<AppLink> {
   Future<void> _handleTap() async {
     final uri = Uri.tryParse(widget.url);
     if (uri == null) {
-      debugPrint('AppLink: invalid url "${widget.url}"');
+      Logger('ui.link').warning('AppLink: invalid url "${widget.url}"');
       return;
     }
     await openExternalUrl(uri);
@@ -51,7 +52,7 @@ class _AppLinkState extends State<AppLink> {
 
 Future<void> openExternalUrl(Uri uri) async {
   if (!await canLaunchUrl(uri)) {
-    debugPrint('openExternalUrl: cannot launch $uri');
+    Logger('ui.link').warning('openExternalUrl: cannot launch $uri');
     return;
   }
   await launchUrl(uri, mode: LaunchMode.externalApplication);
