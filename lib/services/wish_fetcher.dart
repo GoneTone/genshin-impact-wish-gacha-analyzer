@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 class AuthExpiredException implements Exception {
   AuthExpiredException(this.retcode);
@@ -54,6 +56,7 @@ class WishFetcher {
   final Duration retryBackoff;
   final Duration timeout;
 
+  static final _log = Logger('wish.fetcher');
   static const _pageSize = 20;
   static const _maxRetryOnRateLimit = 3;
 
@@ -61,6 +64,9 @@ class WishFetcher {
   Future<FetchedPage> fetchPage(Uri url, http.Client client) async {
     final queryGachaType = url.queryParameters['gacha_type'] ?? '';
     var attempt = 0;
+    _log.fine(
+      'fetchPage gachaType=$queryGachaType url=${sanitizeUrl(url.toString())}',
+    );
     while (true) {
       final res = await client.get(url).timeout(timeout);
       final body = jsonDecode(res.body) as Map<String, dynamic>;
@@ -79,14 +85,20 @@ class WishFetcher {
         );
       }
       if (retcode == -101 || retcode == -100) {
+        _log.warning('auth expired retcode=$retcode');
         throw AuthExpiredException(retcode);
       }
       if (retcode == -110) {
         attempt++;
+        _log.warning(
+          'rate-limited (retcode=-110), backoff ${retryBackoff.inMilliseconds}ms, '
+          'attempt=$attempt/$_maxRetryOnRateLimit',
+        );
         if (attempt > _maxRetryOnRateLimit) throw RateLimitedException();
         await Future<void>.delayed(retryBackoff);
         continue;
       }
+      _log.severe('ApiError retcode=$retcode message=${body['message']}');
       throw ApiErrorException(retcode, body['message'] as String? ?? '');
     }
   }
@@ -103,6 +115,7 @@ class WishFetcher {
     required http.Client client,
   }) async {
     final existingMaxId = existing.isEmpty ? '0' : existing.first.id;
+    _log.info('banner=$gachaType start, existing=${existing.length}');
     final fresh = <WishRecord>[];
     var endId = '0';
     var isFirstPage = true;
@@ -150,6 +163,7 @@ class WishFetcher {
     }
 
     // fresh + existing 都是 desc
+    _log.info('banner=$gachaType done, fresh=${fresh.length} pages=$pageIndex');
     return [...fresh, ...existing];
   }
 
@@ -189,9 +203,16 @@ class WishFetcher {
     }
 
     final wishHit = await tryCategory(GachaCategory.wish);
-    if (wishHit != null) return wishHit;
+    if (wishHit != null) {
+      _log.info('probe wish: hit uid=${sanitizeUid(wishHit.uid ?? "")}');
+      return wishHit;
+    }
     final odesHit = await tryCategory(GachaCategory.odes);
-    if (odesHit != null) return odesHit;
+    if (odesHit != null) {
+      _log.info('probe odes: hit uid=${sanitizeUid(odesHit.uid ?? "")}');
+      return odesHit;
+    }
+    _log.info('probe: no records in any banner');
     return UidProbeResult(uid: null, primerPages: primers);
   }
 }

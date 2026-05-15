@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
 
@@ -132,6 +133,57 @@ void main() {
       );
       expect(paths, isNotEmpty);
       expect(paths.every((p) => p.endsWith('/getBeyondGachaLog')), isTrue);
+    });
+  });
+
+  group('logging instrumentation', () {
+    setUp(() {
+      Logger.root.level = Level.ALL;
+    });
+
+    tearDown(() {
+      Logger.root.clearListeners();
+    });
+
+    test('emits WARNING when retcode=-110 triggers backoff', () async {
+      final records = <LogRecord>[];
+      final sub = Logger.root.onRecord.listen(records.add);
+      addTearDown(sub.cancel);
+
+      var hits = 0;
+      final client = MockClient((req) async {
+        hits++;
+        if (hits == 1) {
+          return http.Response(
+            jsonEncode({'retcode': -110, 'data': null, 'message': 'rate'}),
+            200,
+          );
+        }
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {'list': []},
+          }),
+          200,
+        );
+      });
+
+      final fetcher = WishFetcher(
+        retryBackoff: const Duration(milliseconds: 1),
+      );
+      await fetcher.fetchPage(
+        Uri.parse('https://x.example/y?gacha_type=301'),
+        client,
+      );
+
+      final warning = records.firstWhere(
+        (r) => r.level == Level.WARNING && r.loggerName == 'wish.fetcher',
+        orElse: () => throw StateError(
+          'no WARNING from wish.fetcher; got '
+          '${records.map((r) => "${r.level.name}:${r.loggerName}:${r.message}").toList()}',
+        ),
+      );
+      expect(warning.message, contains('rate-limited'));
     });
   });
 }
