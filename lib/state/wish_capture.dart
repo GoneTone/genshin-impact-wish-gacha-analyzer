@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
 
@@ -18,21 +21,31 @@ abstract class WishCapture {
 }
 
 class RustWishCapture implements WishCapture {
+  static final _log = Logger('wish.capture');
+
   @override
   CaptureSession start() {
     final completer = Completer<String?>();
     String? capturedUrl;
+    _log.info('capture started');
 
     rust_capture.startCapture().listen(
       (event) {
         capturedUrl ??= event.url;
+        _log.fine('captured: host=${event.host}');
         // 不 complete 這裡：等 stream onDone 觸發 = MITM 已 graceful shutdown +
         // system proxy 已還原；此時呼叫 HTTP fetcher 才不會誤走代理
       },
-      onError: (e) {
+      onError: (Object e, StackTrace st) {
+        _log.severe('capture error', e, st);
         if (!completer.isCompleted) completer.completeError(e);
       },
       onDone: () {
+        if (capturedUrl == null) {
+          _log.info('capture done with no match');
+        } else {
+          _log.info('capture done, url=${sanitizeUrl(capturedUrl!)}');
+        }
         if (!completer.isCompleted) completer.complete(capturedUrl);
       },
     );
@@ -40,8 +53,8 @@ class RustWishCapture implements WishCapture {
     return CaptureSession(
       result: completer.future,
       cancel: () async {
+        _log.info('capture cancelled by user');
         await rust_capture.stopCapture();
-        // stop_capture 觸發 stream done → onDone → completer.complete
       },
     );
   }
