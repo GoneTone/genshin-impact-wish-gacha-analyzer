@@ -75,15 +75,15 @@ class SettingsPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
-                title: l.settingsLogs,
-                icon: Icons.bug_report_outlined,
-                child: const _LogsSection(),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              SectionCard(
                 title: l.settingsAccountManagement,
                 icon: Icons.manage_accounts_outlined,
                 child: const AccountManagement(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsLogs,
+                icon: Icons.bug_report_outlined,
+                child: const _LogsSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
