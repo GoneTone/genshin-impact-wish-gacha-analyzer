@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
@@ -89,6 +91,8 @@ final wishRepositoryProvider = NotifierProvider<WishRepository, WishState>(
 // ─── Notifier ───
 
 class WishRepository extends Notifier<WishState> {
+  static final _log = Logger('wish.repo');
+
   @override
   WishState build() {
     _bootstrapLoad();
@@ -158,6 +162,7 @@ class WishRepository extends Notifier<WishState> {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
     _cancelTriggered = false;
+    _log.info('update start, forceRecapture=$forceRecapture');
 
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     _activeCancellable = cancellable;
@@ -180,12 +185,18 @@ class WishRepository extends Notifier<WishState> {
       if (!forceRecapture && initialActiveUid != null) {
         capturedUrl = await storage.loadCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
+        if (capturedUrl != null) {
+          _log.info(
+            'using cached url for uid=${sanitizeUid(initialActiveUid)}',
+          );
+        }
       }
 
       if (capturedUrl == null) {
         capturedUrl = await _runMitm(isFallback: false);
         if (!ref.mounted) return;
         if (capturedUrl == null) {
+          _log.info('update aborted (user cancelled capture)');
           state = state.copyWith(clearProgress: true);
           return;
         }
@@ -200,6 +211,7 @@ class WishRepository extends Notifier<WishState> {
         );
       } on AuthExpiredException {
         if (!ref.mounted) return;
+        _log.warning('auth expired, falling back to MITM recapture');
         if (initialActiveUid != null) {
           await storage.deleteCapturedUrl(initialActiveUid);
           if (!ref.mounted) return;
@@ -236,12 +248,18 @@ class WishRepository extends Notifier<WishState> {
       } on http.ClientException catch (e) {
         if (!ref.mounted) return;
         if (_cancelTriggered) {
+          _log.info('update cancelled (http client closed)');
           state = state.copyWith(clearProgress: true);
         } else {
+          _log.warning(
+            'http client error: ${e.message}'
+            '${e.uri != null ? " uri=${sanitizeUrl(e.uri!.toString())}" : ""}',
+          );
           state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
         }
-      } catch (e) {
+      } catch (e, st) {
         if (!ref.mounted) return;
+        _log.severe('update unexpected error', e, st);
         state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
     } finally {
@@ -256,8 +274,11 @@ class WishRepository extends Notifier<WishState> {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
     final session = ref.read(wishCaptureProvider).start();
     _activeCancel = session.cancel;
+    _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
     try {
-      return await session.result;
+      final result = await session.result;
+      _log.info('MITM session done, hasUrl=${result != null}');
+      return result;
     } finally {
       _activeCancel = null;
     }
@@ -325,6 +346,7 @@ class WishRepository extends Notifier<WishState> {
       } on http.ClientException {
         rethrow;
       } catch (e) {
+        _log.warning('banner=${t.nameKey} failed: $e');
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);
       }
@@ -343,6 +365,10 @@ class WishRepository extends Notifier<WishState> {
 
     final newByUid = Map<String, BannerStorage>.from(state.byUid)
       ..[uid] = newData;
+    _log.info(
+      'update completed: uid=${sanitizeUid(uid)} '
+      'totalNew=$totalNew failed=[${failed.join(",")}]',
+    );
     state = state.copyWith(
       byUid: newByUid,
       activeUid: uid,
@@ -390,6 +416,7 @@ class WishRepository extends Notifier<WishState> {
     await ref.read(settingsProvider.notifier).clearAllUidPreferences();
     if (!ref.mounted) return;
     state = const WishState(isBootstrapping: false);
+    _log.info('cleared all wish data');
   }
 
   Future<ImportResult> importAccounts(AccountsBundle bundle) async {
@@ -474,6 +501,11 @@ class WishRepository extends Notifier<WishState> {
       clearActiveUid: newActive == null,
     );
 
+    _log.info(
+      'import: success=$successCount '
+      'failed=[${failed.join(",")}] '
+      'records=$totalRecords',
+    );
     return ImportResult(
       successAccounts: successCount,
       totalRecords: totalRecords,
@@ -511,6 +543,7 @@ class WishRepository extends Notifier<WishState> {
     } else {
       state = state.copyWith(byUid: newByUid);
     }
+    _log.info('cleared uid=${sanitizeUid(uid)}');
   }
 
   UpdateError _friendlyError(Object e) => switch (e) {

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
@@ -1174,6 +1175,136 @@ void main() {
       expect(container.read(settingsProvider).lastActiveUid, 'Y');
     },
   );
+  group('logging instrumentation', () {
+    setUp(() {
+      Logger.root.level = Level.ALL;
+    });
+
+    tearDown(() {
+      Logger.root.clearListeners();
+    });
+
+    test('emits update start and update completed on happy path', () async {
+      final records = <LogRecord>[];
+      final sub = Logger.root.onRecord.listen(records.add);
+      addTearDown(sub.cancel);
+
+      // Reuse happy-path setup from the FetchingBanner cancel test:
+      // primer page returns 20 records (forcing fetchBannerWithMerge into
+      // page 2), but here the second and subsequent pages return an empty
+      // list so the fetch completes successfully.
+      final storage = WishStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026),
+          banners: const {
+            '301': [],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+          },
+        ),
+      );
+      await storage.saveCapturedUrl(
+        '100000001',
+        'https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog'
+            '?authkey=fakekey&authkey_ver=1&sign_type=2'
+            '&game_biz=hk4e_global&lang=zh-tw&gacha_type=301&page=1&size=20&end_id=0',
+      );
+
+      var hits = 0;
+      final container = ProviderContainer(
+        overrides: [
+          wishStorageProvider.overrideWithValue(storage),
+          wishCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((req) async {
+                hits++;
+                if (hits == 1) {
+                  // primer: 20 records causes fetchBannerWithMerge to page 2
+                  return http.Response(
+                    jsonEncode({
+                      'retcode': 0,
+                      'message': 'OK',
+                      'data': {
+                        'list': List.generate(
+                          20,
+                          (i) => {
+                            'uid': '100000001',
+                            'gacha_type': '301',
+                            'item_id': '',
+                            'count': '1',
+                            'time': '2025-09-23 21:27:37',
+                            'name': 'x',
+                            'lang': 'zh-tw',
+                            'item_type': '武器',
+                            'rank_type': '3',
+                            'id': '17${(99 - i).toString().padLeft(17, '0')}',
+                          },
+                        ),
+                        'page': '1',
+                        'size': '20',
+                        'total': '0',
+                      },
+                    }),
+                    200,
+                    headers: {'content-type': 'application/json'},
+                  );
+                }
+                // All subsequent pages return empty list → fetch completes
+                return http.Response(
+                  jsonEncode({
+                    'retcode': 0,
+                    'message': 'OK',
+                    'data': {
+                      'list': <dynamic>[],
+                      'page': '2',
+                      'size': '20',
+                      'total': '0',
+                    },
+                  }),
+                  200,
+                  headers: {'content-type': 'application/json'},
+                );
+              }),
+              cancel: () {},
+            ),
+          ),
+          wishFetcherProvider.overrideWithValue(
+            WishFetcher(rateLimit: Duration.zero, retryBackoff: Duration.zero),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.read(wishRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      await container.read(wishRepositoryProvider.notifier).update();
+
+      expect(
+        records.where(
+          (r) =>
+              r.loggerName == 'wish.repo' &&
+              r.message.startsWith('update start'),
+        ),
+        isNotEmpty,
+        reason: 'expected `update start` log',
+      );
+      expect(
+        records.where(
+          (r) =>
+              r.loggerName == 'wish.repo' &&
+              r.message.startsWith('update completed'),
+        ),
+        isNotEmpty,
+        reason: 'expected `update completed` log',
+      );
+    });
+  });
 }
 
 class _FailingStorage extends WishStorage {
