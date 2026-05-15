@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 class UpdateProgressDialog extends ConsumerWidget {
   const UpdateProgressDialog({super.key});
@@ -28,7 +29,8 @@ class UpdateProgressDialog extends ConsumerWidget {
 
     return PopScope(
       canPop: false,
-      child: AlertDialog(
+      child: AppDialog(
+        // size 預設 sm，符合短訊息 + LinearProgressIndicator 語意。
         title: _Title(progress: progress, l: l, tokens: tokens),
         content: _Body(progress: progress, l: l),
         actions: _actions(context, progress, notifier, l),
