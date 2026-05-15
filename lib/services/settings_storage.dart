@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppThemeMode { system, dark, light }
@@ -107,6 +108,8 @@ class AppSettings {
 }
 
 abstract final class SettingsStorage {
+  static final _log = Logger('settings');
+
   static const _kThemeMode = 'pref.themeMode';
   static const _kLocale = 'pref.locale';
   static const _kLastActiveUid = 'pref.lastActiveUid';
@@ -170,7 +173,8 @@ abstract final class SettingsStorage {
       final decoded = jsonDecode(raw);
       if (decoded is! Map) return const {};
       return decoded.map((k, v) => MapEntry(k.toString(), v.toString()));
-    } catch (_) {
+    } catch (e, st) {
+      _log.warning('uidAliases corrupt, resetting to empty', e, st);
       return const {};
     }
   }
@@ -181,7 +185,8 @@ abstract final class SettingsStorage {
       final decoded = jsonDecode(raw);
       if (decoded is! List) return const [];
       return decoded.map((e) => e.toString()).toList(growable: false);
-    } catch (_) {
+    } catch (e, st) {
+      _log.warning('uidOrder corrupt, resetting to empty', e, st);
       return const [];
     }
   }

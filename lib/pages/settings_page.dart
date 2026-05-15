@@ -409,6 +409,10 @@ class _DataManagement extends ConsumerWidget {
       now: now,
     );
     await File(loc.path).writeAsString(text);
+    Logger('accounts.io').info(
+      'export: uids=${pickedSet.length} '
+      'records=${filteredByUid.values.fold<int>(0, (a, b) => a + b.allRecords.length)}',
+    );
     if (!ctx.mounted) return;
     ScaffoldMessenger.of(
       ctx,
@@ -541,12 +545,20 @@ class _DataManagement extends ConsumerWidget {
 
     final SnackBar snack;
     if (result.failedUids.isEmpty) {
+      Logger('accounts.io').info(
+        'import: success=${result.successAccounts} '
+        'records=${result.totalRecords}',
+      );
       snack = SnackBar(
         content: Text(
           l.settingsImportSuccess(result.successAccounts, result.totalRecords),
         ),
       );
     } else {
+      Logger('accounts.io').warning(
+        'import partial: success=${result.successAccounts} '
+        'failed=[${result.failedUids.join(",")}]',
+      );
       snack = SnackBar(
         content: Text(
           l.settingsImportPartial(
