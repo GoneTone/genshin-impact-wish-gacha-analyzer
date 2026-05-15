@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -10,53 +13,117 @@ import 'package:window_manager/window_manager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
+import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/logging.dart'
+    as rust_logging;
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/frb_generated.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await RustLib.init();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await RustLib.init();
 
-  if (Platform.isWindows) {
-    await windowManager.ensureInitialized();
-    await WindowStateKeeper.bootstrap();
-  }
+      if (Platform.isWindows) {
+        await windowManager.ensureInitialized();
+        await WindowStateKeeper.bootstrap();
+      }
 
-  try {
-    final cleaned = await rust_capture.cleanupStaleProxy();
-    if (cleaned) {
-      debugPrint('[startup] stale proxy detected and reset');
-    }
-  } catch (e) {
-    debugPrint('[startup] cleanup_stale_proxy failed: $e');
-  }
+      final supportDir = await getApplicationSupportDirectory();
+      final logService = await LogService.bootstrap(supportDir);
 
-  final supportDir = await getApplicationSupportDirectory();
-  final wishDir = Directory('${supportDir.path}/wish_data');
-  if (!await wishDir.exists()) {
-    await wishDir.create(recursive: true);
-  }
-  final storage = WishStorage(wishDir);
+      FlutterError.onError = (details) {
+        Logger('app.error').severe(
+          'FlutterError: ${details.exceptionAsString()}',
+          details.exception,
+          details.stack,
+        );
+        FlutterError.presentError(details);
+      };
+      PlatformDispatcher.instance.onError = (e, st) {
+        Logger('app.error').severe('Uncaught async error', e, st);
+        return true;
+      };
 
-  final pkgInfo = await PackageInfo.fromPlatform();
+      unawaited(_connectRustLogStream());
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        wishStorageProvider.overrideWithValue(storage),
-        appVersionProvider.overrideWithValue(pkgInfo.version),
-      ],
-      child: const MainApp(),
-    ),
+      final pkgInfo = await PackageInfo.fromPlatform();
+
+      Logger('app.startup').info(
+        'app start v${pkgInfo.version}+${pkgInfo.buildNumber} '
+        'on ${Platform.operatingSystem} ${Platform.operatingSystemVersion}, '
+        'locale=${Platform.localeName}',
+      );
+
+      try {
+        final cleaned = await rust_capture.cleanupStaleProxy();
+        if (cleaned) {
+          Logger(
+            'app.startup',
+          ).info('cleanup_stale_proxy: stale proxy detected and reset');
+        }
+      } catch (e, st) {
+        Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
+      }
+
+      final wishDir = Directory('${supportDir.path}/wish_data');
+      if (!await wishDir.exists()) {
+        await wishDir.create(recursive: true);
+      }
+      final storage = WishStorage(wishDir);
+
+      runApp(
+        ProviderScope(
+          overrides: [
+            wishStorageProvider.overrideWithValue(storage),
+            appVersionProvider.overrideWithValue(pkgInfo.version),
+            logServiceProvider.overrideWithValue(logService),
+          ],
+          child: const MainApp(),
+        ),
+      );
+    },
+    (e, st) {
+      Logger('app.error').severe('Zone uncaught', e, st);
+    },
   );
 }
+
+Future<void> _connectRustLogStream() async {
+  try {
+    rust_logging.startLogStream().listen(
+      (event) {
+        Logger('rust.${event.target}').log(
+          _levelFromRust(event.level),
+          event.message,
+        );
+      },
+      onError: (Object e, StackTrace st) {
+        Logger('rust.bridge').warning('log stream error', e, st);
+      },
+    );
+    Logger('rust.bridge').info('rust log stream connected');
+  } catch (e, st) {
+    Logger('rust.bridge').warning('failed to start rust log stream', e, st);
+  }
+}
+
+Level _levelFromRust(String s) => switch (s) {
+  'ERROR' => Level.SEVERE,
+  'WARN' => Level.WARNING,
+  'INFO' => Level.INFO,
+  'DEBUG' => Level.FINE,
+  _ => Level.FINER,
+};
 
 class MainApp extends ConsumerStatefulWidget {
   const MainApp({super.key});
