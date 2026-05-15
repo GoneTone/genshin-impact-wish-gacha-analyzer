@@ -83,6 +83,7 @@
   "emptyNoRecords": "此卡池無紀錄",
   "emptyNoFiltered": "沒有符合條件的紀錄",
   "emptyNoOdesRecords": "尚無頌願記錄",
+  "emptyNoWishRecords": "尚無祈願記錄",
 
   "statsTotal": "總抽數",
   "statsFiveStarCount": "5★ 件數",

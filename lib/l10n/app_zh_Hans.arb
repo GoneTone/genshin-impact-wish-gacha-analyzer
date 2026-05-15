@@ -57,6 +57,7 @@
   "emptyNoRecords": "此卡池无记录",
   "emptyNoFiltered": "没有符合条件的记录",
   "emptyNoOdesRecords": "暂无颂愿记录",
+  "emptyNoWishRecords": "尚无祈愿记录",
 
   "statsTotal": "总抽数",
   "statsFiveStarCount": "5★ 件数",

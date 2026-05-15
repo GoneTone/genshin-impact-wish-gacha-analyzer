@@ -63,6 +63,7 @@
   "emptyNoRecords": "No records for this banner",
   "emptyNoFiltered": "No records match the current filter",
   "emptyNoOdesRecords": "No Odes records yet",
+  "emptyNoWishRecords": "No wish records yet",
 
   "statsTotal": "Total pulls",
   "statsFiveStarCount": "5★ Count",
