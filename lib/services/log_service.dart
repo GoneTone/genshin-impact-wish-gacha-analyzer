@@ -46,32 +46,48 @@ class LogService {
   }
 
   void _handle(LogRecord r) {
-    final line = _format(r);
+    // listener 不能讓例外冒到 zone：root logger 是 sync broadcast，這條
+    // log 還在 firing，例外被 zone uncaught handler 接住後若再 publish
+    // (例如 main.dart 的 onError 寫 log) 會炸 "Cannot fire new event"。
+    // 只能用 developer.log 報失敗，不要再呼叫 Logger.xxx。
+    try {
+      final line = _format(r);
 
-    developer.log(
-      r.message,
-      time: r.time,
-      level: r.level.value,
-      name: r.loggerName,
-      error: r.error,
-      stackTrace: r.stackTrace,
-    );
-    if (kDebugMode) {
-      debugPrint(line);
+      developer.log(
+        r.message,
+        time: r.time,
+        level: r.level.value,
+        name: r.loggerName,
+        error: r.error,
+        stackTrace: r.stackTrace,
+      );
+      if (kDebugMode) {
+        debugPrint(line);
+      }
+
+      _ringBuffer.addLast(line);
+      while (_ringBuffer.length > _ringBufferCapacity) {
+        _ringBuffer.removeFirst();
+      }
+      if (!_liveController.isClosed) _liveController.add(line);
+
+      _appendToFile(line, r);
+    } catch (e, st) {
+      developer.log(
+        'LogService._handle failed',
+        name: 'app.error',
+        level: Level.SEVERE.value,
+        error: e,
+        stackTrace: st,
+      );
     }
-
-    _ringBuffer.addLast(line);
-    while (_ringBuffer.length > _ringBufferCapacity) {
-      _ringBuffer.removeFirst();
-    }
-    if (!_liveController.isClosed) _liveController.add(line);
-
-    _appendToFile(line, r);
   }
 
   String _format(LogRecord r) {
+    // 時間戳一律寫 UTC (帶 Z 後綴),跟 _appendToFile / _openTodaySink 的
+    // UTC 分檔基準對齊;否則跨 UTC 午夜的紀錄看起來會「寫錯天」。
     final buf = StringBuffer()
-      ..write(r.time.toIso8601String())
+      ..write(r.time.toUtc().toIso8601String())
       ..write(' [')
       ..write(r.level.name.padRight(7))
       ..write('] [')
@@ -92,7 +108,12 @@ class LogService {
   }
 
   void _appendToFile(String line, LogRecord r) {
-    final d = DateTime.utc(r.time.year, r.time.month, r.time.day);
+    // 必須用 r.time.toUtc() 取年月日,跟 _openTodaySink 的基準對齊。
+    // 直接拿 r.time.year/month/day 會用 local 時區,跨午夜 UTC 那段
+    // (台灣 00:00~07:59) 第一條 log 就會誤觸 rollover,撞到 sink race
+    // 拋 "StreamSink is bound to a stream"。
+    final t = r.time.toUtc();
+    final d = DateTime.utc(t.year, t.month, t.day);
     if (_todayDate != d) {
       _todayDate =
           d; // synchronous guard — prevents re-entry from later records
@@ -109,11 +130,26 @@ class LogService {
   }
 
   Future<void> _rolloverTo(DateTime d) async {
-    await _todaySink?.flush();
-    await _todaySink?.close();
+    // 先把舊 sink 取走、立刻開新 sink 接管後續寫入,避免 _appendToFile
+    // 的 writeln 打到正在 flush/close 的舊 sink 拋 "StreamSink is bound
+    // to a stream"。舊 sink 的 flush+close 改在背景 try 裡完成,任何
+    // 錯誤吞掉,不影響新 sink 的寫入。
+    final old = _todaySink;
     _todayDate = d;
     final file = _fileFor(d);
     _todaySink = file.openWrite(mode: FileMode.append, encoding: utf8);
+    try {
+      await old?.flush();
+      await old?.close();
+    } catch (e, st) {
+      developer.log(
+        'LogService._rolloverTo: old sink teardown failed',
+        name: 'app.error',
+        level: Level.WARNING.value,
+        error: e,
+        stackTrace: st,
+      );
+    }
     await _rotate();
   }
 
