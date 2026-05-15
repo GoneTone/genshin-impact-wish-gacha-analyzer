@@ -149,13 +149,13 @@ class OverviewPage extends ConsumerWidget {
             statCards: wishStatCards,
             emptyTitle: l.emptyNoWishRecords,
           ),
-          const SizedBox(height: AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxxl),
           Divider(
             color: Theme.of(context).gacha.borderEmphasis,
             height: 1,
             thickness: 1,
           ),
-          const SizedBox(height: AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxxl),
           _OverviewSection(
             title: l.pageOverviewOdesSection,
             types: odesTypes,
