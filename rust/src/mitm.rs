@@ -1,19 +1,18 @@
-use std::net::SocketAddr;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
+use crate::api::capture::CapturedRequest;
+use crate::frb_generated::StreamSink;
 use anyhow::{Context, Result};
 use hudsucker::{
-    Proxy,
-    Body, HttpContext, HttpHandler, RequestOrResponse,
     certificate_authority::RcgenAuthority,
     hyper::{Request, Response, Uri},
     rcgen::{Issuer, KeyPair},
-    rustls::{ClientConfig, crypto::aws_lc_rs},
+    rustls::{crypto::aws_lc_rs, ClientConfig},
+    Body, HttpContext, HttpHandler, Proxy, RequestOrResponse,
 };
 use hyper_rustls::{ConfigBuilderExt, HttpsConnectorBuilder};
+use std::net::SocketAddr;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use tokio::sync::oneshot;
-use crate::api::capture::CapturedRequest;
-use crate::frb_generated::StreamSink;
 
 pub struct MitmServerGuard {
     shutdown_tx: Option<oneshot::Sender<()>>,
@@ -37,8 +36,7 @@ fn is_target(uri: &Uri) -> bool {
         .map(|h| h == "hoyoverse.com" || h.ends_with(".hoyoverse.com"))
         .unwrap_or(false);
     let path = uri.path();
-    let path_ok = path.ends_with("/getGachaLog")
-        || path.ends_with("/getBeyondGachaLog");
+    let path_ok = path.ends_with("/getGachaLog") || path.ends_with("/getBeyondGachaLog");
     host_ok && path_ok
 }
 
@@ -89,11 +87,7 @@ impl HttpHandler for LogHandler {
         Request::from_parts(parts, body).into()
     }
 
-    async fn handle_response(
-        &mut self,
-        _ctx: &HttpContext,
-        res: Response<Body>,
-    ) -> Response<Body> {
+    async fn handle_response(&mut self, _ctx: &HttpContext, res: Response<Body>) -> Response<Body> {
         if self.pending_stop.swap(false, Ordering::SeqCst) {
             tracing::info!(target: "mitm", "handle_response after hit: status {}, scheduling stop", res.status());
 
@@ -118,8 +112,8 @@ pub fn start(
     sink: StreamSink<CapturedRequest>,
 ) -> Result<MitmServerGuard> {
     let key_pair = KeyPair::from_pem(key_pem).context("rcgen KeyPair::from_pem failed")?;
-    let issuer = Issuer::from_ca_cert_pem(cert_pem, key_pair)
-        .context("Issuer::from_ca_cert_pem failed")?;
+    let issuer =
+        Issuer::from_ca_cert_pem(cert_pem, key_pair).context("Issuer::from_ca_cert_pem failed")?;
 
     let provider = aws_lc_rs::default_provider();
     let ca = RcgenAuthority::new(issuer, 1_000, provider);

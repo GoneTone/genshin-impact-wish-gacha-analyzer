@@ -1,5 +1,7 @@
 use anyhow::{Context, Result};
-use rcgen::{BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa, KeyPair, KeyUsagePurpose};
+use rcgen::{
+    BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa, KeyPair, KeyUsagePurpose,
+};
 use sha1::Digest;
 use std::fs;
 use std::path::PathBuf;
@@ -11,7 +13,8 @@ pub fn ca_dir() -> Result<PathBuf> {
     let dir = PathBuf::from(appdata)
         .join("genshin_impact_wish_gacha_analyzer")
         .join("ca");
-    fs::create_dir_all(&dir).with_context(|| format!("Failed to create CA directory: {}", dir.display()))?;
+    fs::create_dir_all(&dir)
+        .with_context(|| format!("Failed to create CA directory: {}", dir.display()))?;
     Ok(dir)
 }
 
@@ -47,17 +50,20 @@ pub fn load_or_generate() -> Result<RootCa> {
             .with_context(|| format!("Failed to read {}", key_path.display()))?;
 
         // Parse PEM to extract DER bytes using the `pem` crate.
-        let pem_obj = pem::parse(&cert_pem)
-            .with_context(|| "Failed to parse root_ca.pem")?;
+        let pem_obj = pem::parse(&cert_pem).with_context(|| "Failed to parse root_ca.pem")?;
         let cert_der = pem_obj.contents().to_vec();
 
-        Ok(RootCa { cert_pem, key_pem, cert_der })
+        Ok(RootCa {
+            cert_pem,
+            key_pem,
+            cert_der,
+        })
     } else {
         debug!(target: "ca", "generate branch (no existing files)");
 
         // Generate a new self-signed root CA.
-        let mut params = CertificateParams::new(Vec::new())
-            .context("Failed to create CertificateParams")?;
+        let mut params =
+            CertificateParams::new(Vec::new()).context("Failed to create CertificateParams")?;
 
         params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
         params.key_usages = vec![KeyUsagePurpose::KeyCertSign, KeyUsagePurpose::CrlSign];
@@ -68,7 +74,9 @@ pub fn load_or_generate() -> Result<RootCa> {
         params.distinguished_name = dn;
 
         let key_pair = KeyPair::generate().context("Failed to generate key pair")?;
-        let cert = params.self_signed(&key_pair).context("Failed to self-sign certificate")?;
+        let cert = params
+            .self_signed(&key_pair)
+            .context("Failed to self-sign certificate")?;
 
         let cert_pem = cert.pem();
         let key_pem = key_pair.serialize_pem();
@@ -79,7 +87,11 @@ pub fn load_or_generate() -> Result<RootCa> {
         fs::write(&key_path, &key_pem)
             .with_context(|| format!("Failed to write {}", key_path.display()))?;
 
-        Ok(RootCa { cert_pem, key_pem, cert_der })
+        Ok(RootCa {
+            cert_pem,
+            key_pem,
+            cert_der,
+        })
     };
 
     if let Ok(ref ca) = result {

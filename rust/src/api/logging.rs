@@ -93,6 +93,7 @@ where
 }
 
 #[derive(Default)]
+#[frb(ignore)]
 struct MessageVisitor {
     message: Option<String>,
     fields: Vec<(String, String)>,

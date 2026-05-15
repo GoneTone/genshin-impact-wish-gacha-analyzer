@@ -144,9 +144,8 @@ fn write_state(enable: u32, server: Option<&str>) -> Result<()> {
             // - `wide` 在整個 FFI 呼叫期間保持有效（本地 Vec，借用於此 unsafe 區塊）。
             // - `as_ptr() as *const u8` 合法：u16 對齊 ≥ u8，且 from_raw_parts 的長度以位元組計。
             // - 長度 = wide.len() * 2 精確表示字串的位元組數（含 null 結尾）。
-            let byte_slice = unsafe {
-                std::slice::from_raw_parts(wide.as_ptr() as *const u8, wide.len() * 2)
-            };
+            let byte_slice =
+                unsafe { std::slice::from_raw_parts(wide.as_ptr() as *const u8, wide.len() * 2) };
             unsafe {
                 RegSetValueExW(
                     hkey,
@@ -160,9 +159,7 @@ fn write_state(enable: u32, server: Option<&str>) -> Result<()> {
         }
         None => {
             // SAFETY: hkey 有效；字串 "ProxyServer" 透過 HSTRING 傳遞，生命週期覆蓋呼叫。
-            let result = unsafe {
-                RegDeleteValueW(hkey, &HSTRING::from("ProxyServer"))
-            };
+            let result = unsafe { RegDeleteValueW(hkey, &HSTRING::from("ProxyServer")) };
             // ERROR_FILE_NOT_FOUND 表示值本不存在，視為成功。
             if result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND {
                 Ok(())
