@@ -693,6 +693,7 @@ class _LogsSection extends ConsumerWidget {
     ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(content: Text(l.settingsLogsExportSuccess(loc.path))),
     );
+    unawaited(revealInFileManager(loc.path));
   }
 
   Future<void> _openFolder(BuildContext ctx, WidgetRef ref) async {
