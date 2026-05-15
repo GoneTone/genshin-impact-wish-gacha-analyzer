@@ -1,11 +1,11 @@
 // lib/state/app_release.dart
 //
 // 版本檢查狀態管理。啟動自動 + 設定頁手動兩個入口共用同一個 notifier。
-// 失敗時 `manual=false` 靜默（僅 debugPrint），`manual=true` 才把錯誤
-// 推給 UI。i18n localize 在這層完成；service 端保持純函式。
+// 失敗時 `manual=false` 靜默，`manual=true` 才把錯誤推給 UI。
+// i18n localize 在這層完成；service 端保持純函式。
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
@@ -54,6 +54,7 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
 
   Future<void> check({required bool manual}) async {
     if (state is ReleaseChecking) return; // 防 re-entrancy
+    Logger('release').info('release check start manual=$manual');
     state = const ReleaseChecking();
     final currentVersion = ref.read(appVersionProvider);
     final client = ref.read(httpClientProvider);
@@ -66,18 +67,25 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
       );
     } on ReleaseCheckError catch (e) {
       if (manual) {
+        Logger('release').warning('release check failed (manual): $e');
         state = ReleaseCheckFailed(_localizeError(e));
       } else {
-        debugPrint('[app_release] silent failure: $e');
+        Logger('release').warning('release check failed (silent): $e');
         state = const ReleaseIdle();
       }
       return;
     }
 
     if (releases.isEmpty) {
+      Logger('release').info('release check: up-to-date');
       state = manual ? const ReleaseUpToDate() : const ReleaseIdle();
       return;
     }
+
+    Logger('release').info(
+      'release check: ${releases.length} newer release(s), '
+      'latest=${releases.first.tagName}',
+    );
 
     if (!manual) {
       final skipped = ref.read(settingsProvider).skippedReleaseTag;
