@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 /// 顯示一個要求使用者打字確認的 dialog。
 /// 回傳值：true = 確認 / false = 取消 / null = 系統 dismiss。
@@ -60,7 +61,8 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).gacha;
     final matches = _ctrl.text == widget.expectedText;
-    return AlertDialog(
+    return AppDialog(
+      // size 預設 sm，符合短訊息語意，不必顯式傳。
       title: Text(widget.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
