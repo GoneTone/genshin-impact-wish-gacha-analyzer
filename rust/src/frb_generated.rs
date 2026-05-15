@@ -342,6 +342,17 @@ impl SseEncode for crate::api::capture::CapturedRequest {
     }
 }
 
+impl SseEncode for crate::api::logging::LogEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    // NOTE: manually added for Task 4 pre-codegen; Task 5 codegen will overwrite frb_generated.rs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i64>::sse_encode(self.timestamp_ms, serializer);
+        <String>::sse_encode(self.level, serializer);
+        <String>::sse_encode(self.target, serializer);
+        <String>::sse_encode(self.message, serializer);
+    }
+}
+
 impl SseEncode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {

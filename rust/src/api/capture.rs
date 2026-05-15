@@ -1,9 +1,9 @@
-use std::sync::Mutex;
+use crate::frb_generated::StreamSink;
+use crate::{ca, cert_store, mitm, sys_proxy};
 use anyhow::{anyhow, Result};
 use flutter_rust_bridge::frb;
 use once_cell::sync::Lazy;
-use crate::{ca, cert_store, mitm, sys_proxy};
-use crate::frb_generated::StreamSink;
+use std::sync::Mutex;
 
 const PROXY_ADDR: &str = "127.0.0.1:18080";
 
@@ -32,26 +32,19 @@ pub fn start_capture(sink: StreamSink<CapturedRequest>) -> Result<()> {
         return Err(anyhow!("capture already running"));
     }
 
-    let _ = tracing_subscriber::fmt()
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info"))
-        )
-        .try_init();
+    crate::api::logging::init_tracing_once();
 
     let root = ca::load_or_generate()?;
     cert_store::install_to_current_user_root(&root.cert_der)?;
 
-    let mitm = mitm::start(
-        PROXY_ADDR.parse()?,
-        &root.cert_pem,
-        &root.key_pem,
-        sink,
-    )?;
+    let mitm = mitm::start(PROXY_ADDR.parse()?, &root.cert_pem, &root.key_pem, sink)?;
     // mitm 起好後再切系統 proxy，避免 race
     let proxy = sys_proxy::apply(PROXY_ADDR)?;
 
-    *guard = Some(Session { _mitm: mitm, _proxy: proxy });
+    *guard = Some(Session {
+        _mitm: mitm,
+        _proxy: proxy,
+    });
     Ok(())
 }
 
