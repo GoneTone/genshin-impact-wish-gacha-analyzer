@@ -102,10 +102,9 @@ Future<void> _connectRustLogStream() async {
   try {
     rust_logging.startLogStream().listen(
       (event) {
-        Logger('rust.${event.target}').log(
-          _levelFromRust(event.level),
-          event.message,
-        );
+        Logger(
+          'rust.${event.target}',
+        ).log(_levelFromRust(event.level), event.message);
       },
       onError: (Object e, StackTrace st) {
         Logger('rust.bridge').warning('log stream error', e, st);
