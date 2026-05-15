@@ -41,16 +41,23 @@ Future<void> main() async {
       final supportDir = await getApplicationSupportDirectory();
       final logService = await LogService.bootstrap(supportDir);
 
+      // 注意：onError 用 scheduleMicrotask 排到下一個 tick，避免 listener
+      // 在處理某條 log 時拋例外被 zone 接住後，又同步 publish 到正在 firing
+      // 的 root logger broadcast controller，造成 "Cannot fire new event" 死循環。
       FlutterError.onError = (details) {
-        Logger('app.error').severe(
-          'FlutterError: ${details.exceptionAsString()}',
-          details.exception,
-          details.stack,
-        );
+        scheduleMicrotask(() {
+          Logger('app.error').severe(
+            'FlutterError: ${details.exceptionAsString()}',
+            details.exception,
+            details.stack,
+          );
+        });
         FlutterError.presentError(details);
       };
       PlatformDispatcher.instance.onError = (e, st) {
-        Logger('app.error').severe('Uncaught async error', e, st);
+        scheduleMicrotask(
+          () => Logger('app.error').severe('Uncaught async error', e, st),
+        );
         return true;
       };
 
@@ -93,7 +100,9 @@ Future<void> main() async {
       );
     },
     (e, st) {
-      Logger('app.error').severe('Zone uncaught', e, st);
+      scheduleMicrotask(
+        () => Logger('app.error').severe('Zone uncaught', e, st),
+      );
     },
   );
 }
