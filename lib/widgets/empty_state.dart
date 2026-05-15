@@ -56,14 +56,6 @@ class EmptyState extends StatelessWidget {
     );
   }
 
-  factory EmptyState.noOdesRecords(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
-    return EmptyState(
-      icon: Icons.auto_awesome_outlined,
-      title: l.emptyNoOdesRecords,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

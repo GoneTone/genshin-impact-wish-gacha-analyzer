@@ -147,22 +147,24 @@ class OverviewPage extends ConsumerWidget {
             stats: wishStats,
             bannerColors: bannerColors,
             statCards: wishStatCards,
+            emptyTitle: l.emptyNoWishRecords,
           ),
           const SizedBox(height: AppSpacing.xl),
-          if (odesAll.isEmpty)
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.l),
-              child: EmptyState.noOdesRecords(context),
-            )
-          else
-            _OverviewSection(
-              title: l.pageOverviewOdesSection,
-              types: odesTypes,
-              banners: odesBanners,
-              stats: odesStats,
-              bannerColors: bannerColors,
-              statCards: odesStatCards,
-            ),
+          Divider(
+            color: Theme.of(context).gacha.borderEmphasis,
+            height: 1,
+            thickness: 1,
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          _OverviewSection(
+            title: l.pageOverviewOdesSection,
+            types: odesTypes,
+            banners: odesBanners,
+            stats: odesStats,
+            bannerColors: bannerColors,
+            statCards: odesStatCards,
+            emptyTitle: l.emptyNoOdesRecords,
+          ),
         ],
       ),
     );
@@ -177,6 +179,7 @@ class _OverviewSection extends StatelessWidget {
     required this.stats,
     required this.bannerColors,
     required this.statCards,
+    required this.emptyTitle,
   });
 
   final String title;
@@ -185,11 +188,25 @@ class _OverviewSection extends StatelessWidget {
   final WishStats stats;
   final BannerColors bannerColors;
   final List<Widget> statCards;
+  final String emptyTitle;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
+    final hasData = banners.values.any((r) => r.isNotEmpty);
+
+    if (!hasData) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
+          const SizedBox(height: AppSpacing.m),
+          EmptyState.noRecords(context, title: emptyTitle, compact: true),
+        ],
+      );
+    }
+
     final typesByGt = <String, GachaType>{
       for (final t in types) t.gachaType: t,
     };
