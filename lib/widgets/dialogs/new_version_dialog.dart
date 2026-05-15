@@ -1,6 +1,4 @@
 // lib/widgets/dialogs/new_version_dialog.dart
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_widget/markdown_widget.dart';
@@ -8,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
 class NewVersionDialog extends ConsumerWidget {
@@ -20,12 +19,10 @@ class NewVersionDialog extends ConsumerWidget {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final latest = releases.first;
-    final mq = MediaQuery.of(context);
-    // AlertDialog 預設左右 insetPadding 共 80,先扣掉再卡 720 上限,避免窄視窗撐爆。
-    final dialogWidth = math.min(720.0, mq.size.width - 80);
-    final maxHeight = mq.size.height * 0.6;
 
-    return AlertDialog(
+    return AppDialog(
+      size: AppDialogSize.lg,
+      scrollable: true,
       title: Row(
         children: [
           Icon(Icons.system_update, color: tokens.stateSuccess),
@@ -33,23 +30,14 @@ class NewVersionDialog extends ConsumerWidget {
           Expanded(child: Text(l.updateTitle(latest.tagName))),
         ],
       ),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxHeight),
-        child: SizedBox(
-          width: dialogWidth,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (int i = 0; i < releases.length; i++) ...[
-                  _ReleaseCard(release: releases[i], l: l),
-                  if (i < releases.length - 1)
-                    const SizedBox(height: AppSpacing.m),
-                ],
-              ],
-            ),
-          ),
-        ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < releases.length; i++) ...[
+            _ReleaseCard(release: releases[i], l: l),
+            if (i < releases.length - 1) const SizedBox(height: AppSpacing.m),
+          ],
+        ],
       ),
       actions: [
         TextButton(
