@@ -63,6 +63,7 @@ class AppSettings {
     this.uidAliases = const {},
     this.uidOrder = const [],
     this.skippedReleaseTag,
+    this.logLevel = 'INFO',
   });
 
   final AppThemeMode themeMode;
@@ -71,6 +72,9 @@ class AppSettings {
   final Map<String, String> uidAliases;
   final List<String> uidOrder;
   final String? skippedReleaseTag;
+
+  /// `package:logging` Level name:"OFF" | "SEVERE" | "WARNING" | "INFO" | "FINE"
+  final String logLevel;
 
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -86,6 +90,7 @@ class AppSettings {
     List<String>? uidOrder,
     String? skippedReleaseTag,
     bool clearSkippedReleaseTag = false,
+    String? logLevel,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -97,6 +102,7 @@ class AppSettings {
     skippedReleaseTag: clearSkippedReleaseTag
         ? null
         : (skippedReleaseTag ?? this.skippedReleaseTag),
+    logLevel: logLevel ?? this.logLevel,
   );
 }
 
@@ -107,6 +113,7 @@ abstract final class SettingsStorage {
   static const _kUidAliases = 'pref.uidAliases';
   static const _kUidOrder = 'pref.uidOrder';
   static const _kSkippedReleaseTag = 'pref.skippedReleaseTag';
+  static const _kLogLevel = 'pref.logLevel';
 
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -117,6 +124,7 @@ abstract final class SettingsStorage {
       uidAliases: _parseAliases(prefs.getString(_kUidAliases)),
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
+      logLevel: prefs.getString(_kLogLevel) ?? 'INFO',
     );
   }
 
@@ -136,6 +144,7 @@ abstract final class SettingsStorage {
     } else {
       await prefs.setString(_kSkippedReleaseTag, s.skippedReleaseTag!);
     }
+    await prefs.setString(_kLogLevel, s.logLevel);
   }
 
   static AppThemeMode _parseThemeMode(String? raw) => switch (raw) {

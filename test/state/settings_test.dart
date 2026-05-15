@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -218,5 +219,32 @@ void main() {
     expect(container.read(settingsProvider).skippedReleaseTag, isNull);
     final reloaded = await SettingsStorage.load();
     expect(reloaded.skippedReleaseTag, isNull);
+  });
+
+  group('logLevel', () {
+    test('setLogLevel persists and applies to Logger.root', () async {
+      SharedPreferences.setMockInitialValues({});
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      await container.read(settingsProvider.notifier).waitForLoad();
+      expect(Logger.root.level, equals(Level.INFO));
+
+      await container.read(settingsProvider.notifier).setLogLevel('WARNING');
+      expect(Logger.root.level, equals(Level.WARNING));
+      expect(container.read(settingsProvider).logLevel, equals('WARNING'));
+
+      // Simulate fresh process — manually reset root level, reload container
+      Logger.root.level = Level.INFO;
+      final container2 = ProviderContainer();
+      addTearDown(container2.dispose);
+      await container2.read(settingsProvider.notifier).waitForLoad();
+      expect(Logger.root.level, equals(Level.WARNING));
+    });
+
+    tearDown(() {
+      Logger.root.level = Level.INFO;
+      Logger.root.clearListeners();
+    });
   });
 }

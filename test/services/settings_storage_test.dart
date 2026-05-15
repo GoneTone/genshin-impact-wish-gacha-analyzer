@@ -204,4 +204,23 @@ void main() {
       expect(s.skippedReleaseTag, isNull);
     });
   });
+
+  group('logLevel persistence', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+    });
+
+    test('defaults to INFO when unset', () async {
+      final loaded = await SettingsStorage.load();
+      expect(loaded.logLevel, equals('INFO'));
+    });
+
+    test('round-trips a non-default value', () async {
+      await SettingsStorage.save(
+        AppSettings.defaults.copyWith(logLevel: 'WARNING'),
+      );
+      final loaded = await SettingsStorage.load();
+      expect(loaded.logLevel, equals('WARNING'));
+    });
+  });
 }

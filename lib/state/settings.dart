@@ -1,6 +1,7 @@
 // lib/state/settings.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 
@@ -17,6 +18,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
     final loaded = await SettingsStorage.load();
     if (!ref.mounted) return;
     state = loaded;
+    _applyLogLevel(state.logLevel);
   }
 
   /// 等首次 `_load` 完成。
@@ -64,6 +66,25 @@ class SettingsNotifier extends Notifier<AppSettings> {
     );
     await SettingsStorage.save(state);
   }
+
+  Future<void> setLogLevel(String level) async {
+    state = state.copyWith(logLevel: level);
+    await SettingsStorage.save(state);
+    _applyLogLevel(level);
+  }
+
+  void _applyLogLevel(String level) {
+    Logger.root.level = _parseLevel(level);
+  }
+
+  Level _parseLevel(String s) => switch (s) {
+    'OFF' => Level.OFF,
+    'SEVERE' => Level.SEVERE,
+    'WARNING' => Level.WARNING,
+    'INFO' => Level.INFO,
+    'FINE' => Level.FINE,
+    _ => Level.INFO,
+  };
 
   Future<void> removeUidFromSettings(String uid) async {
     final aliases = Map<String, String>.from(state.uidAliases)..remove(uid);
