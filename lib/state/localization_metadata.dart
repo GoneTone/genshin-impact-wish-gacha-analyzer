@@ -22,7 +22,7 @@ class LocaleMetadata {
 /// 所以 `.then` callback 在同個 stack frame 內同步觸發、無 microtask 跳轉，
 /// 也就不會多畫一個 `AsyncLoading` frame（避免設定頁進入時的 spinner 閃）。
 ///
-/// 註:此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
+/// 註：此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
 /// 的實作慣例。若未來 gen_l10n 改變 (例如改 async load asset)，此 provider
 /// 內 `result` 會空，需退回 FutureProvider。
 ///
