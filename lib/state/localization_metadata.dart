@@ -22,19 +22,16 @@ class LocaleMetadata {
 /// 所以 `.then` callback 在同個 stack frame 內同步觸發、無 microtask 跳轉，
 /// 也就不會多畫一個 `AsyncLoading` frame（避免設定頁進入時的 spinner 閃）。
 ///
-/// 自動排除 gen_l10n 為支援 script/country 變體而生成的「裸」base locale
-/// （如 `zh` 是 `zh_Hant` + `zh_Hans` 的 fallback base、`pt` 是 `pt_BR` 的
-/// fallback base）——這些 bare locale 沒有獨立的 `localeNativeName`，在
-/// dropdown 會跟具體變體重複顯示。
-///
-/// 註：此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
+/// 註:此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
 /// 的實作慣例。若未來 gen_l10n 改變 (例如改 async load asset)，此 provider
 /// 內 `result` 會空，需退回 FutureProvider。
+///
+/// 每個 supported locale 都是可選的真實語言（裸 `zh` = 繁體中文，
+/// `zh_Hans` = 簡體中文），不再有重複的空殼 base，故全部納入。
 final localeMetadataProvider = Provider<Map<String, LocaleMetadata>>((ref) {
   final all = AppLocalizations.supportedLocales;
   final result = <String, LocaleMetadata>{};
   for (final locale in all) {
-    if (_isBareBaseOfSpecificVariant(locale, all)) continue;
     AppLocalizations.delegate.load(locale).then((l) {
       result[locale.toLanguageTag()] = LocaleMetadata(
         nativeName: l.localeNativeName,
@@ -45,20 +42,11 @@ final localeMetadataProvider = Provider<Map<String, LocaleMetadata>>((ref) {
   return result;
 });
 
-bool _isBareBaseOfSpecificVariant(Locale locale, List<Locale> all) {
-  if (locale.scriptCode != null || locale.countryCode != null) return false;
-  return all.any(
-    (other) =>
-        other.languageCode == locale.languageCode &&
-        (other.scriptCode != null || other.countryCode != null),
-  );
-}
-
 /// `MaterialApp.localeListResolutionCallback`：補足 Flutter
 /// `basicLocaleListResolution` 在中文 region-only locale（例如 OS 只回
 /// `zh-CN` / `zh-TW` 而沒帶 scriptCode）時無法區分繁簡的問題。
 ///
-/// 映射：CN / SG / MY → `zh-Hans`；TW / HK / MO → `zh-Hant`。
+/// 映射：CN / SG / MY → `zh-Hans`；TW / HK / MO → 裸 `zh`（繁體中文）。
 /// 對其他語言、或 Chinese 已帶 scriptCode 的情況一律回傳 null，
 /// 落到 Flutter 預設邏輯處理（會正確尊重使用者偏好順序）。
 ///
@@ -103,7 +91,7 @@ Locale? localeListResolution(
         user.countryCode != null) {
       final wanted = simplifiedRegions.contains(user.countryCode)
           ? const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans')
-          : const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant');
+          : const Locale('zh');
       if (supportedLocales.contains(wanted)) return wanted;
     }
     if (hasLang(user)) return null;

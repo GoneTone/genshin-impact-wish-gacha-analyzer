@@ -18,16 +18,19 @@ void main() {
       }
     });
 
-    test('zh_Hant / zh_Hans 的 localeTranslator 為空字串', () async {
-      final hant = await AppLocalizations.delegate.load(
-        const Locale('zh', 'Hant'),
-      );
-      expect(hant.localeTranslator, isEmpty);
+    test('裸 zh（繁中）/ zh_Hans 的 localeTranslator 為空字串', () async {
+      final zh = await AppLocalizations.delegate.load(const Locale('zh'));
+      expect(zh.localeTranslator, isEmpty);
 
       final hans = await AppLocalizations.delegate.load(
-        const Locale('zh', 'Hans'),
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
       );
       expect(hans.localeTranslator, isEmpty);
+    });
+
+    test('裸 zh localeNativeName = "繁體中文"', () async {
+      final zh = await AppLocalizations.delegate.load(const Locale('zh'));
+      expect(zh.localeNativeName, '繁體中文');
     });
 
     test('日文 localeNativeName = "日本語"', () async {
@@ -44,10 +47,8 @@ void main() {
       );
     });
 
-    test('zh_Hant 提供全部 contributors keys（fallback 模板必填）', () async {
-      final l = await AppLocalizations.delegate.load(
-        const Locale('zh', 'Hant'),
-      );
+    test('裸 zh 提供全部 contributors keys（模板必填）', () async {
+      final l = await AppLocalizations.delegate.load(const Locale('zh'));
       expect(l.navContributors, isNotEmpty);
       expect(l.contributorsTitle, isNotEmpty);
       expect(l.contributorsSubtitle, isNotEmpty);
@@ -60,12 +61,13 @@ void main() {
       expect(l.contributorsProjectLicense, isNotEmpty);
     });
 
-    test('supportedLocales 包含 zh_Hant / zh_Hans / en / ja / pt', () {
+    test('supportedLocales 包含 zh / zh-Hans / en / ja / pt，且不含 zh-Hant', () {
       final tags = AppLocalizations.supportedLocales
           .map((l) => l.toLanguageTag())
           .toSet();
-      expect(tags, contains('zh-Hant'));
+      expect(tags, contains('zh'));
       expect(tags, contains('zh-Hans'));
+      expect(tags, isNot(contains('zh-Hant')));
       expect(tags, contains('en'));
       expect(tags, contains('ja'));
       expect(tags, contains('pt'));
@@ -73,27 +75,16 @@ void main() {
   });
 
   group('localeMetadataProvider', () {
-    test('排除 bare zh（已有 zh-Hant / zh-Hans 變體存在）', () {
+    test('裸 zh（繁中）與 zh-Hans 都保留，無重複空殼被排除', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final metadata = container.read(localeMetadataProvider);
       final tags = metadata.keys.toSet();
 
-      // bare zh 應被過濾掉（有 script 變體存在）
-      expect(
-        tags,
-        isNot(contains('zh')),
-        reason: 'bare zh 跟 zh_Hant / zh_Hans 重複，應排除',
-      );
-
-      // 中文 script 變體保留
-      expect(tags, containsAll(<String>['zh-Hant', 'zh-Hans']));
-
-      // 葡萄牙文只有單一 ARB（已整併 pt_BR），bare pt 不被過濾
+      expect(tags, containsAll(<String>['zh', 'zh-Hans']));
+      expect(tags, isNot(contains('zh-Hant')));
       expect(tags, contains('pt'));
-
-      // 沒有變體的單一語言（en/ja/...）保留
       expect(tags, containsAll(<String>['en', 'ja', 'es', 'fr', 'th', 'vi']));
     });
 
@@ -113,8 +104,7 @@ void main() {
   });
 
   group('localeListResolution', () {
-    // 模擬一份代表性的 supportedLocales：含 bare zh、zh-Hant、zh-Hans、
-    // 單一 pt、以及若干其他 bare locale。
+    // 代表性 supportedLocales：裸 zh（繁中）、zh-Hans、單一 pt、其他 bare。
     const supported = <Locale>[
       Locale('en'),
       Locale('es'),
@@ -125,7 +115,6 @@ void main() {
       Locale('vi'),
       Locale('zh'),
       Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-      Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
     ];
 
     test('zh-CN → zh-Hans（region 大陸映射到簡體）', () {
@@ -149,12 +138,12 @@ void main() {
       );
     });
 
-    test('zh-TW / zh-HK / zh-MO → zh-Hant', () {
+    test('zh-TW / zh-HK / zh-MO → 裸 zh（繁體中文）', () {
       for (final region in ['TW', 'HK', 'MO']) {
         expect(
           localeListResolution([Locale('zh', region)], supported),
-          const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
-          reason: 'zh-$region 應映射到 zh-Hant',
+          const Locale('zh'),
+          reason: 'zh-$region 應映射到裸 zh（繁中）',
         );
       }
     });
@@ -212,7 +201,7 @@ void main() {
     });
 
     test('裸 zh (no script no country) → null', () {
-      // 沒有 region 資訊無法判定，交給 Flutter 預設（會 fallback 到 bare zh / template）
+      // 沒有 region 資訊無法判定，交給 Flutter 預設（會 fallback 到裸 zh = 繁中）
       expect(localeListResolution([const Locale('zh')], supported), isNull);
     });
 

@@ -25,17 +25,6 @@ void main() {
   });
 
   test(
-    'LocaleLanguage("zh-Hant") → Locale.fromSubtags(scriptCode: "Hant")',
-    () async {
-      final c = await makeContainer(const LocaleLanguage('zh-Hant'));
-      expect(
-        c.read(localeProvider),
-        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
-      );
-    },
-  );
-
-  test(
     'LocaleLanguage("zh-Hans") → Locale.fromSubtags(scriptCode: "Hans")',
     () async {
       final c = await makeContainer(const LocaleLanguage('zh-Hans'));
@@ -45,6 +34,11 @@ void main() {
       );
     },
   );
+
+  test('LocaleLanguage("zh") → Locale("zh")', () async {
+    final c = await makeContainer(const LocaleLanguage('zh'));
+    expect(c.read(localeProvider), const Locale('zh'));
+  });
 
   test('LocaleLanguage("pt-BR") → Locale("pt", "BR")', () async {
     final c = await makeContainer(const LocaleLanguage('pt-BR'));

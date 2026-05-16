@@ -133,13 +133,13 @@ void main() {
     final bundle = await svc.buildExportBundle(
       appVersion: '9.9.9',
       osDescription: 'TestOS',
-      localeTag: 'zh-Hant',
+      localeTag: 'zh',
       themeMode: 'dark',
     );
     expect(bundle, contains('Genshin Wish Gacha Analyzer log bundle'));
     expect(bundle, contains('app_version: 9.9.9'));
     expect(bundle, contains('os: TestOS'));
-    expect(bundle, contains('locale: zh-Hant'));
+    expect(bundle, contains('locale: zh'));
     expect(bundle, contains('theme: dark'));
     expect(bundle, contains('mark-line'));
   });

@@ -13,10 +13,10 @@ void main() {
       expect(LanguagePreference.fromCode('system'), isA<SystemLanguage>());
     });
 
-    test('fromCode("zh-Hant") 回傳 LocaleLanguage("zh-Hant")', () {
-      final pref = LanguagePreference.fromCode('zh-Hant');
+    test('fromCode("zh-Hans") 回傳 LocaleLanguage("zh-Hans")', () {
+      final pref = LanguagePreference.fromCode('zh-Hans');
       expect(pref, isA<LocaleLanguage>());
-      expect((pref as LocaleLanguage).code, 'zh-Hant');
+      expect((pref as LocaleLanguage).code, 'zh-Hans');
     });
 
     test('fromCode("pt-BR") 回傳 LocaleLanguage("pt-BR")', () {
@@ -24,21 +24,11 @@ void main() {
       expect((pref as LocaleLanguage).code, 'pt-BR');
     });
 
-    test(
-      'toCode roundtrip 在 system / zh-Hant / zh-Hans / en / pt-BR / ja 都保持原值',
-      () {
-        for (final code in [
-          'system',
-          'zh-Hant',
-          'zh-Hans',
-          'en',
-          'pt-BR',
-          'ja',
-        ]) {
-          expect(LanguagePreference.fromCode(code).toCode(), code);
-        }
-      },
-    );
+    test('toCode roundtrip 在 system / zh-Hans / en / pt-BR / ja 都保持原值', () {
+      for (final code in ['system', 'zh-Hans', 'en', 'pt-BR', 'ja']) {
+        expect(LanguagePreference.fromCode(code).toCode(), code);
+      }
+    });
 
     test('SystemLanguage 相等比較', () {
       expect(const SystemLanguage() == const SystemLanguage(), isTrue);
@@ -47,11 +37,11 @@ void main() {
 
     test('LocaleLanguage 依 code 相等', () {
       expect(
-        const LocaleLanguage('zh-Hant') == const LocaleLanguage('zh-Hant'),
+        const LocaleLanguage('zh-Hans') == const LocaleLanguage('zh-Hans'),
         isTrue,
       );
       expect(
-        const LocaleLanguage('zh-Hant') == const LocaleLanguage('zh-Hans'),
+        const LocaleLanguage('zh-Hans') == const LocaleLanguage('en'),
         isFalse,
       );
     });
@@ -97,10 +87,10 @@ void main() {
       },
     );
 
-    test('舊資料 "zh-Hant" 仍能正確解析（向後相容）', () async {
-      SharedPreferences.setMockInitialValues({'pref.locale': 'zh-Hant'});
+    test('已存的 pref.locale 字串能正確解析為 LocaleLanguage', () async {
+      SharedPreferences.setMockInitialValues({'pref.locale': 'zh-Hans'});
       final s = await SettingsStorage.load();
-      expect(s.locale, const LocaleLanguage('zh-Hant'));
+      expect(s.locale, const LocaleLanguage('zh-Hans'));
     });
 
     test('locale = "system" 字串 解析為 SystemLanguage', () async {
