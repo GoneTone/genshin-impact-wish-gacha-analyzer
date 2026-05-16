@@ -535,7 +535,7 @@ class _DataManagement extends ConsumerWidget {
       title: l.settingsImportConfirmTitle,
       body: buf.toString(),
       expectedText: 'IMPORT',
-      cancelLabel: l.confirmCancel,
+      cancelLabel: l.actionCancel,
       confirmLabel: l.confirmImport,
       confirmIcon: Icons.check,
     );
@@ -583,7 +583,7 @@ class _DataManagement extends ConsumerWidget {
       title: l.confirmTitle,
       body: l.confirmClearActiveBody(uid),
       expectedText: uid,
-      cancelLabel: l.confirmCancel,
+      cancelLabel: l.actionCancel,
       confirmLabel: l.confirmDelete,
       confirmIcon: Icons.delete_outline,
     );
@@ -598,7 +598,7 @@ class _DataManagement extends ConsumerWidget {
       title: l.confirmTitle,
       body: l.confirmClearAllBody,
       expectedText: 'DELETE',
-      cancelLabel: l.confirmCancel,
+      cancelLabel: l.actionCancel,
       confirmLabel: l.confirmDelete,
       confirmIcon: Icons.delete_outline,
     );
@@ -715,7 +715,7 @@ class _LogsSection extends ConsumerWidget {
       title: l.confirmTitle,
       body: l.settingsLogsClearConfirmBody,
       expectedText: 'CLEAR',
-      cancelLabel: l.confirmCancel,
+      cancelLabel: l.actionCancel,
       confirmLabel: l.confirmDelete,
       confirmIcon: Icons.delete_outline,
     );

@@ -96,7 +96,7 @@ class AccountManagement extends ConsumerWidget {
       title: l.confirmTitle,
       body: l.confirmClearActiveBody(uid),
       expectedText: uid,
-      cancelLabel: l.confirmCancel,
+      cancelLabel: l.actionCancel,
       confirmLabel: l.confirmDelete,
       confirmIcon: Icons.delete_outline,
     );

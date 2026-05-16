@@ -137,7 +137,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
         TextButton.icon(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close, size: 18),
-          label: Text(l.confirmCancel),
+          label: Text(l.actionCancel),
         ),
         FilledButton.icon(
           onPressed: _selected.isEmpty

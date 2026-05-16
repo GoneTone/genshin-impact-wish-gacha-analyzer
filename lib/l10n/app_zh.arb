@@ -318,7 +318,6 @@
     "placeholders": { "uid": { "type": "String" } }
   },
   "confirmClearAllBody": "這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：",
-  "confirmCancel": "取消",
   "confirmDelete": "刪除",
   "confirmImport": "匯入",
   "confirmExport": "匯出",

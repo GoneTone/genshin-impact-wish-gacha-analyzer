@@ -287,7 +287,6 @@
     "placeholders": { "uid": { "type": "String" } }
   },
   "confirmClearAllBody": "This will permanently delete every account's wish records. Type DELETE to confirm:",
-  "confirmCancel": "Cancel",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
   "confirmExport": "Export",
