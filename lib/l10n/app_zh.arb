@@ -76,6 +76,7 @@
   "uidSwitchTooltip": "切換帳號",
   "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活躍）",
+
   "emptyNoSyncTitle": "尚未同步任何資料",
   "emptyNoSyncMessage": "點右上「更新資料」開始",
   "emptyNoRecords": "此卡池無紀錄",

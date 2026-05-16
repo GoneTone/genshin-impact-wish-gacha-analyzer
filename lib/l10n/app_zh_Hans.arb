@@ -50,6 +50,7 @@
 
   "uidSwitchTooltip": "切换账号",
   "uidActiveSuffix": "（活跃）",
+
   "emptyNoSyncTitle": "尚未同步任何数据",
   "emptyNoSyncMessage": "点右上「更新数据」开始",
   "emptyNoRecords": "此卡池无记录",
