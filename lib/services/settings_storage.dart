@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum AppThemeMode { system, dark, light }
 
 /// 使用者偏好的語言：跟隨系統（[SystemLanguage]）或指定 BCP-47 locale
-/// （[LocaleLanguage]，例如 "zh-Hant"、"pt-BR"、"ja"）。
+/// （[LocaleLanguage]，例如 "zh-Hans"、"pt-BR"、"ja"）。
 sealed class LanguagePreference {
   const LanguagePreference();
 
@@ -38,7 +38,7 @@ class SystemLanguage extends LanguagePreference {
 class LocaleLanguage extends LanguagePreference {
   const LocaleLanguage(this.code);
 
-  /// BCP-47 code，例如 "zh-Hant"、"pt-BR"、"ja"。
+  /// BCP-47 code，例如 "zh-Hans"、"pt-BR"、"ja"。
   final String code;
 
   @override
