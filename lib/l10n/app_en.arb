@@ -61,7 +61,7 @@
   "emptyNoSyncTitle": "No data synced yet",
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
   "emptyNoRecords": "No records for this banner",
-  "emptyNoFiltered": "No records match the current filter",
+  "emptyNoFilterMatch": "No records match the current filter",
   "emptyNoOdesRecords": "No Odes records yet",
   "emptyNoWishRecords": "No wish records yet",
 
@@ -92,7 +92,7 @@
   },
   "sortDirectionDesc": "Descending",
   "sortDirectionAsc": "Ascending",
-  "sortDirectionNone": "Click to sort",
+  "sortHintClickToSort": "Click to sort",
 
   "progressPreparing": "Preparing…",
   "progressPreparingHint": "Preparing data source…",
@@ -236,8 +236,8 @@
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
 
-  "settingsExportAccounts": "Export data",
-  "settingsImportAccounts": "Import data",
+  "settingsExportData": "Export data",
+  "settingsImportData": "Import data",
   "settingsExportSuccess": "Exported to {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -314,8 +314,8 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineCountTopRarity": "{rank}★ Timeline ({n})",
-  "@timelineCountTopRarity": {
+  "timelineTopRarityTitle": "{rank}★ Timeline ({n})",
+  "@timelineTopRarityTitle": {
     "placeholders": {
       "rank": { "type": "int" },
       "n": { "type": "int" }

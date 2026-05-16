@@ -55,7 +55,7 @@
   "emptyNoSyncTitle": "尚未同步任何数据",
   "emptyNoSyncMessage": "点右上「更新数据」开始",
   "emptyNoRecords": "此卡池无记录",
-  "emptyNoFiltered": "没有符合条件的记录",
+  "emptyNoFilterMatch": "没有符合条件的记录",
   "emptyNoOdesRecords": "暂无颂愿记录",
   "emptyNoWishRecords": "暂无祈愿记录",
 
@@ -81,7 +81,7 @@
   "@tableMainPityTooltip": {
     "placeholders": { "rank": { "type": "int" } }
   },
-  "sortDirectionNone": "点击排序",
+  "sortHintClickToSort": "点击排序",
 
   "progressPreparing": "准备中…",
   "progressPreparingHint": "正在准备数据源…",
@@ -210,8 +210,8 @@
   "settingsClearActive": "清除当前账号数据",
   "settingsClearAll": "清除所有数据",
 
-  "settingsExportAccounts": "导出数据",
-  "settingsImportAccounts": "导入数据",
+  "settingsExportData": "导出数据",
+  "settingsImportData": "导入数据",
   "settingsExportSuccess": "已导出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -286,8 +286,8 @@
 
   "loadingBootstrap": "加载中…",
 
-  "timelineCountTopRarity": "{rank}★ 时间轴 ({n})",
-  "@timelineCountTopRarity": {
+  "timelineTopRarityTitle": "{rank}★ 时间轴 ({n})",
+  "@timelineTopRarityTitle": {
     "placeholders": {
       "rank": { "type": "int" },
       "n": { "type": "int" }

@@ -51,7 +51,7 @@ class EmptyState extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return EmptyState(
       icon: Icons.search_off_outlined,
-      title: l.emptyNoFiltered,
+      title: l.emptyNoFilterMatch,
       action: action,
     );
   }

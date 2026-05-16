@@ -57,7 +57,7 @@ class _SortableTableState extends State<SortableTable> {
         padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Center(
           child: Text(
-            l.emptyNoFiltered,
+            l.emptyNoFilterMatch,
             style: TextStyle(color: tokens.textMuted),
           ),
         ),
@@ -239,7 +239,7 @@ class _HeaderCell extends StatelessWidget {
     if (!isActive || sort == null) {
       icon = Icons.unfold_more;
       iconColor = tokens.textMuted;
-      tip = l.sortDirectionNone;
+      tip = l.sortHintClickToSort;
     } else if (sort!.direction == SortDirection.desc) {
       icon = Icons.arrow_downward;
       iconColor = tokens.textSecondary;

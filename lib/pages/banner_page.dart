@@ -238,7 +238,7 @@ class BannerPage extends ConsumerWidget {
                   SizedBox(
                     width: tileWidth,
                     child: ChartCard(
-                      title: l.timelineCountTopRarity(
+                      title: l.timelineTopRarityTitle(
                         primary.rank,
                         _countAtRank(stats, primary.rank),
                       ),

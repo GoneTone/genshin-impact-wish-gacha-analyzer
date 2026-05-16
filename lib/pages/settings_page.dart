@@ -313,12 +313,12 @@ class _DataManagement extends ConsumerWidget {
         OutlinedButton.icon(
           onPressed: !hasData ? null : () => _export(context, ref),
           icon: const Icon(Icons.download_outlined, size: 18),
-          label: Text(l.settingsExportAccounts),
+          label: Text(l.settingsExportData),
         ),
         OutlinedButton.icon(
           onPressed: () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
-          label: Text(l.settingsImportAccounts),
+          label: Text(l.settingsImportData),
         ),
         FilledButton.icon(
           style: FilledButton.styleFrom(

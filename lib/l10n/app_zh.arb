@@ -81,7 +81,7 @@
   "emptyNoSyncTitle": "尚未同步任何資料",
   "emptyNoSyncMessage": "點右上「更新資料」開始",
   "emptyNoRecords": "此卡池無紀錄",
-  "emptyNoFiltered": "沒有符合條件的紀錄",
+  "emptyNoFilterMatch": "沒有符合條件的紀錄",
   "emptyNoOdesRecords": "尚無頌願記錄",
   "emptyNoWishRecords": "尚無祈願記錄",
 
@@ -112,7 +112,7 @@
   },
   "sortDirectionDesc": "降序",
   "sortDirectionAsc": "升序",
-  "sortDirectionNone": "點擊排序",
+  "sortHintClickToSort": "點擊排序",
 
   "progressPreparing": "準備中…",
   "progressPreparingHint": "正在準備資料來源…",
@@ -267,8 +267,8 @@
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",
 
-  "settingsExportAccounts": "匯出資料",
-  "settingsImportAccounts": "匯入資料",
+  "settingsExportData": "匯出資料",
+  "settingsImportData": "匯入資料",
   "settingsExportSuccess": "已匯出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -345,8 +345,8 @@
 
   "loadingBootstrap": "載入中…",
 
-  "timelineCountTopRarity": "{rank}★ 時間軸 ({n})",
-  "@timelineCountTopRarity": {
+  "timelineTopRarityTitle": "{rank}★ 時間軸 ({n})",
+  "@timelineTopRarityTitle": {
     "placeholders": {
       "rank": { "type": "int" },
       "n": { "type": "int" }
