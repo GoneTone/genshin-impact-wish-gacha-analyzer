@@ -95,9 +95,6 @@
   "statsRarityDistribution": "稀有度分布",
   "statsItemTypeDistribution": "類型分布",
   "statsNoData": "無資料",
-  "statsThreeStarCount": "3★ 件數",
-  "statsTwoStarCount": "2★ 件數",
-
   "kindUnknown": "未知",
 
   "tableTime": "時間",
@@ -157,7 +154,6 @@
 
   "settingsTitle": "設定",
   "settingsAppearance": "外觀",
-  "settingsTheme": "主題",
   "settingsThemeSystem": "跟隨系統",
   "settingsThemeDark": "深色",
   "settingsThemeLight": "淺色",
@@ -170,8 +166,6 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "settingsPlaceholderPhase2": "（即將推出）",
-
   "contributorsTitle": "貢獻名單",
   "contributorsSubtitle": "感謝以下為此軟體貢獻的夥伴！",
   "contributorsProjectLeader": "專案負責人",
@@ -323,7 +317,6 @@
     "placeholders": { "uid": { "type": "String" } }
   },
   "confirmClearAllBody": "這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：",
-  "confirmTypeMismatch": "輸入不符，操作已取消",
   "confirmCancel": "取消",
   "confirmDelete": "刪除",
   "confirmImport": "匯入",

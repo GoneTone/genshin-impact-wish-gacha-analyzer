@@ -68,10 +68,6 @@
   },
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
-  "statsThreeStarCount": "3★ 件数",
-  "statsTwoStarCount": "2★ 件数",
-
-
   "tableTime": "时间",
   "tableName": "名称",
   "tableKind": "类型",
@@ -123,7 +119,6 @@
 
   "settingsTitle": "设置",
   "settingsAppearance": "外观",
-  "settingsTheme": "主题",
   "settingsThemeSystem": "跟随系统",
   "settingsThemeLight": "浅色",
   "settingsLanguage": "语言",
@@ -134,8 +129,6 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "settingsPlaceholderPhase2": "（即将推出）",
-
   "pityThreeStar": "3★ 保底",
   "@pityCurrent": {
     "placeholders": {
@@ -266,7 +259,6 @@
     "placeholders": { "uid": { "type": "String" } }
   },
   "confirmClearAllBody": "这会永久删除所有账号的祈愿记录。输入 DELETE 确认：",
-  "confirmTypeMismatch": "输入不符，操作已取消",
   "confirmDelete": "删除",
   "confirmImport": "导入",
   "confirmExport": "导出",

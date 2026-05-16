@@ -75,9 +75,6 @@
   "statsRarityDistribution": "Rarity Distribution",
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
-  "statsThreeStarCount": "3★ Count",
-  "statsTwoStarCount": "2★ Count",
-
   "kindUnknown": "Unknown",
 
   "tableTime": "Time",
@@ -137,7 +134,6 @@
 
   "settingsTitle": "Settings",
   "settingsAppearance": "Appearance",
-  "settingsTheme": "Theme",
   "settingsThemeSystem": "Follow system",
   "settingsThemeDark": "Dark",
   "settingsThemeLight": "Light",
@@ -150,8 +146,6 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "settingsPlaceholderPhase2": "(Coming soon)",
-
   "pityFiveStar": "5★ pity",
   "pityFourStar": "4★ pity",
   "pityThreeStar": "3★ pity",
@@ -292,7 +286,6 @@
     "placeholders": { "uid": { "type": "String" } }
   },
   "confirmClearAllBody": "This will permanently delete every account's wish records. Type DELETE to confirm:",
-  "confirmTypeMismatch": "Input did not match. Operation cancelled.",
   "confirmCancel": "Cancel",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
