@@ -76,8 +76,6 @@
   "uidSwitchTooltip": "切換帳號",
   "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活躍）",
-  "uidRecapture": "新增帳號",
-
   "emptyNoSyncTitle": "尚未同步任何資料",
   "emptyNoSyncMessage": "點右上「更新資料」開始",
   "emptyNoRecords": "此卡池無紀錄",
@@ -331,7 +329,7 @@
   "accountActiveTag": "活躍",
   "accountSetActive": "設為活躍",
   "accountRemove": "移除",
-  "accountRecapture": "新增帳號",
+  "accountAdd": "新增帳號",
   "accountAliasLabel": "別名",
   "accountAliasHint": "為此帳號取一個好記的名稱",
   "accountDragHandleTooltip": "拖曳排序",

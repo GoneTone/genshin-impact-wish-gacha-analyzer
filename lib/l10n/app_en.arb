@@ -56,8 +56,6 @@
   "uidSwitchTooltip": "Switch account",
   "uidNotSynced": "Not synced",
   "uidActiveSuffix": " (active)",
-  "uidRecapture": "Add account",
-
   "emptyNoSyncTitle": "No data synced yet",
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
   "emptyNoRecords": "No records for this banner",
@@ -300,7 +298,7 @@
   "accountActiveTag": "Active",
   "accountSetActive": "Set active",
   "accountRemove": "Remove",
-  "accountRecapture": "Add account",
+  "accountAdd": "Add account",
   "accountAliasLabel": "Alias",
   "accountAliasHint": "A friendly name for this account",
   "accountDragHandleTooltip": "Drag to reorder",

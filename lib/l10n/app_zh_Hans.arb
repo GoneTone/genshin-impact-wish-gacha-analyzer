@@ -50,8 +50,6 @@
 
   "uidSwitchTooltip": "切换账号",
   "uidActiveSuffix": "（活跃）",
-  "uidRecapture": "新增账号",
-
   "emptyNoSyncTitle": "尚未同步任何数据",
   "emptyNoSyncMessage": "点右上「更新数据」开始",
   "emptyNoRecords": "此卡池无记录",
@@ -271,7 +269,7 @@
   },
   "accountActiveTag": "活跃",
   "accountSetActive": "设为活跃",
-  "accountRecapture": "新增账号",
+  "accountAdd": "新增账号",
   "accountAliasLabel": "别名",
   "accountAliasHint": "为此账号取一个好记的名字",
   "accountDragHandleTooltip": "拖动排序",

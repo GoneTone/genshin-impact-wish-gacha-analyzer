@@ -68,7 +68,7 @@ class UidIndicator extends ConsumerWidget {
             children: [
               const Icon(Icons.person_add_alt, size: 16),
               const SizedBox(width: AppSpacing.s),
-              Text(l.uidRecapture),
+              Text(l.accountAdd),
             ],
           ),
         ),
