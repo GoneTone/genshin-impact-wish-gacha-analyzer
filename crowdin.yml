@@ -1,0 +1,8 @@
+commit_message: Translations %language%
+append_commit_message: false
+files:
+  - source: /lib/l10n/app_zh.arb
+    translation: /lib/l10n/app_%two_letters_code%.arb
+    languages_mapping:
+      two_letters_code:
+        zh-CN: zh_Hans
