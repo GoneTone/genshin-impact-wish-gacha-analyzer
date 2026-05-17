@@ -107,9 +107,9 @@
   },
   "tableTotalIndex": "累計回数",
   "tableMainPity": "天井内",
-  "tableMainPityTooltip": "前回の ★{rank} からの回数",
+  "tableMainPityTooltip": "前回の {star} からの回数",
   "@tableMainPityTooltip": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "sortDirectionDesc": "降順",
   "sortDirectionAsc": "昇順",
@@ -199,9 +199,9 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "天井確定",
-  "pityNoMainRarity": "★{rank} はまだありません",
+  "pityNoMainRarity": "{star} はまだありません",
   "@pityNoMainRarity": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "pityBeginnerEnded": "終了済み",
   "pityAverageInterval": "平均 {n} 回で出現",
@@ -209,9 +209,9 @@
     "placeholders": { "n": { "type": "String" } }
   },
 
-  "timelineNoRecordsForRank": "★{rank} の記録はまだありません",
+  "timelineNoRecordsForRank": "{star} の記録はまだありません",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "timelineSinceLast": "{n} 回",
   "@timelineSinceLast": {
@@ -222,17 +222,17 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "前回の ★{rank} から {n} 回",
+  "timelineNowSinceLast": "前回の {star} から {n} 回",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "前回の ★{rank} から現在まで {n} 回",
+  "timelineNowSinceCrossPool": "前回の {star} から現在まで {n} 回",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
@@ -341,19 +341,19 @@
 
   "loadingBootstrap": "読み込み中…",
 
-  "timelineTopRarityTitle": "★{rank} タイムライン（{n}）",
+  "timelineTopRarityTitle": "{star} タイムライン（{n}）",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
 
   "bannerTopRarityCountTitle": "祈願別の最高レアリティ件数",
-  "bannerTopRarityPullsSinceLast": "前回の ★{rank} から {n} 回",
+  "bannerTopRarityPullsSinceLast": "前回の {star} から {n} 回",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },

@@ -48,7 +48,10 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
-    expect(find.text(l.timelineNoRecordsForRank(5)), findsOneWidget);
+    expect(
+      find.text(l.timelineNoRecordsForRank(l.rarityStar(5))),
+      findsOneWidget,
+    );
   });
 
   testWidgets('renders one column per entry', (tester) async {
@@ -105,7 +108,10 @@ void main() {
       tester.element(find.byType(TimelineHorizontal)),
     )!;
     expect(find.text(l.timelineNowLabel), findsOneWidget);
-    expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
+    expect(
+      find.text(l.timelineNoRecordsForRank(l.rarityStar(5))),
+      findsNothing,
+    );
   });
 
   testWidgets('Now column appears leftmost (before entry columns)', (

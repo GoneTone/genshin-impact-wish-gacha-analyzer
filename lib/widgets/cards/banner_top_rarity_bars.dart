@@ -44,7 +44,7 @@ class BannerTopRarityBars extends StatelessWidget {
           if (isEnded) {
             subtitle = l.pityBeginnerEnded;
           } else if (topCount == 0) {
-            subtitle = l.pityNoMainRarity(type.primaryPity.rank);
+            subtitle = l.pityNoMainRarity(l.rarityStar(type.primaryPity.rank));
           } else {
             final pity = computePity(
               records,
@@ -52,7 +52,7 @@ class BannerTopRarityBars extends StatelessWidget {
               rank: type.primaryPity.rank,
             ).current;
             subtitle = l.bannerTopRarityPullsSinceLast(
-              type.primaryPity.rank,
+              l.rarityStar(type.primaryPity.rank),
               pity,
             );
           }

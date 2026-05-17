@@ -107,9 +107,9 @@
   },
   "tableTotalIndex": "Total",
   "tableMainPity": "Pity",
-  "tableMainPityTooltip": "Pulls since the last {rank}★",
+  "tableMainPityTooltip": "Pulls since the last {star}",
   "@tableMainPityTooltip": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "sortDirectionDesc": "Descending",
   "sortDirectionAsc": "Ascending",
@@ -199,9 +199,9 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "Guaranteed soon",
-  "pityNoMainRarity": "No {rank}★ yet",
+  "pityNoMainRarity": "No {star} yet",
   "@pityNoMainRarity": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "pityBeginnerEnded": "Ended",
   "pityAverageInterval": "Avg {n} pulls",
@@ -209,9 +209,9 @@
     "placeholders": { "n": { "type": "String" } }
   },
 
-  "timelineNoRecordsForRank": "No {rank}★ records",
+  "timelineNoRecordsForRank": "No {star} records",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "timelineSinceLast": "{n} pulls",
   "@timelineSinceLast": {
@@ -222,17 +222,17 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "{n} pulls since last {rank}★",
+  "timelineNowSinceLast": "{n} pulls since last {star}",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "{n} pulls since last {rank}★ across banners",
+  "timelineNowSinceCrossPool": "{n} pulls since last {star} across banners",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
@@ -341,19 +341,19 @@
 
   "loadingBootstrap": "Loading…",
 
-  "timelineTopRarityTitle": "{rank}★ Timeline ({n})",
+  "timelineTopRarityTitle": "{star} Timeline ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
 
   "bannerTopRarityCountTitle": "Highest rarity count per banner",
-  "bannerTopRarityPullsSinceLast": "{n} pulls since last {rank}★",
+  "bannerTopRarityPullsSinceLast": "{n} pulls since last {star}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },

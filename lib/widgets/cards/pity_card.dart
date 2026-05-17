@@ -200,7 +200,7 @@ class _Subtitle extends StatelessWidget {
       _Phase.close => (l.pityClose(pity.distance), tokens.stateWarning),
       _Phase.normal =>
         pity.lastRecordAt == null
-            ? (l.pityNoMainRarity(rank), tokens.textMuted)
+            ? (l.pityNoMainRarity(l.rarityStar(rank)), tokens.textMuted)
             : (l.pityDistance(pity.distance), tokens.textMuted),
     };
 

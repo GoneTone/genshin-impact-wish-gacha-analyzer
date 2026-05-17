@@ -116,7 +116,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
           child: Center(
             child: Text(
-              l.timelineNoRecordsForRank(targetRank),
+              l.timelineNoRecordsForRank(l.rarityStar(targetRank)),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: tokens.textMuted,
               ),
@@ -343,8 +343,8 @@ class _NowRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final meta = isAcrossBanners
-        ? l.timelineNowSinceCrossPool(targetRank, nowPulls)
-        : l.timelineNowSinceLast(targetRank, nowPulls);
+        ? l.timelineNowSinceCrossPool(l.rarityStar(targetRank), nowPulls)
+        : l.timelineNowSinceLast(l.rarityStar(targetRank), nowPulls);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.m),
       child: Row(

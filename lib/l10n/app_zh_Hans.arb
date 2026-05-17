@@ -107,9 +107,9 @@
   },
   "tableTotalIndex": "总抽数",
   "tableMainPity": "保底内",
-  "tableMainPityTooltip": "距上一次 {rank}★ 的抽数",
+  "tableMainPityTooltip": "距上一次 {star} 的抽数",
   "@tableMainPityTooltip": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "sortDirectionDesc": "降序",
   "sortDirectionAsc": "升序",
@@ -199,9 +199,9 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "保底中",
-  "pityNoMainRarity": "暂无 {rank}★",
+  "pityNoMainRarity": "暂无 {star}",
   "@pityNoMainRarity": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "pityBeginnerEnded": "已结束",
   "pityAverageInterval": "平均 {n} 抽出",
@@ -209,9 +209,9 @@
     "placeholders": { "n": { "type": "String" } }
   },
 
-  "timelineNoRecordsForRank": "暂无 {rank}★ 记录",
+  "timelineNoRecordsForRank": "暂无 {star} 记录",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": { "star": { "type": "String" } }
   },
   "timelineSinceLast": "{n} 抽",
   "@timelineSinceLast": {
@@ -222,17 +222,17 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "距上次 {rank}★ {n} 抽",
+  "timelineNowSinceLast": "距上次 {star} {n} 抽",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "从上次 {rank}★ 至今 {n} 抽",
+  "timelineNowSinceCrossPool": "从上次 {star} 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
@@ -341,19 +341,19 @@
 
   "loadingBootstrap": "加载中…",
 
-  "timelineTopRarityTitle": "{rank}★ 时间轴 ({n})",
+  "timelineTopRarityTitle": "{star} 时间轴 ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
 
   "bannerTopRarityCountTitle": "各卡池最高稀有度件数",
-  "bannerTopRarityPullsSinceLast": "距上次 {rank}★ {n} 抽",
+  "bannerTopRarityPullsSinceLast": "距上次 {star} {n} 抽",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "rank": { "type": "int" },
+      "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },

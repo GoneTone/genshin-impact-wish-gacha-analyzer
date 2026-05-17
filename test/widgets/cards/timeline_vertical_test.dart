@@ -40,7 +40,10 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
-    expect(find.text(l.timelineNoRecordsForRank(5)), findsOneWidget);
+    expect(
+      find.text(l.timelineNoRecordsForRank(l.rarityStar(5))),
+      findsOneWidget,
+    );
   });
 
   testWidgets('renders entries with month tag per month group', (tester) async {
@@ -84,8 +87,14 @@ void main() {
         tester.element(find.byType(TimelineVertical)),
       )!;
       expect(find.text(l.timelineNowLabel), findsOneWidget);
-      expect(find.text(l.timelineNowSinceCrossPool(5, 12)), findsOneWidget);
-      expect(find.text(l.timelineNowSinceLast(5, 12)), findsNothing);
+      expect(
+        find.text(l.timelineNowSinceCrossPool(l.rarityStar(5), 12)),
+        findsOneWidget,
+      );
+      expect(
+        find.text(l.timelineNowSinceLast(l.rarityStar(5), 12)),
+        findsNothing,
+      );
     },
   );
 
@@ -105,7 +114,10 @@ void main() {
       final l = AppLocalizations.of(
         tester.element(find.byType(TimelineVertical)),
       )!;
-      expect(find.text(l.timelineNowSinceLast(5, 28)), findsOneWidget);
+      expect(
+        find.text(l.timelineNowSinceLast(l.rarityStar(5), 28)),
+        findsOneWidget,
+      );
     },
   );
 
@@ -126,7 +138,10 @@ void main() {
       tester.element(find.byType(TimelineVertical)),
     )!;
     expect(find.text(l.timelineNowLabel), findsOneWidget);
-    expect(find.text(l.timelineNoRecordsForRank(5)), findsNothing);
+    expect(
+      find.text(l.timelineNoRecordsForRank(l.rarityStar(5))),
+      findsNothing,
+    );
   });
 
   testWidgets('entries=11 → defaults to first 10 entries only', (tester) async {

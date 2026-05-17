@@ -239,7 +239,7 @@ class BannerPage extends ConsumerWidget {
                     width: tileWidth,
                     child: ChartCard(
                       title: l.timelineTopRarityTitle(
-                        primary.rank,
+                        l.rarityStar(primary.rank),
                         _countAtRank(stats, primary.rank),
                       ),
                       icon: Icons.timeline,

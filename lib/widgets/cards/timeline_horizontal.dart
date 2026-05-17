@@ -128,7 +128,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
     if (widget.entries.isEmpty && widget.nowPulls == null) {
       return Center(
         child: Text(
-          l.timelineNoRecordsForRank(widget.targetRank),
+          l.timelineNoRecordsForRank(l.rarityStar(widget.targetRank)),
           style: theme.textTheme.bodyMedium?.copyWith(color: tokens.textMuted),
         ),
       );

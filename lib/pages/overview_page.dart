@@ -362,7 +362,10 @@ class _OverviewSection extends StatelessWidget {
         const SizedBox(height: AppSpacing.xl),
         InlineSectionTitle(
           icon: Icons.timeline,
-          title: l.timelineTopRarityTitle(timelineRank, timelineEntries.length),
+          title: l.timelineTopRarityTitle(
+            l.rarityStar(timelineRank),
+            timelineEntries.length,
+          ),
         ),
         const SizedBox(height: AppSpacing.s),
         TimelineVertical(

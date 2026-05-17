@@ -193,7 +193,7 @@ class _Header extends StatelessWidget {
             _HeaderCell(
               flex: 2,
               label: l.tableMainPity,
-              tooltip: l.tableMainPityTooltip(mainRank),
+              tooltip: l.tableMainPityTooltip(l.rarityStar(mainRank)),
               column: SortColumn.mainPity,
               sort: sort,
               tokens: tokens,

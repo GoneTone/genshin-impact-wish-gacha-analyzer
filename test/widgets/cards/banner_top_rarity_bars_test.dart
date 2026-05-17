@@ -67,8 +67,11 @@ void main() {
     final wishAndEventOdes = gachaTypes
         .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
         .length;
-    expect(find.text(l.pityNoMainRarity(5)), findsNWidgets(wishAndEventOdes));
-    expect(find.text(l.pityNoMainRarity(4)), findsOneWidget);
+    expect(
+      find.text(l.pityNoMainRarity(l.rarityStar(5))),
+      findsNWidgets(wishAndEventOdes),
+    );
+    expect(find.text(l.pityNoMainRarity(l.rarityStar(4))), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
     // 件數全為 0；分隔點「·」出現 N 次
     expect(find.text('0'), findsNWidgets(gachaTypes.length));
@@ -116,7 +119,10 @@ void main() {
     )!;
     // count = 1 appears once (others are 0)
     expect(find.text('1'), findsOneWidget);
-    expect(find.text(l.bannerTopRarityPullsSinceLast(5, 2)), findsOneWidget);
+    expect(
+      find.text(l.bannerTopRarityPullsSinceLast(l.rarityStar(5), 2)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('100 (beginner) → subtitle always "已結束" even with 5★ records', (
@@ -145,8 +151,11 @@ void main() {
     final wishAndEventOdes = gachaTypes
         .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
         .length;
-    expect(find.text(l.pityNoMainRarity(5)), findsNWidgets(wishAndEventOdes));
-    expect(find.text(l.pityNoMainRarity(4)), findsOneWidget);
+    expect(
+      find.text(l.pityNoMainRarity(l.rarityStar(5))),
+      findsNWidgets(wishAndEventOdes),
+    );
+    expect(find.text(l.pityNoMainRarity(l.rarityStar(4))), findsOneWidget);
   });
 
   testWidgets('bar widthFactor = topCount / max(topCount across banners)', (
