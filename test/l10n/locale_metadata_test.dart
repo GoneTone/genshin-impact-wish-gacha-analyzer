@@ -94,7 +94,7 @@ void main() {
       },
     );
 
-    test('裸 zh(繁中)localeTranslatorLabel = "翻譯者：X"', () async {
+    test('裸 zh（繁中）localeTranslatorLabel = "翻譯者：X"', () async {
       final zh = await AppLocalizations.delegate.load(const Locale('zh'));
       expect(zh.localeTranslatorLabel('X'), '翻譯者：X');
     });
