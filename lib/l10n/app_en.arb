@@ -4,6 +4,13 @@
   "localeNativeName": "English",
   "localeTranslator": "Zanah_68, pan93412, Lemon7777",
 
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+
   "appName": "Genshin Wish Analyzer",
 
   "actionUpdate": "Update",
@@ -19,6 +26,7 @@
   "navStandard": "Standard",
   "navBeginner": "Beginner",
   "navSettings": "Settings",
+  "navContributors": "Contributors",
 
   "gachaTypeCharacter": "Character Event Wish",
   "gachaTypeWeapon": "Weapon Event Wish",
@@ -40,18 +48,30 @@
   },
 
   "relativeNow": "Just now",
-  "relativeSecondsAgo": "{count, plural, =1{1 second ago} other{{count} seconds ago}}",
-  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
-  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
-  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
-  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMonthsAgo": "{count, plural, =1{1 month ago} other{{count} months ago}}",
-  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeYearsAgo": "{count, plural, =1{1 year ago} other{{count} years ago}}",
-  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeSecondsAgo": "{count} seconds ago",
+  "@relativeSecondsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMinutesAgo": "{count} minutes ago",
+  "@relativeMinutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeHoursAgo": "{count} hours ago",
+  "@relativeHoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeDaysAgo": "{count} days ago",
+  "@relativeDaysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMonthsAgo": "{count} months ago",
+  "@relativeMonthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeYearsAgo": "{count} years ago",
+  "@relativeYearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
 
   "uidSwitchTooltip": "Switch account",
   "uidNotSynced": "Not synced",
@@ -62,7 +82,7 @@
   "emptyNoRecords": "No records for this banner",
   "emptyNoFilterMatch": "No records match the current filter",
   "emptyNoOdesRecords": "No Odes records yet",
-  "emptyNoWishRecords": "No wish records yet",
+  "emptyNoWishRecords": "No Wish records yet",
 
   "statsTotal": "Total pulls",
   "statsFiveStarCount": "5★ Count",
@@ -125,7 +145,7 @@
   "@errorServer": {
     "placeholders": { "message": { "type": "String" } }
   },
-  "errorNoRecords": "This account has no wish records yet",
+  "errorNoRecords": "This account has no Wish records yet",
 
   "pageOverviewTitle": "Overview (all banners)",
   "pageOverviewWishSection": "Wish Overview",
@@ -146,9 +166,20 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
+  "contributorsTitle": "Contributors",
+  "contributorsSubtitle": "Special thanks to the following partners who have contributed to the development of this software!",
+  "contributorsProjectLeader": "Project moderator",
+  "contributorsTesters": "Testers",
+  "contributorsGithubContributors": "GitHub Contributors",
+  "contributorsTranslationReviewer": "Translation proofreaders",
+  "contributorsTranslatedLanguages": "Available languages",
+  "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
+  "contributorsProjectLicense": "Project License",
+
   "pityFiveStar": "5★ pity",
   "pityFourStar": "4★ pity",
   "pityThreeStar": "3★ pity",
+  "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
       "current": { "type": "int" },
@@ -281,11 +312,11 @@
   },
 
   "confirmTitle": "Confirm",
-  "confirmClearActiveBody": "This will permanently delete all wish records for UID {uid}. Type the UID to confirm:",
+  "confirmClearActiveBody": "This will permanently delete all Wish records for UID {uid}. Type the UID to confirm:",
   "@confirmClearActiveBody": {
     "placeholders": { "uid": { "type": "String" } }
   },
-  "confirmClearAllBody": "This will permanently delete every account's wish records. Type DELETE to confirm:",
+  "confirmClearAllBody": "This will permanently delete every account's Wish records. Type DELETE to confirm:",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
   "confirmExport": "Export",
@@ -323,17 +354,32 @@
     }
   },
 
-  "navContributors": "Contribution",
-  "contributorsTitle": "Contributors",
-  "contributorsSubtitle": "Special thanks to the following partners who have contributed to the development of this software!",
-  "contributorsProjectLeader": "Project moderator",
-  "contributorsTesters": "Testers",
-  "contributorsGithubContributors": "GitHub Contributors",
-  "contributorsTranslationReviewer": "Translation proofreaders",
-  "contributorsTranslatedLanguages": "Available languages",
-  "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
-  "contributorsProjectLicense": "Project License"
-,
+  "updateTitle": "New version {version} available",
+  "@updateTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "updateReleasedAt": "Released on {date}",
+  "@updateReleasedAt": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "updateButtonDownload": "Download",
+  "updateButtonSkip": "Skip this version",
+  "updateButtonLater": "Later",
+  "updateCheckButton": "Check for updates",
+  "updateChecking": "Checking…",
+  "updateAlreadyLatest": "You're on the latest version",
+  "updateCheckFailed": "Update check failed: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "updateErrorNetwork": "Unable to connect, please check your network",
+  "updateErrorTimeout": "Request timed out",
+  "updateErrorRateLimited": "GitHub API quota exhausted, please retry later",
+  "updateErrorServer": "Server error (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "updateErrorFormat": "Unexpected response format",
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
   "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
