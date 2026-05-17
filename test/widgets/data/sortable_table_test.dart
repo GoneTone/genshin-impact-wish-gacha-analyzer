@@ -29,7 +29,44 @@ Widget _wrap(Widget child) => MaterialApp(
   ),
 );
 
+Widget _wrapJa(Widget child) => MaterialApp(
+  theme: buildDarkTheme(),
+  locale: const Locale('ja'),
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  home: Scaffold(
+    body: SingleChildScrollView(child: SizedBox(width: 1200, child: child)),
+  ),
+);
+
 void main() {
+  testWidgets('ja locale → rank cell uses ★N order (pill + plain)', (
+    tester,
+  ) async {
+    final records = [
+      _r(id: '5', rank: 5, name: 'A'), // accent != null → _Pill
+      _r(id: '4', rank: 4, name: 'B'), // accent != null → _Pill
+      _r(id: '3', rank: 3, name: 'C'), // accent == null → 純 Text 分支
+    ];
+    final rows = buildRecordRows(records);
+    await tester.pumpWidget(
+      _wrapJa(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+      ),
+    );
+    expect(find.text('★5'), findsOneWidget);
+    expect(find.text('★4'), findsOneWidget);
+    expect(find.text('★3'), findsOneWidget);
+    expect(find.text('5★'), findsNothing);
+    expect(find.text('4★'), findsNothing);
+    expect(find.text('3★'), findsNothing);
+  });
+
   testWidgets('renders rows, rarity pills, totalIndex/pity columns', (
     tester,
   ) async {

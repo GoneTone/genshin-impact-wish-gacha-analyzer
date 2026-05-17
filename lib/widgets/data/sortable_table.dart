@@ -332,7 +332,7 @@ class _Row extends StatelessWidget {
             flex: 2,
             child: accent != null
                 ? _Pill(rank: record.rankType, color: accent)
-                : Text('${record.rankType}★'),
+                : Text(l.rarityStar(record.rankType)),
           ),
           Expanded(
             flex: 2,
@@ -363,6 +363,7 @@ class _Pill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -375,7 +376,7 @@ class _Pill extends StatelessWidget {
           borderRadius: BorderRadius.circular(99),
         ),
         child: Text(
-          '$rank★',
+          l.rarityStar(rank),
           style: TextStyle(color: color, fontWeight: FontWeight.bold),
         ),
       ),
