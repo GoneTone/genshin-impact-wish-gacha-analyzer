@@ -331,7 +331,7 @@ class _Row extends StatelessWidget {
           Expanded(
             flex: 2,
             child: accent != null
-                ? _Pill(rank: record.rankType, color: accent)
+                ? _Pill(rank: record.rankType, color: accent, l: l)
                 : Text(l.rarityStar(record.rankType)),
           ),
           Expanded(
@@ -357,13 +357,13 @@ class _Row extends StatelessWidget {
 }
 
 class _Pill extends StatelessWidget {
-  const _Pill({required this.rank, required this.color});
+  const _Pill({required this.rank, required this.color, required this.l});
   final int rank;
   final Color color;
+  final AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(

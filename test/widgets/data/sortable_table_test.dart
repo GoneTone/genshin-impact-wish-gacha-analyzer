@@ -19,19 +19,9 @@ WishRecord _r({required String id, required int rank, required String name}) =>
       lang: 'zh-tw',
     );
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Locale locale = const Locale('zh')}) => MaterialApp(
   theme: buildDarkTheme(),
-  locale: const Locale('zh'),
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  home: Scaffold(
-    body: SingleChildScrollView(child: SizedBox(width: 1200, child: child)),
-  ),
-);
-
-Widget _wrapJa(Widget child) => MaterialApp(
-  theme: buildDarkTheme(),
-  locale: const Locale('ja'),
+  locale: locale,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   home: Scaffold(
@@ -50,13 +40,14 @@ void main() {
     ];
     final rows = buildRecordRows(records);
     await tester.pumpWidget(
-      _wrapJa(
+      _wrap(
         SortableTable(
           rows: rows,
           sort: null,
           mainRank: 5,
           onSortColumnTapped: (_) {},
         ),
+        locale: const Locale('ja'),
       ),
     );
     expect(find.text('★5'), findsOneWidget);
