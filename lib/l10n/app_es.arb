@@ -33,8 +33,10 @@
   "tableTotalIndex": "Deseos Totales",
   "tableFiveStarPity": "Numero de deseos desde el ultimo Pity",
   "statsTotal": "Deseos Totales",
-  "statsFiveStarCount": "Numero de articulos 5-Estrellas",
-  "statsFourStarCount": "Numero de articulos 4-Estrellas",
+  "statsRankCount": "Numero de articulos {star}",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "statsNoData": "Datos no encontrados",
   "pageOverviewTitle": "Cuadro de datos globales",
   "settingsAbout": "Sobre",

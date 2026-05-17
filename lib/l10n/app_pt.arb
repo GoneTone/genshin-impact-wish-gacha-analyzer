@@ -11,8 +11,10 @@
   "kindWeapon": "A arma",
   "tableName": "O nome",
   "tableKind": "tipo",
-  "statsFiveStarCount": "O número de ganhar um 5 estrelas",
-  "statsFourStarCount": "A quantidade ganha de um 4 estrelas",
+  "statsRankCount": "O número de ganhar um {star}",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "settingsAbout": "Cerca de",
 
   "contributorsProjectLeader": "O líder do projeto",

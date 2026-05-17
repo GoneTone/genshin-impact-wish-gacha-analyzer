@@ -85,8 +85,10 @@
   "emptyNoWishRecords": "尚無祈願記錄",
 
   "statsTotal": "總抽數",
-  "statsFiveStarCount": "5★ 件數",
-  "statsFourStarCount": "4★ 件數",
+  "statsRankCount": "{star} 件數",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "statsShareOfTotal": "佔總抽 {rate}%",
   "@statsShareOfTotal": {
     "placeholders": { "rate": { "type": "String" } }

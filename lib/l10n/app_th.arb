@@ -33,8 +33,10 @@
   "tableTotalIndex": "จำนวนครั้ง",
   "tableFiveStarPity": "จำนวนครั้ง",
   "statsTotal": "จำนวนครั้ง",
-  "statsFiveStarCount": "จำนวนไอเทม 5 ดาวที่ดรอป",
-  "statsFourStarCount": "จำนวนไอเทม 4 ดาวที่ดรอป",
+  "statsRankCount": "จำนวนไอเทม {star} ที่ดรอป",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "statsNoData": "ไม่มีข้อมูล",
   "pageOverviewTitle": "กราฟข้อมูลโดยรวม",
   "settingsAbout": "เกี่ยวกับ",

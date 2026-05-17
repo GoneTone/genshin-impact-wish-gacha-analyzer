@@ -82,7 +82,7 @@ class OverviewPage extends ConsumerWidget {
         accent: tokens.accentPrimary,
       ),
       StatCard(
-        label: l.statsFiveStarCount,
+        label: l.statsRankCount(l.rarityStar(5)),
         value: '${wishStats.fiveStarCount}',
         accent: tokens.fiveStar,
         subtitle: shareWithAvg(
@@ -93,7 +93,7 @@ class OverviewPage extends ConsumerWidget {
         ),
       ),
       StatCard(
-        label: l.statsFourStarCount,
+        label: l.statsRankCount(l.rarityStar(4)),
         value: '${wishStats.fourStarCount}',
         accent: tokens.fourStar,
         subtitle: shareWithAvg(

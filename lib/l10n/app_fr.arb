@@ -16,8 +16,10 @@
   "tableTotalIndex": "Voeux totaux",
   "tableFiveStarPity": "Nombre de vœux depuis la dernière pity",
   "statsTotal": "Voeux totaux",
-  "statsFiveStarCount": "Nombre d'objets 5★ obtenu",
-  "statsFourStarCount": "Nombre d'objets 4★ obtenu",
+  "statsRankCount": "Nombre d'objets {star} obtenu",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "statsNoData": "Données introuvables",
   "pageOverviewTitle": "Données globales",
   "settingsAbout": "Sur",

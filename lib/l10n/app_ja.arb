@@ -85,8 +85,10 @@
   "emptyNoWishRecords": "祈願の記録がまだありません",
 
   "statsTotal": "累計回数",
-  "statsFiveStarCount": "★5 件数",
-  "statsFourStarCount": "★4 件数",
+  "statsRankCount": "{star} 件数",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "statsShareOfTotal": "全体の {rate}%",
   "@statsShareOfTotal": {
     "placeholders": { "rate": { "type": "String" } }
