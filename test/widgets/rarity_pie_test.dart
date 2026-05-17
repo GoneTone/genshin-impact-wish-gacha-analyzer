@@ -10,7 +10,7 @@ void main() {
     late AppLocalizations zh;
     late AppLocalizations ja;
 
-    setUp(() async {
+    setUpAll(() async {
       zh = await AppLocalizations.delegate.load(const Locale('zh'));
       ja = await AppLocalizations.delegate.load(const Locale('ja'));
     });
