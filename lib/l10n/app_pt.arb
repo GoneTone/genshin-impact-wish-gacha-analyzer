@@ -2,6 +2,7 @@
   "@@locale": "pt",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio",
+  "localeTranslatorLabel": "Tradutor: {translator}",
   "appName": "O analisador de gacha de Genshin Impact",
   "actionPrevPage": "A página anterior",
   "actionNextPage": "A próxima página",

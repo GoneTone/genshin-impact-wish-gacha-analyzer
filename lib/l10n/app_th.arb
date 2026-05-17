@@ -2,6 +2,7 @@
   "@@locale": "th",
   "localeNativeName": "ภาษาไทย",
   "localeTranslator": "Armzyaec1234",
+  "localeTranslatorLabel": "ผู้แปล: {translator}",
   "appName": "Genshin Impact Wish Gacha Analyzer",
   "actionUpdate": "อัพเดทข้อมูล",
   "actionPrevPage": "ก่อนหน้า",

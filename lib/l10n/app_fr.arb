@@ -2,6 +2,7 @@
   "@@locale": "fr",
   "localeNativeName": "Français",
   "localeTranslator": "",
+  "localeTranslatorLabel": "Traducteur : {translator}",
   "appName": "Analyse des vœux Genshin Impact",
   "actionPrevPage": "Page précédente",
   "actionNextPage": "Page suivante",

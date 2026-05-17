@@ -3,12 +3,19 @@
 
   "localeNativeName": "繁體中文",
   "localeTranslator": "",
+  "localeTranslatorLabel": "翻譯者：{translator}",
 
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": { "type": "String" }
+    }
   },
 
   "appName": "原神祈願卡池分析",

@@ -3,6 +3,7 @@
 
   "localeNativeName": "简体中文",
   "localeTranslator": "",
+  "localeTranslatorLabel": "翻译者：{translator}",
 
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."

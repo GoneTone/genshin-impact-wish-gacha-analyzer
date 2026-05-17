@@ -2,6 +2,7 @@
   "@@locale": "vi",
   "localeNativeName": "Tiếng Việt",
   "localeTranslator": "",
+  "localeTranslatorLabel": "Người dịch: {translator}",
   "navCharacter": "Nhân Vật",
   "navWeapon": "Vũ Khí",
   "kindCharacter": "Nhân Vật",

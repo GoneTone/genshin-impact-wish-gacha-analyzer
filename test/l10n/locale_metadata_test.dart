@@ -72,6 +72,37 @@ void main() {
       expect(tags, contains('ja'));
       expect(tags, contains('pt'));
     });
+
+    test(
+      'localeTranslatorLabel 帶 placeholder:每個 supported locale 都非空且含代入值',
+      () async {
+        for (final locale in AppLocalizations.supportedLocales) {
+          final l = await AppLocalizations.delegate.load(locale);
+          final out = l.localeTranslatorLabel('__TESTER__');
+          expect(
+            out,
+            isNotEmpty,
+            reason: '${locale.toLanguageTag()} 的 localeTranslatorLabel 不能為空',
+          );
+          expect(
+            out,
+            contains('__TESTER__'),
+            reason:
+                '${locale.toLanguageTag()} 的 localeTranslatorLabel 必須代入 {translator}',
+          );
+        }
+      },
+    );
+
+    test('裸 zh(繁中)localeTranslatorLabel = "翻譯者：X"', () async {
+      final zh = await AppLocalizations.delegate.load(const Locale('zh'));
+      expect(zh.localeTranslatorLabel('X'), '翻譯者：X');
+    });
+
+    test('日文 localeTranslatorLabel = "翻訳者：X"', () async {
+      final ja = await AppLocalizations.delegate.load(const Locale('ja'));
+      expect(ja.localeTranslatorLabel('X'), '翻訳者：X');
+    });
   });
 
   group('localeMetadataProvider', () {

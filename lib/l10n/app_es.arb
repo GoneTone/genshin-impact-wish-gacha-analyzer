@@ -2,6 +2,7 @@
   "@@locale": "es",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu",
+  "localeTranslatorLabel": "Traductor: {translator}",
   "appName": "Analizador de Gacha de Genshin Impact",
   "actionUpdate": "Actualizar datos",
   "actionPrevPage": "Pagina anterior",
