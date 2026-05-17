@@ -85,8 +85,8 @@
   "emptyNoWishRecords": "祈願の記録がまだありません",
 
   "statsTotal": "累計回数",
-  "statsFiveStarCount": "5★ 件数",
-  "statsFourStarCount": "4★ 件数",
+  "statsFiveStarCount": "★5 件数",
+  "statsFourStarCount": "★4 件数",
   "statsShareOfTotal": "全体の {rate}%",
   "@statsShareOfTotal": {
     "placeholders": { "rate": { "type": "String" } }
@@ -103,7 +103,7 @@
   "tableRarity": "レアリティ",
   "tableTotalIndex": "累計回数",
   "tableMainPity": "天井内",
-  "tableMainPityTooltip": "前回の {rank}★ からの回数",
+  "tableMainPityTooltip": "前回の ★{rank} からの回数",
   "@tableMainPityTooltip": {
     "placeholders": { "rank": { "type": "int" } }
   },
@@ -176,9 +176,9 @@
   "contributorsHelpTranslate": "あなたの言語がありませんか？翻訳にご協力ください！",
   "contributorsProjectLicense": "プロジェクトライセンス",
 
-  "pityFiveStar": "5★ 天井",
-  "pityFourStar": "4★ 天井",
-  "pityThreeStar": "3★ 天井",
+  "pityFiveStar": "★5 天井",
+  "pityFourStar": "★4 天井",
+  "pityThreeStar": "★3 天井",
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
@@ -195,7 +195,7 @@
     "placeholders": { "n": { "type": "int" } }
   },
   "pityGuaranteed": "天井確定",
-  "pityNoMainRarity": "{rank}★ はまだありません",
+  "pityNoMainRarity": "★{rank} はまだありません",
   "@pityNoMainRarity": {
     "placeholders": { "rank": { "type": "int" } }
   },
@@ -205,7 +205,7 @@
     "placeholders": { "n": { "type": "String" } }
   },
 
-  "timelineNoRecordsForRank": "{rank}★ の記録はまだありません",
+  "timelineNoRecordsForRank": "★{rank} の記録はまだありません",
   "@timelineNoRecordsForRank": {
     "placeholders": { "rank": { "type": "int" } }
   },
@@ -218,14 +218,14 @@
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "前回の {rank}★ から {n} 回",
+  "timelineNowSinceLast": "前回の ★{rank} から {n} 回",
   "@timelineNowSinceLast": {
     "placeholders": {
       "rank": { "type": "int" },
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "前回の {rank}★ から現在まで {n} 回",
+  "timelineNowSinceCrossPool": "前回の ★{rank} から現在まで {n} 回",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "rank": { "type": "int" },
@@ -249,8 +249,8 @@
   },
 
   "filterRarityAll": "全レアリティ",
-  "filterRarityFiveStar": "5★ のみ",
-  "filterRarityFourStar": "4★ のみ",
+  "filterRarityFiveStar": "★5 のみ",
+  "filterRarityFourStar": "★4 のみ",
   "filterKindAll": "全タイプ",
   "filterSearchHint": "名称を検索…",
   "filterClear": "フィルターをクリア",
@@ -337,7 +337,7 @@
 
   "loadingBootstrap": "読み込み中…",
 
-  "timelineTopRarityTitle": "{rank}★ タイムライン（{n}）",
+  "timelineTopRarityTitle": "★{rank} タイムライン（{n}）",
   "@timelineTopRarityTitle": {
     "placeholders": {
       "rank": { "type": "int" },
@@ -346,7 +346,7 @@
   },
 
   "bannerTopRarityCountTitle": "祈願別の最高レアリティ件数",
-  "bannerTopRarityPullsSinceLast": "前回の {rank}★ から {n} 回",
+  "bannerTopRarityPullsSinceLast": "前回の ★{rank} から {n} 回",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "rank": { "type": "int" },
