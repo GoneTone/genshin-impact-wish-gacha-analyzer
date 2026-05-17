@@ -83,9 +83,19 @@ pub fn load_or_generate() -> Result<RootCa> {
                 if let Err(e) = crate::cert_store::remove_from_current_user_root(&cert_der) {
                     warn!(target: "ca", error = %e, "failed to remove stale CA from store (continuing)");
                 }
-                let _ = fs::remove_file(&cert_path);
-                let _ = fs::remove_file(&key_path);
-                debug!(target: "ca", "stale CA files removed");
+                for path in [&cert_path, &key_path] {
+                    if let Err(e) = fs::remove_file(path) {
+                        if e.kind() != std::io::ErrorKind::NotFound {
+                            warn!(
+                                target: "ca",
+                                path = %path.display(),
+                                error = %e,
+                                "failed to remove stale CA file (regeneration will overwrite)"
+                            );
+                        }
+                    }
+                }
+                debug!(target: "ca", "stale CA files cleanup done");
 
                 generate_and_persist(&cert_path, &key_path)?
             }
