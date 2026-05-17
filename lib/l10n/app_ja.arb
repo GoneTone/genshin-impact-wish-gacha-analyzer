@@ -33,13 +33,13 @@
   "gachaTypeChronicled": "集録祈願",
   "gachaTypeStandard": "通常祈願",
   "gachaTypeBeginner": "初心者応援祈願",
-  "gachaTypeOdesEvent": "イベント頌願",
-  "gachaTypeOdesStandard": "通常頌願",
+  "gachaTypeOdesEvent": "イベント星願",
+  "gachaTypeOdesStandard": "通常星願",
 
   "navOdesEvent": "イベント",
   "navOdesStandard": "通常",
   "navSectionWish": "祈願",
-  "navSectionOdes": "頌願",
+  "navSectionOdes": "星願",
 
   "footerNotSynced": "未同期",
   "footerLastUpdated": "最終更新：{time}",
@@ -81,7 +81,7 @@
   "emptyNoSyncMessage": "右上の「データ更新」から開始してください",
   "emptyNoRecords": "この祈願に記録がありません",
   "emptyNoFilterMatch": "条件に一致する記録がありません",
-  "emptyNoOdesRecords": "頌願の記録がまだありません",
+  "emptyNoOdesRecords": "星願の記録がまだありません",
   "emptyNoWishRecords": "祈願の記録がまだありません",
 
   "statsTotal": "累計回数",
@@ -149,7 +149,7 @@
 
   "pageOverviewTitle": "総合データ（全祈願合計）",
   "pageOverviewWishSection": "祈願総合",
-  "pageOverviewOdesSection": "頌願総合",
+  "pageOverviewOdesSection": "星願総合",
   "pageBannerRecordList": "記録一覧",
 
   "settingsTitle": "設定",
