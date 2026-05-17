@@ -120,12 +120,12 @@ class OverviewPage extends ConsumerWidget {
         accent: tokens.accentPrimary,
       ),
       StatCard(
-        label: '${odesEventType.resolveName(l)} 5★',
+        label: '${odesEventType.resolveName(l)} ${l.rarityStar(5)}',
         value: '$odesEventFiveCount',
         accent: accentForRank(5, tokens),
       ),
       StatCard(
-        label: '${odesStandardType.resolveName(l)} 4★',
+        label: '${odesStandardType.resolveName(l)} ${l.rarityStar(4)}',
         value: '$odesStandardFourCount',
         accent: accentForRank(4, tokens),
       ),
@@ -291,7 +291,7 @@ class _OverviewSection extends StatelessWidget {
               icon: Icons.pie_chart_outline,
               chart: RarityPie(stats: stats),
               legend: DistributionLegend(
-                entries: rarityDistributionEntries(stats, tokens),
+                entries: rarityDistributionEntries(stats, tokens, l),
               ),
             );
             final itemTypeCard = ChartCard(

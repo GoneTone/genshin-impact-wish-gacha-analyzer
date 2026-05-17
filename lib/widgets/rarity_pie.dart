@@ -15,30 +15,31 @@ const double _kCenterRadius = 40;
 List<DistributionEntry> rarityDistributionEntries(
   WishStats stats,
   GachaTokens tokens,
+  AppLocalizations l,
 ) {
   return [
     DistributionEntry(
       color: tokens.fiveStar,
-      name: '5★',
+      name: l.rarityStar(5),
       count: stats.fiveStarCount,
       rate: stats.fiveStarRate,
     ),
     DistributionEntry(
       color: tokens.fourStar,
-      name: '4★',
+      name: l.rarityStar(4),
       count: stats.fourStarCount,
       rate: stats.fourStarRate,
     ),
     DistributionEntry(
       color: tokens.threeStar,
-      name: '3★',
+      name: l.rarityStar(3),
       count: stats.threeStarCount,
       rate: stats.threeStarRate,
     ),
     if (stats.twoStarCount > 0)
       DistributionEntry(
         color: tokens.twoStar,
-        name: '2★',
+        name: l.rarityStar(2),
         count: stats.twoStarCount,
         rate: stats.twoStarRate,
       ),

@@ -216,7 +216,7 @@ class BannerPage extends ConsumerWidget {
                       icon: Icons.pie_chart_outline,
                       chart: RarityPie(stats: stats),
                       legend: DistributionLegend(
-                        entries: rarityDistributionEntries(stats, tokens),
+                        entries: rarityDistributionEntries(stats, tokens, l),
                       ),
                     ),
                   ),
