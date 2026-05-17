@@ -101,6 +101,10 @@
   "tableName": "Name",
   "tableKind": "Type",
   "tableRarity": "Rarity",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "tableTotalIndex": "Total",
   "tableMainPity": "Pity",
   "tableMainPityTooltip": "Pulls since the last {rank}★",

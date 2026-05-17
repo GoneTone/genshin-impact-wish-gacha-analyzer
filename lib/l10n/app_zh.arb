@@ -101,6 +101,10 @@
   "tableName": "名稱",
   "tableKind": "類型",
   "tableRarity": "稀有度",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "tableTotalIndex": "總抽數",
   "tableMainPity": "保底內",
   "tableMainPityTooltip": "距上一次 {rank}★ 的抽數",

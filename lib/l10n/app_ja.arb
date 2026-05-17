@@ -101,6 +101,10 @@
   "tableName": "名称",
   "tableKind": "タイプ",
   "tableRarity": "レアリティ",
+  "rarityStar": "★{rank}",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
   "tableTotalIndex": "累計回数",
   "tableMainPity": "天井内",
   "tableMainPityTooltip": "前回の ★{rank} からの回数",
