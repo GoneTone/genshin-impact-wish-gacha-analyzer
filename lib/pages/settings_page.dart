@@ -31,6 +31,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -162,7 +163,7 @@ class _LocaleDropdown extends ConsumerWidget {
                 selectableTags.contains((current as LocaleLanguage).code))
         ? current
         : const SystemLanguage();
-    return DropdownButtonFormField<LanguagePreference>(
+    final dropdown = DropdownButtonFormField<LanguagePreference>(
       initialValue: effectiveCurrent,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
@@ -182,6 +183,25 @@ class _LocaleDropdown extends ConsumerWidget {
       onChanged: (v) {
         if (v != null) onChanged(v);
       },
+    );
+
+    final translator = l.localeTranslator;
+    if (translator.isEmpty) return dropdown;
+
+    final theme = Theme.of(context);
+    final creditStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.gacha.textSecondary,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        dropdown,
+        const SizedBox(height: AppSpacing.xs),
+        TranslatorText(
+          raw: l.localeTranslatorLabel(translator),
+          style: creditStyle,
+        ),
+      ],
     );
   }
 }
