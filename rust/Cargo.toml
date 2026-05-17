@@ -33,3 +33,7 @@ windows = { version = "0.62", features = [
     "Win32_System_Registry",
     "Win32_Foundation",
 ] }
+
+[lints.rust]
+# flutter_rust_bridge 的 #[frb] 巨集會展開出 cfg(frb_expand)，在此宣告以消除 unexpected_cfgs lint。
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
