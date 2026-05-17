@@ -255,8 +255,10 @@
   },
 
   "filterRarityAll": "全レアリティ",
-  "filterRarityFiveStar": "★5 のみ",
-  "filterRarityFourStar": "★4 のみ",
+  "filterRarityRankOnly": "{star} のみ",
+  "@filterRarityRankOnly": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "filterKindAll": "全タイプ",
   "filterSearchHint": "名称を検索…",
   "filterClear": "フィルターをクリア",

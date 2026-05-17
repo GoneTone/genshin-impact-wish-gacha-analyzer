@@ -255,8 +255,10 @@
   },
 
   "filterRarityAll": "All rarities",
-  "filterRarityFiveStar": "5★ only",
-  "filterRarityFourStar": "4★ only",
+  "filterRarityRankOnly": "{star} only",
+  "@filterRarityRankOnly": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "filterKindAll": "All kinds",
   "filterSearchHint": "Search name…",
   "filterClear": "Clear filters",

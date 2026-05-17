@@ -98,11 +98,11 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
             ),
             DropdownMenuItem(
               value: RarityFilter.fiveStar,
-              child: Text(l.filterRarityFiveStar),
+              child: Text(l.filterRarityRankOnly(l.rarityStar(5))),
             ),
             DropdownMenuItem(
               value: RarityFilter.fourStar,
-              child: Text(l.filterRarityFourStar),
+              child: Text(l.filterRarityRankOnly(l.rarityStar(4))),
             ),
           ],
         ),
