@@ -4,15 +4,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 enum GachaCategory { wish, odes }
 
 class PityRule {
-  const PityRule({
-    required this.rank,
-    required this.threshold,
-    required this.labelKey,
-  });
+  const PityRule({required this.rank, required this.threshold});
 
   final int rank;
   final int threshold;
-  final String labelKey;
 }
 
 class GachaType {
@@ -50,13 +45,13 @@ class GachaType {
   };
 }
 
-const _pityFive90 = PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar');
-const _pityFive80 = PityRule(rank: 5, threshold: 80, labelKey: 'pityFiveStar');
-const _pityFive70 = PityRule(rank: 5, threshold: 70, labelKey: 'pityFiveStar');
-const _pityFive20 = PityRule(rank: 5, threshold: 20, labelKey: 'pityFiveStar');
-const _pityFour70 = PityRule(rank: 4, threshold: 70, labelKey: 'pityFourStar');
-const _pityFour10 = PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar');
-const _pityThree5 = PityRule(rank: 3, threshold: 5, labelKey: 'pityThreeStar');
+const _pityFive90 = PityRule(rank: 5, threshold: 90);
+const _pityFive80 = PityRule(rank: 5, threshold: 80);
+const _pityFive70 = PityRule(rank: 5, threshold: 70);
+const _pityFive20 = PityRule(rank: 5, threshold: 20);
+const _pityFour70 = PityRule(rank: 4, threshold: 70);
+const _pityFour10 = PityRule(rank: 4, threshold: 10);
+const _pityThree5 = PityRule(rank: 3, threshold: 5);
 
 const gachaTypes = <GachaType>[
   GachaType(

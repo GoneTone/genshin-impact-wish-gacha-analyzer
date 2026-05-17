@@ -182,9 +182,10 @@
   "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
   "contributorsProjectLicense": "项目许可证",
 
-  "pityFiveStar": "5★ 保底",
-  "pityFourStar": "4★ 保底",
-  "pityThreeStar": "3★ 保底",
+  "pityRank": "{star} 保底",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {

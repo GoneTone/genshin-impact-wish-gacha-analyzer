@@ -40,8 +40,8 @@ class BannerPage extends ConsumerWidget {
       nameKey: gachaType,
       category: GachaCategory.wish,
       pities: const [
-        PityRule(rank: 5, threshold: 90, labelKey: 'pityFiveStar'),
-        PityRule(rank: 4, threshold: 10, labelKey: 'pityFourStar'),
+        PityRule(rank: 5, threshold: 90),
+        PityRule(rank: 4, threshold: 10),
       ],
     ),
   );
@@ -121,7 +121,7 @@ class BannerPage extends ConsumerWidget {
               final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
 
               final primaryCard = PityCard(
-                label: _pityLabel(primary.labelKey, l),
+                label: l.pityRank(l.rarityStar(primary.rank)),
                 rank: primary.rank,
                 pity: primaryPityData,
                 accent: accentForRank(primary.rank, tokens),
@@ -131,7 +131,7 @@ class BannerPage extends ConsumerWidget {
                   (secondary == null || secondaryPityData == null)
                   ? null
                   : PityCard(
-                      label: _pityLabel(secondary.labelKey, l),
+                      label: l.pityRank(l.rarityStar(secondary.rank)),
                       rank: secondary.rank,
                       pity: secondaryPityData,
                       accent: accentForRank(secondary.rank, tokens),
@@ -290,14 +290,6 @@ class BannerPage extends ConsumerWidget {
     );
   }
 }
-
-/// 將 [PityRule.labelKey] 解析為對應的 i18n 字串。
-String _pityLabel(String labelKey, AppLocalizations l) => switch (labelKey) {
-  'pityFiveStar' => l.pityFiveStar,
-  'pityFourStar' => l.pityFourStar,
-  'pityThreeStar' => l.pityThreeStar,
-  _ => labelKey,
-};
 
 /// 取 [WishStats] 中對應稀有度的件數，作為 timeline 標題的 N。
 int _countAtRank(WishStats stats, int rank) => switch (rank) {

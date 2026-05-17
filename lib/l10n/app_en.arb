@@ -182,9 +182,10 @@
   "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
   "contributorsProjectLicense": "Project License",
 
-  "pityFiveStar": "5★ pity",
-  "pityFourStar": "4★ pity",
-  "pityThreeStar": "3★ pity",
+  "pityRank": "{star} pity",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {

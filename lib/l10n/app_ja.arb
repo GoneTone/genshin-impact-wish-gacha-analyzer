@@ -182,9 +182,10 @@
   "contributorsHelpTranslate": "あなたの言語がありませんか？翻訳にご協力ください！",
   "contributorsProjectLicense": "プロジェクトライセンス",
 
-  "pityFiveStar": "★5 天井",
-  "pityFourStar": "★4 天井",
-  "pityThreeStar": "★3 天井",
+  "pityRank": "{star} 天井",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
