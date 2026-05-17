@@ -22,7 +22,7 @@ pub struct SavedProxyState {
 ///
 /// 若任何步驟失敗會先嘗試回復到原本的 proxy 設定再傳播錯誤；
 /// 但若 `write_state` 之後的廣播失敗且 rollback 也失敗，
-/// registry 可能殘留 PoC 設定——此種極端情況依賴啟動時的 `cleanup_stale` 自我修復。
+/// registry 可能殘留本程式寫入的代理設定——此種極端情況依賴啟動時的 `cleanup_stale` 自我修復。
 pub fn apply(addr: &str) -> Result<SysProxyGuard> {
     let saved = read_state().context("讀取原有代理設定失敗")?;
     write_state(1, Some(addr)).context("寫入代理設定失敗")?;
