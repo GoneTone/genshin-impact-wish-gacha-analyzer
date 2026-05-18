@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';

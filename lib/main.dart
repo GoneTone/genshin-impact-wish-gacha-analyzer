@@ -16,7 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/logging.dart'
@@ -25,7 +25,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/src/rust/frb_generated.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 
 Future<void> main() async {
@@ -83,16 +83,16 @@ Future<void> main() async {
         Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
       }
 
-      final wishDir = Directory('${supportDir.path}/wish_data');
-      if (!await wishDir.exists()) {
-        await wishDir.create(recursive: true);
+      final gachaDir = Directory('${supportDir.path}/gacha_data');
+      if (!await gachaDir.exists()) {
+        await gachaDir.create(recursive: true);
       }
-      final storage = WishStorage(wishDir);
+      final storage = GachaStorage(gachaDir);
 
       runApp(
         ProviderScope(
           overrides: [
-            wishStorageProvider.overrideWithValue(storage),
+            gachaStorageProvider.overrideWithValue(storage),
             appVersionProvider.overrideWithValue(pkgInfo.version),
             logServiceProvider.overrideWithValue(logService),
           ],

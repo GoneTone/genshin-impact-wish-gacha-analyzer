@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
@@ -13,7 +13,7 @@ const double _kRingRadius = 75;
 const double _kCenterRadius = 40;
 
 List<DistributionEntry> rarityDistributionEntries(
-  WishStats stats,
+  GachaStats stats,
   GachaTokens tokens,
   AppLocalizations l,
 ) {
@@ -48,7 +48,7 @@ List<DistributionEntry> rarityDistributionEntries(
 
 class RarityPie extends StatelessWidget {
   const RarityPie({super.key, required this.stats});
-  final WishStats stats;
+  final GachaStats stats;
 
   @override
   Widget build(BuildContext context) {

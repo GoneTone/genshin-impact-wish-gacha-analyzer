@@ -21,7 +21,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   /// 等首次 `_load` 完成。
   ///
-  /// `WishRepository._bootstrapLoad` 會在讀 settings 前 await 此 future，
+  /// `GachaRepository._bootstrapLoad` 會在讀 settings 前 await 此 future，
   /// 確保 `lastActiveUid` / `uidOrder` 等偏好已就緒；測試也用得到。
   Future<void> waitForLoad() => _loadFuture;
 

@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 
-WishRecord _r({
+GachaRecord _r({
   required String id,
   required String gachaType,
   required int rank,
   required DateTime time,
   String name = 'x',
-}) => WishRecord(
+}) => GachaRecord(
   id: id,
   uid: '1',
   gachaType: gachaType,
@@ -144,7 +144,7 @@ void main() {
     });
 
     test('rankFor callback 給各卡池不同主稀有度', () {
-      final banners = <String, List<WishRecord>>{
+      final banners = <String, List<GachaRecord>>{
         '301': [
           _r(
             id: 'a',
@@ -279,7 +279,7 @@ void main() {
 
     test('rankFor 各卡池用不同稀有度', () {
       // 301 用 5★、1000 用 4★
-      final banners = <String, List<WishRecord>>{
+      final banners = <String, List<GachaRecord>>{
         '301': [
           _r(id: 'c2', gachaType: '301', rank: 3, time: DateTime(2026, 5, 10)),
           _r(id: 'c1', gachaType: '301', rank: 5, time: DateTime(2026, 5, 5)),

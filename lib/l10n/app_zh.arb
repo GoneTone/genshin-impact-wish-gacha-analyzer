@@ -45,7 +45,7 @@
 
   "navOdesEvent": "活動",
   "navOdesStandard": "常駐",
-  "navSectionWish": "祈願",
+  "navSectionGacha": "祈願",
   "navSectionOdes": "頌願",
 
   "footerNotSynced": "尚未同步",
@@ -89,7 +89,7 @@
   "emptyNoRecords": "此卡池無紀錄",
   "emptyNoFilterMatch": "沒有符合條件的紀錄",
   "emptyNoOdesRecords": "尚無頌願記錄",
-  "emptyNoWishRecords": "尚無祈願記錄",
+  "emptyNoGachaRecords": "尚無祈願記錄",
 
   "statsTotal": "總抽數",
   "statsRankCount": "{star} 件數",
@@ -161,7 +161,7 @@
   "errorNoRecords": "此帳號尚無任何卡池紀錄",
 
   "pageOverviewTitle": "綜合數據（全卡池合計）",
-  "pageOverviewWishSection": "祈願綜合",
+  "pageOverviewGachaSection": "祈願綜合",
   "pageOverviewOdesSection": "頌願綜合",
   "pageBannerRecordList": "紀錄列表",
 

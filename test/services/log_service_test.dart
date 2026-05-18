@@ -136,7 +136,7 @@ void main() {
       localeTag: 'zh',
       themeMode: 'dark',
     );
-    expect(bundle, contains('Genshin Wish Gacha Analyzer log bundle'));
+    expect(bundle, contains('Genshin Gacha Gacha Analyzer log bundle'));
     expect(bundle, contains('app_version: 9.9.9'));
     expect(bundle, contains('os: TestOS'));
     expect(bundle, contains('locale: zh'));

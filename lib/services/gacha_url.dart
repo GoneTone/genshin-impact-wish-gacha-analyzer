@@ -1,5 +1,5 @@
 enum GachaEndpoint {
-  wish('getGachaLog'),
+  gacha('getGachaLog'),
   odes('getBeyondGachaLog');
 
   const GachaEndpoint(this.pathSegment);

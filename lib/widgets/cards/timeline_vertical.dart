@@ -224,7 +224,7 @@ class _EntryRow extends StatelessWidget {
         orElse: () => GachaType(
           gachaType: gachaType,
           nameKey: gachaType,
-          category: GachaCategory.wish,
+          category: GachaCategory.gacha,
           pities: const [
             PityRule(rank: 5, threshold: 90),
             PityRule(rank: 4, threshold: 10),

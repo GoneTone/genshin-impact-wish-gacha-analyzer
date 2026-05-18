@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
@@ -18,13 +18,13 @@ class AccountManagement extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final byUid = ref.watch(wishRepositoryProvider.select((s) => s.byUid));
+    final byUid = ref.watch(gachaRepositoryProvider.select((s) => s.byUid));
     final activeUid = ref.watch(
-      wishRepositoryProvider.select((s) => s.activeUid),
+      gachaRepositoryProvider.select((s) => s.activeUid),
     );
     final uidAliases = ref.watch(settingsProvider.select((s) => s.uidAliases));
     final uidOrder = ref.watch(settingsProvider.select((s) => s.uidOrder));
-    final notifier = ref.read(wishRepositoryProvider.notifier);
+    final notifier = ref.read(gachaRepositoryProvider.notifier);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
     final ordered = byUid.isEmpty
@@ -101,7 +101,7 @@ class AccountManagement extends ConsumerWidget {
       confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
-    await ref.read(wishRepositoryProvider.notifier).removeUid(uid);
+    await ref.read(gachaRepositoryProvider.notifier).removeUid(uid);
   }
 }
 

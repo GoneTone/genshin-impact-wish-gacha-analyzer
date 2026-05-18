@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 class PityCard extends StatefulWidget {

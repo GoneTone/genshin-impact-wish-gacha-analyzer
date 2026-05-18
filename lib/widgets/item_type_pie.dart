@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
@@ -37,7 +37,7 @@ List<Color> _itemTypePalette(Brightness b) =>
     b == Brightness.dark ? _paletteDark : _paletteLight;
 
 List<DistributionEntry> itemTypeDistributionEntries(
-  WishStats stats,
+  GachaStats stats,
   Brightness brightness,
   AppLocalizations l,
 ) {
@@ -56,7 +56,7 @@ List<DistributionEntry> itemTypeDistributionEntries(
 
 class ItemTypePie extends StatelessWidget {
   const ItemTypePie({super.key, required this.stats});
-  final WishStats stats;
+  final GachaStats stats;
 
   @override
   Widget build(BuildContext context) {

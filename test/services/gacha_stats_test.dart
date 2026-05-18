@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 
-WishRecord _r({String id = '1', int rank = 5, String itemType = '角色'}) =>
-    WishRecord(
+GachaRecord _r({String id = '1', int rank = 5, String itemType = '角色'}) =>
+    GachaRecord(
       id: id,
       uid: '1',
       gachaType: '301',
@@ -15,9 +15,9 @@ WishRecord _r({String id = '1', int rank = 5, String itemType = '角色'}) =>
     );
 
 void main() {
-  group('WishStats', () {
+  group('GachaStats', () {
     test('空 list 全 0', () {
-      final s = computeWishStats(const []);
+      final s = computeGachaStats(const []);
       expect(s.total, 0);
       expect(s.fiveStarCount, 0);
       expect(s.byItemType, isEmpty);
@@ -32,7 +32,7 @@ void main() {
         _r(id: '4', rank: 3, itemType: '武器'),
         _r(id: '5', rank: 3, itemType: '武器'),
       ];
-      final s = computeWishStats(records);
+      final s = computeGachaStats(records);
       expect(s.total, 5);
       expect(s.fiveStarCount, 1);
       expect(s.fourStarCount, 2);
@@ -49,7 +49,7 @@ void main() {
         _r(id: '3', rank: 5, itemType: '武器'),
         _r(id: '4', rank: 4, itemType: '裝扮'),
       ];
-      final stats = computeWishStats(records);
+      final stats = computeGachaStats(records);
       expect(stats.byItemType, {'角色': 2, '武器': 1, '裝扮': 1});
     });
 
@@ -61,7 +61,7 @@ void main() {
         _r(id: '4', rank: 3),
         _r(id: '5', rank: 2),
       ];
-      final stats = computeWishStats(records);
+      final stats = computeGachaStats(records);
       expect(stats.fiveStarCount, 1);
       expect(stats.fourStarCount, 1);
       expect(stats.threeStarCount, 2);
@@ -70,17 +70,17 @@ void main() {
 
     test('空字串 itemType 累計到 ""', () {
       final records = [_r(id: '1', rank: 5, itemType: '')];
-      final stats = computeWishStats(records);
+      final stats = computeGachaStats(records);
       expect(stats.byItemType, {'': 1});
     });
 
     test('sortedItemTypes 依 count desc 排序', () {
-      final records = <WishRecord>[
+      final records = <GachaRecord>[
         for (var i = 0; i < 5; i++) _r(id: 'w$i', itemType: '武器'),
         for (var i = 0; i < 3; i++) _r(id: 'c$i', itemType: '角色'),
         _r(id: 'd', itemType: '裝扮'),
       ];
-      final stats = computeWishStats(records);
+      final stats = computeGachaStats(records);
       expect(stats.sortedItemTypes().map((e) => e.key).toList(), [
         '武器',
         '角色',

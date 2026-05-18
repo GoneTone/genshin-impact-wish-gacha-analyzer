@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
 @immutable
 class Pity {
@@ -41,7 +41,7 @@ class Pity {
 
 /// 計算單一卡池對指定 [rank] 的保底狀態。預設 rank=5，4★ pity 傳 rank=4。
 Pity computePity(
-  List<WishRecord> records, {
+  List<GachaRecord> records, {
   required int threshold,
   int rank = 5,
 }) {
@@ -72,7 +72,7 @@ Pity computePity(
 /// 把分子分母分別累加再相除。與單卡池 [Pity.averageInterval] 語意一致,
 /// 每個卡池各算各的 `current`,不會把多個卡池「未命中當前 pity」合計進分子。
 double? averageIntervalAcrossBanners(
-  Map<String, List<WishRecord>> banners, {
+  Map<String, List<GachaRecord>> banners, {
   required int Function(String gachaType) rankFor,
 }) {
   var sumCompleted = 0;

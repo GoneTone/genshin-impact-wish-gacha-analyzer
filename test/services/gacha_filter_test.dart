@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 
-WishRecord _r({
+GachaRecord _r({
   required String id,
   required int rank,
   required String itemType,
   required String name,
   DateTime? time,
-}) => WishRecord(
+}) => GachaRecord(
   id: id,
   uid: '1',
   gachaType: '301',
@@ -21,7 +21,7 @@ WishRecord _r({
 );
 
 void main() {
-  late List<WishRecord> records;
+  late List<GachaRecord> records;
   setUp(() {
     records = [
       _r(

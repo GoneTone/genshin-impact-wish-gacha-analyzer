@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 
 void main() {
   late Directory tempDir;
-  late WishStorage storage;
+  late GachaStorage storage;
 
   setUp(() async {
-    tempDir = await Directory.systemTemp.createTemp('wish_test_');
-    storage = WishStorage(tempDir);
+    tempDir = await Directory.systemTemp.createTemp('gacha_test_');
+    storage = GachaStorage(tempDir);
   });
 
   tearDown(() async {
@@ -20,7 +20,7 @@ void main() {
     }
   });
 
-  WishRecord makeRecord(String id) => WishRecord(
+  GachaRecord makeRecord(String id) => GachaRecord(
     id: id,
     uid: '801057625',
     gachaType: '301',

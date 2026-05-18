@@ -39,7 +39,7 @@
 
   "navOdesEvent": "イベント",
   "navOdesStandard": "通常",
-  "navSectionWish": "祈願",
+  "navSectionGacha": "祈願",
   "navSectionOdes": "星願",
 
   "footerNotSynced": "未同期",
@@ -83,7 +83,7 @@
   "emptyNoRecords": "この祈願に記録がありません",
   "emptyNoFilterMatch": "条件に一致する記録がありません",
   "emptyNoOdesRecords": "星願の記録がまだありません",
-  "emptyNoWishRecords": "祈願の記録がまだありません",
+  "emptyNoGachaRecords": "祈願の記録がまだありません",
 
   "statsTotal": "累計回数",
   "statsRankCount": "{star} 件数",
@@ -155,7 +155,7 @@
   "errorNoRecords": "このアカウントには祈願の記録がまだありません",
 
   "pageOverviewTitle": "総合データ（全祈願合計）",
-  "pageOverviewWishSection": "祈願総合",
+  "pageOverviewGachaSection": "祈願総合",
   "pageOverviewOdesSection": "星願総合",
   "pageBannerRecordList": "記録一覧",
 

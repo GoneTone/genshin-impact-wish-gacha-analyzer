@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
 void main() {
-  group('WishRecord.fromApiJson', () {
-    test('解析典型祈願 zh-tw API 回傳', () {
+  group('GachaRecord.fromApiJson', () {
+    test('解析典型卡池 zh-tw API 回傳', () {
       final json = {
         'uid': '801057625',
         'gacha_type': '200',
@@ -17,7 +17,7 @@ void main() {
         'rank_type': '3',
         'id': '1758632760000221425',
       };
-      final record = WishRecord.fromApiJson(json, gachaType: '200');
+      final record = GachaRecord.fromApiJson(json, gachaType: '200');
       expect(record.id, '1758632760000221425');
       expect(record.uid, '801057625');
       expect(record.gachaType, '200');
@@ -43,7 +43,7 @@ void main() {
         'time': '2025-10-24 01:51:25',
         'op_gacha_type': '20021',
       };
-      final record = WishRecord.fromApiJson(json, gachaType: '2000');
+      final record = GachaRecord.fromApiJson(json, gachaType: '2000');
       expect(record.id, '1761240000000038925');
       expect(record.uid, '801057625');
       // 用查詢的 banner 級 gacha_type，不取 op_gacha_type
@@ -57,9 +57,9 @@ void main() {
     });
   });
 
-  group('WishRecord JSON 持久化序列化', () {
+  group('GachaRecord JSON 持久化序列化', () {
     test('toStorageJson / fromStorageJson roundtrip', () {
-      final original = WishRecord(
+      final original = GachaRecord(
         id: '1758632760000221425',
         uid: '801057625',
         gachaType: '200',
@@ -76,7 +76,7 @@ void main() {
       expect(json['rank_type'], 3);
       expect(json['time'], '2025-09-23 21:27:37');
 
-      final restored = WishRecord.fromStorageJson(json);
+      final restored = GachaRecord.fromStorageJson(json);
       expect(restored.id, original.id);
       expect(restored.itemType, original.itemType);
       expect(restored.time, original.time);
@@ -85,7 +85,7 @@ void main() {
 
   group('BannerStorage roundtrip', () {
     test('serialize/deserialize 保留 5 個 banner key', () {
-      final record = WishRecord(
+      final record = GachaRecord(
         id: '1',
         uid: '801057625',
         gachaType: '301',

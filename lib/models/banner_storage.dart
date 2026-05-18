@@ -1,4 +1,4 @@
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
 class BannerStorage {
   const BannerStorage({
@@ -9,7 +9,8 @@ class BannerStorage {
 
   final String uid;
   final DateTime lastUpdated; // UTC
-  final Map<String, List<WishRecord>> banners; // gachaType → records desc by id
+  final Map<String, List<GachaRecord>>
+  banners; // gachaType → records desc by id
 
   factory BannerStorage.fromJson(Map<String, dynamic> json) {
     final bannersJson = json['banners'] as Map<String, dynamic>;
@@ -20,7 +21,9 @@ class BannerStorage {
         (k, v) => MapEntry(
           k,
           (v as List<dynamic>)
-              .map((e) => WishRecord.fromStorageJson(e as Map<String, dynamic>))
+              .map(
+                (e) => GachaRecord.fromStorageJson(e as Map<String, dynamic>),
+              )
               .toList(growable: false),
         ),
       ),
@@ -38,7 +41,7 @@ class BannerStorage {
 
   BannerStorage copyWith({
     DateTime? lastUpdated,
-    Map<String, List<WishRecord>>? banners,
+    Map<String, List<GachaRecord>>? banners,
   }) => BannerStorage(
     uid: uid,
     lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -46,6 +49,6 @@ class BannerStorage {
   );
 
   /// 全 banner 串成一條 list（OverviewPage 用）
-  List<WishRecord> get allRecords =>
+  List<GachaRecord> get allRecords =>
       banners.values.expand((l) => l).toList(growable: false);
 }

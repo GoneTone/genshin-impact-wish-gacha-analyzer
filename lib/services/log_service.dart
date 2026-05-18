@@ -203,7 +203,7 @@ class LogService {
           ..sort((a, b) => a.path.compareTo(b.path));
 
     final buf = StringBuffer()
-      ..writeln('=== Genshin Wish Gacha Analyzer log bundle ===')
+      ..writeln('=== Genshin Gacha Gacha Analyzer log bundle ===')
       ..writeln('exported_at: ${DateTime.now().toUtc().toIso8601String()}')
       ..writeln('app_version: $appVersion')
       ..writeln('os: $osDescription')

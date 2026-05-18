@@ -11,14 +11,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 
-class _NullCapture implements WishCapture {
+class _NullCapture implements GachaCapture {
   @override
   CaptureSession start() =>
       CaptureSession(result: Future.value(null), cancel: () async {});
@@ -29,14 +29,14 @@ class _NullCapture implements WishCapture {
 /// 必須在 tester.runAsync 裡呼叫，以跳出 FakeAsync 環境，
 /// 讓 File I/O 和 Future.delayed 能正常完成。
 Future<ProviderContainer> _setupContainer({
-  required WishStorage storage,
+  required GachaStorage storage,
   Map<String, dynamic> prefs = const {},
 }) async {
   SharedPreferences.setMockInitialValues(Map<String, Object>.from(prefs));
   final container = ProviderContainer(
     overrides: [
-      wishStorageProvider.overrideWithValue(storage),
-      wishCaptureProvider.overrideWithValue(_NullCapture()),
+      gachaStorageProvider.overrideWithValue(storage),
+      gachaCaptureProvider.overrideWithValue(_NullCapture()),
       cancellableHttpClientFactoryProvider.overrideWithValue(
         () => CancellableHttpClient(
           client: MockClient((_) async => http.Response('{}', 200)),
@@ -46,7 +46,7 @@ Future<ProviderContainer> _setupContainer({
     ],
   );
   await container.read(settingsProvider.notifier).waitForLoad();
-  container.read(wishRepositoryProvider);
+  container.read(gachaRepositoryProvider);
   await Future<void>.delayed(const Duration(milliseconds: 50));
   return container;
 }
@@ -72,7 +72,7 @@ void main() {
   });
 
   testWidgets('依 uidOrder 顯示順序', (tester) async {
-    final storage = WishStorage(tempDir);
+    final storage = GachaStorage(tempDir);
     // 用 runAsync 跳出 FakeAsync，讓 File I/O / Future.delayed 正常完成
     await tester.runAsync(() async {
       await storage.save(
@@ -122,7 +122,7 @@ void main() {
   });
 
   testWidgets('拖曳 row → 呼叫 setUidOrder', (tester) async {
-    final storage = WishStorage(tempDir);
+    final storage = GachaStorage(tempDir);
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
@@ -175,7 +175,7 @@ void main() {
   });
 
   testWidgets('編輯別名 onSubmitted → 寫入 setUidAlias', (tester) async {
-    final storage = WishStorage(tempDir);
+    final storage = GachaStorage(tempDir);
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
@@ -213,7 +213,7 @@ void main() {
   });
 
   testWidgets('別名空字串 → 移除', (tester) async {
-    final storage = WishStorage(tempDir);
+    final storage = GachaStorage(tempDir);
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(

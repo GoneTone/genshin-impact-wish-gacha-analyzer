@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 class UidIndicator extends ConsumerWidget {
@@ -13,9 +13,9 @@ class UidIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(wishRepositoryProvider);
+    final state = ref.watch(gachaRepositoryProvider);
     final settings = ref.watch(settingsProvider);
-    final notifier = ref.read(wishRepositoryProvider.notifier);
+    final notifier = ref.read(gachaRepositoryProvider.notifier);
     final activeUid = state.activeUid;
     final l = AppLocalizations.of(context)!;
 

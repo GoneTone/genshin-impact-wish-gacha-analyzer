@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
@@ -38,7 +38,7 @@ class _AppShellState extends ConsumerState<AppShell> {
   @override
   Widget build(BuildContext context) {
     ref.listen<UpdateProgress?>(
-      wishRepositoryProvider.select((s) => s.progress),
+      gachaRepositoryProvider.select((s) => s.progress),
       (prev, next) {
         if (next != null && !_dialogOpen) {
           _dialogOpen = true;
@@ -70,7 +70,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     final tokens = Theme.of(context).gacha;
     final location = GoRouterState.of(context).uri.path;
     final activeData = ref.watch(
-      wishRepositoryProvider.select((s) => s.activeData),
+      gachaRepositoryProvider.select((s) => s.activeData),
     );
     final width = MediaQuery.of(context).size.width;
     final extendedRail = width >= 1180;
@@ -115,7 +115,7 @@ class _AppShellState extends ConsumerState<AppShell> {
               icon: const Icon(Icons.refresh),
               label: Text(l.actionUpdate),
               onPressed: () async {
-                await ref.read(wishRepositoryProvider.notifier).update();
+                await ref.read(gachaRepositoryProvider.notifier).update();
               },
             ),
           ),
@@ -182,11 +182,11 @@ class _AppShellState extends ConsumerState<AppShell> {
     if (path == '/') return const _RailSelection(topIndex: 0);
     if (path.startsWith('/banner/')) {
       final type = path.substring('/banner/'.length);
-      final wishTypes = gachaTypes
-          .where((t) => t.category == GachaCategory.wish)
+      final gachaList = gachaTypes
+          .where((t) => t.category == GachaCategory.gacha)
           .toList(growable: false);
-      final wi = wishTypes.indexWhere((t) => t.gachaType == type);
-      if (wi >= 0) return _RailSelection(wishIndex: wi);
+      final wi = gachaList.indexWhere((t) => t.gachaType == type);
+      if (wi >= 0) return _RailSelection(gachaIndex: wi);
       final odesTypes = gachaTypes
           .where((t) => t.category == GachaCategory.odes)
           .toList(growable: false);
@@ -198,9 +198,9 @@ class _AppShellState extends ConsumerState<AppShell> {
 }
 
 class _RailSelection {
-  const _RailSelection({this.topIndex, this.wishIndex, this.odesIndex});
+  const _RailSelection({this.topIndex, this.gachaIndex, this.odesIndex});
   final int? topIndex;
-  final int? wishIndex;
+  final int? gachaIndex;
   final int? odesIndex;
 
   static const none = _RailSelection();
@@ -224,8 +224,8 @@ class _Rail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wishTypes = gachaTypes
-        .where((t) => t.category == GachaCategory.wish)
+    final gachaList = gachaTypes
+        .where((t) => t.category == GachaCategory.gacha)
         .toList(growable: false);
     final odesTypes = gachaTypes
         .where((t) => t.category == GachaCategory.odes)
@@ -255,18 +255,18 @@ class _Rail extends StatelessWidget {
                     hideLabel: collapsedNoLabel,
                   ),
                   _SectionLabel(
-                    label: l.navSectionWish,
+                    label: l.navSectionGacha,
                     extended: extended,
                     hideLabel: collapsedNoLabel,
                   ),
-                  for (var i = 0; i < wishTypes.length; i++)
+                  for (var i = 0; i < gachaList.length; i++)
                     _RailDestinationTile(
-                      iconInactive: _railIconInactive(wishTypes[i].nameKey),
-                      iconActive: _railIconActive(wishTypes[i].nameKey),
-                      label: _railLabel(wishTypes[i].nameKey, l),
-                      selected: selection.wishIndex == i,
+                      iconInactive: _railIconInactive(gachaList[i].nameKey),
+                      iconActive: _railIconActive(gachaList[i].nameKey),
+                      label: _railLabel(gachaList[i].nameKey, l),
+                      selected: selection.gachaIndex == i,
                       onTap: () =>
-                          context.go('/banner/${wishTypes[i].gachaType}'),
+                          context.go('/banner/${gachaList[i].gachaType}'),
                       extended: extended,
                       hideLabel: collapsedNoLabel,
                     ),

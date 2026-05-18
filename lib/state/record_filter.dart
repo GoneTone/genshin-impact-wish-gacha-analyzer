@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 
 @immutable
 class RecordFilterState {

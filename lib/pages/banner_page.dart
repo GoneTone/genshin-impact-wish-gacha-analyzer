@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
@@ -38,7 +38,7 @@ class BannerPage extends ConsumerWidget {
     orElse: () => GachaType(
       gachaType: gachaType,
       nameKey: gachaType,
-      category: GachaCategory.wish,
+      category: GachaCategory.gacha,
       pities: const [
         PityRule(rank: 5, threshold: 90),
         PityRule(rank: 4, threshold: 10),
@@ -50,7 +50,7 @@ class BannerPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final state = ref.watch(wishRepositoryProvider);
+    final state = ref.watch(gachaRepositoryProvider);
     final activeData = state.activeData;
 
     if (state.isBootstrapping) {
@@ -78,7 +78,7 @@ class BannerPage extends ConsumerWidget {
       );
     }
 
-    final stats = computeWishStats(records);
+    final stats = computeGachaStats(records);
     final primary = type.primaryPity;
     final secondary = type.secondaryPity;
     final primaryPityData = computePity(
@@ -291,8 +291,8 @@ class BannerPage extends ConsumerWidget {
   }
 }
 
-/// 取 [WishStats] 中對應稀有度的件數，作為 timeline 標題的 N。
-int _countAtRank(WishStats stats, int rank) => switch (rank) {
+/// 取 [GachaStats] 中對應稀有度的件數，作為 timeline 標題的 N。
+int _countAtRank(GachaStats stats, int rank) => switch (rank) {
   5 => stats.fiveStarCount,
   4 => stats.fourStarCount,
   3 => stats.threeStarCount,

@@ -16,12 +16,12 @@ class CaptureSession {
   final Future<void> Function() cancel;
 }
 
-abstract class WishCapture {
+abstract class GachaCapture {
   CaptureSession start();
 }
 
-class RustWishCapture implements WishCapture {
-  static final _log = Logger('wish.capture');
+class RustGachaCapture implements GachaCapture {
+  static final _log = Logger('gacha.capture');
 
   @override
   CaptureSession start() {

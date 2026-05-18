@@ -6,12 +6,12 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
-class WishStorage {
-  WishStorage(this.baseDir);
+class GachaStorage {
+  GachaStorage(this.baseDir);
 
-  static final _log = Logger('wish.storage');
+  static final _log = Logger('gacha.storage');
 
-  /// `<applicationSupportDirectory>/wish_data/`，main.dart 創建後傳入
+  /// `<applicationSupportDirectory>/gacha_data/`，main.dart 創建後傳入
   final Directory baseDir;
 
   File _dataFile(String uid) => File('${baseDir.path}/$uid.json');
@@ -96,7 +96,7 @@ class WishStorage {
         await e.delete();
       }
     }
-    _log.info('clear all wish data');
+    _log.info('clear all gacha data');
   }
 
   Future<void> _atomicWrite(File target, String content) async {

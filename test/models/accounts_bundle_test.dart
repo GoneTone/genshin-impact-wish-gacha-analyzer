@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
-WishRecord _r(String id, {String uid = '1'}) => WishRecord(
+GachaRecord _r(String id, {String uid = '1'}) => GachaRecord(
   id: id,
   uid: uid,
   gachaType: '301',

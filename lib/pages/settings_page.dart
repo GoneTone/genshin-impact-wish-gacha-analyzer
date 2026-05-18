@@ -21,7 +21,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dar
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
@@ -320,10 +320,10 @@ class _DataManagement extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final hasData = ref.watch(
-      wishRepositoryProvider.select((s) => s.byUid.isNotEmpty),
+      gachaRepositoryProvider.select((s) => s.byUid.isNotEmpty),
     );
     final activeUid = ref.watch(
-      wishRepositoryProvider.select((s) => s.activeUid),
+      gachaRepositoryProvider.select((s) => s.activeUid),
     );
 
     return Wrap(
@@ -366,14 +366,14 @@ class _DataManagement extends ConsumerWidget {
 
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
-    final wish = ref.read(wishRepositoryProvider);
+    final gacha = ref.read(gachaRepositoryProvider);
     final settings = ref.read(settingsProvider);
     final appVersion = ref.read(appVersionProvider);
 
     final ordered = mergeUidOrder(
-      knownUids: wish.byUid.keys,
+      knownUids: gacha.byUid.keys,
       customOrder: settings.uidOrder,
-      lastUpdatedOf: (u) => wish.byUid[u]!.lastUpdated,
+      lastUpdatedOf: (u) => gacha.byUid[u]!.lastUpdated,
     );
 
     final entries = [
@@ -381,8 +381,8 @@ class _DataManagement extends ConsumerWidget {
         AccountPickerEntry(
           uid: uid,
           alias: settings.uidAliases[uid],
-          lastUpdated: wish.byUid[uid]!.lastUpdated,
-          recordCount: wish.byUid[uid]!.allRecords.length,
+          lastUpdated: gacha.byUid[uid]!.lastUpdated,
+          recordCount: gacha.byUid[uid]!.allRecords.length,
         ),
     ];
     final picked = await showAccountsPickerDialog(
@@ -400,7 +400,7 @@ class _DataManagement extends ConsumerWidget {
         '${_two(now.hour)}${_two(now.minute)}${_two(now.second)}';
 
     final loc = await getSaveLocation(
-      suggestedName: 'genshin_wish_backup_$stamp.json',
+      suggestedName: 'genshin_gacha_backup_$stamp.json',
       acceptedTypeGroups: const [
         XTypeGroup(label: 'JSON', extensions: ['json']),
       ],
@@ -409,7 +409,7 @@ class _DataManagement extends ConsumerWidget {
 
     final pickedSet = picked.toSet();
     final filteredByUid = {
-      for (final e in wish.byUid.entries)
+      for (final e in gacha.byUid.entries)
         if (pickedSet.contains(e.key)) e.key: e.value,
     };
     final filteredAliases = {
@@ -475,7 +475,7 @@ class _DataManagement extends ConsumerWidget {
     }
 
     // Picker：列出檔案內的帳號讓使用者勾選。
-    final existing = ref.read(wishRepositoryProvider).byUid.keys.toSet();
+    final existing = ref.read(gachaRepositoryProvider).byUid.keys.toSet();
     final entries = [
       for (final a in bundle.accounts)
         AccountPickerEntry(
@@ -563,7 +563,7 @@ class _DataManagement extends ConsumerWidget {
     if (!ctx.mounted) return;
 
     final result = await ref
-        .read(wishRepositoryProvider.notifier)
+        .read(gachaRepositoryProvider.notifier)
         .importAccounts(filteredBundle);
     if (!ctx.mounted) return;
 
@@ -608,7 +608,7 @@ class _DataManagement extends ConsumerWidget {
       confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
-    await ref.read(wishRepositoryProvider.notifier).clearActive();
+    await ref.read(gachaRepositoryProvider.notifier).clearActive();
   }
 
   Future<void> _clearAll(BuildContext ctx, WidgetRef ref) async {
@@ -623,7 +623,7 @@ class _DataManagement extends ConsumerWidget {
       confirmIcon: Icons.delete_outline,
     );
     if (ok != true) return;
-    await ref.read(wishRepositoryProvider.notifier).clearAll();
+    await ref.read(gachaRepositoryProvider.notifier).clearAll();
   }
 }
 

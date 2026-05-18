@@ -25,11 +25,11 @@ void main() {
       }
     });
 
-    test('5 個祈願 type 都是 wish category', () {
-      const wishTypes = {'301', '302', '500', '200', '100'};
+    test('5 個卡池 type 都是 gacha category', () {
+      const gachaTypeIds = {'301', '302', '500', '200', '100'};
       for (final t in gachaTypes) {
-        if (wishTypes.contains(t.gachaType)) {
-          expect(t.category, GachaCategory.wish);
+        if (gachaTypeIds.contains(t.gachaType)) {
+          expect(t.category, GachaCategory.gacha);
         }
       }
     });
@@ -73,10 +73,10 @@ void main() {
       expect(t.secondaryPity!.threshold, 5);
     });
 
-    test('總共 7 個 type (5 wish + 2 odes)', () {
+    test('總共 7 個 type (5 gacha + 2 odes)', () {
       expect(gachaTypes.length, 7);
       expect(
-        gachaTypes.where((t) => t.category == GachaCategory.wish).length,
+        gachaTypes.where((t) => t.category == GachaCategory.gacha).length,
         5,
       );
       expect(

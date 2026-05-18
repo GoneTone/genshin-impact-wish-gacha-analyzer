@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
@@ -13,7 +13,7 @@ class UpdateProgressDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<UpdateProgress?>(
-      wishRepositoryProvider.select((s) => s.progress),
+      gachaRepositoryProvider.select((s) => s.progress),
       (prev, next) {
         if (next == null && Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
@@ -21,9 +21,9 @@ class UpdateProgressDialog extends ConsumerWidget {
       },
     );
     final progress = ref.watch(
-      wishRepositoryProvider.select((s) => s.progress),
+      gachaRepositoryProvider.select((s) => s.progress),
     );
-    final notifier = ref.read(wishRepositoryProvider.notifier);
+    final notifier = ref.read(gachaRepositoryProvider.notifier);
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
 
@@ -41,7 +41,7 @@ class UpdateProgressDialog extends ConsumerWidget {
   List<Widget> _actions(
     BuildContext ctx,
     UpdateProgress? p,
-    WishRepository r,
+    GachaRepository r,
     AppLocalizations l,
   ) {
     return switch (p) {

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 
 /// 卡池主稀有度件數長條圖。
 ///
-/// 每個 [GachaType] 依其 `primaryPity.rank` 決定該池要計數的稀有度（祈願是
+/// 每個 [GachaType] 依其 `primaryPity.rank` 決定該池要計數的稀有度（卡池是
 /// 5★、頌願常駐是 4★），bar 長度為各池件數相對最大值的比例。
 class BannerTopRarityBars extends StatelessWidget {
   const BannerTopRarityBars({
@@ -20,7 +20,7 @@ class BannerTopRarityBars extends StatelessWidget {
   });
 
   final List<GachaType> types;
-  final Map<String, List<WishRecord>> banners;
+  final Map<String, List<GachaRecord>> banners;
   final BannerColors colors;
 
   @override
@@ -37,7 +37,7 @@ class BannerTopRarityBars extends StatelessWidget {
 
     final rows = types
         .map((type) {
-          final records = banners[type.gachaType] ?? const <WishRecord>[];
+          final records = banners[type.gachaType] ?? const <GachaRecord>[];
           final topCount = counts[type.gachaType]!;
           final isEnded = type.gachaType == '100';
           final String subtitle;

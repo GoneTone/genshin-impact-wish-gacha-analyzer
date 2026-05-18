@@ -1,7 +1,7 @@
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
-class WishStats {
-  const WishStats({
+class GachaStats {
+  const GachaStats({
     required this.total,
     required this.fiveStarCount,
     required this.fourStarCount,
@@ -32,7 +32,7 @@ class WishStats {
   }
 }
 
-WishStats computeWishStats(List<WishRecord> records) {
+GachaStats computeGachaStats(List<GachaRecord> records) {
   var five = 0, four = 0, three = 0, two = 0;
   final byItemType = <String, int>{};
   for (final r in records) {
@@ -48,7 +48,7 @@ WishStats computeWishStats(List<WishRecord> records) {
     }
     byItemType[r.itemType] = (byItemType[r.itemType] ?? 0) + 1;
   }
-  return WishStats(
+  return GachaStats(
     total: records.length,
     fiveStarCount: five,
     fourStarCount: four,

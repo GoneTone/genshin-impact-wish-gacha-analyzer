@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 
 Future<AppLocalizations> _loadL10n() async {
@@ -12,7 +12,7 @@ void main() {
   group('itemTypeDistributionEntries', () {
     test('依 byItemType count desc 動態建立 entries', () async {
       final l = await _loadL10n();
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 100,
         fiveStarCount: 0,
         fourStarCount: 0,
@@ -34,7 +34,7 @@ void main() {
 
     test('未知（空字串）itemType 顯示為 l.kindUnknown', () async {
       final l = await _loadL10n();
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 10,
         fiveStarCount: 0,
         fourStarCount: 0,
@@ -52,7 +52,7 @@ void main() {
 
     test('total=0 → entries 全部 rate=0（不除以零）', () async {
       final l = await _loadL10n();
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 0,
         fiveStarCount: 0,
         fourStarCount: 0,
@@ -67,7 +67,7 @@ void main() {
     test('項目數 > palette 大小 → 顏色循環使用 palette', () async {
       final l = await _loadL10n();
       // palette 有 6 種顏色，這裡放 7 種讓最後一筆走回 index 0
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 28,
         fiveStarCount: 0,
         fourStarCount: 0,
@@ -83,7 +83,7 @@ void main() {
 
     test('dark / light 兩種 brightness 使用不同 palette', () async {
       final l = await _loadL10n();
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 2,
         fiveStarCount: 0,
         fourStarCount: 0,

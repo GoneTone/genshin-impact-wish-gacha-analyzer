@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_filter.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
@@ -20,7 +20,7 @@ class SortableTable extends StatefulWidget {
   final List<RecordRow> rows;
   final TableSort? sort;
 
-  /// 該卡池的主稀有度 rank（祈願預設 5、常駐頌願 4），用於「保底內」欄
+  /// 該卡池的主稀有度 rank（卡池預設 5、常駐頌願 4），用於「保底內」欄
   /// 標題與 tooltip 中的 N★。
   final int mainRank;
   final ValueChanged<SortColumn> onSortColumnTapped;

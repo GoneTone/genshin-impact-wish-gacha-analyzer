@@ -1,5 +1,5 @@
-class WishRecord {
-  const WishRecord({
+class GachaRecord {
+  const GachaRecord({
     required this.id,
     required this.uid,
     required this.gachaType,
@@ -22,17 +22,17 @@ class WishRecord {
   /// 從 hoyoverse getGachaLog / getBeyondGachaLog API 回傳的 list 元素解析。
   ///
   /// 兩個 endpoint 的 schema 不一致：
-  /// - 祈願 (getGachaLog): `name` / `gacha_type` / `lang`
+  /// - 卡池 (getGachaLog): `name` / `gacha_type` / `lang`
   /// - 頌願 (getBeyondGachaLog): `item_name` / `op_gacha_type`（值為 schedule 級
   ///   ID 如 20021，跟我們查詢的 banner 級 gacha_type 2000/1000 不同）；無 `lang`
   ///
   /// 為了讓存檔 schema 對齊查詢的 banner（mergedBanners key 是 query 用的
   /// gacha_type），這裡用呼叫端傳入的 [gachaType] 覆寫，不取回傳的 op_gacha_type。
-  factory WishRecord.fromApiJson(
+  factory GachaRecord.fromApiJson(
     Map<String, dynamic> json, {
     required String gachaType,
   }) {
-    return WishRecord(
+    return GachaRecord(
       id: json['id'] as String,
       uid: json['uid'] as String,
       gachaType: gachaType,
@@ -45,8 +45,8 @@ class WishRecord {
   }
 
   /// 從本地存檔的 JSON 還原
-  factory WishRecord.fromStorageJson(Map<String, dynamic> json) {
-    return WishRecord(
+  factory GachaRecord.fromStorageJson(Map<String, dynamic> json) {
+    return GachaRecord(
       id: json['id'] as String,
       uid: json['uid'] as String,
       gachaType: json['gacha_type'] as String,

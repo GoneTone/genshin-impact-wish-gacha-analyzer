@@ -15,7 +15,7 @@ void main() {
         gachaType: '500',
         endId: '12345',
         size: 20,
-        endpoint: GachaEndpoint.wish,
+        endpoint: GachaEndpoint.gacha,
       );
       final params = url.queryParameters;
 
@@ -35,18 +35,18 @@ void main() {
     test('default size=20', () {
       final url = GachaUrl.parse(
         _capturedUrl,
-      ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish);
+      ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha);
       expect(url.queryParameters['size'], '20');
     });
 
-    test('build with endpoint=wish 保留 getGachaLog path', () {
+    test('build with endpoint=gacha 保留 getGachaLog path', () {
       final url = GachaUrl.parse(
         'https://example.com/gacha_info/api/getGachaLog?authkey=AAA&gacha_type=301&end_id=0',
       );
       final built = url.build(
         gachaType: '301',
         endId: '0',
-        endpoint: GachaEndpoint.wish,
+        endpoint: GachaEndpoint.gacha,
       );
       expect(built.path, '/gacha_info/api/getGachaLog');
     });
@@ -63,14 +63,14 @@ void main() {
       expect(built.path, '/gacha_info/api/getBeyondGachaLog');
     });
 
-    test('build 從 odes URL 解析後也能切回 wish', () {
+    test('build 從 odes URL 解析後也能切回 gacha', () {
       final url = GachaUrl.parse(
         'https://example.com/gacha_info/api/getBeyondGachaLog?authkey=AAA&gacha_type=2000&end_id=0',
       );
       final built = url.build(
         gachaType: '301',
         endId: '0',
-        endpoint: GachaEndpoint.wish,
+        endpoint: GachaEndpoint.gacha,
       );
       expect(built.path, '/gacha_info/api/getGachaLog');
     });

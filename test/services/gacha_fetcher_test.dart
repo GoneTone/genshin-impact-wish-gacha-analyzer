@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 
 const _baseUrl =
     'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getGachaLog'
@@ -41,16 +41,16 @@ http.Response _err(int retcode) => http.Response(
 );
 
 void main() {
-  group('WishFetcher.fetchPage', () {
+  group('GachaFetcher.fetchPage', () {
     test('retcode=0 解析 list', () async {
       final mock = MockClient(
         (req) async => _ok([_record(id: '1', type: '301')]),
       );
-      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
       final page = await fetcher.fetchPage(
         GachaUrl.parse(
           _baseUrl,
-        ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
+        ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha),
         mock,
       );
       expect(page.records, hasLength(1));
@@ -59,12 +59,12 @@ void main() {
 
     test('retcode=-101 throw AuthExpiredException', () async {
       final mock = MockClient((req) async => _err(-101));
-      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
       expect(
         () => fetcher.fetchPage(
           GachaUrl.parse(
             _baseUrl,
-          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
+          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha),
           mock,
         ),
         throwsA(isA<AuthExpiredException>()),
@@ -77,7 +77,7 @@ void main() {
         hits++;
         return _err(-110);
       });
-      final fetcher = WishFetcher(
+      final fetcher = GachaFetcher(
         rateLimit: Duration.zero,
         retryBackoff: Duration.zero,
       );
@@ -85,7 +85,7 @@ void main() {
         () => fetcher.fetchPage(
           GachaUrl.parse(
             _baseUrl,
-          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.wish),
+          ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha),
           mock,
         ),
         throwsA(isA<RateLimitedException>()),
@@ -94,18 +94,18 @@ void main() {
     });
   });
 
-  group('WishFetcher.fetchBannerWithMerge', () {
-    test('endpoint=wish 走 getGachaLog', () async {
+  group('GachaFetcher.fetchBannerWithMerge', () {
+    test('endpoint=gacha 走 getGachaLog', () async {
       final paths = <String>[];
       final client = MockClient((req) async {
         paths.add(req.url.path);
         return _ok(const []);
       });
-      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
       await fetcher.fetchBannerWithMerge(
         url: GachaUrl.parse(_baseUrl),
         gachaType: '301',
-        endpoint: GachaEndpoint.wish,
+        endpoint: GachaEndpoint.gacha,
         existing: const [],
         primer: null,
         onProgress: (_) {},
@@ -121,7 +121,7 @@ void main() {
         paths.add(req.url.path);
         return _ok(const []);
       });
-      final fetcher = WishFetcher(rateLimit: Duration.zero);
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
       await fetcher.fetchBannerWithMerge(
         url: GachaUrl.parse(_baseUrl),
         gachaType: '2000',
@@ -168,7 +168,7 @@ void main() {
         );
       });
 
-      final fetcher = WishFetcher(
+      final fetcher = GachaFetcher(
         retryBackoff: const Duration(milliseconds: 1),
       );
       await fetcher.fetchPage(
@@ -177,9 +177,9 @@ void main() {
       );
 
       final warning = records.firstWhere(
-        (r) => r.level == Level.WARNING && r.loggerName == 'wish.fetcher',
+        (r) => r.level == Level.WARNING && r.loggerName == 'gacha.fetcher',
         orElse: () => throw StateError(
-          'no WARNING from wish.fetcher; got '
+          'no WARNING from gacha.fetcher; got '
           '${records.map((r) => "${r.level.name}:${r.loggerName}:${r.message}").toList()}',
         ),
       );

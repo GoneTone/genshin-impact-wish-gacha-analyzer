@@ -7,15 +7,15 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_fetcher.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
@@ -36,8 +36,8 @@ class ImportResult {
 }
 
 @immutable
-class WishState {
-  const WishState({
+class GachaState {
+  const GachaState({
     this.activeUid,
     this.byUid = const {},
     this.progress,
@@ -52,14 +52,14 @@ class WishState {
   BannerStorage? get activeData => activeUid == null ? null : byUid[activeUid];
   Iterable<String> get knownUids => byUid.keys;
 
-  WishState copyWith({
+  GachaState copyWith({
     String? activeUid,
     bool clearActiveUid = false,
     Map<String, BannerStorage>? byUid,
     UpdateProgress? progress,
     bool clearProgress = false,
     bool? isBootstrapping,
-  }) => WishState(
+  }) => GachaState(
     activeUid: clearActiveUid ? null : (activeUid ?? this.activeUid),
     byUid: byUid ?? this.byUid,
     progress: clearProgress ? null : (progress ?? this.progress),
@@ -70,13 +70,15 @@ class WishState {
 // ─── Providers ───
 
 /// 必須在 main.dart 用 overrideWithValue 注入（baseDir 需要 async 取得）
-final wishStorageProvider = Provider<WishStorage>((ref) {
-  throw UnimplementedError('wishStorageProvider must be overridden in main()');
+final gachaStorageProvider = Provider<GachaStorage>((ref) {
+  throw UnimplementedError('gachaStorageProvider must be overridden in main()');
 });
 
-final wishCaptureProvider = Provider<WishCapture>((ref) => RustWishCapture());
+final gachaCaptureProvider = Provider<GachaCapture>(
+  (ref) => RustGachaCapture(),
+);
 
-final wishFetcherProvider = Provider<WishFetcher>((ref) => WishFetcher());
+final gachaFetcherProvider = Provider<GachaFetcher>((ref) => GachaFetcher());
 
 /// 每次 update 用一個獨立的 [CancellableHttpClient]（cancel 不會影響其他連線）。
 final cancellableHttpClientFactoryProvider =
@@ -84,23 +86,23 @@ final cancellableHttpClientFactoryProvider =
       (ref) => createIoCancellableHttpClient,
     );
 
-final wishRepositoryProvider = NotifierProvider<WishRepository, WishState>(
-  WishRepository.new,
+final gachaRepositoryProvider = NotifierProvider<GachaRepository, GachaState>(
+  GachaRepository.new,
 );
 
 // ─── Notifier ───
 
-class WishRepository extends Notifier<WishState> {
-  static final _log = Logger('wish.repo');
+class GachaRepository extends Notifier<GachaState> {
+  static final _log = Logger('gacha.repo');
 
   @override
-  WishState build() {
+  GachaState build() {
     _bootstrapLoad();
-    return const WishState();
+    return const GachaState();
   }
 
   Future<void> _bootstrapLoad() async {
-    final storage = ref.read(wishStorageProvider);
+    final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
     await settingsNotifier.waitForLoad();
     if (!ref.mounted) return;
@@ -172,8 +174,8 @@ class WishRepository extends Notifier<WishState> {
 
     try {
       final initialActiveUid = state.activeUid;
-      final storage = ref.read(wishStorageProvider);
-      final fetcher = ref.read(wishFetcherProvider);
+      final storage = ref.read(gachaStorageProvider);
+      final fetcher = ref.read(gachaFetcherProvider);
 
       if (forceRecapture && initialActiveUid != null) {
         await storage.deleteCapturedUrl(initialActiveUid);
@@ -272,7 +274,7 @@ class WishRepository extends Notifier<WishState> {
 
   Future<String?> _runMitm({required bool isFallback}) async {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
-    final session = ref.read(wishCaptureProvider).start();
+    final session = ref.read(gachaCaptureProvider).start();
     _activeCancel = session.cancel;
     _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
     try {
@@ -286,8 +288,8 @@ class WishRepository extends Notifier<WishState> {
 
   Future<void> _fetchAllBanners({
     required String url,
-    required WishFetcher fetcher,
-    required WishStorage storage,
+    required GachaFetcher fetcher,
+    required GachaStorage storage,
     required http.Client client,
   }) async {
     final gachaUrl = GachaUrl.parse(url);
@@ -304,16 +306,16 @@ class WishRepository extends Notifier<WishState> {
         BannerStorage(
           uid: uid,
           lastUpdated: DateTime.utc(1970),
-          banners: {for (final t in gachaTypes) t.gachaType: <WishRecord>[]},
+          banners: {for (final t in gachaTypes) t.gachaType: <GachaRecord>[]},
         );
 
-    final mergedBanners = <String, List<WishRecord>>{};
+    final mergedBanners = <String, List<GachaRecord>>{};
     final failed = <String>[];
     var totalNew = 0;
 
     for (final t in gachaTypes) {
       final endpoint = switch (t.category) {
-        GachaCategory.wish => GachaEndpoint.wish,
+        GachaCategory.gacha => GachaEndpoint.gacha,
         GachaCategory.odes => GachaEndpoint.odes,
       };
       try {
@@ -410,17 +412,17 @@ class WishRepository extends Notifier<WishState> {
   }
 
   Future<void> clearAll() async {
-    final storage = ref.read(wishStorageProvider);
+    final storage = ref.read(gachaStorageProvider);
     await storage.clearAll();
     if (!ref.mounted) return;
     await ref.read(settingsProvider.notifier).clearAllUidPreferences();
     if (!ref.mounted) return;
-    state = const WishState(isBootstrapping: false);
-    _log.info('cleared all wish data');
+    state = const GachaState(isBootstrapping: false);
+    _log.info('cleared all gacha data');
   }
 
   Future<ImportResult> importAccounts(AccountsBundle bundle) async {
-    final storage = ref.read(wishStorageProvider);
+    final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
     final newByUid = Map<String, BannerStorage>.from(state.byUid);
@@ -524,7 +526,7 @@ class WishRepository extends Notifier<WishState> {
   }
 
   Future<void> removeUid(String uid) async {
-    final storage = ref.read(wishStorageProvider);
+    final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
     await storage.delete(uid);

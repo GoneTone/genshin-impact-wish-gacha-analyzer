@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
@@ -29,7 +29,7 @@ class ApiErrorException implements Exception {
 
 class FetchedPage {
   const FetchedPage(this.records);
-  final List<WishRecord> records;
+  final List<GachaRecord> records;
   bool get isEmpty => records.isEmpty;
   int get length => records.length;
 }
@@ -45,8 +45,8 @@ class FetchProgress {
   final int newRecordsSoFar;
 }
 
-class WishFetcher {
-  WishFetcher({
+class GachaFetcher {
+  GachaFetcher({
     this.rateLimit = const Duration(milliseconds: 600),
     this.retryBackoff = const Duration(seconds: 5),
     this.timeout = const Duration(seconds: 10),
@@ -56,7 +56,7 @@ class WishFetcher {
   final Duration retryBackoff;
   final Duration timeout;
 
-  static final _log = Logger('wish.fetcher');
+  static final _log = Logger('gacha.fetcher');
   static const _pageSize = 20;
   static const _maxRetryOnRateLimit = 3;
 
@@ -76,7 +76,7 @@ class WishFetcher {
         return FetchedPage(
           list
               .map(
-                (e) => WishRecord.fromApiJson(
+                (e) => GachaRecord.fromApiJson(
                   e as Map<String, dynamic>,
                   gachaType: queryGachaType,
                 ),
@@ -105,18 +105,18 @@ class WishFetcher {
 
   /// 對指定 banner 走完分頁 + merge：existing 是該 banner 的舊 desc list
   /// primer 若不為 null 則作為第一頁（避免 UID 探測重抓）
-  Future<List<WishRecord>> fetchBannerWithMerge({
+  Future<List<GachaRecord>> fetchBannerWithMerge({
     required GachaUrl url,
     required String gachaType,
     required GachaEndpoint endpoint,
-    required List<WishRecord> existing,
+    required List<GachaRecord> existing,
     required FetchedPage? primer,
     required void Function(FetchProgress) onProgress,
     required http.Client client,
   }) async {
     final existingMaxId = existing.isEmpty ? '0' : existing.first.id;
     _log.info('banner=$gachaType start, existing=${existing.length}');
-    final fresh = <WishRecord>[];
+    final fresh = <GachaRecord>[];
     var endId = '0';
     var isFirstPage = true;
     var pageIndex = 1;
@@ -170,7 +170,7 @@ class WishFetcher {
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序
   bool _idGreater(String a, String b) => a.compareTo(b) > 0;
 
-  /// UID 探測：先掃所有 wish banner，若全部空白再掃所有 odes banner。
+  /// UID 探測：先掃所有 gacha banner，若全部空白再掃所有 odes banner。
   /// 第一筆非空者回傳該 UID + 已累積的 primer pages。
   Future<UidProbeResult> probeUid({
     required GachaUrl url,
@@ -180,7 +180,7 @@ class WishFetcher {
 
     Future<UidProbeResult?> tryCategory(GachaCategory cat) async {
       final endpoint = switch (cat) {
-        GachaCategory.wish => GachaEndpoint.wish,
+        GachaCategory.gacha => GachaEndpoint.gacha,
         GachaCategory.odes => GachaEndpoint.odes,
       };
       for (final type in gachaTypes.where((t) => t.category == cat)) {
@@ -202,10 +202,10 @@ class WishFetcher {
       return null;
     }
 
-    final wishHit = await tryCategory(GachaCategory.wish);
-    if (wishHit != null) {
-      _log.info('probe wish: hit uid=${sanitizeUid(wishHit.uid ?? "")}');
-      return wishHit;
+    final gachaHit = await tryCategory(GachaCategory.gacha);
+    if (gachaHit != null) {
+      _log.info('probe gacha: hit uid=${sanitizeUid(gachaHit.uid ?? "")}');
+      return gachaHit;
     }
     final odesHit = await tryCategory(GachaCategory.odes);
     if (odesHit != null) {

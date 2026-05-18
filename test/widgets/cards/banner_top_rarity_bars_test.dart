@@ -3,19 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
 
-WishRecord _r({
+GachaRecord _r({
   required String id,
   required String gachaType,
   required int rank,
   required DateTime time,
   String name = 'X',
   String itemType = '角色',
-}) => WishRecord(
+}) => GachaRecord(
   id: id,
   uid: '100000000',
   gachaType: gachaType,
@@ -64,12 +64,12 @@ void main() {
     }
     // 除新手池 (100) 顯示「已結束」、常駐頌願 (1000) 主稀有度為 4★ 顯示
     // 「暫無 4★」外，其餘 5 池主稀有度為 5★ 顯示「暫無 5★」
-    final wishAndEventOdes = gachaTypes
+    final gachaAndEventOdes = gachaTypes
         .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
         .length;
     expect(
       find.text(l.pityNoMainRarity(l.rarityStar(5))),
-      findsNWidgets(wishAndEventOdes),
+      findsNWidgets(gachaAndEventOdes),
     );
     expect(find.text(l.pityNoMainRarity(l.rarityStar(4))), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
   ) async {
     // 301 character: desc-by-time → [4★, 4★, 5★A] → 5★ count = 1, pulls since last 5★ = 2
     final t0 = DateTime(2025, 1, 1);
-    final banners = <String, List<WishRecord>>{
+    final banners = <String, List<GachaRecord>>{
       '301': [
         _r(
           id: '3',
@@ -129,7 +129,7 @@ void main() {
     tester,
   ) async {
     final t0 = DateTime(2025, 1, 1);
-    final banners = <String, List<WishRecord>>{
+    final banners = <String, List<GachaRecord>>{
       '100': [_r(id: 'b1', gachaType: '100', rank: 5, time: t0)],
     };
     await tester.pumpWidget(
@@ -148,12 +148,12 @@ void main() {
     expect(find.text('1'), findsOneWidget);
     expect(find.text(l.pityBeginnerEnded), findsOneWidget);
     // 其他主稀有度 5★ 的池仍顯示「暫無 5★」；常駐頌願 (1000) 主稀有度為 4★
-    final wishAndEventOdes = gachaTypes
+    final gachaAndEventOdes = gachaTypes
         .where((t) => t.gachaType != '100' && t.primaryPity.rank == 5)
         .length;
     expect(
       find.text(l.pityNoMainRarity(l.rarityStar(5))),
-      findsNWidgets(wishAndEventOdes),
+      findsNWidgets(gachaAndEventOdes),
     );
     expect(find.text(l.pityNoMainRarity(l.rarityStar(4))), findsOneWidget);
   });
@@ -168,7 +168,7 @@ void main() {
     );
     final t0 = DateTime(2025, 1, 1);
     // 301: 4×5★; 302: 1×5★; others: 0
-    final banners = <String, List<WishRecord>>{
+    final banners = <String, List<GachaRecord>>{
       '301': [
         for (var i = 0; i < 4; i++)
           _r(
@@ -209,7 +209,7 @@ void main() {
     tester,
   ) async {
     final t0 = DateTime(2025, 1, 1);
-    final banners = <String, List<WishRecord>>{
+    final banners = <String, List<GachaRecord>>{
       for (final t in gachaTypes)
         t.gachaType: [
           _r(
@@ -256,7 +256,7 @@ void main() {
     final eventOdes = gachaTypes.firstWhere((t) => t.gachaType == '2000');
     final standardOdes = gachaTypes.firstWhere((t) => t.gachaType == '1000');
     final t0 = DateTime(2025, 1, 1);
-    final banners = <String, List<WishRecord>>{
+    final banners = <String, List<GachaRecord>>{
       // 活動頌願 primary = 5★：只有 1 件 5★ 算入
       '2000': [
         _r(id: 'a', gachaType: '2000', rank: 5, time: t0),

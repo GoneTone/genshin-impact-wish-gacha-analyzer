@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 
-WishRecord _r({required String id, required int rank, DateTime? time}) =>
-    WishRecord(
+GachaRecord _r({required String id, required int rank, DateTime? time}) =>
+    GachaRecord(
       id: id,
       uid: '1',
       gachaType: '301',
@@ -89,7 +89,7 @@ void main() {
     test('rank=4 → counts to last 4★ ignoring 5★', () {
       // records: 4★, 3★, 5★, 4★, 3★ (newest first)
       final records = [
-        WishRecord(
+        GachaRecord(
           id: '5',
           uid: '1',
           gachaType: '301',
@@ -99,7 +99,7 @@ void main() {
           time: DateTime(2025, 1, 5),
           lang: 'zh-tw',
         ),
-        WishRecord(
+        GachaRecord(
           id: '4',
           uid: '1',
           gachaType: '301',
@@ -109,7 +109,7 @@ void main() {
           time: DateTime(2025, 1, 4),
           lang: 'zh-tw',
         ),
-        WishRecord(
+        GachaRecord(
           id: '3',
           uid: '1',
           gachaType: '301',
@@ -119,7 +119,7 @@ void main() {
           time: DateTime(2025, 1, 3),
           lang: 'zh-tw',
         ),
-        WishRecord(
+        GachaRecord(
           id: '2',
           uid: '1',
           gachaType: '301',
@@ -129,7 +129,7 @@ void main() {
           time: DateTime(2025, 1, 2),
           lang: 'zh-tw',
         ),
-        WishRecord(
+        GachaRecord(
           id: '1',
           uid: '1',
           gachaType: '301',
@@ -246,8 +246,8 @@ void main() {
   group('averageIntervalAcrossBanners', () {
     test('全空 banners → null', () {
       final result = averageIntervalAcrossBanners(const {
-        '301': <WishRecord>[],
-        '302': <WishRecord>[],
+        '301': <GachaRecord>[],
+        '302': <GachaRecord>[],
       }, rankFor: (_) => 5);
       expect(result, isNull);
     });
@@ -298,7 +298,7 @@ void main() {
         _r(id: 'hit', rank: 5, time: DateTime(2025, 1, 1)),
       ];
       final result = averageIntervalAcrossBanners({
-        '301': const <WishRecord>[],
+        '301': const <GachaRecord>[],
         '302': r302,
       }, rankFor: (_) => 5);
       expect(result, 1.0);

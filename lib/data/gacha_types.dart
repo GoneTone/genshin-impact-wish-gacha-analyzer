@@ -1,7 +1,7 @@
 // lib/data/gacha_types.dart
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
-enum GachaCategory { wish, odes }
+enum GachaCategory { gacha, odes }
 
 class PityRule {
   const PityRule({required this.rank, required this.threshold});
@@ -24,7 +24,7 @@ class GachaType {
   /// i18n key（透過 [resolveName] 取顯示字串）。
   final String nameKey;
 
-  /// wish = getGachaLog，odes = getBeyondGachaLog。
+  /// gacha = getGachaLog，odes = getBeyondGachaLog。
   final GachaCategory category;
 
   /// 由高 rank 到低 rank。[0] 為主保底，[1] 為副保底（若有）。
@@ -57,31 +57,31 @@ const gachaTypes = <GachaType>[
   GachaType(
     gachaType: '301',
     nameKey: 'gachaTypeCharacter',
-    category: GachaCategory.wish,
+    category: GachaCategory.gacha,
     pities: [_pityFive90, _pityFour10],
   ),
   GachaType(
     gachaType: '302',
     nameKey: 'gachaTypeWeapon',
-    category: GachaCategory.wish,
+    category: GachaCategory.gacha,
     pities: [_pityFive80, _pityFour10],
   ),
   GachaType(
     gachaType: '500',
     nameKey: 'gachaTypeChronicled',
-    category: GachaCategory.wish,
+    category: GachaCategory.gacha,
     pities: [_pityFive90, _pityFour10],
   ),
   GachaType(
     gachaType: '200',
     nameKey: 'gachaTypeStandard',
-    category: GachaCategory.wish,
+    category: GachaCategory.gacha,
     pities: [_pityFive90, _pityFour10],
   ),
   GachaType(
     gachaType: '100',
     nameKey: 'gachaTypeBeginner',
-    category: GachaCategory.wish,
+    category: GachaCategory.gacha,
     pities: [_pityFive20, _pityFour10],
   ),
   GachaType(

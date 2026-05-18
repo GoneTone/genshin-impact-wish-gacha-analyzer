@@ -4,11 +4,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/wish_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_pity.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/wish_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
@@ -31,7 +31,7 @@ class OverviewPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final state = ref.watch(wishRepositoryProvider);
+    final state = ref.watch(gachaRepositoryProvider);
     final activeData = state.activeData;
 
     if (state.isBootstrapping) {
@@ -41,32 +41,34 @@ class OverviewPage extends ConsumerWidget {
       return EmptyState.noSync(context);
     }
 
-    final wishTypes = gachaTypes
-        .where((t) => t.category == GachaCategory.wish)
+    final gachaList = gachaTypes
+        .where((t) => t.category == GachaCategory.gacha)
         .toList(growable: false);
     final odesTypes = gachaTypes
         .where((t) => t.category == GachaCategory.odes)
         .toList(growable: false);
-    final wishBanners = <String, List<WishRecord>>{
-      for (final t in wishTypes)
-        t.gachaType: activeData.banners[t.gachaType] ?? const <WishRecord>[],
+    final gachaBanners = <String, List<GachaRecord>>{
+      for (final t in gachaList)
+        t.gachaType: activeData.banners[t.gachaType] ?? const <GachaRecord>[],
     };
-    final odesBanners = <String, List<WishRecord>>{
+    final odesBanners = <String, List<GachaRecord>>{
       for (final t in odesTypes)
-        t.gachaType: activeData.banners[t.gachaType] ?? const <WishRecord>[],
+        t.gachaType: activeData.banners[t.gachaType] ?? const <GachaRecord>[],
     };
-    final wishAll = wishBanners.values.expand((r) => r).toList(growable: false);
+    final gachaAll = gachaBanners.values
+        .expand((r) => r)
+        .toList(growable: false);
     final odesAll = odesBanners.values.expand((r) => r).toList(growable: false);
-    final wishStats = computeWishStats(wishAll);
-    final odesStats = computeWishStats(odesAll);
+    final gachaStats = computeGachaStats(gachaAll);
+    final odesStats = computeGachaStats(odesAll);
     final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
-    final wish5StarAvg = averageIntervalAcrossBanners(
-      wishBanners,
+    final gacha5StarAvg = averageIntervalAcrossBanners(
+      gachaBanners,
       rankFor: (_) => 5,
     );
-    final wish4StarAvg = averageIntervalAcrossBanners(
-      wishBanners,
+    final gacha4StarAvg = averageIntervalAcrossBanners(
+      gachaBanners,
       rankFor: (_) => 4,
     );
 
@@ -75,42 +77,42 @@ class OverviewPage extends ConsumerWidget {
       return '$shareText · ${l.pityAverageInterval(avg.toStringAsFixed(2))}';
     }
 
-    final wishStatCards = <Widget>[
+    final gachaStatCards = <Widget>[
       StatCard(
         label: l.statsTotal,
-        value: '${wishStats.total}',
+        value: '${gachaStats.total}',
         accent: tokens.accentPrimary,
       ),
       StatCard(
         label: l.statsRankCount(l.rarityStar(5)),
-        value: '${wishStats.fiveStarCount}',
+        value: '${gachaStats.fiveStarCount}',
         accent: tokens.fiveStar,
         subtitle: shareWithAvg(
           l.statsShareOfTotal(
-            (wishStats.fiveStarRate * 100).toStringAsFixed(2),
+            (gachaStats.fiveStarRate * 100).toStringAsFixed(2),
           ),
-          wish5StarAvg,
+          gacha5StarAvg,
         ),
       ),
       StatCard(
         label: l.statsRankCount(l.rarityStar(4)),
-        value: '${wishStats.fourStarCount}',
+        value: '${gachaStats.fourStarCount}',
         accent: tokens.fourStar,
         subtitle: shareWithAvg(
           l.statsShareOfTotal(
-            (wishStats.fourStarRate * 100).toStringAsFixed(2),
+            (gachaStats.fourStarRate * 100).toStringAsFixed(2),
           ),
-          wish4StarAvg,
+          gacha4StarAvg,
         ),
       ),
     ];
 
     final odesEventType = odesTypes.firstWhere((t) => t.gachaType == '2000');
     final odesStandardType = odesTypes.firstWhere((t) => t.gachaType == '1000');
-    final odesEventFiveCount = (odesBanners['2000'] ?? const <WishRecord>[])
+    final odesEventFiveCount = (odesBanners['2000'] ?? const <GachaRecord>[])
         .where((r) => r.rankType == 5)
         .length;
-    final odesStandardFourCount = (odesBanners['1000'] ?? const <WishRecord>[])
+    final odesStandardFourCount = (odesBanners['1000'] ?? const <GachaRecord>[])
         .where((r) => r.rankType == 4)
         .length;
     final odesStatCards = <Widget>[
@@ -141,13 +143,13 @@ class OverviewPage extends ConsumerWidget {
             icon: Icons.dashboard_outlined,
           ),
           _OverviewSection(
-            title: l.pageOverviewWishSection,
-            types: wishTypes,
-            banners: wishBanners,
-            stats: wishStats,
+            title: l.pageOverviewGachaSection,
+            types: gachaList,
+            banners: gachaBanners,
+            stats: gachaStats,
             bannerColors: bannerColors,
-            statCards: wishStatCards,
-            emptyTitle: l.emptyNoWishRecords,
+            statCards: gachaStatCards,
+            emptyTitle: l.emptyNoGachaRecords,
           ),
           const SizedBox(height: AppSpacing.xxxl),
           Divider(
@@ -184,8 +186,8 @@ class _OverviewSection extends StatelessWidget {
 
   final String title;
   final List<GachaType> types;
-  final Map<String, List<WishRecord>> banners;
-  final WishStats stats;
+  final Map<String, List<GachaRecord>> banners;
+  final GachaStats stats;
   final BannerColors bannerColors;
   final List<Widget> statCards;
   final String emptyTitle;

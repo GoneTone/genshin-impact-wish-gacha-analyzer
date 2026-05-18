@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
@@ -16,7 +16,7 @@ void main() {
     });
 
     test('returns 5★/4★/3★ entries with correct counts and rates (zh)', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 100,
         fiveStarCount: 1,
         fourStarCount: 9,
@@ -37,7 +37,7 @@ void main() {
     });
 
     test('包含 2★ 當 twoStarCount > 0 (zh)', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 10,
         fiveStarCount: 1,
         fourStarCount: 2,
@@ -53,7 +53,7 @@ void main() {
     });
 
     test('略過 2★ 當 twoStarCount == 0 (zh)', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 8,
         fiveStarCount: 1,
         fourStarCount: 2,
@@ -66,7 +66,7 @@ void main() {
     });
 
     test('threeStarCount 不再包含 2★（獨立計算, zh）', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 6,
         fiveStarCount: 0,
         fourStarCount: 1,
@@ -84,7 +84,7 @@ void main() {
     });
 
     test('keeps zero-count entries when twoStar absent (zh)', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 0,
         fiveStarCount: 0,
         fourStarCount: 0,
@@ -98,7 +98,7 @@ void main() {
     });
 
     test('ja 用 ★N 順序', () {
-      const stats = WishStats(
+      const stats = GachaStats(
         total: 10,
         fiveStarCount: 1,
         fourStarCount: 2,

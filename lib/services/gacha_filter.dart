@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/wish_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 
 enum RarityFilter { all, fiveStar, fourStar }
 

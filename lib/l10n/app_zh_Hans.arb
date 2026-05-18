@@ -39,7 +39,7 @@
 
   "navOdesEvent": "活动",
   "navOdesStandard": "常驻",
-  "navSectionWish": "祈愿",
+  "navSectionGacha": "祈愿",
   "navSectionOdes": "颂愿",
 
   "footerNotSynced": "尚未同步",
@@ -83,7 +83,7 @@
   "emptyNoRecords": "此卡池无记录",
   "emptyNoFilterMatch": "没有符合条件的记录",
   "emptyNoOdesRecords": "暂无颂愿记录",
-  "emptyNoWishRecords": "暂无祈愿记录",
+  "emptyNoGachaRecords": "暂无祈愿记录",
 
   "statsTotal": "总抽数",
   "statsRankCount": "{star} 件数",
@@ -155,7 +155,7 @@
   "errorNoRecords": "此账号尚无任何卡池记录",
 
   "pageOverviewTitle": "综合数据（全卡池合计）",
-  "pageOverviewWishSection": "祈愿综合",
+  "pageOverviewGachaSection": "祈愿综合",
   "pageOverviewOdesSection": "颂愿综合",
   "pageBannerRecordList": "记录列表",
 
