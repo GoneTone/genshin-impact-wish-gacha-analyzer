@@ -5,23 +5,113 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 
 void main() {
+  // 記錄 fake 收到的呼叫
+  String? capturedExe;
+  List<String>? capturedArgs;
+  Uri? capturedUri;
+
+  setUp(() {
+    capturedExe = null;
+    capturedArgs = null;
+    capturedUri = null;
+  });
+
+  tearDown(resetFileRevealSeams);
+
+  Future<File> makeTempFile() => File(
+    '${Directory.systemTemp.path}/__gwga_reveal_${DateTime.now().microsecondsSinceEpoch}.tmp',
+  ).create();
+
   group('revealInFileManager', () {
-    test('returns false for non-existent file', () async {
+    test('non-existent file returns false without touching seams', () async {
+      revealProcessRunner = (exe, args) async {
+        capturedExe = exe;
+        capturedArgs = args;
+        return ProcessResult(0, 0, '', '');
+      };
+      revealUrlLauncher = (uri) async {
+        capturedUri = uri;
+        return true;
+      };
+
       final fakePath =
-          '${Directory.systemTemp.path}/__gwga_does_not_exist_${DateTime.now().microsecondsSinceEpoch}.tmp';
+          '${Directory.systemTemp.path}/__gwga_missing_${DateTime.now().microsecondsSinceEpoch}.tmp';
       final ok = await revealInFileManager(fakePath);
+
       expect(ok, isFalse);
+      expect(capturedExe, isNull);
+      expect(capturedArgs, isNull);
+      expect(capturedUri, isNull);
     });
 
-    test('does not throw when file exists (smoke)', () async {
-      // 故意不 assert 結果 true/false：在 test 環境
-      // launchUrl 通常因為 platform plugin 不存在而失敗回傳 false，
-      // 但呼叫本身不應丟例外。
-      final f = await File(
-        '${Directory.systemTemp.path}/__gwga_reveal_smoke_${DateTime.now().microsecondsSinceEpoch}.tmp',
-      ).create();
+    test('windows branch calls explorer /select,<path>', () async {
+      revealPlatform = () => RevealPlatform.windows;
+      revealProcessRunner = (exe, args) async {
+        capturedExe = exe;
+        capturedArgs = args;
+        return ProcessResult(0, 1, '', ''); // explorer 常回非 0
+      };
+
+      final f = await makeTempFile();
       try {
-        await revealInFileManager(f.path);
+        final ok = await revealInFileManager(f.path);
+        expect(ok, isTrue);
+        expect(capturedExe, 'explorer');
+        expect(capturedArgs, ['/select,${f.path}']);
+      } finally {
+        if (await f.exists()) await f.delete();
+      }
+    });
+
+    test('macos branch with exit 0 returns true', () async {
+      revealPlatform = () => RevealPlatform.macos;
+      revealProcessRunner = (exe, args) async {
+        capturedExe = exe;
+        capturedArgs = args;
+        return ProcessResult(0, 0, '', '');
+      };
+
+      final f = await makeTempFile();
+      try {
+        final ok = await revealInFileManager(f.path);
+        expect(ok, isTrue);
+        expect(capturedExe, 'open');
+        expect(capturedArgs, ['-R', f.path]);
+      } finally {
+        if (await f.exists()) await f.delete();
+      }
+    });
+
+    test('macos branch with non-zero exit returns false', () async {
+      revealPlatform = () => RevealPlatform.macos;
+      revealProcessRunner = (exe, args) async => ProcessResult(0, 1, '', '');
+
+      final f = await makeTempFile();
+      try {
+        final ok = await revealInFileManager(f.path);
+        expect(ok, isFalse);
+      } finally {
+        if (await f.exists()) await f.delete();
+      }
+    });
+
+    test('other platform falls back to openFolder via launcher', () async {
+      revealPlatform = () => RevealPlatform.other;
+      revealProcessRunner = (exe, args) async {
+        capturedExe = exe;
+        return ProcessResult(0, 0, '', '');
+      };
+      revealUrlLauncher = (uri) async {
+        capturedUri = uri;
+        return true;
+      };
+
+      final f = await makeTempFile();
+      try {
+        final ok = await revealInFileManager(f.path);
+        expect(ok, isTrue);
+        expect(capturedExe, isNull); // runner 未被呼叫
+        expect(capturedUri, Uri.file(f.parent.path));
       } finally {
         if (await f.exists()) await f.delete();
       }
@@ -29,15 +119,33 @@ void main() {
   });
 
   group('openFolder', () {
-    test('does not throw when dir exists (smoke)', () async {
+    test('calls launcher with Uri.file(dir) and returns its result', () async {
+      revealUrlLauncher = (uri) async {
+        capturedUri = uri;
+        return true;
+      };
       final dir = await Directory(
-        '${Directory.systemTemp.path}/__gwga_open_smoke_${DateTime.now().microsecondsSinceEpoch}',
+        '${Directory.systemTemp.path}/__gwga_open_${DateTime.now().microsecondsSinceEpoch}',
       ).create();
       try {
-        await openFolder(dir.path);
+        final ok = await openFolder(dir.path);
+        expect(ok, isTrue);
+        expect(capturedUri, Uri.file(dir.path));
       } finally {
         if (await dir.exists()) await dir.delete(recursive: true);
       }
+    });
+
+    test('launcher returning false yields false', () async {
+      revealUrlLauncher = (uri) async => false;
+      final ok = await openFolder(Directory.systemTemp.path);
+      expect(ok, isFalse);
+    });
+
+    test('launcher throwing yields false without throwing', () async {
+      revealUrlLauncher = (uri) async => throw Exception('boom');
+      final ok = await openFolder(Directory.systemTemp.path);
+      expect(ok, isFalse);
     });
   });
 }
