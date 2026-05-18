@@ -24,6 +24,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
@@ -395,9 +396,7 @@ class _DataManagement extends ConsumerWidget {
     if (!ctx.mounted) return;
 
     final now = DateTime.now();
-    final stamp =
-        '${now.year}-${_two(now.month)}-${_two(now.day)}_'
-        '${_two(now.hour)}${_two(now.minute)}${_two(now.second)}';
+    final stamp = fileTimestamp(now);
 
     final loc = await getSaveLocation(
       suggestedName: 'genshin_gacha_backup_$stamp.json',
@@ -686,9 +685,7 @@ class _LogsSection extends ConsumerWidget {
     final settings = ref.read(settingsProvider);
 
     final now = DateTime.now();
-    final stamp =
-        '${now.year}-${_two(now.month)}-${_two(now.day)}_'
-        '${_two(now.hour)}${_two(now.minute)}${_two(now.second)}';
+    final stamp = fileTimestamp(now);
 
     final loc = await getSaveLocation(
       suggestedName: 'gwga_logs_$stamp.log',
@@ -745,5 +742,3 @@ class _LogsSection extends ConsumerWidget {
     Logger('accounts.io').info('logs cleared by user');
   }
 }
-
-String _two(int n) => n.toString().padLeft(2, '0');

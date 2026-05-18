@@ -25,29 +25,31 @@ class _ShareActionButtonState extends State<ShareActionButton> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    if (_busy) {
-      return const Padding(
-        padding: EdgeInsets.all(8),
-        child: SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-      );
-    }
-    return IconButton(
-      tooltip: l.shareImageButton,
-      icon: const Icon(Icons.ios_share),
-      onPressed: widget.enabled
-          ? () async {
-              setState(() => _busy = true);
-              try {
-                await widget.onGenerate();
-              } finally {
-                if (mounted) setState(() => _busy = false);
-              }
-            }
-          : null,
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: _busy
+          ? const Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          : IconButton(
+              tooltip: l.shareImageButton,
+              icon: const Icon(Icons.ios_share),
+              onPressed: widget.enabled
+                  ? () async {
+                      setState(() => _busy = true);
+                      try {
+                        await widget.onGenerate();
+                      } finally {
+                        if (mounted) setState(() => _busy = false);
+                      }
+                    }
+                  : null,
+            ),
     );
   }
 }

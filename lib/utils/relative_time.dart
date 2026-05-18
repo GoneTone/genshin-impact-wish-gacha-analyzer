@@ -45,3 +45,7 @@ String formatAbsoluteDateTime(DateTime t) =>
 /// `yyyy-MM-dd` 轉 local。用於新版本對話框「發布於」。
 String formatAbsoluteDate(DateTime t) =>
     DateFormat('yyyy-MM-dd').format(t.toLocal());
+
+/// 適合檔名的時間戳：yyyy-MM-dd_HHmmss（本地時間）。
+String fileTimestamp([DateTime? now]) =>
+    DateFormat('yyyy-MM-dd_HHmmss').format(now ?? DateTime.now());
