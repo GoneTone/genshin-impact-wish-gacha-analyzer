@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 /// 開啟分享圖選項 dialog。回傳 null 表示使用者取消。
@@ -38,7 +39,7 @@ class _ShareImageDialogState extends State<_ShareImageDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(l.shareImageThemeLabel),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s),
           SegmentedButton<Brightness>(
             segments: [
               ButtonSegment(
@@ -53,7 +54,7 @@ class _ShareImageDialogState extends State<_ShareImageDialog> {
             selected: {_brightness},
             onSelectionChanged: (s) => setState(() => _brightness = s.first),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.l),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: _showFullUid,
