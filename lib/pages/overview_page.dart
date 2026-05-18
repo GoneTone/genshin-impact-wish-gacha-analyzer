@@ -1,14 +1,22 @@
 // lib/pages/overview_page.dart
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
@@ -20,9 +28,13 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_result_snackbar.dart';
 
 class OverviewPage extends ConsumerWidget {
   const OverviewPage({super.key});
@@ -110,9 +122,20 @@ class OverviewPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PageHeader(
-            title: l.pageOverviewTitle,
-            icon: Icons.dashboard_outlined,
+          Row(
+            children: [
+              Expanded(
+                child: PageHeader(
+                  title: l.pageOverviewTitle,
+                  icon: Icons.dashboard_outlined,
+                ),
+              ),
+              ShareActionButton(
+                enabled: activeData.banners.values.any((r) => r.isNotEmpty),
+                onGenerate: () =>
+                    _generateOverviewShare(context, ref, l, activeData),
+              ),
+            ],
           ),
           _OverviewSection(
             title: l.pageOverviewGachaSection,
@@ -148,6 +171,70 @@ class OverviewPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _generateOverviewShare(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    BannerStorage activeData,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final brightness = Theme.of(context).brightness;
+    final options = await showShareImageDialog(
+      context,
+      initialBrightness: brightness,
+    );
+    if (options == null) return;
+    if (!context.mounted) return;
+
+    final appVersion = ref.read(appVersionProvider);
+    try {
+      final ui.Image icon = await loadAppIconImage();
+      try {
+        final card = MediaQuery(
+          data: const MediaQueryData(),
+          child: Theme(
+            data: options.brightness == Brightness.dark
+                ? buildDarkTheme()
+                : buildLightTheme(),
+            child: Material(
+              type: MaterialType.transparency,
+              child: ShareCard.overview(
+                l: l,
+                appVersion: appVersion,
+                appIcon: icon,
+                options: options,
+                uid: activeData.uid,
+                updatedAt: activeData.lastUpdated.toLocal(),
+                banners: activeData.banners,
+              ),
+            ),
+          ),
+        );
+        final png = await renderWidgetToPng(
+          Directionality(textDirection: TextDirection.ltr, child: card),
+          logicalSize: const Size(kShareCardWidth, 2200),
+        );
+        final now = DateTime.now();
+        final stamp =
+            '${now.year}-${now.month.toString().padLeft(2, '0')}-'
+            '${now.day.toString().padLeft(2, '0')}_'
+            '${now.hour.toString().padLeft(2, '0')}'
+            '${now.minute.toString().padLeft(2, '0')}'
+            '${now.second.toString().padLeft(2, '0')}';
+        final result = await exportShareImage(
+          png,
+          suggestedName: 'genshin_gacha_share_overview_$stamp.png',
+        );
+        showShareResultSnackBar(messenger, l, result);
+      } finally {
+        icon.dispose();
+      }
+    } catch (e, st) {
+      Logger('share.image').warning('overview share failed', e, st);
+      messenger.showSnackBar(SnackBar(content: Text(l.shareImageFailed)));
+    }
   }
 }
 
