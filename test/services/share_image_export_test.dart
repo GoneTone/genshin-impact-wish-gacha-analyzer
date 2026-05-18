@@ -43,4 +43,14 @@ void main() {
     expect(r.status, ShareExportStatus.savedOnly);
     await File(tmp).delete();
   });
+
+  test('剪貼簿失敗 + 使用者取消存檔 → copiedOnly', () async {
+    shareSaveLocationPicker = (name) async => null;
+    shareClipboardWriter = (bytes) async => false;
+
+    final r = await exportShareImage(png, suggestedName: 'a.png');
+
+    expect(r.status, ShareExportStatus.copiedOnly);
+    expect(r.path, isNull);
+  });
 }

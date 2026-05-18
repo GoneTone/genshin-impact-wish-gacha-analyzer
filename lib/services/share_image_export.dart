@@ -24,6 +24,7 @@ class ShareExportResult {
 
 /// 預設剪貼簿寫入：寫 PNG 到系統剪貼簿，回傳是否成功
 /// （平台不支援時回傳 false）。
+/// 平台原生路徑；unit test 以 [shareClipboardWriter] seam 取代覆蓋（flutter test 環境 SystemClipboard.instance 為 null）。
 Future<bool> _defaultClipboardWriter(Uint8List png) async {
   final clipboard = SystemClipboard.instance;
   if (clipboard == null) return false;
@@ -33,14 +34,17 @@ Future<bool> _defaultClipboardWriter(Uint8List png) async {
   return true;
 }
 
+Future<FileSaveLocation?> _defaultSaveLocationPicker(String name) =>
+    getSaveLocation(
+      suggestedName: name,
+      acceptedTypeGroups: const [
+        XTypeGroup(label: 'PNG', extensions: ['png']),
+      ],
+    );
+
 @visibleForTesting
 Future<FileSaveLocation?> Function(String suggestedName)
-shareSaveLocationPicker = (name) => getSaveLocation(
-  suggestedName: name,
-  acceptedTypeGroups: const [
-    XTypeGroup(label: 'PNG', extensions: ['png']),
-  ],
-);
+shareSaveLocationPicker = _defaultSaveLocationPicker;
 
 @visibleForTesting
 Future<bool> Function(Uint8List png) shareClipboardWriter =
@@ -52,17 +56,15 @@ Future<void> Function(String path, Uint8List png) shareFileWriter =
 
 @visibleForTesting
 void resetShareImageExportSeams() {
-  shareSaveLocationPicker = (name) => getSaveLocation(
-    suggestedName: name,
-    acceptedTypeGroups: const [
-      XTypeGroup(label: 'PNG', extensions: ['png']),
-    ],
-  );
+  shareSaveLocationPicker = _defaultSaveLocationPicker;
   shareClipboardWriter = _defaultClipboardWriter;
   shareFileWriter = (path, png) => File(path).writeAsBytes(png);
 }
 
 /// 先寫剪貼簿（失敗不致命），再讓使用者選位置存檔（取消則只剩剪貼簿）。
+///
+/// 若使用者已選存檔路徑但寫入失敗，會記 severe log 後 rethrow `Exception`
+/// （通常為 `FileSystemException`），由呼叫端負責處理（顯示錯誤）。
 Future<ShareExportResult> exportShareImage(
   Uint8List png, {
   required String suggestedName,
@@ -81,7 +83,12 @@ Future<ShareExportResult> exportShareImage(
     return const ShareExportResult(status: ShareExportStatus.copiedOnly);
   }
 
-  await shareFileWriter(loc.path, png);
+  try {
+    await shareFileWriter(loc.path, png);
+  } catch (e, st) {
+    _log.severe('share image write failed ${sanitizeFsPath(loc.path)}', e, st);
+    rethrow;
+  }
   _log.info(
     'share image saved ${sanitizeFsPath(loc.path)}; '
     'bytes=${png.length} clipboard=$copied',
