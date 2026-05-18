@@ -30,7 +30,8 @@ Widget _wrap(
   Widget Function(BuildContext ctx, BannerColors colors) build, {
   Locale? locale,
   double width = 800,
-  double height = 280,
+  // 7 rows × ~2 wrapped lines × ~24px + 間距/padding ≈ 480
+  double height = 480,
 }) => MaterialApp(
   theme: buildDarkTheme(),
   locale: locale,
@@ -306,6 +307,7 @@ void main() {
         ),
         locale: const Locale('en'),
         width: 360, // 刻意窄，逼出換行
+        // 窄欄 width:360 下換行更多行,7 rows × ~3 lines × ~24px ≈ 504,取 600 留 margin
         height: 600, // 足夠高度，避免七列換行觸發 RenderFlex overflow 掩蓋真正斷言
       ),
     );
@@ -321,6 +323,7 @@ void main() {
     final firstName = gachaTypes.first.resolveName(l);
     final nameText = tester.widget<Text>(find.text(firstName));
     expect(nameText.overflow, isNot(TextOverflow.ellipsis));
+    expect(nameText.maxLines, isNull);
 
     // 右側 subtitle Text 不得有 ellipsis（空 banners → "No 5★ yet"）
     // 對所有符合的 subtitle Text 逐一斷言
@@ -329,6 +332,7 @@ void main() {
       find.text(noMainRarityStr),
     )) {
       expect(subtitleText.overflow, isNot(TextOverflow.ellipsis));
+      expect(subtitleText.maxLines, isNull);
     }
 
     // bar 仍每列渲染

@@ -101,12 +101,11 @@ class _BannerRow extends StatelessWidget {
       children: [
         SizedBox(
           width:
-              96, // name label column, tuned for longest banner name at bodyMedium
+              120, // name label column; CJK fits one line, English wraps ~2 lines
           child: Text(
             name,
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.right,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
         const SizedBox(width: AppSpacing.s),
@@ -115,7 +114,8 @@ class _BannerRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.s),
         SizedBox(
-          width: 156, // count + separator + subtitle (ellipsis) column
+          width:
+              180, // count + separator + subtitle; subtitle wraps freely (no ellipsis)
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -134,7 +134,6 @@ class _BannerRow extends StatelessWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: tokens.textMuted,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
