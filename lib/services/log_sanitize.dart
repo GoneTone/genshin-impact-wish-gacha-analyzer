@@ -33,7 +33,7 @@ String sanitizeUid(String uid) {
 
 /// 掃描自由文字 log 訊息中內嵌的 http(s) URL,逐段套 [sanitizeUrl] 後原位替換,
 /// 非 URL 內容原樣保留。Rust log 跨橋進 Dart 時統一呼叫,作為單一脫敏匣道,
-/// 避免在 Rust 端複製脫敏邏輯(見 docs/superpowers/specs/2026-05-18-rust-log-sanitization-design.md)。
+/// 避免在 Rust 端複製脫敏邏輯。
 String sanitizeLogMessage(String message) {
   // log 訊息中 URL 皆為末段或後接空白,以非空白序列界定 token 邊界即足夠。
   final urlPattern = RegExp(r'https?://\S+');
