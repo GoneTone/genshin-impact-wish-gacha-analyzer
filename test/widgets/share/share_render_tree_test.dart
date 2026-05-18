@@ -85,6 +85,7 @@ void main() {
                   '${collected.map((d) => d.exceptionAsString()).join(' | ')}',
       );
       expect(png.isNotEmpty, isTrue);
+      expect(png.length, greaterThan(10 * 1024), reason: 'PNG 過小，可能渲染為空白圖');
     });
   });
 
@@ -121,6 +122,7 @@ void main() {
                   '${collected.map((d) => d.exceptionAsString()).join(' | ')}',
       );
       expect(png.isNotEmpty, isTrue);
+      expect(png.length, greaterThan(10 * 1024), reason: 'PNG 過小，可能渲染為空白圖');
     });
   });
 }
