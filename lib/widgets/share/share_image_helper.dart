@@ -3,6 +3,7 @@
 // overview / banner 兩頁共用，避免骨架重複（CLAUDE.md 嚴禁重複造輪子）。
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -17,6 +18,41 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_result_sn
 
 final _log = Logger('share.image');
 
+/// 建構離屏渲染用的 widget 樹（含 Localizations，使重用的 RarityPie/ItemTypePie
+/// 內部 AppLocalizations.of(context) 能在同步 flush 內解析）。
+///
+/// 只放同步載入的 delegate：AppLocalizations.delegate 透過 SynchronousFuture
+/// 載入，Default*Localizations 也都同步；離屏渲染只跑一次同步 pipeline flush，
+/// 用 AppLocalizations.localizationsDelegates（含 Global*，可能 async）會來不及
+/// 解析而導致畫面空白。
+Widget buildShareRenderTree({
+  required Widget card,
+  required Brightness brightness,
+  required Locale locale,
+}) {
+  return Directionality(
+    textDirection: TextDirection.ltr,
+    child: Localizations(
+      locale: locale,
+      delegates: const [
+        AppLocalizations.delegate,
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+      child: MediaQuery(
+        data: const MediaQueryData(),
+        child: Theme(
+          data: brightness == Brightness.dark
+              ? buildDarkTheme()
+              : buildLightTheme(),
+          child: Material(type: MaterialType.transparency, child: card),
+        ),
+      ),
+    ),
+  );
+}
+
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
 /// [logicalHeight] 該卡片固定畫布高度；[suggestedName] 完整建議檔名（含時間戳）。
 Future<void> generateAndShareImage({
@@ -28,6 +64,7 @@ Future<void> generateAndShareImage({
 }) async {
   final messenger = ScaffoldMessenger.of(context);
   final brightness = Theme.of(context).brightness;
+  final locale = Localizations.localeOf(context);
   final options = await showShareImageDialog(
     context,
     initialBrightness: brightness,
@@ -37,20 +74,12 @@ Future<void> generateAndShareImage({
 
   final icon = await loadAppIconImage();
   try {
-    final card = MediaQuery(
-      data: const MediaQueryData(),
-      child: Theme(
-        data: options.brightness == Brightness.dark
-            ? buildDarkTheme()
-            : buildLightTheme(),
-        child: Material(
-          type: MaterialType.transparency,
-          child: buildCard(icon, options),
-        ),
-      ),
-    );
     final png = await renderWidgetToPng(
-      Directionality(textDirection: TextDirection.ltr, child: card),
+      buildShareRenderTree(
+        card: buildCard(icon, options),
+        brightness: options.brightness,
+        locale: locale,
+      ),
       logicalSize: Size(kShareCardWidth, logicalHeight),
     );
     final result = await exportShareImage(png, suggestedName: suggestedName);
