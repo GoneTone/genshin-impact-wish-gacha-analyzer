@@ -36,7 +36,7 @@ String sanitizeUid(String uid) {
 /// 避免在 Rust 端複製脫敏邏輯。
 String sanitizeLogMessage(String message) {
   // log 訊息中 URL 皆為末段或後接空白,以非空白序列界定 token 邊界即足夠。
-  final urlPattern = RegExp(r'https?://\S+');
+  final urlPattern = RegExp(r'https?://\S+', caseSensitive: false);
   return message.replaceAllMapped(urlPattern, (m) => sanitizeUrl(m.group(0)!));
 }
 

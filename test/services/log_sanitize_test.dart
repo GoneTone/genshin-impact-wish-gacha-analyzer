@@ -92,6 +92,15 @@ void main() {
       expect(out, isNot(contains('BBB')));
       expect('authkey=***'.allMatches(out).length, equals(2));
     });
+
+    test('redacts authkey even when scheme is uppercase', () {
+      final out = sanitizeLogMessage(
+        'weird HTTPS://x.example.com/y?authkey=SECRET&size=5',
+      );
+      expect(out, contains('authkey=***'));
+      expect(out, contains('size=5'));
+      expect(out, isNot(contains('SECRET')));
+    });
   });
 
   group('sanitizeUid', () {
