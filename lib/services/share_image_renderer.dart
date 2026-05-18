@@ -15,10 +15,13 @@ final _log = Logger('share.image');
 
 /// 預解碼 app icon，給 ShareCard 以 RawImage 同步繪製
 /// （Image.asset 是 async，無法在同步 pipeline flush 內完成）。
+///
+/// 回傳的 [ui.Image] 由呼叫端負責用完後 dispose 釋放 native 資源。
 Future<ui.Image> loadAppIconImage() async {
   final data = await rootBundle.load('assets/icons/app_icon.png');
   final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
   final frame = await codec.getNextFrame();
+  codec.dispose();
   return frame.image;
 }
 
@@ -47,9 +50,8 @@ Future<Uint8List> renderWidgetToPng(
   pipelineOwner.rootNode = renderView;
   renderView.prepareInitialFrame();
 
-  RenderObjectToWidgetElement<RenderBox>? rootElement;
   try {
-    rootElement = RenderObjectToWidgetAdapter<RenderBox>(
+    final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
       container: boundary,
       child: MediaQuery(
         data: MediaQueryData(devicePixelRatio: pixelRatio),
@@ -71,7 +73,7 @@ Future<Uint8List> renderWidgetToPng(
     }
     final out = bytes.buffer.asUint8List();
     _log.info(
-      'render ok: ${logicalSize.width.toInt()}x${logicalSize.height.toInt()} '
+      'render ok: ${logicalSize.width}x${logicalSize.height} '
       '@${pixelRatio}x, ${out.length} bytes',
     );
     return out;
