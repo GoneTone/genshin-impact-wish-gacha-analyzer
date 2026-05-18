@@ -47,8 +47,13 @@ List<DistributionEntry> rarityDistributionEntries(
 }
 
 class RarityPie extends StatelessWidget {
-  const RarityPie({super.key, required this.stats});
+  const RarityPie({
+    super.key,
+    required this.stats,
+    this.animationDuration = const Duration(milliseconds: 600),
+  });
   final GachaStats stats;
+  final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +78,7 @@ class RarityPie extends StatelessWidget {
         centerSpaceRadius: _kCenterRadius,
         pieTouchData: PieTouchData(enabled: false),
       ),
-      duration: const Duration(milliseconds: 600),
+      duration: animationDuration,
       curve: Curves.easeOut,
     );
   }

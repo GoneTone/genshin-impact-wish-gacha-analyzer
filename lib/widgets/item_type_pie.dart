@@ -55,8 +55,13 @@ List<DistributionEntry> itemTypeDistributionEntries(
 }
 
 class ItemTypePie extends StatelessWidget {
-  const ItemTypePie({super.key, required this.stats});
+  const ItemTypePie({
+    super.key,
+    required this.stats,
+    this.animationDuration = const Duration(milliseconds: 600),
+  });
   final GachaStats stats;
+  final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +91,7 @@ class ItemTypePie extends StatelessWidget {
         centerSpaceRadius: _kCenterRadius,
         pieTouchData: PieTouchData(enabled: false),
       ),
-      duration: const Duration(milliseconds: 600),
+      duration: animationDuration,
       curve: Curves.easeOut,
     );
   }
