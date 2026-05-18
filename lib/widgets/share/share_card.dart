@@ -19,11 +19,20 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/share_uid_mask.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 const double kShareCardWidth = 1200;
+
+/// stat 卡 accent 來源（與 App overview_page 對齊）：
+/// primary→tokens.accentPrimary、rank5→accentForRank(5)、rank4→accentForRank(4)。
+/// factory 階段拿不到 tokens，故先記語意，於 [_SectionView.build] 再映射為 Color。
+enum _StatAccent { primary, rank5, rank4 }
 
 /// 一段內容描述（卡池模式 1 段；綜合模式 2 段）。
 class _Section {
@@ -32,6 +41,8 @@ class _Section {
     required this.stats,
     required this.timeline,
     required this.timelineRank,
+    required this.timelineNowPulls,
+    required this.isAcrossBanners,
     required this.statLines,
   });
   final String title;
@@ -39,8 +50,15 @@ class _Section {
   final List<TimelineEntry> timeline;
   final int timelineRank;
 
-  /// 左欄數字摘要列：label + value + subtitle（subtitle 可空）。
-  final List<(String label, String value, String? sub)> statLines;
+  /// 時間軸最頂端「現在」row 的累積抽數（重用 App TimelineVertical 的語意）。
+  final int? timelineNowPulls;
+
+  /// 跨卡池（綜合）時影響 TimelineVertical 的「現在」row 文案。
+  final bool isAcrossBanners;
+
+  /// 左欄數字摘要列：label + value + subtitle（subtitle 可空）+ accent 語意。
+  final List<(String label, String value, String? sub, _StatAccent accent)>
+  statLines;
 }
 
 class ShareCard extends StatelessWidget {
@@ -84,17 +102,21 @@ class ShareCard extends StatelessWidget {
           stats: stats,
           timeline: buildTimelineEntries(records, targetRank: targetRank),
           timelineRank: targetRank,
+          timelineNowPulls: pullsSinceLastRanked(records, rank: targetRank),
+          isAcrossBanners: false,
           statLines: [
-            (l.statsTotal, '${stats.total}', null),
+            (l.statsTotal, '${stats.total}', null, _StatAccent.primary),
             (
               l.statsRankCount(l.rarityStar(5)),
               '${stats.fiveStarCount}',
               _rateAvg(l, stats.fiveStarRate, fiveAvg),
+              _StatAccent.rank5,
             ),
             (
               l.statsRankCount(l.rarityStar(4)),
               '${stats.fourStarCount}',
               _rateAvg(l, stats.fourStarRate, fourAvg),
+              _StatAccent.rank4,
             ),
           ],
         ),
@@ -132,17 +154,21 @@ class ShareCard extends StatelessWidget {
           stats: g.stats,
           timeline: g.timeline,
           timelineRank: g.timelineRank,
+          timelineNowPulls: g.timelineNowPulls,
+          isAcrossBanners: true,
           statLines: [
-            (l.statsTotal, '${g.stats.total}', null),
+            (l.statsTotal, '${g.stats.total}', null, _StatAccent.primary),
             (
               l.statsRankCount(l.rarityStar(5)),
               '${g.stats.fiveStarCount}',
               _rateAvg(l, g.stats.fiveStarRate, g.fiveStarAvg),
+              _StatAccent.rank5,
             ),
             (
               l.statsRankCount(l.rarityStar(4)),
               '${g.stats.fourStarCount}',
               _rateAvg(l, g.stats.fourStarRate, g.fourStarAvg),
+              _StatAccent.rank4,
             ),
           ],
         ),
@@ -151,17 +177,21 @@ class ShareCard extends StatelessWidget {
           stats: o.stats,
           timeline: o.timeline,
           timelineRank: o.timelineRank,
+          timelineNowPulls: o.timelineNowPulls,
+          isAcrossBanners: true,
           statLines: [
-            (l.statsTotal, '${o.stats.total}', null),
+            (l.statsTotal, '${o.stats.total}', null, _StatAccent.primary),
             (
               '${odesEventType.resolveName(l)} ${l.rarityStar(5)}',
               '${o.eventFiveCount}',
               null,
+              _StatAccent.rank5,
             ),
             (
               '${odesStdType.resolveName(l)} ${l.rarityStar(4)}',
               '${o.standardFourCount}',
               null,
+              _StatAccent.rank4,
             ),
           ],
         ),
@@ -189,39 +219,40 @@ class ShareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).gacha;
     final colors = BannerColors.of(options.brightness);
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _ShareHeader(
+          l: l,
+          appVersion: appVersion,
+          appIcon: appIcon,
+          uidText: _uidText,
+          updatedAt: updatedAt,
+          tokens: tokens,
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        for (var i = 0; i < _sections.length; i++) ...[
+          if (i > 0) ...[
+            const SizedBox(height: AppSpacing.xl),
+            Divider(color: tokens.borderEmphasis, height: 1, thickness: 1),
+            const SizedBox(height: AppSpacing.xl),
+          ],
+          _SectionView(
+            l: l,
+            section: _sections[i],
+            colors: colors,
+            brightness: options.brightness,
+            tokens: tokens,
+          ),
+        ],
+      ],
+    );
     return Container(
       width: kShareCardWidth,
       color: tokens.surfaceBackground,
       padding: const EdgeInsets.all(AppSpacing.xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _ShareHeader(
-            l: l,
-            appVersion: appVersion,
-            appIcon: appIcon,
-            uidText: _uidText,
-            updatedAt: updatedAt,
-            tokens: tokens,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          for (var i = 0; i < _sections.length; i++) ...[
-            if (i > 0) ...[
-              const SizedBox(height: AppSpacing.xl),
-              Divider(color: tokens.borderEmphasis, height: 1, thickness: 1),
-              const SizedBox(height: AppSpacing.xl),
-            ],
-            _SectionView(
-              l: l,
-              section: _sections[i],
-              colors: colors,
-              brightness: options.brightness,
-              tokens: tokens,
-            ),
-          ],
-        ],
-      ),
+      child: content,
     );
   }
 }
@@ -311,6 +342,12 @@ class _SectionView extends StatelessWidget {
   final Brightness brightness;
   final GachaTokens tokens;
 
+  Color _accentColor(_StatAccent a) => switch (a) {
+    _StatAccent.primary => tokens.accentPrimary,
+    _StatAccent.rank5 => accentForRank(5, tokens),
+    _StatAccent.rank4 => accentForRank(4, tokens),
+  };
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -320,7 +357,7 @@ class _SectionView extends StatelessWidget {
       children: [
         Text(section.title, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.m),
-        // 頂部：三張 stat 卡橫排，等寬等高。
+        // 頂部：三張 App StatCard 橫排，IntrinsicHeight + stretch 下等高。
         IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -329,127 +366,95 @@ class _SectionView extends StatelessWidget {
               for (var i = 0; i < section.statLines.length; i++) ...[
                 if (i > 0) const SizedBox(width: AppSpacing.m),
                 Expanded(
-                  child: _StatTile(line: section.statLines[i], tokens: tokens),
+                  child: StatCard(
+                    label: section.statLines[i].$1,
+                    value: section.statLines[i].$2,
+                    subtitle: section.statLines[i].$3,
+                    accent: _accentColor(section.statLines[i].$4),
+                  ),
                 ),
               ],
             ],
           ),
         ),
         const SizedBox(height: AppSpacing.l),
-        // 下方：左欄雙圓餅 + 右欄時間軸，IntrinsicHeight 等高，
-        // 時間軸內容撐滿消除底部空白。
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 左欄：稀有度 + 類型雙圓餅（含圖例）
-              Expanded(
-                flex: 11,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _PieBox(
-                      title: l.statsRarityDistribution,
-                      pie: RarityPie(
-                        stats: section.stats,
-                        animationDuration: Duration.zero,
-                      ),
-                      legend: DistributionLegend(
-                        entries: rarityDistributionEntries(
-                          section.stats,
-                          tokens,
-                          l,
-                        ),
-                      ),
-                      tokens: tokens,
+        // 下方：左欄雙圓餅 + 右欄時間軸，兩欄頂端對齊、各自然高。
+        // 重用未改的 TimelineVertical（mainAxisSize.min）會讓較矮那欄底部留
+        // surfaceBackground，這是「與 App 一致」的預期取捨，非缺陷。
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 左欄：稀有度 + 類型雙圓餅（含圖例）
+            Expanded(
+              flex: 11,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _PieBox(
+                    title: l.statsRarityDistribution,
+                    pie: RarityPie(
+                      stats: section.stats,
+                      animationDuration: Duration.zero,
                     ),
-                    const SizedBox(height: AppSpacing.m),
-                    _PieBox(
-                      title: l.statsItemTypeDistribution,
-                      pie: ItemTypePie(
-                        stats: section.stats,
-                        animationDuration: Duration.zero,
+                    legend: DistributionLegend(
+                      entries: rarityDistributionEntries(
+                        section.stats,
+                        tokens,
+                        l,
                       ),
-                      legend: DistributionLegend(
-                        entries: itemTypeDistributionEntries(
-                          section.stats,
-                          brightness,
-                          l,
-                        ),
-                      ),
-                      tokens: tokens,
                     ),
-                  ],
-                ),
+                    tokens: tokens,
+                  ),
+                  const SizedBox(height: AppSpacing.m),
+                  _PieBox(
+                    title: l.statsItemTypeDistribution,
+                    pie: ItemTypePie(
+                      stats: section.stats,
+                      animationDuration: Duration.zero,
+                    ),
+                    legend: DistributionLegend(
+                      entries: itemTypeDistributionEntries(
+                        section.stats,
+                        brightness,
+                        l,
+                      ),
+                    ),
+                    tokens: tokens,
+                  ),
+                ],
               ),
-              const SizedBox(width: AppSpacing.l),
-              // 右欄：垂直時間軸（最新 10 筆），撐滿等高
-              Expanded(
-                flex: 9,
-                child: _ShareTimeline(
-                  l: l,
-                  entries: section.timeline.take(10).toList(growable: false),
-                  rank: section.timelineRank,
-                  colors: colors,
-                  tokens: tokens,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _StatTile extends StatelessWidget {
-  const _StatTile({required this.line, required this.tokens});
-  final (String, String, String?) line;
-  final GachaTokens tokens;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: tokens.surfaceCard,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: tokens.borderSubtle),
-      ),
-      padding: const EdgeInsets.all(AppSpacing.m),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            line.$1,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: tokens.textMuted,
             ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            line.$2,
-            maxLines: 1,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: tokens.textPrimary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          if (line.$3 != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              line.$3!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: tokens.textMuted,
+            const SizedBox(width: AppSpacing.l),
+            // 右欄：與 App 綜合頁一致的「InlineSectionTitle + TimelineVertical」。
+            // take(10) → TimelineVertical 內部 remaining=0，不出現「載入更多」。
+            Expanded(
+              flex: 9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InlineSectionTitle(
+                    icon: Icons.timeline,
+                    title: l.timelineTopRarityTitle(
+                      l.rarityStar(section.timelineRank),
+                      section.timeline.length,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  TimelineVertical(
+                    entries: section.timeline.take(10).toList(growable: false),
+                    colors: colors,
+                    targetRank: section.timelineRank,
+                    nowPulls: section.timelineNowPulls,
+                    isAcrossBanners: section.isAcrossBanners,
+                  ),
+                ],
               ),
             ),
           ],
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -487,96 +492,6 @@ class _PieBox extends StatelessWidget {
           legend,
         ],
       ),
-    );
-  }
-}
-
-class _ShareTimeline extends StatelessWidget {
-  const _ShareTimeline({
-    required this.l,
-    required this.entries,
-    required this.rank,
-    required this.colors,
-    required this.tokens,
-  });
-  final AppLocalizations l;
-  final List<TimelineEntry> entries;
-  final int rank;
-  final BannerColors colors;
-  final GachaTokens tokens;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: tokens.surfaceCard,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: tokens.borderSubtle),
-      ),
-      padding: const EdgeInsets.all(AppSpacing.m),
-      child: entries.isEmpty
-          // 空資料：維持置頂排列，不套 spaceBetween 以免單筆/標題被拉開變形。
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  l.shareImageTimelineTitle(entries.length, l.rarityStar(rank)),
-                  style: theme.textTheme.labelSmall,
-                ),
-                const SizedBox(height: AppSpacing.s),
-                Text(
-                  l.statsNoData,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: tokens.textMuted,
-                  ),
-                ),
-              ],
-            )
-          // 有資料：標題在頂、各筆 row 均勻分布撐滿父高，消除底部空白。
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l.shareImageTimelineTitle(entries.length, l.rarityStar(rank)),
-                  style: theme.textTheme.labelSmall,
-                ),
-                for (final e in entries)
-                  Row(
-                    children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: colors.colorFor(e.gachaType),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.s),
-                      Expanded(
-                        child: Text(
-                          e.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: tokens.textPrimary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.s),
-                      Text(
-                        '${e.pullsSincePrev}',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: tokens.textMuted,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
     );
   }
 }

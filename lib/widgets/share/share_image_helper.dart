@@ -46,7 +46,20 @@ Widget buildShareRenderTree({
           data: brightness == Brightness.dark
               ? buildDarkTheme()
               : buildLightTheme(),
-          child: Material(type: MaterialType.transparency, child: card),
+          child: Material(
+            type: MaterialType.transparency,
+            // Overlay 補齊 TimelineVertical 內 Tooltip 所需的 Overlay 祖先；
+            // 離屏為 RenderView tight constraints，opaque entry 會填滿畫布。
+            child: Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  opaque: true,
+                  maintainState: true,
+                  builder: (_) => card,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     ),

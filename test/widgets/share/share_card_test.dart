@@ -6,6 +6,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 
 Future<ui.Image> _img() async {
@@ -100,6 +103,51 @@ void main() {
     expect((tops[1] - tops[2]).abs(), lessThan(2));
     expect(lefts[0], lessThan(lefts[1]));
     expect(lefts[1], lessThan(lefts[2]));
+  });
+
+  testWidgets('卡池模式重用 App 元件（StatCard ×3 + TimelineVertical ×1）', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    // 鎖住「已改用 App 元件」：回退到自製 _StatTile/_ShareTimeline 會失敗。
+    expect(find.byType(StatCard), findsNWidgets(3));
+    expect(find.byType(TimelineVertical), findsOneWidget);
+    // 右欄時間軸標題改用與 App 綜合頁一致的 InlineSectionTitle。
+    expect(find.byType(InlineSectionTitle), findsWidgets);
+  });
+
+  testWidgets('綜合模式重用 App 元件（StatCard ×6 + TimelineVertical ×2）', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    final card = ShareCard.overview(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(showFullUid: true),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      banners: {
+        '301': [_r('301', 5, '那維萊特'), _r('301', 3, '冷刃')],
+        '2000': [_r('2000', 5, '某五星')],
+      },
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    expect(find.byType(StatCard), findsNWidgets(6));
+    expect(find.byType(TimelineVertical), findsNWidgets(2));
+    expect(find.byType(InlineSectionTitle), findsNWidgets(2));
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {

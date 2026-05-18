@@ -110,7 +110,7 @@ void main() {
           brightness: Brightness.dark,
           locale: const Locale('zh'),
         ),
-        logicalSize: const Size(kShareCardWidth, 1800),
+        logicalSize: const Size(kShareCardWidth, 2200),
       );
 
       expect(
