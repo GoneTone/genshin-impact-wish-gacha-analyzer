@@ -320,69 +320,71 @@ class _SectionView extends StatelessWidget {
       children: [
         Text(section.title, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.m),
-        // IntrinsicHeight：讓左欄（數字+雙圓餅）與右欄（時間軸）等高，
-        // 分享版面兩欄底部對齊。
+        // 頂部：三張 stat 卡橫排，等寬等高。
         IntrinsicHeight(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            key: const Key('shareStatRow'),
             children: [
-              // 左欄：數字摘要 + 雙圓餅
+              for (var i = 0; i < section.statLines.length; i++) ...[
+                if (i > 0) const SizedBox(width: AppSpacing.m),
+                Expanded(
+                  child: _StatTile(line: section.statLines[i], tokens: tokens),
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.l),
+        // 下方：左欄雙圓餅 + 右欄時間軸，IntrinsicHeight 等高，
+        // 時間軸內容撐滿消除底部空白。
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 左欄：稀有度 + 類型雙圓餅（含圖例）
               Expanded(
                 flex: 11,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (final line in section.statLines)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.s),
-                        child: _StatTile(line: line, tokens: tokens),
+                    _PieBox(
+                      title: l.statsRarityDistribution,
+                      pie: RarityPie(
+                        stats: section.stats,
+                        animationDuration: Duration.zero,
                       ),
-                    const SizedBox(height: AppSpacing.s),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _PieBox(
-                            title: l.statsRarityDistribution,
-                            pie: RarityPie(
-                              stats: section.stats,
-                              animationDuration: Duration.zero,
-                            ),
-                            legend: DistributionLegend(
-                              entries: rarityDistributionEntries(
-                                section.stats,
-                                tokens,
-                                l,
-                              ),
-                            ),
-                            tokens: tokens,
-                          ),
+                      legend: DistributionLegend(
+                        entries: rarityDistributionEntries(
+                          section.stats,
+                          tokens,
+                          l,
                         ),
-                        const SizedBox(width: AppSpacing.m),
-                        Expanded(
-                          child: _PieBox(
-                            title: l.statsItemTypeDistribution,
-                            pie: ItemTypePie(
-                              stats: section.stats,
-                              animationDuration: Duration.zero,
-                            ),
-                            legend: DistributionLegend(
-                              entries: itemTypeDistributionEntries(
-                                section.stats,
-                                brightness,
-                                l,
-                              ),
-                            ),
-                            tokens: tokens,
-                          ),
+                      ),
+                      tokens: tokens,
+                    ),
+                    const SizedBox(height: AppSpacing.m),
+                    _PieBox(
+                      title: l.statsItemTypeDistribution,
+                      pie: ItemTypePie(
+                        stats: section.stats,
+                        animationDuration: Duration.zero,
+                      ),
+                      legend: DistributionLegend(
+                        entries: itemTypeDistributionEntries(
+                          section.stats,
+                          brightness,
+                          l,
                         ),
-                      ],
+                      ),
+                      tokens: tokens,
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: AppSpacing.l),
-              // 右欄：垂直時間軸（最新 10 筆）
+              // 右欄：垂直時間軸（最新 10 筆），撐滿等高
               Expanded(
                 flex: 9,
                 child: _ShareTimeline(
@@ -416,39 +418,36 @@ class _StatTile extends StatelessWidget {
         border: Border.all(color: tokens.borderSubtle),
       ),
       padding: const EdgeInsets.all(AppSpacing.m),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Text(
-              line.$1,
-              style: theme.textTheme.bodyMedium?.copyWith(
+          Text(
+            line.$1,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: tokens.textMuted,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            line.$2,
+            maxLines: 1,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: tokens.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (line.$3 != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              line.$3!,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
                 color: tokens.textMuted,
               ),
             ),
-          ),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  line.$2,
-                  maxLines: 1,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: tokens.textPrimary,
-                  ),
-                ),
-                if (line.$3 != null)
-                  Text(
-                    line.$3!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: tokens.textMuted,
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          ],
         ],
       ),
     );
@@ -516,60 +515,68 @@ class _ShareTimeline extends StatelessWidget {
         border: Border.all(color: tokens.borderSubtle),
       ),
       padding: const EdgeInsets.all(AppSpacing.m),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            l.shareImageTimelineTitle(entries.length, l.rarityStar(rank)),
-            style: theme.textTheme.labelSmall,
-          ),
-          const SizedBox(height: AppSpacing.s),
-          if (entries.isEmpty)
-            Text(
-              l.statsNoData,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: tokens.textMuted,
-              ),
+      child: entries.isEmpty
+          // 空資料：維持置頂排列，不套 spaceBetween 以免單筆/標題被拉開變形。
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l.shareImageTimelineTitle(entries.length, l.rarityStar(rank)),
+                  style: theme.textTheme.labelSmall,
+                ),
+                const SizedBox(height: AppSpacing.s),
+                Text(
+                  l.statsNoData,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: tokens.textMuted,
+                  ),
+                ),
+              ],
             )
-          else
-            for (final e in entries)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: colors.colorFor(e.gachaType),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: Text(
-                        e.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: tokens.textPrimary,
+          // 有資料：標題在頂、各筆 row 均勻分布撐滿父高，消除底部空白。
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l.shareImageTimelineTitle(entries.length, l.rarityStar(rank)),
+                  style: theme.textTheme.labelSmall,
+                ),
+                for (final e in entries)
+                  Row(
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: colors.colorFor(e.gachaType),
+                          shape: BoxShape.circle,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Text(
-                      '${e.pullsSincePrev}',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: tokens.textMuted,
-                        fontFeatures: const [FontFeature.tabularFigures()],
+                      const SizedBox(width: AppSpacing.s),
+                      Expanded(
+                        child: Text(
+                          e.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: tokens.textPrimary,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-        ],
-      ),
+                      const SizedBox(width: AppSpacing.s),
+                      Text(
+                        '${e.pullsSincePrev}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: tokens.textMuted,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
     );
   }
 }

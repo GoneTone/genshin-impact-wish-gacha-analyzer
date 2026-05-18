@@ -63,6 +63,45 @@ void main() {
     expect(find.textContaining('800123456'), findsNothing);
   });
 
+  testWidgets('頂部 stat 為水平橫排（三張同一橫列）', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    // 結構斷言：stat 橫排 Row 帶 Key('shareStatRow')。
+    final statRow = find.byKey(const Key('shareStatRow'));
+    expect(statRow, findsOneWidget);
+
+    // 版面斷言：三個 stat label（總計 / 5★ / 4★）位於同一橫列，
+    // y 座標相近（同列），且 x 座標遞增（左→右排列）。
+    final labels = <Finder>[
+      find.text(l.statsTotal),
+      find.text(l.statsRankCount(l.rarityStar(5))),
+      find.text(l.statsRankCount(l.rarityStar(4))),
+    ];
+    final tops = labels
+        .map((f) => t.getTopLeft(f.first).dy)
+        .toList(growable: false);
+    final lefts = labels
+        .map((f) => t.getTopLeft(f.first).dx)
+        .toList(growable: false);
+    expect((tops[0] - tops[1]).abs(), lessThan(2));
+    expect((tops[1] - tops[2]).abs(), lessThan(2));
+    expect(lefts[0], lessThan(lefts[1]));
+    expect(lefts[1], lessThan(lefts[2]));
+  });
+
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.overview(
