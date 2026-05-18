@@ -13,6 +13,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/wish_storage.dart';
@@ -113,7 +114,7 @@ Future<void> _connectRustLogStream() async {
       (event) {
         Logger(
           'rust.${event.target}',
-        ).log(_levelFromRust(event.level), event.message);
+        ).log(_levelFromRust(event.level), sanitizeLogMessage(event.message));
       },
       onError: (Object e, StackTrace st) {
         Logger('rust.bridge').warning('log stream error', e, st);
