@@ -2,6 +2,7 @@
 //
 // 綜合頁的「祈願/頌願分組 + 統計 + 平均間隔 + timeline」純資料計算。
 // OverviewPage 與 ShareCard 共用，避免兩處複製分組邏輯。
+import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
@@ -9,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 
 /// 祈願段（角色/武器/常駐/新手…）的彙整結果。
+@immutable
 class GachaSectionData {
   const GachaSectionData({
     required this.types,
@@ -33,6 +35,7 @@ class GachaSectionData {
 
 /// 頌願段沿用既有 odes 統計組成（總抽數、事件 5★、常駐 4★），
 /// 不套「佔比 + 平均幾抽出」（odes 無對應保底語意）。
+@immutable
 class OdesSectionData {
   const OdesSectionData({
     required this.types,
@@ -55,6 +58,7 @@ class OdesSectionData {
   final int timelineNowPulls;
 }
 
+@immutable
 class OverviewSections {
   const OverviewSections({required this.gacha, required this.odes});
   final GachaSectionData gacha;

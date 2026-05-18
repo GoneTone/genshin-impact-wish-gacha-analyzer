@@ -29,4 +29,28 @@ void main() {
     expect(sections.odes.stats.total, 1);
     expect(sections.odes.eventFiveCount, 1);
   });
+
+  test('buildOverviewSections 空輸入不拋例外、各欄位回傳零值', () {
+    final sections = buildOverviewSections(const <String, List<GachaRecord>>{});
+
+    expect(sections.gacha.stats.total, 0);
+    expect(sections.odes.stats.total, 0);
+    expect(sections.gacha.fiveStarAvg, isNull);
+    expect(sections.odes.eventFiveCount, 0);
+    expect(sections.odes.standardFourCount, 0);
+    expect(sections.gacha.timeline, isEmpty);
+    expect(sections.odes.timeline, isEmpty);
+  });
+
+  test('buildOverviewSections 僅頌願輸入：祈願 total=0，odes eventFiveCount=1', () {
+    final t = DateTime(2026, 5, 1);
+    final activeBanners = <String, List<GachaRecord>>{
+      '2000': [_r('2000', 5, '某頌願五星', t)],
+    };
+
+    final sections = buildOverviewSections(activeBanners);
+
+    expect(sections.gacha.stats.total, 0);
+    expect(sections.odes.eventFiveCount, 1);
+  });
 }

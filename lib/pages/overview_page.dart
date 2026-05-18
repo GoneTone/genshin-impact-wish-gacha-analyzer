@@ -193,8 +193,6 @@ class _OverviewSection extends StatelessWidget {
       );
     }
 
-    final timelineEntries = timeline;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -338,12 +336,12 @@ class _OverviewSection extends StatelessWidget {
           icon: Icons.timeline,
           title: l.timelineTopRarityTitle(
             l.rarityStar(timelineRank),
-            timelineEntries.length,
+            timeline.length,
           ),
         ),
         const SizedBox(height: AppSpacing.s),
         TimelineVertical(
-          entries: timelineEntries,
+          entries: timeline,
           colors: bannerColors,
           targetRank: timelineRank,
           nowPulls: timelineNowPulls,
