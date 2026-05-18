@@ -77,10 +77,11 @@ void main() {
       expect(out, isNot(contains('SECRET')));
     });
 
-    test('replaces malformed url token with marker', () {
-      final out = sanitizeLogMessage('bad link https://');
-      expect(out, contains('<malformed url>'));
-      expect(out, startsWith('bad link '));
+    test('leaves a contentless scheme token untouched (no match, no leak)', () {
+      expect(
+        sanitizeLogMessage('bad link https://'),
+        equals('bad link https://'),
+      );
     });
 
     test('sanitizes multiple urls in one message', () {

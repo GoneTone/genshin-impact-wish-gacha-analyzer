@@ -35,20 +35,9 @@ String sanitizeUid(String uid) {
 /// 非 URL 內容原樣保留。Rust log 跨橋進 Dart 時統一呼叫,作為單一脫敏匣道,
 /// 避免在 Rust 端複製脫敏邏輯(見 docs/superpowers/specs/2026-05-18-rust-log-sanitization-design.md)。
 String sanitizeLogMessage(String message) {
-  // 使用 \S* (允許零個非空白字元) 以捕捉 "https://" 這類 host 缺失的 malformed token。
-  final urlPattern = RegExp(r'https?://\S*');
-  return message.replaceAllMapped(urlPattern, (m) {
-    final raw = m.group(0)!;
-    // 若解析後 host 為空,視為 malformed URL,sanitizeUrl 的條件 (host.isEmpty &&
-    // scheme.isEmpty) 僅捕捉無 scheme 的情況,此處補足 host-only 空的邊界案例。
-    try {
-      final uri = Uri.parse(raw);
-      if (uri.host.isEmpty) return '<malformed url>';
-    } catch (_) {
-      return '<malformed url>';
-    }
-    return sanitizeUrl(raw);
-  });
+  // log 訊息中 URL 皆為末段或後接空白,以非空白序列界定 token 邊界即足夠。
+  final urlPattern = RegExp(r'https?://\S+');
+  return message.replaceAllMapped(urlPattern, (m) => sanitizeUrl(m.group(0)!));
 }
 
 /// 把檔案路徑內的 home 段 username 換成 `***`，避免 log 洩漏使用者名稱。
