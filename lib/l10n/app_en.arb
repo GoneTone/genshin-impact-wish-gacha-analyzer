@@ -273,6 +273,32 @@
 
   "settingsExportData": "Export data",
   "settingsImportData": "Import data",
+  "shareImageButton": "Generate share image",
+  "shareImageDialogTitle": "Share image options",
+  "shareImageThemeLabel": "Theme",
+  "shareImageThemeDark": "Dark",
+  "shareImageThemeLight": "Light",
+  "shareImageShowFullUid": "Show full UID on image",
+  "shareImageShowFullUidHint": "When off, only the first 3 digits are shown, the rest masked with x",
+  "shareImageGenerate": "Generate",
+  "shareImageUpdatedAt": "Updated {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "shareImageTimelineTitle": "Latest {n} {star} (new->old)",
+  "@shareImageTimelineTitle": {
+    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
+  },
+  "shareImageSavedAndCopied": "Saved and copied to clipboard: {path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageSavedOnly": "Saved: {path} (clipboard unsupported)",
+  "@shareImageSavedOnly": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageCopiedOnly": "Copied to clipboard",
+  "shareImageFailed": "Failed to generate share image",
   "settingsExportSuccess": "Exported to {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }

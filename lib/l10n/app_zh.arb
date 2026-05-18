@@ -279,6 +279,32 @@
 
   "settingsExportData": "匯出資料",
   "settingsImportData": "匯入資料",
+  "shareImageButton": "生成分享圖",
+  "shareImageDialogTitle": "分享圖設定",
+  "shareImageThemeLabel": "主題",
+  "shareImageThemeDark": "深色",
+  "shareImageThemeLight": "淺色",
+  "shareImageShowFullUid": "在圖上顯示完整 UID",
+  "shareImageShowFullUidHint": "關閉時只顯示前 3 碼，其餘以 x 遮罩",
+  "shareImageGenerate": "生成",
+  "shareImageUpdatedAt": "資料更新 {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "shareImageTimelineTitle": "最近 {n} 筆 {star}（新→舊）",
+  "@shareImageTimelineTitle": {
+    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
+  },
+  "shareImageSavedAndCopied": "已存檔並複製到剪貼簿：{path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageSavedOnly": "已存檔：{path}（剪貼簿不支援）",
+  "@shareImageSavedOnly": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageCopiedOnly": "已複製到剪貼簿",
+  "shareImageFailed": "分享圖生成失敗",
   "settingsExportSuccess": "已匯出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
