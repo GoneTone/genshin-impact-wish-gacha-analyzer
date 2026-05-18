@@ -26,24 +26,29 @@ GachaRecord _r({
   lang: 'zh-tw',
 );
 
-Widget _wrap(Widget Function(BuildContext ctx, BannerColors colors) build) =>
-    MaterialApp(
-      theme: buildDarkTheme(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: SizedBox(
-          width: 800,
-          height: 280,
-          child: Builder(
-            builder: (ctx) {
-              final colors = BannerColors.of(Theme.of(ctx).brightness);
-              return build(ctx, colors);
-            },
-          ),
-        ),
+Widget _wrap(
+  Widget Function(BuildContext ctx, BannerColors colors) build, {
+  Locale? locale,
+  double width = 800,
+  double height = 280,
+}) => MaterialApp(
+  theme: buildDarkTheme(),
+  locale: locale,
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  home: Scaffold(
+    body: SizedBox(
+      width: width,
+      height: height,
+      child: Builder(
+        builder: (ctx) {
+          final colors = BannerColors.of(Theme.of(ctx).brightness);
+          return build(ctx, colors);
+        },
       ),
-    );
+    ),
+  ),
+);
 
 void main() {
   testWidgets('empty banners → renders one row per gachaType', (tester) async {
@@ -289,5 +294,53 @@ void main() {
     );
     // 兩條 bar 各 1 件
     expect(find.text('1'), findsNWidgets(2));
+  });
+
+  testWidgets('英文窄視窗：名稱/說明不截斷（無 ellipsis）、bar 仍渲染', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => BannerTopRarityBars(
+          types: gachaTypes,
+          banners: const {},
+          colors: colors,
+        ),
+        locale: const Locale('en'),
+        width: 360, // 刻意窄，逼出換行
+        height: 600, // 足夠高度，避免七列換行觸發 RenderFlex overflow 掩蓋真正斷言
+      ),
+    );
+    // 等 locale 切換 / 版面 settle 完成
+    await tester.pumpAndSettle();
+
+    final l = AppLocalizations.of(
+      tester.element(find.byType(BannerTopRarityBars)),
+    )!;
+
+    // 名稱 Text 不得有 ellipsis（完整換行顯示）
+    // 取 gachaTypes.first（301 角色活動祈願）的 en 名稱
+    final firstName = gachaTypes.first.resolveName(l);
+    final nameText = tester.widget<Text>(find.text(firstName));
+    expect(nameText.overflow, isNot(TextOverflow.ellipsis));
+
+    // 右側 subtitle Text 不得有 ellipsis（空 banners → "No 5★ yet"）
+    // 對所有符合的 subtitle Text 逐一斷言
+    final noMainRarityStr = l.pityNoMainRarity(l.rarityStar(5));
+    for (final subtitleText in tester.widgetList<Text>(
+      find.text(noMainRarityStr),
+    )) {
+      expect(subtitleText.overflow, isNot(TextOverflow.ellipsis));
+    }
+
+    // bar 仍每列渲染
+    expect(
+      find.descendant(
+        of: find.byType(BannerTopRarityBars),
+        matching: find.byType(FractionallySizedBox),
+      ),
+      findsNWidgets(gachaTypes.length),
+    );
+
+    // 版面未拋 overflow 例外
+    expect(tester.takeException(), isNull);
   });
 }
