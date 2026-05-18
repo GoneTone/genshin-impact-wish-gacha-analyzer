@@ -6,11 +6,13 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_uid_mask.dart';
@@ -65,8 +67,10 @@ class ShareCard extends StatelessWidget {
     required int targetRank,
   }) {
     final stats = computeGachaStats(records);
-    final fiveAvg = _avgInterval(records, 5);
-    final fourAvg = _avgInterval(records, 4);
+    // threshold: 0 — 此處只取 averageInterval，不需 pity progress/distance
+    // （與 gacha_pity.dart 的 averageIntervalAcrossBanners 同一慣例）。
+    final fiveAvg = computePity(records, threshold: 0, rank: 5).averageInterval;
+    final fourAvg = computePity(records, threshold: 0, rank: 4).averageInterval;
     return ShareCard._(
       l: l,
       appVersion: appVersion,
@@ -111,6 +115,8 @@ class ShareCard extends StatelessWidget {
     final s = buildOverviewSections(banners);
     final g = s.gacha;
     final o = s.odes;
+    // '2000'/'1000' 必定存在：o.types 來自 lib/data/gacha_types.dart 的靜態常數，
+    // 頌願活動/常駐卡池為固定資料，故 firstWhere 無需 orElse。
     final odesEventType = o.types.firstWhere((t) => t.gachaType == '2000');
     final odesStdType = o.types.firstWhere((t) => t.gachaType == '1000');
     return ShareCard._(
@@ -170,21 +176,6 @@ class ShareCard extends StatelessWidget {
   final String uid;
   final DateTime updatedAt;
   final List<_Section> _sections;
-
-  static double? _avgInterval(List<GachaRecord> records, int rank) {
-    var current = 0;
-    var hit = 0;
-    DateTime? last;
-    for (final r in records) {
-      if (r.rankType == rank) {
-        last ??= r.time;
-        hit++;
-      } else if (last == null) {
-        current++;
-      }
-    }
-    return hit > 0 ? (records.length - current) / hit : null;
-  }
 
   static String? _rateAvg(AppLocalizations l, double rate, double? avg) {
     final pct = l.statsShareOfTotal((rate * 100).toStringAsFixed(2));
@@ -254,11 +245,7 @@ class _ShareHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final ts =
-        '${updatedAt.year}-${updatedAt.month.toString().padLeft(2, '0')}-'
-        '${updatedAt.day.toString().padLeft(2, '0')} '
-        '${updatedAt.hour.toString().padLeft(2, '0')}:'
-        '${updatedAt.minute.toString().padLeft(2, '0')}';
+    final ts = DateFormat('yyyy-MM-dd HH:mm').format(updatedAt);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -333,6 +320,8 @@ class _SectionView extends StatelessWidget {
       children: [
         Text(section.title, style: theme.textTheme.titleLarge),
         const SizedBox(height: AppSpacing.m),
+        // IntrinsicHeight：讓左欄（數字+雙圓餅）與右欄（時間軸）等高，
+        // 分享版面兩欄底部對齊。
         IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,23 +426,28 @@ class _StatTile extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                line.$2,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: tokens.textPrimary,
-                ),
-              ),
-              if (line.$3 != null)
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
                 Text(
-                  line.$3!,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: tokens.textMuted,
+                  line.$2,
+                  maxLines: 1,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: tokens.textPrimary,
                   ),
                 ),
-            ],
+                if (line.$3 != null)
+                  Text(
+                    line.$3!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: tokens.textMuted,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
