@@ -10,6 +10,12 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
 
+// 自適應高度斷言用上下界（邏輯px × pixelRatio 3）：
+// 下界證明確有內容（非空白圖）；上界 = renderer 預設 maxHeight × pixelRatio，
+// 證明沒撞到上限被裁切。實測 overview 兩段大資料 < 3500 邏輯px。
+const _minPngHeight = 600 * 3; // > 600 邏輯px 才算有實際內容
+const _maxPngHeight = 8000 * 3; // renderer maxHeight 上限 × pixelRatio
+
 // 鏡像 test/widgets/share/share_card_test.dart 的 ui.Image / GachaRecord 工廠。
 Future<ui.Image> _img() async {
   final recorder = ui.PictureRecorder();
@@ -73,7 +79,7 @@ void main() {
           brightness: Brightness.dark,
           locale: const Locale('zh'),
         ),
-        logicalSize: const Size(kShareCardWidth, 1400),
+        width: kShareCardWidth,
       );
 
       expect(
@@ -86,6 +92,22 @@ void main() {
       );
       expect(png.isNotEmpty, isTrue);
       expect(png.length, greaterThan(10 * 1024), reason: 'PNG 過小，可能渲染為空白圖');
+
+      // 高度自適應：解碼後高度在合理下界（有內容）與 maxHeight 上界（未被裁切）之間，
+      // 證明 banner 卡輸出高=內容高、零留白零裁切。
+      final codec = await ui.instantiateImageCodec(png);
+      final frame = await codec.getNextFrame();
+      expect(frame.image.width, (kShareCardWidth * 3).round());
+      expect(
+        frame.image.height,
+        greaterThan(_minPngHeight),
+        reason: 'PNG 過矮，可能渲染為空白圖',
+      );
+      expect(
+        frame.image.height,
+        lessThan(_maxPngHeight),
+        reason: 'PNG 撞到 maxHeight，內容可能被裁切',
+      );
     });
   });
 
@@ -110,7 +132,7 @@ void main() {
           brightness: Brightness.dark,
           locale: const Locale('zh'),
         ),
-        logicalSize: const Size(kShareCardWidth, 2200),
+        width: kShareCardWidth,
       );
 
       expect(
@@ -123,6 +145,22 @@ void main() {
       );
       expect(png.isNotEmpty, isTrue);
       expect(png.length, greaterThan(10 * 1024), reason: 'PNG 過小，可能渲染為空白圖');
+
+      // 高度自適應：overview 兩段內容比 banner 高，仍須落在下界與上界之間，
+      // 證明零留白零裁切。
+      final codec = await ui.instantiateImageCodec(png);
+      final frame = await codec.getNextFrame();
+      expect(frame.image.width, (kShareCardWidth * 3).round());
+      expect(
+        frame.image.height,
+        greaterThan(_minPngHeight),
+        reason: 'PNG 過矮，可能渲染為空白圖',
+      );
+      expect(
+        frame.image.height,
+        lessThan(_maxPngHeight),
+        reason: 'PNG 撞到 maxHeight，內容可能被裁切',
+      );
     });
   });
 }

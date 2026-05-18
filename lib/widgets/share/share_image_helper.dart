@@ -55,6 +55,10 @@ Widget buildShareRenderTree({
                 OverlayEntry(
                   opaque: true,
                   maintainState: true,
+                  // 離屏渲染給 unbounded 高度約束以達高度自適應；此非定位
+                  // entry 設 canSizeOverlay 後，Overlay 會以它（即 ShareCard）
+                  // 的自然高決定自身高度（見 share_image_renderer.dart）。
+                  canSizeOverlay: true,
                   builder: (_) => card,
                 ),
               ],
@@ -67,11 +71,11 @@ Widget buildShareRenderTree({
 }
 
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
-/// [logicalHeight] 該卡片固定畫布高度；[suggestedName] 完整建議檔名（含時間戳）。
+/// 分享圖寬固定為 [kShareCardWidth]、高隨內容自適應（底部不留白、不裁切）；
+/// [suggestedName] 完整建議檔名（含時間戳）。
 Future<void> generateAndShareImage({
   required BuildContext context,
   required AppLocalizations l,
-  required double logicalHeight,
   required String suggestedName,
   required Widget Function(ui.Image icon, ShareImageOptions options) buildCard,
 }) async {
@@ -93,7 +97,7 @@ Future<void> generateAndShareImage({
         brightness: options.brightness,
         locale: locale,
       ),
-      logicalSize: Size(kShareCardWidth, logicalHeight),
+      width: kShareCardWidth,
     );
     final result = await exportShareImage(png, suggestedName: suggestedName);
     showShareResultSnackBar(messenger, l, result);

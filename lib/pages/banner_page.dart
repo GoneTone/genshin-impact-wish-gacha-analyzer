@@ -330,7 +330,6 @@ class BannerPage extends ConsumerWidget {
     await generateAndShareImage(
       context: context,
       l: l,
-      logicalHeight: 1400,
       suggestedName:
           'genshin_gacha_share_${type.gachaType}_${fileTimestamp()}.png',
       buildCard: (icon, options) => ShareCard.banner(

@@ -177,7 +177,6 @@ class OverviewPage extends ConsumerWidget {
     await generateAndShareImage(
       context: context,
       l: l,
-      logicalHeight: 2200,
       suggestedName: 'genshin_gacha_share_overview_${fileTimestamp()}.png',
       buildCard: (icon, options) => ShareCard.overview(
         l: l,
