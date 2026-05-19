@@ -25,6 +25,7 @@
   "actionClose": "關閉",
   "actionPrevPage": "上一頁",
   "actionNextPage": "下一頁",
+  "actionOpenFolder": "開啟資料夾",
 
   "navOverview": "綜合",
   "navCharacter": "角色",
@@ -303,13 +304,8 @@
   "shareImageFailed": "分享圖生成失敗",
   "exportDialogSuccessTitle": "匯出成功",
   "exportDialogFailedTitle": "匯出失敗",
-  "actionOpenFolder": "開啟資料夾",
   "settingsExportFailed": "匯出失敗：{error}",
   "@settingsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
-  },
-  "settingsLogsExportFailed": "Logs 匯出失敗：{error}",
-  "@settingsLogsExportFailed": {
     "placeholders": { "error": { "type": "String" } }
   },
   "settingsExportSuccess": "已匯出至 {path}",
@@ -446,6 +442,10 @@
     "placeholders": {
       "path": { "type": "String" }
     }
+  },
+  "settingsLogsExportFailed": "logs 匯出失敗：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
   },
   "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。"
 }

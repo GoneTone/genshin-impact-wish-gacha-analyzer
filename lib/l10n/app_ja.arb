@@ -19,6 +19,7 @@
   "actionClose": "閉じる",
   "actionPrevPage": "前へ",
   "actionNextPage": "次へ",
+  "actionOpenFolder": "フォルダーを開く",
 
   "navOverview": "総合",
   "navCharacter": "キャラクター",
@@ -275,9 +276,7 @@
   "settingsImportData": "データをインポート",
   "exportDialogSuccessTitle": "エクスポート成功",
   "exportDialogFailedTitle": "エクスポート失敗",
-  "actionOpenFolder": "フォルダーを開く",
   "settingsExportFailed": "エクスポートに失敗しました：{error}",
-  "settingsLogsExportFailed": "ログのエクスポートに失敗しました：{error}",
   "settingsExportSuccess": "{path} にエクスポートしました",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -413,5 +412,6 @@
       "path": { "type": "String" }
     }
   },
+  "settingsLogsExportFailed": "ログのエクスポートに失敗しました：{error}",
   "settingsLogsClearConfirmBody": "logs/ 内のすべてのファイルを完全に削除します。問題報告の前にログが必要な場合は、先にエクスポートしてください。確認のため CLEAR と入力してください。"
 }
