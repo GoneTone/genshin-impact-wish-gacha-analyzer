@@ -32,45 +32,47 @@ const double kShareCardWidth = 1200;
 /// 抽成具名常數讓左欄高度估算與實際渲染共用同一數值，改一處即同步。
 const double _kPieDiameterBox = 200;
 
-// ── 左欄 _PieBox 高度估算常數（獨立審查實測校準 + 保守 buffer）───────────
+// ── 校準常數：以 widget test 實測精算（不再過度保守）─────────────────────
 //
-// 估算的單向保守原則：左欄 H **寧可低估**（H 偏小 → avail 小 → N 小 →
-// 右欄更矮 → 嚴格不超出）。
+// 「右欄不超出左欄、也不反拉左欄圓餅卡」由離屏渲染下 fillHeight:true +
+// 下方 IntrinsicHeight(Row stretch) 機制硬性保證（多資料集像素 diff=0）。
+// 因此本估算**無需為了不超出而保守低估**；估算唯一職責是「避免 N 過大
+// 致右欄內容 > H 造成 RenderFlex overflow」，故每筆只加極小 buffer 即可，
+// 取精確實測值讓 N 盡量大、右卡接近填滿、留白縮到最小。
 //
-// 校準方法（獨立審查以「同一 rarity _PieBox」控制變因實測，不再用跨兩種
-// 不同 _PieBox 相減的無效推導）：固定圓餅與 padding，只變動 legend 行數，
-// 量 _PieBox 外框 Container getSize().height：
-//   legend 1 行 = 302；legend 3 行 = 390；legend 4 行 = 434
-//   ⇒ 線性 perRow = (434−302)/3 = 44/行；截距 base = 302 − 44 = 258
-//   驗證實測：258+1*44=302 ✓；258+3*44=390 ✓；258+4*44=434 ✓
-// itemType _PieBox 結構與 rarity 相同（同 labelSmall 標題 + 同
-//   _kPieDiameterBox 圓餅 + 同 padding，差別僅 legend 行數），套用同一公式。
-// 為「保守低估 H」（硬性保證右 ≤ 左），把 base/perRow 各下調一個小 buffer：
-//   base 取 250（< 實測 258）、perRow 取 42（< 實測 44）
-//   ⇒ 公式結果恆 ≤ 真實 _PieBox 高（H 不會高估），多算的安全邊際全留給右側。
-const double _kPieBoxBase = 250; // 實測截距 258 − 8 保守 buffer
-const double _kPieBoxLegendRow = 42; // 實測 perRow 44 − 2 保守 buffer
+// 左欄 _PieBox：以同一 rarity _PieBox 控制變因（固定圓餅+padding，只變
+//   legend 行數）量外框 Container getSize().height：
+//   1 行=302、3 行=390、4 行=434 ⇒ 完美線性
+//   perRow = (434−302)/3 = 44/行；base = 302 − 1*44 = 258
+//   驗證：258+1*44=302 ✓ 258+3*44=390 ✓ 258+4*44=434 ✓
+//   itemType _PieBox 結構同（同 labelSmall 標題+同 _kPieDiameterBox 圓餅
+//   +同 padding，差別僅 legend 行數），套用同一公式。取精確值不下調。
+const double _kPieBoxBase = 258; // 實測精確截距
+const double _kPieBoxLegendRow = 44; // 實測精確 perRow
 
-// ── 右欄 TimelineVertical 高度估算常數（保守上界，恆不低估右欄高）─────────
-//
-// 單向保守原則：右欄每筆 perEntry 與固定 chrome **寧可高估**（→ N 小 →
-// 右欄更矮 → 嚴格不超出）。
-//
-// 跨月情境（每筆 _EntryRow 都帶月份 tag，是最高的 row）為最壞情況：
-//   獨立審查反推「全跨月 5★、N=6 時右欄真實 627」⇒ 每筆增量
-//   ≈ (627 − chrome≈82) / 6 ≈ 90.8 > 舊值 86（86 不是真正上界，會低估
-//   → N 偏大 → 右側超出左側，正是本次 Critical 缺陷根因）。
-// 取真正保守上界：每筆 96（最壞觀測 ~90.8 + buffer），確保任何 row（含
-//   跨月月份 tag）皆 ≤ 此值、恆不低估。
-//   h(n) ≈ _kTimelineChrome + n * _kTimelineEntryRow（恆 ≥ 真實右欄高）。
-// chrome 涵蓋 container 垂直 padding(AppSpacing.l*2=32) + 標題(labelSmall
-//   + AppSpacing.s=8) + footer 區(AppSpacing.s=8 + bodySmall 行高)；保守
-//   一律「假設有 footer」（截斷時 remaining>0 幾乎必然有 footer；若最終無
-//   footer 反而更鬆、仍不超出）。取 90 涵蓋上述加總並含 buffer。
-// _NowRow 增量保守取上界 60（實測約 53）。
-const double _kTimelineChrome = 90; // 保守上界（padding+title+footer 區）
-const double _kTimelineEntryRow = 96; // 跨月最壞每筆 ~90.8 + 保守 buffer
-const double _kTimelineNowRow = 60; // 實測 ~53 + 保守 buffer
+// 右欄 TimelineVertical：**務必在分享圖右欄真實外框寬度量**（實測分享圖
+//   右欄 TimelineVertical 外框 ≈ 331px；meta 文字「MM/DD · 卡池 · 距上次」
+//   在此寬度會換行成 2 行 → 行高才是真值，用更寬的近似值量會少算行高→N 過大
+//   →右欄 overflow，正是本次需避免的陷阱）。固定 title+footer，量外框
+//   Container getSize().height（now=null：高 = chrome + 各 entry 行高）：
+//     same  n=1=164  n=2=234  n=10=794（第 0 筆帶月份 tag、其餘無）
+//     cross n=1=164  n=2=246  n=10=902（每筆都帶月份 tag）
+//   解線性方程：
+//     無月份標籤每筆 NO = (234−164)/1 = 70（= (794−164)/9 ✓）
+//     有月份標籤每筆 W  = (246−164)/1 = 82（= (902−164)/9 ✓）
+//     chrome = 164 − 1*W = 82
+//       （= container 垂直 padding 32 + labelSmall 標題 + AppSpacing.s 8
+//          + footer 區 AppSpacing.s 8 + bodySmall 行高；一律假設有 footer，
+//          截斷時 remaining>0 幾乎必然有 footer，無 footer 反而更鬆）
+//   驗證：same n=10 = 82+82+9*70=794 ✓ cross n=10 = 82+10*82=902 ✓
+//   _NowRow 增量：同 N now=null vs now=30 一律差 53（164→217、234→287…）。
+// 各加極小 buffer（+3~4px）讓估算略高估、N 不會多算到 overflow，但遠比
+//   bcd7a0d 一律 96/90 精準（精算非過度保守；不超出由 fillHeight+
+//   IntrinsicHeight 保證，本估算僅防 N 過大致 RenderFlex overflow）。
+const double _kEntryRowNoMonth = 73; // 實測 70 + 3 buffer
+const double _kEntryRowWithMonth = 85; // 實測 82 + 3 buffer
+const double _kTimelineChrome = 86; // 實測 82 + 4 buffer（padding+title+footer）
+const double _kTimelineNowRow = 56; // 實測 53 + 3 buffer
 
 /// 分享圖時間軸最多展示筆數（沿用 App TimelineVertical `_initialPageSize`）。
 const int _kShareTimelineMaxEntries = 10;
@@ -414,23 +416,52 @@ class _SectionView extends StatelessWidget {
     return _pieBoxHeight(rarityRows) + AppSpacing.m + _pieBoxHeight(itemRows);
   }
 
-  /// 在左欄目標高 H 內，右側時間軸最多能放幾筆（保守上界估算 → N 偏小、
-  /// 右側偏矮，**嚴格不超出**）。多出的較早筆數併入底部 footerNote。
+  /// 前 [n] 筆時間軸 entry 中，有幾筆會顯示月份標籤（較高的 _EntryRow）。
+  ///
+  /// 規則必須與 [TimelineVertical] 完全一致（timeline_vertical.dart）：
+  /// ```
+  /// int? prevYearMonth;
+  /// for (entry) { ym = year*12+month; flag = prevYearMonth != ym; prev = ym; }
+  /// ```
+  /// 即第 0 筆必顯示（prevYearMonth==null）；之後與前一筆 (year,month) 不同
+  /// 才顯示。_NowRow 不參與此分組（TimelineVertical 迴圈只跑 entries）。
+  int _monthTagCount(int n) {
+    var count = 0;
+    int? prevYearMonth;
+    for (var i = 0; i < n; i++) {
+      final t = section.timeline[i].time;
+      final ym = t.year * 12 + t.month;
+      if (prevYearMonth != ym) count++;
+      prevYearMonth = ym;
+    }
+    return count;
+  }
+
+  /// 在左欄真實高度 H 內塞得下的**最多**筆數（精算迭代，使 fillHeight 撐齊
+  /// 後右卡接近填滿、留白縮到最小）。每筆依「是否顯示月份標籤」分兩種行高
+  /// 精估（非一律最壞上界），故 N 接近真實可放數。多出的較早筆數併入底部
+  /// footerNote。「右欄不超出/不反拉左欄」由 fillHeight + IntrinsicHeight
+  /// 機制保證，本估算僅防 N 過大致 RenderFlex overflow。
   int get _maxTimelineEntries {
+    final total = section.timeline.length;
     final hasNowRow = section.timelineNowPulls != null;
     // chrome 一律假設有 footer（截斷時 remaining>0 幾乎必然有 footer；若最終
-    // 無 footer 反而更鬆、仍不超出）。
+    // 無 footer 反而更鬆、仍不 overflow）。
     final avail =
         _leftColumnHeight -
         _kTimelineChrome -
         (hasNowRow ? _kTimelineNowRow : 0);
     if (avail <= 0) return 0;
-    final fit = (avail / _kTimelineEntryRow).floor();
-    final n = fit < 0 ? 0 : fit;
-    final capped = n < _kShareTimelineMaxEntries
-        ? n
+    final maxN = total < _kShareTimelineMaxEntries
+        ? total
         : _kShareTimelineMaxEntries;
-    return capped < section.timeline.length ? capped : section.timeline.length;
+    // 找最大 N（≤ maxN）使前 N 筆估高 ≤ avail。
+    for (var n = maxN; n >= 0; n--) {
+      final m = _monthTagCount(n);
+      final est = (n - m) * _kEntryRowNoMonth + m * _kEntryRowWithMonth;
+      if (est <= avail) return n;
+    }
+    return 0;
   }
 
   /// 右欄時間軸：重用 App TimelineVertical（自帶 container）。標題與底部
