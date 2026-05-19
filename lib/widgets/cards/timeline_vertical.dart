@@ -22,6 +22,7 @@ class TimelineVertical extends StatefulWidget {
     required this.colors,
     required this.targetRank,
     this.title,
+    this.footerNote,
     this.nowPulls,
     this.isAcrossBanners = false,
   });
@@ -34,6 +35,13 @@ class TimelineVertical extends StatefulWidget {
   /// （App 既有用法，如 overview 外部已有 `InlineSectionTitle`）則完全不
   /// 顯示，版面與行為與原本逐字相同。空資料分支與有資料分支皆適用。
   final String? title;
+
+  /// 可選的卡內最底部說明文字。傳入時於卡片 container 內**最底部**（原內容
+  /// 之後、仍在 border + padding 內）以低調說明文字顯示（`bodySmall` +
+  /// `textMuted` + 置中，分享圖用來標示「另有較早紀錄未顯示」）；不傳（App
+  /// 既有用法）則完全不顯示，版面與行為與原本逐字相同。空資料分支與有資料
+  /// 分支皆適用。由呼叫端傳入「已格式化字串」，本元件只負責畫，不懂 l10n。
+  final String? footerNote;
 
   /// 主要顯示稀有度（5 或 4）。用於「暫無 N★ 紀錄」、「距上次 N★ X 抽」等文案。
   /// 跨卡池且 banner 各自主稀有度不同（頌願綜合）時，傳入「最具代表性的那個」
@@ -99,28 +107,46 @@ class _TimelineVerticalState extends State<TimelineVertical> {
     final l = AppLocalizations.of(context)!;
 
     final title = widget.title;
-    Widget container(Widget child) => Container(
-      decoration: BoxDecoration(
-        color: tokens.surfaceCard,
-        border: Border.all(color: tokens.borderSubtle),
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.l,
-        horizontal: AppSpacing.l,
-      ),
-      child: title == null
+    final footerNote = widget.footerNote;
+    Widget container(Widget child) {
+      // title 與 footerNote 皆未傳（App 既有用法）→ 回傳原 child 本體，
+      // 渲染樹與加入此參數前逐字等價、零回歸。
+      final Widget body = (title == null && footerNote == null)
           ? child
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(title, style: theme.textTheme.labelSmall),
-                const SizedBox(height: AppSpacing.s),
+                if (title != null) ...[
+                  Text(title, style: theme.textTheme.labelSmall),
+                  const SizedBox(height: AppSpacing.s),
+                ],
                 child,
+                if (footerNote != null) ...[
+                  const SizedBox(height: AppSpacing.s),
+                  Text(
+                    footerNote,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: tokens.textMuted,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ],
-            ),
-    );
+            );
+      return Container(
+        decoration: BoxDecoration(
+          color: tokens.surfaceCard,
+          border: Border.all(color: tokens.borderSubtle),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.l,
+          horizontal: AppSpacing.l,
+        ),
+        child: body,
+      );
+    }
 
     final entries = widget.entries;
     final nowPulls = widget.nowPulls;

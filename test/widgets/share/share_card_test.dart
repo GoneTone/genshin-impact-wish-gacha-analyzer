@@ -187,8 +187,12 @@ void main() {
     await _pump(t, card);
     expect(t.takeException(), isNull);
 
+    // 提示已移進 TimelineVertical 卡片子樹內（border 內），不再卡外。
     expect(
-      find.text(l.shareImageTimelineMore(2, l.rarityStar(5))),
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.text(l.shareImageTimelineMore(2, l.rarityStar(5))),
+      ),
       findsOneWidget,
     );
   });

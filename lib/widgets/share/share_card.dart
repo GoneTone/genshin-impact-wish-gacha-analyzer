@@ -347,6 +347,26 @@ class _SectionView extends StatelessWidget {
     _StatAccent.rank4 => accentForRank(4, tokens),
   };
 
+  /// 右欄時間軸：重用 App TimelineVertical（自帶 container）。標題與底部
+  /// 「還有 N 筆較早」提示皆透過 title / footerNote 進到卡片 border 內，
+  /// 最多顯示 10 筆；footerNote 僅在 remaining > 0 時傳入。
+  Widget _timeline() {
+    final rank = section.timelineRank;
+    final shown = section.timeline.take(10).toList(growable: false);
+    final remaining = section.timeline.length - shown.length;
+    return TimelineVertical(
+      title: l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
+      footerNote: remaining > 0
+          ? l.shareImageTimelineMore(remaining, l.rarityStar(rank))
+          : null,
+      entries: shown,
+      colors: colors,
+      targetRank: rank,
+      nowPulls: section.timelineNowPulls,
+      isAcrossBanners: section.isAcrossBanners,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -425,65 +445,14 @@ class _SectionView extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.l),
-            // 右欄：時間軸。標題透過 TimelineVertical.title 進到卡片 container
-            // 內，與 _PieBox 卡內 labelSmall 標題同風格；底部剩餘提示維持卡外
-            // （bodySmall）。take(10) → 其內部 remaining=0 不出現「載入更多」。
-            Expanded(
-              flex: 9,
-              child: _TimelineColumn(
-                l: l,
-                section: section,
-                colors: colors,
-                tokens: tokens,
-              ),
-            ),
+            // 右欄：時間軸。標題與底部「還有 N 筆較早」提示皆透過
+            // TimelineVertical 的 title / footerNote 進到卡片 container 內，
+            // 與 _PieBox 卡內 labelSmall 標題同風格。take(10) → 其內部
+            // remaining=0 不出現「載入更多」按鈕；footerNote 僅在實際有未
+            // 顯示的較早紀錄（remaining > 0）時才傳入。
+            Expanded(flex: 9, child: _timeline()),
           ],
         ),
-      ],
-    );
-  }
-}
-
-/// 右欄時間軸：TimelineVertical（自帶 container，標題透過 title 參數進到
-/// 卡內、最多顯示 10 筆）+ 底部卡外剩餘筆數提示（僅 remaining > 0 時）。
-class _TimelineColumn extends StatelessWidget {
-  const _TimelineColumn({
-    required this.l,
-    required this.section,
-    required this.colors,
-    required this.tokens,
-  });
-  final AppLocalizations l;
-  final _Section section;
-  final BannerColors colors;
-  final GachaTokens tokens;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final rank = section.timelineRank;
-    final shown = section.timeline.take(10).toList(growable: false);
-    final remaining = section.timeline.length - shown.length;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TimelineVertical(
-          title: l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
-          entries: shown,
-          colors: colors,
-          targetRank: rank,
-          nowPulls: section.timelineNowPulls,
-          isAcrossBanners: section.isAcrossBanners,
-        ),
-        if (remaining > 0) ...[
-          const SizedBox(height: AppSpacing.s),
-          Text(
-            l.shareImageTimelineMore(remaining, l.rarityStar(rank)),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(color: tokens.textMuted),
-          ),
-        ],
       ],
     );
   }
