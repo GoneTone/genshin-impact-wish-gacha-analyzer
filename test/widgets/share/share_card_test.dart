@@ -199,7 +199,7 @@ void main() {
     );
   });
 
-  testWidgets('時間軸超出左欄高：右欄卡恆 = 左欄高、內容被裁、無 footer、無 overflow', (t) async {
+  testWidgets('時間軸超出左欄高：右欄卡恆 = 左欄高、內容被裁、無 overflow', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     // 12 筆跨月 5★ → 時間軸自然高遠超左欄（只有 5★ → 左欄各 1 legend 行，較矮）。
     final card = ShareCard.banner(
@@ -276,7 +276,7 @@ void main() {
     expect(rightHeight, closeTo(leftHeight, 0.5));
   });
 
-  testWidgets('跨月 5★ 大量資料（overview）：兩段渲染、無 overflow、無 footer', (t) async {
+  testWidgets('跨月 5★ 大量資料（overview）：兩段渲染、無 overflow', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.overview(
       l: l,
