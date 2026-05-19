@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
@@ -31,6 +32,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_managem
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
@@ -430,16 +432,31 @@ class _DataManagement extends ConsumerWidget {
       appVersion: appVersion,
       now: now,
     );
-    await File(loc.path).writeAsString(text);
+    try {
+      await File(loc.path).writeAsString(text);
+    } catch (e, st) {
+      Logger(
+        'accounts.io',
+      ).severe('export failed ${sanitizeFsPath(loc.path)}', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: l.settingsExportFailed(e.toString()),
+      );
+      return;
+    }
     Logger('accounts.io').info(
       'export: uids=${pickedSet.length} '
       'records=${filteredByUid.values.fold<int>(0, (a, b) => a + b.allRecords.length)}',
     );
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(
+    await showExportResultDialog(
       ctx,
-    ).showSnackBar(SnackBar(content: Text(l.settingsExportSuccess(loc.path))));
-    unawaited(revealInFileManager(loc.path));
+      success: true,
+      message: l.settingsExportSuccess(loc.path),
+      revealPath: loc.path,
+    );
   }
 
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
