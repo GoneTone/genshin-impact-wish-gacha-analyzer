@@ -1,5 +1,4 @@
 // lib/pages/settings_page.dart
-import 'dart:async' show unawaited;
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -719,15 +718,30 @@ class _LogsSection extends ConsumerWidget {
       localeTag: Platform.localeName,
       themeMode: settings.themeMode.name,
     );
-    await File(loc.path).writeAsString(bundle);
+    try {
+      await File(loc.path).writeAsString(bundle);
+    } catch (e, st) {
+      Logger(
+        'accounts.io',
+      ).severe('logs export failed ${sanitizeFsPath(loc.path)}', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: l.settingsLogsExportFailed(e.toString()),
+      );
+      return;
+    }
     Logger(
       'accounts.io',
     ).info('logs exported: ${loc.path} (${bundle.length} bytes)');
     if (!ctx.mounted) return;
-    ScaffoldMessenger.of(ctx).showSnackBar(
-      SnackBar(content: Text(l.settingsLogsExportSuccess(loc.path))),
+    await showExportResultDialog(
+      ctx,
+      success: true,
+      message: l.settingsLogsExportSuccess(loc.path),
+      revealPath: loc.path,
     );
-    unawaited(revealInFileManager(loc.path));
   }
 
   Future<void> _openFolder(BuildContext ctx, WidgetRef ref) async {
