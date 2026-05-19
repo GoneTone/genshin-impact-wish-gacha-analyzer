@@ -5,9 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
@@ -35,7 +33,7 @@ GachaRecord _r(String gt, int rank, String name, {DateTime? time}) =>
     );
 
 /// 造跨月 5★ 紀錄：第 i 筆時間落在不同年月（遞減），使 TimelineVertical
-/// 幾乎每筆都帶月份 tag（較高的 row）。共 [count] 筆。
+/// 幾乎每筆都帶月份 tag（較高的 row），自然高遠超左欄高。共 [count] 筆。
 List<GachaRecord> _crossMonthFives(int count) => [
   for (var i = 0; i < count; i++)
     _r(
@@ -60,6 +58,23 @@ Future<void> _pump(WidgetTester t, Widget card) async {
     ),
   );
   await t.pump();
+}
+
+/// 左欄兩 _PieBox 疊起來的總高（第一張頂端 → 第二張底端）。
+double _leftColumnHeight(WidgetTester t, AppLocalizations l) {
+  final rarityBox = find
+      .ancestor(
+        of: find.text(l.statsRarityDistribution),
+        matching: find.byType(Container),
+      )
+      .first;
+  final itemTypeBox = find
+      .ancestor(
+        of: find.text(l.statsItemTypeDistribution),
+        matching: find.byType(Container),
+      )
+      .first;
+  return t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
 }
 
 void main() {
@@ -183,14 +198,9 @@ void main() {
     );
   });
 
-  testWidgets('右欄時間軸超出左欄高時，截斷且底部顯示正確剩餘筆數', (t) async {
+  testWidgets('時間軸超出左欄高：右欄區域恆 = 左欄高、內容被裁、無 footer、無 overflow', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 造 12 筆 rank5 → timeline.length=12。新行為：N 由左欄高保守估算
-    // （只有 5★ → rarity/itemType 各 1 legend 行 → 左欄較矮）→ N<12，
-    // remaining = 12 - N 併入 footer，且右側嚴格不超出左欄。
-    final records = <GachaRecord>[
-      for (var i = 0; i < 12; i++) _r('301', 5, '五星$i'),
-    ];
+    // 12 筆跨月 5★ → 時間軸自然高遠超左欄（只有 5★ → 左欄各 1 legend 行，較矮）。
     final card = ShareCard.banner(
       l: l,
       appVersion: '1.0.0',
@@ -199,61 +209,42 @@ void main() {
       uid: '800123456',
       updatedAt: DateTime(2026, 5, 18, 14, 30),
       title: '角色活動祈願',
-      records: records,
+      records: _crossMonthFives(12),
       targetRank: 5,
     );
     await _pump(t, card);
+    // 直接裁切方案：不可有 RenderFlex overflow 或任何 error。
     expect(t.takeException(), isNull);
 
-    // 右欄 TimelineVertical 卡高 ≤ 左欄兩 _PieBox 疊高（嚴格不超出，容忍 0.5）。
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    expect(timelineHeight, lessThanOrEqualTo(leftHeight + 0.5));
+    // 右欄裁切容器（Stack）高度恆 == 左欄兩 _PieBox 疊高（由 Stack
+    // intrinsic=0 → Row stretch 高度完全由左欄決定，右欄不反拉左欄）。
+    final clipHeight = t
+        .getSize(find.byKey(const Key('shareTimelineClip')))
+        .height;
+    final leftHeight = _leftColumnHeight(t, l);
+    expect(clipHeight, closeTo(leftHeight, 0.5));
 
-    // 截斷：N 必 < 12，footer 顯示 remaining = 12 - N（> 0）。
-    // 標題含 N（timelineTopRarityTitle 第二參數），由標題反推 N。
-    var shownN = 0;
-    for (var n = 1; n <= 12; n++) {
-      if (find
-          .descendant(
-            of: find.byType(TimelineVertical),
-            matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), n)),
-          )
-          .evaluate()
-          .isNotEmpty) {
-        shownN = n;
-        break;
-      }
-    }
-    expect(shownN, greaterThan(0));
-    expect(shownN, lessThan(12));
+    // 標題仍在 TimelineVertical 子樹內（title 保留，至多 10 筆）。
     expect(
       find.descendant(
         of: find.byType(TimelineVertical),
-        matching: find.text(
-          l.shareImageTimelineMore(12 - shownN, l.rarityStar(5)),
-        ),
+        matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), 10)),
       ),
       findsOneWidget,
     );
+
+    // footer「還有 N 筆」一律不出現（任何 remaining 都不顯示）。
+    for (var r = 1; r <= 12; r++) {
+      expect(
+        find.text(l.shareImageTimelineMore(r, l.rarityStar(5))),
+        findsNothing,
+      );
+    }
   });
 
   testWidgets('右欄時間軸 ≤ 10 筆時，不顯示剩餘筆數提示', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 造 3 筆 rank5 → timeline.length=3，remaining=0，不顯示提示。
+    // 造 3 筆 rank5 → timeline.length=3。
     final records = <GachaRecord>[
       for (var i = 0; i < 3; i++) _r('301', 5, '五星$i'),
     ];
@@ -277,7 +268,7 @@ void main() {
     );
   });
 
-  testWidgets('下方右欄時間軸卡高度 == 左欄雙圓餅卡疊起來的總高', (t) async {
+  testWidgets('資料少：右欄裁切容器恆 = 左欄高（Row 由左欄決定，右不反拉）', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.banner(
       l: l,
@@ -293,90 +284,17 @@ void main() {
     await _pump(t, card);
     expect(t.takeException(), isNull);
 
-    // 右欄：時間軸卡外框（TimelineVertical）高度。
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-
-    // 左欄：兩張圓餅卡（_PieBox 外框 Container = 各自標題 labelSmall 的
-    // 最近 ancestor Container）疊起來的範圍 = 第一張頂端 → 第二張底端。
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftColumnTop = t.getTopLeft(rarityBox).dy;
-    final leftColumnBottom = t.getBottomLeft(itemTypeBox).dy;
-    final leftColumnHeight = leftColumnBottom - leftColumnTop;
-
-    // 嚴格不超出（硬需求）：右 ≤ 左。
-    expect(timelineHeight, lessThanOrEqualTo(leftColumnHeight + 0.5));
-    // 少量資料放得下時，fillHeight + IntrinsicHeight 使右欄撐到與左欄等高
-    // （右側內容估算 ≤ H，IntrinsicHeight 較高側恆為左欄，不反拉左欄）。
-    expect(timelineHeight, closeTo(leftColumnHeight, 0.5));
+    // 裁切容器（Stack）撐滿右欄區域，其高 = 左欄高（Stack intrinsic=0，
+    // Row stretch 高度完全由左欄決定）。資料少時 TimelineVertical 自然高
+    // 比此矮，是已選定行為（右欄下方為背景空白，不強撐等高）。
+    final clipHeight = t
+        .getSize(find.byKey(const Key('shareTimelineClip')))
+        .height;
+    final leftHeight = _leftColumnHeight(t, l);
+    expect(clipHeight, closeTo(leftHeight, 0.5));
   });
 
-  testWidgets('跨月 5★ 大量資料：banner 右欄嚴格 ≤ 左欄（不可超出）', (t) async {
-    final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 16 筆 5★ 每筆不同年月 → timeline 每筆帶月份 tag（最高的 row）。
-    final card = ShareCard.banner(
-      l: l,
-      appVersion: '1.0.0',
-      appIcon: await _img(),
-      options: const ShareImageOptions(),
-      uid: '800123456',
-      updatedAt: DateTime(2026, 5, 18, 14, 30),
-      title: '角色活動祈願',
-      records: _crossMonthFives(16),
-      targetRank: 5,
-    );
-    await _pump(t, card);
-    expect(t.takeException(), isNull);
-
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    // 嚴格不超出（硬需求，不可放寬成 closeTo）。
-    expect(
-      timelineHeight,
-      lessThanOrEqualTo(leftHeight + 0.5),
-      reason: 'banner 跨月：右欄 $timelineHeight 不可超出左欄 $leftHeight',
-    );
-    // 保守不應退化到極少筆：至少放得下若干筆（避免 N→0/1）。
-    var shownN = 0;
-    for (var n = 1; n <= 16; n++) {
-      if (find
-          .descendant(
-            of: find.byType(TimelineVertical),
-            matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), n)),
-          )
-          .evaluate()
-          .isNotEmpty) {
-        shownN = n;
-        break;
-      }
-    }
-    expect(shownN, greaterThanOrEqualTo(3), reason: 'N 不應退化到極少筆，實際 $shownN');
-  });
-
-  testWidgets('跨月 5★ 大量資料：overview 右欄嚴格 ≤ 左欄（不可超出）', (t) async {
+  testWidgets('跨月 5★ 大量資料（overview）：兩段渲染、無 overflow、無 footer', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.overview(
       l: l,
@@ -393,270 +311,14 @@ void main() {
     await _pump(t, card);
     expect(t.takeException(), isNull);
 
-    // 第一段（祈願）為跨月大量 5★ → 檢查其右欄不超出左欄。
-    final timelines = find.byType(TimelineVertical);
-    expect(timelines, findsNWidgets(2));
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final timelineHeight = t.getSize(timelines.first).height;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    expect(
-      timelineHeight,
-      lessThanOrEqualTo(leftHeight + 0.5),
-      reason: 'overview 跨月：右欄 $timelineHeight 不可超出左欄 $leftHeight',
-    );
-  });
-
-  // 量「右欄時間軸內容自然高」：用與分享圖完全相同的 shown 筆數（由標題反推
-  // N）、**完全相同的右欄外框寬度**（先從已 pump 的分享圖量真實 TimelineVertical
-  // 寬度——meta 文字會否換行高度敏感於寬度，故必須一致）與相同 title/footerNote/
-  // nowPulls，pump 一個**不帶 fillHeight** 的對照，讓它依內容自然收縮量高。
-  // 這是內容真實所需高，不受 fillHeight 撐高干擾，且與分享圖逐像素同行高。
-  Future<double> naturalTimelineHeight(
-    WidgetTester t,
-    AppLocalizations l,
-    List<GachaRecord> records, {
-    required int targetRank,
-    required bool isAcrossBanners,
-    int? nowPulls,
-  }) async {
-    // 先量分享圖右欄 TimelineVertical 真實外框寬度（與行高換行行為攸關）。
-    final realWidth = t.getSize(find.byType(TimelineVertical)).width;
-    // 由分享圖標題反推 N（timelineTopRarityTitle 第二參數）。
-    final timeline = buildTimelineEntries(records, targetRank: targetRank);
-    var shownN = 0;
-    for (var n = timeline.length; n >= 1; n--) {
-      if (find
-          .text(l.timelineTopRarityTitle(l.rarityStar(targetRank), n))
-          .evaluate()
-          .isNotEmpty) {
-        shownN = n;
-        break;
-      }
+    expect(find.byType(TimelineVertical), findsNWidgets(2));
+    // 兩段右欄裁切容器各 = 各自左欄高（這裡僅斷言無錯且 footer 不出現）。
+    for (var r = 1; r <= 16; r++) {
+      expect(
+        find.text(l.shareImageTimelineMore(r, l.rarityStar(5))),
+        findsNothing,
+      );
     }
-    final shown = timeline.take(shownN).toList(growable: false);
-    final remaining = timeline.length - shownN;
-    await t.pumpWidget(
-      MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('zh'),
-        home: Scaffold(
-          body: SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                width: realWidth, // 與分享圖右欄真實外框寬度一致
-                child: TimelineVertical(
-                  key: const Key('natTl'),
-                  title: l.timelineTopRarityTitle(
-                    l.rarityStar(targetRank),
-                    shownN,
-                  ),
-                  footerNote: remaining > 0
-                      ? l.shareImageTimelineMore(
-                          remaining,
-                          l.rarityStar(targetRank),
-                        )
-                      : null,
-                  fillHeight: false,
-                  entries: shown,
-                  colors: BannerColors.of(Brightness.dark),
-                  targetRank: targetRank,
-                  nowPulls: nowPulls,
-                  isAcrossBanners: isAcrossBanners,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    await t.pump();
-    return t.getSize(find.byKey(const Key('natTl'))).height;
-  }
-
-  testWidgets('填滿率：同月大量 5★ → 右欄內容自然高 ≥ 左欄高 × 0.85', (t) async {
-    final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 14 筆同月 5★（同年月 → 僅第一筆帶月份 tag，每筆 ~70px）。
-    final records = <GachaRecord>[
-      for (var i = 0; i < 14; i++)
-        _r('301', 5, '五星$i', time: DateTime(2026, 5, 20 - i, 12)),
-    ];
-    final card = ShareCard.banner(
-      l: l,
-      appVersion: '1.0.0',
-      appIcon: await _img(),
-      options: const ShareImageOptions(),
-      uid: '800123456',
-      updatedAt: DateTime(2026, 5, 18, 14, 30),
-      title: '角色活動祈願',
-      records: records,
-      targetRank: 5,
-    );
-    await _pump(t, card);
-    expect(t.takeException(), isNull);
-
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    // 嚴格不超出。
-    expect(timelineHeight, lessThanOrEqualTo(leftHeight + 0.5));
-
-    // 內容自然高（重 pump 對照，會破壞上面 finder，故最後量）。
-    final pulls = pullsSinceLastRanked(records, rank: 5);
-    final natural = await naturalTimelineHeight(
-      t,
-      l,
-      records,
-      targetRank: 5,
-      isAcrossBanners: false,
-      nowPulls: pulls,
-    );
-    expect(
-      natural,
-      greaterThanOrEqualTo(leftHeight * 0.85),
-      reason:
-          '同月填滿率不足：內容自然高 $natural < 左欄 $leftHeight × 0.85 '
-          '(${(natural / leftHeight).toStringAsFixed(3)})',
-    );
-  });
-
-  testWidgets('填滿率：跨月大量 5★ → 右欄內容自然高 ≥ 左欄高 × 0.85', (t) async {
-    final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    final records = _crossMonthFives(16);
-    final card = ShareCard.banner(
-      l: l,
-      appVersion: '1.0.0',
-      appIcon: await _img(),
-      options: const ShareImageOptions(),
-      uid: '800123456',
-      updatedAt: DateTime(2026, 5, 18, 14, 30),
-      title: '角色活動祈願',
-      records: records,
-      targetRank: 5,
-    );
-    await _pump(t, card);
-    expect(t.takeException(), isNull);
-
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    expect(timelineHeight, lessThanOrEqualTo(leftHeight + 0.5));
-
-    final pulls = pullsSinceLastRanked(records, rank: 5);
-    final natural = await naturalTimelineHeight(
-      t,
-      l,
-      records,
-      targetRank: 5,
-      isAcrossBanners: false,
-      nowPulls: pulls,
-    );
-    expect(
-      natural,
-      greaterThanOrEqualTo(leftHeight * 0.85),
-      reason:
-          '跨月填滿率不足：內容自然高 $natural < 左欄 $leftHeight × 0.85 '
-          '(${(natural / leftHeight).toStringAsFixed(3)})',
-    );
-  });
-
-  testWidgets('填滿率：混合 rarity（3 legend 行）大量同月 → 內容自然高 ≥ 左欄高 × 0.85', (t) async {
-    final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 含 5★/4★/3★ → rarity legend 3 行、itemType 2 行 → 左欄較高；
-    // 大量同月 5★ 作為時間軸資料（targetRank=5 的 timeline 只取 5★）。
-    final records = <GachaRecord>[
-      for (var i = 0; i < 14; i++)
-        _r('301', 5, '五星$i', time: DateTime(2026, 5, 20 - i, 12)),
-      for (var i = 0; i < 8; i++)
-        _r('301', 4, '四星$i', time: DateTime(2026, 5, 19, 12)),
-      for (var i = 0; i < 30; i++)
-        _r('301', 3, '三星$i', time: DateTime(2026, 5, 19, 12)),
-    ];
-    final card = ShareCard.banner(
-      l: l,
-      appVersion: '1.0.0',
-      appIcon: await _img(),
-      options: const ShareImageOptions(),
-      uid: '800123456',
-      updatedAt: DateTime(2026, 5, 18, 14, 30),
-      title: '角色活動祈願',
-      records: records,
-      targetRank: 5,
-    );
-    await _pump(t, card);
-    expect(t.takeException(), isNull);
-
-    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
-    final rarityBox = find
-        .ancestor(
-          of: find.text(l.statsRarityDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final itemTypeBox = find
-        .ancestor(
-          of: find.text(l.statsItemTypeDistribution),
-          matching: find.byType(Container),
-        )
-        .first;
-    final leftHeight =
-        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
-    expect(timelineHeight, lessThanOrEqualTo(leftHeight + 0.5));
-
-    final pulls = pullsSinceLastRanked(records, rank: 5);
-    final natural = await naturalTimelineHeight(
-      t,
-      l,
-      records,
-      targetRank: 5,
-      isAcrossBanners: false,
-      nowPulls: pulls,
-    );
-    expect(
-      natural,
-      greaterThanOrEqualTo(leftHeight * 0.85),
-      reason:
-          '混合 rarity 填滿率不足：內容自然高 $natural < 左欄 $leftHeight × 0.85 '
-          '(${(natural / leftHeight).toStringAsFixed(3)})',
-    );
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {
