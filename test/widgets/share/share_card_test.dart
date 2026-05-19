@@ -9,6 +9,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 
 Future<ui.Image> _img() async {
@@ -220,6 +222,71 @@ void main() {
     expect(
       find.text(l.shareImageTimelineMore(0, l.rarityStar(5))),
       findsNothing,
+    );
+  });
+
+  testWidgets('左欄稀有度／類型兩張卡同高、兩圓餅同大', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    // 稀有度 legend 含 2★ 共 4 行（最壞情況）、itemType 2 行（角色／武器），
+    // 兩卡圖例行數不同，未固定高時高度必不等 → 此案守住「同高同大」。
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: [
+        _r('301', 5, '那維萊特'),
+        _r('301', 4, '菲謝爾'),
+        _r('301', 3, '冷刃'),
+        // rank 2 → itemType '武器'，產生 2★ legend 行（共 4 行）。
+        GachaRecord(
+          id: 'two${DateTime.now().microsecondsSinceEpoch}',
+          uid: '800123456',
+          gachaType: '301',
+          name: '舊式長劍',
+          itemType: '武器',
+          rankType: 2,
+          time: DateTime(2026, 5, 10, 12),
+          lang: 'zh-tw',
+        ),
+      ],
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    // _PieBox 為 private 無法 find.byType；用標題文字 → ancestor 到卡片
+    // Container（帶 BoxDecoration 的那層），比對兩卡 Size。
+    Size cardSize(String title) {
+      final container = find
+          .ancestor(of: find.text(title), matching: find.byType(Container))
+          .first;
+      return t.getSize(container);
+    }
+
+    final raritySize = cardSize(l.statsRarityDistribution);
+    final typeSize = cardSize(l.statsItemTypeDistribution);
+    expect(
+      (raritySize.height - typeSize.height).abs(),
+      lessThan(0.5),
+      reason: '兩張分布卡高度不相等：$raritySize vs $typeSize',
+    );
+
+    // 兩圓餅同大：同欄寬度一致 + 固定高度一致。
+    final pieRarity = t.getSize(find.byType(RarityPie));
+    final pieType = t.getSize(find.byType(ItemTypePie));
+    expect(
+      (pieRarity.height - pieType.height).abs(),
+      lessThan(0.5),
+      reason: '兩圓餅高度不相等：$pieRarity vs $pieType',
+    );
+    expect(
+      (pieRarity.width - pieType.width).abs(),
+      lessThan(0.5),
+      reason: '兩圓餅寬度不相等：$pieRarity vs $pieType',
     );
   });
 

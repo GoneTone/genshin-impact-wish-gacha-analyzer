@@ -28,6 +28,23 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 const double kShareCardWidth = 1200;
 
+/// 左欄兩張分布卡（稀有度／類型）的固定總高（含 [_PieBox] 的 padding）。
+///
+/// 為什麼要固定：兩卡圖例行數不同（稀有度最多含 2★ 共 4 行、原神 itemType
+/// 角色／武器 2 行），若隨內容 shrink-wrap 兩卡高度不一致。固定同高 +
+/// 固定同尺寸圓餅 ⟹ 行少的卡底部留白，此為「同高同大」的已知取捨。
+///
+/// 取值依據（非任意 magic）：最壞情況實測內容高約 434（title labelSmall +
+/// AppSpacing.s + 圓餅 [_kSharePieSize] + AppSpacing.s + 4 行 legend +
+/// 上下各 AppSpacing.m padding）。ChartCard 既有慣例值 380 不足以容納此最壞
+/// 情況會 overflow，故取 440（>434，留少量 sub-pixel buffer）作為固定高，
+/// 確保零 overflow 且兩卡同高。
+const double _kSharePieBoxHeight = 440;
+
+/// 兩張分布卡圓餅的固定尺寸（取代原本寫死的 `SizedBox(height: 200)`）。
+/// 兩處共用同一常數 ⟹ 兩圓餅等大。
+const double _kSharePieSize = 200;
+
 /// stat 卡 accent 來源（與 App overview_page 對齊）：
 /// primary→tokens.accentPrimary、rank5→accentForRank(5)、rank4→accentForRank(4)。
 /// factory 階段拿不到 tokens，故先記語意，於 [_SectionView.build] 再映射為 Color。
@@ -474,6 +491,7 @@ class _PieBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
+      height: _kSharePieBoxHeight,
       decoration: BoxDecoration(
         color: tokens.surfaceCard,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -482,13 +500,22 @@ class _PieBox extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
         children: [
           Text(title, style: theme.textTheme.labelSmall),
           const SizedBox(height: AppSpacing.s),
-          SizedBox(height: 200, child: pie),
+          SizedBox(height: _kSharePieSize, child: pie),
           const SizedBox(height: AppSpacing.s),
-          legend,
+          // legend 置於圓餅下方剩餘空間、頂端對齊；行少者下方自然留白，
+          // 為「兩卡同高 + 兩圓餅同大」的已知取捨。Column 維持
+          // crossAxisAlignment.stretch 讓 legend 撐滿欄寬（沿用原行為），
+          // mainAxisAlignment.start 使其貼齊頂端。
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [legend],
+            ),
+          ),
         ],
       ),
     );
