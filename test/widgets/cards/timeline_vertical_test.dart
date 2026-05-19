@@ -230,6 +230,50 @@ void main() {
     expect(find.text('夜蘭'), findsOneWidget);
   });
 
+  testWidgets('fillHeight: true + 內容遠超有界高（300）→ 無 overflow、卡片恆 = 300、內容置頂', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SizedBox(
+          height: 300,
+          child: TimelineVertical(
+            fillHeight: true,
+            entries: [
+              for (var i = 0; i < 30; i++)
+                _e(
+                  '五星$i',
+                  '301',
+                  80,
+                  DateTime(2026, 1, 1).subtract(Duration(days: 31 * i + 1)),
+                ),
+            ],
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    // 解開內部高約束 + clip → 不可有 RenderFlex overflow / 任何 error。
+    expect(tester.takeException(), isNull);
+    // 卡片外框恆 = 父給的有界高 300（不被內容撐大、也不縮小）。
+    final boxFinder = find.descendant(
+      of: find.byType(TimelineVertical),
+      matching: find.byType(Container),
+    );
+    expect(tester.getSize(boxFinder.first).height, closeTo(300, 0.5));
+    // fillHeight 分支應包一層 ClipRect 負責裁切超出內容。
+    expect(
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.byType(ClipRect),
+      ),
+      findsWidgets,
+    );
+    // 最上方（最新）entry 仍可見（內容置頂、未被裁掉）。
+    expect(find.text('五星0'), findsOneWidget);
+  });
+
   testWidgets('fillHeight: false（預設，App 既有用法）→ 卡片高依內容、未撐滿 600', (tester) async {
     await tester.pumpWidget(
       _wrap(

@@ -141,11 +141,23 @@ class _TimelineVerticalState extends State<TimelineVertical> {
                 ],
               ],
             );
+      // fillHeight=true：父為有界高度時，外框撐滿該高度；內部 body 以
+      // ClipRect + OverflowBox 解開高約束（自然高、不 RenderFlex overflow）
+      // 並置頂，超出邊框 padding 區的部分由 ClipRect 直接裁掉。內容少時
+      // OverflowBox 區域 = 有界高，body 自然高較矮 → 下方為卡內留白。
+      // fillHeight=false（App 既有用法）：child 維持原 body，渲染樹與加入
+      // 此參數前逐字等價、零回歸。
+      final Widget content = fillHeight
+          ? ClipRect(
+              child: OverflowBox(
+                minHeight: 0,
+                maxHeight: double.infinity,
+                alignment: Alignment.topCenter,
+                child: body,
+              ),
+            )
+          : body;
       return Container(
-        // fillHeight=true：在父為有界高度時撐滿該高度（內容因下方 Column
-        // 仍 mainAxisSize.min 而置頂，底部為 padding 內留白）。
-        // fillHeight=false（App 既有用法）：不加 constraints，渲染樹與加入
-        // 此參數前逐字等價、零回歸。
         constraints: fillHeight
             ? const BoxConstraints(minHeight: double.infinity)
             : null,
@@ -158,7 +170,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
           vertical: AppSpacing.l,
           horizontal: AppSpacing.l,
         ),
-        child: body,
+        child: content,
       );
     }
 
