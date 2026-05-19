@@ -1,5 +1,5 @@
 // lib/widgets/share/share_image_helper.dart
-// 通用分享圖生成流程：dialog → render → export → snackbar+reveal。
+// 通用分享圖生成流程：dialog → render → export → result dialog。
 // overview / banner 兩頁共用，避免骨架重複（CLAUDE.md 嚴禁重複造輪子）。
 import 'dart:ui' as ui;
 
@@ -14,9 +14,28 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_result_snackbar.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 
 final _log = Logger('share.image');
+
+/// 把 [ShareExportResult] 攤平成 dialog 需要的訊息與 reveal 路徑。
+/// copiedOnly 只進剪貼簿、無檔案，故 revealPath 為 null。
+({String message, String? revealPath}) _shareResultToDialog(
+  AppLocalizations l,
+  ShareExportResult r,
+) {
+  switch (r.status) {
+    case ShareExportStatus.savedAndCopied:
+      return (
+        message: l.shareImageSavedAndCopied(r.path ?? ''),
+        revealPath: r.path,
+      );
+    case ShareExportStatus.savedOnly:
+      return (message: l.shareImageSavedOnly(r.path ?? ''), revealPath: r.path);
+    case ShareExportStatus.copiedOnly:
+      return (message: l.shareImageCopiedOnly, revealPath: null);
+  }
+}
 
 /// 建構離屏渲染用的 widget 樹（含 Localizations，使重用的 RarityPie/ItemTypePie
 /// 內部 AppLocalizations.of(context) 能在同步 flush 內解析）。
@@ -79,7 +98,6 @@ Future<void> generateAndShareImage({
   required String suggestedName,
   required Widget Function(ui.Image icon, ShareImageOptions options) buildCard,
 }) async {
-  final messenger = ScaffoldMessenger.of(context);
   final brightness = Theme.of(context).brightness;
   final locale = Localizations.localeOf(context);
   final options = await showShareImageDialog(
@@ -100,10 +118,22 @@ Future<void> generateAndShareImage({
       width: kShareCardWidth,
     );
     final result = await exportShareImage(png, suggestedName: suggestedName);
-    showShareResultSnackBar(messenger, l, result);
+    if (!context.mounted) return;
+    final m = _shareResultToDialog(l, result);
+    await showExportResultDialog(
+      context,
+      success: true,
+      message: m.message,
+      revealPath: m.revealPath,
+    );
   } catch (e, st) {
     _log.warning('share image flow failed', e, st);
-    messenger.showSnackBar(SnackBar(content: Text(l.shareImageFailed)));
+    if (!context.mounted) return;
+    await showExportResultDialog(
+      context,
+      success: false,
+      message: l.shareImageFailed,
+    );
   } finally {
     icon.dispose();
   }
