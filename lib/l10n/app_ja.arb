@@ -273,6 +273,11 @@
 
   "settingsExportData": "データをエクスポート",
   "settingsImportData": "データをインポート",
+  "exportDialogSuccessTitle": "エクスポート成功",
+  "exportDialogFailedTitle": "エクスポート失敗",
+  "actionOpenFolder": "フォルダーを開く",
+  "settingsExportFailed": "エクスポートに失敗しました：{error}",
+  "settingsLogsExportFailed": "ログのエクスポートに失敗しました：{error}",
   "settingsExportSuccess": "{path} にエクスポートしました",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }

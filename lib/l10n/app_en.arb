@@ -295,6 +295,11 @@
   },
   "shareImageCopiedOnly": "Copied to clipboard",
   "shareImageFailed": "Failed to generate share image",
+  "exportDialogSuccessTitle": "Export Successful",
+  "exportDialogFailedTitle": "Export Failed",
+  "actionOpenFolder": "Open Folder",
+  "settingsExportFailed": "Export failed: {error}",
+  "settingsLogsExportFailed": "Logs export failed: {error}",
   "settingsExportSuccess": "Exported to {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }

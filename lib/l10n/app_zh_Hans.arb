@@ -273,6 +273,11 @@
 
   "settingsExportData": "导出数据",
   "settingsImportData": "导入数据",
+  "exportDialogSuccessTitle": "导出成功",
+  "exportDialogFailedTitle": "导出失败",
+  "actionOpenFolder": "打开文件夹",
+  "settingsExportFailed": "导出失败：{error}",
+  "settingsLogsExportFailed": "日志导出失败：{error}",
   "settingsExportSuccess": "已导出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }

@@ -301,6 +301,17 @@
   },
   "shareImageCopiedOnly": "已複製到剪貼簿",
   "shareImageFailed": "分享圖生成失敗",
+  "exportDialogSuccessTitle": "匯出成功",
+  "exportDialogFailedTitle": "匯出失敗",
+  "actionOpenFolder": "開啟資料夾",
+  "settingsExportFailed": "匯出失敗：{error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsLogsExportFailed": "Logs 匯出失敗：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
   "settingsExportSuccess": "已匯出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
