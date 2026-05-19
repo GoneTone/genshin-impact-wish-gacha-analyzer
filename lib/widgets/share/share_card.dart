@@ -359,6 +359,7 @@ class _SectionView extends StatelessWidget {
       footerNote: remaining > 0
           ? l.shareImageTimelineMore(remaining, l.rarityStar(rank))
           : null,
+      fillHeight: true,
       entries: shown,
       colors: colors,
       targetRank: rank,
@@ -397,61 +398,64 @@ class _SectionView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.l),
-        // 下方：左欄雙圓餅 + 右欄時間軸，兩欄頂端對齊、各自然高。
-        // 重用未改的 TimelineVertical（mainAxisSize.min）會讓較矮那欄底部留
-        // surfaceBackground，這是「與 App 一致」的預期取捨，非缺陷。
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 左欄：稀有度 + 類型雙圓餅（含圖例）
-            Expanded(
-              flex: 11,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _PieBox(
-                    title: l.statsRarityDistribution,
-                    pie: RarityPie(
-                      stats: section.stats,
-                      animationDuration: Duration.zero,
-                    ),
-                    legend: DistributionLegend(
-                      entries: rarityDistributionEntries(
-                        section.stats,
-                        tokens,
-                        l,
+        // 下方：左欄雙圓餅 + 右欄時間軸，IntrinsicHeight + stretch 下兩欄等高
+        // （取較高者，通常為左欄兩張圓餅卡疊起來）。右欄 TimelineVertical 傳
+        // fillHeight: true 讓其卡片撐滿被拉高的高度；5★ 筆數少時時間軸卡底部
+        // 會留卡內空白，這是已決定的取捨。
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 左欄：稀有度 + 類型雙圓餅（含圖例）
+              Expanded(
+                flex: 11,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _PieBox(
+                      title: l.statsRarityDistribution,
+                      pie: RarityPie(
+                        stats: section.stats,
+                        animationDuration: Duration.zero,
                       ),
-                    ),
-                    tokens: tokens,
-                  ),
-                  const SizedBox(height: AppSpacing.m),
-                  _PieBox(
-                    title: l.statsItemTypeDistribution,
-                    pie: ItemTypePie(
-                      stats: section.stats,
-                      animationDuration: Duration.zero,
-                    ),
-                    legend: DistributionLegend(
-                      entries: itemTypeDistributionEntries(
-                        section.stats,
-                        brightness,
-                        l,
+                      legend: DistributionLegend(
+                        entries: rarityDistributionEntries(
+                          section.stats,
+                          tokens,
+                          l,
+                        ),
                       ),
+                      tokens: tokens,
                     ),
-                    tokens: tokens,
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.m),
+                    _PieBox(
+                      title: l.statsItemTypeDistribution,
+                      pie: ItemTypePie(
+                        stats: section.stats,
+                        animationDuration: Duration.zero,
+                      ),
+                      legend: DistributionLegend(
+                        entries: itemTypeDistributionEntries(
+                          section.stats,
+                          brightness,
+                          l,
+                        ),
+                      ),
+                      tokens: tokens,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.l),
-            // 右欄：時間軸。標題與底部「還有 N 筆較早」提示皆透過
-            // TimelineVertical 的 title / footerNote 進到卡片 container 內，
-            // 與 _PieBox 卡內 labelSmall 標題同風格。take(10) → 其內部
-            // remaining=0 不出現「載入更多」按鈕；footerNote 僅在實際有未
-            // 顯示的較早紀錄（remaining > 0）時才傳入。
-            Expanded(flex: 9, child: _timeline()),
-          ],
+              const SizedBox(width: AppSpacing.l),
+              // 右欄：時間軸。標題與底部「還有 N 筆較早」提示皆透過
+              // TimelineVertical 的 title / footerNote 進到卡片 container 內，
+              // 與 _PieBox 卡內 labelSmall 標題同風格。take(10) → 其內部
+              // remaining=0 不出現「載入更多」按鈕；footerNote 僅在實際有未
+              // 顯示的較早紀錄（remaining > 0）時才傳入。
+              Expanded(flex: 9, child: _timeline()),
+            ],
+          ),
         ),
       ],
     );

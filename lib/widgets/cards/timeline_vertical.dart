@@ -23,6 +23,7 @@ class TimelineVertical extends StatefulWidget {
     required this.targetRank,
     this.title,
     this.footerNote,
+    this.fillHeight = false,
     this.nowPulls,
     this.isAcrossBanners = false,
   });
@@ -42,6 +43,11 @@ class TimelineVertical extends StatefulWidget {
   /// 既有用法）則完全不顯示，版面與行為與原本逐字相同。空資料分支與有資料
   /// 分支皆適用。由呼叫端傳入「已格式化字串」，本元件只負責畫，不懂 l10n。
   final String? footerNote;
+
+  /// 傳 `true` 時，卡片容器會撐滿父給的高度約束（內容仍置頂、底部多出的
+  /// 空間為卡內留白）；分享圖用來讓本欄與相鄰欄（左側雙圓餅卡）等高。
+  /// 預設 `false`：容器高度依內容（App 既有用法逐字不變、零回歸）。
+  final bool fillHeight;
 
   /// 主要顯示稀有度（5 或 4）。用於「暫無 N★ 紀錄」、「距上次 N★ X 抽」等文案。
   /// 跨卡池且 banner 各自主稀有度不同（頌願綜合）時，傳入「最具代表性的那個」
@@ -108,6 +114,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
 
     final title = widget.title;
     final footerNote = widget.footerNote;
+    final fillHeight = widget.fillHeight;
     Widget container(Widget child) {
       // title 與 footerNote 皆未傳（App 既有用法）→ 回傳原 child 本體，
       // 渲染樹與加入此參數前逐字等價、零回歸。
@@ -135,6 +142,13 @@ class _TimelineVerticalState extends State<TimelineVertical> {
               ],
             );
       return Container(
+        // fillHeight=true：在父為有界高度時撐滿該高度（內容因下方 Column
+        // 仍 mainAxisSize.min 而置頂，底部為 padding 內留白）。
+        // fillHeight=false（App 既有用法）：不加 constraints，渲染樹與加入
+        // 此參數前逐字等價、零回歸。
+        constraints: fillHeight
+            ? const BoxConstraints(minHeight: double.infinity)
+            : null,
         decoration: BoxDecoration(
           color: tokens.surfaceCard,
           border: Border.all(color: tokens.borderSubtle),

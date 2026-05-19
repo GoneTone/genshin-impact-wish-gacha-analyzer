@@ -206,6 +206,54 @@ void main() {
     expect(find.text('夜蘭'), findsOneWidget);
   });
 
+  testWidgets('fillHeight: true → 卡片外框撐滿父給的有界高度（600）', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SizedBox(
+          height: 600,
+          child: TimelineVertical(
+            fillHeight: true,
+            entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+            colors: colors,
+            targetRank: 5,
+          ),
+        ),
+      ),
+    );
+    // TimelineVertical 卡片容器（Container with decoration）的高度撐滿到 600。
+    final boxFinder = find.descendant(
+      of: find.byType(TimelineVertical),
+      matching: find.byType(Container),
+    );
+    expect(tester.getSize(boxFinder.first).height, closeTo(600, 0.5));
+    // 內容仍正常顯示（置頂，底部為卡內留白）
+    expect(find.text('夜蘭'), findsOneWidget);
+  });
+
+  testWidgets('fillHeight: false（預設，App 既有用法）→ 卡片高依內容、未撐滿 600', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => SizedBox(
+          height: 600,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: TimelineVertical(
+              entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+              colors: colors,
+              targetRank: 5,
+            ),
+          ),
+        ),
+      ),
+    );
+    final boxFinder = find.descendant(
+      of: find.byType(TimelineVertical),
+      matching: find.byType(Container),
+    );
+    expect(tester.getSize(boxFinder.first).height, lessThan(600));
+    expect(find.text('夜蘭'), findsOneWidget);
+  });
+
   testWidgets('renders entries with month tag per month group', (tester) async {
     await tester.pumpWidget(
       _wrap(

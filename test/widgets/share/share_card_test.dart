@@ -223,6 +223,46 @@ void main() {
     );
   });
 
+  testWidgets('下方右欄時間軸卡高度 == 左欄雙圓餅卡疊起來的總高', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    // 右欄：時間軸卡外框（TimelineVertical）高度。
+    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
+
+    // 左欄：兩張圓餅卡（_PieBox 外框 Container = 各自標題 labelSmall 的
+    // 最近 ancestor Container）疊起來的範圍 = 第一張頂端 → 第二張底端。
+    final rarityBox = find
+        .ancestor(
+          of: find.text(l.statsRarityDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final itemTypeBox = find
+        .ancestor(
+          of: find.text(l.statsItemTypeDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final leftColumnTop = t.getTopLeft(rarityBox).dy;
+    final leftColumnBottom = t.getBottomLeft(itemTypeBox).dy;
+    final leftColumnHeight = leftColumnBottom - leftColumnTop;
+
+    expect(timelineHeight, closeTo(leftColumnHeight, 0.5));
+  });
+
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.overview(
