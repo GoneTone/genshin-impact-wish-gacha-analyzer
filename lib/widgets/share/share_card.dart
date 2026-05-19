@@ -28,6 +28,54 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 const double kShareCardWidth = 1200;
 
+/// _PieBox 內圓餅固定高（與 [_PieBox.build] 內 `SizedBox(height: …)` 同值）。
+/// 抽成具名常數讓左欄高度估算與實際渲染共用同一數值，改一處即同步。
+const double _kPieDiameterBox = 200;
+
+// ── 左欄 _PieBox 高度估算常數（widget test 實測校準，見下方公式）─────────────
+//
+// 校準方法：以 ShareCard.banner 真實 pump，量 _PieBox 外框 Container（標題
+// labelSmall 的最近 ancestor Container）getSize().height：
+//   rarityPieBox(3 legend 行) = 390.0；itemTypePieBox(1 legend 行) = 346.0
+// 兩者差 44 / 2 行 ⇒ 每 legend 行 22.0；回推固定基底：
+//   pieBoxHeight(rows) = 324 + rows * 22
+//   驗證：324 + 1*22 = 346 ✓；324 + 3*22 = 390 ✓
+//   左欄總高 H = pieBoxHeight(rarityRows) + AppSpacing.m + pieBoxHeight(itemRows)
+//   實測 leftColumnTotal = 748 = 390 + 12 + 346 ✓（公式與實渲染逐像素一致）
+// 此基底涵蓋：Container padding(AppSpacing.m*2) + 標題(labelSmall) +
+//   AppSpacing.s + 圓餅固定高(_kPieDiameterBox) + AppSpacing.s。
+// H 用「精確值」（公式 = 實測），安全邊際完全交由右側每筆 row 高估上界提供。
+const double _kPieBoxBase = 324;
+const double _kPieBoxLegendRow = 22;
+
+// ── 右欄 TimelineVertical 高度估算常數（widget test 實測校準）─────────────
+//
+// 校準方法：以單一 TimelineVertical（title+footerNote 皆傳，模擬分享圖實況）
+// 在 SizedBox(width:400) 下變動 entries 筆數量 getSize().height：
+//   同月多筆：h1=164, h2=234, h3=290（每筆無月份 tag 增量 56）
+//   跨月多筆（每筆都有月份 tag，較高）：m2=246, m3=328, m4=384
+//     ⇒ 每筆含月份 tag 增量最大觀測 = m3-m2 = 82
+// 取「保守上界」：固定開銷 chrome 與每筆 row 高皆向上取，確保估算恆 ≥ 實際
+// （N 偏小、右側偏矮，絕不超出）：
+//   h(n) ≈ _kTimelineChrome + n * _kTimelineEntryRow
+//   驗證恆不低估：
+//     n=1 同月 164 ≤ 82+86=168 ✓        n=2 同月 234 ≤ 254 ✓
+//     n=3 同月 290 ≤ 340 ✓             n=2 跨月 246 ≤ 254 ✓
+//     n=3 跨月 328 ≤ 340 ✓             n=4 跨月 384 ≤ 426 ✓
+// chrome 涵蓋 container 垂直 padding(AppSpacing.l*2) + 標題(labelSmall +
+//   AppSpacing.s) + footer(AppSpacing.s + bodySmall 置中)；估算一律「假設
+//   有 footer」（截斷時 remaining>0 幾乎必然有 footer；若最終無 footer 反更鬆）。
+// _NowRow 增量實測 53 → 取上界 56。
+const double _kTimelineChrome = 82;
+const double _kTimelineEntryRow = 86; // 最大觀測 82 + 保守 buffer
+const double _kTimelineNowRow = 56; // 實測 53 + buffer
+
+/// 分享圖時間軸最多展示筆數（沿用 App TimelineVertical `_initialPageSize`）。
+const int _kShareTimelineMaxEntries = 10;
+
+double _pieBoxHeight(int legendRows) =>
+    _kPieBoxBase + legendRows * _kPieBoxLegendRow;
+
 /// stat 卡 accent 來源（與 App overview_page 對齊）：
 /// primary→tokens.accentPrimary、rank5→accentForRank(5)、rank4→accentForRank(4)。
 /// factory 階段拿不到 tokens，故先記語意，於 [_SectionView.build] 再映射為 Color。
@@ -347,12 +395,52 @@ class _SectionView extends StatelessWidget {
     _StatAccent.rank4 => accentForRank(4, tokens),
   };
 
+  /// 左欄兩張 _PieBox 疊起來的目標總高（純計算，相容離屏同步單次渲染，
+  /// 不可用量測→setState→重 build）。row 數與 [DistributionLegend]
+  /// `showAllEntries:false`（過濾 count==0）一致，故與實渲染逐像素對齊。
+  double get _leftColumnHeight {
+    final rarityRows = rarityDistributionEntries(
+      section.stats,
+      tokens,
+      l,
+    ).where((e) => e.count > 0).length;
+    final itemRows = itemTypeDistributionEntries(
+      section.stats,
+      brightness,
+      l,
+    ).where((e) => e.count > 0).length;
+    return _pieBoxHeight(rarityRows) + AppSpacing.m + _pieBoxHeight(itemRows);
+  }
+
+  /// 在左欄目標高 H 內，右側時間軸最多能放幾筆（保守上界估算 → N 偏小、
+  /// 右側偏矮，**嚴格不超出**）。多出的較早筆數併入底部 footerNote。
+  int get _maxTimelineEntries {
+    final hasNowRow = section.timelineNowPulls != null;
+    // chrome 一律假設有 footer（截斷時 remaining>0 幾乎必然有 footer；若最終
+    // 無 footer 反而更鬆、仍不超出）。
+    final avail =
+        _leftColumnHeight -
+        _kTimelineChrome -
+        (hasNowRow ? _kTimelineNowRow : 0);
+    if (avail <= 0) return 0;
+    final fit = (avail / _kTimelineEntryRow).floor();
+    final n = fit < 0 ? 0 : fit;
+    final capped = n < _kShareTimelineMaxEntries
+        ? n
+        : _kShareTimelineMaxEntries;
+    return capped < section.timeline.length ? capped : section.timeline.length;
+  }
+
   /// 右欄時間軸：重用 App TimelineVertical（自帶 container）。標題與底部
-  /// 「還有 N 筆較早」提示皆透過 title / footerNote 進到卡片 border 內，
-  /// 最多顯示 10 筆；footerNote 僅在 remaining > 0 時傳入。
+  /// 「還有 N 筆較早」提示皆透過 title / footerNote 進到卡片 border 內。
+  /// 展示筆數 N 由 [_maxTimelineEntries] 保守估算，確保右側卡內容估算高
+  /// ≤ 左欄兩 _PieBox 疊高；因 N 已使右內容 ≤ H，下方 IntrinsicHeight 的
+  /// 較高側恆為左欄，右欄 fillHeight 撐到左欄高、絕不反拉左欄圓餅卡。
+  /// footerNote 僅在 remaining > 0 時傳入。
   Widget _timeline() {
     final rank = section.timelineRank;
-    final shown = section.timeline.take(10).toList(growable: false);
+    final n = _maxTimelineEntries;
+    final shown = section.timeline.take(n).toList(growable: false);
     final remaining = section.timeline.length - shown.length;
     return TimelineVertical(
       title: l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
@@ -490,7 +578,7 @@ class _PieBox extends StatelessWidget {
         children: [
           Text(title, style: theme.textTheme.labelSmall),
           const SizedBox(height: AppSpacing.s),
-          SizedBox(height: 200, child: pie),
+          SizedBox(height: _kPieDiameterBox, child: pie),
           const SizedBox(height: AppSpacing.s),
           legend,
         ],

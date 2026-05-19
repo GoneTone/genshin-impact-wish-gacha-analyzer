@@ -167,9 +167,11 @@ void main() {
     );
   });
 
-  testWidgets('右欄時間軸 > 10 筆 5★ 時，底部顯示剩餘筆數提示', (t) async {
+  testWidgets('右欄時間軸超出左欄高時，截斷且底部顯示正確剩餘筆數', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 造 12 筆 rank5 → timeline.length=12，take(10) 顯示 10，remaining=2。
+    // 造 12 筆 rank5 → timeline.length=12。新行為：N 由左欄高保守估算
+    // （只有 5★ → rarity/itemType 各 1 legend 行 → 左欄較矮）→ N<12，
+    // remaining = 12 - N 併入 footer，且右側嚴格不超出左欄。
     final records = <GachaRecord>[
       for (var i = 0; i < 12; i++) _r('301', 5, '五星$i'),
     ];
@@ -187,11 +189,47 @@ void main() {
     await _pump(t, card);
     expect(t.takeException(), isNull);
 
-    // 提示已移進 TimelineVertical 卡片子樹內（border 內），不再卡外。
+    // 右欄 TimelineVertical 卡高 ≤ 左欄兩 _PieBox 疊高（嚴格不超出，容忍 0.5）。
+    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
+    final rarityBox = find
+        .ancestor(
+          of: find.text(l.statsRarityDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final itemTypeBox = find
+        .ancestor(
+          of: find.text(l.statsItemTypeDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final leftHeight =
+        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
+    expect(timelineHeight, lessThanOrEqualTo(leftHeight + 0.5));
+
+    // 截斷：N 必 < 12，footer 顯示 remaining = 12 - N（> 0）。
+    // 標題含 N（timelineTopRarityTitle 第二參數），由標題反推 N。
+    var shownN = 0;
+    for (var n = 1; n <= 12; n++) {
+      if (find
+          .descendant(
+            of: find.byType(TimelineVertical),
+            matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), n)),
+          )
+          .evaluate()
+          .isNotEmpty) {
+        shownN = n;
+        break;
+      }
+    }
+    expect(shownN, greaterThan(0));
+    expect(shownN, lessThan(12));
     expect(
       find.descendant(
         of: find.byType(TimelineVertical),
-        matching: find.text(l.shareImageTimelineMore(2, l.rarityStar(5))),
+        matching: find.text(
+          l.shareImageTimelineMore(12 - shownN, l.rarityStar(5)),
+        ),
       ),
       findsOneWidget,
     );
@@ -260,6 +298,10 @@ void main() {
     final leftColumnBottom = t.getBottomLeft(itemTypeBox).dy;
     final leftColumnHeight = leftColumnBottom - leftColumnTop;
 
+    // 嚴格不超出（硬需求）：右 ≤ 左。
+    expect(timelineHeight, lessThanOrEqualTo(leftColumnHeight + 0.5));
+    // 少量資料放得下時，fillHeight + IntrinsicHeight 使右欄撐到與左欄等高
+    // （右側內容估算 ≤ H，IntrinsicHeight 較高側恆為左欄，不反拉左欄）。
     expect(timelineHeight, closeTo(leftColumnHeight, 0.5));
   });
 
