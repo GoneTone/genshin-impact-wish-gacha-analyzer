@@ -47,6 +47,9 @@ class TimelineVertical extends StatefulWidget {
   /// 傳 `true` 時，卡片容器會撐滿父給的高度約束（內容仍置頂、底部多出的
   /// 空間為卡內留白）；分享圖用來讓本欄與相鄰欄（左側雙圓餅卡）等高。
   /// 預設 `false`：容器高度依內容（App 既有用法逐字不變、零回歸）。
+  /// 前置條件：`fillHeight: true` 須由父層給定「有界（bounded）的高度約束」；
+  /// 若父層高度無界，內部 `OverflowBox` 會讓內容無限延伸、`ClipRect` 形同無作用，
+  /// 等高／裁切意圖將失效。
   final bool fillHeight;
 
   /// 主要顯示稀有度（5 或 4）。用於「暫無 N★ 紀錄」、「距上次 N★ X 抽」等文案。
