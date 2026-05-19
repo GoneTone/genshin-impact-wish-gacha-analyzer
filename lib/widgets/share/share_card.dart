@@ -32,43 +32,45 @@ const double kShareCardWidth = 1200;
 /// 抽成具名常數讓左欄高度估算與實際渲染共用同一數值，改一處即同步。
 const double _kPieDiameterBox = 200;
 
-// ── 左欄 _PieBox 高度估算常數（widget test 實測校準，見下方公式）─────────────
+// ── 左欄 _PieBox 高度估算常數（獨立審查實測校準 + 保守 buffer）───────────
 //
-// 校準方法：以 ShareCard.banner 真實 pump，量 _PieBox 外框 Container（標題
-// labelSmall 的最近 ancestor Container）getSize().height：
-//   rarityPieBox(3 legend 行) = 390.0；itemTypePieBox(1 legend 行) = 346.0
-// 兩者差 44 / 2 行 ⇒ 每 legend 行 22.0；回推固定基底：
-//   pieBoxHeight(rows) = 324 + rows * 22
-//   驗證：324 + 1*22 = 346 ✓；324 + 3*22 = 390 ✓
-//   左欄總高 H = pieBoxHeight(rarityRows) + AppSpacing.m + pieBoxHeight(itemRows)
-//   實測 leftColumnTotal = 748 = 390 + 12 + 346 ✓（公式與實渲染逐像素一致）
-// 此基底涵蓋：Container padding(AppSpacing.m*2) + 標題(labelSmall) +
-//   AppSpacing.s + 圓餅固定高(_kPieDiameterBox) + AppSpacing.s。
-// H 用「精確值」（公式 = 實測），安全邊際完全交由右側每筆 row 高估上界提供。
-const double _kPieBoxBase = 324;
-const double _kPieBoxLegendRow = 22;
+// 估算的單向保守原則：左欄 H **寧可低估**（H 偏小 → avail 小 → N 小 →
+// 右欄更矮 → 嚴格不超出）。
+//
+// 校準方法（獨立審查以「同一 rarity _PieBox」控制變因實測，不再用跨兩種
+// 不同 _PieBox 相減的無效推導）：固定圓餅與 padding，只變動 legend 行數，
+// 量 _PieBox 外框 Container getSize().height：
+//   legend 1 行 = 302；legend 3 行 = 390；legend 4 行 = 434
+//   ⇒ 線性 perRow = (434−302)/3 = 44/行；截距 base = 302 − 44 = 258
+//   驗證實測：258+1*44=302 ✓；258+3*44=390 ✓；258+4*44=434 ✓
+// itemType _PieBox 結構與 rarity 相同（同 labelSmall 標題 + 同
+//   _kPieDiameterBox 圓餅 + 同 padding，差別僅 legend 行數），套用同一公式。
+// 為「保守低估 H」（硬性保證右 ≤ 左），把 base/perRow 各下調一個小 buffer：
+//   base 取 250（< 實測 258）、perRow 取 42（< 實測 44）
+//   ⇒ 公式結果恆 ≤ 真實 _PieBox 高（H 不會高估），多算的安全邊際全留給右側。
+const double _kPieBoxBase = 250; // 實測截距 258 − 8 保守 buffer
+const double _kPieBoxLegendRow = 42; // 實測 perRow 44 − 2 保守 buffer
 
-// ── 右欄 TimelineVertical 高度估算常數（widget test 實測校準）─────────────
+// ── 右欄 TimelineVertical 高度估算常數（保守上界，恆不低估右欄高）─────────
 //
-// 校準方法：以單一 TimelineVertical（title+footerNote 皆傳，模擬分享圖實況）
-// 在 SizedBox(width:400) 下變動 entries 筆數量 getSize().height：
-//   同月多筆：h1=164, h2=234, h3=290（每筆無月份 tag 增量 56）
-//   跨月多筆（每筆都有月份 tag，較高）：m2=246, m3=328, m4=384
-//     ⇒ 每筆含月份 tag 增量最大觀測 = m3-m2 = 82
-// 取「保守上界」：固定開銷 chrome 與每筆 row 高皆向上取，確保估算恆 ≥ 實際
-// （N 偏小、右側偏矮，絕不超出）：
-//   h(n) ≈ _kTimelineChrome + n * _kTimelineEntryRow
-//   驗證恆不低估：
-//     n=1 同月 164 ≤ 82+86=168 ✓        n=2 同月 234 ≤ 254 ✓
-//     n=3 同月 290 ≤ 340 ✓             n=2 跨月 246 ≤ 254 ✓
-//     n=3 跨月 328 ≤ 340 ✓             n=4 跨月 384 ≤ 426 ✓
-// chrome 涵蓋 container 垂直 padding(AppSpacing.l*2) + 標題(labelSmall +
-//   AppSpacing.s) + footer(AppSpacing.s + bodySmall 置中)；估算一律「假設
-//   有 footer」（截斷時 remaining>0 幾乎必然有 footer；若最終無 footer 反更鬆）。
-// _NowRow 增量實測 53 → 取上界 56。
-const double _kTimelineChrome = 82;
-const double _kTimelineEntryRow = 86; // 最大觀測 82 + 保守 buffer
-const double _kTimelineNowRow = 56; // 實測 53 + buffer
+// 單向保守原則：右欄每筆 perEntry 與固定 chrome **寧可高估**（→ N 小 →
+// 右欄更矮 → 嚴格不超出）。
+//
+// 跨月情境（每筆 _EntryRow 都帶月份 tag，是最高的 row）為最壞情況：
+//   獨立審查反推「全跨月 5★、N=6 時右欄真實 627」⇒ 每筆增量
+//   ≈ (627 − chrome≈82) / 6 ≈ 90.8 > 舊值 86（86 不是真正上界，會低估
+//   → N 偏大 → 右側超出左側，正是本次 Critical 缺陷根因）。
+// 取真正保守上界：每筆 96（最壞觀測 ~90.8 + buffer），確保任何 row（含
+//   跨月月份 tag）皆 ≤ 此值、恆不低估。
+//   h(n) ≈ _kTimelineChrome + n * _kTimelineEntryRow（恆 ≥ 真實右欄高）。
+// chrome 涵蓋 container 垂直 padding(AppSpacing.l*2=32) + 標題(labelSmall
+//   + AppSpacing.s=8) + footer 區(AppSpacing.s=8 + bodySmall 行高)；保守
+//   一律「假設有 footer」（截斷時 remaining>0 幾乎必然有 footer；若最終無
+//   footer 反而更鬆、仍不超出）。取 90 涵蓋上述加總並含 buffer。
+// _NowRow 增量保守取上界 60（實測約 53）。
+const double _kTimelineChrome = 90; // 保守上界（padding+title+footer 區）
+const double _kTimelineEntryRow = 96; // 跨月最壞每筆 ~90.8 + 保守 buffer
+const double _kTimelineNowRow = 60; // 實測 ~53 + 保守 buffer
 
 /// 分享圖時間軸最多展示筆數（沿用 App TimelineVertical `_initialPageSize`）。
 const int _kShareTimelineMaxEntries = 10;

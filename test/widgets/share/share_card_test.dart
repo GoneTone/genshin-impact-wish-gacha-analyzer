@@ -20,16 +20,30 @@ Future<ui.Image> _img() async {
   return recorder.endRecording().toImage(4, 4);
 }
 
-GachaRecord _r(String gt, int rank, String name) => GachaRecord(
-  id: '$name$rank${gt}_${DateTime.now().microsecondsSinceEpoch}',
-  uid: '800123456',
-  gachaType: gt,
-  name: name,
-  itemType: rank == 5 ? '角色' : '武器',
-  rankType: rank,
-  time: DateTime(2026, 5, 10, 12),
-  lang: 'zh-tw',
-);
+GachaRecord _r(String gt, int rank, String name, {DateTime? time}) =>
+    GachaRecord(
+      id: '$name$rank${gt}_${DateTime.now().microsecondsSinceEpoch}',
+      uid: '800123456',
+      gachaType: gt,
+      name: name,
+      itemType: rank == 5 ? '角色' : '武器',
+      rankType: rank,
+      time: time ?? DateTime(2026, 5, 10, 12),
+      lang: 'zh-tw',
+    );
+
+/// 造跨月 5★ 紀錄：第 i 筆時間落在不同年月（遞減），使 TimelineVertical
+/// 幾乎每筆都帶月份 tag（較高的 row）。共 [count] 筆。
+List<GachaRecord> _crossMonthFives(int count) => [
+  for (var i = 0; i < count; i++)
+    _r(
+      '301',
+      5,
+      '五星$i',
+      // 從 2026-01 往前每筆退一個月，產生 count 個不同年月。
+      time: DateTime(2026, 1, 1, 12).subtract(Duration(days: 31 * i + 1)),
+    ),
+];
 
 Future<void> _pump(WidgetTester t, Widget card) async {
   await t.pumpWidget(
@@ -303,6 +317,103 @@ void main() {
     // 少量資料放得下時，fillHeight + IntrinsicHeight 使右欄撐到與左欄等高
     // （右側內容估算 ≤ H，IntrinsicHeight 較高側恆為左欄，不反拉左欄）。
     expect(timelineHeight, closeTo(leftColumnHeight, 0.5));
+  });
+
+  testWidgets('跨月 5★ 大量資料：banner 右欄嚴格 ≤ 左欄（不可超出）', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    // 16 筆 5★ 每筆不同年月 → timeline 每筆帶月份 tag（最高的 row）。
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: _crossMonthFives(16),
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    final timelineHeight = t.getSize(find.byType(TimelineVertical)).height;
+    final rarityBox = find
+        .ancestor(
+          of: find.text(l.statsRarityDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final itemTypeBox = find
+        .ancestor(
+          of: find.text(l.statsItemTypeDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final leftHeight =
+        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
+    // 嚴格不超出（硬需求，不可放寬成 closeTo）。
+    expect(
+      timelineHeight,
+      lessThanOrEqualTo(leftHeight + 0.5),
+      reason: 'banner 跨月：右欄 $timelineHeight 不可超出左欄 $leftHeight',
+    );
+    // 保守不應退化到極少筆：至少放得下若干筆（避免 N→0/1）。
+    var shownN = 0;
+    for (var n = 1; n <= 16; n++) {
+      if (find
+          .descendant(
+            of: find.byType(TimelineVertical),
+            matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), n)),
+          )
+          .evaluate()
+          .isNotEmpty) {
+        shownN = n;
+        break;
+      }
+    }
+    expect(shownN, greaterThanOrEqualTo(3), reason: 'N 不應退化到極少筆，實際 $shownN');
+  });
+
+  testWidgets('跨月 5★ 大量資料：overview 右欄嚴格 ≤ 左欄（不可超出）', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    final card = ShareCard.overview(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      banners: {
+        '301': _crossMonthFives(16),
+        '2000': [_r('2000', 5, '某五星')],
+      },
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    // 第一段（祈願）為跨月大量 5★ → 檢查其右欄不超出左欄。
+    final timelines = find.byType(TimelineVertical);
+    expect(timelines, findsNWidgets(2));
+    final rarityBox = find
+        .ancestor(
+          of: find.text(l.statsRarityDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final itemTypeBox = find
+        .ancestor(
+          of: find.text(l.statsItemTypeDistribution),
+          matching: find.byType(Container),
+        )
+        .first;
+    final timelineHeight = t.getSize(timelines.first).height;
+    final leftHeight =
+        t.getBottomLeft(itemTypeBox).dy - t.getTopLeft(rarityBox).dy;
+    expect(
+      timelineHeight,
+      lessThanOrEqualTo(leftHeight + 0.5),
+      reason: 'overview 跨月：右欄 $timelineHeight 不可超出左欄 $leftHeight',
+    );
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {
