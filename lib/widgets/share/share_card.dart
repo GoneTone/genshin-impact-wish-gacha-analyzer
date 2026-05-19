@@ -25,6 +25,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.d
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 
 const double kShareCardWidth = 1200;
 
@@ -373,6 +374,7 @@ class _SectionView extends StatelessWidget {
       targetRank: rank,
       nowPulls: section.timelineNowPulls,
       isAcrossBanners: section.isAcrossBanners,
+      fillHeight: true,
     );
   }
 
@@ -406,92 +408,52 @@ class _SectionView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.l),
-        // 下方：左欄雙圓餅 + 右欄時間軸（直接裁切）。
-        //
-        // 機制：右欄是 Stack(Clip.hardEdge)，只含一個 Positioned（無
-        // non-positioned child）→ Stack 的 intrinsic height = 0。外層
-        // IntrinsicHeight 把 Row 的高度定為「各子 intrinsic 高的較大者」＝
-        // 左欄兩 _PieBox 疊高（右欄 intrinsic=0 不參與 max）→ Row 高完全由
-        // 左欄決定，右欄絕不反拉左欄圓餅卡。
-        // （IntrinsicHeight 為必要：離屏渲染管線給整棵樹 unbounded 高約束，
-        //  少了它 Row(stretch) 會把無限高往下傳給 Stack 而 layout 失敗；它同時
-        //  正是「Stack intrinsic=0 → Row 由左欄決定」生效的依據。）
-        // Positioned(top/left/right/bottom:0) 使內容區 = Row 高（= 左欄高）；
-        // OverflowBox(minHeight:0, maxHeight:∞, topCenter) 解開父給的 tight
-        // 高，讓 TimelineVertical 以自然高度 layout（故不 RenderFlex overflow）
-        // 並自頂部對齊；自然高超過右欄區域的部分由 Clip.hardEdge 直接裁掉。
-        // 資料少時時間軸只到內容高、比左欄矮，右欄下方為 ShareCard 背景空白，
-        // 為已選定行為（裁切方案不再強撐等高）。
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 左欄：稀有度 + 類型雙圓餅（含圖例）
-              Expanded(
-                flex: 11,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _PieBox(
-                      title: l.statsRarityDistribution,
-                      pie: RarityPie(
-                        stats: section.stats,
-                        animationDuration: Duration.zero,
-                      ),
-                      legend: DistributionLegend(
-                        entries: rarityDistributionEntries(
-                          section.stats,
-                          tokens,
-                          l,
-                        ),
-                      ),
-                      tokens: tokens,
+        // 下方：左欄雙圓餅 + 右欄時間軸，右欄高度由左欄量測後強制等高
+        // （LeftDrivenEqualHeight）。右欄 fillHeight：內容少→卡內底部留白、
+        // 內容多→底部由 TimelineVertical 自身 ClipRect 裁切。
+        LeftDrivenEqualHeight(
+          children: [
+            // index 0 = 左欄：稀有度 + 類型雙圓餅（含圖例）
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _PieBox(
+                  title: l.statsRarityDistribution,
+                  pie: RarityPie(
+                    stats: section.stats,
+                    animationDuration: Duration.zero,
+                  ),
+                  legend: DistributionLegend(
+                    entries: rarityDistributionEntries(
+                      section.stats,
+                      tokens,
+                      l,
                     ),
-                    const SizedBox(height: AppSpacing.m),
-                    _PieBox(
-                      title: l.statsItemTypeDistribution,
-                      pie: ItemTypePie(
-                        stats: section.stats,
-                        animationDuration: Duration.zero,
-                      ),
-                      legend: DistributionLegend(
-                        entries: itemTypeDistributionEntries(
-                          section.stats,
-                          brightness,
-                          l,
-                        ),
-                      ),
-                      tokens: tokens,
-                    ),
-                  ],
+                  ),
+                  tokens: tokens,
                 ),
-              ),
-              const SizedBox(width: AppSpacing.l),
-              // 右欄：時間軸（直接裁切）。
-              Expanded(
-                flex: 9,
-                child: Stack(
-                  key: const Key('shareTimelineClip'),
-                  clipBehavior: Clip.hardEdge,
-                  children: [
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: OverflowBox(
-                        alignment: Alignment.topCenter,
-                        minHeight: 0,
-                        maxHeight: double.infinity,
-                        child: _timeline(),
-                      ),
+                const SizedBox(height: AppSpacing.m),
+                _PieBox(
+                  title: l.statsItemTypeDistribution,
+                  pie: ItemTypePie(
+                    stats: section.stats,
+                    animationDuration: Duration.zero,
+                  ),
+                  legend: DistributionLegend(
+                    entries: itemTypeDistributionEntries(
+                      section.stats,
+                      brightness,
+                      l,
                     ),
-                  ],
+                  ),
+                  tokens: tokens,
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            // index 1 = 右欄：時間軸（fillHeight，超出自身裁切）
+            _timeline(),
+          ],
         ),
       ],
     );

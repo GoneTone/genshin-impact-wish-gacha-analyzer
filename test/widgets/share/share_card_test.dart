@@ -9,6 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 
 Future<ui.Image> _img() async {
@@ -198,7 +199,7 @@ void main() {
     );
   });
 
-  testWidgets('時間軸超出左欄高：右欄區域恆 = 左欄高、內容被裁、無 footer、無 overflow', (t) async {
+  testWidgets('時間軸超出左欄高：右欄卡恆 = 左欄高、內容被裁、無 footer、無 overflow', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     // 12 筆跨月 5★ → 時間軸自然高遠超左欄（只有 5★ → 左欄各 1 legend 行，較矮）。
     final card = ShareCard.banner(
@@ -216,13 +217,21 @@ void main() {
     // 直接裁切方案：不可有 RenderFlex overflow 或任何 error。
     expect(t.takeException(), isNull);
 
-    // 右欄裁切容器（Stack）高度恆 == 左欄兩 _PieBox 疊高（由 Stack
-    // intrinsic=0 → Row stretch 高度完全由左欄決定，右欄不反拉左欄）。
-    final clipHeight = t
-        .getSize(find.byKey(const Key('shareTimelineClip')))
+    // 右欄時間軸卡外框高度恆 == 左欄兩 _PieBox 疊高（LeftDrivenEqualHeight
+    // 量左欄高後強制右欄等高；超出由 TimelineVertical 自身 ClipRect 裁掉）。
+    expect(find.byType(LeftDrivenEqualHeight), findsOneWidget);
+    final rightHeight = t
+        .getSize(
+          find
+              .descendant(
+                of: find.byType(TimelineVertical),
+                matching: find.byType(Container),
+              )
+              .first,
+        )
         .height;
     final leftHeight = _leftColumnHeight(t, l);
-    expect(clipHeight, closeTo(leftHeight, 0.5));
+    expect(rightHeight, closeTo(leftHeight, 0.5));
 
     // 標題仍在 TimelineVertical 子樹內（title 保留，至多 10 筆）。
     expect(
@@ -268,7 +277,7 @@ void main() {
     );
   });
 
-  testWidgets('資料少：右欄裁切容器恆 = 左欄高（Row 由左欄決定，右不反拉）', (t) async {
+  testWidgets('資料少：右欄卡恆 = 左欄高（卡內底部留白，不縮小）', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.banner(
       l: l,
@@ -284,14 +293,21 @@ void main() {
     await _pump(t, card);
     expect(t.takeException(), isNull);
 
-    // 裁切容器（Stack）撐滿右欄區域，其高 = 左欄高（Stack intrinsic=0，
-    // Row stretch 高度完全由左欄決定）。資料少時 TimelineVertical 自然高
-    // 比此矮，是已選定行為（右欄下方為背景空白，不強撐等高）。
-    final clipHeight = t
-        .getSize(find.byKey(const Key('shareTimelineClip')))
+    // 資料少時，右欄卡仍被強制撐到左欄高（卡內底部為留白，非縮小、
+    // 非外部背景空白）—— 即使用者確認的目標行為。
+    expect(find.byType(LeftDrivenEqualHeight), findsOneWidget);
+    final rightHeight = t
+        .getSize(
+          find
+              .descendant(
+                of: find.byType(TimelineVertical),
+                matching: find.byType(Container),
+              )
+              .first,
+        )
         .height;
     final leftHeight = _leftColumnHeight(t, l);
-    expect(clipHeight, closeTo(leftHeight, 0.5));
+    expect(rightHeight, closeTo(leftHeight, 0.5));
   });
 
   testWidgets('跨月 5★ 大量資料（overview）：兩段渲染、無 overflow、無 footer', (t) async {
@@ -312,6 +328,7 @@ void main() {
     expect(t.takeException(), isNull);
 
     expect(find.byType(TimelineVertical), findsNWidgets(2));
+    expect(find.byType(LeftDrivenEqualHeight), findsNWidgets(2));
     // 兩段右欄裁切容器各 = 各自左欄高（這裡僅斷言無錯且 footer 不出現）。
     for (var r = 1; r <= 16; r++) {
       expect(
