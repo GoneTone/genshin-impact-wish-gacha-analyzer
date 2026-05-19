@@ -103,10 +103,13 @@ void main() {
 
       await t.tap(find.text(l.actionOpenFolder));
       // unawaited(revealInFileManager(...)) 是真實 IO；
-      // 用 runAsync 短暫離開 FakeAsync，讓 IO future 完成後再 settle UI。
-      await t.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 50)),
-      );
+      // 用 runAsync 短暫離開 FakeAsync，輪詢直到 seam 被觸發（capturedExe 不為 null），
+      // 避免固定延遲的脆弱 magic number。
+      await t.runAsync(() async {
+        for (var i = 0; i < 50 && capturedExe == null; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 5));
+        }
+      });
       await t.pumpAndSettle();
 
       expect(capturedExe, 'explorer');
