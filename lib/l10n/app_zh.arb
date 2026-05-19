@@ -291,14 +291,6 @@
   "@shareImageUpdatedAt": {
     "placeholders": { "time": { "type": "String" } }
   },
-  "shareImageTimelineTitle": "最近 {n} 筆 {star}（新→舊）",
-  "@shareImageTimelineTitle": {
-    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
-  },
-  "shareImageTimelineMore": "⋯ 還有 {n} 筆較早的 {star} 紀錄",
-  "@shareImageTimelineMore": {
-    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
-  },
   "shareImageSavedAndCopied": "已存檔並複製到剪貼簿：{path}",
   "@shareImageSavedAndCopied": {
     "placeholders": { "path": { "type": "String" } }

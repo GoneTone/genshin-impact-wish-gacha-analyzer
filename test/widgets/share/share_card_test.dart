@@ -241,40 +241,6 @@ void main() {
       ),
       findsOneWidget,
     );
-
-    // footer「還有 N 筆」一律不出現（任何 remaining 都不顯示）。
-    for (var r = 1; r <= 12; r++) {
-      expect(
-        find.text(l.shareImageTimelineMore(r, l.rarityStar(5))),
-        findsNothing,
-      );
-    }
-  });
-
-  testWidgets('右欄時間軸 ≤ 10 筆時，不顯示剩餘筆數提示', (t) async {
-    final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    // 造 3 筆 rank5 → timeline.length=3。
-    final records = <GachaRecord>[
-      for (var i = 0; i < 3; i++) _r('301', 5, '五星$i'),
-    ];
-    final card = ShareCard.banner(
-      l: l,
-      appVersion: '1.0.0',
-      appIcon: await _img(),
-      options: const ShareImageOptions(),
-      uid: '800123456',
-      updatedAt: DateTime(2026, 5, 18, 14, 30),
-      title: '角色活動祈願',
-      records: records,
-      targetRank: 5,
-    );
-    await _pump(t, card);
-    expect(t.takeException(), isNull);
-
-    expect(
-      find.text(l.shareImageTimelineMore(0, l.rarityStar(5))),
-      findsNothing,
-    );
   });
 
   testWidgets('資料少：右欄卡恆 = 左欄高（卡內底部留白，不縮小）', (t) async {
@@ -329,13 +295,6 @@ void main() {
 
     expect(find.byType(TimelineVertical), findsNWidgets(2));
     expect(find.byType(LeftDrivenEqualHeight), findsNWidgets(2));
-    // 兩段右欄裁切容器各 = 各自左欄高（這裡僅斷言無錯且 footer 不出現）。
-    for (var r = 1; r <= 16; r++) {
-      expect(
-        find.text(l.shareImageTimelineMore(r, l.rarityStar(5))),
-        findsNothing,
-      );
-    }
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {

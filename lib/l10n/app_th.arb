@@ -26,13 +26,10 @@
   "relativeYearsAgo": "{count} ปีที่แล้ว",
   "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
 
-  "kindCharacter": "ตัวละคร",
-  "kindWeapon": "อาวุธ",
   "tableTime": "เวลาที่ได้รับ",
   "tableName": "ชื่อ",
   "tableKind": "รูปแบบ",
   "tableTotalIndex": "จำนวนครั้ง",
-  "tableFiveStarPity": "จำนวนครั้ง",
   "statsTotal": "จำนวนครั้ง",
   "statsRankCount": "จำนวนไอเทม {star} ที่ดรอป",
   "@statsRankCount": {

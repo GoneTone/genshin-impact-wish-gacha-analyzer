@@ -285,14 +285,6 @@
   "@shareImageUpdatedAt": {
     "placeholders": { "time": { "type": "String" } }
   },
-  "shareImageTimelineTitle": "Latest {n} {star} (new->old)",
-  "@shareImageTimelineTitle": {
-    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
-  },
-  "shareImageTimelineMore": "… {n} more earlier {star} records",
-  "@shareImageTimelineMore": {
-    "placeholders": { "n": { "type": "int" }, "star": { "type": "String" } }
-  },
   "shareImageSavedAndCopied": "Saved and copied to clipboard: {path}",
   "@shareImageSavedAndCopied": {
     "placeholders": { "path": { "type": "String" } }

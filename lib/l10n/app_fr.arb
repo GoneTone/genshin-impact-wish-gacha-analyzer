@@ -9,13 +9,10 @@
   "navOverview": "Globalement",
   "navCharacter": "Personnage",
   "navWeapon": "Arme",
-  "kindCharacter": "Personnage",
-  "kindWeapon": "Arme",
   "tableTime": "Heure de réception",
   "tableName": "Nom",
   "tableKind": "Type",
   "tableTotalIndex": "Voeux totaux",
-  "tableFiveStarPity": "Nombre de vœux depuis la dernière pity",
   "statsTotal": "Voeux totaux",
   "statsRankCount": "Nombre d'objets {star} obtenu",
   "@statsRankCount": {

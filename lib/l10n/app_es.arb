@@ -26,13 +26,10 @@
   "relativeYearsAgo": "{count, plural, =1{Hace 1 año} other{Hace {count} años}}",
   "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
 
-  "kindCharacter": "Personaje",
-  "kindWeapon": "Arma",
   "tableTime": "Hora de recepcion",
   "tableName": "Nombre",
   "tableKind": "Tipo",
   "tableTotalIndex": "Deseos Totales",
-  "tableFiveStarPity": "Numero de deseos desde el ultimo Pity",
   "statsTotal": "Deseos Totales",
   "statsRankCount": "Numero de articulos {star}",
   "@statsRankCount": {
