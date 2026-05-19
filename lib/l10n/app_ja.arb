@@ -277,6 +277,9 @@
   "exportDialogSuccessTitle": "エクスポート成功",
   "exportDialogFailedTitle": "エクスポート失敗",
   "settingsExportFailed": "エクスポートに失敗しました：{error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
   "settingsExportSuccess": "{path} にエクスポートしました",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -413,5 +416,8 @@
     }
   },
   "settingsLogsExportFailed": "ログのエクスポートに失敗しました：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
   "settingsLogsClearConfirmBody": "logs/ 内のすべてのファイルを完全に削除します。問題報告の前にログが必要な場合は、先にエクスポートしてください。確認のため CLEAR と入力してください。"
 }

@@ -277,6 +277,9 @@
   "exportDialogSuccessTitle": "导出成功",
   "exportDialogFailedTitle": "导出失败",
   "settingsExportFailed": "导出失败：{error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
   "settingsExportSuccess": "已导出至 {path}",
   "@settingsExportSuccess": {
     "placeholders": { "path": { "type": "String" } }
@@ -413,5 +416,8 @@
     }
   },
   "settingsLogsExportFailed": "日志导出失败：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
   "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。"
 }
