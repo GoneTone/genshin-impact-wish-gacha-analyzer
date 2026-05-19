@@ -127,6 +127,14 @@ void main() {
     // 右欄時間軸標題改用與其他卡片一致的低調小標題（labelSmall），
     // 不再用視覺權重過重的 InlineSectionTitle（titleLarge + icon）。
     expect(find.byType(InlineSectionTitle), findsNothing);
+    // 時間軸標題現在進到 TimelineVertical 卡片內（border 內）。
+    expect(
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), 1)),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('綜合模式重用 App 元件（StatCard ×6 + TimelineVertical ×2）', (t) async {
@@ -149,6 +157,14 @@ void main() {
     expect(find.byType(StatCard), findsNWidgets(6));
     expect(find.byType(TimelineVertical), findsNWidgets(2));
     expect(find.byType(InlineSectionTitle), findsNothing);
+    // 兩段時間軸標題皆進到各自 TimelineVertical 卡片內。
+    expect(
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), 1)),
+      ),
+      findsNWidgets(2),
+    );
   });
 
   testWidgets('右欄時間軸 > 10 筆 5★ 時，底部顯示剩餘筆數提示', (t) async {

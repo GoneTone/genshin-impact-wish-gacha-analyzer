@@ -46,6 +46,70 @@ void main() {
     );
   });
 
+  testWidgets('title 參數：顯示於 TimelineVertical 卡片子樹內', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineVertical(
+          title: 'X標題',
+          entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+          colors: colors,
+          targetRank: 5,
+        ),
+      ),
+    );
+    expect(
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.text('X標題'),
+      ),
+      findsOneWidget,
+    );
+    // 既有內容仍正常顯示
+    expect(find.text('夜蘭'), findsOneWidget);
+  });
+
+  testWidgets('title 參數：空資料分支也顯示標題於卡內', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineVertical(
+          title: 'X標題',
+          entries: const [],
+          colors: colors,
+          targetRank: 5,
+        ),
+      ),
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineVertical)),
+    )!;
+    expect(
+      find.descendant(
+        of: find.byType(TimelineVertical),
+        matching: find.text('X標題'),
+      ),
+      findsOneWidget,
+    );
+    // 空資料文案仍存在
+    expect(
+      find.text(l.timelineNoRecordsForRank(l.rarityStar(5))),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('不傳 title（App 既有用法）：完全不顯示標題、行為不變', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineVertical(
+          entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+          colors: colors,
+          targetRank: 5,
+        ),
+      ),
+    );
+    expect(find.text('X標題'), findsNothing);
+    expect(find.text('夜蘭'), findsOneWidget);
+  });
+
   testWidgets('renders entries with month tag per month group', (tester) async {
     await tester.pumpWidget(
       _wrap(

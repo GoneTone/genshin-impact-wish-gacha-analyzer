@@ -21,12 +21,19 @@ class TimelineVertical extends StatefulWidget {
     required this.entries,
     required this.colors,
     required this.targetRank,
+    this.title,
     this.nowPulls,
     this.isAcrossBanners = false,
   });
 
   final List<TimelineEntry> entries;
   final BannerColors colors;
+
+  /// 可選的卡內小標題。傳入時於卡片 container 內最上方顯示一個與卡片風格
+  /// 一致的小標題（`labelSmall`，與 share `_PieBox` title 同樣式）；不傳
+  /// （App 既有用法，如 overview 外部已有 `InlineSectionTitle`）則完全不
+  /// 顯示，版面與行為與原本逐字相同。空資料分支與有資料分支皆適用。
+  final String? title;
 
   /// 主要顯示稀有度（5 或 4）。用於「暫無 N★ 紀錄」、「距上次 N★ X 抽」等文案。
   /// 跨卡池且 banner 各自主稀有度不同（頌願綜合）時，傳入「最具代表性的那個」
@@ -91,6 +98,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
     final tokens = theme.gacha;
     final l = AppLocalizations.of(context)!;
 
+    final title = widget.title;
     Widget container(Widget child) => Container(
       decoration: BoxDecoration(
         color: tokens.surfaceCard,
@@ -101,7 +109,17 @@ class _TimelineVerticalState extends State<TimelineVertical> {
         vertical: AppSpacing.l,
         horizontal: AppSpacing.l,
       ),
-      child: child,
+      child: title == null
+          ? child
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title, style: theme.textTheme.labelSmall),
+                const SizedBox(height: AppSpacing.s),
+                child,
+              ],
+            ),
     );
 
     final entries = widget.entries;

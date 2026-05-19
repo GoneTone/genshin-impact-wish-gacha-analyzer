@@ -425,10 +425,9 @@ class _SectionView extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.l),
-            // 右欄：時間軸。標題與底部剩餘提示皆採與 _PieBox title 一致的低調
-            // 樣式（labelSmall / bodySmall，無 icon），避免視覺權重突兀。
-            // TimelineVertical 自帶 container 不可改，故標題在容器外上方、
-            // 剩餘提示在容器外下方；take(10) → 其內部 remaining=0 不出現「載入更多」。
+            // 右欄：時間軸。標題透過 TimelineVertical.title 進到卡片 container
+            // 內，與 _PieBox 卡內 labelSmall 標題同風格；底部剩餘提示維持卡外
+            // （bodySmall）。take(10) → 其內部 remaining=0 不出現「載入更多」。
             Expanded(
               flex: 9,
               child: _TimelineColumn(
@@ -445,8 +444,8 @@ class _SectionView extends StatelessWidget {
   }
 }
 
-/// 右欄時間軸：標題（與 _PieBox title 同樣式）+ TimelineVertical（自帶
-/// container，最多顯示 10 筆）+ 底部剩餘筆數提示（僅 remaining > 0 時）。
+/// 右欄時間軸：TimelineVertical（自帶 container，標題透過 title 參數進到
+/// 卡內、最多顯示 10 筆）+ 底部卡外剩餘筆數提示（僅 remaining > 0 時）。
 class _TimelineColumn extends StatelessWidget {
   const _TimelineColumn({
     required this.l,
@@ -469,12 +468,8 @@ class _TimelineColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
-          style: theme.textTheme.labelSmall,
-        ),
-        const SizedBox(height: AppSpacing.s),
         TimelineVertical(
+          title: l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
           entries: shown,
           colors: colors,
           targetRank: rank,
