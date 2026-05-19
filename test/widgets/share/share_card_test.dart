@@ -124,8 +124,9 @@ void main() {
     // 鎖住「已改用 App 元件」：回退到自製 _StatTile/_ShareTimeline 會失敗。
     expect(find.byType(StatCard), findsNWidgets(3));
     expect(find.byType(TimelineVertical), findsOneWidget);
-    // 右欄時間軸標題改用與 App 綜合頁一致的 InlineSectionTitle。
-    expect(find.byType(InlineSectionTitle), findsWidgets);
+    // 右欄時間軸標題改用與其他卡片一致的低調小標題（labelSmall），
+    // 不再用視覺權重過重的 InlineSectionTitle（titleLarge + icon）。
+    expect(find.byType(InlineSectionTitle), findsNothing);
   });
 
   testWidgets('綜合模式重用 App 元件（StatCard ×6 + TimelineVertical ×2）', (t) async {
@@ -147,7 +148,59 @@ void main() {
 
     expect(find.byType(StatCard), findsNWidgets(6));
     expect(find.byType(TimelineVertical), findsNWidgets(2));
-    expect(find.byType(InlineSectionTitle), findsNWidgets(2));
+    expect(find.byType(InlineSectionTitle), findsNothing);
+  });
+
+  testWidgets('右欄時間軸 > 10 筆 5★ 時，底部顯示剩餘筆數提示', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    // 造 12 筆 rank5 → timeline.length=12，take(10) 顯示 10，remaining=2。
+    final records = <GachaRecord>[
+      for (var i = 0; i < 12; i++) _r('301', 5, '五星$i'),
+    ];
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: records,
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    expect(
+      find.text(l.shareImageTimelineMore(2, l.rarityStar(5))),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('右欄時間軸 ≤ 10 筆時，不顯示剩餘筆數提示', (t) async {
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    // 造 3 筆 rank5 → timeline.length=3，remaining=0，不顯示提示。
+    final records = <GachaRecord>[
+      for (var i = 0; i < 3; i++) _r('301', 5, '五星$i'),
+    ];
+    final card = ShareCard.banner(
+      l: l,
+      appVersion: '1.0.0',
+      appIcon: await _img(),
+      options: const ShareImageOptions(),
+      uid: '800123456',
+      updatedAt: DateTime(2026, 5, 18, 14, 30),
+      title: '角色活動祈願',
+      records: records,
+      targetRank: 5,
+    );
+    await _pump(t, card);
+    expect(t.takeException(), isNull);
+
+    expect(
+      find.text(l.shareImageTimelineMore(0, l.rarityStar(5))),
+      findsNothing,
+    );
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {

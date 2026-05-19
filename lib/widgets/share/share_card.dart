@@ -22,7 +22,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
@@ -426,34 +425,70 @@ class _SectionView extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.l),
-            // 右欄：與 App 綜合頁一致的「InlineSectionTitle + TimelineVertical」。
-            // take(10) → TimelineVertical 內部 remaining=0，不出現「載入更多」。
+            // 右欄：時間軸。標題與底部剩餘提示皆採與 _PieBox title 一致的低調
+            // 樣式（labelSmall / bodySmall，無 icon），避免視覺權重突兀。
+            // TimelineVertical 自帶 container 不可改，故標題在容器外上方、
+            // 剩餘提示在容器外下方；take(10) → 其內部 remaining=0 不出現「載入更多」。
             Expanded(
               flex: 9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InlineSectionTitle(
-                    icon: Icons.timeline,
-                    title: l.timelineTopRarityTitle(
-                      l.rarityStar(section.timelineRank),
-                      section.timeline.length,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.s),
-                  TimelineVertical(
-                    entries: section.timeline.take(10).toList(growable: false),
-                    colors: colors,
-                    targetRank: section.timelineRank,
-                    nowPulls: section.timelineNowPulls,
-                    isAcrossBanners: section.isAcrossBanners,
-                  ),
-                ],
+              child: _TimelineColumn(
+                l: l,
+                section: section,
+                colors: colors,
+                tokens: tokens,
               ),
             ),
           ],
         ),
+      ],
+    );
+  }
+}
+
+/// 右欄時間軸：標題（與 _PieBox title 同樣式）+ TimelineVertical（自帶
+/// container，最多顯示 10 筆）+ 底部剩餘筆數提示（僅 remaining > 0 時）。
+class _TimelineColumn extends StatelessWidget {
+  const _TimelineColumn({
+    required this.l,
+    required this.section,
+    required this.colors,
+    required this.tokens,
+  });
+  final AppLocalizations l;
+  final _Section section;
+  final BannerColors colors;
+  final GachaTokens tokens;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final rank = section.timelineRank;
+    final shown = section.timeline.take(10).toList(growable: false);
+    final remaining = section.timeline.length - shown.length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
+          style: theme.textTheme.labelSmall,
+        ),
+        const SizedBox(height: AppSpacing.s),
+        TimelineVertical(
+          entries: shown,
+          colors: colors,
+          targetRank: rank,
+          nowPulls: section.timelineNowPulls,
+          isAcrossBanners: section.isAcrossBanners,
+        ),
+        if (remaining > 0) ...[
+          const SizedBox(height: AppSpacing.s),
+          Text(
+            l.shareImageTimelineMore(remaining, l.rarityStar(rank)),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(color: tokens.textMuted),
+          ),
+        ],
       ],
     );
   }
