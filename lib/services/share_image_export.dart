@@ -1,8 +1,3 @@
-// lib/services/share_image_export.dart
-//
-// PNG bytes → 系統剪貼簿 + 使用者選位置存檔。
-// I/O 與剪貼簿經 @visibleForTesting seam 注入（仿 services/file_reveal.dart），
-// 讓 flutter test 不碰真實 FS / 剪貼簿。
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -12,13 +7,21 @@ import 'package:super_clipboard/super_clipboard.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
+/// 分享圖匯出流程的 logger（命名空間 share.image）。
 final _log = Logger('share.image');
 
+/// 分享圖匯出結果狀態：同時存檔+複製、僅存檔、僅複製三種情況。
 enum ShareExportStatus { savedAndCopied, savedOnly, copiedOnly }
 
+/// 分享圖匯出結果，包含狀態與存檔路徑（僅存檔/同時存檔時不為 null）。
 class ShareExportResult {
+  /// 建立 [ShareExportResult]。
   const ShareExportResult({required this.status, this.path});
+
+  /// 匯出結果狀態。
   final ShareExportStatus status;
+
+  /// 存檔路徑；[ShareExportStatus.copiedOnly] 時為 null。
   final String? path;
 }
 
@@ -34,6 +37,7 @@ Future<bool> _defaultClipboardWriter(Uint8List png) async {
   return true;
 }
 
+/// 預設存檔位置選擇器：開啟系統 save dialog，回傳使用者選擇的路徑（取消為 null）。
 Future<FileSaveLocation?> _defaultSaveLocationPicker(String name) =>
     getSaveLocation(
       suggestedName: name,
@@ -42,18 +46,22 @@ Future<FileSaveLocation?> _defaultSaveLocationPicker(String name) =>
       ],
     );
 
+/// 存檔位置選擇器 seam，讓 flutter test 不開啟真實系統 dialog。
 @visibleForTesting
 Future<FileSaveLocation?> Function(String suggestedName)
 shareSaveLocationPicker = _defaultSaveLocationPicker;
 
+/// 剪貼簿寫入 seam，讓 flutter test 不碰真實剪貼簿（SystemClipboard.instance 為 null）。
 @visibleForTesting
 Future<bool> Function(Uint8List png) shareClipboardWriter =
     _defaultClipboardWriter;
 
+/// 檔案寫入 seam，讓 flutter test 不碰真實 FS。
 @visibleForTesting
 Future<void> Function(String path, Uint8List png) shareFileWriter =
     (path, png) => File(path).writeAsBytes(png);
 
+/// 將所有 seam 重設為預設實作，供 tearDown 使用。
 @visibleForTesting
 void resetShareImageExportSeams() {
   shareSaveLocationPicker = _defaultSaveLocationPicker;

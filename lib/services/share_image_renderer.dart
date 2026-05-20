@@ -1,8 +1,3 @@
-// lib/services/share_image_renderer.dart
-//
-// 把任意 widget 以固定邏輯尺寸 + pixelRatio 同步離屏渲染成 PNG。
-// 用獨立 RenderView + BuildOwner pipeline，不依賴 live Navigator/Overlay，
-// 全程同步 flush（無動畫、無 async image），輸出穩定可測。
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -11,6 +6,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
+/// 分享圖渲染的 logger（命名空間 share.image）。
 final _log = Logger('share.image');
 
 /// 預解碼 app icon，給 ShareCard 以 RawImage 同步繪製
@@ -26,6 +22,9 @@ Future<ui.Image> loadAppIconImage() async {
 }
 
 /// 把 [widget] 以「寬固定 [width]、高隨內容自適應」同步離屏渲染成 PNG bytes。
+///
+/// 採獨立 RenderView + BuildOwner pipeline，不依賴 live Navigator/Overlay；
+/// 全程同步 flush（無動畫、無 async image），輸出穩定可測。
 ///
 /// 寬度 tight 約束為 [width]；高度給 **unbounded**（0..∞）約束，讓 boundary
 /// 取內容自然高度。實測本專案 ShareCard 透過 `buildShareRenderTree` 的

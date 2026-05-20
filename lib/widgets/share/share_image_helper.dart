@@ -1,6 +1,3 @@
-// lib/widgets/share/share_image_helper.dart
-// 通用分享圖生成流程：dialog → render → export → result dialog。
-// overview / banner 兩頁共用，避免骨架重複（CLAUDE.md 嚴禁重複造輪子）。
 import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;
@@ -16,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_d
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 
+/// 分享圖流程的 logger（命名空間 share.image）。
 final _log = Logger('share.image');
 
 /// 把 [ShareExportResult] 攤平成 dialog 需要的訊息與 reveal 路徑。
@@ -92,6 +90,7 @@ Widget buildShareRenderTree({
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
 /// 分享圖寬固定為 [kShareCardWidth]、高隨內容自適應（底部不留白、不裁切）；
 /// [suggestedName] 完整建議檔名（含時間戳）。
+/// overview 與 banner 兩頁共用，避免重複骨架。
 Future<void> generateAndShareImage({
   required BuildContext context,
   required AppLocalizations l,

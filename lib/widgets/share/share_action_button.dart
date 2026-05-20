@@ -1,4 +1,3 @@
-// lib/widgets/share/share_action_button.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -12,14 +11,19 @@ class ShareActionButton extends StatefulWidget {
     required this.onGenerate,
   });
 
+  /// 按鈕是否可用（false 時 onPressed 為 null，呈現 disabled 外觀）。
   final bool enabled;
+
+  /// 點擊後執行的分享圖生成流程，完成前按鈕維持 spinner 狀態。
   final Future<void> Function() onGenerate;
 
   @override
   State<ShareActionButton> createState() => _ShareActionButtonState();
 }
 
+/// [ShareActionButton] 的狀態：追蹤生成中旗標以防重入。
 class _ShareActionButtonState extends State<ShareActionButton> {
+  /// 分享圖生成進行中為 true，期間顯示 spinner 並鎖定按鈕。
   bool _busy = false;
 
   @override

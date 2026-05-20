@@ -1,7 +1,3 @@
-// lib/services/overview_sections.dart
-//
-// 綜合頁的「祈願/頌願分組 + 統計 + 平均間隔 + timeline」純資料計算。
-// OverviewPage 與 ShareCard 共用，避免兩處複製分組邏輯。
 import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
@@ -12,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dar
 /// 祈願段（角色/武器/常駐/新手…）的彙整結果。
 @immutable
 class GachaSectionData {
+  /// 建立 [GachaSectionData]。
   const GachaSectionData({
     required this.types,
     required this.banners,
@@ -23,13 +20,28 @@ class GachaSectionData {
     required this.fourStarAvg,
   });
 
+  /// 此段包含的祈願類型清單。
   final List<GachaType> types;
+
+  /// 各卡池的抽卡記錄，key 為 gachaType。
   final Map<String, List<GachaRecord>> banners;
+
+  /// 此段所有卡池合計統計。
   final GachaStats stats;
+
+  /// 跨卡池合併的時間軸條目。
   final List<TimelineEntry> timeline;
+
+  /// 時間軸目標星級（primaryPity.rank）。
   final int timelineRank;
+
+  /// 距上次 timelineRank 出貨的累積抽數（供 TimelineVertical「現在」row 顯示）。
   final int timelineNowPulls;
+
+  /// 5★ 平均間隔抽數；無出貨記錄時為 null。
   final double? fiveStarAvg;
+
+  /// 4★ 平均間隔抽數；無出貨記錄時為 null。
   final double? fourStarAvg;
 }
 
@@ -37,6 +49,7 @@ class GachaSectionData {
 /// 不套「佔比 + 平均幾抽出」（odes 無對應保底語意）。
 @immutable
 class OdesSectionData {
+  /// 建立 [OdesSectionData]。
   const OdesSectionData({
     required this.types,
     required this.banners,
@@ -48,23 +61,46 @@ class OdesSectionData {
     required this.timelineNowPulls,
   });
 
+  /// 此段包含的頌願類型清單。
   final List<GachaType> types;
+
+  /// 各卡池的抽卡記錄，key 為 gachaType。
   final Map<String, List<GachaRecord>> banners;
+
+  /// 此段所有卡池合計統計。
   final GachaStats stats;
+
+  /// 頌願活動卡池（gachaType '2000'）的 5★ 出貨數。
   final int eventFiveCount;
+
+  /// 頌願常駐卡池（gachaType '1000'）的 4★ 出貨數。
   final int standardFourCount;
+
+  /// 跨卡池合併的時間軸條目。
   final List<TimelineEntry> timeline;
+
+  /// 時間軸目標星級（primaryPity.rank）。
   final int timelineRank;
+
+  /// 距上次 timelineRank 出貨的累積抽數（供 TimelineVertical「現在」row 顯示）。
   final int timelineNowPulls;
 }
 
+/// OverviewPage 與 ShareCard 共用的祈願＋頌願兩段彙整結果。
 @immutable
 class OverviewSections {
+  /// 建立 [OverviewSections]。
   const OverviewSections({required this.gacha, required this.odes});
+
+  /// 祈願段（角色/武器/常駐/新手）彙整。
   final GachaSectionData gacha;
+
+  /// 頌願段彙整。
   final OdesSectionData odes;
 }
 
+/// 從 [activeBanners] 建構 [OverviewSections]，供 OverviewPage 與 ShareCard 共用，
+/// 避免兩處複製分組邏輯。
 OverviewSections buildOverviewSections(
   Map<String, List<GachaRecord>> activeBanners,
 ) {

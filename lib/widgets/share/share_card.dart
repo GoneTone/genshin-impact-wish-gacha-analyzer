@@ -1,8 +1,3 @@
-// lib/widgets/share/share_card.dart
-//
-// 分享圖固定寬版面（版面 B：左數字+雙圓餅，右垂直時間軸）。
-// 所有外部相依由建構子注入；圖示為預解碼 ui.Image，避免離屏同步渲染時
-// Image.asset 的 async 載入無法完成。
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -27,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 
+/// 分享圖固定寬度（邏輯像素）。
 const double kShareCardWidth = 1200;
 
 /// _PieBox 內圓餅固定高（與 [_PieBox.build] 內 `SizedBox(height: …)` 同值）。
@@ -53,9 +49,17 @@ class _Section {
     required this.isAcrossBanners,
     required this.statLines,
   });
+
+  /// 段落標題文字（例如祈願段名稱或卡池名稱）。
   final String title;
+
+  /// 此段合計統計資料。
   final GachaStats stats;
+
+  /// 時間軸條目清單。
   final List<TimelineEntry> timeline;
+
+  /// 時間軸目標星級。
   final int timelineRank;
 
   /// 時間軸最頂端「現在」row 的累積抽數（重用 App TimelineVertical 的語意）。
@@ -69,6 +73,10 @@ class _Section {
   statLines;
 }
 
+/// 分享圖固定寬版面（版面 B：左數字+雙圓餅，右垂直時間軸）。
+///
+/// 所有外部相依由建構子注入；圖示為預解碼 [ui.Image]，避免離屏同步渲染時
+/// Image.asset 的 async 載入無法完成。
 class ShareCard extends StatelessWidget {
   const ShareCard._({
     required this.l,
@@ -207,20 +215,35 @@ class ShareCard extends StatelessWidget {
     );
   }
 
+  /// 當前語系的本地化字串。
   final AppLocalizations l;
+
+  /// App 版本號，顯示於頂部 header。
   final String appVersion;
+
+  /// 預解碼的 App icon，以 [RawImage] 同步繪製。
   final ui.Image appIcon;
+
+  /// 分享圖選項（亮暗模式、UID 顯示方式）。
   final ShareImageOptions options;
+
+  /// 使用者 UID（依 [options] 決定是否遮蔽）。
   final String uid;
+
+  /// 資料最後更新時間，顯示於 header 右側。
   final DateTime updatedAt;
+
+  /// 各段內容（卡池模式 1 段；綜合模式 2 段）。
   final List<_Section> _sections;
 
+  /// 格式化「佔比 · 平均間隔」副標題字串；avg 為 null 時只回傳佔比。
   static String? _rateAvg(AppLocalizations l, double rate, double? avg) {
     final pct = l.statsShareOfTotal((rate * 100).toStringAsFixed(2));
     if (avg == null) return pct;
     return '$pct · ${l.pityAverageInterval(avg.toStringAsFixed(2))}';
   }
 
+  /// 依 [options] 決定顯示完整或遮蔽後的 UID。
   String get _uidText => options.showFullUid ? uid : maskUidForShare(uid);
 
   @override
@@ -265,6 +288,7 @@ class ShareCard extends StatelessWidget {
   }
 }
 
+/// 分享圖頂部 header：App icon + 名稱/版本 + GitHub URL + UID + 更新時間。
 class _ShareHeader extends StatelessWidget {
   const _ShareHeader({
     required this.l,
@@ -274,11 +298,23 @@ class _ShareHeader extends StatelessWidget {
     required this.updatedAt,
     required this.tokens,
   });
+
+  /// 當前語系的本地化字串。
   final AppLocalizations l;
+
+  /// App 版本號。
   final String appVersion;
+
+  /// 預解碼的 App icon。
   final ui.Image appIcon;
+
+  /// 已依選項遮蔽或完整的 UID 字串。
   final String uidText;
+
+  /// 資料最後更新時間。
   final DateTime updatedAt;
+
+  /// 主題 token，用於文字顏色。
   final GachaTokens tokens;
 
   @override
@@ -336,6 +372,7 @@ class _ShareHeader extends StatelessWidget {
   }
 }
 
+/// 一段祈願/頌願內容的版面：標題 + StatCard 橫排 + 左圓餅/右時間軸。
 class _SectionView extends StatelessWidget {
   const _SectionView({
     required this.l,
@@ -344,12 +381,23 @@ class _SectionView extends StatelessWidget {
     required this.brightness,
     required this.tokens,
   });
+
+  /// 當前語系的本地化字串。
   final AppLocalizations l;
+
+  /// 此段資料。
   final _Section section;
+
+  /// 卡池色彩對應表（依亮暗模式選取）。
   final BannerColors colors;
+
+  /// 亮暗模式，用於 ItemTypePie 圖例色彩。
   final Brightness brightness;
+
+  /// 主題 token。
   final GachaTokens tokens;
 
+  /// 將 [_StatAccent] 語意映射為實際 [Color]。
   Color _accentColor(_StatAccent a) => switch (a) {
     _StatAccent.primary => tokens.accentPrimary,
     _StatAccent.rank5 => accentForRank(5, tokens),
@@ -460,6 +508,7 @@ class _SectionView extends StatelessWidget {
   }
 }
 
+/// 圓餅圖容器：標題 + 固定高圓餅 + 圖例，帶卡片邊框背景。
 class _PieBox extends StatelessWidget {
   const _PieBox({
     required this.title,
@@ -467,9 +516,17 @@ class _PieBox extends StatelessWidget {
     required this.legend,
     required this.tokens,
   });
+
+  /// 卡片標題文字。
   final String title;
+
+  /// 圓餅圖 widget（RarityPie 或 ItemTypePie）。
   final Widget pie;
+
+  /// 圖例 widget（DistributionLegend）。
   final Widget legend;
+
+  /// 主題 token，用於背景色與邊框色。
   final GachaTokens tokens;
 
   @override
