@@ -28,6 +28,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 
+/// 應用程式入口：初始化 Flutter、Rust bridge、視窗管理、log 服務，然後啟動 app。
 Future<void> main() async {
   runZonedGuarded(
     () async {
@@ -108,6 +109,7 @@ Future<void> main() async {
   );
 }
 
+/// 訂閱 Rust 端的 log stream，將每條 log 轉發到 Dart logging。
 Future<void> _connectRustLogStream() async {
   try {
     rust_logging.startLogStream().listen(
@@ -126,6 +128,7 @@ Future<void> _connectRustLogStream() async {
   }
 }
 
+/// 將 Rust log level 字串對應到 Dart [Level]。
 Level _levelFromRust(String s) => switch (s) {
   'ERROR' => Level.SEVERE,
   'WARN' => Level.WARNING,
@@ -134,13 +137,16 @@ Level _levelFromRust(String s) => switch (s) {
   _ => Level.FINER,
 };
 
+/// App 根元件，負責套用主題、語言與路由設定。
 class MainApp extends ConsumerStatefulWidget {
+  /// 建立 [MainApp]。
   const MainApp({super.key});
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
 }
 
+/// [MainApp] 的 state，持有 GoRouter 快取。
 class _MainAppState extends ConsumerState<MainApp> {
   /// 快取 router 實例，避免每次 build（主題 / 語言切換）時重建並重設到 initialLocation。
   late final GoRouter _router = buildAppRouter();

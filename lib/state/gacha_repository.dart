@@ -19,24 +19,34 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
+/// probeUid 回傳 null 時拋出，轉成 [UpdateErrorNoRecords]。
 class _NoRecordsException implements Exception {
   const _NoRecordsException();
 }
 
+/// 帳號批次匯入的結果摘要。
 class ImportResult {
+  /// 建立 [ImportResult]。
   const ImportResult({
     required this.successAccounts,
     required this.totalRecords,
     required this.failedUids,
   });
 
+  /// 成功匯入的帳號數。
   final int successAccounts;
+
+  /// 成功匯入的總紀錄數。
   final int totalRecords;
+
+  /// 匯入失敗的 UID 列表。
   final List<String> failedUids;
 }
 
+/// 祈願資料整體狀態，包含帳號資料、更新進度與 bootstrap 旗標。
 @immutable
 class GachaState {
+  /// 建立 [GachaState]。
   const GachaState({
     this.activeUid,
     this.byUid = const {},
@@ -44,14 +54,25 @@ class GachaState {
     this.isBootstrapping = true,
   });
 
+  /// 目前作用中的帳號 UID；null 表示無帳號。
   final String? activeUid;
+
+  /// UID → 該帳號存檔資料。
   final Map<String, BannerStorage> byUid;
+
+  /// 目前更新進度；null 表示無進行中的更新。
   final UpdateProgress? progress;
+
+  /// true 表示首次從本地存檔載入尚未完成。
   final bool isBootstrapping;
 
+  /// 作用中帳號的存檔資料；無作用中帳號時為 null。
   BannerStorage? get activeData => activeUid == null ? null : byUid[activeUid];
+
+  /// 所有已知 UID。
   Iterable<String> get knownUids => byUid.keys;
 
+  /// 複製並選擇性覆蓋欄位；[clearActiveUid] / [clearProgress] 為 true 時強制清除對應欄位。
   GachaState copyWith({
     String? activeUid,
     bool clearActiveUid = false,
@@ -74,10 +95,12 @@ final gachaStorageProvider = Provider<GachaStorage>((ref) {
   throw UnimplementedError('gachaStorageProvider must be overridden in main()');
 });
 
+/// [GachaCapture] 實作，預設為 [RustGachaCapture]。
 final gachaCaptureProvider = Provider<GachaCapture>(
   (ref) => RustGachaCapture(),
 );
 
+/// [GachaFetcher] provider，負責從 Hoyoverse API 拉取祈願紀錄。
 final gachaFetcherProvider = Provider<GachaFetcher>((ref) => GachaFetcher());
 
 /// 每次 update 用一個獨立的 [CancellableHttpClient]（cancel 不會影響其他連線）。
@@ -86,12 +109,14 @@ final cancellableHttpClientFactoryProvider =
       (ref) => createIoCancellableHttpClient,
     );
 
+/// [GachaRepository] 的 Riverpod provider。
 final gachaRepositoryProvider = NotifierProvider<GachaRepository, GachaState>(
   GachaRepository.new,
 );
 
 // ─── Notifier ───
 
+/// 祈願資料狀態管理，統一處理 bootstrap、更新、匯入與刪除。
 class GachaRepository extends Notifier<GachaState> {
   static final _log = Logger('gacha.repo');
 
@@ -101,6 +126,7 @@ class GachaRepository extends Notifier<GachaState> {
     return const GachaState();
   }
 
+  /// 從本地存檔載入全部帳號資料，完成後設定 [GachaState.isBootstrapping] 為 false。
   Future<void> _bootstrapLoad() async {
     final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
@@ -146,20 +172,24 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// 切換作用中帳號並持久化 lastActiveUid。
   Future<void> setActiveUid(String uid) async {
     if (!state.byUid.containsKey(uid)) return;
     state = state.copyWith(activeUid: uid);
     await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
   }
 
+  /// 清除目前的更新進度狀態。
   void clearProgress() {
     state = state.copyWith(clearProgress: true);
   }
 
+  /// 啟動祈願資料更新，優先使用快取 URL，無快取則觸發 MITM 捕獲。
   Future<void> update() async {
     await _runUpdate(forceRecapture: false);
   }
 
+  /// 實際執行更新流程；[forceRecapture] 為 true 時強制重新 MITM 捕獲。
   Future<void> _runUpdate({required bool forceRecapture}) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
@@ -272,6 +302,7 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// 啟動 MITM 捕獲會話並等候 URL；[isFallback] 為 auth 過期後的二次捕獲。
   Future<String?> _runMitm({required bool isFallback}) async {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
     final session = ref.read(gachaCaptureProvider).start();
@@ -286,6 +317,7 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// 依序拉取所有 banner 的新紀錄並合併存檔。
   Future<void> _fetchAllBanners({
     required String url,
     required GachaFetcher fetcher,
@@ -384,16 +416,25 @@ class GachaRepository extends Notifier<GachaState> {
     await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
   }
 
+  /// 防 re-entrancy 旗標，update 進行中為 true。
   bool _isUpdating = false;
+
+  /// 使用者觸發取消時設為 true，避免將 ClientException 誤判為錯誤。
   bool _cancelTriggered = false;
+
+  /// 目前 MITM 會話的取消函式。
   Future<void> Function()? _activeCancel;
+
+  /// 目前 HTTP 請求的可取消 client，取消後關閉所有連線。
   CancellableHttpClient? _activeCancellable;
 
+  /// 取消 Preparing 階段的 HTTP 請求。
   void cancelPreparing() {
     _cancelTriggered = true;
     _activeCancellable?.cancel();
   }
 
+  /// 取消正在進行的 MITM 捕獲會話。
   Future<void> cancelCapture() async {
     final cancel = _activeCancel;
     if (cancel != null) {
@@ -401,16 +442,19 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// 強制重新 MITM 捕獲並更新（忽略快取 URL）。
   Future<void> forceRecaptureAndUpdate() async {
     await _runUpdate(forceRecapture: true);
   }
 
+  /// 刪除目前作用中帳號的所有資料。
   Future<void> clearActive() async {
     final uid = state.activeUid;
     if (uid == null) return;
     await removeUid(uid);
   }
 
+  /// 刪除所有帳號資料並重置設定。
   Future<void> clearAll() async {
     final storage = ref.read(gachaStorageProvider);
     await storage.clearAll();
@@ -421,6 +465,7 @@ class GachaRepository extends Notifier<GachaState> {
     _log.info('cleared all gacha data');
   }
 
+  /// 批次匯入 [AccountsBundle]，合併現有帳號資料與偏好設定。
   Future<ImportResult> importAccounts(AccountsBundle bundle) async {
     final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
@@ -515,6 +560,7 @@ class GachaRepository extends Notifier<GachaState> {
     );
   }
 
+  /// 依 uidOrder 與最後更新時間挑選 fallback 作用中 UID。
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
     if (byUid.isEmpty) return null;
     final order = ref.read(settingsProvider).uidOrder;
@@ -525,6 +571,7 @@ class GachaRepository extends Notifier<GachaState> {
     ).first;
   }
 
+  /// 刪除指定 UID 的帳號資料並更新設定。
   Future<void> removeUid(String uid) async {
     final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
@@ -548,6 +595,7 @@ class GachaRepository extends Notifier<GachaState> {
     _log.info('cleared uid=${sanitizeUid(uid)}');
   }
 
+  /// 將各種 exception 轉換成對應的 [UpdateError] 子類，供 UI 顯示。
   UpdateError _friendlyError(Object e) => switch (e) {
     _NoRecordsException() => const UpdateErrorNoRecords(),
     FormatException(:final message) => UpdateErrorOther(message),

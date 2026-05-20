@@ -1,17 +1,24 @@
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
+/// 單一 UID 的全卡池祈願存檔。
 class BannerStorage {
+  /// 建立 [BannerStorage]。
   const BannerStorage({
     required this.uid,
     required this.lastUpdated,
     required this.banners,
   });
 
+  /// 帳號 UID。
   final String uid;
-  final DateTime lastUpdated; // UTC
-  final Map<String, List<GachaRecord>>
-  banners; // gachaType → records desc by id
 
+  /// 最後更新時間（UTC）。
+  final DateTime lastUpdated;
+
+  /// gacha_type → 該卡池紀錄（依 id 降序）。
+  final Map<String, List<GachaRecord>> banners;
+
+  /// 從本地存檔 JSON 還原 [BannerStorage]。
   factory BannerStorage.fromJson(Map<String, dynamic> json) {
     final bannersJson = json['banners'] as Map<String, dynamic>;
     return BannerStorage(
@@ -30,6 +37,7 @@ class BannerStorage {
     );
   }
 
+  /// 序列化為本地存檔 JSON。
   Map<String, dynamic> toJson() => {
     'uid': uid,
     'last_updated': lastUpdated.toUtc().toIso8601String(),
@@ -39,6 +47,7 @@ class BannerStorage {
     ),
   };
 
+  /// 複製並選擇性覆蓋欄位。
   BannerStorage copyWith({
     DateTime? lastUpdated,
     Map<String, List<GachaRecord>>? banners,

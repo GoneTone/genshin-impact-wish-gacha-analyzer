@@ -1,8 +1,3 @@
-// lib/state/clock_tick.dart
-//
-// 每 30 秒 emit 一次 `DateTime.now()`，給需要顯示相對時間的 UI 訂閱。
-// 取出的值本身可以不使用 — 只要 watch 它就會跟著 rebuild。
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// 每 30 秒 emit 一次 `DateTime.now()`。

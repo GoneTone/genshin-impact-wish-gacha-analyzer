@@ -6,7 +6,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
 
+/// 單次 MITM 捕獲會話，提供結果 future 與取消函式。
 class CaptureSession {
+  /// 建立 [CaptureSession]。
   CaptureSession({required this.result, required this.cancel});
 
   /// 解析為 URL，或 null 代表使用者取消 / MITM 在無命中下關閉
@@ -16,10 +18,13 @@ class CaptureSession {
   final Future<void> Function() cancel;
 }
 
+/// 抽象祈願捕獲介面，實作由 Rust MITM 提供。
 abstract class GachaCapture {
+  /// 啟動一次捕獲會話並回傳 [CaptureSession]。
   CaptureSession start();
 }
 
+/// 以 Rust MITM proxy 實作的 [GachaCapture]。
 class RustGachaCapture implements GachaCapture {
   static final _log = Logger('gacha.capture');
 

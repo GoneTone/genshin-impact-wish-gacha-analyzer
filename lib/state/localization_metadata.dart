@@ -1,11 +1,12 @@
-// lib/state/localization_metadata.dart
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
+/// 語言的顯示名稱與翻譯者資訊。
 @immutable
 class LocaleMetadata {
+  /// 建立 [LocaleMetadata]。
   const LocaleMetadata({required this.nativeName, required this.translator});
 
   /// 該 locale 的母語名稱，例如 "日本語"、"Português (Brasil)"。

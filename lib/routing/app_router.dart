@@ -1,4 +1,3 @@
-// lib/routing/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/pages/overview_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/contributors_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/settings_page.dart';
 
+/// 建立並回傳 app 的 [GoRouter]，定義所有頁面路由。
 GoRouter buildAppRouter() => GoRouter(
   initialLocation: '/',
   routes: [
@@ -33,6 +33,7 @@ GoRouter buildAppRouter() => GoRouter(
   ],
 );
 
+/// 建立帶 200ms fade 動畫的 [CustomTransitionPage]，動畫關閉時直接顯示子元件。
 CustomTransitionPage<T> _fade<T>(Widget child) => CustomTransitionPage<T>(
   child: child,
   transitionDuration: const Duration(milliseconds: 200),

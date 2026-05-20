@@ -1,4 +1,6 @@
+/// 單筆祈願紀錄，支援 API 與本地存檔兩種來源。
 class GachaRecord {
+  /// 建立 [GachaRecord]。
   const GachaRecord({
     required this.id,
     required this.uid,
@@ -10,13 +12,28 @@ class GachaRecord {
     required this.lang,
   });
 
+  /// 紀錄唯一 ID（API 回傳的流水號字串）。
   final String id;
+
+  /// 帳號 UID。
   final String uid;
+
+  /// 查詢用的卡池 gacha_type（如 `'301'`、`'2000'`）。
   final String gachaType;
+
+  /// 道具名稱。
   final String name;
+
+  /// 道具類型（原始字串，如 `'角色'`）。
   final String itemType;
+
+  /// 星級（3 / 4 / 5）。
   final int rankType;
+
+  /// 抽到的時間（本地時間）。
   final DateTime time;
+
+  /// 紀錄的語言 tag（頌願 API 無此欄位時為空字串）。
   final String lang;
 
   /// 從 hoyoverse getGachaLog / getBeyondGachaLog API 回傳的 list 元素解析。

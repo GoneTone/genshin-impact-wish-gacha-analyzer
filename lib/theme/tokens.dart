@@ -1,30 +1,57 @@
-// lib/theme/tokens.dart
 import 'package:flutter/material.dart';
 
 /// 中性 scale：間距 / 圓角 / 字級。dark 與 light 共用。
 abstract class AppSpacing {
+  /// 4dp。
   static const double xs = 4;
+
+  /// 8dp。
   static const double s = 8;
+
+  /// 12dp。
   static const double m = 12;
+
+  /// 16dp。
   static const double l = 16;
+
+  /// 24dp。
   static const double xl = 24;
+
+  /// 32dp。
   static const double xxl = 32;
+
+  /// 48dp。
   static const double xxxl = 48;
 }
 
+/// 圓角常數（single-source）。
 abstract class AppRadius {
+  /// 小圓角，用於 chip、badge 等。
   static const double sm = 6;
+
+  /// 中圓角，用於卡片、按鈕等。
   static const double md = 10;
+
+  /// 大圓角，用於 dialog、bottom sheet 等。
   static const double lg = 14;
 }
 
 /// 字級語意（搭配 ThemeData.textTheme 對應 M3 名稱）。
 abstract class AppFontSize {
-  static const double display = 32; // 保底大數字
-  static const double pageTitle = 22; // 頁標
-  static const double title = 18; // 卡標
+  /// 32sp，保底大數字展示用。
+  static const double display = 32;
+
+  /// 22sp，頁面標題。
+  static const double pageTitle = 22;
+
+  /// 18sp，卡片標題。
+  static const double title = 18;
+
+  /// 14sp，正文。
   static const double body = 14;
-  static const double label = 11; // uppercase 小寫上標
+
+  /// 11sp，uppercase 小寫上標。
+  static const double label = 11;
 }
 
 /// 應用層級的色 token。透過 ThemeExtension 注入。
@@ -33,6 +60,7 @@ abstract class AppFontSize {
 /// 自成一套 palette。
 @immutable
 class GachaTokens extends ThemeExtension<GachaTokens> {
+  /// 建立 [GachaTokens]。
   const GachaTokens({
     required this.surfaceBackground,
     required this.surfaceCard,
@@ -52,21 +80,52 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     required this.stateWarning,
   });
 
+  /// Scaffold 最底層背景色。
   final Color surfaceBackground;
+
+  /// 卡片底色。
   final Color surfaceCard;
+
+  /// 較高層級卡片底色（nested card）。
   final Color surfaceCardHigh;
+
+  /// 低對比邊框色。
   final Color borderSubtle;
+
+  /// 較高對比邊框色。
   final Color borderEmphasis;
+
+  /// 主要文字色。
   final Color textPrimary;
+
+  /// 次要文字色。
   final Color textSecondary;
+
+  /// 輔助（muted）文字色。
   final Color textMuted;
+
+  /// 五星稀有度色。
   final Color fiveStar;
+
+  /// 四星稀有度色。
   final Color fourStar;
+
+  /// 三星稀有度色。
   final Color threeStar;
+
+  /// 二星稀有度色。
   final Color twoStar;
+
+  /// 品牌主色（按鈕、強調色）。
   final Color accentPrimary;
+
+  /// 危險狀態色（錯誤、刪除）。
   final Color stateDanger;
+
+  /// 成功狀態色。
   final Color stateSuccess;
+
+  /// 警告狀態色。
   final Color stateWarning;
 
   /// Dark = 深藍夜空 (palette A)
