@@ -58,6 +58,10 @@ function Find-ISCC {
         if (Test-Path $p) { return $p }
     }
 
+    # PATH lookup（CI 環境 / chocolatey 安裝走這條）
+    $onPath = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+    if ($onPath) { return $onPath.Source }
+
     return $null
 }
 
