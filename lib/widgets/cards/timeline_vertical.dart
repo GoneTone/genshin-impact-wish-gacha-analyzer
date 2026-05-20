@@ -78,7 +78,7 @@ class TimelineVertical extends StatefulWidget {
   State<TimelineVertical> createState() => _TimelineVerticalState();
 }
 
-/// State for [TimelineVertical]; manages pagination via [_visibleCount].
+/// [TimelineVertical] 的 State：管理分頁顯示數量 [_visibleCount]。
 class _TimelineVerticalState extends State<TimelineVertical> {
   /// 首次渲染顯示的最大條目數。
   static const int _initialPageSize = 10;
