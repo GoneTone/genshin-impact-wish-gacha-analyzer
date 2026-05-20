@@ -29,6 +29,9 @@
 
   "footerNotSynced": "No sincronizado",
   "footerLastUpdated": "Ultima actualizacion: {time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
 
   "relativeNow": "Ahora",
   "relativeSecondsAgo": "{count, plural, =1{Hace 1 segundo} other{Hace {count} segundos}}",
