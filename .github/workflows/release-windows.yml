@@ -100,9 +100,9 @@ jobs:
         shell: pwsh
         run: |
           $candidates = @(Get-ChildItem build\installer\*.exe -ErrorAction SilentlyContinue)
-          if ($candidates.Count -eq 0) { throw "build\installer 內沒有 *.exe" }
+          if ($candidates.Count -eq 0) { throw "No *.exe found in build\installer" }
           if ($candidates.Count -gt 1) {
-            throw "build\installer 內有多個 *.exe,預期僅 1 個:`n$($candidates.FullName -join "`n")"
+            throw "Multiple *.exe found in build\installer (expected exactly 1):`n$($candidates.FullName -join "`n")"
           }
           $exe = $candidates[0].FullName
           "INSTALLER_PATH=$exe" | Out-File $env:GITHUB_ENV -Append

@@ -21,15 +21,15 @@ Set-Location $ProjectRoot
 # --- 1. 讀版本號 -------------------------------------------------------------
 $PubspecPath = Join-Path $ProjectRoot 'pubspec.yaml'
 if (-not (Test-Path $PubspecPath)) {
-    throw "找不到 pubspec.yaml：$PubspecPath"
+    throw "pubspec.yaml not found at: $PubspecPath"
 }
 
 $VersionLine = Select-String -Path $PubspecPath -Pattern '^version:\s*([^\s+]+)' | Select-Object -First 1
 if (-not $VersionLine) {
-    throw "無法從 pubspec.yaml 抓到 version"
+    throw "Failed to parse version from pubspec.yaml"
 }
 $Version = $VersionLine.Matches[0].Groups[1].Value
-Write-Host "版本號：$Version" -ForegroundColor Cyan
+Write-Host "Version: $Version" -ForegroundColor Cyan
 
 # --- 2. 偵測 ISCC.exe ---------------------------------------------------------
 function Find-ISCC {
@@ -68,23 +68,23 @@ function Find-ISCC {
 $ISCC = Find-ISCC
 if (-not $ISCC) {
     Write-Host ""
-    Write-Host "找不到 Inno Setup 6。請下載並安裝：" -ForegroundColor Red
+    Write-Host "Inno Setup 6 not found. Please install:" -ForegroundColor Red
     Write-Host "  https://jrsoftware.org/isdl.php" -ForegroundColor Yellow
-    Write-Host "  (需要 6.3 或以上版本)" -ForegroundColor Yellow
+    Write-Host "  (requires 6.3 or above)" -ForegroundColor Yellow
     exit 1
 }
-Write-Host "Inno Setup:$ISCC" -ForegroundColor Cyan
+Write-Host "Inno Setup: $ISCC" -ForegroundColor Cyan
 
 # --- 3. Flutter build --------------------------------------------------------
 Write-Host ""
 Write-Host "==> flutter pub get" -ForegroundColor Green
 flutter pub get
-if ($LASTEXITCODE -ne 0) { throw "flutter pub get 失敗" }
+if ($LASTEXITCODE -ne 0) { throw "flutter pub get failed" }
 
 Write-Host ""
 Write-Host "==> flutter build windows --release" -ForegroundColor Green
 flutter build windows --release
-if ($LASTEXITCODE -ne 0) { throw "flutter build 失敗" }
+if ($LASTEXITCODE -ne 0) { throw "flutter build failed" }
 
 # --- 3a. (Optional) Sign app exe before packaging --------------------------
 if ($env:WINDOWS_SIGN_PFX_BASE64 -and $env:WINDOWS_SIGN_PASSWORD) {
@@ -106,7 +106,7 @@ $IssPath = Join-Path $ProjectRoot 'scripts\build_installer\installer.iss'
 Write-Host ""
 Write-Host "==> ISCC compile" -ForegroundColor Green
 & $ISCC "/DMyAppVersion=$Version" $IssPath
-if ($LASTEXITCODE -ne 0) { throw "ISCC 編譯失敗" }
+if ($LASTEXITCODE -ne 0) { throw "ISCC compile failed" }
 
 # --- 4a. (Optional) Sign installer after ISCC ------------------------------
 if ($env:WINDOWS_SIGN_PFX_BASE64 -and $env:WINDOWS_SIGN_PASSWORD) {
@@ -122,5 +122,5 @@ else {
 # --- 5. 報告產物 -------------------------------------------------------------
 $Output = Join-Path $InstallerDir "Genshin_Impact_Wish_Gacha_Analyzer-Setup-$Version.exe"
 Write-Host ""
-Write-Host "完成！產物：" -ForegroundColor Green
+Write-Host "Done! Output:" -ForegroundColor Green
 Write-Host "  $Output" -ForegroundColor Cyan
