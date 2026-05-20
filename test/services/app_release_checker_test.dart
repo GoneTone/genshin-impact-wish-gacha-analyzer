@@ -1,4 +1,3 @@
-// test/services/app_release_checker_test.dart
 import 'dart:convert';
 import 'dart:io';
 

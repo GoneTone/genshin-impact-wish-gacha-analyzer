@@ -70,7 +70,6 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    // 觸發 build
     final initial = container.read(gachaRepositoryProvider);
     expect(initial.activeUid, isNull);
     expect(initial.byUid, isEmpty);
@@ -170,7 +169,6 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 50));
     expect(container.read(gachaRepositoryProvider).activeUid, 'A');
 
-    // 觸發 update
     await container.read(gachaRepositoryProvider.notifier).update();
 
     final progress = container.read(gachaRepositoryProvider).progress;
@@ -279,11 +277,10 @@ void main() {
     final updateFut = notifier.update();
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
-    // act：呼叫 cancelPreparing
     notifier.cancelPreparing();
     await updateFut;
 
-    // assert：progress 應為 null（取消），不是 UpdateFailed
+    // progress 應為 null（取消），不是 UpdateFailed
     expect(container.read(gachaRepositoryProvider).progress, isNull);
     // 既有資料保留
     expect(container.read(gachaRepositoryProvider).activeUid, 'A');
@@ -627,11 +624,10 @@ void main() {
         reason: '應該已進入 banner fetch 階段',
       );
 
-      // act：取消
       notifier.cancelPreparing();
       await updateFut;
 
-      // assert：progress 應為 null（clean cancel），不是 UpdateCompleted with failedBanners
+      // progress 應為 null（clean cancel），不是 UpdateCompleted with failedBanners
       final finalProgress = container.read(gachaRepositoryProvider).progress;
       expect(
         finalProgress,

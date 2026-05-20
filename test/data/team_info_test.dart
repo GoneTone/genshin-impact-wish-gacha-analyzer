@@ -1,4 +1,3 @@
-// test/data/team_info_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 

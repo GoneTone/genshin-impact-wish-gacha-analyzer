@@ -1,4 +1,3 @@
-// test/widgets/inline_section_title_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

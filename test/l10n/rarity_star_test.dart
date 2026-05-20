@@ -1,4 +1,3 @@
-// test/l10n/rarity_star_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
