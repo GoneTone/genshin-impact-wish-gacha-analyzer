@@ -7,44 +7,70 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
+/// 認證過期（retcode -100 / -101）。
 class AuthExpiredException implements Exception {
   AuthExpiredException(this.retcode);
+
+  /// API 回傳的 retcode。
   final int retcode;
+
   @override
   String toString() => 'AuthExpiredException(retcode=$retcode)';
 }
 
+/// 請求頻率超限（retcode -110）且重試已達上限。
 class RateLimitedException implements Exception {
   @override
   String toString() => 'RateLimitedException';
 }
 
+/// API 回傳非預期的錯誤 retcode。
 class ApiErrorException implements Exception {
   ApiErrorException(this.retcode, this.message);
+
+  /// API 回傳的 retcode。
   final int retcode;
+
+  /// API 回傳的 message 字串。
   final String message;
+
   @override
   String toString() => 'ApiErrorException(retcode=$retcode, $message)';
 }
 
+/// 單頁 API 回應包裝。
 class FetchedPage {
   const FetchedPage(this.records);
+
+  /// 本頁紀錄列表。
   final List<GachaRecord> records;
+
+  /// 本頁是否無紀錄。
   bool get isEmpty => records.isEmpty;
+
+  /// 本頁紀錄數。
   int get length => records.length;
 }
 
+/// 抓取進度回報。
 class FetchProgress {
   const FetchProgress({
     required this.gachaType,
     required this.pageIndex,
     required this.newRecordsSoFar,
   });
+
+  /// 當前正在抓的卡池類型。
   final String gachaType;
+
+  /// 目前已抓到第幾頁（1-based）。
   final int pageIndex;
+
+  /// 目前新增紀錄累計數。
   final int newRecordsSoFar;
 }
 
+/// 負責呼叫 Hoyoverse 祈願 log API、處理分頁與新舊合併。
 class GachaFetcher {
   GachaFetcher({
     this.rateLimit = const Duration(milliseconds: 600),
@@ -52,12 +78,22 @@ class GachaFetcher {
     this.timeout = const Duration(seconds: 10),
   });
 
+  /// 兩次 API 呼叫之間的最短間隔。
   final Duration rateLimit;
+
+  /// rate-limit 退避等待時間。
   final Duration retryBackoff;
+
+  /// 單次 HTTP 請求超時。
   final Duration timeout;
 
+  /// Logger 實例（gacha 抓取）。
   static final _log = Logger('gacha.fetcher');
+
+  /// 每頁最大紀錄數（API 上限）。
   static const _pageSize = 20;
+
+  /// rate-limit 自動退避的最大重試次數。
   static const _maxRetryOnRateLimit = 3;
 
   /// 抓單頁，retcode 處理：0=ok / -101,-100=AuthExpired / -110=自動退避 / 其他=ApiError
@@ -217,8 +253,13 @@ class GachaFetcher {
   }
 }
 
+/// [GachaFetcher.probeUid] 的回傳值。
 class UidProbeResult {
   const UidProbeResult({required this.uid, required this.primerPages});
+
+  /// 探測到的 UID；若所有卡池皆無紀錄則為 null。
   final String? uid;
+
+  /// 探測過程中已抓到的第一頁（primer），key = gachaType，供後續抓取重用避免重抓。
   final Map<String, FetchedPage> primerPages;
 }

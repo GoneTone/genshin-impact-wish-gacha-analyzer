@@ -6,12 +6,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
+/// Logger 實例（檔案總管 reveal）。
 final _log = Logger('ui.reveal');
 
 /// reveal 的目標作業系統。把 [Platform] 判斷抽成 seam，讓三平台分支
 /// 能在單一主機上被測試驗證。
 enum RevealPlatform { windows, macos, other }
 
+/// 依 [Platform] 回傳當前作業系統對應的 [RevealPlatform]。
 RevealPlatform _defaultPlatform() {
   if (Platform.isWindows) return RevealPlatform.windows;
   if (Platform.isMacOS) return RevealPlatform.macos;
@@ -24,13 +26,16 @@ RevealPlatform _defaultPlatform() {
 @visibleForTesting
 RevealPlatform Function() revealPlatform = _defaultPlatform;
 
+/// Process.run seam，供測試注入 fake runner。
 @visibleForTesting
 Future<ProcessResult> Function(String exe, List<String> args)
 revealProcessRunner = Process.run;
 
+/// launchUrl seam，供測試注入 fake launcher。
 @visibleForTesting
 Future<bool> Function(Uri uri) revealUrlLauncher = launchUrl;
 
+/// 還原三個 seam 到預設真實實作；測試 tearDown 使用。
 @visibleForTesting
 void resetFileRevealSeams() {
   revealPlatform = _defaultPlatform;

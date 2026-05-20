@@ -14,21 +14,32 @@ import 'package:logging/logging.dart';
 /// 3. `<applicationSupport>/logs/YYYY-MM-DD.log`(UTC 日期,append);
 /// 4. `kDebugMode` 下額外 `debugPrint` 給 `flutter run` console。
 class LogService {
+  /// 私有建構；透過 [bootstrap] 初始化。
   LogService._(this.logsDir);
 
   /// `<applicationSupport>/logs/`
   final Directory logsDir;
 
+  /// log 檔保留天數。
   static const int _retentionDays = 7;
+
+  /// ring buffer 最大容量（條數）。
   static const int _ringBufferCapacity = 2000;
 
+  /// 最近 [_ringBufferCapacity] 條格式化 log 的記憶體環形緩衝。
   final Queue<String> _ringBuffer = Queue<String>();
+
+  /// 設定頁即時預覽用的 broadcast stream controller。
   final StreamController<String> _liveController =
       StreamController<String>.broadcast();
 
+  /// 當前寫入中的 log 檔 sink。
   IOSink? _todaySink;
-  DateTime? _todayDate; // UTC date
 
+  /// 當前 sink 對應的 UTC 日期（零時點），用於偵測是否需要 rollover。
+  DateTime? _todayDate;
+
+  /// root Logger 的訂閱，[dispose] 時取消。
   StreamSubscription<LogRecord>? _rootSubscription;
 
   /// 建立 `logs/`、清舊檔、開今天的 sink、訂閱 root Logger。
@@ -45,6 +56,7 @@ class LogService {
     return svc;
   }
 
+  /// 接收單條 [LogRecord] 並分發到 developer.log、ring buffer、live stream 及檔案。
   void _handle(LogRecord r) {
     // listener 不能讓例外冒到 zone：root logger 是 sync broadcast，這條
     // log 還在 firing，例外被 zone uncaught handler 接住後若再 publish
@@ -83,6 +95,7 @@ class LogService {
     }
   }
 
+  /// 將 [LogRecord] 格式化為單行文字（UTC 時間戳 + level + logger + message）。
   String _format(LogRecord r) {
     // 時間戳一律寫 UTC (帶 Z 後綴),跟 _appendToFile / _openTodaySink 的
     // UTC 分檔基準對齊;否則跨 UTC 午夜的紀錄看起來會「寫錯天」。
@@ -107,6 +120,7 @@ class LogService {
     return buf.toString();
   }
 
+  /// 將格式化後的 [line] 追加到今天的 log 檔，日期改變時觸發 rollover。
   void _appendToFile(String line, LogRecord r) {
     // 必須用 r.time.toUtc() 取年月日,跟 _openTodaySink 的基準對齊。
     // 直接拿 r.time.year/month/day 會用 local 時區,跨午夜 UTC 那段
@@ -122,6 +136,7 @@ class LogService {
     _todaySink?.writeln(line);
   }
 
+  /// 開啟今天（UTC）的 log 檔 sink（append 模式）。
   Future<void> _openTodaySink() async {
     final now = DateTime.now().toUtc();
     _todayDate = DateTime.utc(now.year, now.month, now.day);
@@ -129,6 +144,7 @@ class LogService {
     _todaySink = file.openWrite(mode: FileMode.append, encoding: utf8);
   }
 
+  /// 切換到 [d] 對應的 log 檔，舊 sink 在背景 close。
   Future<void> _rolloverTo(DateTime d) async {
     // 先把舊 sink 取走、立刻開新 sink 接管後續寫入,避免 _appendToFile
     // 的 writeln 打到正在 flush/close 的舊 sink 拋 "StreamSink is bound
@@ -153,6 +169,7 @@ class LogService {
     await _rotate();
   }
 
+  /// 回傳 [d]（UTC）對應的 log 檔路徑。
   File _fileFor(DateTime d) {
     final yyyy = d.year.toString().padLeft(4, '0');
     final mm = d.month.toString().padLeft(2, '0');
@@ -160,6 +177,7 @@ class LogService {
     return File('${logsDir.path}/$yyyy-$mm-$dd.log');
   }
 
+  /// 刪除 [_retentionDays] 前的舊 log 檔。
   Future<void> _rotate() async {
     if (!await logsDir.exists()) return;
     final entries = await logsDir.list().toList();
@@ -248,6 +266,7 @@ class LogService {
   /// 新進 log 的 broadcast stream。
   Stream<String> get live => _liveController.stream;
 
+  /// 取消 root logger 訂閱，flush 並關閉 sink 與 live stream。
   Future<void> dispose() async {
     await _rootSubscription?.cancel();
     await _todaySink?.flush();

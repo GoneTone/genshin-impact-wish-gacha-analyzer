@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 
+/// Logger 實例（帳號匯入/匯出）。
 final _log = Logger('accounts.io');
 
 /// 把 JSON 文字解析回 [AccountsBundle]。任何結構或型別不符都會

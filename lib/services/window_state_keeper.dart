@@ -1,4 +1,3 @@
-// lib/services/window_state_keeper.dart
 import 'dart:async';
 import 'dart:ui';
 
@@ -7,10 +6,16 @@ import 'package:screen_retriever/screen_retriever.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
+/// 視窗最小尺寸（寬 × 高，dp）。
 const Size _kMinWindowSize = Size(800, 450);
+
+/// 計算預設視窗大小時留的邊距（dp）。
 const double _kMargin = 100;
+
+/// 判斷 saved bounds 是否「在螢幕上」的最低重疊比例。
 const double _kOnScreenOverlapRatio = 0.3;
 
+/// 根據工作區大小計算預設視窗尺寸（16:9 比例，留 [margin] 邊距）。
 @visibleForTesting
 Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
   final w = workArea.width;
@@ -42,6 +47,7 @@ Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
   return raw;
 }
 
+/// 決定視窗初始 bounds：[saved] 有效且有足夠螢幕重疊時沿用，否則置中公式。
 @visibleForTesting
 Rect resolveInitialBounds({
   required Rect? saved,
@@ -74,17 +80,33 @@ Rect resolveInitialBounds({
   return formulaCentered();
 }
 
+/// 監聽視窗移動/縮放事件並持久化 bounds；重啟時自動恢復上次位置。
 class WindowStateKeeper with WindowListener {
+  /// 私有建構；透過 [bootstrap] 初始化。
   WindowStateKeeper._(this._prefs);
 
+  /// SharedPreferences key：視窗左上角 x 座標。
   static const _kX = 'window.state.x';
+
+  /// SharedPreferences key：視窗左上角 y 座標。
   static const _kY = 'window.state.y';
+
+  /// SharedPreferences key：視窗寬度。
   static const _kWidth = 'window.state.width';
+
+  /// SharedPreferences key：視窗高度。
   static const _kHeight = 'window.state.height';
+
+  /// SharedPreferences key：是否最大化。
   static const _kMaximized = 'window.state.isMaximized';
+
+  /// 視窗狀態寫入 debounce 間隔。
   static const _kSaveDebounce = Duration(milliseconds: 800);
 
+  /// SharedPreferences 實例，用於持久化視窗狀態。
   final SharedPreferences _prefs;
+
+  /// debounce timer，[_scheduleSave] 使用。
   Timer? _debounceTimer;
 
   /// 初始化視窗：讀取持久化狀態 → 解析初始 bounds → 套用 → 開始監聽。
@@ -122,11 +144,13 @@ class WindowStateKeeper with WindowListener {
     windowManager.addListener(keeper);
   }
 
+  /// 取消 debounce 並立即觸發儲存。
   void _flushNow() {
     _debounceTimer?.cancel();
     unawaited(_saveNow());
   }
 
+  /// 從 SharedPreferences 讀取上次儲存的視窗 bounds；四個值任一缺漏則回傳 null。
   Rect? _loadSaved() {
     final x = _prefs.getDouble(_kX);
     final y = _prefs.getDouble(_kY);
@@ -136,11 +160,13 @@ class WindowStateKeeper with WindowListener {
     return Rect.fromLTWH(x, y, w, h);
   }
 
+  /// 重設 debounce timer，[_kSaveDebounce] 後觸發儲存。
   void _scheduleSave() {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(_kSaveDebounce, () => unawaited(_saveNow()));
   }
 
+  /// 立即讀取並儲存目前視窗狀態。
   Future<void> _saveNow() async {
     final isMax = await windowManager.isMaximized();
     await _prefs.setBool(_kMaximized, isMax);

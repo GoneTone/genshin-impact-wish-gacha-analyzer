@@ -12,10 +12,14 @@ import 'package:http/io_client.dart';
 class CancellableHttpClient {
   CancellableHttpClient({required this.client, required this.cancel});
 
+  /// 用於發送請求的 HTTP client。
   final http.Client client;
+
+  /// 取消當前進行中的請求；可重複呼叫安全。
   final void Function() cancel;
 }
 
+/// 建立 [CancellableHttpClient] 的 factory 函式類型，供測試注入 fake。
 typedef CancellableHttpClientFactory = CancellableHttpClient Function();
 
 /// Production factory：建立可強制中斷的 [CancellableHttpClient]。

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
+/// 單一卡池的保底狀態計算結果。
 @immutable
 class Pity {
   const Pity({
@@ -27,12 +28,14 @@ class Pity {
   /// 該 rank 在 records 中的總命中次數。
   final int hitCount;
 
+  /// 保底進度（0.0–1.0），超過閾值時夾到 1.0。
   double get progress {
     if (threshold <= 0) return 0;
     final raw = current / threshold;
     return raw > 1 ? 1.0 : raw;
   }
 
+  /// 距保底還剩幾抽；已超過閾值時為 0。
   int get distance {
     final d = threshold - current;
     return d < 0 ? 0 : d;

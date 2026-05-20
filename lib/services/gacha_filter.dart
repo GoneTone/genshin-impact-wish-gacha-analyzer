@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 
+/// 稀有度篩選條件。
 enum RarityFilter { all, fiveStar, fourStar }
 
+/// 祈願紀錄篩選條件（稀有度、物品類型、關鍵字）。
 @immutable
 class RecordFilter {
   const RecordFilter({
@@ -12,10 +14,16 @@ class RecordFilter {
     this.query = '',
   });
 
+  /// 稀有度篩選。
   final RarityFilter rarity;
+
+  /// 物品類型篩選；null 表示不限。
   final String? itemType;
+
+  /// 關鍵字搜尋字串。
   final String query;
 
+  /// 是否有任何非預設的篩選條件。
   bool get hasAny =>
       rarity != RarityFilter.all || itemType != null || query.trim().isNotEmpty;
 
@@ -32,18 +40,25 @@ class RecordFilter {
     query: query ?? this.query,
   );
 
+  /// [copyWith] 用以區分「不傳 itemType」與「設為 null」的哨兵值。
   static const _sentinel = Object();
 }
 
+/// 可排序的欄位。
 enum SortColumn { time, name, kind, rarity, totalIndex, mainPity }
 
+/// 排序方向。
 enum SortDirection { asc, desc }
 
+/// 表格排序條件（欄位 + 方向）。
 @immutable
 class TableSort {
   const TableSort({required this.column, required this.direction});
 
+  /// 排序欄位。
   final SortColumn column;
+
+  /// 排序方向。
   final SortDirection direction;
 
   @override
@@ -56,6 +71,7 @@ class TableSort {
   int get hashCode => Object.hash(column, direction);
 }
 
+/// 依 [RecordFilter] 條件過濾 [rows]，回傳新列表。
 List<RecordRow> filterRecordRows(List<RecordRow> rows, RecordFilter f) {
   final q = f.query.trim().toLowerCase();
   return rows

@@ -1,10 +1,10 @@
-// lib/services/settings_storage.dart
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// 應用程式的外觀主題設定。
 enum AppThemeMode { system, dark, light }
 
 /// 使用者偏好的語言：跟隨系統（[SystemLanguage]）或指定 BCP-47 locale
@@ -12,6 +12,7 @@ enum AppThemeMode { system, dark, light }
 sealed class LanguagePreference {
   const LanguagePreference();
 
+  /// 從 [toCode] 序列化字串還原偏好設定。
   factory LanguagePreference.fromCode(String code) =>
       code == 'system' ? const SystemLanguage() : LocaleLanguage(code);
 
@@ -19,6 +20,7 @@ sealed class LanguagePreference {
   String toCode();
 }
 
+/// 跟隨系統語言。
 class SystemLanguage extends LanguagePreference {
   const SystemLanguage();
 
@@ -35,6 +37,7 @@ class SystemLanguage extends LanguagePreference {
   String toString() => 'SystemLanguage';
 }
 
+/// 指定 BCP-47 locale 的語言偏好。
 class LocaleLanguage extends LanguagePreference {
   const LocaleLanguage(this.code);
 
@@ -55,6 +58,7 @@ class LocaleLanguage extends LanguagePreference {
   String toString() => 'LocaleLanguage($code)';
 }
 
+/// 應用程式全域使用者偏好設定的快照。
 @immutable
 class AppSettings {
   const AppSettings({
@@ -66,13 +70,25 @@ class AppSettings {
     this.skippedReleaseTag,
   });
 
+  /// 外觀主題。
   final AppThemeMode themeMode;
+
+  /// 語言偏好。
   final LanguagePreference locale;
+
+  /// 最近一次使用的 UID。
   final String? lastActiveUid;
+
+  /// UID 別名對應，key = uid。
   final Map<String, String> uidAliases;
+
+  /// 使用者自訂的 UID 顯示順序。
   final List<String> uidOrder;
+
+  /// 使用者選擇跳過的 release tag（已讀過不再提示）。
   final String? skippedReleaseTag;
 
+  /// 預設設定值。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
     locale: SystemLanguage(),
@@ -101,16 +117,30 @@ class AppSettings {
   );
 }
 
+/// [AppSettings] 的 SharedPreferences 讀寫工具類別。
 abstract final class SettingsStorage {
+  /// Logger 實例（設定存取）。
   static final _log = Logger('settings');
 
+  /// SharedPreferences key：外觀主題。
   static const _kThemeMode = 'pref.themeMode';
+
+  /// SharedPreferences key：語言偏好。
   static const _kLocale = 'pref.locale';
+
+  /// SharedPreferences key：最近使用 UID。
   static const _kLastActiveUid = 'pref.lastActiveUid';
+
+  /// SharedPreferences key：UID 別名 JSON。
   static const _kUidAliases = 'pref.uidAliases';
+
+  /// SharedPreferences key：UID 排序 JSON。
   static const _kUidOrder = 'pref.uidOrder';
+
+  /// SharedPreferences key：使用者跳過的 release tag。
   static const _kSkippedReleaseTag = 'pref.skippedReleaseTag';
 
+  /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
     return AppSettings(
@@ -123,6 +153,7 @@ abstract final class SettingsStorage {
     );
   }
 
+  /// 將 [s] 持久化到 SharedPreferences。
   static Future<void> save(AppSettings s) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_kThemeMode, _themeModeToString(s.themeMode));
@@ -141,23 +172,27 @@ abstract final class SettingsStorage {
     }
   }
 
+  /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。
   static AppThemeMode _parseThemeMode(String? raw) => switch (raw) {
     'dark' => AppThemeMode.dark,
     'light' => AppThemeMode.light,
     _ => AppThemeMode.system,
   };
 
+  /// 序列化主題設定為字串。
   static String _themeModeToString(AppThemeMode m) => switch (m) {
     AppThemeMode.dark => 'dark',
     AppThemeMode.light => 'light',
     AppThemeMode.system => 'system',
   };
 
+  /// 解析語言偏好字串，空值或 null 回退到 [SystemLanguage]。
   static LanguagePreference _parseLocale(String? raw) =>
       (raw == null || raw.isEmpty)
       ? const SystemLanguage()
       : LanguagePreference.fromCode(raw);
 
+  /// 解析 UID 別名 JSON，格式錯誤時 log 警告並回傳空 map。
   static Map<String, String> _parseAliases(String? raw) {
     if (raw == null || raw.isEmpty) return const {};
     try {
@@ -170,6 +205,7 @@ abstract final class SettingsStorage {
     }
   }
 
+  /// 解析 UID 排序 JSON，格式錯誤時 log 警告並回傳空列表。
   static List<String> _parseOrder(String? raw) {
     if (raw == null || raw.isEmpty) return const [];
     try {

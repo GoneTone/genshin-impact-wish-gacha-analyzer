@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
+/// 附帶計算後序號的祈願紀錄行（表格顯示用）。
 @immutable
 class RecordRow {
   const RecordRow({
@@ -10,6 +11,7 @@ class RecordRow {
     required this.mainPityIndex,
   });
 
+  /// 原始祈願紀錄。
   final GachaRecord record;
 
   /// 該抽在該卡池所有抽中的累積序號（asc）；最舊 = 1，最新 = N。

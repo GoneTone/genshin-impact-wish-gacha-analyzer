@@ -1,19 +1,26 @@
+/// 祈願 log API 端點類型（一般祈願 vs 過去活動頌願）。
 enum GachaEndpoint {
   gacha('getGachaLog'),
   odes('getBeyondGachaLog');
 
   const GachaEndpoint(this.pathSegment);
+
+  /// URL path 最後一段的端點名稱。
   final String pathSegment;
 }
 
+/// 封裝擷取到的祈願 URL，提供組出各卡池分頁請求的 [build] 方法。
 class GachaUrl {
   GachaUrl._(this._uri);
 
+  /// 內部包裝的原始 URI。
   final Uri _uri;
 
+  /// 解析使用者擷取的 URL 字串。
   static GachaUrl parse(String capturedUrl) =>
       GachaUrl._(Uri.parse(capturedUrl));
 
+  /// 組出指定 [gachaType]、[endId]、[endpoint] 的 API 請求 URI。
   Uri build({
     required String gachaType,
     required String endId,

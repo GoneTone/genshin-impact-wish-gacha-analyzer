@@ -1,9 +1,3 @@
-// lib/services/app_release_checker.dart
-//
-// 純函式：查 GitHub Releases，過濾 prerelease/draft，回傳比 currentVersion
-// 新的 release（新到舊）。i18n 留給 notifier 端；service 端不依賴
-// AppLocalizations，方便單元測試。
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -13,6 +7,7 @@ import 'package:pub_semver/pub_semver.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 
+/// 單筆 GitHub Release 的資料。
 class AppRelease {
   const AppRelease({
     required this.tagName,
@@ -23,35 +18,54 @@ class AppRelease {
     required this.publishedAt,
   });
 
-  final String tagName; // 例 "v1.2.0"
-  final String version; // 例 "1.2.0"（剝掉 "v"）
+  /// 例 "v1.2.0"
+  final String tagName;
+
+  /// 例 "1.2.0"（剝掉 "v"）
+  final String version;
+
+  /// Release 標題。
   final String name;
-  final String body; // Markdown
+
+  /// Markdown 格式的 release notes。
+  final String body;
+
+  /// GitHub Release 頁面 URL。
   final String htmlUrl;
+
+  /// 發佈時間。
   final DateTime publishedAt;
 }
 
+/// [fetchNewerReleases] 失敗時拋出的 sealed 類別。
 sealed class ReleaseCheckError implements Exception {
   const ReleaseCheckError();
 }
 
+/// 網路連線失敗。
 class ReleaseCheckNetwork extends ReleaseCheckError {
   const ReleaseCheckNetwork();
 }
 
+/// 請求超時。
 class ReleaseCheckTimeout extends ReleaseCheckError {
   const ReleaseCheckTimeout();
 }
 
+/// GitHub API rate limit 超限。
 class ReleaseCheckRateLimited extends ReleaseCheckError {
   const ReleaseCheckRateLimited();
 }
 
+/// GitHub API 回傳非 200 錯誤碼。
 class ReleaseCheckServer extends ReleaseCheckError {
   const ReleaseCheckServer(this.status);
+
+  /// HTTP status code。
   final int status;
 }
 
+/// API 回應格式不符預期。
 class ReleaseCheckFormat extends ReleaseCheckError {
   const ReleaseCheckFormat();
 }
