@@ -95,12 +95,12 @@
 
   "progressPreparing": "Đang chuẩn bị…",
   "progressPreparingHint": "Đang chuẩn bị nguồn dữ liệu…",
-  "progressWaiting": "Đang chờ chặn bắt…",
+  "progressWaiting": "Đang chờ lấy URL…",
   "progressFetching": "Đang tải…",
   "progressDone": "Cập nhật hoàn tất",
   "progressFailed": "Thất bại",
-  "progressOpenGameHint": "Vui lòng mở Genshin Impact → Gacha → Lịch sử Cầu Nguyện",
-  "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần chặn bắt lại)",
+  "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
+  "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
   "progressFetchingBanner": "Đang tải: {name}",
   "@progressFetchingBanner": {
     "placeholders": { "name": { "type": "String" } }
