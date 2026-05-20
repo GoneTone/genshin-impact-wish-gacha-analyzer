@@ -110,7 +110,7 @@
     "placeholders": { "rank": { "type": "int" } }
   },
   "tableTotalIndex": "累計回数",
-  "tableMainPity": "天井内",
+  "tableMainPity": "天井カウント",
   "tableMainPityTooltip": "前回の {star} からの回数",
   "@tableMainPityTooltip": {
     "placeholders": { "star": { "type": "String" } }
@@ -148,7 +148,7 @@
   },
 
   "errorAuthExpired": "認証が継続して失効しています。ゲームに再ログインしてください",
-  "errorRateLimited": "リクエストが頻繁すぎます。しばらくしてから再試行してください",
+  "errorRateLimited": "リクエストが多すぎます。しばらくしてから再試行してください",
   "errorServer": "サーバーエラー：{message}",
   "@errorServer": {
     "placeholders": { "message": { "type": "String" } }
@@ -199,7 +199,7 @@
   "@pityDistance": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityClose": "天井間近！残り {n} 回",
+  "pityClose": "もうすぐ天井！あと {n} 回",
   "@pityClose": {
     "placeholders": { "n": { "type": "int" } }
   },
