@@ -11,7 +11,16 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 final _log = Logger('share.image');
 
 /// 分享圖匯出結果狀態：同時存檔+複製、僅存檔、僅複製三種情況。
-enum ShareExportStatus { savedAndCopied, savedOnly, copiedOnly }
+enum ShareExportStatus {
+  /// 同時存檔並複製到剪貼簿。
+  savedAndCopied,
+
+  /// 僅存檔（剪貼簿寫入失敗或平台不支援）。
+  savedOnly,
+
+  /// 僅複製到剪貼簿（使用者取消存檔）。
+  copiedOnly,
+}
 
 /// 分享圖匯出結果，包含狀態與存檔路徑（僅存檔/同時存檔時不為 null）。
 class ShareExportResult {

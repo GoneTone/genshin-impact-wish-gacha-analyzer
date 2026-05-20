@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 /// 單一卡池的保底狀態計算結果。
 @immutable
 class Pity {
+  /// 建立 [Pity]。
   const Pity({
     required this.current,
     required this.threshold,

@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 單一統計數值的卡片，含標籤、大字主數值、可選副標題與尾端 widget。
 class StatCard extends StatelessWidget {
+  /// 建立 [StatCard]。
   const StatCard({
     super.key,
     required this.label,

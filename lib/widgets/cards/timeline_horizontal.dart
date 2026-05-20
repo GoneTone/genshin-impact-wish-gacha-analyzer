@@ -61,6 +61,7 @@ List<DistributionEntry> bannerDistributionEntries(
 /// - 每欄 3 行:名稱 / 節點(軸線居中) / `MM/dd · N抽`
 /// - `nowPulls != null` 時最左欄為「現在」(中空節點 + 同色 halo)
 class TimelineHorizontal extends StatefulWidget {
+  /// 建立 [TimelineHorizontal]。
   const TimelineHorizontal({
     super.key,
     required this.entries,

@@ -31,6 +31,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_hel
 
 /// 總覽頁，將 gacha 與 odes 分兩段各自呈現統計、圖表、timeline。
 class OverviewPage extends ConsumerWidget {
+  /// 建立 [OverviewPage]。
   const OverviewPage({super.key});
 
   @override

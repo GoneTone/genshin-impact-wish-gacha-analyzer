@@ -8,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 /// 負責祈願資料與已擷取 URL 的本地 JSON 讀寫。
 class GachaStorage {
+  /// 建立 [GachaStorage]，需指定資料根目錄 [baseDir]。
   GachaStorage(this.baseDir);
 
   /// Logger 實例（gacha 儲存）。

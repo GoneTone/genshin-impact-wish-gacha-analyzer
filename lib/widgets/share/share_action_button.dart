@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 /// 觸發分享圖生成的圖示按鈕（OverviewPage / BannerPage 共用）。
 /// 生成中顯示 spinner，禁止重入。
 class ShareActionButton extends StatefulWidget {
+  /// 建立 [ShareActionButton]。
   const ShareActionButton({
     super.key,
     required this.enabled,

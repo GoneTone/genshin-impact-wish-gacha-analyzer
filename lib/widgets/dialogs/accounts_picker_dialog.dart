@@ -7,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.da
 
 /// 帳號挑選對話框中單一帳號的資料模型。
 class AccountPickerEntry {
+  /// 建立 [AccountPickerEntry]。
   const AccountPickerEntry({
     required this.uid,
     this.alias,

@@ -35,6 +35,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_hel
 
 /// 單一 banner 的詳細統計頁，顯示保底進度、圖表、記錄列表。
 class BannerPage extends ConsumerWidget {
+  /// 建立 [BannerPage]，需指定目標卡池的 [gachaType]。
   const BannerPage({super.key, required this.gachaType});
 
   /// 對應 [GachaType.gachaType] 的卡池類型字串。

@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 /// 時間軸條目:一筆目標稀有度紀錄 + 距該卡池上一筆同稀有度的抽數。
 @immutable
 class TimelineEntry {
+  /// 建立 [TimelineEntry]。
   const TimelineEntry({
     required this.name,
     required this.gachaType,
@@ -12,9 +13,16 @@ class TimelineEntry {
     required this.pullsSincePrev,
   });
 
+  /// 物品名稱。
   final String name;
+
+  /// 所屬卡池類型字串。
   final String gachaType;
+
+  /// 抽取時間。
   final DateTime time;
+
+  /// 距該卡池上一筆相同稀有度的抽數（含自己）。
   final int pullsSincePrev;
 }
 

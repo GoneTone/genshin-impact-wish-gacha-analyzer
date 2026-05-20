@@ -2,6 +2,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
 /// 單一卡池的祈願統計摘要。
 class GachaStats {
+  /// 建立 [GachaStats]。
   const GachaStats({
     required this.total,
     required this.fiveStarCount,

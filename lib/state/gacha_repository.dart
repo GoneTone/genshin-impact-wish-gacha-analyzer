@@ -608,7 +608,7 @@ class GachaRepository extends Notifier<GachaState> {
     _ => UpdateErrorOther(e.toString()),
   };
 
-  // ─── debug helpers，僅供測試用 ───
+  /// 強制覆寫 progress 狀態，僅供測試使用。
   @visibleForTesting
   void debugSetProgress(UpdateProgress p) {
     state = state.copyWith(progress: p);

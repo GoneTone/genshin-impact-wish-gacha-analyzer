@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 生成分享圖前由使用者在 dialog 選定的選項。
 class ShareImageOptions {
+  /// 建立 [ShareImageOptions]，預設暗色主題且不顯示完整 UID。
   const ShareImageOptions({
     this.brightness = Brightness.dark,
     this.showFullUid = false,

@@ -13,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 ///
 /// 自動訂閱 [clockTickProvider],每 30 秒重繪。
 class RelativeTimeText extends ConsumerWidget {
+  /// 建立 [RelativeTimeText]。
   const RelativeTimeText({
     super.key,
     required this.time,

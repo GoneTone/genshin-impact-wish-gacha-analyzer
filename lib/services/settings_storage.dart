@@ -5,7 +5,16 @@ import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 應用程式的外觀主題設定。
-enum AppThemeMode { system, dark, light }
+enum AppThemeMode {
+  /// 跟隨系統明暗模式。
+  system,
+
+  /// 強制深色模式。
+  dark,
+
+  /// 強制淺色模式。
+  light,
+}
 
 /// 使用者偏好的語言：跟隨系統（[SystemLanguage]）或指定 BCP-47 locale
 /// （[LocaleLanguage]，例如 "zh-Hans"、"pt-BR"、"ja"）。
@@ -22,6 +31,7 @@ sealed class LanguagePreference {
 
 /// 跟隨系統語言。
 class SystemLanguage extends LanguagePreference {
+  /// 建立 [SystemLanguage]。
   const SystemLanguage();
 
   @override
@@ -39,6 +49,7 @@ class SystemLanguage extends LanguagePreference {
 
 /// 指定 BCP-47 locale 的語言偏好。
 class LocaleLanguage extends LanguagePreference {
+  /// 建立 [LocaleLanguage]，需提供 BCP-47 [code]。
   const LocaleLanguage(this.code);
 
   /// BCP-47 code，例如 "zh-Hans"、"pt-BR"、"ja"。
@@ -61,6 +72,7 @@ class LocaleLanguage extends LanguagePreference {
 /// 應用程式全域使用者偏好設定的快照。
 @immutable
 class AppSettings {
+  /// 建立 [AppSettings]。
   const AppSettings({
     required this.themeMode,
     required this.locale,
@@ -88,12 +100,14 @@ class AppSettings {
   /// 使用者選擇跳過的 release tag（已讀過不再提示）。
   final String? skippedReleaseTag;
 
-  /// 預設設定值。
+  /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
     locale: SystemLanguage(),
   );
 
+  /// 回傳以指定欄位覆寫的新 [AppSettings]；
+  /// 傳 `clearLastActiveUid: true` 或 `clearSkippedReleaseTag: true` 可將對應欄位清為 null。
   AppSettings copyWith({
     AppThemeMode? themeMode,
     LanguagePreference? locale,

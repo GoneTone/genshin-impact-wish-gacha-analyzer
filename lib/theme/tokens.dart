@@ -235,5 +235,6 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
 
 /// Theme.of(context) 取 token 的便捷 extension。
 extension GachaTokensX on ThemeData {
+  /// 取出 [GachaTokens] 主題延伸；未注入時拋出 [Null] error。
   GachaTokens get gacha => extension<GachaTokens>()!;
 }

@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.da
 
 /// 新版本通知 dialog，列出自上次版本以來的所有 release notes。
 class NewVersionDialog extends ConsumerWidget {
+  /// 建立 [NewVersionDialog]，需傳入要顯示的 release 列表。
   const NewVersionDialog({super.key, required this.releases});
 
   /// 需要顯示的 release 列表（最新版在前）。

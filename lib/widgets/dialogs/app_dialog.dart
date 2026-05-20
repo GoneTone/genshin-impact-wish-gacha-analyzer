@@ -8,8 +8,13 @@ import 'package:flutter/material.dart';
 /// 視窗較窄時實際寬度會 fallback 到 `mq.size.width - 80`（扣掉 AlertDialog
 /// 預設左右 insetPadding 40 * 2）。
 enum AppDialogSize {
+  /// 小尺寸，最大寬度 480px。
   sm,
+
+  /// 中尺寸，最大寬度 640px。
   md,
+
+  /// 大尺寸，最大寬度 720px。
   lg;
 
   /// 對應尺寸的最大內容寬度（px）。
@@ -30,6 +35,7 @@ enum AppDialogSize {
 ///
 /// 不要再自己手寫 `AlertDialog` + `ConstrainedBox` + `math.min(...)` — 用這個。
 class AppDialog extends StatelessWidget {
+  /// 建立 [AppDialog]。
   const AppDialog({
     super.key,
     required this.title,

@@ -1,8 +1,12 @@
 /// 祈願 log API 端點類型（一般祈願 vs 過去活動頌願）。
 enum GachaEndpoint {
+  /// 一般祈願（角色、武器、常駐等卡池）的 API 端點。
   gacha('getGachaLog'),
+
+  /// 過去活動頌願的 API 端點。
   odes('getBeyondGachaLog');
 
+  /// 建立 [GachaEndpoint]，需提供 API 路徑段 [pathSegment]。
   const GachaEndpoint(this.pathSegment);
 
   /// URL path 最後一段的端點名稱。

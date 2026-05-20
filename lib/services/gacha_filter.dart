@@ -3,11 +3,21 @@ import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 
 /// 稀有度篩選條件。
-enum RarityFilter { all, fiveStar, fourStar }
+enum RarityFilter {
+  /// 不限稀有度。
+  all,
+
+  /// 僅顯示 5★。
+  fiveStar,
+
+  /// 僅顯示 4★。
+  fourStar,
+}
 
 /// 祈願紀錄篩選條件（稀有度、物品類型、關鍵字）。
 @immutable
 class RecordFilter {
+  /// 建立 [RecordFilter]，預設不限稀有度、不限物品類型、無關鍵字。
   const RecordFilter({
     this.rarity = RarityFilter.all,
     this.itemType,
@@ -45,14 +55,39 @@ class RecordFilter {
 }
 
 /// 可排序的欄位。
-enum SortColumn { time, name, kind, rarity, totalIndex, mainPity }
+enum SortColumn {
+  /// 抽取時間。
+  time,
+
+  /// 物品名稱。
+  name,
+
+  /// 物品類型（武器/角色）。
+  kind,
+
+  /// 稀有度。
+  rarity,
+
+  /// 卡池累計抽數序號。
+  totalIndex,
+
+  /// 距上次主稀有度（含自己）的抽數。
+  mainPity,
+}
 
 /// 排序方向。
-enum SortDirection { asc, desc }
+enum SortDirection {
+  /// 升冪排序。
+  asc,
+
+  /// 降冪排序。
+  desc,
+}
 
 /// 表格排序條件（欄位 + 方向）。
 @immutable
 class TableSort {
+  /// 建立 [TableSort]，需指定排序欄位與方向。
   const TableSort({required this.column, required this.direction});
 
   /// 排序欄位。

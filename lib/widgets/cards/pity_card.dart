@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 顯示單一稀有度的保底進度卡片，包含抽數、進度條與副標題。
 class PityCard extends StatefulWidget {
+  /// 建立 [PityCard]。
   const PityCard({
     super.key,
     required this.label,

@@ -23,6 +23,7 @@ const double _railLeft = _monthColumnWidth + (_haloSize / 2);
 /// - 軸線一條連續貫穿;月份標籤貼於軸線左外側(獨立左欄,不打斷軸線)
 /// - `nowPulls != null` 時最頂端為「現在」row;`isAcrossBanners` 決定 i18n 文案
 class TimelineVertical extends StatefulWidget {
+  /// 建立 [TimelineVertical]。
   const TimelineVertical({
     super.key,
     required this.entries,

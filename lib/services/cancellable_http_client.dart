@@ -10,6 +10,7 @@ import 'package:http/io_client.dart';
 /// [cancel] 呼叫底層 `HttpClient.close(force: true)` 強制中斷所有
 /// in-flight request（會讓 await 中的 request 拋 [http.ClientException]）。
 class CancellableHttpClient {
+  /// 建立 [CancellableHttpClient]。
   CancellableHttpClient({required this.client, required this.cancel});
 
   /// 用於發送請求的 HTTP client。

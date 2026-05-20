@@ -13,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.da
 
 /// 帳號管理卡片：顯示所有已知 UID 的清單，支援排序、切換、重命名與刪除。
 class AccountManagement extends ConsumerWidget {
+  /// 建立 [AccountManagement]。
   const AccountManagement({super.key});
 
   @override

@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 包裹圖表的統一卡片容器，含標題列與可選圖例。
 class ChartCard extends StatelessWidget {
+  /// 建立 [ChartCard]。
   const ChartCard({
     super.key,
     required this.title,

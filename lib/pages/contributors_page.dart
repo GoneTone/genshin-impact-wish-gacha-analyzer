@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart'
 
 /// 貢獻者清單頁，列出專案領導、測試者、翻譯者等資訊。
 class ContributorsPage extends StatelessWidget {
+  /// 建立 [ContributorsPage]。
   const ContributorsPage({super.key});
 
   @override

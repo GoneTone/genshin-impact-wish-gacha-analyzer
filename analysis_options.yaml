@@ -6,3 +6,10 @@ analyzer:
     # 並由 Flutter Rust Bridge 在 build time 自行 dart pub get；不應由
     # 主專案 analyzer 檢視。
     - rust_builder/**
+    - lib/generated/**
+    - lib/src/rust/**
+    - lib/l10n/generated/**
+
+linter:
+  rules:
+    - public_member_api_docs

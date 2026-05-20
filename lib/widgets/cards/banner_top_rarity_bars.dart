@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 /// 每個 [GachaType] 依其 `primaryPity.rank` 決定該池要計數的稀有度（卡池是
 /// 5★、頌願常駐是 4★），bar 長度為各池件數相對最大值的比例。
 class BannerTopRarityBars extends StatelessWidget {
+  /// 建立 [BannerTopRarityBars]。
   const BannerTopRarityBars({
     super.key,
     required this.types,

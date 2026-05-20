@@ -9,6 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 /// 認證過期（retcode -100 / -101）。
 class AuthExpiredException implements Exception {
+  /// 建立 [AuthExpiredException]，需提供 API 回傳的 [retcode]。
   AuthExpiredException(this.retcode);
 
   /// API 回傳的 retcode。
@@ -26,6 +27,7 @@ class RateLimitedException implements Exception {
 
 /// API 回傳非預期的錯誤 retcode。
 class ApiErrorException implements Exception {
+  /// 建立 [ApiErrorException]，需提供 API 的 [retcode] 與 [message]。
   ApiErrorException(this.retcode, this.message);
 
   /// API 回傳的 retcode。
@@ -40,6 +42,7 @@ class ApiErrorException implements Exception {
 
 /// 單頁 API 回應包裝。
 class FetchedPage {
+  /// 建立 [FetchedPage]，需提供本頁紀錄列表。
   const FetchedPage(this.records);
 
   /// 本頁紀錄列表。
@@ -54,6 +57,7 @@ class FetchedPage {
 
 /// 抓取進度回報。
 class FetchProgress {
+  /// 建立 [FetchProgress]，帶 [gachaType]、[pageIndex]、[newRecordsSoFar] 三個進度欄位。
   const FetchProgress({
     required this.gachaType,
     required this.pageIndex,
@@ -72,6 +76,7 @@ class FetchProgress {
 
 /// 負責呼叫 Hoyoverse 祈願 log API、處理分頁與新舊合併。
 class GachaFetcher {
+  /// 建立 [GachaFetcher]，可調整速率限制、退避時間與逾時設定。
   GachaFetcher({
     this.rateLimit = const Duration(milliseconds: 600),
     this.retryBackoff = const Duration(seconds: 5),
@@ -255,6 +260,7 @@ class GachaFetcher {
 
 /// [GachaFetcher.probeUid] 的回傳值。
 class UidProbeResult {
+  /// 建立 [UidProbeResult]，包含 [uid]（可為 null）與 [primerPages] 欄位。
   const UidProbeResult({required this.uid, required this.primerPages});
 
   /// 探測到的 UID；若所有卡池皆無紀錄則為 null。

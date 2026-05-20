@@ -9,6 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 
 /// 單筆 GitHub Release 的資料。
 class AppRelease {
+  /// 建立 [AppRelease]。
   const AppRelease({
     required this.tagName,
     required this.version,
@@ -44,21 +45,25 @@ sealed class ReleaseCheckError implements Exception {
 
 /// 網路連線失敗。
 class ReleaseCheckNetwork extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckNetwork]。
   const ReleaseCheckNetwork();
 }
 
 /// 請求超時。
 class ReleaseCheckTimeout extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckTimeout]。
   const ReleaseCheckTimeout();
 }
 
 /// GitHub API rate limit 超限。
 class ReleaseCheckRateLimited extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckRateLimited]。
   const ReleaseCheckRateLimited();
 }
 
 /// GitHub API 回傳非 200 錯誤碼。
 class ReleaseCheckServer extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckServer]，需提供 HTTP [status] 碼。
   const ReleaseCheckServer(this.status);
 
   /// HTTP status code。
@@ -67,6 +72,7 @@ class ReleaseCheckServer extends ReleaseCheckError {
 
 /// API 回應格式不符預期。
 class ReleaseCheckFormat extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckFormat]。
   const ReleaseCheckFormat();
 }
 

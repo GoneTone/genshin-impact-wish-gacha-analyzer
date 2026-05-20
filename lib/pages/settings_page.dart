@@ -36,6 +36,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart'
 
 /// 設定頁，包含外觀、語言、資料管理、帳號管理、日誌、關於等 section。
 class SettingsPage extends ConsumerWidget {
+  /// 建立 [SettingsPage]。
   const SettingsPage({super.key});
 
   @override

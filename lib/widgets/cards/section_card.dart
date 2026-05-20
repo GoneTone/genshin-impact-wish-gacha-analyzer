@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 帶標題的通用區塊卡片容器。
 class SectionCard extends StatelessWidget {
+  /// 建立 [SectionCard]。
   const SectionCard({
     super.key,
     required this.title,

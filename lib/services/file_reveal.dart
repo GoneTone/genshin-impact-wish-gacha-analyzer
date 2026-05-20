@@ -11,7 +11,16 @@ final _log = Logger('ui.reveal');
 
 /// reveal 的目標作業系統。把 [Platform] 判斷抽成 seam，讓三平台分支
 /// 能在單一主機上被測試驗證。
-enum RevealPlatform { windows, macos, other }
+enum RevealPlatform {
+  /// Windows 桌面。
+  windows,
+
+  /// macOS 桌面。
+  macos,
+
+  /// 其他平台（退化成開父資料夾）。
+  other,
+}
 
 /// 依 [Platform] 回傳當前作業系統對應的 [RevealPlatform]。
 RevealPlatform _defaultPlatform() {

@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 /// 附帶計算後序號的祈願紀錄行（表格顯示用）。
 @immutable
 class RecordRow {
+  /// 建立 [RecordRow]。
   const RecordRow({
     required this.record,
     required this.totalIndex,
