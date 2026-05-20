@@ -1,4 +1,3 @@
-// lib/pages/contributors_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
+/// 貢獻者清單頁，列出專案領導、測試者、翻譯者等資訊。
 class ContributorsPage extends StatelessWidget {
   const ContributorsPage({super.key});
 
@@ -90,8 +90,11 @@ class ContributorsPage extends StatelessWidget {
   }
 }
 
+/// 以 [Wrap] 排列一組 [Contributor]，有連結者用 [AppLink] 包裝。
 class _ContributorChips extends StatelessWidget {
   const _ContributorChips(this.items);
+
+  /// 要顯示的貢獻者清單。
   final List<Contributor> items;
 
   @override
@@ -110,6 +113,7 @@ class _ContributorChips extends StatelessWidget {
   }
 }
 
+/// 已翻譯語言清單，每行顯示語言原生名稱與翻譯者（如有）。
 class _LanguageList extends ConsumerWidget {
   const _LanguageList();
 

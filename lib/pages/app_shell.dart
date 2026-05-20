@@ -1,4 +1,3 @@
-// lib/pages/app_shell.dart
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,16 +13,27 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
 
+/// 頂層 shell，包含 AppBar、側欄 rail、底部狀態列。
+///
+/// 負責監聽 [gachaRepositoryProvider] 進度與 [appReleaseProvider] 狀態，
+/// 並在適當時機彈出對應 dialog。
 class AppShell extends ConsumerStatefulWidget {
+  /// 建立 [AppShell]，[child] 為由路由系統插入的頁面內容。
   const AppShell({super.key, required this.child});
+
+  /// 由路由系統插入的頁面主體。
   final Widget child;
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
 }
 
+/// [AppShell] 的 State，持有 dialog 開啟旗標以防重複彈出。
 class _AppShellState extends ConsumerState<AppShell> {
+  /// 更新進度 dialog 是否已開啟。
   bool _dialogOpen = false;
+
+  /// 新版本通知 dialog 是否已開啟。
   bool _releaseDialogOpen = false;
 
   @override
@@ -173,6 +183,9 @@ class _AppShellState extends ConsumerState<AppShell> {
     );
   }
 
+  /// 依 [path] 計算當前選中的 rail 索引。
+  ///
+  /// 設定頁與貢獻者頁回傳 [_RailSelection.none]，其餘路徑對應 gacha/odes 索引。
   _RailSelection _resolveRailSelection(
     String path, {
     required bool isSettings,
@@ -197,15 +210,26 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 }
 
+/// 描述側欄目前選中項目的索引。
+///
+/// 三個索引互斥，最多一個非 null；全 null 表示無選中項（設定／貢獻者頁）。
 class _RailSelection {
   const _RailSelection({this.topIndex, this.gachaIndex, this.odesIndex});
+
+  /// Overview 頁的索引（固定 0）。
   final int? topIndex;
+
+  /// gacha 分類在 rail 清單中的索引。
   final int? gachaIndex;
+
+  /// odes 分類在 rail 清單中的索引。
   final int? odesIndex;
 
+  /// 無選中項（設定 / 貢獻者頁使用）。
   static const none = _RailSelection();
 }
 
+/// 左側導覽 rail，包含所有 gacha/odes 分類及底部設定、貢獻者入口。
 class _Rail extends StatelessWidget {
   const _Rail({
     required this.selection,
@@ -215,11 +239,23 @@ class _Rail extends StatelessWidget {
     required this.collapsedNoLabel,
     required this.l,
   });
+
+  /// 當前選中的 rail 項目。
   final _RailSelection selection;
+
+  /// 設定頁是否為當前路由。
   final bool isSettingsActive;
+
+  /// 貢獻者頁是否為當前路由。
   final bool isContributorsActive;
+
+  /// rail 是否展開（寬版）。
   final bool extended;
+
+  /// 是否在 collapsed 模式下隱藏文字標籤（極窄視窗）。
   final bool collapsedNoLabel;
+
+  /// 當前 i18n 字串實例。
   final AppLocalizations l;
 
   @override
@@ -291,7 +327,6 @@ class _Rail extends StatelessWidget {
               ),
             ),
           ),
-          // 貢獻者入口
           _BottomRailButton(
             active: isContributorsActive,
             extended: extended,
@@ -301,7 +336,6 @@ class _Rail extends StatelessWidget {
             iconInactive: Icons.volunteer_activism_outlined,
             onPressed: () => context.go('/contributors'),
           ),
-          // 設定入口（固定在底部）
           _BottomRailButton(
             active: isSettingsActive,
             extended: extended,
@@ -334,12 +368,25 @@ class _RailDestinationTile extends StatelessWidget {
     required this.hideLabel,
   });
 
+  /// 未選中狀態圖示。
   final IconData iconInactive;
+
+  /// 選中狀態圖示。
   final IconData iconActive;
+
+  /// 導覽項目文字。
   final String label;
+
+  /// 是否為當前選中項目。
   final bool selected;
+
+  /// 點擊回呼。
   final VoidCallback onTap;
+
+  /// rail 是否展開（寬版）。
   final bool extended;
+
+  /// 是否在 collapsed 模式下隱藏文字標籤（極窄視窗）。
   final bool hideLabel;
 
   @override
@@ -434,6 +481,7 @@ class _RailDestinationTile extends StatelessWidget {
   }
 }
 
+/// Rail 分類標題，extended 時顯示文字，collapsed 時退化為分隔線。
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({
     required this.label,
@@ -441,8 +489,13 @@ class _SectionLabel extends StatelessWidget {
     required this.hideLabel,
   });
 
+  /// 分類標題文字。
   final String label;
+
+  /// 是否為展開模式。
   final bool extended;
+
+  /// 是否隱藏標籤（極窄視窗）。
   final bool hideLabel;
 
   @override
@@ -476,6 +529,7 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
+/// 將 [nameKey] 對應至 i18n rail 標籤文字。
 String _railLabel(String nameKey, AppLocalizations l) => switch (nameKey) {
   'gachaTypeCharacter' => l.navCharacter,
   'gachaTypeWeapon' => l.navWeapon,
@@ -487,6 +541,7 @@ String _railLabel(String nameKey, AppLocalizations l) => switch (nameKey) {
   _ => nameKey,
 };
 
+/// 將 [nameKey] 對應至未選中狀態的 rail 圖示。
 IconData _railIconInactive(String nameKey) => switch (nameKey) {
   'gachaTypeCharacter' => Icons.person_outline,
   'gachaTypeWeapon' => Icons.shield_outlined,
@@ -498,6 +553,7 @@ IconData _railIconInactive(String nameKey) => switch (nameKey) {
   _ => Icons.casino_outlined,
 };
 
+/// 將 [nameKey] 對應至選中狀態的 rail 圖示。
 IconData _railIconActive(String nameKey) => switch (nameKey) {
   'gachaTypeCharacter' => Icons.person,
   'gachaTypeWeapon' => Icons.shield,
@@ -509,6 +565,7 @@ IconData _railIconActive(String nameKey) => switch (nameKey) {
   _ => Icons.casino,
 };
 
+/// 固定於 rail 底部的功能按鈕（設定、貢獻者）。
 class _BottomRailButton extends StatelessWidget {
   const _BottomRailButton({
     required this.active,
@@ -519,12 +576,26 @@ class _BottomRailButton extends StatelessWidget {
     required this.iconInactive,
     required this.onPressed,
   });
+
+  /// 該頁是否為當前路由。
   final bool active;
+
+  /// rail 是否展開（寬版）。
   final bool extended;
+
+  /// 是否在 collapsed 模式下隱藏文字標籤（極窄視窗）。
   final bool hideLabel;
+
+  /// 按鈕文字。
   final String label;
+
+  /// 選中狀態圖示。
   final IconData iconActive;
+
+  /// 未選中狀態圖示。
   final IconData iconInactive;
+
+  /// 點擊回呼。
   final VoidCallback onPressed;
 
   @override

@@ -1,4 +1,3 @@
-// lib/pages/banner_page.dart
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,11 +33,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_bu
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
 
+/// 單一 banner 的詳細統計頁，顯示保底進度、圖表、記錄列表。
 class BannerPage extends ConsumerWidget {
   const BannerPage({super.key, required this.gachaType});
 
+  /// 對應 [GachaType.gachaType] 的卡池類型字串。
   final String gachaType;
 
+  /// 依 [gachaType] 查找對應的 [GachaType]；找不到時回傳含預設值的佔位物件。
   GachaType _resolveType() => gachaTypes.firstWhere(
     (t) => t.gachaType == gachaType,
     orElse: () => GachaType(
@@ -317,6 +319,7 @@ class BannerPage extends ConsumerWidget {
     );
   }
 
+  /// 產生並分享此 banner 的統計截圖。
   Future<void> _generateBannerShare(
     BuildContext context,
     WidgetRef ref,
@@ -356,6 +359,7 @@ int _countAtRank(GachaStats stats, int rank) => switch (rank) {
   _ => 0,
 };
 
+/// 將 [GachaType] 對應至頁面標題圖示。
 IconData _iconForGachaType(GachaType type) {
   return switch (type.nameKey) {
     'gachaTypeCharacter' => Icons.person_outline,

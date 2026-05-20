@@ -1,4 +1,3 @@
-// lib/pages/overview_page.dart
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +29,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_bu
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
 
+/// 總覽頁，將 gacha 與 odes 分兩段各自呈現統計、圖表、timeline。
 class OverviewPage extends ConsumerWidget {
   const OverviewPage({super.key});
 
@@ -167,6 +167,7 @@ class OverviewPage extends ConsumerWidget {
     );
   }
 
+  /// 產生並分享總覽統計截圖。
   Future<void> _generateOverviewShare(
     BuildContext context,
     WidgetRef ref,
@@ -191,6 +192,7 @@ class OverviewPage extends ConsumerWidget {
   }
 }
 
+/// 總覽頁中 gacha 或 odes 的單一段落，包含 stat 卡、圖表與 timeline。
 class _OverviewSection extends StatelessWidget {
   const _OverviewSection({
     required this.title,
@@ -205,15 +207,34 @@ class _OverviewSection extends StatelessWidget {
     required this.timelineRank,
   });
 
+  /// 段落標題文字。
   final String title;
+
+  /// 此段落包含的 [GachaType] 清單。
   final List<GachaType> types;
+
+  /// 各卡池的祈願記錄 map。
   final Map<String, List<GachaRecord>> banners;
+
+  /// 此段落的聚合統計。
   final GachaStats stats;
+
+  /// 各卡池顏色對照。
   final BannerColors bannerColors;
+
+  /// 三張 stat 卡 widget（總抽、主稀有度、次稀有度）。
   final List<Widget> statCards;
+
+  /// 無記錄時顯示的空狀態標題。
   final String emptyTitle;
+
+  /// 跨卡池合併後的 timeline 條目。
   final List<TimelineEntry> timeline;
+
+  /// 距離最後一次主稀有度的現有累積抽數。
   final int timelineNowPulls;
+
+  /// timeline 目標稀有度。
   final int timelineRank;
 
   @override

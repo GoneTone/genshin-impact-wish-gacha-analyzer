@@ -1,4 +1,3 @@
-// lib/pages/settings_page.dart
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -35,6 +34,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
+/// 設定頁，包含外觀、語言、資料管理、帳號管理、日誌、關於等 section。
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -105,14 +105,21 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
+/// 主題模式選擇的 RadioGroup 區塊。
 class _ThemeRadios extends StatelessWidget {
   const _ThemeRadios({
     required this.current,
     required this.onChanged,
     required this.l,
   });
+
+  /// 當前選中的主題模式。
   final AppThemeMode current;
+
+  /// 使用者選擇後的回呼。
   final ValueChanged<AppThemeMode> onChanged;
+
+  /// 當前 i18n 字串實例。
   final AppLocalizations l;
 
   @override
@@ -140,14 +147,21 @@ class _ThemeRadios extends StatelessWidget {
   }
 }
 
+/// 語系選擇下拉選單，當前語系有翻譯者時附加署名。
 class _LocaleDropdown extends ConsumerWidget {
   const _LocaleDropdown({
     required this.current,
     required this.onChanged,
     required this.l,
   });
+
+  /// 當前語系偏好。
   final LanguagePreference current;
+
+  /// 使用者選擇後的回呼。
   final ValueChanged<LanguagePreference> onChanged;
+
+  /// 當前 i18n 字串實例。
   final AppLocalizations l;
 
   @override
@@ -208,6 +222,7 @@ class _LocaleDropdown extends ConsumerWidget {
   }
 }
 
+/// 關於區塊，顯示版本號、更新檢查按鈕與開發團隊資訊。
 class _AboutContent extends ConsumerWidget {
   const _AboutContent();
 
@@ -315,6 +330,7 @@ class _AboutContent extends ConsumerWidget {
   }
 }
 
+/// 資料管理區塊，提供匯出、匯入、清除當前帳號、清除全部帳號等操作。
 class _DataManagement extends ConsumerWidget {
   const _DataManagement();
 
@@ -366,6 +382,7 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
+  /// 匯出帳號資料：讓使用者選取帳號、存檔位置後寫出 JSON。
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final gacha = ref.read(gachaRepositoryProvider);
@@ -458,6 +475,7 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
+  /// 匯入帳號資料：讀取 JSON、讓使用者選取帳號與確認後寫入 repository。
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final file = await openFile(
@@ -611,6 +629,7 @@ class _DataManagement extends ConsumerWidget {
     ScaffoldMessenger.of(ctx).showSnackBar(snack);
   }
 
+  /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。
   Future<void> _clearActive(BuildContext ctx, WidgetRef ref, String uid) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
@@ -626,6 +645,7 @@ class _DataManagement extends ConsumerWidget {
     await ref.read(gachaRepositoryProvider.notifier).clearActive();
   }
 
+  /// 清除所有帳號資料，需使用者輸入 "DELETE" 確認。
   Future<void> _clearAll(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
@@ -642,6 +662,7 @@ class _DataManagement extends ConsumerWidget {
   }
 }
 
+/// 日誌區塊，提供回報問題、匯出日誌、開啟資料夾、清除日誌等操作。
 class _LogsSection extends ConsumerWidget {
   const _LogsSection();
 
@@ -694,6 +715,7 @@ class _LogsSection extends ConsumerWidget {
     );
   }
 
+  /// 匯出應用程式日誌至使用者指定路徑。
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final log = ref.read(logServiceProvider);
@@ -744,11 +766,13 @@ class _LogsSection extends ConsumerWidget {
     );
   }
 
+  /// 在檔案總管中開啟日誌資料夾。
   Future<void> _openFolder(BuildContext ctx, WidgetRef ref) async {
     final log = ref.read(logServiceProvider);
     await openFolder(log.logsDir.path);
   }
 
+  /// 以外部瀏覽器開啟 GitHub issue 回報頁面。
   Future<void> _reportIssue() async {
     final uri = Uri.parse('${AppRepo.githubUrl}/issues/new/choose');
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
@@ -756,6 +780,7 @@ class _LogsSection extends ConsumerWidget {
     }
   }
 
+  /// 清除所有日誌，需使用者輸入 "CLEAR" 確認。
   Future<void> _clear(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
