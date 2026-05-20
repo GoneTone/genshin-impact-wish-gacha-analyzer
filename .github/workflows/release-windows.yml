@@ -1,0 +1,149 @@
+name: release-windows
+run-name: release ${{ github.event.release.tag_name }}
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.event.release.id }}
+  cancel-in-progress: false
+
+jobs:
+  build-windows:
+    if: github.event.release.draft == true
+    runs-on: windows-latest
+
+    env:
+      WINDOWS_SIGN_PFX_BASE64: ${{ secrets.WINDOWS_SIGN_PFX_BASE64 }}
+      WINDOWS_SIGN_PASSWORD:   ${{ secrets.WINDOWS_SIGN_PASSWORD }}
+
+    steps:
+      # === A. Checkout target branch ================================
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # === B. Toolchain =============================================
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          channel: stable
+          cache: true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust_builder -> target
+
+      - name: Install Inno Setup 6
+        shell: pwsh
+        run: choco install innosetup -y --no-progress
+
+      - name: Verify ISCC on PATH
+        shell: pwsh
+        run: |
+          $iscc = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+          if (-not $iscc) { throw "ISCC.exe not on PATH after chocolatey install" }
+          Write-Host "ISCC: $($iscc.Source)"
+
+      # === C. Version injection =====================================
+      - name: Parse tag & rewrite pubspec
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.release.tag_name }}"
+          if ($tag -notmatch '^v(\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?)$') {
+            throw "tag '$tag' does not match vX.Y.Z[-prerelease]"
+          }
+          $semver = $Matches[1]
+          $buildNumber = ${{ github.run_number }}
+          $pubspecVersion = "$semver+$buildNumber"
+
+          $content = Get-Content pubspec.yaml -Raw -Encoding UTF8
+          $updated = [regex]::Replace($content, '(?m)^version:\s*\S+\s*$', "version: $pubspecVersion", 1)
+
+          if ($updated -eq $content) {
+            "VERSION_CHANGED=false" | Out-File $env:GITHUB_ENV -Append
+          } else {
+            Set-Content pubspec.yaml -Value $updated -Encoding UTF8 -NoNewline
+            "VERSION_CHANGED=true" | Out-File $env:GITHUB_ENV -Append
+          }
+          "PUBSPEC_VERSION=$pubspecVersion" | Out-File $env:GITHUB_ENV -Append
+          "SEMVER=$semver" | Out-File $env:GITHUB_ENV -Append
+
+      - name: Commit pubspec bump
+        if: env.VERSION_CHANGED == 'true'
+        shell: pwsh
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore(release): bump version to v${{ env.SEMVER }} [skip ci]"
+          git push origin HEAD:${{ github.event.release.target_commitish }}
+
+      # === D. Build =================================================
+      - name: Build Windows installer
+        shell: pwsh
+        run: .\scripts\build_installer\build_release.ps1
+
+      - name: Locate installer
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem build\installer\*.exe -ErrorAction SilentlyContinue)
+          if ($candidates.Count -eq 0) { throw "build\installer 內沒有 *.exe" }
+          if ($candidates.Count -gt 1) {
+            throw "build\installer 內有多個 *.exe,預期僅 1 個:`n$($candidates.FullName -join "`n")"
+          }
+          $exe = $candidates[0].FullName
+          "INSTALLER_PATH=$exe" | Out-File $env:GITHUB_ENV -Append
+          "INSTALLER_NAME=$($candidates[0].Name)" | Out-File $env:GITHUB_ENV -Append
+
+      # === E. Sign (skip, structure 內嵌於 build_release.ps1) ==========
+
+      # === F. Upload to release draft ===============================
+      - name: Upload installer to release draft
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.event.release.tag_name }}"
+          # 上傳檔名與 build 產物完全一致,不改名
+          gh release upload "$tag" "${{ env.INSTALLER_PATH }}" --clobber
+
+      # === G. Workflow artifact (debug fallback) ====================
+      - name: Upload installer as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer-${{ env.PUBSPEC_VERSION }}
+          path: build/installer/*.exe
+          retention-days: 30
+          if-no-files-found: warn
+
+      # === H. Step summary ==========================================
+      - name: Write step summary
+        if: success()
+        shell: pwsh
+        run: |
+          $exe = "${{ env.INSTALLER_PATH }}"
+          $size = [math]::Round((Get-Item $exe).Length / 1MB, 2)
+          $sha  = (Get-FileHash $exe -Algorithm SHA256).Hash
+          @"
+          ## Release ${{ github.event.release.tag_name }}
+
+          - **Pubspec version**: ${{ env.PUBSPEC_VERSION }}
+          - **Installer**: ``${{ env.INSTALLER_NAME }}``
+          - **Size**: $size MB
+          - **SHA-256**: ``$sha``
+          - **Uploaded to release**: ✓
+          "@ | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
