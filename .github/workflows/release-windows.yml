@@ -4,6 +4,15 @@ run-name: release ${{ github.event.release.tag_name }}
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name to simulate (e.g. v0.0.0-dryrun)'
+        required: true
+      target_branch:
+        description: 'Target branch'
+        required: true
+        default: 'feat/ci-release-windows'
 
 permissions:
   contents: write
@@ -14,7 +23,7 @@ concurrency:
 
 jobs:
   build-windows:
-    if: github.event.release.draft == true
+    if: github.event_name == 'workflow_dispatch' || github.event.release.draft == true
     runs-on: windows-latest
 
     env:
@@ -26,7 +35,7 @@ jobs:
       - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.target_commitish }}
+          ref: ${{ github.event.release.target_commitish || inputs.target_branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,7 +70,7 @@ jobs:
       - name: Parse tag & rewrite pubspec
         shell: pwsh
         run: |
-          $tag = "${{ github.event.release.tag_name }}"
+          $tag = "${{ github.event.release.tag_name || inputs.tag }}"
           if ($tag -notmatch '^v(\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?)$') {
             throw "tag '$tag' does not match vX.Y.Z[-prerelease]"
           }
@@ -89,7 +98,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add pubspec.yaml
           git commit -m "chore(release): bump version to v${{ env.SEMVER }} [skip ci]"
-          git push origin HEAD:${{ github.event.release.target_commitish }}
+          git push origin HEAD:${{ github.event.release.target_commitish || inputs.target_branch }}
 
       # === D. Build =================================================
       - name: Build Windows installer
@@ -112,6 +121,7 @@ jobs:
 
       # === F. Upload to release draft ===============================
       - name: Upload installer to release draft
+        if: github.event_name == 'release'
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
