@@ -6,7 +6,8 @@
 - **風格體驗要一致**：應用程式的 UI/UX 要一致，避免混亂，任何設計都要考慮到 RWD 和元件內容是否會超出邊界等等的情況。
 - **Dialog 一律用 `AppDialog`**：新建 dialog 一律使用 `AppDialog`（`lib/widgets/dialogs/app_dialog.dart`），透過 `size: AppDialogSize.sm/md/lg`（480 / 640 / 720）指定最大寬度。內部自動套寬高上限（width = `min(size.maxWidth, mq.width - 80)`，height = `min(720, mq.height - 120)`），低視窗下也不會被卡死。整體需要捲動時加 `scrollable: true`；內容已自帶捲動元件（`ListView` 等）維持預設 `false`。**不要再自己手寫 `AlertDialog` + `ConstrainedBox` + `math.min(...)`**。
 - **新功能要埋 log**：實作新功能或修改既有業務邏輯時，在關鍵節點（I/O、錯誤分支、外部 API、Rust bridge 互動等）加上適當等級的 `Logger('xxx').info/warning/severe(...)` 呼叫，內容要帶足夠 context（uid、banner、retcode、脫敏 URL 等）讓使用者匯出 log 後能直接定位問題，而不是「失敗了」這種沒有上下文的訊息。Logger 命名對齊既有樹（例如 `wish.*`、`app.*`、`rust.*`）。敏感資料一律經 `sanitizeUrl` / `sanitizeUid` 後再寫入。
-- **不要隨意加註解**：預設不寫註解。只有當 WHY 不顯而易見時才加：隱藏限制、微妙 invariant、特殊 bug 的 workaround、會讓讀者意外的行為。如果拿掉註解不會讓未來讀者困惑，就不要寫。
+- **註解節制使用**：預設不寫實作層 `//` 註解；寫了就要對讀者有資訊增益。可寫的情境：(1) **WHY 不顯而易見**——隱藏限制、微妙 invariant、特殊 bug 的 workaround、會讓讀者意外的行為；(2) **結構/段落導引**——在較長的函式內標出段落意圖，讓讀者一眼看懂這段在做什麼。判準：拿掉註解後讀者是否需要多花時間理解？需要 → 留；不需要 → 刪。反例：純粹重述下一行名稱（壞例 `// 取得 user id` 對應 `String getUserId()`）、檔頭路徑 banner（如 `// lib/foo/bar.dart`）、被註解掉的舊程式碼（直接刪）。
+- **方法應該有 dartdoc**：所有宣告（top-level function、class、constructor、method、field、typedef、enum；含 private `_xxx`）寫一行 `///` dartdoc 說明其作用，讓讀者不必讀實作就知道在做什麼。Flutter override（`build()`、`createState()`、`dispose()`、`initState()`、`didChangeDependencies()` 等簽名已自明的）不寫。
 
 ## 提交前品質檢查
 
