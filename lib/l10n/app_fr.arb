@@ -70,7 +70,7 @@
 
   "emptyNoSyncTitle": "Aucune donnée synchronisée",
   "emptyNoSyncMessage": "Cliquez sur \"Mettre à jour les données\" en haut à droite pour commencer",
-  "emptyNoRecords": "Aucun enregistrement pour ce vœu",
+  "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
   "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
   "emptyNoGachaRecords": "Aucun enregistrement de vœux",
 
@@ -109,7 +109,7 @@
   "@progressFetchingBanner": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "progressPageStatus": "Page {page}, {count} enregistrement(s) ajouté(s)",
+  "progressPageStatus": "{count, plural, =1{Page {page}, 1 enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": { "type": "int" },
@@ -169,11 +169,11 @@
       "threshold": { "type": "int" }
     }
   },
-  "pityDistance": "{n} tirage(s) avant le prochain pity",
+  "pityDistance": "{n, plural, =1{1 tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
   "@pityDistance": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "pityClose": "Pity imminent ! {n} tirage(s) restant(s)",
+  "pityClose": "{n, plural, =1{Pity imminent ! 1 tirage restant} other{Pity imminent ! {n} tirages restants}}",
   "@pityClose": {
     "placeholders": { "n": { "type": "int" } }
   },
@@ -192,23 +192,23 @@
   "@timelineNoRecordsForRank": {
     "placeholders": { "star": { "type": "String" } }
   },
-  "timelineSinceLast": "{n} tirage(s)",
+  "timelineSinceLast": "{n, plural, =1{1 tirage} other{{n} tirages}}",
   "@timelineSinceLast": {
     "placeholders": { "n": { "type": "int" } }
   },
   "timelineNowLabel": "Maintenant",
-  "timelineNowPulls": "{n} tirage(s) effectué(s)",
+  "timelineNowPulls": "{n, plural, =1{1 tirage effectué} other{{n} tirages effectués}}",
   "@timelineNowPulls": {
     "placeholders": { "n": { "type": "int" } }
   },
-  "timelineNowSinceLast": "{n} tirage(s) depuis le dernier {star}",
+  "timelineNowSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": { "type": "String" },
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "{n} tirage(s) depuis le dernier {star} (tous vœux)",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": { "type": "String" },
@@ -224,7 +224,7 @@
   },
   "timelineScrollLeft": "Défiler vers la gauche",
   "timelineScrollRight": "Défiler vers la droite",
-  "timelineLoadMore": "Charger plus ({n} restant(s))",
+  "timelineLoadMore": "{n, plural, =1{Charger plus (1 restant)} other{Charger plus ({n} restants)}}",
   "@timelineLoadMore": {
     "placeholders": { "n": { "type": "int" } }
   },
@@ -359,7 +359,7 @@
   },
 
   "bannerTopRarityCountTitle": "Nombre d'objets de rareté maximale par vœu",
-  "bannerTopRarityPullsSinceLast": "{n} tirage(s) depuis le dernier {star}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": { "type": "String" },
