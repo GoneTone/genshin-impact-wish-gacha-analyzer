@@ -119,7 +119,7 @@
     "placeholders": { "names": { "type": "String" } }
   },
 
-  "errorAuthExpired": "Autenticação inválida persistente, faça login no jogo novamente",
+  "errorAuthExpired": "Autenticação continua falhando, faça login no jogo novamente",
   "errorRateLimited": "Muitas solicitações, tente novamente mais tarde",
   "errorServer": "Erro no servidor: {message}",
   "@errorServer": {
@@ -206,7 +206,7 @@
       "n": { "type": "int" }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, =1{1 oração desde o último {star} (cross-banner)} other{{n} orações desde o último {star} (cross-banner)}}",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": { "type": "String" },
