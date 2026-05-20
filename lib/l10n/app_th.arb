@@ -50,7 +50,7 @@
 
   "uidSwitchTooltip": "สลับบัญชี",
   "uidNotSynced": "ยังไม่ได้ซิงค์",
-  "uidActiveSuffix": "(ใช้งานอยู่)",
+  "uidActiveSuffix": " (ใช้งานอยู่)",
 
   "emptyNoSyncTitle": "ยังไม่ได้ซิงค์ข้อมูล",
   "emptyNoSyncMessage": "กดปุ่ม \"อัพเดทข้อมูล\" ที่มุมบนขวาเพื่อเริ่มต้น",
