@@ -6,9 +6,16 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dar
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 
+/// 左側月份標籤欄的固定寬度。
 const double _monthColumnWidth = 80;
+
+/// 節點內圓直徑。
 const double _nodeSize = 14;
+
+/// 節點外圍 halo（觸控熱區）直徑。
 const double _haloSize = 22;
+
+/// 軸線 left 偏移：月份欄右緣 + halo 半徑，使軸線穿過節點中心。
 const double _railLeft = _monthColumnWidth + (_haloSize / 2);
 
 /// 直向時間軸(視覺隱喻 B):
@@ -28,7 +35,10 @@ class TimelineVertical extends StatefulWidget {
     this.isAcrossBanners = false,
   });
 
+  /// 要顯示的時間軸條目（由新到舊排序）。
   final List<TimelineEntry> entries;
+
+  /// 各卡池節點的顏色映射。
   final BannerColors colors;
 
   /// 可選的卡內小標題。傳入時於卡片 container 內最上方顯示一個與卡片風格
@@ -56,17 +66,26 @@ class TimelineVertical extends StatefulWidget {
   /// 跨卡池且 banner 各自主稀有度不同（頌願綜合）時，傳入「最具代表性的那個」
   /// （目前以 types.first.primaryPity.rank 為準）。
   final int targetRank;
+
+  /// 傳入時在時間軸最頂端加入「現在」row，值為距上次目標稀有度的抽數。
   final int? nowPulls;
+
+  /// true 表示跨卡池場景，影響「現在」row 的 i18n 文案。
   final bool isAcrossBanners;
 
   @override
   State<TimelineVertical> createState() => _TimelineVerticalState();
 }
 
+/// State for [TimelineVertical]; manages pagination via [_visibleCount].
 class _TimelineVerticalState extends State<TimelineVertical> {
+  /// 首次渲染顯示的最大條目數。
   static const int _initialPageSize = 10;
+
+  /// 每次點「載入更多」增加的條目數。
   static const int _pageStep = 10;
 
+  /// 當前顯示的最大條目數；點「載入更多」後遞增。
   int _visibleCount = _initialPageSize;
 
   /// Dataset-change detection: resets [_visibleCount] when **both** length and
@@ -100,6 +119,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
     }
   }
 
+  /// 將 [_visibleCount] 遞增一個 [_pageStep]，上限為資料集長度。
   void _loadMore() {
     setState(() {
       _visibleCount = (_visibleCount + _pageStep).clamp(
@@ -273,6 +293,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
   }
 }
 
+/// 時間軸中單一高稀有度紀錄的 row。
 class _EntryRow extends StatelessWidget {
   const _EntryRow({
     required this.entry,
@@ -281,16 +302,25 @@ class _EntryRow extends StatelessWidget {
     required this.tokens,
   });
 
+  /// 該 row 對應的時間軸條目。
   final TimelineEntry entry;
+
+  /// true 時在月份欄顯示月份標籤（每個月的第一筆）。
   final bool showMonthTag;
+
+  /// 各卡池節點的顏色映射。
   final BannerColors colors;
+
+  /// 主題 token。
   final GachaTokens tokens;
 
+  /// 將 [DateTime] 格式化為 `MM/dd` 字串。
   static String _formatShortDate(DateTime t) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(t.month)}/${two(t.day)}';
   }
 
+  /// 依 [gachaType] 查詢對應的在地化卡池名稱；查無時回傳 [gachaType] 本身。
   String _bannerName(String gachaType, AppLocalizations l) => gachaTypes
       .firstWhere(
         (t) => t.gachaType == gachaType,
@@ -399,6 +429,7 @@ class _EntryRow extends StatelessWidget {
   }
 }
 
+/// 時間軸最頂端的「現在」row（中空節點 + 距上次目標稀有度抽數）。
 class _NowRow extends StatelessWidget {
   const _NowRow({
     required this.nowPulls,
@@ -407,9 +438,16 @@ class _NowRow extends StatelessWidget {
     required this.tokens,
   });
 
+  /// 距上次目標稀有度的當前累積抽數。
   final int nowPulls;
+
+  /// 目標稀有度，用於 i18n 文案中的星數標示。
   final int targetRank;
+
+  /// true 時套用跨卡池的 i18n 文案。
   final bool isAcrossBanners;
+
+  /// 主題 token。
   final GachaTokens tokens;
 
   @override
@@ -471,8 +509,14 @@ class _NowRow extends StatelessWidget {
 /// 節點圓:外圍 halo + 內圓。`hollow=true` 時內圓填容器底色看起來只剩 border。
 class _Node extends StatelessWidget {
   const _Node({required this.color, required this.tokens, this.hollow = false});
+
+  /// 節點與 halo 的主色。
   final Color color;
+
+  /// 主題 token，用於取得 [GachaTokens.surfaceCard]（hollow 填色）。
   final GachaTokens tokens;
+
+  /// true 時內圓填 surfaceCard 使節點看起來只有邊框，用於「現在」節點。
   final bool hollow;
 
   @override

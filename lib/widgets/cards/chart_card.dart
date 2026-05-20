@@ -1,8 +1,8 @@
-// lib/widgets/cards/chart_card.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 包裹圖表的統一卡片容器，含標題列與可選圖例。
 class ChartCard extends StatelessWidget {
   const ChartCard({
     super.key,
@@ -13,14 +13,20 @@ class ChartCard extends StatelessWidget {
     this.icon,
   });
 
+  /// 卡片標題文字。
   final String title;
+
+  /// 圖表 widget，[height] 有值時以 [Expanded] 填滿剩餘高度。
   final Widget chart;
+
+  /// 可選圖例，顯示於圖表下方。
   final Widget? legend;
 
   /// 卡片固定高度；傳 `null` 則改為依內容 shrink-wrap，chart 不會被
   /// `Expanded` 撐滿（適合非圓形、自身有 intrinsic height 的圖表）。
   final double? height;
 
+  /// 可選的標題前置圖示。
   final IconData? icon;
 
   @override

@@ -4,6 +4,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 顯示單一稀有度的保底進度卡片，包含抽數、進度條與副標題。
 class PityCard extends StatefulWidget {
   const PityCard({
     super.key,
@@ -14,12 +15,17 @@ class PityCard extends StatefulWidget {
     this.isEndedPool = false,
   });
 
+  /// 卡片標籤（顯示於最上方，轉 uppercase）。
   final String label;
 
   /// 該 pity 對應的稀有度（5 / 4 / 3 / 2）。
   /// 用來決定「暫無 N★」副文字裡的 N。
   final int rank;
+
+  /// 保底狀態資料。
   final Pity pity;
+
+  /// 左側邊條與進度條的主色。
   final Color accent;
 
   /// 新手池 20 抽結束 → 顯示「已結束」狀態。
@@ -29,8 +35,10 @@ class PityCard extends StatefulWidget {
   State<PityCard> createState() => _PityCardState();
 }
 
+/// State for [PityCard]; 管理「快保底」閃爍動畫的 [AnimationController]。
 class _PityCardState extends State<PityCard>
     with SingleTickerProviderStateMixin {
+  /// 用於進度條閃爍效果的動畫控制器（`close` phase 時啟動）。
   late final AnimationController _breath;
 
   @override
@@ -107,6 +115,7 @@ class _PityCardState extends State<PityCard>
     );
   }
 
+  /// 依 [Pity] 狀態判斷目前顯示階段。
   _Phase _phase(Pity p) {
     if (widget.isEndedPool) return _Phase.ended;
     if (p.progress >= 1.0 || p.distance == 0) return _Phase.guaranteed;
@@ -118,8 +127,10 @@ class _PityCardState extends State<PityCard>
   }
 }
 
+/// 保底卡片的顯示階段，決定顏色與副標題文案。
 enum _Phase { normal, close, guaranteed, ended }
 
+/// 保底進度條；`close` phase 時加入呼吸閃爍動畫。
 class _ProgressBar extends StatelessWidget {
   const _ProgressBar({
     required this.progress,
@@ -128,10 +139,20 @@ class _ProgressBar extends StatelessWidget {
     required this.tokens,
     required this.breath,
   });
+
+  /// 目前保底進度（0.0–1.0）。
   final double progress;
+
+  /// 決定漸層顏色與是否啟動閃爍動畫的階段。
   final _Phase phase;
+
+  /// 進度條右端顏色。
   final Color accent;
+
+  /// 主題 token。
   final GachaTokens tokens;
+
+  /// 閃爍動畫控制器；null 表示使用者開啟了 reduce motion 或非 close phase。
   final AnimationController? breath;
 
   @override
@@ -174,6 +195,7 @@ class _ProgressBar extends StatelessWidget {
   }
 }
 
+/// 保底卡片底部副標題，依 [_Phase] 顯示對應文案與可選平均間隔。
 class _Subtitle extends StatelessWidget {
   const _Subtitle({
     required this.phase,
@@ -183,11 +205,23 @@ class _Subtitle extends StatelessWidget {
     required this.tokens,
     required this.l,
   });
+
+  /// 決定顯示文案與顏色的階段。
   final _Phase phase;
+
+  /// 保底狀態資料，用於距離與平均間隔文案。
   final Pity pity;
+
+  /// 稀有度，用於「暫無 N★」文案。
   final int rank;
+
+  /// 是否為已結束的新手池。
   final bool isEndedPool;
+
+  /// 主題 token。
   final GachaTokens tokens;
+
+  /// 在地化資源。
   final AppLocalizations l;
 
   @override

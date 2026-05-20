@@ -8,14 +8,25 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
+/// 每個時間軸欄的固定寬度。
 const double _colWidth = 90;
+
+/// 節點內圓直徑。
 const double _nodeSize = 14;
+
+/// 節點外圍 halo（觸控熱區）直徑。
 const double _haloSize = 22;
 
+/// 邊緣漸隱遮罩的寬度。
 const double _edgeFadeWidth = 32;
+
+/// 點擊箭頭捲動的動畫時長。
 const Duration _scrollDuration = Duration(milliseconds: 240);
+
+/// 點擊箭頭捲動的動畫曲線。
 const Curve _scrollCurve = Curves.easeOutCubic;
 
+/// 捲動可及性箭頭的方向。
 enum _ScrollSide { left, right }
 
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
@@ -58,20 +69,31 @@ class TimelineHorizontal extends StatefulWidget {
     this.nowPulls,
   });
 
+  /// 要顯示的時間軸條目（由新到舊排序）。
   final List<TimelineEntry> entries;
+
+  /// 各卡池節點的顏色映射。
   final BannerColors colors;
 
   /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案。
   final int targetRank;
+
+  /// 傳入時在時間軸最左端加入「現在」欄，值為距上次目標稀有度的抽數。
   final int? nowPulls;
 
   @override
   State<TimelineHorizontal> createState() => _TimelineHorizontalState();
 }
 
+/// State for [TimelineHorizontal]; 管理橫向捲動控制器與邊緣箭頭可見性。
 class _TimelineHorizontalState extends State<TimelineHorizontal> {
+  /// 橫向 [SingleChildScrollView] 的捲動控制器。
   late final ScrollController _controller;
+
+  /// true 時顯示左側漸隱遮罩與箭頭。
   bool _hasLeft = false;
+
+  /// true 時顯示右側漸隱遮罩與箭頭。
   bool _hasRight = false;
 
   @override
@@ -95,6 +117,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
     super.dispose();
   }
 
+  /// 依捲動位置更新 [_hasLeft] / [_hasRight]，觸發箭頭顯示或隱藏。
   void _updateAffordance() {
     if (!mounted || !_controller.hasClients) return;
     final pos = _controller.position;
@@ -108,6 +131,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
     }
   }
 
+  /// 相對捲動 [delta] px，夾在 0 與 maxScrollExtent 之間，使用動畫。
   void _scrollBy(double delta) {
     if (!_controller.hasClients) return;
     final pos = _controller.position;
@@ -237,16 +261,24 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
   }
 }
 
+/// 時間軸中單一高稀有度紀錄的直欄（名稱 / 節點 / 日期+抽數）。
 class _EntryColumn extends StatelessWidget {
   const _EntryColumn({
     required this.entry,
     required this.colors,
     required this.tokens,
   });
+
+  /// 該欄對應的時間軸條目。
   final TimelineEntry entry;
+
+  /// 各卡池節點的顏色映射。
   final BannerColors colors;
+
+  /// 主題 token。
   final GachaTokens tokens;
 
+  /// 將 [DateTime] 格式化為 `MM/dd` 字串。
   static String _formatShortDate(DateTime t) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(t.month)}/${two(t.day)}';
@@ -298,9 +330,14 @@ class _EntryColumn extends StatelessWidget {
   }
 }
 
+/// 時間軸最左端的「現在」欄（中空節點 + 距上次目標稀有度抽數）。
 class _NowColumn extends StatelessWidget {
   const _NowColumn({required this.nowPulls, required this.tokens});
+
+  /// 距上次目標稀有度的當前累積抽數。
   final int nowPulls;
+
+  /// 主題 token。
   final GachaTokens tokens;
 
   @override
@@ -341,10 +378,17 @@ class _NowColumn extends StatelessWidget {
   }
 }
 
+/// 節點圓:外圍 halo + 內圓。`hollow=true` 時內圓填容器底色看起來只剩 border。
 class _Node extends StatelessWidget {
   const _Node({required this.color, required this.tokens, this.hollow = false});
+
+  /// 節點與 halo 的主色。
   final Color color;
+
+  /// 主題 token，用於取得 [GachaTokens.surfaceCard]（hollow 填色）。
   final GachaTokens tokens;
+
+  /// true 時內圓填 surfaceCard 使節點看起來只有邊框，用於「現在」節點。
   final bool hollow;
 
   @override
@@ -370,8 +414,11 @@ class _Node extends StatelessWidget {
   }
 }
 
+/// 邊緣漸隱遮罩，用於提示使用者該方向仍可捲動。
 class _EdgeFade extends StatelessWidget {
   const _EdgeFade({required this.side});
+
+  /// 漸隱方向：left 從左往右漸隱，right 從右往左漸隱。
   final _ScrollSide side;
 
   @override
@@ -390,6 +437,7 @@ class _EdgeFade extends StatelessWidget {
   }
 }
 
+/// 浮在時間軸邊緣的圓形捲動箭頭按鈕。
 class _ArrowButton extends StatelessWidget {
   const _ArrowButton({
     required this.icon,
@@ -398,9 +446,16 @@ class _ArrowButton extends StatelessWidget {
     required this.onPressed,
   });
 
+  /// 按鈕圖示（左箭頭或右箭頭）。
   final IconData icon;
+
+  /// 無障礙 tooltip 文字。
   final String tooltip;
+
+  /// 主題 token，用於按鈕背景色。
   final GachaTokens tokens;
+
+  /// 點擊後的回呼。
   final VoidCallback onPressed;
 
   @override

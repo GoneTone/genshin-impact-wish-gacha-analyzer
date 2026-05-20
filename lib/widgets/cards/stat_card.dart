@@ -1,8 +1,8 @@
-// lib/widgets/cards/stat_card.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 單一統計數值的卡片，含標籤、大字主數值、可選副標題與尾端 widget。
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -13,10 +13,19 @@ class StatCard extends StatelessWidget {
     this.trailing,
   });
 
+  /// 統計標籤（顯示於最上方，轉 uppercase）。
   final String label;
+
+  /// 主數值文字（大字顯示）。
   final String value;
+
+  /// 可選副標題，顯示於主數值下方。
   final String? subtitle;
+
+  /// 有值時在卡片左側繪製彩色邊條；null 時改用 borderSubtle 框線。
   final Color? accent;
+
+  /// 可選的右側尾端 widget（如小圖示或標籤）。
   final Widget? trailing;
 
   @override

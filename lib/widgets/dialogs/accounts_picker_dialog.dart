@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
+/// 帳號挑選對話框中單一帳號的資料模型。
 class AccountPickerEntry {
   const AccountPickerEntry({
     required this.uid,
@@ -14,10 +15,19 @@ class AccountPickerEntry {
     this.badge,
   });
 
+  /// 帳號 UID。
   final String uid;
+
+  /// 使用者自訂別名；null 表示未設定。
   final String? alias;
+
+  /// 最後一次更新祈願資料的時間。
   final DateTime lastUpdated;
+
+  /// 該帳號的祈願紀錄總筆數。
   final int recordCount;
+
+  /// 可選的紅色警示徽章文字（如「有新資料」提示）。
   final String? badge;
 }
 
@@ -40,6 +50,7 @@ Future<List<String>?> showAccountsPickerDialog({
   );
 }
 
+/// 帳號複選 dialog 的實作 widget。
 class _AccountsPickerDialog extends StatefulWidget {
   const _AccountsPickerDialog({
     required this.title,
@@ -47,15 +58,22 @@ class _AccountsPickerDialog extends StatefulWidget {
     required this.entries,
   });
 
+  /// dialog 標題文字。
   final String title;
+
+  /// 確認按鈕的標籤文字。
   final String confirmLabel;
+
+  /// 可挑選的帳號條目列表。
   final List<AccountPickerEntry> entries;
 
   @override
   State<_AccountsPickerDialog> createState() => _AccountsPickerDialogState();
 }
 
+/// State for [_AccountsPickerDialog]; 管理勾選狀態。
 class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
+  /// 目前已勾選的 UID 集合；初始值為全選。
   late final Set<String> _selected;
 
   @override
@@ -64,12 +82,14 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
     _selected = widget.entries.map((e) => e.uid).toSet();
   }
 
+  /// 「全選」checkbox 的三態值：true = 全選、false = 全不選、null = 部分選。
   bool? get _selectAllValue {
     if (_selected.isEmpty) return false;
     if (_selected.length == widget.entries.length) return true;
     return null;
   }
 
+  /// [checked] 為 true 時全選，false 時清空。
   void _setAll(bool checked) {
     setState(() {
       if (checked) {
@@ -82,6 +102,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
     });
   }
 
+  /// 切換單一 [uid] 的勾選狀態。
   void _toggle(String uid, bool checked) {
     setState(() {
       if (checked) {
@@ -92,6 +113,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
     });
   }
 
+  /// 處理「全選」checkbox 被點擊；接管 tristate cycle。
   void _onSelectAllTap() {
     // 自己接管 tristate cycle：true → false；false / null → true。
     _setAll(_selectAllValue != true);
@@ -157,6 +179,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
   }
 }
 
+/// 帳號挑選列表中單一帳號的 checkbox row。
 class _PickerRow extends StatelessWidget {
   const _PickerRow({
     required this.entry,
@@ -164,8 +187,13 @@ class _PickerRow extends StatelessWidget {
     required this.onChanged,
   });
 
+  /// 該 row 對應的帳號資料。
   final AccountPickerEntry entry;
+
+  /// 目前是否已勾選。
   final bool selected;
+
+  /// 勾選狀態變更時的回呼。
   final ValueChanged<bool?> onChanged;
 
   @override

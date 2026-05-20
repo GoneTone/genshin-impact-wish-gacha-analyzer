@@ -19,8 +19,13 @@ class BannerTopRarityBars extends StatelessWidget {
     required this.colors,
   });
 
+  /// 要顯示的卡池類型列表，決定條目數量與各池的主稀有度。
   final List<GachaType> types;
+
+  /// 各 gachaType → 該池所有祈願紀錄的映射。
   final Map<String, List<GachaRecord>> banners;
+
+  /// 各卡池節點的顏色映射。
   final BannerColors colors;
 
   @override
@@ -78,6 +83,7 @@ class BannerTopRarityBars extends StatelessWidget {
   }
 }
 
+/// 單一卡池的名稱 + 長條 + 數量標籤 row。
 class _BannerRow extends StatelessWidget {
   const _BannerRow({
     required this.name,
@@ -87,10 +93,19 @@ class _BannerRow extends StatelessWidget {
     required this.ratio,
   });
 
+  /// 在地化卡池名稱。
   final String name;
+
+  /// 長條與節點的主色。
   final Color color;
+
+  /// 該池主稀有度的件數。
   final int topCount;
+
+  /// 已格式化的副標題（如「距上次 N★ X 抽」或特殊狀態文案）。
   final String subtitle;
+
+  /// 長條填滿比例（0.0–1.0），以所有池最大件數為基準。
   final double ratio;
 
   @override
@@ -144,9 +159,14 @@ class _BannerRow extends StatelessWidget {
   }
 }
 
+/// 漸層填色的水平進度長條。
 class _Bar extends StatelessWidget {
   const _Bar({required this.color, required this.ratio});
+
+  /// 長條的主色，用於漸層右端。
   final Color color;
+
+  /// 填滿比例（0.0–1.0）。
   final double ratio;
 
   @override

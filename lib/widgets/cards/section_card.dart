@@ -1,8 +1,8 @@
-// lib/widgets/cards/section_card.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 帶標題的通用區塊卡片容器。
 class SectionCard extends StatelessWidget {
   const SectionCard({
     super.key,
@@ -11,8 +11,13 @@ class SectionCard extends StatelessWidget {
     this.icon,
   });
 
+  /// 卡片標題文字。
   final String title;
+
+  /// 卡片內容。
   final Widget child;
+
+  /// 可選的標題前置圖示。
   final IconData? icon;
 
   @override

@@ -12,6 +12,7 @@ enum AppDialogSize {
   md,
   lg;
 
+  /// 對應尺寸的最大內容寬度（px）。
   double get maxWidth => switch (this) {
     AppDialogSize.sm => 480,
     AppDialogSize.md => 640,
@@ -38,10 +39,19 @@ class AppDialog extends StatelessWidget {
     this.scrollable = false,
   });
 
+  /// dialog 標題 widget，傳給 [AlertDialog.title]。
   final Widget title;
+
+  /// dialog 內容 widget；[scrollable] 為 true 時會被包在 [SingleChildScrollView] 內。
   final Widget content;
+
+  /// 底部按鈕列表；空列表時不顯示（傳 null 給 [AlertDialog.actions]）。
   final List<Widget> actions;
+
+  /// dialog 最大寬度語意尺寸。
   final AppDialogSize size;
+
+  /// true 時整體內容可捲動；內容已自帶捲動元件時維持預設 false。
   final bool scrollable;
 
   @override

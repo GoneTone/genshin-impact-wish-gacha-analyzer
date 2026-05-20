@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
+/// 帳號管理卡片：顯示所有已知 UID 的清單，支援排序、切換、重命名與刪除。
 class AccountManagement extends ConsumerWidget {
   const AccountManagement({super.key});
 
@@ -89,6 +90,7 @@ class AccountManagement extends ConsumerWidget {
     );
   }
 
+  /// 彈出打字確認 dialog，確認後呼叫 [GachaRepositoryNotifier.removeUid]。
   Future<void> _remove(BuildContext ctx, WidgetRef ref, String uid) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showConfirmTypeDialog(
@@ -105,6 +107,7 @@ class AccountManagement extends ConsumerWidget {
   }
 }
 
+/// 帳號清單中單一 UID 的可拖排 row，包含 UID、別名編輯、切換與刪除操作。
 class _Row extends StatefulWidget {
   const _Row({
     super.key,
@@ -118,21 +121,40 @@ class _Row extends StatefulWidget {
     required this.onAliasSubmit,
   });
 
+  /// 該 row 代表的 UID。
   final String uid;
+
+  /// 在 [ReorderableListView] 中的排序位置，用於拖拉 handle。
   final int index;
+
+  /// 最後一次更新祈願資料的時間。
   final DateTime lastUpdated;
+
+  /// 是否為當前啟用的帳號。
   final bool isActive;
+
+  /// 使用者自訂別名；空字串表示未設定。
   final String alias;
+
+  /// 點擊「切換」後呼叫。
   final VoidCallback onSetActive;
+
+  /// 點擊「移除」並確認後呼叫。
   final VoidCallback onRemove;
+
+  /// 別名 TextField 失去 focus 或按 Enter 後呼叫。
   final ValueChanged<String> onAliasSubmit;
 
   @override
   State<_Row> createState() => _RowState();
 }
 
+/// State for [_Row]; 管理別名 [TextField] 的 controller 與 focus。
 class _RowState extends State<_Row> {
+  /// 別名 TextField 的 controller。
   late final TextEditingController _ctrl;
+
+  /// 別名 TextField 的 focus node；失焦時自動提交別名。
   late final FocusNode _focus;
 
   @override
@@ -152,6 +174,7 @@ class _RowState extends State<_Row> {
     }
   }
 
+  /// 失焦時將目前輸入值提交為新別名。
   void _onFocusChange() {
     if (!_focus.hasFocus) {
       widget.onAliasSubmit(_ctrl.text);

@@ -1,4 +1,3 @@
-// lib/widgets/dialogs/new_version_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_widget/markdown_widget.dart';
@@ -9,8 +8,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
+/// 新版本通知 dialog，列出自上次版本以來的所有 release notes。
 class NewVersionDialog extends ConsumerWidget {
   const NewVersionDialog({super.key, required this.releases});
+
+  /// 需要顯示的 release 列表（最新版在前）。
   final List<AppRelease> releases;
 
   @override
@@ -66,6 +68,7 @@ class NewVersionDialog extends ConsumerWidget {
   }
 }
 
+/// 依 [theme] 亮暗模式建立 markdown 渲染設定，統一連結樣式。
 MarkdownConfig _markdownConfig(ThemeData theme) {
   final base = theme.brightness == Brightness.dark
       ? MarkdownConfig.darkConfig
@@ -83,9 +86,14 @@ MarkdownConfig _markdownConfig(ThemeData theme) {
   );
 }
 
+/// 單一 release 的卡片，顯示版本號、發布時間與 markdown release notes。
 class _ReleaseCard extends StatelessWidget {
   const _ReleaseCard({required this.release, required this.l});
+
+  /// 該卡片對應的 release 資料。
   final AppRelease release;
+
+  /// 在地化資源，用於時間格式文案。
   final AppLocalizations l;
 
   @override
