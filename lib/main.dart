@@ -157,7 +157,19 @@ class _MainAppState extends ConsumerState<MainApp> {
     final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
-      onGenerateTitle: (ctx) => AppLocalizations.of(ctx)!.appName,
+      onGenerateTitle: (ctx) {
+        final title = AppLocalizations.of(ctx)!.appName;
+        if (Platform.isWindows) {
+          scheduleMicrotask(() async {
+            try {
+              await windowManager.setTitle(title);
+            } catch (e, st) {
+              Logger('app.window').warning('setTitle failed', e, st);
+            }
+          });
+        }
+        return title;
+      },
       theme: buildLightTheme(),
       darkTheme: buildDarkTheme(),
       themeMode: themeMode,
