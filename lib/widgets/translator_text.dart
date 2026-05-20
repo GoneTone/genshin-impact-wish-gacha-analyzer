@@ -40,34 +40,54 @@ List<TranslatorSegment> parseTranslatorMarkup(String raw) {
   return segments;
 }
 
+/// [parseTranslatorMarkup] 拆出的文字或連結段落基底類型。
 sealed class TranslatorSegment {
+  /// 建立 [TranslatorSegment]。
   const TranslatorSegment();
 }
 
+/// 純文字段落。
 class TextSegment extends TranslatorSegment {
+  /// 建立 [TextSegment]。
   const TextSegment(this.text);
+
+  /// 段落文字內容。
   final String text;
 }
 
+/// 可點擊連結段落。
 class LinkSegment extends TranslatorSegment {
+  /// 建立 [LinkSegment]。
   const LinkSegment(this.text, this.uri);
+
+  /// 顯示文字。
   final String text;
+
+  /// 連結目標 URI。
   final Uri uri;
 }
 
 /// 把帶有 `<a href>` 標籤的字串顯示為可點擊文字。
 class TranslatorText extends StatefulWidget {
+  /// 建立 [TranslatorText]。
   const TranslatorText({super.key, required this.raw, this.style});
 
+  /// 含 `<a href>` 標籤的原始字串。
   final String raw;
+
+  /// 套用於全段文字的基礎樣式（可選）。
   final TextStyle? style;
 
   @override
   State<TranslatorText> createState() => _TranslatorTextState();
 }
 
+/// [TranslatorText] 的 State：解析 segment 並管理連結 [TapGestureRecognizer] 生命週期。
 class _TranslatorTextState extends State<TranslatorText> {
+  /// 當前 [widget.raw] 解析出的段落列表。
   late List<TranslatorSegment> _segments;
+
+  /// 各 [LinkSegment] 對應的手勢辨識器，與 [_segments] 的連結型段落一一對應。
   final List<TapGestureRecognizer> _recognizers = [];
 
   @override
@@ -91,6 +111,7 @@ class _TranslatorTextState extends State<TranslatorText> {
     super.dispose();
   }
 
+  /// 重新解析 [widget.raw] 並為 [LinkSegment] 建立手勢辨識器。
   void _rebuild() {
     _segments = parseTranslatorMarkup(widget.raw);
     for (final seg in _segments) {
@@ -102,6 +123,7 @@ class _TranslatorTextState extends State<TranslatorText> {
     }
   }
 
+  /// 釋放所有 [TapGestureRecognizer] 並清空列表。
   void _disposeRecognizers() {
     for (final r in _recognizers) {
       r.dispose();

@@ -1,4 +1,3 @@
-// lib/widgets/update_progress_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +6,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
+/// 顯示祈願資料更新進度的 dialog，包含 [LinearProgressIndicator] 與各狀態文字。
 class UpdateProgressDialog extends ConsumerWidget {
+  /// 建立 [UpdateProgressDialog]。
   const UpdateProgressDialog({super.key});
 
   @override
@@ -38,6 +39,7 @@ class UpdateProgressDialog extends ConsumerWidget {
     );
   }
 
+  /// 依 [p] 狀態回傳對應的操作按鈕列表。
   List<Widget> _actions(
     BuildContext ctx,
     UpdateProgress? p,
@@ -74,10 +76,18 @@ class UpdateProgressDialog extends ConsumerWidget {
   }
 }
 
+/// Dialog 標題列：依 [progress] 狀態切換圖示、顏色與文字。
 class _Title extends StatelessWidget {
+  /// 建立 [_Title]。
   const _Title({required this.progress, required this.l, required this.tokens});
+
+  /// 當前更新進度狀態。
   final UpdateProgress? progress;
+
+  /// 國際化字串。
   final AppLocalizations l;
+
+  /// 主題色彩 token。
   final GachaTokens tokens;
 
   @override
@@ -116,9 +126,15 @@ class _Title extends StatelessWidget {
   }
 }
 
+/// Dialog 內容區：依 [progress] 狀態切換進度列、說明文字或結果摘要。
 class _Body extends StatelessWidget {
+  /// 建立 [_Body]。
   const _Body({required this.progress, required this.l});
+
+  /// 當前更新進度狀態。
   final UpdateProgress? progress;
+
+  /// 國際化字串。
   final AppLocalizations l;
 
   @override
@@ -197,6 +213,7 @@ class _Body extends StatelessWidget {
     };
   }
 
+  /// 將 [UpdateError] 轉為對應的本地化錯誤訊息。
   String _resolveError(UpdateError error, AppLocalizations l) =>
       switch (error) {
         UpdateErrorAuthExpired() => l.errorAuthExpired,

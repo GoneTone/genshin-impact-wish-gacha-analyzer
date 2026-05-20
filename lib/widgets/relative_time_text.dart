@@ -33,9 +33,13 @@ class RelativeTimeText extends ConsumerWidget {
   /// `false`(預設) → `formatAbsoluteDateTime`;`true` → `formatAbsoluteDate`。
   final bool useDateOnly;
 
+  /// 套用於全段文字的樣式（含底色相對時間部分）。
   final TextStyle? style;
+
+  /// 文字溢出處理方式。
   final TextOverflow? overflow;
 
+  /// 用於切割 template 字串的占位字元（OBJECT REPLACEMENT CHARACTER U+FFFC）。
   static const _sentinel = '￼';
 
   @override

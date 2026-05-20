@@ -7,7 +7,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 
+/// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
+  /// 建立 [SortableTable]。
   const SortableTable({
     super.key,
     required this.rows,
@@ -18,19 +20,27 @@ class SortableTable extends StatefulWidget {
 
   /// 已 filter / sort 完的 rows;元件本身不做篩選排序。
   final List<RecordRow> rows;
+
+  /// 當前排序設定；`null` 表示未排序。
   final TableSort? sort;
 
   /// 該卡池的主稀有度 rank（卡池預設 5、常駐頌願 4），用於「保底內」欄
   /// 標題與 tooltip 中的 N★。
   final int mainRank;
+
+  /// 使用者點擊欄位標題時的回呼。
   final ValueChanged<SortColumn> onSortColumnTapped;
 
   @override
   State<SortableTable> createState() => _SortableTableState();
 }
 
+/// [SortableTable] 的 State：管理排序狀態與條紋背景。
 class _SortableTableState extends State<SortableTable> {
+  /// 每頁顯示的記錄筆數。
   static const _pageSize = 20;
+
+  /// 當前頁碼（0-based）。
   int _page = 0;
 
   @override
@@ -43,6 +53,7 @@ class _SortableTableState extends State<SortableTable> {
     }
   }
 
+  /// 依 rows 數量計算總頁數，最小為 1。
   int get _totalPages =>
       (widget.rows.length / _pageSize).ceil().clamp(1, 99999);
 
@@ -110,7 +121,9 @@ class _SortableTableState extends State<SortableTable> {
   }
 }
 
+/// 表格標題列，含各欄位的排序觸發按鈕。
 class _Header extends StatelessWidget {
+  /// 建立 [_Header]。
   const _Header({
     required this.theme,
     required this.tokens,
@@ -119,11 +132,23 @@ class _Header extends StatelessWidget {
     required this.mainRank,
     required this.onTap,
   });
+
+  /// 主題資料。
   final ThemeData theme;
+
+  /// 主題色彩 token。
   final GachaTokens tokens;
+
+  /// 國際化字串。
   final AppLocalizations l;
+
+  /// 當前排序設定；`null` 表示未排序。
   final TableSort? sort;
+
+  /// 該卡池的主稀有度 rank，用於「保底內」欄標題的 N★ 顯示。
   final int mainRank;
+
+  /// 使用者點擊欄位標題時的回呼。
   final ValueChanged<SortColumn> onTap;
 
   @override
@@ -208,7 +233,9 @@ class _Header extends StatelessWidget {
   }
 }
 
+/// 單一欄位的可排序標題儲存格。
 class _HeaderCell extends StatelessWidget {
+  /// 建立 [_HeaderCell]。
   const _HeaderCell({
     required this.flex,
     required this.label,
@@ -220,14 +247,32 @@ class _HeaderCell extends StatelessWidget {
     this.tooltip,
     this.alignEnd = false,
   });
+
+  /// [Expanded] 的 flex 值。
   final int flex;
+
+  /// 欄位顯示名稱。
   final String label;
+
+  /// 欄位額外 Tooltip 說明（可選）。
   final String? tooltip;
+
+  /// 對應的排序欄位。
   final SortColumn column;
+
+  /// 當前排序設定；`null` 表示未排序。
   final TableSort? sort;
+
+  /// 主題色彩 token。
   final GachaTokens tokens;
+
+  /// 國際化字串。
   final AppLocalizations l;
+
+  /// 使用者點擊時的回呼。
   final ValueChanged<SortColumn> onTap;
+
+  /// 是否靠右對齊（數字欄位）。
   final bool alignEnd;
 
   @override
@@ -277,7 +322,9 @@ class _HeaderCell extends StatelessWidget {
   }
 }
 
+/// 單筆祈願記錄的資料列。
 class _Row extends StatelessWidget {
+  /// 建立 [_Row]。
   const _Row({
     required this.row,
     required this.isStripe,
@@ -285,10 +332,20 @@ class _Row extends StatelessWidget {
     required this.tokens,
     required this.l,
   });
+
+  /// 祈願記錄資料。
   final RecordRow row;
+
+  /// 是否為斑馬紋的深色列。
   final bool isStripe;
+
+  /// 主題資料。
   final ThemeData theme;
+
+  /// 主題色彩 token。
   final GachaTokens tokens;
+
+  /// 國際化字串。
   final AppLocalizations l;
 
   @override
@@ -356,10 +413,18 @@ class _Row extends StatelessWidget {
   }
 }
 
+/// 稀有度標籤膠囊，用於 5★ / 4★ 的彩色底色顯示。
 class _Pill extends StatelessWidget {
+  /// 建立 [_Pill]。
   const _Pill({required this.rank, required this.color, required this.l});
+
+  /// 稀有度 rank。
   final int rank;
+
+  /// 膠囊主色。
   final Color color;
+
+  /// 國際化字串。
   final AppLocalizations l;
 
   @override

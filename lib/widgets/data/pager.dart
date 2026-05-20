@@ -3,7 +3,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 分頁導覽列，含首頁 / 上一頁 / 頁碼 dropdown / 下一頁 / 末頁按鈕。
 class Pager extends StatelessWidget {
+  /// 建立 [Pager]。
   const Pager({
     super.key,
     required this.page,
@@ -11,8 +13,13 @@ class Pager extends StatelessWidget {
     required this.onChanged,
   });
 
-  final int page; // 0-based
+  /// 當前頁碼（0-based）。
+  final int page;
+
+  /// 總頁數。
   final int totalPages;
+
+  /// 使用者切換頁碼時的回呼，參數為新頁碼（0-based）。
   final void Function(int) onChanged;
 
   @override

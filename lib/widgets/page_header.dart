@@ -1,13 +1,19 @@
-// lib/widgets/page_header.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 頁面頂部的標題區塊，含主標題、可選的副標題與前置圖示。
 class PageHeader extends StatelessWidget {
+  /// 建立 [PageHeader]。
   const PageHeader({super.key, required this.title, this.subtitle, this.icon});
 
+  /// 主標題文字。
   final String title;
+
+  /// 副標題文字（可選）。
   final String? subtitle;
+
+  /// 主標題前置圖示（可選）。
   final IconData? icon;
 
   @override

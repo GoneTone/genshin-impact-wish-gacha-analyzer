@@ -1,4 +1,3 @@
-// lib/widgets/rarity_pie.dart
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -7,11 +6,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
-// 與 ItemTypePie 共用，確保兩個 Pie 視覺大小一致。
-// 直徑 = (75 + 40) × 2 = 230px，可在 ChartCard 預設 chart slot (~244px) 內安全顯示。
+/// Pie 圓環外徑（邏輯像素）。與 [ItemTypePie] 共用，確保兩個 Pie 視覺大小一致。
+/// 直徑 = (_kRingRadius + _kCenterRadius) × 2 = 230px，可在 ChartCard 預設 chart slot (~244px) 內安全顯示。
 const double _kRingRadius = 75;
+
+/// Pie 中心圓半徑（邏輯像素）。與 [_kRingRadius] 配合決定圓環寬度。
 const double _kCenterRadius = 40;
 
+/// 將 [stats] 轉為稀有度 [DistributionEntry] 列表，供圖例或 Pie chart 使用。
 List<DistributionEntry> rarityDistributionEntries(
   GachaStats stats,
   GachaTokens tokens,
@@ -46,13 +48,19 @@ List<DistributionEntry> rarityDistributionEntries(
   ];
 }
 
+/// 以圓環 Pie chart 呈現稀有度分佈的 widget。
 class RarityPie extends StatelessWidget {
+  /// 建立 [RarityPie]。
   const RarityPie({
     super.key,
     required this.stats,
     this.animationDuration = const Duration(milliseconds: 600),
   });
+
+  /// 用於計算各 Pie 區塊比例的統計資料。
   final GachaStats stats;
+
+  /// Pie chart 動畫時長。
   final Duration animationDuration;
 
   @override
@@ -83,6 +91,7 @@ class RarityPie extends StatelessWidget {
     );
   }
 
+  /// 建立單一 Pie 區塊資料，[value] 為數量，[color] 為填色。
   PieChartSectionData _section(int value, Color color) => PieChartSectionData(
     showTitle: false,
     value: value.toDouble(),

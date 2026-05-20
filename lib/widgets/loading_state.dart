@@ -3,7 +3,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 全屏置中的載入中佔位元件，含 [CircularProgressIndicator] 與文字提示。
 class LoadingState extends StatelessWidget {
+  /// 建立 [LoadingState]。
   const LoadingState({super.key});
 
   @override

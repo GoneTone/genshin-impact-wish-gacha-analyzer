@@ -1,9 +1,10 @@
-// lib/widgets/distribution_legend.dart
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// Pie 圖例或色票說明的單一條目資料。
 class DistributionEntry {
+  /// 建立 [DistributionEntry]。
   const DistributionEntry({
     required this.color,
     required this.name,
@@ -11,21 +12,29 @@ class DistributionEntry {
     required this.rate,
   });
 
+  /// 色塊顏色。
   final Color color;
+
+  /// 條目名稱。
   final String name;
+
+  /// 數量。
   final int count;
 
-  /// 0.0 ~ 1.0
+  /// 佔比，範圍 0.0 ~ 1.0。
   final double rate;
 }
 
+/// 以色塊、名稱、數量、百分比呈現分佈資料的圖例列表。
 class DistributionLegend extends StatelessWidget {
+  /// 建立 [DistributionLegend]。
   const DistributionLegend({
     super.key,
     required this.entries,
     this.showAllEntries = false,
   });
 
+  /// 圖例條目列表。
   final List<DistributionEntry> entries;
 
   /// false (預設):過濾 count == 0 的條目 — Pie 圖例的慣例

@@ -1,4 +1,3 @@
-// lib/widgets/uid_indicator.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +7,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// AppBar 上的 UID 切換按鈕，點擊後展開帳號選單。
 class UidIndicator extends ConsumerWidget {
+  /// 建立 [UidIndicator]。
   const UidIndicator({super.key});
 
   @override
@@ -87,9 +88,13 @@ class UidIndicator extends ConsumerWidget {
 /// AppBar 觸發鈕的單行顯示:alias (uid),alias 過長 ellipsis;
 /// 無 alias 顯示 UID;activeUid==null 顯示「未同步」。
 class AccountTriggerLabel extends StatelessWidget {
+  /// 建立 [AccountTriggerLabel]。
   const AccountTriggerLabel({super.key, this.activeUid, this.alias});
 
+  /// 當前登入的 UID，`null` 表示尚未同步。
   final String? activeUid;
+
+  /// 使用者自訂的帳號別名。
   final String? alias;
 
   @override
@@ -120,12 +125,14 @@ class AccountTriggerLabel extends StatelessWidget {
     ]);
   }
 
+  /// 以 [MainAxisSize.min] Row 包裝 [children]。
   Widget _row(List<Widget> children) =>
       Row(mainAxisSize: MainAxisSize.min, children: children);
 }
 
 /// 選單項目顯示:alias 主標 + UID 副標。沒 alias 時退化為 UID 單行。
 class AccountMenuLabel extends StatelessWidget {
+  /// 建立 [AccountMenuLabel]。
   const AccountMenuLabel({
     super.key,
     required this.uid,
@@ -133,8 +140,13 @@ class AccountMenuLabel extends StatelessWidget {
     this.alias,
   });
 
+  /// 帳號 UID。
   final String uid;
+
+  /// 使用者自訂的帳號別名。
   final String? alias;
+
+  /// 是否為當前使用中的帳號。
   final bool isActive;
 
   @override

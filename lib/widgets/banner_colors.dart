@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// 各一組對應飽和度。
 @immutable
 class BannerColors {
+  /// 建立 [BannerColors]。
   const BannerColors({
     required this.character,
     required this.weapon,
@@ -22,6 +23,7 @@ class BannerColors {
   factory BannerColors.of(Brightness brightness) =>
       brightness == Brightness.dark ? _dark : _light;
 
+  /// Dark mode palette。
   static const _dark = BannerColors(
     character: Color(0xFF46B07A), // 森林綠
     weapon: Color(0xFFE6736B), // 珊瑚紅
@@ -33,6 +35,7 @@ class BannerColors {
     fallback: Color(0xFF8A92A6), // 中性
   );
 
+  /// Light mode palette。
   static const _light = BannerColors(
     character: Color(0xFF2E7D32),
     weapon: Color(0xFFC62828),
@@ -44,15 +47,31 @@ class BannerColors {
     fallback: Color(0xFF6A7080),
   );
 
+  /// 角色活動祈願配色。
   final Color character;
+
+  /// 武器活動祈願配色。
   final Color weapon;
+
+  /// 集錄祈願配色。
   final Color chronicled;
+
+  /// 常駐祈願配色。
   final Color standard;
+
+  /// 新手祈願配色。
   final Color beginner;
+
+  /// 歐差事件祈願配色。
   final Color odesEvent;
+
+  /// 歐差常駐祈願配色。
   final Color odesStandard;
+
+  /// 未知 gachaType 的備用配色。
   final Color fallback;
 
+  /// 依 [gachaType] 字串（如 `'301'`）回傳對應色；未知 type 回傳 [fallback]。
   Color colorFor(String gachaType) => switch (gachaType) {
     '301' => character,
     '302' => weapon,

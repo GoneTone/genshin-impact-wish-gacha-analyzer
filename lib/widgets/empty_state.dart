@@ -3,7 +3,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
+/// 空白狀態佔位元件，支援滿屏置中與縮小版兩種佈局。
 class EmptyState extends StatelessWidget {
+  /// 建立 [EmptyState]。
   const EmptyState({
     super.key,
     required this.icon,
@@ -13,15 +15,23 @@ class EmptyState extends StatelessWidget {
     this.compact = false,
   });
 
+  /// 主要圖示。
   final IconData icon;
+
+  /// 標題文字。
   final String title;
+
+  /// 說明文字（可選）。
   final String? message;
+
+  /// 操作按鈕（可選）。
   final Widget? action;
 
   /// 縮小版:用於「頁面內某個 section 的空位佔位」(icon 40px + 邊框框出範圍),
   /// 非滿屏置中。
   final bool compact;
 
+  /// 未同步狀態的空白佔位（雲端離線圖示 + 提示文字）。
   factory EmptyState.noSync(BuildContext context, {Widget? action}) {
     final l = AppLocalizations.of(context)!;
     return EmptyState(
@@ -47,6 +57,7 @@ class EmptyState extends StatelessWidget {
     );
   }
 
+  /// 無篩選結果的空白佔位（搜尋關閉圖示）。
   factory EmptyState.noFiltered(BuildContext context, {Widget? action}) {
     final l = AppLocalizations.of(context)!;
     return EmptyState(
