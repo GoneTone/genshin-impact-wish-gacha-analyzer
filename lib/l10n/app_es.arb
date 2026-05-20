@@ -49,7 +49,7 @@
 
   "uidSwitchTooltip": "Cambiar cuenta",
   "uidNotSynced": "No sincronizado",
-  "uidActiveSuffix": "（Activo）",
+  "uidActiveSuffix": " (Activo)",
 
   "emptyNoSyncTitle": "Aún no se ha sincronizado ningún dato",
   "emptyNoSyncMessage": "Pulsa «Actualizar datos» en la esquina superior derecha para comenzar",
@@ -97,7 +97,7 @@
   "progressDone": "Actualización completada",
   "progressFailed": "Fallido",
   "progressOpenGameHint": "Abre Genshin Impact → Deseos → Historial",
-  "progressFallbackHint": "（La autenticación anterior ha expirado, se necesita re-interceptar）",
+  "progressFallbackHint": "(La autenticación anterior ha expirado, se necesita re-interceptar)",
   "progressFetchingBanner": "Obteniendo: {name}",
   "@progressFetchingBanner": {
     "placeholders": { "name": { "type": "String" } }
@@ -216,7 +216,7 @@
     "placeholders": { "n": { "type": "int" } }
   },
 
-  "filterRarityAll": "Toda rareza",
+  "filterRarityAll": "Todas las rarezas",
   "filterRarityRankOnly": "Solo {star}",
   "@filterRarityRankOnly": {
     "placeholders": { "star": { "type": "String" } }
