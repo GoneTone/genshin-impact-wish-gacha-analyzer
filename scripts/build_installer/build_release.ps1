@@ -86,6 +86,17 @@ Write-Host "==> flutter build windows --release" -ForegroundColor Green
 flutter build windows --release
 if ($LASTEXITCODE -ne 0) { throw "flutter build 失敗" }
 
+# --- 3a. (Optional) Sign app exe before packaging --------------------------
+if ($env:WINDOWS_SIGN_PFX_BASE64 -and $env:WINDOWS_SIGN_PASSWORD) {
+    Write-Host ""
+    Write-Host "==> Signing app exe (TODO: signtool)" -ForegroundColor Yellow
+    # TODO(signing): 用 base64 還原 pfx, 呼叫 signtool sign /f ... /p ... build\windows\x64\runner\Release\*.exe
+}
+else {
+    Write-Host ""
+    Write-Host "==> Skip app exe signing (no cert configured)" -ForegroundColor DarkGray
+}
+
 # --- 4. 編譯安裝檔 ----------------------------------------------------------
 $InstallerDir = Join-Path $ProjectRoot 'build\installer'
 New-Item -ItemType Directory -Force $InstallerDir | Out-Null
@@ -96,6 +107,17 @@ Write-Host ""
 Write-Host "==> ISCC compile" -ForegroundColor Green
 & $ISCC "/DMyAppVersion=$Version" $IssPath
 if ($LASTEXITCODE -ne 0) { throw "ISCC 編譯失敗" }
+
+# --- 4a. (Optional) Sign installer after ISCC ------------------------------
+if ($env:WINDOWS_SIGN_PFX_BASE64 -and $env:WINDOWS_SIGN_PASSWORD) {
+    Write-Host ""
+    Write-Host "==> Signing installer (TODO: signtool)" -ForegroundColor Yellow
+    # TODO(signing): signtool sign /f ... /p ... <installer.exe>
+}
+else {
+    Write-Host ""
+    Write-Host "==> Skip installer signing (no cert configured)" -ForegroundColor DarkGray
+}
 
 # --- 5. 報告產物 -------------------------------------------------------------
 $Output = Join-Path $InstallerDir "Genshin_Impact_Wish_Gacha_Analyzer-Setup-$Version.exe"
