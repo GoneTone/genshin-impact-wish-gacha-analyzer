@@ -131,6 +131,32 @@ void main() {
         );
       }
     });
+
+    // 防呆：某語系若被部分翻譯（有 ≥1 則訊息故進 supportedLocales），
+    // 但剛好漏翻 localeNativeName，gen-l10n 會 fallback 成範本（繁中）的
+    // 顯示名，選單就會冒出第二個「繁體中文」。isNotEmpty 擋不到（fallback
+    // 值非空），唯有檢查 nativeName 是否重複才能抓出來。
+    test('各保留 locale 的 nativeName 互不重複', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final metadata = container.read(localeMetadataProvider);
+      final byName = <String, List<String>>{};
+      for (final entry in metadata.entries) {
+        byName.putIfAbsent(entry.value.nativeName, () => []).add(entry.key);
+      }
+      final duplicated = {
+        for (final e in byName.entries)
+          if (e.value.length > 1) e.key: e.value,
+      };
+      expect(
+        duplicated,
+        isEmpty,
+        reason:
+            '以下 nativeName 被多個 locale 共用（疑似漏翻 localeNativeName '
+            '而 fallback 成範本顯示名）：$duplicated',
+      );
+    });
   });
 
   group('localeListResolution', () {
