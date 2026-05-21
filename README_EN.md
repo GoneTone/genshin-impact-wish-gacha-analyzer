@@ -49,6 +49,7 @@ The utility may trigger anti-virus software during installation and execution. T
 - Rarity distribution pie chart
 - Item type distribution pie chart
 - Wish history table: multi-column sort, fuzzy search, rarity and item-type filters, pagination
+- Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
 - Export / Import accounts as JSON
 - Dark / Light theme toggle
 - Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
