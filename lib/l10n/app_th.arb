@@ -15,18 +15,23 @@
   "navCharacter": "ตัวละคร",
   "navWeapon": "อาวุธ",
   "navChronicled": "รวมปรารถนา",
-  "navStandard": "แห่งการเดินทาง",
-  "navBeginner": "ผู้เริ่มต้น",
+  "navStandard": "ถาวร",
+  "navBeginner": "ผู้เริ่ม",
   "navSettings": "การตั้งค่า",
   "navContributors": "ผลงาน",
 
   "gachaTypeCharacter": "กิจกรรมอธิษฐานตัวละคร",
   "gachaTypeWeapon": "กิจกรรมอธิษฐานอาวุธ",
   "gachaTypeChronicled": "การอธิษฐานรวมปรารถนา",
-  "gachaTypeStandard": "การอธิษฐานแห่งการเดินทาง",
-  "gachaTypeBeginner": "การอธิษฐานแนะนำสำหรับผู้เริ่มต้น",
+  "gachaTypeStandard": "อธิษฐานถาวร",
+  "gachaTypeBeginner": "ผู้เริ่มอธิษฐาน",
+  "gachaTypeOdesEvent": "กิจกรรมภาวนา",
+  "gachaTypeOdesStandard": "ภาวนาถาวร",
 
+  "navOdesEvent": "กิจกรรม",
+  "navOdesStandard": "ถาวร",
   "navSectionGacha": "การอธิษฐาน",
+  "navSectionOdes": "ภาวนา",
 
   "footerNotSynced": "ยังไม่ได้ซิงค์",
   "footerLastUpdated": "ปรับปรุงล่าสุด ：{time}",
@@ -56,6 +61,7 @@
   "emptyNoSyncMessage": "กดปุ่ม \"อัพเดทข้อมูล\" ที่มุมบนขวาเพื่อเริ่มต้น",
   "emptyNoRecords": "ไม่มีบันทึกสำหรับ banner นี้",
   "emptyNoFilterMatch": "ไม่พบรายการที่ตรงกับเงื่อนไข",
+  "emptyNoOdesRecords": "ยังไม่มีบันทึกภาวนา",
   "emptyNoGachaRecords": "ยังไม่มีบันทึกการอธิษฐาน",
 
   "tableTime": "เวลาที่ได้รับ",
@@ -129,6 +135,7 @@
 
   "pageOverviewTitle": "กราฟข้อมูลโดยรวม",
   "pageOverviewGachaSection": "สรุปการอธิษฐาน",
+  "pageOverviewOdesSection": "สรุปภาวนา",
   "pageBannerRecordList": "รายการบันทึก",
 
   "settingsTitle": "การตั้งค่า",
