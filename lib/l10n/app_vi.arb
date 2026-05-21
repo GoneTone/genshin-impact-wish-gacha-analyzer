@@ -17,18 +17,23 @@
   "navCharacter": "Nhân Vật",
   "navWeapon": "Vũ Khí",
   "navChronicled": "Sử Ký",
-  "navStandard": "Thường Trú",
-  "navBeginner": "Người Mới",
+  "navStandard": "Thường",
+  "navBeginner": "Tân Thủ",
   "navSettings": "Cài Đặt",
   "navContributors": "Đóng Góp",
 
-  "gachaTypeCharacter": "Cầu Nguyện Sự Kiện Nhân Vật",
-  "gachaTypeWeapon": "Cầu Nguyện Sự Kiện Vũ Khí",
+  "gachaTypeCharacter": "Cầu Nguyện Nhân Vật",
+  "gachaTypeWeapon": "Cầu Nguyện Vũ Khí",
   "gachaTypeChronicled": "Sử Ký Cầu Nguyện",
-  "gachaTypeStandard": "Du Hành Thế Gian",
-  "gachaTypeBeginner": "Cầu Nguyện Đề Xuất Cho Người Mới",
+  "gachaTypeStandard": "Cầu Nguyện Thường",
+  "gachaTypeBeginner": "Cầu Nguyện Tân Thủ",
+  "gachaTypeOdesEvent": "Ca Tụng Sự Kiện",
+  "gachaTypeOdesStandard": "Ca Tụng Thường",
 
   "navSectionGacha": "Cầu Nguyện",
+  "navSectionOdes": "Ca Tụng",
+  "navOdesEvent": "Sự Kiện",
+  "navOdesStandard": "Thường",
 
   "footerNotSynced": "Chưa đồng bộ",
   "footerLastUpdated": "Cập nhật lần cuối: {time}",
@@ -58,6 +63,7 @@
   "emptyNoSyncMessage": "Nhấn \"Cập Nhật Dữ Liệu\" ở góc trên bên phải để bắt đầu",
   "emptyNoRecords": "Banner này chưa có bản ghi",
   "emptyNoFilterMatch": "Không tìm thấy bản ghi phù hợp với điều kiện",
+  "emptyNoOdesRecords": "Chưa có bản ghi Ca Tụng",
   "emptyNoGachaRecords": "Chưa có bản ghi Cầu Nguyện",
 
   "statsTotal": "Tổng số lần cầu",
@@ -131,6 +137,7 @@
 
   "pageOverviewTitle": "Dữ liệu tổng quan (tất cả banner)",
   "pageOverviewGachaSection": "Tổng quan Cầu Nguyện",
+  "pageOverviewOdesSection": "Tổng quan Ca Tụng",
   "pageBannerRecordList": "Danh sách bản ghi",
 
   "settingsTitle": "Cài Đặt",
