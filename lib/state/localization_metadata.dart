@@ -41,6 +41,11 @@ List<Locale> filterReleasedLocales({
 /// 餵給 `MaterialApp.supportedLocales` 與語言選單，使 OS 為某半翻譯語系的使用者
 /// 不會被解析到 100% fallback 的空殼、選單也不會冒出多個「繁體中文」。
 /// gate 邏輯見 [filterReleasedLocales]。
+///
+/// 同步性依賴與 [localeMetadataProvider] 相同：`delegate.load` 對 const 內容回
+/// [SynchronousFuture]，故 `.then` 在同 stack frame 同步填妥 `names` 後，下一行
+/// 才呼叫 [filterReleasedLocales]。若未來 gen_l10n 改為 async load，`names` 會空、
+/// 此 provider 需退回 FutureProvider。
 final releasedLocalesProvider = Provider<List<Locale>>((ref) {
   const template = Locale('zh');
   final names = <Locale, String>{};
