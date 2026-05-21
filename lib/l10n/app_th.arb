@@ -1,9 +1,13 @@
 {
   "@@locale": "th",
   "localeNativeName": "ภาษาไทย",
+  "localeTranslator": "Armzyaec1234, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "ผู้แปล: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
@@ -131,6 +135,14 @@
   "tableName": "ชื่อ",
   "tableKind": "รูปแบบ",
   "tableRarity": "ความหายาก",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
   "tableTotalIndex": "จำนวนครั้ง",
   "tableMainPity": "pity ปัจจุบัน",
   "tableMainPityTooltip": "จำนวนครั้งนับจาก {star} ครั้งล่าสุด",
@@ -237,6 +249,17 @@
       }
     }
   },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
   "pityDistance": "อีก {n} ครั้งถึง pity",
   "@pityDistance": {
     "placeholders": {
@@ -315,6 +338,17 @@
       },
       "n": {
         "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
       }
     }
   },
