@@ -12,7 +12,7 @@
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
 
-  "appName": "Genshin Wish Analyzer",
+  "appName": "Genshin Impact Wish Gacha Analyzer",
 
   "actionUpdate": "Update",
   "actionCancel": "Cancel",
