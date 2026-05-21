@@ -15,13 +15,17 @@
   },
   "appName": "原神祈愿卡池分析",
   "actionUpdate": "更新数据",
+  "actionCancel": "取消",
   "actionClose": "关闭",
   "actionPrevPage": "上一页",
   "actionNextPage": "下一页",
   "actionOpenFolder": "打开文件夹",
   "navOverview": "综合",
+  "navCharacter": "角色",
+  "navWeapon": "武器",
   "navChronicled": "集录",
   "navStandard": "常驻",
+  "navBeginner": "新手",
   "navSettings": "设置",
   "navContributors": "贡献者",
   "gachaTypeCharacter": "角色活动祈愿",
@@ -35,6 +39,7 @@
   "navOdesStandard": "常驻",
   "navSectionGacha": "祈愿",
   "navSectionOdes": "颂愿",
+  "footerNotSynced": "尚未同步",
   "footerLastUpdated": "最后更新：{time}",
   "@footerLastUpdated": {
     "placeholders": {
@@ -44,6 +49,14 @@
     }
   },
   "relativeNow": "现在",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeMinutesAgo": "{count} 分钟前",
   "@relativeMinutesAgo": {
     "placeholders": {
@@ -60,6 +73,14 @@
       }
     }
   },
+  "relativeDaysAgo": "{count} 天前",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeMonthsAgo": "{count} 个月前",
   "@relativeMonthsAgo": {
     "placeholders": {
@@ -68,7 +89,16 @@
       }
     }
   },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "uidSwitchTooltip": "切换账号",
+  "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活跃）",
   "emptyNoSyncTitle": "尚未同步任何数据",
   "emptyNoSyncMessage": "点右上「更新数据」开始",
@@ -93,11 +123,22 @@
       }
     }
   },
+  "statsRarityDistribution": "稀有度分布",
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
+  "kindUnknown": "未知",
   "tableTime": "时间",
   "tableName": "名称",
   "tableKind": "类型",
+  "tableRarity": "稀有度",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
   "tableTotalIndex": "总抽数",
   "tableMainPity": "保底内",
   "tableMainPityTooltip": "距上一次 {star} 的抽数",
@@ -108,13 +149,25 @@
       }
     }
   },
+  "sortDirectionDesc": "降序",
+  "sortDirectionAsc": "升序",
   "sortHintClickToSort": "点击排序",
   "progressPreparing": "准备中…",
   "progressPreparingHint": "正在准备数据源…",
   "progressWaiting": "等待拦截…",
+  "progressFetching": "抓取中…",
+  "progressDone": "更新完成",
   "progressFailed": "失败",
   "progressOpenGameHint": "请打开原神 → 卡池 → 历史记录",
   "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
+  "progressFetchingBanner": "正在抓取：{name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "progressPageStatus": "第 {page} 页，已新增 {count} 条",
   "@progressPageStatus": {
     "placeholders": {
@@ -160,12 +213,21 @@
   "settingsTitle": "设置",
   "settingsAppearance": "外观",
   "settingsThemeSystem": "跟随系统",
+  "settingsThemeDark": "深色",
   "settingsThemeLight": "浅色",
   "settingsLanguage": "语言",
   "settingsLocaleSystem": "跟随系统",
   "settingsDataManagement": "数据管理",
   "settingsAccountManagement": "账号管理",
   "settingsAbout": "关于",
+  "settingsAboutVersion": "版本 {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "contributorsTitle": "贡献名单",
   "contributorsSubtitle": "感谢以下为此软件贡献的伙伴！",
   "contributorsProjectLeader": "项目负责人",
@@ -175,6 +237,33 @@
   "contributorsTranslatedLanguages": "已翻译语言",
   "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
   "contributorsProjectLicense": "项目许可证",
+  "pityRank": "{star} 保底",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "距下次保底 {n} 抽",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "pityClose": "快保底了！剩余 {n} 抽",
   "@pityClose": {
     "placeholders": {
@@ -183,6 +272,7 @@
       }
     }
   },
+  "pityGuaranteed": "保底中",
   "pityNoMainRarity": "暂无 {star}",
   "@pityNoMainRarity": {
     "placeholders": {
@@ -192,6 +282,14 @@
     }
   },
   "pityBeginnerEnded": "已结束",
+  "pityAverageInterval": "平均 {n} 抽出",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
   "timelineNoRecordsForRank": "暂无 {star} 记录",
   "@timelineNoRecordsForRank": {
     "placeholders": {
@@ -200,7 +298,34 @@
       }
     }
   },
+  "timelineSinceLast": "{n} 抽",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "timelineNowLabel": "现在",
+  "timelineNowPulls": "已 {n} 抽",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "距上次 {star} {n} 抽",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "timelineNowSinceCrossPool": "从上次 {star} 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
@@ -212,6 +337,17 @@
       }
     }
   },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "timelineScrollLeft": "往左滚动",
   "timelineScrollRight": "往右滚动",
   "timelineLoadMore": "加载更多（剩余 {n} 条）",
@@ -219,6 +355,15 @@
     "placeholders": {
       "n": {
         "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "全部稀有度",
+  "filterRarityRankOnly": "只看 {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
       }
     }
   },
@@ -234,9 +379,11 @@
   "shareImageButton": "生成分享图",
   "shareImageDialogTitle": "分享图设置",
   "shareImageThemeLabel": "主题",
+  "shareImageThemeDark": "深色",
   "shareImageThemeLight": "浅色",
   "shareImageShowFullUid": "在图上显示完整 UID",
   "shareImageShowFullUidHint": "关闭时只显示前 3 位，其余以 x 遮盖",
+  "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "数据更新 {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -374,6 +521,7 @@
   },
   "accountActiveTag": "活跃",
   "accountSetActive": "设为活跃",
+  "accountRemove": "移除",
   "accountAdd": "新增账号",
   "accountAliasLabel": "别名",
   "accountAliasHint": "为此账号取一个好记的名字",
@@ -391,6 +539,25 @@
     }
   },
   "bannerTopRarityCountTitle": "各卡池最高稀有度件数",
+  "bannerTopRarityPullsSinceLast": "距上次 {star} {n} 抽",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "有新版本 {version} 可用",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "updateReleasedAt": "发布于 {date}",
   "@updateReleasedAt": {
     "placeholders": {
@@ -404,6 +571,7 @@
   "updateButtonLater": "稍后再说",
   "updateCheckButton": "检查更新",
   "updateChecking": "检查中…",
+  "updateAlreadyLatest": "已是最新版本",
   "updateCheckFailed": "检查更新失败：{reason}",
   "@updateCheckFailed": {
     "placeholders": {
@@ -434,6 +602,8 @@
   "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "打开 logs 文件夹",
   "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "清除所有 logs",
+  "@settingsLogsClear": {},
   "settingsLogsExportSuccess": "已导出 logs：{path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
