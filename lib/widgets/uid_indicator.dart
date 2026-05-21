@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
@@ -28,58 +30,80 @@ class UidIndicator extends ConsumerWidget {
             lastUpdatedOf: (u) => state.byUid[u]!.lastUpdated,
           );
 
-    return PopupMenuButton<String>(
-      tooltip: l.uidSwitchTooltip,
-      onSelected: (key) async {
-        if (key == '__recapture__') {
-          await notifier.forceRecaptureAndUpdate();
-        } else {
-          await notifier.setActiveUid(key);
-        }
-      },
-      itemBuilder: (context) => [
-        for (final uid in orderedUids)
-          PopupMenuItem<String>(
-            value: uid,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  uid == activeUid ? Icons.check : Icons.radio_button_unchecked,
-                  size: 16,
-                  color: uid == activeUid
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.transparent,
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: AccountMenuLabel(
-                    uid: uid,
-                    alias: settings.uidAliases[uid],
-                    isActive: uid == activeUid,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        if (orderedUids.isNotEmpty) const PopupMenuDivider(),
+    final menuItems = <PopupMenuEntry<String>>[
+      for (final uid in orderedUids)
         PopupMenuItem<String>(
-          value: '__recapture__',
+          value: uid,
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(Icons.person_add_alt, size: 16),
+              Icon(
+                uid == activeUid ? Icons.check : Icons.radio_button_unchecked,
+                size: 16,
+                color: uid == activeUid
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.transparent,
+              ),
               const SizedBox(width: AppSpacing.s),
-              Text(l.accountAdd),
+              Expanded(
+                child: AccountMenuLabel(
+                  uid: uid,
+                  alias: settings.uidAliases[uid],
+                  isActive: uid == activeUid,
+                ),
+              ),
             ],
           ),
         ),
-      ],
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        child: AccountTriggerLabel(
-          activeUid: activeUid,
-          alias: activeUid == null ? null : settings.uidAliases[activeUid],
+      if (orderedUids.isNotEmpty) const PopupMenuDivider(),
+      PopupMenuItem<String>(
+        value: '__recapture__',
+        child: Row(
+          children: [
+            const Icon(Icons.person_add_alt, size: 16),
+            const SizedBox(width: AppSpacing.s),
+            Text(l.accountAdd),
+          ],
         ),
+      ),
+    ];
+
+    return AccountTriggerButton(
+      tooltip: l.uidSwitchTooltip,
+      onPressed: () async {
+        final button = context.findRenderObject() as RenderBox;
+        final overlay =
+            Navigator.of(context).overlay!.context.findRenderObject()
+                as RenderBox;
+        final position = RelativeRect.fromRect(
+          Rect.fromPoints(
+            button.localToGlobal(Offset.zero, ancestor: overlay),
+            button.localToGlobal(
+              button.size.bottomRight(Offset.zero),
+              ancestor: overlay,
+            ),
+          ),
+          Offset.zero & overlay.size,
+        );
+
+        final key = await showMenu<String>(
+          context: context,
+          position: position,
+          items: menuItems,
+        );
+        if (key == null) return;
+
+        if (key == '__recapture__') {
+          Logger('ui.account').info('account add / recapture triggered');
+          await notifier.forceRecaptureAndUpdate();
+        } else {
+          Logger('ui.account').info('switch active uid -> ${sanitizeUid(key)}');
+          await notifier.setActiveUid(key);
+        }
+      },
+      child: AccountTriggerLabel(
+        activeUid: activeUid,
+        alias: activeUid == null ? null : settings.uidAliases[activeUid],
       ),
     );
   }
