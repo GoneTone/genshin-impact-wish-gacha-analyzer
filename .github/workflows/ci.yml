@@ -11,19 +11,38 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 同 repo PR 才 checkout head 分支本身（供正規化後 commit 回去）；
+          # push 與 fork PR 回退到預設 ref，避免 fork 分支名在本 repo 不存在而失敗。
+          ref: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.head_ref || github.ref }}
+          persist-credentials: true
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version-file: .fvmrc
           channel: stable
           cache: true
+
+      - name: Normalize ARB @@locale to match filenames
+        run: dart tool/normalize_arb_locale.dart
+
+      - name: Commit normalized ARB files (same-repo PRs only)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if [ -n "$(git status --porcelain lib/l10n)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add lib/l10n
+            git commit -m "fix(l10n): normalize @@locale to match filenames"
+            git push origin "HEAD:${{ github.head_ref }}"
+          fi
 
       - run: flutter pub get
 
