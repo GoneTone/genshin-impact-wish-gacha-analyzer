@@ -3,10 +3,6 @@ append_commit_message: false
 files:
   - source: /lib/l10n/app_zh.arb
     translation: /lib/l10n/app_%two_letters_code%.arb
-    # 零翻譯的語系不要下載成空殼 .arb（只有 @@locale）。gen-l10n 雖會自動把
-    # 零訊息語系排除在 supportedLocales 外、不致污染語言選單，但空檔仍會塞進
-    # repo 與每次 Crowdin PR，純屬噪音。
-    skip_untranslated_files: true
     languages_mapping:
       two_letters_code:
         zh-CN: zh_Hans
