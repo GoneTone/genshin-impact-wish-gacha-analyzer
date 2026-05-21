@@ -3,6 +3,20 @@
   "localeNativeName": "ภาษาไทย",
   "localeTranslator": "Armzyaec1234, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "ผู้แปล: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
   "appName": "Genshin Impact Wish Gacha Analyzer",
   "actionUpdate": "อัพเดทข้อมูล",
   "actionCancel": "ยกเลิก",
@@ -10,7 +24,6 @@
   "actionPrevPage": "ก่อนหน้า",
   "actionNextPage": "ถัดไป",
   "actionOpenFolder": "เปิดโฟลเดอร์",
-
   "navOverview": "โดยรวม",
   "navCharacter": "ตัวละคร",
   "navWeapon": "อาวุธ",
@@ -19,7 +32,6 @@
   "navBeginner": "ผู้เริ่ม",
   "navSettings": "การตั้งค่า",
   "navContributors": "ผลงาน",
-
   "gachaTypeCharacter": "กิจกรรมอธิษฐานตัวละคร",
   "gachaTypeWeapon": "กิจกรรมอธิษฐานอาวุธ",
   "gachaTypeChronicled": "การอธิษฐานรวมปรารถนา",
@@ -27,76 +39,123 @@
   "gachaTypeBeginner": "ผู้เริ่มอธิษฐาน",
   "gachaTypeOdesEvent": "กิจกรรมภาวนา",
   "gachaTypeOdesStandard": "ภาวนาถาวร",
-
   "navOdesEvent": "กิจกรรม",
   "navOdesStandard": "ถาวร",
   "navSectionGacha": "การอธิษฐาน",
   "navSectionOdes": "ภาวนา",
-
   "footerNotSynced": "ยังไม่ได้ซิงค์",
   "footerLastUpdated": "ปรับปรุงล่าสุด ：{time}",
   "@footerLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
-
   "relativeNow": "ตอนนี้",
   "relativeSecondsAgo": "{count} วินาทีที่แล้ว",
-  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeMinutesAgo": "{count} นาทีที่แล้ว",
-  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeHoursAgo": "{count} ชั่วโมงที่แล้ว",
-  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeDaysAgo": "{count} วันที่แล้ว",
-  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeMonthsAgo": "{count} เดือนที่แล้ว",
-  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeYearsAgo": "{count} ปีที่แล้ว",
-  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
-
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "uidSwitchTooltip": "สลับบัญชี",
   "uidNotSynced": "ยังไม่ได้ซิงค์",
   "uidActiveSuffix": " (ใช้งานอยู่)",
-
   "emptyNoSyncTitle": "ยังไม่ได้ซิงค์ข้อมูล",
   "emptyNoSyncMessage": "กดปุ่ม \"อัพเดทข้อมูล\" ที่มุมบนขวาเพื่อเริ่มต้น",
   "emptyNoRecords": "ไม่มีบันทึกสำหรับ banner นี้",
   "emptyNoFilterMatch": "ไม่พบรายการที่ตรงกับเงื่อนไข",
   "emptyNoOdesRecords": "ยังไม่มีบันทึกภาวนา",
   "emptyNoGachaRecords": "ยังไม่มีบันทึกการอธิษฐาน",
-
+  "statsTotal": "จำนวนครั้ง",
+  "statsRankCount": "จำนวนไอเทม {star} ที่ดรอป",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "คิดเป็น {rate}% ของทั้งหมด",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "การกระจายความหายาก",
+  "statsItemTypeDistribution": "การกระจายประเภทไอเทม",
+  "statsNoData": "ไม่มีข้อมูล",
+  "kindUnknown": "ไม่ทราบ",
   "tableTime": "เวลาที่ได้รับ",
   "tableName": "ชื่อ",
   "tableKind": "รูปแบบ",
   "tableRarity": "ความหายาก",
   "rarityStar": "{rank}★",
   "@rarityStar": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
   },
   "tableTotalIndex": "จำนวนครั้ง",
   "tableMainPity": "pity ปัจจุบัน",
   "tableMainPityTooltip": "จำนวนครั้งนับจาก {star} ครั้งล่าสุด",
   "@tableMainPityTooltip": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "sortDirectionDesc": "มากไปน้อย",
   "sortDirectionAsc": "น้อยไปมาก",
   "sortHintClickToSort": "คลิกเพื่อเรียงลำดับ",
-
-  "statsTotal": "จำนวนครั้ง",
-  "statsRankCount": "จำนวนไอเทม {star} ที่ดรอป",
-  "@statsRankCount": {
-    "placeholders": { "star": { "type": "String" } }
-  },
-  "statsShareOfTotal": "คิดเป็น {rate}% ของทั้งหมด",
-  "@statsShareOfTotal": {
-    "placeholders": { "rate": { "type": "String" } }
-  },
-  "statsRarityDistribution": "การกระจายความหายาก",
-  "statsItemTypeDistribution": "การกระจายประเภทไอเทม",
-  "statsNoData": "ไม่มีข้อมูล",
-
-  "kindUnknown": "ไม่ทราบ",
-
   "progressPreparing": "กำลังเตรียม…",
   "progressPreparingHint": "กำลังเตรียมแหล่งข้อมูล…",
   "progressWaiting": "รอการดักจับ…",
@@ -107,37 +166,54 @@
   "progressFallbackHint": "(การยืนยันตัวตนก่อนหน้าหมดอายุ จำเป็นต้องดักจับใหม่)",
   "progressFetchingBanner": "กำลังดึงข้อมูล: {name}",
   "@progressFetchingBanner": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "progressPageStatus": "หน้า {page} เพิ่มแล้ว {count} รายการ",
   "@progressPageStatus": {
     "placeholders": {
-      "page": { "type": "int" },
-      "count": { "type": "int" }
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "progressDoneSummary": "เพิ่ม {count} รายการ",
   "@progressDoneSummary": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "progressPartialFailed": "⚠ บางส่วนล้มเหลว: {names}",
   "@progressPartialFailed": {
-    "placeholders": { "names": { "type": "String" } }
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
   },
-
   "errorAuthExpired": "การยืนยันตัวตนล้มเหลวต่อเนื่อง กรุณาเข้าสู่ระบบเกมใหม่",
   "errorRateLimited": "คำขอถี่เกินไป กรุณารอสักครู่แล้วลองใหม่",
   "errorServer": "เซิร์ฟเวอร์ผิดพลาด: {message}",
   "@errorServer": {
-    "placeholders": { "message": { "type": "String" } }
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorNoRecords": "บัญชีนี้ยังไม่มีบันทึก banner ใดๆ",
-
   "pageOverviewTitle": "กราฟข้อมูลโดยรวม",
   "pageOverviewGachaSection": "สรุปการอธิษฐาน",
   "pageOverviewOdesSection": "สรุปภาวนา",
   "pageBannerRecordList": "รายการบันทึก",
-
   "settingsTitle": "การตั้งค่า",
   "settingsAppearance": "ธีม",
   "settingsThemeSystem": "ตามระบบ",
@@ -150,9 +226,12 @@
   "settingsAbout": "เกี่ยวกับ",
   "settingsAboutVersion": "เวอร์ชัน {version}",
   "@settingsAboutVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
-
   "contributorsTitle": "รายชื่อผู้ให้การสนับสนุน",
   "contributorsSubtitle": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!",
   "contributorsProjectLeader": "หัวหน้าโปรเจค",
@@ -162,93 +241,143 @@
   "contributorsTranslatedLanguages": "ภาษาที่แปล",
   "contributorsHelpTranslate": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
   "contributorsProjectLicense": "ใบอนุญาตโปรเจค",
-
   "pityRank": "{star} pity",
   "@pityRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
-      "current": { "type": "int" },
-      "threshold": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
     }
   },
   "pityDistance": "อีก {n} ครั้งถึง pity",
   "@pityDistance": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityClose": "ใกล้ pity แล้ว! เหลืออีก {n} ครั้ง",
   "@pityClose": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityGuaranteed": "รับประกัน pity",
   "pityNoMainRarity": "ยังไม่มี {star}",
   "@pityNoMainRarity": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityBeginnerEnded": "สิ้นสุดแล้ว",
   "pityAverageInterval": "เฉลี่ย {n} ครั้ง",
   "@pityAverageInterval": {
-    "placeholders": { "n": { "type": "String" } }
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
   },
-
   "timelineNoRecordsForRank": "ยังไม่มีบันทึก {star}",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "timelineSinceLast": "{n} ครั้ง",
   "@timelineSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowLabel": "ตอนนี้",
   "timelineNowPulls": "ดึงแล้ว {n} ครั้ง",
   "@timelineNowPulls": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowSinceLast": "ห่างจาก {star} ล่าสุด {n} ครั้ง",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineNowSinceCrossPool": "นับจาก {star} ล่าสุดทุก banner รวม {n} ครั้ง",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {
     "placeholders": {
-      "year": { "type": "String" },
-      "month": { "type": "String" }
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
     }
   },
   "timelineScrollLeft": "เลื่อนซ้าย",
   "timelineScrollRight": "เลื่อนขวา",
   "timelineLoadMore": "โหลดเพิ่มเติม (เหลืออีก {n} รายการ)",
   "@timelineLoadMore": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "filterRarityAll": "ทุกความหายาก",
   "filterRarityRankOnly": "ดูเฉพาะ {star}",
   "@filterRarityRankOnly": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "filterKindAll": "ทุกประเภท",
   "filterSearchHint": "ค้นหาชื่อ…",
   "filterClear": "ล้างตัวกรอง",
-
   "pagerFirst": "หน้าแรก",
   "pagerLast": "หน้าสุดท้าย",
-
   "settingsClearActive": "ล้างข้อมูลบัญชีปัจจุบัน",
   "settingsClearAll": "ล้างข้อมูลทั้งหมด",
-
   "settingsExportData": "ส่งออกข้อมูล",
   "settingsImportData": "นำเข้าข้อมูล",
   "shareImageButton": "สร้างภาพแชร์",
@@ -261,15 +390,27 @@
   "shareImageGenerate": "สร้าง",
   "shareImageUpdatedAt": "ข้อมูลอัพเดทเมื่อ {time}",
   "@shareImageUpdatedAt": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedAndCopied": "บันทึกและคัดลอกไปยังคลิปบอร์ดแล้ว: {path}",
   "@shareImageSavedAndCopied": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedOnly": "บันทึกแล้ว: {path} (ไม่รองรับคลิปบอร์ด)",
   "@shareImageSavedOnly": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageCopiedOnly": "คัดลอกไปยังคลิปบอร์ดแล้ว",
   "shareImageFailed": "สร้างภาพแชร์ล้มเหลว",
@@ -277,71 +418,110 @@
   "exportDialogFailedTitle": "ส่งออกล้มเหลว",
   "settingsExportFailed": "ส่งออกล้มเหลว: {error}",
   "@settingsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsExportSuccess": "ส่งออกไปยัง {path} แล้ว",
   "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmTitle": "ยืนยันการนำเข้า",
   "settingsImportConfirmIntro": "กำลังจะนำเข้า {accounts} บัญชี (รวม {records} รายการ):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportConfirmOverwriteHeader": "UID ต่อไปนี้มีข้อมูลอยู่แล้ว และจะถูกเขียนทับ:",
   "settingsImportConfirmNoConflict": "ไม่มีข้อมูลที่ขัดแย้ง",
   "settingsImportConfirmPreserveFooter": "บัญชีอื่นที่มีอยู่ ({uids}) จะถูกเก็บไว้",
   "@settingsImportConfirmPreserveFooter": {
-    "placeholders": { "uids": { "type": "String" } }
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmWarning": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ กรุณาพิมพ์ IMPORT เพื่อยืนยัน",
   "settingsImportSuccess": "นำเข้า {accounts} บัญชี ({records} รายการ) สำเร็จ",
   "@settingsImportSuccess": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportPartial": "นำเข้าสำเร็จ {success}/{total} บัญชี; ล้มเหลว: {failedUids}",
   "@settingsImportPartial": {
     "placeholders": {
-      "success": { "type": "int" },
-      "total": { "type": "int" },
-      "failedUids": { "type": "String" }
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
     }
   },
   "settingsImportFailed": "นำเข้าล้มเหลว: {reason}",
   "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
   "settingsImportOverwriteBadge": "เขียนทับ",
   "accountsPickerSelectAll": "เลือกทั้งหมด",
   "accountRecordCount": "{n} รายการ",
   "@accountRecordCount": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "confirmTitle": "ยืนยันการดำเนินการ",
   "confirmClearActiveBody": "การดำเนินการนี้จะลบบันทึกการอธิษฐานทั้งหมดของ UID {uid} อย่างถาวร กรุณาพิมพ์ UID เพื่อยืนยัน:",
   "@confirmClearActiveBody": {
-    "placeholders": { "uid": { "type": "String" } }
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
   },
   "confirmClearAllBody": "การดำเนินการนี้จะลบบันทึกการอธิษฐานของทุกบัญชีอย่างถาวร กรุณาพิมพ์ DELETE เพื่อยืนยัน:",
   "confirmDelete": "ลบ",
   "confirmImport": "นำเข้า",
   "confirmExport": "ส่งออก",
   "confirmContinue": "ดำเนินการต่อ",
-
   "accountListEmpty": "ยังไม่มีบัญชีใดๆ",
   "accountLastUpdated": "อัพเดทล่าสุด {time}",
   "@accountLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "accountActiveTag": "ใช้งานอยู่",
   "accountSetActive": "ตั้งเป็นบัญชีหลัก",
@@ -350,33 +530,45 @@
   "accountAliasLabel": "ชื่อเล่น",
   "accountAliasHint": "ตั้งชื่อที่จำง่ายสำหรับบัญชีนี้",
   "accountDragHandleTooltip": "ลากเพื่อเรียงลำดับ",
-
   "loadingBootstrap": "กำลังโหลด…",
-
   "timelineTopRarityTitle": "ไทม์ไลน์ {star} ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "bannerTopRarityCountTitle": "จำนวนไอเทมความหายากสูงสุดแต่ละ banner",
   "bannerTopRarityPullsSinceLast": "ห่างจาก {star} ล่าสุด {n} ครั้ง",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "updateTitle": "มีเวอร์ชันใหม่ {version} พร้อมใช้งาน",
   "@updateTitle": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "updateReleasedAt": "เผยแพร่เมื่อ {date}",
   "@updateReleasedAt": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "updateButtonDownload": "ดาวน์โหลด",
   "updateButtonSkip": "ข้ามเวอร์ชันนี้",
@@ -386,31 +578,51 @@
   "updateAlreadyLatest": "เป็นเวอร์ชันล่าสุดแล้ว",
   "updateCheckFailed": "ตรวจสอบอัพเดทล้มเหลว: {reason}",
   "@updateCheckFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorNetwork": "ไม่สามารถเชื่อมต่อได้ กรุณาตรวจสอบเครือข่าย",
   "updateErrorTimeout": "คำขอหมดเวลา",
   "updateErrorRateLimited": "GitHub API เกินโควต้า กรุณารอสักครู่แล้วลองใหม่",
   "updateErrorServer": "เซิร์ฟเวอร์ผิดพลาด (HTTP {status})",
   "@updateErrorServer": {
-    "placeholders": { "status": { "type": "String" } }
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
   "settingsLogs": "Logs ดีบัก",
+  "@settingsLogs": {},
   "settingsLogsHint": "เมื่อพบปัญหา สามารถส่งออก log ให้นักพัฒนาช่วยตรวจสอบได้",
+  "@settingsLogsHint": {},
   "settingsLogsReport": "รายงานปัญหา",
+  "@settingsLogsReport": {},
   "settingsLogsExport": "ส่งออก logs",
+  "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "เปิดโฟลเดอร์ logs",
+  "@settingsLogsOpenFolder": {},
   "settingsLogsClear": "ล้าง logs ทั้งหมด",
+  "@settingsLogsClear": {},
   "settingsLogsExportSuccess": "ส่งออก logs แล้ว: {path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
-      "path": { "type": "String" }
+      "path": {
+        "type": "String"
+      }
     }
   },
   "settingsLogsExportFailed": "ส่งออก logs ล้มเหลว: {error}",
   "@settingsLogsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsLogsClearConfirmBody": "การดำเนินการนี้จะลบไฟล์ทั้งหมดใน logs/ อย่างถาวร หากต้องการ logs สำหรับรายงานปัญหา กรุณาส่งออกก่อน กรุณาพิมพ์ CLEAR เพื่อยืนยัน"
 }
