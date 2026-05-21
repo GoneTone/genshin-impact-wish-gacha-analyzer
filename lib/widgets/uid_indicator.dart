@@ -95,6 +95,7 @@ class UidIndicator extends ConsumerWidget {
           context: context,
           position: position,
           items: menuItems,
+          constraints: BoxConstraints.tightFor(width: button.size.width),
         );
         if (key == null) return;
 
