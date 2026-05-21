@@ -79,8 +79,9 @@
 git clone https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer.git
 cd genshin-impact-wish-gacha-analyzer
 flutter pub get
-cargo build --manifest-path rust/Cargo.toml
 ```
+
+Rust 会在 `flutter run` / `flutter build` 时由 `rust_builder/` 的 cargokit 自动编译，无需手动 `cargo build`（但需先安装 Rust toolchain）。
 
 ### 开发模式运行
 
@@ -93,7 +94,7 @@ flutter run -d windows
 修改 `rust/src/api/` 内的 Rust 函数后，重新生成桥接代码。第一次使用前先安装 codegen 工具：
 
 ```bash
-cargo install flutter_rust_bridge_codegen
+cargo install flutter_rust_bridge_codegen --version 2.12.0
 ```
 
 之后每次修改 API 都运行：

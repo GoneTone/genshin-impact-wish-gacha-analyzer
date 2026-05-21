@@ -79,8 +79,9 @@ The utility may trigger anti-virus software during installation and execution. T
 git clone https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer.git
 cd genshin-impact-wish-gacha-analyzer
 flutter pub get
-cargo build --manifest-path rust/Cargo.toml
 ```
+
+Rust is compiled automatically by `rust_builder/`'s cargokit during `flutter run` / `flutter build`; no manual `cargo build` is needed (the Rust toolchain must be installed first).
 
 ### Run in development mode
 
@@ -93,7 +94,7 @@ flutter run -d windows
 After changing Rust functions in `rust/src/api/`, regenerate the bridge code. Install the codegen tool on first use:
 
 ```bash
-cargo install flutter_rust_bridge_codegen
+cargo install flutter_rust_bridge_codegen --version 2.12.0
 ```
 
 Then run this whenever the API changes:
