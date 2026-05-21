@@ -47,6 +47,8 @@ List<Locale> filterReleasedLocales({
 /// 才呼叫 [filterReleasedLocales]。若未來 gen_l10n 改為 async load，`names` 會空、
 /// 此 provider 需退回 FutureProvider。
 final releasedLocalesProvider = Provider<List<Locale>>((ref) {
+  // 須對齊 l10n.yaml 的 template-arb-file（app_zh.arb）；模板換了這裡要跟著改，
+  // 否則新模板會因 nativeName 與自身相等的判斷失準而被誤排除。
   const template = Locale('zh');
   final names = <Locale, String>{};
   for (final locale in AppLocalizations.supportedLocales) {
