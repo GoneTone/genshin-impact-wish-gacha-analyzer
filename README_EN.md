@@ -1,6 +1,6 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[繁體中文](README.md) | [简体中文](README_ZH-CN.md) | English
+[繁體中文](README.md) | [简体中文](README_ZH-HANS.md) | English
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
@@ -57,13 +57,12 @@ The utility may trigger anti-virus software during installation and execution. T
 
 ## Screenshot
 
-![Overall Data Chart](docs/images/en/1.png)
-![Character Event Wish-Data Chart](docs/images/en/2.png)
-![Drop Rate](docs/images/en/3.png)
-![Table 1](docs/images/en/4.png)
-![Table 2](docs/images/en/5.png)
-![Daily Check-in](docs/images/en/6.png)
-![Teyvat Interactive Map](docs/images/en/7.png)
+![Overview page](docs/images/en/1.png)
+![Character Event Wish page](docs/images/en/2.png)
+![Event Ode page](docs/images/en/3.png)
+![Settings page](docs/images/en/4.png)
+![Share image options](docs/images/en/5.png)
+![Share image](docs/images/en/6.png)
 
 ## Development
 

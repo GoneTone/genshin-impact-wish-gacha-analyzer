@@ -1,6 +1,6 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-繁體中文 | [简体中文](README_ZH-CN.md) | [English](README_EN.md)
+繁體中文 | [简体中文](README_ZH-HANS.md) | [English](README_EN.md)
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
@@ -57,13 +57,12 @@
 
 ## 截圖
 
-![綜合數據圖表](docs/images/zh-TW/1.png)
-![角色活動祈願 - 數據圖表](docs/images/zh-TW/2.png)
-![中獎率](docs/images/zh-TW/3.png)
-![表格 1](docs/images/zh-TW/4.png)
-![表格 2](docs/images/zh-TW/5.png)
-![每日簽到](docs/images/zh-TW/6.png)
-![提瓦特互動地圖](docs/images/zh-TW/7.png)
+![綜合數據頁](docs/images/zh-Hant/1.png)
+![角色活動祈願頁](docs/images/zh-Hant/2.png)
+![活動頌願頁](docs/images/zh-Hant/3.png)
+![設定頁](docs/images/zh-Hant/4.png)
+![分享圖生成設定](docs/images/zh-Hant/5.png)
+![分享圖](docs/images/zh-Hant/6.png)
 
 ## 開發
 

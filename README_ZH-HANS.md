@@ -57,13 +57,12 @@
 
 ## 截图
 
-![综合数据图表](docs/images/zh-CN/1.png)
-![角色活动祈愿 - 数据图表](docs/images/zh-CN/2.png)
-![中奖率](docs/images/zh-CN/3.png)
-![表格 1](docs/images/zh-CN/4.png)
-![表格 2](docs/images/zh-CN/5.png)
-![每日签到](docs/images/zh-CN/6.png)
-![提瓦特互动地图](docs/images/zh-CN/7.png)
+![综合数据页](docs/images/zh-Hans/1.png)
+![角色活动祈愿页](docs/images/zh-Hans/2.png)
+![活动颂愿页](docs/images/zh-Hans/3.png)
+![设置页](docs/images/zh-Hans/4.png)
+![分享图生成设置](docs/images/zh-Hans/5.png)
+![分享图](docs/images/zh-Hans/6.png)
 
 ## 开发
 
