@@ -4,7 +4,7 @@
 #
 # 流程：
 #   1. 從 pubspec.yaml 讀版本號
-#   2. 偵測 Inno Setup 6 是否安裝
+#   2. 偵測 Inno Setup 6 與 Rust toolchain (cargo) 是否安裝
 #   3. flutter pub get + flutter build windows --release
 #   4. 呼叫 ISCC.exe 編譯 installer.iss
 #   5. 報告產物路徑
@@ -74,6 +74,18 @@ if (-not $ISCC) {
     exit 1
 }
 Write-Host "Inno Setup: $ISCC" -ForegroundColor Cyan
+
+# --- 2b. 偵測 cargo (Rust) ----------------------------------------------------
+# Rust 編譯透過 cargokit 掛在 `flutter build windows` 的 CMake 流程上，缺 cargo
+# 會在建置中段才爆且錯誤埋在 CMake log 裡，故先在此早早給出清楚提示。
+$Cargo = Get-Command cargo -ErrorAction SilentlyContinue
+if (-not $Cargo) {
+    Write-Host ""
+    Write-Host "Rust toolchain (cargo) not found. Please install:" -ForegroundColor Red
+    Write-Host "  https://rustup.rs/" -ForegroundColor Yellow
+    exit 1
+}
+Write-Host "Cargo: $($Cargo.Source)" -ForegroundColor Cyan
 
 # --- 3. Flutter build --------------------------------------------------------
 Write-Host ""
