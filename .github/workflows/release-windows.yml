@@ -44,7 +44,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          workspaces: rust_builder -> target
+          workspaces: rust
 
       - name: Install Inno Setup 6
         shell: pwsh
