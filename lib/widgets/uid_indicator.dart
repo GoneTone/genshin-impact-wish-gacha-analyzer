@@ -75,9 +75,14 @@ class UidIndicator extends ConsumerWidget {
         final overlay =
             Navigator.of(context).overlay!.context.findRenderObject()
                 as RenderBox;
+        // 以按鈕「下緣」為錨點（bottomLeft~bottomRight），讓選單貼齊按鈕底部
+        // 往下展開；用整個按鈕矩形當錨點時 Material 預設會覆蓋在按鈕上方。
         final position = RelativeRect.fromRect(
           Rect.fromPoints(
-            button.localToGlobal(Offset.zero, ancestor: overlay),
+            button.localToGlobal(
+              button.size.bottomLeft(Offset.zero),
+              ancestor: overlay,
+            ),
             button.localToGlobal(
               button.size.bottomRight(Offset.zero),
               ancestor: overlay,
