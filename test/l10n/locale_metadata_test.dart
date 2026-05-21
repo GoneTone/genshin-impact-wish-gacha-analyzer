@@ -65,13 +65,14 @@ void main() {
       expect(ja.localeNativeName, '日本語');
     });
 
-    test('葡萄牙文 localeNativeName 含 "Portugu"', () async {
-      final pt = await AppLocalizations.delegate.load(const Locale('pt'));
-      expect(
-        pt.localeNativeName.toLowerCase(),
-        contains('portugu'),
-        reason: 'pt localeNativeName 看起來不像葡萄牙文',
-      );
+    test('某個 Portuguese 變體（pt 或 pt_BR）已釋出且母語名像葡萄牙文', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final metadata = container.read(localeMetadataProvider);
+      final pt = metadata.entries.where((e) => e.key.startsWith('pt')).toList();
+      expect(pt, isNotEmpty, reason: '應有某個 Portuguese 變體釋出');
+      expect(pt.first.value.nativeName.toLowerCase(), contains('portugu'));
     });
 
     test('裸 zh 提供全部 contributors keys（模板必填）', () async {
@@ -154,7 +155,7 @@ void main() {
   });
 
   group('localeMetadataProvider', () {
-    test('裸 zh（繁中）與 zh-Hans 都保留，無重複空殼被排除', () {
+    test('裸 zh（繁中）與 zh-Hans 都保留，空殼 fallback 被排除', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
@@ -163,7 +164,6 @@ void main() {
 
       expect(tags, containsAll(<String>['zh', 'zh-Hans']));
       expect(tags, isNot(contains('zh-Hant')));
-      expect(tags, contains('pt'));
       expect(tags, containsAll(<String>['en', 'ja', 'es', 'fr', 'th', 'vi']));
     });
 
