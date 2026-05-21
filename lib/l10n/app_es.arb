@@ -1,9 +1,13 @@
 {
   "@@locale": "es-ES",
   "localeNativeName": "Español",
+  "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
@@ -131,6 +135,14 @@
   "tableName": "Nombre",
   "tableKind": "Tipo",
   "tableRarity": "Rareza",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
   "tableTotalIndex": "Deseos Totales",
   "tableMainPity": "Dentro del pity",
   "tableMainPityTooltip": "Deseos desde el último {star}",
@@ -237,6 +249,17 @@
       }
     }
   },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
   "pityDistance": "{n} deseos hasta el próximo pity",
   "@pityDistance": {
     "placeholders": {
@@ -315,6 +338,17 @@
       },
       "n": {
         "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
       }
     }
   },
