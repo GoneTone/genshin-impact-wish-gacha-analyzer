@@ -39,4 +39,29 @@ void main() {
       contains('"@@locale": "en"'),
     );
   });
+
+  test('跳過缺 @@locale 的檔與非 arb 檔；重複執行為 0 變更', () {
+    final dir = Directory.systemTemp.createTempSync('arb_normalize_skip_test');
+    addTearDown(() => dir.deleteSync(recursive: true));
+
+    File('${dir.path}/app_xx.arb').writeAsStringSync('{\n  "foo": "bar"\n}');
+    File('${dir.path}/README.md').writeAsStringSync('not an arb file');
+    File(
+      '${dir.path}/app_es.arb',
+    ).writeAsStringSync('{\n  "@@locale": "es-ES"\n}');
+
+    final first = normalizeArbLocales(dir);
+    expect(first, 1, reason: '只有 app_es.arb 需正規化');
+
+    // 缺 @@locale 的檔不動、非 arb 檔不動
+    expect(
+      File('${dir.path}/app_xx.arb').readAsStringSync(),
+      '{\n  "foo": "bar"\n}',
+    );
+    expect(File('${dir.path}/README.md').readAsStringSync(), 'not an arb file');
+
+    // 第二次執行：已正規化，0 變更
+    final second = normalizeArbLocales(dir);
+    expect(second, 0, reason: '已正規化的目錄重跑應為 0 變更');
+  });
 }
