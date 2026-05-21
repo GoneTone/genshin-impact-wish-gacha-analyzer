@@ -1,9 +1,13 @@
 {
   "@@locale": "ja",
   "localeNativeName": "日本語",
+  "localeTranslator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>、<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "翻訳者：{translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
@@ -22,9 +26,11 @@
   "actionOpenFolder": "フォルダーを開く",
   "navOverview": "総合",
   "navCharacter": "キャラクター",
+  "navWeapon": "武器",
   "navChronicled": "集録",
   "navStandard": "通常",
   "navBeginner": "初心者",
+  "navSettings": "設定",
   "navContributors": "貢献者",
   "gachaTypeCharacter": "イベント祈願・キャラクター",
   "gachaTypeWeapon": "イベント祈願・武器",
@@ -35,6 +41,7 @@
   "gachaTypeOdesStandard": "通常星願",
   "navOdesEvent": "イベント",
   "navOdesStandard": "通常",
+  "navSectionGacha": "祈願",
   "navSectionOdes": "星願",
   "footerNotSynced": "未同期",
   "footerLastUpdated": "最終更新：{time}",
@@ -46,6 +53,14 @@
     }
   },
   "relativeNow": "たった今",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "relativeMinutesAgo": "{count} 分前",
   "@relativeMinutesAgo": {
     "placeholders": {
@@ -72,6 +87,14 @@
   },
   "relativeMonthsAgo": "{count} か月前",
   "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -133,10 +156,12 @@
   "sortDirectionDesc": "降順",
   "sortDirectionAsc": "昇順",
   "sortHintClickToSort": "クリックで並べ替え",
+  "progressPreparing": "準備中…",
   "progressPreparingHint": "データソースを準備しています…",
   "progressWaiting": "リクエスト待機中…",
   "progressFetching": "取得中…",
   "progressDone": "更新完了",
+  "progressFailed": "失敗",
   "progressOpenGameHint": "原神 → 祈願 → 履歴 を開いてください",
   "progressFallbackHint": "（以前の認証が失効したため、再取得が必要です）",
   "progressFetchingBanner": "取得中：{name}",
@@ -189,6 +214,7 @@
   "pageOverviewGachaSection": "祈願総合",
   "pageOverviewOdesSection": "星願総合",
   "pageBannerRecordList": "記録一覧",
+  "settingsTitle": "設定",
   "settingsAppearance": "外観",
   "settingsThemeSystem": "システムに合わせる",
   "settingsThemeDark": "ダーク",
@@ -220,6 +246,17 @@
     "placeholders": {
       "star": {
         "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
       }
     }
   },
@@ -273,6 +310,7 @@
       }
     }
   },
+  "timelineNowLabel": "現在",
   "timelineNowPulls": "{n} 回経過",
   "@timelineNowPulls": {
     "placeholders": {
@@ -300,6 +338,17 @@
       },
       "n": {
         "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
       }
     }
   },
@@ -338,6 +387,7 @@
   "shareImageThemeLight": "ライト",
   "shareImageShowFullUid": "画像に UID をすべて表示",
   "shareImageShowFullUidHint": "オフにすると先頭 3 桁のみ表示し、残りは x でマスクします",
+  "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "データ更新 {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -477,6 +527,7 @@
   "accountSetActive": "使用中にする",
   "accountRemove": "削除",
   "accountAdd": "アカウントを追加",
+  "accountAliasLabel": "別名",
   "accountAliasHint": "このアカウントに覚えやすい名前を付けてください",
   "accountDragHandleTooltip": "ドラッグで並べ替え",
   "loadingBootstrap": "読み込み中…",
