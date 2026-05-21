@@ -15,18 +15,23 @@
   "navCharacter": "O personangem",
   "navWeapon": "A arma",
   "navChronicled": "Registro",
-  "navStandard": "Padrão",
-  "navBeginner": "Novatos",
+  "navStandard": "Comum",
+  "navBeginner": "Novato",
+  "navOdesEvent": "Evento",
+  "navOdesStandard": "Permanente",
   "navSettings": "Configurações",
   "navContributors": "Contribuidores",
 
   "gachaTypeCharacter": "Oração de Evento de Personagem",
   "gachaTypeWeapon": "Oração de Evento de Arma",
   "gachaTypeChronicled": "Registro de Oração",
-  "gachaTypeStandard": "Oração Padrão",
-  "gachaTypeBeginner": "Oração de Novatos",
+  "gachaTypeStandard": "Oração Comum",
+  "gachaTypeBeginner": "Desejos de Novato",
+  "gachaTypeOdesEvent": "Evento de Ode",
+  "gachaTypeOdesStandard": "Ode Permanente",
 
-  "navSectionGacha": "Oração",
+  "navSectionGacha": "Orar",
+  "navSectionOdes": "Odes",
 
   "footerNotSynced": "Não sincronizado",
   "footerLastUpdated": "Última atualização: {time}",
@@ -57,6 +62,7 @@
   "emptyNoRecords": "Sem registros neste banner",
   "emptyNoFilterMatch": "Nenhum registro corresponde ao filtro",
   "emptyNoGachaRecords": "Sem registros de Oração",
+  "emptyNoOdesRecords": "Sem registros de Ode",
 
   "statsTotal": "Total de orações",
   "statsRankCount": "O número de ganhar um {star}",
@@ -129,6 +135,7 @@
 
   "pageOverviewTitle": "Dados gerais (total de todos os banners)",
   "pageOverviewGachaSection": "Resumo de Orações",
+  "pageOverviewOdesSection": "Resumo de Odes",
   "pageBannerRecordList": "Lista de registros",
 
   "settingsTitle": "Configurações",
