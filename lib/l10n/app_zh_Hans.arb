@@ -1,26 +1,25 @@
 {
   "@@locale": "zh_Hans",
-
   "localeNativeName": "简体中文",
-  "localeTranslator": "",
   "localeTranslatorLabel": "翻译者：{translator}",
-
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "@localeTranslator": {
-    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
   },
-
   "appName": "原神祈愿卡池分析",
-
   "actionUpdate": "更新数据",
   "actionCancel": "取消",
   "actionClose": "关闭",
   "actionPrevPage": "上一页",
   "actionNextPage": "下一页",
   "actionOpenFolder": "打开文件夹",
-
   "navOverview": "综合",
   "navCharacter": "角色",
   "navWeapon": "武器",
@@ -29,7 +28,6 @@
   "navBeginner": "新手",
   "navSettings": "设置",
   "navContributors": "贡献者",
-
   "gachaTypeCharacter": "角色活动祈愿",
   "gachaTypeWeapon": "武器活动祈愿",
   "gachaTypeChronicled": "集录祈愿",
@@ -37,88 +35,123 @@
   "gachaTypeBeginner": "新手祈愿",
   "gachaTypeOdesEvent": "活动颂愿",
   "gachaTypeOdesStandard": "常驻颂愿",
-
   "navOdesEvent": "活动",
   "navOdesStandard": "常驻",
   "navSectionGacha": "祈愿",
   "navSectionOdes": "颂愿",
-
   "footerNotSynced": "尚未同步",
   "footerLastUpdated": "最后更新：{time}",
   "@footerLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
-
   "relativeNow": "现在",
   "relativeSecondsAgo": "{count} 秒前",
   "@relativeSecondsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeMinutesAgo": "{count} 分钟前",
   "@relativeMinutesAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeHoursAgo": "{count} 小时前",
   "@relativeHoursAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeDaysAgo": "{count} 天前",
   "@relativeDaysAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeMonthsAgo": "{count} 个月前",
   "@relativeMonthsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeYearsAgo": "{count} 年前",
   "@relativeYearsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "uidSwitchTooltip": "切换账号",
   "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活跃）",
-
   "emptyNoSyncTitle": "尚未同步任何数据",
   "emptyNoSyncMessage": "点右上「更新数据」开始",
   "emptyNoRecords": "此卡池无记录",
   "emptyNoFilterMatch": "没有符合条件的记录",
   "emptyNoOdesRecords": "暂无颂愿记录",
   "emptyNoGachaRecords": "暂无祈愿记录",
-
   "statsTotal": "总抽数",
   "statsRankCount": "{star} 件数",
   "@statsRankCount": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "statsShareOfTotal": "占总抽 {rate}%",
   "@statsShareOfTotal": {
-    "placeholders": { "rate": { "type": "String" } }
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
   },
   "statsRarityDistribution": "稀有度分布",
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
-
   "kindUnknown": "未知",
-
   "tableTime": "时间",
   "tableName": "名称",
   "tableKind": "类型",
   "tableRarity": "稀有度",
   "rarityStar": "{rank}★",
   "@rarityStar": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
   },
   "tableTotalIndex": "总抽数",
   "tableMainPity": "保底内",
   "tableMainPityTooltip": "距上一次 {star} 的抽数",
   "@tableMainPityTooltip": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "sortDirectionDesc": "降序",
   "sortDirectionAsc": "升序",
   "sortHintClickToSort": "点击排序",
-
   "progressPreparing": "准备中…",
   "progressPreparingHint": "正在准备数据源…",
   "progressWaiting": "等待拦截…",
@@ -129,37 +162,54 @@
   "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
   "progressFetchingBanner": "正在抓取：{name}",
   "@progressFetchingBanner": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "progressPageStatus": "第 {page} 页，已新增 {count} 条",
   "@progressPageStatus": {
     "placeholders": {
-      "page": { "type": "int" },
-      "count": { "type": "int" }
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "progressDoneSummary": "新增 {count} 条记录",
   "@progressDoneSummary": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "progressPartialFailed": "⚠ 部分失败：{names}",
   "@progressPartialFailed": {
-    "placeholders": { "names": { "type": "String" } }
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
   },
-
   "errorAuthExpired": "认证持续失效，请重新登录游戏",
   "errorRateLimited": "请求过于频繁，请稍后再试",
   "errorServer": "服务器错误：{message}",
   "@errorServer": {
-    "placeholders": { "message": { "type": "String" } }
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorNoRecords": "此账号尚无任何卡池记录",
-
   "pageOverviewTitle": "综合数据（全卡池合计）",
   "pageOverviewGachaSection": "祈愿综合",
   "pageOverviewOdesSection": "颂愿综合",
   "pageBannerRecordList": "记录列表",
-
   "settingsTitle": "设置",
   "settingsAppearance": "外观",
   "settingsThemeSystem": "跟随系统",
@@ -172,7 +222,11 @@
   "settingsAbout": "关于",
   "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "contributorsTitle": "贡献名单",
   "contributorsSubtitle": "感谢以下为此软件贡献的伙伴！",
@@ -183,95 +237,143 @@
   "contributorsTranslatedLanguages": "已翻译语言",
   "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
   "contributorsProjectLicense": "项目许可证",
-
   "pityRank": "{star} 保底",
   "@pityRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
-      "current": { "type": "int" },
-      "threshold": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
     }
   },
   "pityDistance": "距下次保底 {n} 抽",
   "@pityDistance": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityClose": "快保底了！剩余 {n} 抽",
   "@pityClose": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityGuaranteed": "保底中",
   "pityNoMainRarity": "暂无 {star}",
   "@pityNoMainRarity": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityBeginnerEnded": "已结束",
   "pityAverageInterval": "平均 {n} 抽出",
   "@pityAverageInterval": {
-    "placeholders": { "n": { "type": "String" } }
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
   },
-
   "timelineNoRecordsForRank": "暂无 {star} 记录",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "timelineSinceLast": "{n} 抽",
   "@timelineSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowLabel": "现在",
   "timelineNowPulls": "已 {n} 抽",
   "@timelineNowPulls": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowSinceLast": "距上次 {star} {n} 抽",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineNowSinceCrossPool": "从上次 {star} 至今 {n} 抽",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {
     "placeholders": {
-      "year": { "type": "String" },
-      "month": { "type": "String" }
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
     }
   },
-
   "timelineScrollLeft": "往左滚动",
   "timelineScrollRight": "往右滚动",
-
   "timelineLoadMore": "加载更多（剩余 {n} 条）",
   "@timelineLoadMore": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "filterRarityAll": "全部稀有度",
   "filterRarityRankOnly": "只看 {star}",
   "@filterRarityRankOnly": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "filterKindAll": "全部类型",
   "filterSearchHint": "搜索名称…",
   "filterClear": "清除筛选",
-
   "pagerFirst": "首页",
   "pagerLast": "末页",
-
   "settingsClearActive": "清除当前账号数据",
   "settingsClearAll": "清除所有数据",
-
   "settingsExportData": "导出数据",
   "settingsImportData": "导入数据",
   "shareImageButton": "生成分享图",
@@ -284,15 +386,27 @@
   "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "数据更新 {time}",
   "@shareImageUpdatedAt": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedAndCopied": "已保存并复制到剪贴板：{path}",
   "@shareImageSavedAndCopied": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedOnly": "已保存：{path}（剪贴板不支持）",
   "@shareImageSavedOnly": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageCopiedOnly": "已复制到剪贴板",
   "shareImageFailed": "分享图生成失败",
@@ -300,71 +414,110 @@
   "exportDialogFailedTitle": "导出失败",
   "settingsExportFailed": "导出失败：{error}",
   "@settingsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsExportSuccess": "已导出至 {path}",
   "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmTitle": "导入确认",
   "settingsImportConfirmIntro": "即将导入 {accounts} 个账号（共 {records} 条记录）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportConfirmOverwriteHeader": "下列 UID 已有数据，将被覆盖：",
   "settingsImportConfirmNoConflict": "无数据冲突。",
   "settingsImportConfirmPreserveFooter": "其他现有账号（{uids}）将保留。",
   "@settingsImportConfirmPreserveFooter": {
-    "placeholders": { "uids": { "type": "String" } }
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmWarning": "此操作无法撤销。请输入 IMPORT 以确认。",
   "settingsImportSuccess": "已成功导入 {accounts} 个账号（{records} 条记录）",
   "@settingsImportSuccess": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportPartial": "已导入 {success}/{total} 个账号；失败：{failedUids}",
   "@settingsImportPartial": {
     "placeholders": {
-      "success": { "type": "int" },
-      "total": { "type": "int" },
-      "failedUids": { "type": "String" }
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
     }
   },
   "settingsImportFailed": "导入失败：{reason}",
   "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsExportSelectTitle": "选择要导出的账号",
   "settingsImportSelectTitle": "选择要导入的账号",
   "settingsImportOverwriteBadge": "覆盖",
   "accountsPickerSelectAll": "全选",
   "accountRecordCount": "{n} 条记录",
   "@accountRecordCount": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "confirmTitle": "确认操作",
   "confirmClearActiveBody": "这会永久删除 UID {uid} 的所有祈愿记录。输入 UID 确认：",
   "@confirmClearActiveBody": {
-    "placeholders": { "uid": { "type": "String" } }
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
   },
   "confirmClearAllBody": "这会永久删除所有账号的祈愿记录。输入 DELETE 确认：",
   "confirmDelete": "删除",
   "confirmImport": "导入",
   "confirmExport": "导出",
   "confirmContinue": "继续",
-
   "accountListEmpty": "目前没有任何账号",
   "accountLastUpdated": "最后更新 {time}",
   "@accountLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "accountActiveTag": "活跃",
   "accountSetActive": "设为活跃",
@@ -373,33 +526,45 @@
   "accountAliasLabel": "别名",
   "accountAliasHint": "为此账号取一个好记的名字",
   "accountDragHandleTooltip": "拖动排序",
-
   "loadingBootstrap": "加载中…",
-
   "timelineTopRarityTitle": "{star} 时间轴 ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "bannerTopRarityCountTitle": "各卡池最高稀有度件数",
   "bannerTopRarityPullsSinceLast": "距上次 {star} {n} 抽",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "updateTitle": "有新版本 {version} 可用",
   "@updateTitle": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "updateReleasedAt": "发布于 {date}",
   "@updateReleasedAt": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "updateButtonDownload": "前往下载",
   "updateButtonSkip": "跳过此版本",
@@ -409,14 +574,22 @@
   "updateAlreadyLatest": "已是最新版本",
   "updateCheckFailed": "检查更新失败：{reason}",
   "@updateCheckFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorNetwork": "无法连接，请检查网络",
   "updateErrorTimeout": "请求超时",
   "updateErrorRateLimited": "GitHub API 配额用尽，请稍后再试",
   "updateErrorServer": "服务器错误 (HTTP {status})",
   "@updateErrorServer": {
-    "placeholders": { "status": { "type": "String" } }
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorFormat": "响应格式异常",
   "settingsLogs": "日志调试",
@@ -434,12 +607,18 @@
   "settingsLogsExportSuccess": "已导出 logs：{path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
-      "path": { "type": "String" }
+      "path": {
+        "type": "String"
+      }
     }
   },
   "settingsLogsExportFailed": "日志导出失败：{error}",
   "@settingsLogsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。"
 }

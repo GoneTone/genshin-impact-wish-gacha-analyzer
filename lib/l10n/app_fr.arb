@@ -3,6 +3,20 @@
   "localeNativeName": "Français",
   "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Traducteur : {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
   "appName": "Analyse des vœux Genshin Impact",
   "actionUpdate": "Mettre à jour les données",
   "actionCancel": "Annuler",
@@ -10,7 +24,6 @@
   "actionPrevPage": "Page précédente",
   "actionNextPage": "Page suivante",
   "actionOpenFolder": "Ouvrir le dossier",
-
   "navOverview": "Globalement",
   "navCharacter": "Personnage",
   "navWeapon": "Arme",
@@ -19,7 +32,6 @@
   "navBeginner": "Débutants",
   "navSettings": "Paramètres",
   "navContributors": "Contribution",
-
   "gachaTypeCharacter": "Vœux événements de personnage",
   "gachaTypeWeapon": "Vœux événements d'armes",
   "gachaTypeChronicled": "Vœux nostalgie",
@@ -27,82 +39,123 @@
   "gachaTypeBeginner": "Vœux des débutants",
   "gachaTypeOdesEvent": "Odes événements",
   "gachaTypeOdesStandard": "Odes permanentes",
-
   "navOdesEvent": "Événements",
   "navOdesStandard": "Permanentes",
   "navSectionGacha": "Vœux",
   "navSectionOdes": "Odes",
-
-  "tableTime": "Heure de réception",
-  "tableName": "Nom",
-  "tableKind": "Type",
-  "tableTotalIndex": "Voeux totaux",
-  "statsTotal": "Voeux totaux",
-  "statsRankCount": "Nombre d'objets {star} obtenu",
-  "@statsRankCount": {
-    "placeholders": { "star": { "type": "String" } }
-  },
-  "statsNoData": "Données introuvables",
-  "pageOverviewTitle": "Données globales",
-  "settingsAbout": "Sur",
-
-  "contributorsTitle": "Contributeurs",
-  "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!",
-
-  "relativeNow": "À l'instant",
-  "relativeSecondsAgo": "{count, plural, =1{Il y a 1 seconde} other{Il y a {count} secondes}}",
-  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
-  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
-  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
-  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
-  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
-  "relativeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
-  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
-
   "footerNotSynced": "Non synchronisé",
   "footerLastUpdated": "Dernière mise à jour : {time}",
   "@footerLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
-
+  "relativeNow": "À l'instant",
+  "relativeSecondsAgo": "{count, plural, =1{Il y a 1 seconde} other{Il y a {count} secondes}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "uidSwitchTooltip": "Changer de compte",
   "uidNotSynced": "Non synchronisé",
   "uidActiveSuffix": " (actif)",
-
   "emptyNoSyncTitle": "Aucune donnée synchronisée",
   "emptyNoSyncMessage": "Cliquez sur \"Mettre à jour les données\" en haut à droite pour commencer",
   "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
   "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
   "emptyNoOdesRecords": "Aucun enregistrement d'odes",
   "emptyNoGachaRecords": "Aucun enregistrement de vœux",
-
+  "statsTotal": "Voeux totaux",
+  "statsRankCount": "Nombre d'objets {star} obtenu",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
   "statsShareOfTotal": "{rate}% du total",
   "@statsShareOfTotal": {
-    "placeholders": { "rate": { "type": "String" } }
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
   },
   "statsRarityDistribution": "Distribution des raretés",
   "statsItemTypeDistribution": "Distribution par type",
-
+  "statsNoData": "Données introuvables",
   "kindUnknown": "Inconnu",
-
+  "tableTime": "Heure de réception",
+  "tableName": "Nom",
+  "tableKind": "Type",
   "tableRarity": "Rareté",
   "rarityStar": "{rank}★",
   "@rarityStar": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
   },
+  "tableTotalIndex": "Voeux totaux",
   "tableMainPity": "Pity actuel",
   "tableMainPityTooltip": "Tirages depuis le dernier {star}",
   "@tableMainPityTooltip": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "sortDirectionDesc": "Décroissant",
   "sortDirectionAsc": "Croissant",
   "sortHintClickToSort": "Cliquer pour trier",
-
   "progressPreparing": "Préparation...",
   "progressPreparingHint": "Préparation de la source de données...",
   "progressWaiting": "En attente d'interception...",
@@ -113,36 +166,54 @@
   "progressFallbackHint": "(L'authentification précédente a expiré, une nouvelle interception est nécessaire)",
   "progressFetchingBanner": "Récupération : {name}",
   "@progressFetchingBanner": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "progressPageStatus": "{count, plural, =1{Page {page}, 1 enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
   "@progressPageStatus": {
     "placeholders": {
-      "page": { "type": "int" },
-      "count": { "type": "int" }
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "progressDoneSummary": "{count, plural, =1{1 enregistrement ajouté} other{{count} enregistrements ajoutés}}",
   "@progressDoneSummary": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "progressPartialFailed": "⚠ Échec partiel : {names}",
   "@progressPartialFailed": {
-    "placeholders": { "names": { "type": "String" } }
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
   },
-
   "errorAuthExpired": "L'authentification a échoué en permanence, veuillez vous reconnecter au jeu",
   "errorRateLimited": "Trop de requêtes, veuillez réessayer plus tard",
   "errorServer": "Erreur serveur : {message}",
   "@errorServer": {
-    "placeholders": { "message": { "type": "String" } }
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorNoRecords": "Ce compte n'a aucun enregistrement de vœux",
-
+  "pageOverviewTitle": "Données globales",
   "pageOverviewGachaSection": "Vue d'ensemble des vœux",
   "pageOverviewOdesSection": "Vue d'ensemble des odes",
   "pageBannerRecordList": "Liste des enregistrements",
-
   "settingsTitle": "Paramètres",
   "settingsAppearance": "Apparence",
   "settingsThemeSystem": "Suivre le système",
@@ -152,11 +223,17 @@
   "settingsLocaleSystem": "Suivre le système",
   "settingsDataManagement": "Gestion des données",
   "settingsAccountManagement": "Gestion des comptes",
+  "settingsAbout": "Sur",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
-
+  "contributorsTitle": "Contributeurs",
+  "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!",
   "contributorsProjectLeader": "Chef de projet",
   "contributorsTesters": "Testeurs",
   "contributorsGithubContributors": "Contributeurs GitHub",
@@ -164,95 +241,145 @@
   "contributorsTranslatedLanguages": "Langues traduites",
   "contributorsHelpTranslate": "Votre langue n'est pas disponible ? Aidez-nous à traduire !",
   "contributorsProjectLicense": "Licence du projet",
-
   "pityRank": "pity {star}",
   "@pityRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
-      "current": { "type": "int" },
-      "threshold": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
     }
   },
   "pityDistance": "{n, plural, =1{1 tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
   "@pityDistance": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityClose": "{n, plural, =1{Pity imminent ! 1 tirage restant} other{Pity imminent ! {n} tirages restants}}",
   "@pityClose": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityGuaranteed": "pity garanti",
   "pityNoMainRarity": "Pas encore de {star}",
   "@pityNoMainRarity": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityBeginnerEnded": "Terminé",
   "pityAverageInterval": "Moyenne : {n} tirages",
   "@pityAverageInterval": {
-    "placeholders": { "n": { "type": "String" } }
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
   },
-
   "timelineNoRecordsForRank": "Aucun enregistrement {star}",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "timelineSinceLast": "{n, plural, =1{1 tirage} other{{n} tirages}}",
   "@timelineSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowLabel": "Maintenant",
   "timelineNowPulls": "{n, plural, =1{1 tirage effectué} other{{n} tirages effectués}}",
   "@timelineNowPulls": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineNowSinceCrossPool": "{n, plural, =1{1 tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineMonthLabel": "{year} / {month}",
   "@timelineMonthLabel": {
     "placeholders": {
-      "year": { "type": "String" },
-      "month": { "type": "String" }
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
     }
   },
   "timelineScrollLeft": "Défiler vers la gauche",
   "timelineScrollRight": "Défiler vers la droite",
   "timelineLoadMore": "{n, plural, =1{Charger plus (1 restant)} other{Charger plus ({n} restants)}}",
   "@timelineLoadMore": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "filterRarityAll": "Toutes les raretés",
   "filterRarityRankOnly": "Afficher uniquement {star}",
   "@filterRarityRankOnly": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "filterKindAll": "Tous les types",
   "filterSearchHint": "Rechercher un nom...",
   "filterClear": "Effacer les filtres",
-
   "pagerFirst": "Première page",
   "pagerLast": "Dernière page",
-
   "settingsClearActive": "Effacer les données du compte actuel",
   "settingsClearAll": "Effacer toutes les données",
   "settingsExportData": "Exporter les données",
   "settingsImportData": "Importer des données",
-
   "shareImageButton": "Générer une image de partage",
   "shareImageDialogTitle": "Paramètres de l'image de partage",
   "shareImageThemeLabel": "Thème",
@@ -263,89 +390,138 @@
   "shareImageGenerate": "Générer",
   "shareImageUpdatedAt": "Données mises à jour le {time}",
   "@shareImageUpdatedAt": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedAndCopied": "Enregistré et copié dans le presse-papiers : {path}",
   "@shareImageSavedAndCopied": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedOnly": "Enregistré : {path} (presse-papiers non supporté)",
   "@shareImageSavedOnly": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageCopiedOnly": "Copié dans le presse-papiers",
   "shareImageFailed": "Échec de la génération de l'image de partage",
-
   "exportDialogSuccessTitle": "Exportation réussie",
   "exportDialogFailedTitle": "Échec de l'exportation",
   "settingsExportFailed": "Échec de l'exportation : {error}",
   "@settingsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsExportSuccess": "Exporté vers {path}",
   "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsImportConfirmTitle": "Confirmation d'importation",
   "settingsImportConfirmIntro": "Sur le point d'importer {accounts} compte(s) ({records} enregistrement(s) au total) :",
   "@settingsImportConfirmIntro": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportConfirmOverwriteHeader": "Les UID suivants ont déjà des données et seront écrasés :",
   "settingsImportConfirmNoConflict": "Aucun conflit de données.",
   "settingsImportConfirmPreserveFooter": "Les autres comptes existants ({uids}) seront conservés.",
   "@settingsImportConfirmPreserveFooter": {
-    "placeholders": { "uids": { "type": "String" } }
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmWarning": "Cette opération est irréversible. Saisissez IMPORT pour confirmer.",
   "settingsImportSuccess": "{accounts} compte(s) importé(s) avec succès ({records} enregistrement(s))",
   "@settingsImportSuccess": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportPartial": "{success}/{total} compte(s) importé(s) ; échec : {failedUids}",
   "@settingsImportPartial": {
     "placeholders": {
-      "success": { "type": "int" },
-      "total": { "type": "int" },
-      "failedUids": { "type": "String" }
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
     }
   },
   "settingsImportFailed": "Échec de l'importation : {reason}",
   "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportOverwriteBadge": "Écraser",
   "accountsPickerSelectAll": "Tout sélectionner",
   "accountRecordCount": "{n, plural, =1{1 enregistrement} other{{n} enregistrements}}",
   "@accountRecordCount": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "confirmTitle": "Confirmation",
   "confirmClearActiveBody": "Ceci supprimera définitivement tous les enregistrements de vœux de l'UID {uid}. Saisissez l'UID pour confirmer :",
   "@confirmClearActiveBody": {
-    "placeholders": { "uid": { "type": "String" } }
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
   },
   "confirmClearAllBody": "Ceci supprimera définitivement tous les enregistrements de vœux de tous les comptes. Saisissez DELETE pour confirmer :",
   "confirmDelete": "Supprimer",
   "confirmImport": "Importer",
   "confirmExport": "Exporter",
   "confirmContinue": "Continuer",
-
   "accountListEmpty": "Aucun compte pour le moment",
   "accountLastUpdated": "Dernière mise à jour {time}",
   "@accountLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "accountActiveTag": "Actif",
   "accountSetActive": "Définir comme actif",
@@ -354,33 +530,45 @@
   "accountAliasLabel": "Alias",
   "accountAliasHint": "Donnez un nom mémorable à ce compte",
   "accountDragHandleTooltip": "Glisser pour réorganiser",
-
   "loadingBootstrap": "Chargement...",
-
   "timelineTopRarityTitle": "Chronologie {star} ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "bannerTopRarityCountTitle": "Nombre d'objets de rareté maximale par vœu",
   "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "updateTitle": "Nouvelle version {version} disponible",
   "@updateTitle": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "updateReleasedAt": "Publiée le {date}",
   "@updateReleasedAt": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "updateButtonDownload": "Télécharger",
   "updateButtonSkip": "Ignorer cette version",
@@ -390,32 +578,51 @@
   "updateAlreadyLatest": "Vous avez la dernière version",
   "updateCheckFailed": "Échec de la vérification des mises à jour : {reason}",
   "@updateCheckFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorNetwork": "Impossible de se connecter, vérifiez votre réseau",
   "updateErrorTimeout": "La requête a expiré",
   "updateErrorRateLimited": "Quota de l'API GitHub épuisé, veuillez réessayer plus tard",
   "updateErrorServer": "Erreur serveur (HTTP {status})",
   "@updateErrorServer": {
-    "placeholders": { "status": { "type": "String" } }
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorFormat": "Format de réponse inattendu",
-
   "settingsLogs": "Journaux de débogage",
+  "@settingsLogs": {},
   "settingsLogsHint": "En cas de problème, exportez les journaux et envoyez-les au développeur pour l'aider à diagnostiquer.",
+  "@settingsLogsHint": {},
   "settingsLogsReport": "Signaler un problème",
+  "@settingsLogsReport": {},
   "settingsLogsExport": "Exporter les journaux",
+  "@settingsLogsExport": {},
   "settingsLogsOpenFolder": "Ouvrir le dossier des journaux",
+  "@settingsLogsOpenFolder": {},
   "settingsLogsClear": "Effacer tous les journaux",
+  "@settingsLogsClear": {},
   "settingsLogsExportSuccess": "Journaux exportés : {path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
-      "path": { "type": "String" }
+      "path": {
+        "type": "String"
+      }
     }
   },
   "settingsLogsExportFailed": "Échec de l'exportation des journaux : {error}",
   "@settingsLogsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsLogsClearConfirmBody": "Ceci supprimera définitivement tous les fichiers du dossier logs/. Si vous avez besoin des journaux pour signaler un problème, exportez-les d'abord. Saisissez CLEAR pour confirmer."
 }
