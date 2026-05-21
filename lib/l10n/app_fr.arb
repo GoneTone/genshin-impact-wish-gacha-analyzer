@@ -24,9 +24,14 @@
   "gachaTypeWeapon": "Vœux événements d'armes",
   "gachaTypeChronicled": "Vœux nostalgie",
   "gachaTypeStandard": "Vœux permanents",
-  "gachaTypeBeginner": "Vœux pour débutants",
+  "gachaTypeBeginner": "Vœux des débutants",
+  "gachaTypeOdesEvent": "Odes événements",
+  "gachaTypeOdesStandard": "Odes permanentes",
 
+  "navOdesEvent": "Événements",
+  "navOdesStandard": "Permanentes",
   "navSectionGacha": "Vœux",
+  "navSectionOdes": "Odes",
 
   "tableTime": "Heure de réception",
   "tableName": "Nom",
@@ -72,6 +77,7 @@
   "emptyNoSyncMessage": "Cliquez sur \"Mettre à jour les données\" en haut à droite pour commencer",
   "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
   "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
+  "emptyNoOdesRecords": "Aucun enregistrement d'odes",
   "emptyNoGachaRecords": "Aucun enregistrement de vœux",
 
   "statsShareOfTotal": "{rate}% du total",
@@ -134,6 +140,7 @@
   "errorNoRecords": "Ce compte n'a aucun enregistrement de vœux",
 
   "pageOverviewGachaSection": "Vue d'ensemble des vœux",
+  "pageOverviewOdesSection": "Vue d'ensemble des odes",
   "pageBannerRecordList": "Liste des enregistrements",
 
   "settingsTitle": "Paramètres",
