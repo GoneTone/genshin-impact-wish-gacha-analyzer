@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -224,20 +225,32 @@ void main() {
       );
     });
 
-    test(
-      'TimeoutException 觸發 → ReleaseCheckTimeout',
-      () async {
+    test('TimeoutException 觸發 → ReleaseCheckTimeout', () {
+      // 用 fakeAsync 驅動虛擬時間：production 端 .timeout(10s) 在虛擬時鐘
+      // 觸發即可，不必真的等掛鐘 10 秒。先前版本讓 mock 真實 delay 15s 來
+      // 逼出 timeout，整條測試實跑 ~10 真實秒、test-level 上限只有 20s，在
+      // 並行的 CI runner 上 timer 漂移會撞線造成 flaky；改虛擬時間後確定性
+      // 且瞬間完成。
+      fakeAsync((async) {
         final client = MockClient((_) async {
           await Future<void>.delayed(const Duration(seconds: 15));
           return http.Response('[]', 200);
         });
-        expect(
-          () => fetchNewerReleases(currentVersion: '1.0.0', client: client),
-          throwsA(isA<ReleaseCheckTimeout>()),
+
+        Object? caught;
+        fetchNewerReleases(currentVersion: '1.0.0', client: client).then(
+          (_) {},
+          onError: (Object e) {
+            caught = e;
+          },
         );
-      },
-      timeout: const Timeout(Duration(seconds: 20)),
-    );
+
+        // 推進到超過 10s 內部 timeout、但不到 mock 的 15s 回應：.timeout 先觸發。
+        async.elapse(const Duration(seconds: 11));
+
+        expect(caught, isA<ReleaseCheckTimeout>());
+      });
+    });
 
     test('currentVersion 無法 parse → ReleaseCheckFormat', () async {
       final client = MockClient((_) async => _ok([]));
