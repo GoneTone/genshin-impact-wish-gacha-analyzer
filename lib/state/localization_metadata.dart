@@ -36,23 +36,37 @@ List<Locale> filterReleasedLocales({
   ];
 }
 
-/// 一次性 load 所有 [AppLocalizations.supportedLocales] 的 metadata；
-/// Settings 語言選單與 About / Contributors 區塊讀此 provider。
+/// 已釋出（`localeNativeName` 有實際翻譯、未 fallback 成模板繁中）的 locale 清單。
+///
+/// 餵給 `MaterialApp.supportedLocales` 與語言選單，使 OS 為某半翻譯語系的使用者
+/// 不會被解析到 100% fallback 的空殼、選單也不會冒出多個「繁體中文」。
+/// gate 邏輯見 [filterReleasedLocales]。
+final releasedLocalesProvider = Provider<List<Locale>>((ref) {
+  const template = Locale('zh');
+  final names = <Locale, String>{};
+  for (final locale in AppLocalizations.supportedLocales) {
+    AppLocalizations.delegate.load(locale).then((l) {
+      names[locale] = l.localeNativeName;
+    });
+  }
+  return filterReleasedLocales(
+    all: AppLocalizations.supportedLocales,
+    template: template,
+    templateNativeName: names[template] ?? '',
+    nativeNameOf: (l) => names[l] ?? '',
+  );
+});
+
+/// 一次性 load 所有「已釋出」locale 的 metadata；Settings 語言選單與
+/// About / Contributors 區塊讀此 provider。
 ///
 /// `delegate.load` 對 gen_l10n 編譯後的 const 內容回傳 [SynchronousFuture]，
 /// 所以 `.then` callback 在同個 stack frame 內同步觸發、無 microtask 跳轉，
 /// 也就不會多畫一個 `AsyncLoading` frame（避免設定頁進入時的 spinner 閃）。
-///
-/// 註：此 provider 的同步性依賴 gen_l10n 對 const 內容回 SynchronousFuture
-/// 的實作慣例。若未來 gen_l10n 改變 (例如改 async load asset)，此 provider
-/// 內 `result` 會空，需退回 FutureProvider。
-///
-/// 每個 supported locale 都是可選的真實語言（裸 `zh` = 繁體中文，
-/// `zh_Hans` = 簡體中文），不再有重複的空殼 base，故全部納入。
 final localeMetadataProvider = Provider<Map<String, LocaleMetadata>>((ref) {
-  final all = AppLocalizations.supportedLocales;
+  final released = ref.watch(releasedLocalesProvider);
   final result = <String, LocaleMetadata>{};
-  for (final locale in all) {
+  for (final locale in released) {
     AppLocalizations.delegate.load(locale).then((l) {
       result[locale.toLanguageTag()] = LocaleMetadata(
         nativeName: l.localeNativeName,

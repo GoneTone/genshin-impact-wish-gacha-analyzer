@@ -132,6 +132,27 @@ void main() {
     });
   });
 
+  group('releasedLocalesProvider', () {
+    test('保留模板 zh / zh-Hans 與主要已翻譯語言；空殼若存在則排除', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final released = container.read(releasedLocalesProvider);
+      final tags = released.map((l) => l.toLanguageTag()).toSet();
+
+      expect(tags, containsAll(<String>['zh', 'zh-Hans', 'en']));
+      expect(tags, isNot(contains('zh-Hant')));
+
+      final metadata = container.read(localeMetadataProvider);
+      final zhName = metadata['zh']!.nativeName;
+      final fallbackTags = metadata.entries
+          .where((e) => e.key != 'zh' && e.value.nativeName == zhName)
+          .map((e) => e.key)
+          .toList();
+      expect(fallbackTags, isEmpty, reason: '釋出清單不應含 fallback 成繁中的 locale');
+    });
+  });
+
   group('localeMetadataProvider', () {
     test('裸 zh（繁中）與 zh-Hans 都保留，無重複空殼被排除', () {
       final container = ProviderContainer();
