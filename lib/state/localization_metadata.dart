@@ -16,6 +16,26 @@ class LocaleMetadata {
   final String translator;
 }
 
+/// 從 [all] 過濾出「已釋出」的 locale：保留 [template] 自身，以及 `nativeName`
+/// 不等於 [templateNativeName] 的 locale。
+///
+/// gen-l10n 對漏翻 `localeNativeName` 的語系會 fallback 成模板（裸 `zh` = 繁體
+/// 中文）的顯示名，這類「空殼／半翻譯」語系的 `nativeName` 會等於
+/// [templateNativeName]，據此排除；模板自身則明確保留。[nativeNameOf] 提供
+/// 各 locale 的 `localeNativeName`，方便以合成資料做單元測試。
+List<Locale> filterReleasedLocales({
+  required Iterable<Locale> all,
+  required Locale template,
+  required String templateNativeName,
+  required String Function(Locale) nativeNameOf,
+}) {
+  return [
+    for (final locale in all)
+      if (locale == template || nativeNameOf(locale) != templateNativeName)
+        locale,
+  ];
+}
+
 /// 一次性 load 所有 [AppLocalizations.supportedLocales] 的 metadata；
 /// Settings 語言選單與 About / Contributors 區塊讀此 provider。
 ///

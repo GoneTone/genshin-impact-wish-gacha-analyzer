@@ -5,6 +5,34 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 
 void main() {
+  group('filterReleasedLocales', () {
+    test('排除 fallback（nativeName == 模板）的 locale、保留模板與已翻譯', () {
+      const template = Locale('zh');
+      final names = <Locale, String>{
+        const Locale('zh'): '繁體中文',
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'):
+            '简体中文',
+        const Locale('en'): 'English',
+        const Locale('de'): '繁體中文', // 漏翻 localeNativeName → fallback
+        const Locale.fromSubtags(languageCode: 'pt', countryCode: 'BR'):
+            'Português',
+        const Locale('pt'): '繁體中文', // 空殼 → fallback
+      };
+
+      final released = filterReleasedLocales(
+        all: names.keys,
+        template: template,
+        templateNativeName: '繁體中文',
+        nativeNameOf: (l) => names[l]!,
+      );
+      final tags = released.map((l) => l.toLanguageTag()).toSet();
+
+      expect(tags, containsAll(<String>['zh', 'zh-Hans', 'en', 'pt-BR']));
+      expect(tags, isNot(contains('de')));
+      expect(tags, isNot(contains('pt')));
+    });
+  });
+
   group('AppLocalizations locale metadata', () {
     test('每個 supported locale 都能 load 且 localeNativeName 非空', () async {
       for (final locale in AppLocalizations.supportedLocales) {
