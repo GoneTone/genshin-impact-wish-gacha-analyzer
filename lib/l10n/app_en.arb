@@ -26,7 +26,7 @@
   "navWeapon": "Weapon",
   "navChronicled": "Chronicled",
   "navStandard": "Standard",
-  "navBeginner": "Beginner",
+  "navBeginner": "Novice",
   "navSettings": "Settings",
   "navContributors": "Contributors",
 
@@ -34,9 +34,9 @@
   "gachaTypeWeapon": "Weapon Event Wish",
   "gachaTypeChronicled": "Chronicled Wish",
   "gachaTypeStandard": "Standard Wish",
-  "gachaTypeBeginner": "Beginners' Wish",
-  "gachaTypeOdesEvent": "Event Odes",
-  "gachaTypeOdesStandard": "Standard Odes",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
 
   "navOdesEvent": "Event",
   "navOdesStandard": "Standard",
