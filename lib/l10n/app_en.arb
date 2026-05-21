@@ -1,26 +1,29 @@
 {
   "@@locale": "en",
-
   "localeNativeName": "English",
   "localeTranslator": "Zanah_68, pan93412, Lemon7777, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Translator: {translator}",
-
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
   "appName": "Genshin Impact Wish Gacha Analyzer",
-
   "actionUpdate": "Update",
   "actionCancel": "Cancel",
   "actionClose": "Close",
   "actionPrevPage": "Previous",
   "actionNextPage": "Next",
   "actionOpenFolder": "Open Folder",
-
   "navOverview": "Overview",
   "navCharacter": "Character",
   "navWeapon": "Weapon",
@@ -29,7 +32,6 @@
   "navBeginner": "Novice",
   "navSettings": "Settings",
   "navContributors": "Contributors",
-
   "gachaTypeCharacter": "Character Event Wish",
   "gachaTypeWeapon": "Weapon Event Wish",
   "gachaTypeChronicled": "Chronicled Wish",
@@ -37,88 +39,123 @@
   "gachaTypeBeginner": "Novice Wishes",
   "gachaTypeOdesEvent": "Event Ode",
   "gachaTypeOdesStandard": "Standard Ode",
-
   "navOdesEvent": "Event",
   "navOdesStandard": "Standard",
   "navSectionGacha": "Wish",
   "navSectionOdes": "Odes",
-
   "footerNotSynced": "Not synced",
   "footerLastUpdated": "Last updated: {time}",
   "@footerLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
-
   "relativeNow": "Just now",
   "relativeSecondsAgo": "{count} seconds ago",
   "@relativeSecondsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeMinutesAgo": "{count} minutes ago",
   "@relativeMinutesAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeHoursAgo": "{count} hours ago",
   "@relativeHoursAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeDaysAgo": "{count} days ago",
   "@relativeDaysAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeMonthsAgo": "{count} months ago",
   "@relativeMonthsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "relativeYearsAgo": "{count} years ago",
   "@relativeYearsAgo": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "uidSwitchTooltip": "Switch account",
   "uidNotSynced": "Not synced",
   "uidActiveSuffix": " (active)",
-
   "emptyNoSyncTitle": "No data synced yet",
   "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
   "emptyNoRecords": "No records for this banner",
   "emptyNoFilterMatch": "No records match the current filter",
   "emptyNoOdesRecords": "No Odes records yet",
   "emptyNoGachaRecords": "No Wish records yet",
-
   "statsTotal": "Total pulls",
   "statsRankCount": "{star} Count",
   "@statsRankCount": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "statsShareOfTotal": "{rate}% of total",
   "@statsShareOfTotal": {
-    "placeholders": { "rate": { "type": "String" } }
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
   },
   "statsRarityDistribution": "Rarity Distribution",
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
-
   "kindUnknown": "Unknown",
-
   "tableTime": "Time",
   "tableName": "Name",
   "tableKind": "Type",
   "tableRarity": "Rarity",
   "rarityStar": "{rank}★",
   "@rarityStar": {
-    "placeholders": { "rank": { "type": "int" } }
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
   },
   "tableTotalIndex": "Total",
   "tableMainPity": "Pity",
   "tableMainPityTooltip": "Pulls since the last {star}",
   "@tableMainPityTooltip": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "sortDirectionDesc": "Descending",
   "sortDirectionAsc": "Ascending",
   "sortHintClickToSort": "Click to sort",
-
   "progressPreparing": "Preparing…",
   "progressPreparingHint": "Preparing data source…",
   "progressWaiting": "Waiting for capture…",
@@ -129,37 +166,54 @@
   "progressFallbackHint": "(Previous auth expired, re-capture needed)",
   "progressFetchingBanner": "Fetching: {name}",
   "@progressFetchingBanner": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "progressPageStatus": "Page {page}, {count} new records so far",
   "@progressPageStatus": {
     "placeholders": {
-      "page": { "type": "int" },
-      "count": { "type": "int" }
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "progressDoneSummary": "Added {count} new records",
   "@progressDoneSummary": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "progressPartialFailed": "⚠ Partial failure: {names}",
   "@progressPartialFailed": {
-    "placeholders": { "names": { "type": "String" } }
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
   },
-
   "errorAuthExpired": "Auth keeps expiring; please log in to the game again",
   "errorRateLimited": "Too many requests; please retry later",
   "errorServer": "Server error: {message}",
   "@errorServer": {
-    "placeholders": { "message": { "type": "String" } }
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
   },
   "errorNoRecords": "This account has no Wish records yet",
-
   "pageOverviewTitle": "Overview (all banners)",
   "pageOverviewGachaSection": "Wish Overview",
   "pageOverviewOdesSection": "Odes Overview",
   "pageBannerRecordList": "Record list",
-
   "settingsTitle": "Settings",
   "settingsAppearance": "Appearance",
   "settingsThemeSystem": "Follow system",
@@ -172,7 +226,11 @@
   "settingsAbout": "About",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "contributorsTitle": "Contributors",
   "contributorsSubtitle": "Special thanks to the following partners who have contributed to the development of this software!",
@@ -183,95 +241,143 @@
   "contributorsTranslatedLanguages": "Available languages",
   "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
   "contributorsProjectLicense": "Project License",
-
   "pityRank": "{star} pity",
   "@pityRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityCurrent": "{current} / {threshold}",
   "@pityCurrent": {
     "placeholders": {
-      "current": { "type": "int" },
-      "threshold": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
     }
   },
   "pityDistance": "{n} pulls until guaranteed",
   "@pityDistance": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityClose": "Close to guaranteed! {n} pulls left",
   "@pityClose": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "pityGuaranteed": "Guaranteed soon",
   "pityNoMainRarity": "No {star} yet",
   "@pityNoMainRarity": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "pityBeginnerEnded": "Ended",
   "pityAverageInterval": "Avg {n} pulls",
   "@pityAverageInterval": {
-    "placeholders": { "n": { "type": "String" } }
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
   },
-
   "timelineNoRecordsForRank": "No {star} records",
   "@timelineNoRecordsForRank": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "timelineSinceLast": "{n} pulls",
   "@timelineSinceLast": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowLabel": "Now",
   "timelineNowPulls": "{n} pulls",
   "@timelineNowPulls": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
   "timelineNowSinceLast": "{n} pulls since last {star}",
   "@timelineNowSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineNowSinceCrossPool": "{n} pulls since last {star} across banners",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
   "timelineMonthLabel": "{month} / {year}",
   "@timelineMonthLabel": {
     "placeholders": {
-      "year": { "type": "String" },
-      "month": { "type": "String" }
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
     }
   },
-
   "timelineScrollLeft": "Scroll left",
   "timelineScrollRight": "Scroll right",
-
   "timelineLoadMore": "Load more ({n} remaining)",
   "@timelineLoadMore": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "filterRarityAll": "All rarities",
   "filterRarityRankOnly": "{star} only",
   "@filterRarityRankOnly": {
-    "placeholders": { "star": { "type": "String" } }
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "filterKindAll": "All kinds",
   "filterSearchHint": "Search name…",
   "filterClear": "Clear filters",
-
   "pagerFirst": "First",
   "pagerLast": "Last",
-
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
-
   "settingsExportData": "Export data",
   "settingsImportData": "Import data",
   "shareImageButton": "Generate share image",
@@ -284,15 +390,27 @@
   "shareImageGenerate": "Generate",
   "shareImageUpdatedAt": "Updated {time}",
   "@shareImageUpdatedAt": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedAndCopied": "Saved and copied to clipboard: {path}",
   "@shareImageSavedAndCopied": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageSavedOnly": "Saved: {path} (clipboard unsupported)",
   "@shareImageSavedOnly": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "shareImageCopiedOnly": "Copied to clipboard",
   "shareImageFailed": "Failed to generate share image",
@@ -300,71 +418,110 @@
   "exportDialogFailedTitle": "Export Failed",
   "settingsExportFailed": "Export failed: {error}",
   "@settingsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsExportSuccess": "Exported to {path}",
   "@settingsExportSuccess": {
-    "placeholders": { "path": { "type": "String" } }
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmTitle": "Import confirmation",
   "settingsImportConfirmIntro": "About to import {accounts} accounts ({records} records total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportConfirmOverwriteHeader": "The following UIDs already have data and will be overwritten:",
   "settingsImportConfirmNoConflict": "No data conflicts.",
   "settingsImportConfirmPreserveFooter": "Other existing accounts ({uids}) will be preserved.",
   "@settingsImportConfirmPreserveFooter": {
-    "placeholders": { "uids": { "type": "String" } }
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
   },
   "settingsImportConfirmWarning": "This action cannot be undone. Type IMPORT to confirm.",
   "settingsImportSuccess": "Successfully imported {accounts} accounts ({records} records)",
   "@settingsImportSuccess": {
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records": { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "settingsImportPartial": "Imported {success}/{total} accounts; failed: {failedUids}",
   "@settingsImportPartial": {
     "placeholders": {
-      "success": { "type": "int" },
-      "total": { "type": "int" },
-      "failedUids": { "type": "String" }
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
     }
   },
   "settingsImportFailed": "Import failed: {reason}",
   "@settingsImportFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsExportSelectTitle": "Select accounts to export",
   "settingsImportSelectTitle": "Select accounts to import",
   "settingsImportOverwriteBadge": "Overwrite",
   "accountsPickerSelectAll": "Select all",
   "accountRecordCount": "{n} records",
   "@accountRecordCount": {
-    "placeholders": { "n": { "type": "int" } }
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   },
-
   "confirmTitle": "Confirm",
   "confirmClearActiveBody": "This will permanently delete all Wish records for UID {uid}. Type the UID to confirm:",
   "@confirmClearActiveBody": {
-    "placeholders": { "uid": { "type": "String" } }
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
   },
   "confirmClearAllBody": "This will permanently delete every account's Wish records. Type DELETE to confirm:",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
   "confirmExport": "Export",
   "confirmContinue": "Continue",
-
   "accountListEmpty": "No accounts yet",
   "accountLastUpdated": "Last updated {time}",
   "@accountLastUpdated": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "accountActiveTag": "Active",
   "accountSetActive": "Set active",
@@ -373,33 +530,45 @@
   "accountAliasLabel": "Alias",
   "accountAliasHint": "A friendly name for this account",
   "accountDragHandleTooltip": "Drag to reorder",
-
   "loadingBootstrap": "Loading…",
-
   "timelineTopRarityTitle": "{star} Timeline ({n})",
   "@timelineTopRarityTitle": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "bannerTopRarityCountTitle": "Highest rarity count per banner",
   "bannerTopRarityPullsSinceLast": "{n} pulls since last {star}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
-      "star": { "type": "String" },
-      "n": { "type": "int" }
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
     }
   },
-
   "updateTitle": "New version {version} available",
   "@updateTitle": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "updateReleasedAt": "Released on {date}",
   "@updateReleasedAt": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "updateButtonDownload": "Download",
   "updateButtonSkip": "Skip this version",
@@ -409,14 +578,22 @@
   "updateAlreadyLatest": "You're on the latest version",
   "updateCheckFailed": "Update check failed: {reason}",
   "@updateCheckFailed": {
-    "placeholders": { "reason": { "type": "String" } }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorNetwork": "Unable to connect, please check your network",
   "updateErrorTimeout": "Request timed out",
   "updateErrorRateLimited": "GitHub API quota exhausted, please retry later",
   "updateErrorServer": "Server error (HTTP {status})",
   "@updateErrorServer": {
-    "placeholders": { "status": { "type": "String" } }
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
   },
   "updateErrorFormat": "Unexpected response format",
   "settingsLogs": "Debug logs",
@@ -434,12 +611,18 @@
   "settingsLogsExportSuccess": "Logs exported: {path}",
   "@settingsLogsExportSuccess": {
     "placeholders": {
-      "path": { "type": "String" }
+      "path": {
+        "type": "String"
+      }
     }
   },
   "settingsLogsExportFailed": "Logs export failed: {error}",
   "@settingsLogsExportFailed": {
-    "placeholders": { "error": { "type": "String" } }
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "settingsLogsClearConfirmBody": "This will permanently delete all files in logs/. Export them first if you need them for bug reports. Type CLEAR to confirm."
 }
