@@ -65,14 +65,18 @@ void main() {
       expect(ja.localeNativeName, '日本語');
     });
 
-    test('某個 Portuguese 變體（pt 或 pt_BR）已釋出且母語名像葡萄牙文', () {
+    test('已釋出的 Portuguese 變體（pt 或 pt_BR）母語名都像葡萄牙文', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
       final metadata = container.read(localeMetadataProvider);
       final pt = metadata.entries.where((e) => e.key.startsWith('pt')).toList();
       expect(pt, isNotEmpty, reason: '應有某個 Portuguese 變體釋出');
-      expect(pt.first.value.nativeName.toLowerCase(), contains('portugu'));
+      expect(
+        pt.every((e) => e.value.nativeName.toLowerCase().contains('portugu')),
+        isTrue,
+        reason: '所有已釋出的 Portuguese 變體 nativeName 都應像葡萄牙文',
+      );
     });
 
     test('裸 zh 提供全部 contributors keys（模板必填）', () async {
