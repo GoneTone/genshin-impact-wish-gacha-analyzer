@@ -1,5 +1,5 @@
 {
-  "@@locale": "es",
+  "@@locale": "es-ES",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
