@@ -19,6 +19,8 @@
 
 任何一項失敗就先修，不要用 `--no-verify` 跳過 hooks。
 
+不要主動 git push。
+
 ## YAGNI 原則（You Ain't Gonna Need It）
 
 只實作當前需要的功能，不要預先設計「未來可能用到」的東西。
