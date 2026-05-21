@@ -71,6 +71,63 @@ void main() {
     });
   });
 
+  group('AccountTriggerButton', () {
+    testWidgets('渲染 OutlinedButton 且形狀為 StadiumBorder（橢圓）', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          AccountTriggerButton(
+            tooltip: 'switch',
+            onPressed: () {},
+            child: const AccountTriggerLabel(
+              activeUid: '123456789',
+              alias: null,
+            ),
+          ),
+        ),
+      );
+
+      final button = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
+      final shape = button.style!.shape!.resolve(<WidgetState>{});
+      expect(shape, isA<StadiumBorder>());
+    });
+
+    testWidgets('點擊觸發 onPressed', (tester) async {
+      var tapped = false;
+      await tester.pumpWidget(
+        _wrap(
+          AccountTriggerButton(
+            tooltip: 'switch',
+            onPressed: () => tapped = true,
+            child: const AccountTriggerLabel(
+              activeUid: '123456789',
+              alias: null,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(OutlinedButton));
+      await tester.pump();
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('內含傳入的 child 內容（UID 文字）', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          AccountTriggerButton(
+            tooltip: 'switch',
+            onPressed: () {},
+            child: const AccountTriggerLabel(
+              activeUid: '987654321',
+              alias: null,
+            ),
+          ),
+        ),
+      );
+      expect(find.text('987654321'), findsOneWidget);
+    });
+  });
+
   group('AccountTriggerLabel', () {
     testWidgets('activeUid=null:顯示「未同步」', (tester) async {
       await tester.pumpWidget(

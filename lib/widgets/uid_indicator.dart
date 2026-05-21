@@ -130,6 +130,47 @@ class AccountTriggerLabel extends StatelessWidget {
       Row(mainAxisSize: MainAxisSize.min, children: children);
 }
 
+/// AppBar 上的帳號切換觸發鈕：外框膠囊（透明底 + 邊框、StadiumBorder），
+/// 高度與並排的「更新資料」FilledButton 一致（M3 預設 40dp）。
+///
+/// 不依賴任何 provider，純呈現；點擊行為由 [onPressed] 注入，
+/// 可獨立進行 widget test。
+class AccountTriggerButton extends StatelessWidget {
+  /// 建立 [AccountTriggerButton]。
+  const AccountTriggerButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  /// 膠囊內顯示的內容（通常為 [AccountTriggerLabel]）。
+  final Widget child;
+
+  /// 點擊回呼，用於彈出帳號選單。
+  final VoidCallback onPressed;
+
+  /// 滑鼠停留提示文字。
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = Theme.of(context).gacha;
+    return Tooltip(
+      message: tooltip,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          shape: const StadiumBorder(),
+          side: BorderSide(color: tokens.borderEmphasis),
+          foregroundColor: tokens.textPrimary,
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
 /// 選單項目顯示:alias 主標 + UID 副標。沒 alias 時退化為 UID 單行。
 class AccountMenuLabel extends StatelessWidget {
   /// 建立 [AccountMenuLabel]。
