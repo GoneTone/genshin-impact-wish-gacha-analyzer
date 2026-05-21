@@ -1,0 +1,44 @@
+name: genshin_impact_wish_gacha_analyzer
+description: "原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer | A utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner!"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_rust_bridge: ^2.12.0
+  ffi: ^2.2.0
+  flutter_riverpod: ^3.0.0
+  go_router: ^17.0.0
+  http: ^1.2.0
+  path_provider: ^2.1.0
+  shared_preferences: ^2.3.0
+  file_selector: ^1.0.0
+  fl_chart: ^1.0.0
+  intl: ^0.20.0
+  logging: ^1.3.0
+  package_info_plus: ^9.0.1
+  window_manager: ^0.5.1
+  screen_retriever: ^0.2.0
+  url_launcher: ^6.3.2
+  font_awesome_flutter: ^11.0.0
+  pub_semver: ^2.2.0
+  markdown_widget: ^2.3.2+8
+  super_clipboard: ^0.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/icons/
+    - assets/banners/

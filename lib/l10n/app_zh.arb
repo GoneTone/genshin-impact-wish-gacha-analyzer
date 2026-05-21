@@ -1,0 +1,451 @@
+{
+  "@@locale": "zh",
+
+  "localeNativeName": "繁體中文",
+  "localeTranslator": "",
+  "localeTranslatorLabel": "翻譯者：{translator}",
+
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": { "type": "String" }
+    }
+  },
+
+  "appName": "原神祈願卡池分析",
+
+  "actionUpdate": "更新資料",
+  "actionCancel": "取消",
+  "actionClose": "關閉",
+  "actionPrevPage": "上一頁",
+  "actionNextPage": "下一頁",
+  "actionOpenFolder": "開啟資料夾",
+
+  "navOverview": "綜合",
+  "navCharacter": "角色",
+  "navWeapon": "武器",
+  "navChronicled": "集錄",
+  "navStandard": "常駐",
+  "navBeginner": "新手",
+  "navSettings": "設定",
+  "navContributors": "貢獻者",
+
+  "gachaTypeCharacter": "角色活動祈願",
+  "gachaTypeWeapon": "武器活動祈願",
+  "gachaTypeChronicled": "集錄祈願",
+  "gachaTypeStandard": "常駐祈願",
+  "gachaTypeBeginner": "新手祈願",
+  "gachaTypeOdesEvent": "活動頌願",
+  "gachaTypeOdesStandard": "常駐頌願",
+
+  "navOdesEvent": "活動",
+  "navOdesStandard": "常駐",
+  "navSectionGacha": "祈願",
+  "navSectionOdes": "頌願",
+
+  "footerNotSynced": "尚未同步",
+  "footerLastUpdated": "最後更新：{time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "relativeNow": "現在",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMinutesAgo": "{count} 分鐘前",
+  "@relativeMinutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeHoursAgo": "{count} 小時前",
+  "@relativeHoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeDaysAgo": "{count} 天前",
+  "@relativeDaysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMonthsAgo": "{count} 個月前",
+  "@relativeMonthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "uidSwitchTooltip": "切換帳號",
+  "uidNotSynced": "未同步",
+  "uidActiveSuffix": "（活躍）",
+
+  "emptyNoSyncTitle": "尚未同步任何資料",
+  "emptyNoSyncMessage": "點右上「更新資料」開始",
+  "emptyNoRecords": "此卡池無紀錄",
+  "emptyNoFilterMatch": "沒有符合條件的紀錄",
+  "emptyNoOdesRecords": "尚無頌願記錄",
+  "emptyNoGachaRecords": "尚無祈願記錄",
+
+  "statsTotal": "總抽數",
+  "statsRankCount": "{star} 件數",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "statsShareOfTotal": "佔總抽 {rate}%",
+  "@statsShareOfTotal": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+  "statsRarityDistribution": "稀有度分布",
+  "statsItemTypeDistribution": "類型分布",
+  "statsNoData": "無資料",
+
+  "kindUnknown": "未知",
+
+  "tableTime": "時間",
+  "tableName": "名稱",
+  "tableKind": "類型",
+  "tableRarity": "稀有度",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
+  "tableTotalIndex": "總抽數",
+  "tableMainPity": "保底內",
+  "tableMainPityTooltip": "距上一次 {star} 的抽數",
+  "@tableMainPityTooltip": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "sortDirectionDesc": "降序",
+  "sortDirectionAsc": "升序",
+  "sortHintClickToSort": "點擊排序",
+
+  "progressPreparing": "準備中…",
+  "progressPreparingHint": "正在準備資料來源…",
+  "progressWaiting": "等待攔截…",
+  "progressFetching": "抓取中…",
+  "progressDone": "更新完成",
+  "progressFailed": "失敗",
+  "progressOpenGameHint": "請開啟原神 → 卡池 → 歷史紀錄",
+  "progressFallbackHint": "（先前的認證已失效，需重新攔截）",
+  "progressFetchingBanner": "正在抓取：{name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "第 {page} 頁，已新增 {count} 筆",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "新增 {count} 筆紀錄",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ 部分失敗：{names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "認證持續失效，請重新登入遊戲",
+  "errorRateLimited": "請求過於頻繁，請稍後再試",
+  "errorServer": "伺服器錯誤：{message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "此帳號尚無任何卡池紀錄",
+
+  "pageOverviewTitle": "綜合數據（全卡池合計）",
+  "pageOverviewGachaSection": "祈願綜合",
+  "pageOverviewOdesSection": "頌願綜合",
+  "pageBannerRecordList": "紀錄列表",
+
+  "settingsTitle": "設定",
+  "settingsAppearance": "外觀",
+  "settingsThemeSystem": "跟隨系統",
+  "settingsThemeDark": "深色",
+  "settingsThemeLight": "淺色",
+  "settingsLanguage": "語言",
+  "settingsLocaleSystem": "跟隨系統",
+  "settingsDataManagement": "資料管理",
+  "settingsAccountManagement": "帳號管理",
+  "settingsAbout": "關於",
+  "settingsAboutVersion": "版本 {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "contributorsTitle": "貢獻名單",
+  "contributorsSubtitle": "感謝以下為此軟體貢獻的夥伴！",
+  "contributorsProjectLeader": "專案負責人",
+  "contributorsTesters": "測試人員",
+  "contributorsGithubContributors": "GitHub 貢獻者",
+  "contributorsTranslationReviewer": "翻譯審稿人",
+  "contributorsTranslatedLanguages": "已翻譯語言",
+  "contributorsHelpTranslate": "沒有您的語言嗎？協助我們翻譯！",
+  "contributorsProjectLicense": "專案授權",
+
+  "pityRank": "{star} 保底",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "threshold": { "type": "int" }
+    }
+  },
+  "pityDistance": "距下次保底 {n} 抽",
+  "@pityDistance": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityClose": "快保底了！剩餘 {n} 抽",
+  "@pityClose": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityGuaranteed": "保底中",
+  "pityNoMainRarity": "暫無 {star}",
+  "@pityNoMainRarity": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityBeginnerEnded": "已結束",
+  "pityAverageInterval": "平均 {n} 抽出",
+  "@pityAverageInterval": {
+    "placeholders": { "n": { "type": "String" } }
+  },
+
+  "timelineNoRecordsForRank": "暫無 {star} 紀錄",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "timelineSinceLast": "{n} 抽",
+  "@timelineSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowLabel": "現在",
+  "timelineNowPulls": "已 {n} 抽",
+  "@timelineNowPulls": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceLast": "距上次 {star} {n} 抽",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineNowSinceCrossPool": "從上次 {star} 至今 {n} 抽",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": { "type": "String" },
+      "month": { "type": "String" }
+    }
+  },
+
+  "timelineScrollLeft": "往左捲動",
+  "timelineScrollRight": "往右捲動",
+
+  "timelineLoadMore": "載入更多（剩餘 {n} 筆）",
+  "@timelineLoadMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "filterRarityAll": "全部稀有度",
+  "filterRarityRankOnly": "只看 {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "filterKindAll": "全部類型",
+  "filterSearchHint": "搜尋名稱…",
+  "filterClear": "清除篩選",
+
+  "pagerFirst": "首頁",
+  "pagerLast": "末頁",
+
+  "settingsClearActive": "清除目前帳號資料",
+  "settingsClearAll": "清除所有資料",
+
+  "settingsExportData": "匯出資料",
+  "settingsImportData": "匯入資料",
+  "shareImageButton": "生成分享圖",
+  "shareImageDialogTitle": "分享圖設定",
+  "shareImageThemeLabel": "主題",
+  "shareImageThemeDark": "深色",
+  "shareImageThemeLight": "淺色",
+  "shareImageShowFullUid": "在圖上顯示完整 UID",
+  "shareImageShowFullUidHint": "關閉時只顯示前 3 碼，其餘以 x 遮罩",
+  "shareImageGenerate": "生成",
+  "shareImageUpdatedAt": "資料更新 {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "shareImageSavedAndCopied": "已存檔並複製到剪貼簿：{path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageSavedOnly": "已存檔：{path}（剪貼簿不支援）",
+  "@shareImageSavedOnly": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageCopiedOnly": "已複製到剪貼簿",
+  "shareImageFailed": "分享圖生成失敗",
+  "exportDialogSuccessTitle": "匯出成功",
+  "exportDialogFailedTitle": "匯出失敗",
+  "settingsExportFailed": "匯出失敗：{error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsExportSuccess": "已匯出至 {path}",
+  "@settingsExportSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "匯入確認",
+  "settingsImportConfirmIntro": "即將匯入 {accounts} 個帳號（共 {records} 筆紀錄）：",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "下列 UID 已有資料，將被覆蓋：",
+  "settingsImportConfirmNoConflict": "無資料衝突。",
+  "settingsImportConfirmPreserveFooter": "其他現有帳號（{uids}）將保留。",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "此操作無法復原。請輸入 IMPORT 以確認。",
+  "settingsImportSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportPartial": "已匯入 {success}/{total} 個帳號；失敗：{failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportFailed": "匯入失敗：{reason}",
+  "@settingsImportFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "選擇要匯出的帳號",
+  "settingsImportSelectTitle": "選擇要匯入的帳號",
+  "settingsImportOverwriteBadge": "覆蓋",
+  "accountsPickerSelectAll": "全選",
+  "accountRecordCount": "{n} 筆紀錄",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "confirmTitle": "確認操作",
+  "confirmClearActiveBody": "這會永久刪除 UID {uid} 的所有祈願紀錄。輸入 UID 確認：",
+  "@confirmClearActiveBody": {
+    "placeholders": { "uid": { "type": "String" } }
+  },
+  "confirmClearAllBody": "這會永久刪除所有帳號的祈願紀錄。輸入 DELETE 確認：",
+  "confirmDelete": "刪除",
+  "confirmImport": "匯入",
+  "confirmExport": "匯出",
+  "confirmContinue": "繼續",
+
+  "accountListEmpty": "目前沒有任何帳號",
+  "accountLastUpdated": "最後更新 {time}",
+  "@accountLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "accountActiveTag": "活躍",
+  "accountSetActive": "設為活躍",
+  "accountRemove": "移除",
+  "accountAdd": "新增帳號",
+  "accountAliasLabel": "別名",
+  "accountAliasHint": "為此帳號取一個好記的名稱",
+  "accountDragHandleTooltip": "拖曳排序",
+
+  "loadingBootstrap": "載入中…",
+
+  "timelineTopRarityTitle": "{star} 時間軸 ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "bannerTopRarityCountTitle": "各卡池最高稀有度件數",
+  "bannerTopRarityPullsSinceLast": "距上次 {star} {n} 抽",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "updateTitle": "有新版本 {version} 可用",
+  "@updateTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "updateReleasedAt": "發布於 {date}",
+  "@updateReleasedAt": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "updateButtonDownload": "前往下載",
+  "updateButtonSkip": "跳過此版本",
+  "updateButtonLater": "稍後再說",
+  "updateCheckButton": "檢查更新",
+  "updateChecking": "檢查中…",
+  "updateAlreadyLatest": "已是最新版本",
+  "updateCheckFailed": "檢查更新失敗：{reason}",
+  "@updateCheckFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "updateErrorNetwork": "無法連線，請檢查網路",
+  "updateErrorTimeout": "請求逾時",
+  "updateErrorRateLimited": "GitHub API 配額用盡，請稍後再試",
+  "updateErrorServer": "伺服器錯誤 (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "updateErrorFormat": "回應格式異常",
+  "settingsLogs": "Logs 偵錯",
+  "@settingsLogs": {},
+  "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "回報問題",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "匯出 logs",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "開啟 logs 資料夾",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "清除所有 logs",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "已匯出 logs：{path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsExportFailed": "logs 匯出失敗：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。"
+}

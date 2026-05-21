@@ -1,21 +1,16 @@
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[繁體中文](README.md) | [简体中文](README_ZH-CN.md) | English
+[繁體中文](README.md) | [简体中文](README_ZH-HANS.md) | English
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-> [!IMPORTANT]
-> Currently rewriting the entire project using Flutter: https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/pull/59
-
 I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
 
-It works by reading game web cache file to obtain the wish history website url. Thus, you must start the game and open the wish history page at least once before running this utility.
+When you press *Update*, the utility starts a local proxy server (running only on your computer) and automatically installs a locally generated root certificate, so it can intercept Genshin Impact's WebView request to the miHoYo wish history API. You therefore need to open the wish history page in the game *after* pressing *Update*, so the request can be captured. The captured URL is parsed and the resulting parameters are used to call miHoYo's API.
 
-Variables retrieved from the website will be analyzed and used in an API related to Genshin Impact (from miHoYo).
- 
-This program loads your gacha history during initial startup, which may take a while. The resulting data will be stored locally to ensure it not take that much time in the next start, after which it will not be updated until you update it manually. The data will also be automatically updated when there is a version update.
- 
-This program does not tamper with any game resources; thus, there is no risk of being banned for using this software. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
+The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously captured URL and reuses it as long as it's still valid, so you don't have to repeat the capture every time. If the captured URL has expired, the utility will ask you to open the wish history page in the game again to re-capture.
+
+Rest assured: this utility does not read or modify any game file, game memory, or in-game network traffic. It only intercepts the wish history page request that the in-game WebView itself makes, so there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
 - 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
@@ -25,82 +20,103 @@ Posts:
  
 Please help us translate this software.
  
-<https://crwd.in/genshin-impact-wish-gacha-analyzer>
+<https://crowdin.com/project/genshin-impact-wish-gacha-analyzer>
  
 ## Download Software
  
-The software may trigger anti-virus software during installation and execution. If the software doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this software is safe and virus-free.
+The utility may trigger anti-virus software during installation and execution. This is because it generates and installs a local root certificate, and briefly configures a system proxy when you press *Update* to intercept the in-game WebView's wish history request — behavior that resembles malware. However, the utility only intercepts the `getGachaLog` (Wish) and `getBeyondGachaLog` (Odes) wish-history endpoints on `*.hoyoverse.com`, and the certificate stays on your computer. If the utility doesn't function correctly, please try disabling any anti-virus software you have installed. We guarantee this utility is safe and virus-free.
 
 <https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
-## Functions & To-do List
+## How to Use
 
-- [x] Support Genshin Impact 3.0
-- [x] Support The International Server
-- [ ] Support The CN Server
-- [x] Total Wish Counter
-- [x] Average Wishes per 5-star Drop Calculator
-- [x] Pity Progress Bar and Remaining Wish Counter
-- [x] Drop Rate By Rarity and Drop Counter
-- [x] Characters/Weapons Drop Rate and Drop Counter
-- [x] Rare Drops Pie-chart
-- [x] Characters/Weapons Drops Pie-chart
-- [x] Record History From The Official API (Allow Custom Ordering and Search)
-- [x] Export the Record to Excel
-- [x] Load The According Language Data Form The Official API by Local User's Language
-- [x] View Character Image
-- [x] Software Update Notification
-- [x] Multi-language ([Help us traslate!](https://crwd.in/genshin-impact-wish-gacha-analyzer))
-- [ ] Switching Between Multi-accounts' records
-- [ ] Share The Record and Analyzed Result Online
-- [ ] Dark mode
-- [X] Daily Check-in Webpage
-- [X] Teyvat Interactive Map
-- [ ] Update Data Without Overwriting The Original Data
-- [ ] Export and Import Data Back-ups (Manual)
-- [ ] Log in to your miHoYo account to get the Cookies (for API that require Cookie authentication)
-- [ ] Integration query Genesis Crystal, Primogem transactions record and Original Resin usage record and Artifacts, Weapons record
+1. Launch Genshin Impact (don't open the wish history page yet).
+2. Open this utility and press *Update*. The utility will start a local proxy server in the background and wait for the request.
+3. Switch back to the game and open *Wish → History* to view the wish history page.
+4. Once captured, the utility automatically shuts down the proxy, restores your system proxy settings, and starts fetching your data. To update again later, just repeat step 2 — the captured URL will be reused if still valid.
+
+## Features
+
+- Auto-intercepts the in-game WebView's request to the miHoYo wish history API via a local proxy and a self-signed root certificate — no need to paste URLs by hand
+- Supports the Global server (CN server not supported yet)
+- Covers all 7 gacha types: Character Event Wish, Weapon Event Wish, Chronicled Wish, Standard Wish, Beginners' Wish, Event Odes, Standard Odes
+- Multi-account (UID) management: custom aliases, drag-to-reorder, one-click switching
+- Incremental updates merge new records without overwriting old ones, so entries that fall off the official history won't disappear
+- Total pulls and 5★ / 4★ / 3★ / 2★ counts with their share of the total
+- Dual pity progress (5★ and 4★) showing remaining pulls until pity
+- Per-gacha 5★ timeline
+- Bar chart comparing each gacha's highest-rarity counts
+- Rarity distribution pie chart
+- Item type distribution pie chart
+- Wish history table: multi-column sort, fuzzy search, rarity and item-type filters, pagination
+- Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
+- Export / Import accounts as JSON
+- Dark / Light theme toggle
+- Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
+- Automatic update check on launch, with a manual trigger in Settings
+- All data stays on your machine — nothing is uploaded
 
 ## Screenshot
 
-![Overall Data Chart](docs/images/en/1.png)
-![Character Event Wish-Data Chart](docs/images/en/2.png)
-![Drop Rate](docs/images/en/3.png)
-![Table 1](docs/images/en/4.png)
-![Table 2](docs/images/en/5.png)
-![Daily Check-in](docs/images/en/6.png)
-![Teyvat Interactive Map](docs/images/en/7.png)
+![Overview page](docs/images/en/1.png)
+![Character Event Wish page](docs/images/en/2.png)
+![Event Ode page](docs/images/en/3.png)
+![Settings page](docs/images/en/4.png)
+![Share image options](docs/images/en/5.png)
+![Share image](docs/images/en/6.png)
 
 ## Development
 
-### Install Packages
+### Prerequisites
+
+- Windows only for now
+- [Flutter SDK](https://docs.flutter.dev/install) (latest stable)
+- [Rust toolchain](https://rustup.rs/) (stable)
+- Run `flutter doctor` and install anything it flags as missing
+
+### Clone and install dependencies
 
 ```bash
-npm install
+git clone https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer.git
+cd genshin-impact-wish-gacha-analyzer
+flutter pub get
 ```
 
-### Compile and Run (For Development Use)
+Rust is compiled automatically by `rust_builder/`'s cargokit during `flutter run` / `flutter build`; no manual `cargo build` is needed (the Rust toolchain must be installed first).
+
+### Run in development mode
 
 ```bash
-npm run electron:serve
+flutter run -d windows
 ```
 
-### Compile and Minify (For Production Use)
+### Rust ↔ Dart bridge code generation
 
-#### ia32 and x64
+After changing Rust functions in `rust/src/api/`, regenerate the bridge code. Install the codegen tool on first use:
 
 ```bash
-npm run electron:build:win
+cargo install flutter_rust_bridge_codegen --version 2.12.0
 ```
 
-#### ia32
+Then run this whenever the API changes:
 
 ```bash
-npm run electron:build:win32
+flutter_rust_bridge_codegen generate
 ```
 
-#### x64
+Generated files live in `lib/src/rust/`.
+
+### Build for release
 
 ```bash
-npm run electron:build:win64
+flutter build windows --release
+```
+
+Output: `build\windows\x64\runner\Release\`
+
+### Run tests
+
+```bash
+flutter test
+cargo test --manifest-path rust/Cargo.toml
 ```

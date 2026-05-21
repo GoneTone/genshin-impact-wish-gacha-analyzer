@@ -1,0 +1,445 @@
+{
+  "@@locale": "ja",
+
+  "localeNativeName": "日本語",
+  "localeTranslator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>、<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslatorLabel": "翻訳者：{translator}",
+
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+
+  "appName": "原神祈願分析ツール",
+
+  "actionUpdate": "データ更新",
+  "actionCancel": "キャンセル",
+  "actionClose": "閉じる",
+  "actionPrevPage": "前へ",
+  "actionNextPage": "次へ",
+  "actionOpenFolder": "フォルダーを開く",
+
+  "navOverview": "総合",
+  "navCharacter": "キャラクター",
+  "navWeapon": "武器",
+  "navChronicled": "集録",
+  "navStandard": "通常",
+  "navBeginner": "初心者",
+  "navSettings": "設定",
+  "navContributors": "貢献者",
+
+  "gachaTypeCharacter": "イベント祈願・キャラクター",
+  "gachaTypeWeapon": "イベント祈願・武器",
+  "gachaTypeChronicled": "集録祈願",
+  "gachaTypeStandard": "通常祈願",
+  "gachaTypeBeginner": "初心者向け祈願",
+  "gachaTypeOdesEvent": "イベント星願",
+  "gachaTypeOdesStandard": "通常星願",
+
+  "navOdesEvent": "イベント",
+  "navOdesStandard": "通常",
+  "navSectionGacha": "祈願",
+  "navSectionOdes": "星願",
+
+  "footerNotSynced": "未同期",
+  "footerLastUpdated": "最終更新：{time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "relativeNow": "たった今",
+  "relativeSecondsAgo": "{count} 秒前",
+  "@relativeSecondsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMinutesAgo": "{count} 分前",
+  "@relativeMinutesAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeHoursAgo": "{count} 時間前",
+  "@relativeHoursAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeDaysAgo": "{count} 日前",
+  "@relativeDaysAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeMonthsAgo": "{count} か月前",
+  "@relativeMonthsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "relativeYearsAgo": "{count} 年前",
+  "@relativeYearsAgo": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "uidSwitchTooltip": "アカウント切り替え",
+  "uidNotSynced": "未同期",
+  "uidActiveSuffix": "（使用中）",
+
+  "emptyNoSyncTitle": "まだデータが同期されていません",
+  "emptyNoSyncMessage": "右上の「データ更新」から開始してください",
+  "emptyNoRecords": "この祈願に記録がありません",
+  "emptyNoFilterMatch": "条件に一致する記録がありません",
+  "emptyNoOdesRecords": "星願の記録がまだありません",
+  "emptyNoGachaRecords": "祈願の記録がまだありません",
+
+  "statsTotal": "累計回数",
+  "statsRankCount": "{star} 件数",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "statsShareOfTotal": "全体の {rate}%",
+  "@statsShareOfTotal": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+  "statsRarityDistribution": "レアリティ分布",
+  "statsItemTypeDistribution": "タイプ分布",
+  "statsNoData": "データがありません",
+
+  "kindUnknown": "不明",
+
+  "tableTime": "日時",
+  "tableName": "名称",
+  "tableKind": "タイプ",
+  "tableRarity": "レアリティ",
+  "rarityStar": "★{rank}",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
+  "tableTotalIndex": "累計回数",
+  "tableMainPity": "天井カウント",
+  "tableMainPityTooltip": "前回の {star} からの回数",
+  "@tableMainPityTooltip": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "sortDirectionDesc": "降順",
+  "sortDirectionAsc": "昇順",
+  "sortHintClickToSort": "クリックで並べ替え",
+
+  "progressPreparing": "準備中…",
+  "progressPreparingHint": "データソースを準備しています…",
+  "progressWaiting": "リクエスト待機中…",
+  "progressFetching": "取得中…",
+  "progressDone": "更新完了",
+  "progressFailed": "失敗",
+  "progressOpenGameHint": "原神 → 祈願 → 履歴 を開いてください",
+  "progressFallbackHint": "（以前の認証が失効したため、再取得が必要です）",
+  "progressFetchingBanner": "取得中：{name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "{page} ページ目、{count} 件追加しました",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "{count} 件の記録を追加しました",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ 一部失敗：{names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "認証が継続して失効しています。ゲームに再ログインしてください",
+  "errorRateLimited": "リクエストが多すぎます。しばらくしてから再試行してください",
+  "errorServer": "サーバーエラー：{message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "このアカウントには祈願の記録がまだありません",
+
+  "pageOverviewTitle": "総合データ（全祈願合計）",
+  "pageOverviewGachaSection": "祈願総合",
+  "pageOverviewOdesSection": "星願総合",
+  "pageBannerRecordList": "記録一覧",
+
+  "settingsTitle": "設定",
+  "settingsAppearance": "外観",
+  "settingsThemeSystem": "システムに合わせる",
+  "settingsThemeDark": "ダーク",
+  "settingsThemeLight": "ライト",
+  "settingsLanguage": "言語",
+  "settingsLocaleSystem": "システムに合わせる",
+  "settingsDataManagement": "データ管理",
+  "settingsAccountManagement": "アカウント管理",
+  "settingsAbout": "このツールについて",
+  "settingsAboutVersion": "バージョン {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "contributorsTitle": "貢献者一覧",
+  "contributorsSubtitle": "このソフトウェアに貢献してくださった皆様に感謝します！",
+  "contributorsProjectLeader": "プロジェクトマネージャー",
+  "contributorsTesters": "テストスタッフ",
+  "contributorsGithubContributors": "GitHub コントリビューター",
+  "contributorsTranslationReviewer": "翻訳レビュアー",
+  "contributorsTranslatedLanguages": "翻訳済み言語",
+  "contributorsHelpTranslate": "あなたの言語がありませんか？翻訳にご協力ください！",
+  "contributorsProjectLicense": "プロジェクトライセンス",
+
+  "pityRank": "{star} 天井",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "threshold": { "type": "int" }
+    }
+  },
+  "pityDistance": "次の天井まであと {n} 回",
+  "@pityDistance": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityClose": "もうすぐ天井！あと {n} 回",
+  "@pityClose": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityGuaranteed": "天井確定",
+  "pityNoMainRarity": "{star} はまだありません",
+  "@pityNoMainRarity": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityBeginnerEnded": "終了済み",
+  "pityAverageInterval": "平均 {n} 回で出現",
+  "@pityAverageInterval": {
+    "placeholders": { "n": { "type": "String" } }
+  },
+
+  "timelineNoRecordsForRank": "{star} の記録はまだありません",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "timelineSinceLast": "{n} 回",
+  "@timelineSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowLabel": "現在",
+  "timelineNowPulls": "{n} 回経過",
+  "@timelineNowPulls": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceLast": "前回の {star} から {n} 回",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineNowSinceCrossPool": "前回の {star} から現在まで {n} 回",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": { "type": "String" },
+      "month": { "type": "String" }
+    }
+  },
+
+  "timelineScrollLeft": "左へスクロール",
+  "timelineScrollRight": "右へスクロール",
+
+  "timelineLoadMore": "さらに読み込む（残り {n} 件）",
+  "@timelineLoadMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "filterRarityAll": "全レアリティ",
+  "filterRarityRankOnly": "{star} のみ",
+  "@filterRarityRankOnly": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "filterKindAll": "全タイプ",
+  "filterSearchHint": "名称を検索…",
+  "filterClear": "フィルターをクリア",
+
+  "pagerFirst": "最初のページ",
+  "pagerLast": "最後のページ",
+
+  "settingsClearActive": "現在のアカウントのデータを削除",
+  "settingsClearAll": "すべてのデータを削除",
+
+  "settingsExportData": "データをエクスポート",
+  "settingsImportData": "データをインポート",
+  "shareImageButton": "シェア画像を生成",
+  "shareImageDialogTitle": "シェア画像の設定",
+  "shareImageThemeLabel": "テーマ",
+  "shareImageThemeDark": "ダーク",
+  "shareImageThemeLight": "ライト",
+  "shareImageShowFullUid": "画像に UID をすべて表示",
+  "shareImageShowFullUidHint": "オフにすると先頭 3 桁のみ表示し、残りは x でマスクします",
+  "shareImageGenerate": "生成",
+  "shareImageUpdatedAt": "データ更新 {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "shareImageSavedAndCopied": "保存してクリップボードにコピーしました：{path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageSavedOnly": "保存しました：{path}（クリップボード非対応）",
+  "@shareImageSavedOnly": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageCopiedOnly": "クリップボードにコピーしました",
+  "shareImageFailed": "シェア画像の生成に失敗しました",
+  "exportDialogSuccessTitle": "エクスポート成功",
+  "exportDialogFailedTitle": "エクスポート失敗",
+  "settingsExportFailed": "エクスポートに失敗しました：{error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsExportSuccess": "{path} にエクスポートしました",
+  "@settingsExportSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "インポートの確認",
+  "settingsImportConfirmIntro": "{accounts} 個のアカウント（計 {records} 件の記録）をインポートします：",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "次の UID には既存データがあり、上書きされます：",
+  "settingsImportConfirmNoConflict": "データの競合はありません。",
+  "settingsImportConfirmPreserveFooter": "その他の既存アカウント（{uids}）は保持されます。",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "この操作は元に戻せません。確認のため IMPORT と入力してください。",
+  "settingsImportSuccess": "{accounts} 個のアカウント（{records} 件の記録）を正常にインポートしました",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportPartial": "{success}/{total} 個のアカウントをインポートしました。失敗：{failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportFailed": "インポートに失敗しました：{reason}",
+  "@settingsImportFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "エクスポートするアカウントを選択",
+  "settingsImportSelectTitle": "インポートするアカウントを選択",
+  "settingsImportOverwriteBadge": "上書き",
+  "accountsPickerSelectAll": "すべて選択",
+  "accountRecordCount": "{n} 件の記録",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "confirmTitle": "操作の確認",
+  "confirmClearActiveBody": "UID {uid} のすべての祈願記録を完全に削除します。確認のため UID を入力してください：",
+  "@confirmClearActiveBody": {
+    "placeholders": { "uid": { "type": "String" } }
+  },
+  "confirmClearAllBody": "すべてのアカウントの祈願記録を完全に削除します。確認のため DELETE と入力してください：",
+  "confirmDelete": "削除",
+  "confirmImport": "インポート",
+  "confirmExport": "エクスポート",
+  "confirmContinue": "続行",
+
+  "accountListEmpty": "アカウントがまだありません",
+  "accountLastUpdated": "最終更新 {time}",
+  "@accountLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "accountActiveTag": "使用中",
+  "accountSetActive": "使用中にする",
+  "accountRemove": "削除",
+  "accountAdd": "アカウントを追加",
+  "accountAliasLabel": "別名",
+  "accountAliasHint": "このアカウントに覚えやすい名前を付けてください",
+  "accountDragHandleTooltip": "ドラッグで並べ替え",
+
+  "loadingBootstrap": "読み込み中…",
+
+  "timelineTopRarityTitle": "{star} タイムライン（{n}）",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "bannerTopRarityCountTitle": "祈願別の最高レアリティ件数",
+  "bannerTopRarityPullsSinceLast": "前回の {star} から {n} 回",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "updateTitle": "新しいバージョン {version} が利用可能です",
+  "@updateTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "updateReleasedAt": "{date} にリリース",
+  "@updateReleasedAt": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "updateButtonDownload": "ダウンロードへ",
+  "updateButtonSkip": "このバージョンをスキップ",
+  "updateButtonLater": "後で",
+  "updateCheckButton": "更新を確認",
+  "updateChecking": "確認中…",
+  "updateAlreadyLatest": "すでに最新バージョンです",
+  "updateCheckFailed": "更新の確認に失敗しました：{reason}",
+  "@updateCheckFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "updateErrorNetwork": "接続できません。ネットワークを確認してください",
+  "updateErrorTimeout": "リクエストがタイムアウトしました",
+  "updateErrorRateLimited": "GitHub API のリクエスト上限に達しました。しばらくしてから再試行してください",
+  "updateErrorServer": "サーバーエラー (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "updateErrorFormat": "応答フォーマットが異常です",
+  "settingsLogs": "デバッグログ",
+  "@settingsLogs": {},
+  "settingsLogsHint": "問題が発生した際は、ログをエクスポートして開発者の調査にご協力ください。",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "問題を報告",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "ログをエクスポート",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "ログフォルダを開く",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "すべてのログを削除",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "ログをエクスポートしました：{path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsExportFailed": "ログのエクスポートに失敗しました：{error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsLogsClearConfirmBody": "logs/ 内のすべてのファイルを完全に削除します。問題報告の前にログが必要な場合は、先にエクスポートしてください。確認のため CLEAR と入力してください。"
+}

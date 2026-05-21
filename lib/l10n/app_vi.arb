@@ -1,0 +1,420 @@
+{
+  "@@locale": "vi",
+  "localeNativeName": "Tiếng Việt",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslatorLabel": "Người dịch: {translator}",
+
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+
+  "actionUpdate": "Cập Nhật Dữ Liệu",
+  "actionCancel": "Hủy",
+  "actionClose": "Đóng",
+  "actionPrevPage": "Trang Trước",
+  "actionNextPage": "Trang Sau",
+  "actionOpenFolder": "Mở Thư Mục",
+
+  "navOverview": "Tổng Quan",
+  "navCharacter": "Nhân Vật",
+  "navWeapon": "Vũ Khí",
+  "navChronicled": "Sử Ký",
+  "navStandard": "Thường",
+  "navBeginner": "Tân Thủ",
+  "navSettings": "Cài Đặt",
+  "navContributors": "Đóng Góp",
+
+  "gachaTypeCharacter": "Cầu Nguyện Nhân Vật",
+  "gachaTypeWeapon": "Cầu Nguyện Vũ Khí",
+  "gachaTypeChronicled": "Sử Ký Cầu Nguyện",
+  "gachaTypeStandard": "Cầu Nguyện Thường",
+  "gachaTypeBeginner": "Cầu Nguyện Tân Thủ",
+  "gachaTypeOdesEvent": "Ca Tụng Sự Kiện",
+  "gachaTypeOdesStandard": "Ca Tụng Thường",
+
+  "navSectionGacha": "Cầu Nguyện",
+  "navSectionOdes": "Ca Tụng",
+  "navOdesEvent": "Sự Kiện",
+  "navOdesStandard": "Thường",
+
+  "footerNotSynced": "Chưa đồng bộ",
+  "footerLastUpdated": "Cập nhật lần cuối: {time}",
+  "@footerLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "relativeNow": "Vừa xong",
+  "relativeSecondsAgo": "{count} giây trước",
+  "@relativeSecondsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMinutesAgo": "{count} phút trước",
+  "@relativeMinutesAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeHoursAgo": "{count} giờ trước",
+  "@relativeHoursAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeDaysAgo": "{count} ngày trước",
+  "@relativeDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeMonthsAgo": "{count} tháng trước",
+  "@relativeMonthsAgo": { "placeholders": { "count": { "type": "int" } } },
+  "relativeYearsAgo": "{count} năm trước",
+  "@relativeYearsAgo": { "placeholders": { "count": { "type": "int" } } },
+
+  "uidSwitchTooltip": "Chuyển tài khoản",
+  "uidNotSynced": "Chưa đồng bộ",
+  "uidActiveSuffix": " (đang dùng)",
+
+  "emptyNoSyncTitle": "Chưa đồng bộ dữ liệu nào",
+  "emptyNoSyncMessage": "Nhấn \"Cập Nhật Dữ Liệu\" ở góc trên bên phải để bắt đầu",
+  "emptyNoRecords": "Banner này chưa có bản ghi",
+  "emptyNoFilterMatch": "Không tìm thấy bản ghi phù hợp với điều kiện",
+  "emptyNoOdesRecords": "Chưa có bản ghi Ca Tụng",
+  "emptyNoGachaRecords": "Chưa có bản ghi Cầu Nguyện",
+
+  "statsTotal": "Tổng số lần cầu",
+  "statsRankCount": "Số lượng {star}",
+  "@statsRankCount": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "statsShareOfTotal": "Chiếm {rate}% tổng số",
+  "@statsShareOfTotal": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+  "statsRarityDistribution": "Phân bổ độ hiếm",
+  "statsItemTypeDistribution": "Phân bổ loại vật phẩm",
+  "statsNoData": "Không có dữ liệu",
+
+  "kindUnknown": "Không rõ",
+
+  "tableTime": "Thời Gian",
+  "tableName": "Tên",
+  "tableKind": "Loại",
+  "tableRarity": "Độ Hiếm",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": { "rank": { "type": "int" } }
+  },
+  "tableTotalIndex": "Tổng số lần",
+  "tableMainPity": "Bảo hiểm hiện tại",
+  "tableMainPityTooltip": "Số lần kể từ {star} gần nhất",
+  "@tableMainPityTooltip": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "sortDirectionDesc": "Giảm dần",
+  "sortDirectionAsc": "Tăng dần",
+  "sortHintClickToSort": "Nhấp để sắp xếp",
+
+  "progressPreparing": "Đang chuẩn bị…",
+  "progressPreparingHint": "Đang chuẩn bị nguồn dữ liệu…",
+  "progressWaiting": "Đang chờ lấy URL…",
+  "progressFetching": "Đang tải…",
+  "progressDone": "Cập nhật hoàn tất",
+  "progressFailed": "Thất bại",
+  "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
+  "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
+  "progressFetchingBanner": "Đang tải: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "progressPageStatus": "Trang {page}, đã thêm {count} bản ghi",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "progressDoneSummary": "Đã thêm {count} bản ghi",
+  "@progressDoneSummary": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "progressPartialFailed": "⚠ Một phần thất bại: {names}",
+  "@progressPartialFailed": {
+    "placeholders": { "names": { "type": "String" } }
+  },
+
+  "errorAuthExpired": "Xác thực liên tục thất bại, vui lòng đăng nhập lại vào game",
+  "errorRateLimited": "Yêu cầu quá thường xuyên, vui lòng thử lại sau",
+  "errorServer": "Lỗi máy chủ: {message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "errorNoRecords": "Tài khoản này chưa có bất kỳ bản ghi banner nào",
+
+  "pageOverviewTitle": "Dữ liệu tổng quan (tất cả banner)",
+  "pageOverviewGachaSection": "Tổng quan Cầu Nguyện",
+  "pageOverviewOdesSection": "Tổng quan Ca Tụng",
+  "pageBannerRecordList": "Danh sách bản ghi",
+
+  "settingsTitle": "Cài Đặt",
+  "settingsAppearance": "Giao Diện",
+  "settingsThemeSystem": "Theo hệ thống",
+  "settingsThemeDark": "Tối",
+  "settingsThemeLight": "Sáng",
+  "settingsLanguage": "Ngôn Ngữ",
+  "settingsLocaleSystem": "Theo hệ thống",
+  "settingsDataManagement": "Quản Lý Dữ Liệu",
+  "settingsAccountManagement": "Quản Lý Tài Khoản",
+  "settingsAbout": "Giới Thiệu",
+  "settingsAboutVersion": "Phiên bản {version}",
+  "@settingsAboutVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+
+  "contributorsTitle": "Danh sách đóng góp",
+  "contributorsSubtitle": "Cảm ơn các cộng tác viên đã đóng góp cho phần mềm này!",
+  "contributorsProjectLeader": "Trưởng dự án",
+  "contributorsTesters": "Người kiểm thử",
+  "contributorsGithubContributors": "Người đóng góp GitHub",
+  "contributorsTranslationReviewer": "Người duyệt bản dịch",
+  "contributorsTranslatedLanguages": "Ngôn ngữ đã dịch",
+  "contributorsHelpTranslate": "Không có ngôn ngữ của bạn? Hãy giúp chúng tôi dịch!",
+  "contributorsProjectLicense": "Giấy phép dự án",
+
+  "pityRank": "Bảo hiểm {star}",
+  "@pityRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "threshold": { "type": "int" }
+    }
+  },
+  "pityDistance": "Còn {n} lần đến bảo hiểm",
+  "@pityDistance": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityClose": "Sắp đến bảo hiểm! Còn {n} lần",
+  "@pityClose": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "pityGuaranteed": "Đang trong bảo hiểm",
+  "pityNoMainRarity": "Chưa có {star}",
+  "@pityNoMainRarity": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "pityBeginnerEnded": "Đã kết thúc",
+  "pityAverageInterval": "Trung bình {n} lần",
+  "@pityAverageInterval": {
+    "placeholders": { "n": { "type": "String" } }
+  },
+
+  "timelineNoRecordsForRank": "Chưa có bản ghi {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "timelineSinceLast": "{n} lần",
+  "@timelineSinceLast": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowLabel": "Hiện tại",
+  "timelineNowPulls": "Đã cầu {n} lần",
+  "@timelineNowPulls": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "timelineNowSinceLast": "Cách {star} gần nhất {n} lần",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineNowSinceCrossPool": "Từ {star} gần nhất đến nay {n} lần",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": { "type": "String" },
+      "month": { "type": "String" }
+    }
+  },
+
+  "timelineScrollLeft": "Cuộn sang trái",
+  "timelineScrollRight": "Cuộn sang phải",
+
+  "timelineLoadMore": "Tải thêm (còn {n} bản ghi)",
+  "@timelineLoadMore": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "filterRarityAll": "Tất cả độ hiếm",
+  "filterRarityRankOnly": "Chỉ xem {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": { "star": { "type": "String" } }
+  },
+  "filterKindAll": "Tất cả loại",
+  "filterSearchHint": "Tìm kiếm tên…",
+  "filterClear": "Xóa bộ lọc",
+
+  "pagerFirst": "Trang đầu",
+  "pagerLast": "Trang cuối",
+
+  "settingsClearActive": "Xóa dữ liệu tài khoản hiện tại",
+  "settingsClearAll": "Xóa tất cả dữ liệu",
+
+  "settingsExportData": "Xuất dữ liệu",
+  "settingsImportData": "Nhập dữ liệu",
+  "shareImageButton": "Tạo ảnh chia sẻ",
+  "shareImageDialogTitle": "Cài đặt ảnh chia sẻ",
+  "shareImageThemeLabel": "Chủ đề",
+  "shareImageThemeDark": "Tối",
+  "shareImageThemeLight": "Sáng",
+  "shareImageShowFullUid": "Hiển thị UID đầy đủ trên ảnh",
+  "shareImageShowFullUidHint": "Khi tắt, chỉ hiển thị 3 ký tự đầu, phần còn lại sẽ bị che bằng x",
+  "shareImageGenerate": "Tạo",
+  "shareImageUpdatedAt": "Dữ liệu cập nhật {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "shareImageSavedAndCopied": "Đã lưu và sao chép vào clipboard: {path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageSavedOnly": "Đã lưu: {path} (không hỗ trợ clipboard)",
+  "@shareImageSavedOnly": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "shareImageCopiedOnly": "Đã sao chép vào clipboard",
+  "shareImageFailed": "Tạo ảnh chia sẻ thất bại",
+  "exportDialogSuccessTitle": "Xuất thành công",
+  "exportDialogFailedTitle": "Xuất thất bại",
+  "settingsExportFailed": "Xuất thất bại: {error}",
+  "@settingsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsExportSuccess": "Đã xuất tới {path}",
+  "@settingsExportSuccess": {
+    "placeholders": { "path": { "type": "String" } }
+  },
+  "settingsImportConfirmTitle": "Xác nhận nhập",
+  "settingsImportConfirmIntro": "Sắp nhập {accounts} tài khoản (tổng cộng {records} bản ghi):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "Các UID sau đã có dữ liệu và sẽ bị ghi đè:",
+  "settingsImportConfirmNoConflict": "Không có xung đột dữ liệu.",
+  "settingsImportConfirmPreserveFooter": "Các tài khoản hiện có khác ({uids}) sẽ được giữ lại.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "settingsImportConfirmWarning": "Thao tác này không thể hoàn tác. Vui lòng nhập IMPORT để xác nhận.",
+  "settingsImportSuccess": "Đã nhập thành công {accounts} tài khoản ({records} bản ghi)",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records": { "type": "int" }
+    }
+  },
+  "settingsImportPartial": "Đã nhập {success}/{total} tài khoản; thất bại: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": { "type": "int" },
+      "total": { "type": "int" },
+      "failedUids": { "type": "String" }
+    }
+  },
+  "settingsImportFailed": "Nhập thất bại: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+
+  "settingsExportSelectTitle": "Chọn tài khoản để xuất",
+  "settingsImportSelectTitle": "Chọn tài khoản để nhập",
+  "settingsImportOverwriteBadge": "Ghi đè",
+  "accountsPickerSelectAll": "Chọn tất cả",
+  "accountRecordCount": "{n} bản ghi",
+  "@accountRecordCount": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+
+  "confirmTitle": "Xác nhận thao tác",
+  "confirmClearActiveBody": "Thao tác này sẽ xóa vĩnh viễn tất cả bản ghi Cầu Nguyện của UID {uid}. Nhập UID để xác nhận:",
+  "@confirmClearActiveBody": {
+    "placeholders": { "uid": { "type": "String" } }
+  },
+  "confirmClearAllBody": "Thao tác này sẽ xóa vĩnh viễn tất cả bản ghi Cầu Nguyện của mọi tài khoản. Nhập DELETE để xác nhận:",
+  "confirmDelete": "Xóa",
+  "confirmImport": "Nhập",
+  "confirmExport": "Xuất",
+  "confirmContinue": "Tiếp tục",
+
+  "accountListEmpty": "Hiện không có tài khoản nào",
+  "accountLastUpdated": "Cập nhật lần cuối {time}",
+  "@accountLastUpdated": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "accountActiveTag": "Đang dùng",
+  "accountSetActive": "Đặt làm tài khoản hoạt động",
+  "accountRemove": "Xóa",
+  "accountAdd": "Thêm tài khoản",
+  "accountAliasLabel": "Bí danh",
+  "accountAliasHint": "Đặt tên dễ nhớ cho tài khoản này",
+  "accountDragHandleTooltip": "Kéo để sắp xếp",
+
+  "loadingBootstrap": "Đang tải…",
+
+  "timelineTopRarityTitle": "Dòng thời gian {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "bannerTopRarityCountTitle": "Số lượng vật phẩm độ hiếm cao nhất mỗi banner",
+  "bannerTopRarityPullsSinceLast": "Cách {star} gần nhất {n} lần",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": { "type": "String" },
+      "n": { "type": "int" }
+    }
+  },
+
+  "updateTitle": "Có phiên bản mới {version}",
+  "@updateTitle": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "updateReleasedAt": "Phát hành vào {date}",
+  "@updateReleasedAt": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "updateButtonDownload": "Tải về",
+  "updateButtonSkip": "Bỏ qua phiên bản này",
+  "updateButtonLater": "Để sau",
+  "updateCheckButton": "Kiểm tra cập nhật",
+  "updateChecking": "Đang kiểm tra…",
+  "updateAlreadyLatest": "Đã là phiên bản mới nhất",
+  "updateCheckFailed": "Kiểm tra cập nhật thất bại: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": { "reason": { "type": "String" } }
+  },
+  "updateErrorNetwork": "Không thể kết nối, vui lòng kiểm tra mạng",
+  "updateErrorTimeout": "Yêu cầu hết thời gian",
+  "updateErrorRateLimited": "GitHub API đã hết hạn mức, vui lòng thử lại sau",
+  "updateErrorServer": "Lỗi máy chủ (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "updateErrorFormat": "Định dạng phản hồi bất thường",
+  "settingsLogs": "Logs gỡ lỗi",
+  "settingsLogsHint": "Khi gặp sự cố, có thể xuất log để nhà phát triển hỗ trợ kiểm tra.",
+  "settingsLogsReport": "Báo cáo sự cố",
+  "settingsLogsExport": "Xuất logs",
+  "settingsLogsOpenFolder": "Mở thư mục logs",
+  "settingsLogsClear": "Xóa tất cả logs",
+  "settingsLogsExportSuccess": "Đã xuất logs: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "settingsLogsExportFailed": "Xuất logs thất bại: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "settingsLogsClearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn tất cả tệp trong logs/. Nếu cần logs để báo cáo sự cố, vui lòng xuất trước. Nhập CLEAR để xác nhận."
+}
