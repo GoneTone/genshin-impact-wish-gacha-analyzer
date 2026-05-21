@@ -1,3 +1,628 @@
 {
-  "@@locale": "pt-PT"
+  "@@locale": "pt-BR",
+  "localeNativeName": "Português",
+  "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslatorLabel": "Tradutor: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "O analisador de gacha de Genshin Impact",
+  "actionUpdate": "Atualizar dados",
+  "actionCancel": "Cancelar",
+  "actionClose": "Fechar",
+  "actionPrevPage": "A página anterior",
+  "actionNextPage": "A próxima página",
+  "actionOpenFolder": "Abrir pasta",
+  "navOverview": "Geral",
+  "navCharacter": "O personangem",
+  "navWeapon": "A arma",
+  "navChronicled": "Registro",
+  "navStandard": "Comum",
+  "navBeginner": "Novato",
+  "navSettings": "Configurações",
+  "navContributors": "Contribuidores",
+  "gachaTypeCharacter": "Oração de Evento de Personagem",
+  "gachaTypeWeapon": "Oração de Evento de Arma",
+  "gachaTypeChronicled": "Registro de Oração",
+  "gachaTypeStandard": "Oração Comum",
+  "gachaTypeBeginner": "Desejos de Novato",
+  "gachaTypeOdesEvent": "Evento de Ode",
+  "gachaTypeOdesStandard": "Ode Permanente",
+  "navOdesEvent": "Evento",
+  "navOdesStandard": "Permanente",
+  "navSectionGacha": "Orar",
+  "navSectionOdes": "Odes",
+  "footerNotSynced": "Não sincronizado",
+  "footerLastUpdated": "Última atualização: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Agora",
+  "relativeSecondsAgo": "{count, plural, =1{Há 1 segundo} other{Há {count} segundos}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{Há 1 minuto} other{Há {count} minutos}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{Há 1 hora} other{Há {count} horas}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{Há 1 dia} other{Há {count} dias}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{Há 1 mês} other{Há {count} meses}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, =1{Há 1 ano} other{Há {count} anos}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Trocar conta",
+  "uidNotSynced": "Não sincronizado",
+  "uidActiveSuffix": " (ativo)",
+  "emptyNoSyncTitle": "Nenhum dado sincronizado",
+  "emptyNoSyncMessage": "Clique em \"Atualizar dados\" no canto superior direito para começar",
+  "emptyNoRecords": "Sem registros neste banner",
+  "emptyNoFilterMatch": "Nenhum registro corresponde ao filtro",
+  "emptyNoOdesRecords": "Sem registros de Ode",
+  "emptyNoGachaRecords": "Sem registros de Oração",
+  "statsTotal": "Total de orações",
+  "statsRankCount": "O número de ganhar um {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% do total",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Distribuição de raridade",
+  "statsItemTypeDistribution": "Distribuição por tipo",
+  "statsNoData": "Sem dados",
+  "kindUnknown": "Desconhecido",
+  "tableTime": "Hora",
+  "tableName": "O nome",
+  "tableKind": "tipo",
+  "tableRarity": "Raridade",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Total de orações",
+  "tableMainPity": "Pity atual",
+  "tableMainPityTooltip": "Orações desde o último {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Decrescente",
+  "sortDirectionAsc": "Crescente",
+  "sortHintClickToSort": "Clique para ordenar",
+  "progressPreparing": "Preparando…",
+  "progressPreparingHint": "Preparando a fonte de dados…",
+  "progressWaiting": "Aguardando interceptação…",
+  "progressFetching": "Buscando…",
+  "progressDone": "Atualização concluída",
+  "progressFailed": "Falhou",
+  "progressOpenGameHint": "Abra Genshin Impact → Orações → Histórico",
+  "progressFallbackHint": "(A autenticação anterior expirou, é necessário interceptar novamente)",
+  "progressFetchingBanner": "Buscando: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Página {page}, {count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Falha parcial: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "errorAuthExpired": "Autenticação continua falhando, faça login no jogo novamente",
+  "errorRateLimited": "Muitas solicitações, tente novamente mais tarde",
+  "errorServer": "Erro no servidor: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Esta conta não possui registros de Oração",
+  "pageOverviewTitle": "Dados gerais (total de todos os banners)",
+  "pageOverviewGachaSection": "Resumo de Orações",
+  "pageOverviewOdesSection": "Resumo de Odes",
+  "pageBannerRecordList": "Lista de registros",
+  "settingsTitle": "Configurações",
+  "settingsAppearance": "Aparência",
+  "settingsThemeSystem": "Seguir sistema",
+  "settingsThemeDark": "Escuro",
+  "settingsThemeLight": "Claro",
+  "settingsLanguage": "Idioma",
+  "settingsLocaleSystem": "Seguir sistema",
+  "settingsDataManagement": "Gerenciamento de dados",
+  "settingsAccountManagement": "Gerenciamento de contas",
+  "settingsAbout": "Cerca de",
+  "settingsAboutVersion": "Versão {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "contributorsTitle": "Contribuidores",
+  "contributorsSubtitle": "Agradecimentos especiais a todos que contribuíram para este software!",
+  "contributorsProjectLeader": "O líder do projeto",
+  "contributorsTesters": "Os testadores",
+  "contributorsGithubContributors": "Os contribuintes de Github",
+  "contributorsTranslationReviewer": "Revisor de tradução",
+  "contributorsTranslatedLanguages": "Idiomas traduzidos",
+  "contributorsHelpTranslate": "Não encontrou seu idioma? Ajude-nos a traduzir!",
+  "contributorsProjectLicense": "Licença do projeto",
+  "pityRank": "Pity de {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, =1{Falta 1 oração para o próximo pity} other{Faltam {n} orações para o próximo pity}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Pity próximo! {n, plural, =1{Falta 1 oração} other{Faltam {n} orações}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Garantido",
+  "pityNoMainRarity": "Sem {star} ainda",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Encerrado",
+  "pityAverageInterval": "Média de {n} orações",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Sem registros de {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{1 oração} other{{n} orações}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Agora",
+  "timelineNowPulls": "{n, plural, =1{1 oração acumulada} other{{n} orações acumuladas}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{year}/{month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Rolar para a esquerda",
+  "timelineScrollRight": "Rolar para a direita",
+  "timelineLoadMore": "Carregar mais ({n, plural, =1{1 restante} other{{n} restantes}})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Todas as raridades",
+  "filterRarityRankOnly": "Apenas {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Todos os tipos",
+  "filterSearchHint": "Pesquisar por nome…",
+  "filterClear": "Limpar filtros",
+  "pagerFirst": "Primeira página",
+  "pagerLast": "Última página",
+  "settingsClearActive": "Limpar dados da conta atual",
+  "settingsClearAll": "Limpar todos os dados",
+  "settingsExportData": "Exportar dados",
+  "settingsImportData": "Importar dados",
+  "shareImageButton": "Gerar imagem para compartilhar",
+  "shareImageDialogTitle": "Configurações da imagem",
+  "shareImageThemeLabel": "Tema",
+  "shareImageThemeDark": "Escuro",
+  "shareImageThemeLight": "Claro",
+  "shareImageShowFullUid": "Mostrar UID completo na imagem",
+  "shareImageShowFullUidHint": "Quando desativado, exibe apenas os 3 primeiros dígitos; o restante é ocultado com x",
+  "shareImageGenerate": "Gerar",
+  "shareImageUpdatedAt": "Dados atualizados em {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageSavedAndCopied": "Salvo e copiado para a área de transferência: {path}",
+  "@shareImageSavedAndCopied": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageSavedOnly": "Salvo: {path} (área de transferência não suportada)",
+  "@shareImageSavedOnly": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Copiado para a área de transferência",
+  "shareImageFailed": "Falha ao gerar imagem",
+  "exportDialogSuccessTitle": "Exportação concluída",
+  "exportDialogFailedTitle": "Exportação falhou",
+  "settingsExportFailed": "Exportação falhou: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Exportado para {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Confirmação de importação",
+  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmOverwriteHeader": "Os seguintes UIDs já possuem dados e serão sobrescritos:",
+  "settingsImportConfirmNoConflict": "Sem conflitos de dados.",
+  "settingsImportConfirmPreserveFooter": "Outras contas existentes ({uids}) serão mantidas.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmWarning": "Esta operação não pode ser desfeita. Digite IMPORT para confirmar.",
+  "settingsImportSuccess": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{1 registro} other{{records} registros}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "{success}/{total} contas importadas; falhou: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Importação falhou: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSelectTitle": "Selecionar contas para exportar",
+  "settingsImportSelectTitle": "Selecionar contas para importar",
+  "settingsImportOverwriteBadge": "Sobrescrever",
+  "accountsPickerSelectAll": "Selecionar tudo",
+  "accountRecordCount": "{n, plural, =1{1 registro} other{{n} registros}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Confirmar operação",
+  "confirmClearActiveBody": "Isso excluirá permanentemente todos os registros de Oração do UID {uid}. Digite o UID para confirmar:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Isso excluirá permanentemente todos os registros de Oração de todas as contas. Digite DELETE para confirmar:",
+  "confirmDelete": "Excluir",
+  "confirmImport": "Importar",
+  "confirmExport": "Exportar",
+  "confirmContinue": "Continuar",
+  "accountListEmpty": "Nenhuma conta encontrada",
+  "accountLastUpdated": "Última atualização {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Ativo",
+  "accountSetActive": "Definir como ativo",
+  "accountRemove": "Remover",
+  "accountAdd": "Adicionar conta",
+  "accountAliasLabel": "Apelido",
+  "accountAliasHint": "Defina um nome fácil de lembrar para esta conta",
+  "accountDragHandleTooltip": "Arrastar para ordenar",
+  "loadingBootstrap": "Carregando…",
+  "timelineTopRarityTitle": "Linha do tempo de {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Contagem de itens de maior raridade por banner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Nova versão {version} disponível",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Lançado em {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Baixar",
+  "updateButtonSkip": "Pular esta versão",
+  "updateButtonLater": "Lembrar depois",
+  "updateCheckButton": "Verificar atualizações",
+  "updateChecking": "Verificando…",
+  "updateAlreadyLatest": "Você já possui a versão mais recente",
+  "updateCheckFailed": "Falha ao verificar atualizações: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Sem conexão, verifique sua rede",
+  "updateErrorTimeout": "Tempo de solicitação esgotado",
+  "updateErrorRateLimited": "Cota da API do GitHub esgotada, tente novamente mais tarde",
+  "updateErrorServer": "Erro no servidor (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Formato de resposta inválido",
+  "settingsLogs": "Logs de depuração",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Em caso de problemas, exporte os logs para ajudar os desenvolvedores a diagnosticar.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Reportar problema",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Exportar logs",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Abrir pasta de logs",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Limpar todos os logs",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Logs exportados: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Falha ao exportar logs: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Isso excluirá permanentemente todos os arquivos na pasta logs/. Se precisar dos logs para reportar um problema, exporte-os primeiro. Digite CLEAR para confirmar."
 }
