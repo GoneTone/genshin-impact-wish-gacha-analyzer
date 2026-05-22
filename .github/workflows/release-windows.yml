@@ -138,7 +138,8 @@ jobs:
             if ($isDraft -ne "true") {
               throw "Release '$tag' already exists and is PUBLISHED; refusing to overwrite its assets."
             }
-            Write-Host "Draft '$tag' already exists; re-uploading installer with --clobber"
+            Write-Host "Draft '$tag' already exists; refreshing target to $env:RELEASE_SHA and re-uploading installer with --clobber"
+            gh release edit "$tag" --target "$env:RELEASE_SHA"
             gh release upload "$tag" "$env:INSTALLER_PATH" --clobber
           } else {
             Write-Host "Creating draft release '$tag' targeting $env:RELEASE_SHA"

@@ -43,5 +43,5 @@
 - **每次發版 CI 會自動 push 一個 pubspec bump commit 到 master**，commit author 顯示為 `github-actions[bot]`。
 - **發版前不要手動改 pubspec version**——讓 CI 改，避免雙方衝突。
 - **草稿不會建立 tag**：草稿狀態下 GitHub 不建 git tag，刪草稿即可重來；只有按 Publish 才會把 tag 打在草稿釘住的 commit 上。
-- **不要在 master 之外的 branch 發 release**：CI 會 push pubspec 到 release `target_commitish`，誤推到 dev branch 會把 dev branch 也 bump 版號。
+- **發版固定以 master 為基準**：workflow 寫死 `ref: master` 並把 pubspec bump push 回 master，無法從其他 branch 發版；發版前確認 master tip 就是要發的 commit。
 - **升 Flutter 版本走 PR 改 `.fvmrc`**：CI 與本地會同步切換。
