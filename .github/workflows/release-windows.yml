@@ -149,7 +149,8 @@ jobs:
 
             # 在自動產生的 What's Changed 底下附上固定文案(翻譯邀請/防毒說明,維護於 .github/release-footer.md)
             # ConvertFrom-Json 取 body 為單一字串,避免 pwsh 把多行 stdout 切成陣列
-            $generated = (gh release view "$tag" --json body | ConvertFrom-Json).body
+            # TrimEnd 去掉上游可能帶的尾換行,確保與 footer 之間固定剛好一個空行
+            $generated = (gh release view "$tag" --json body | ConvertFrom-Json).body.TrimEnd()
             $footer = Get-Content .github/release-footer.md -Raw -Encoding UTF8
             $bodyFile = Join-Path $env:RUNNER_TEMP "release_body.md"
             Set-Content -Path $bodyFile -Value "$generated`n`n$footer" -Encoding UTF8 -NoNewline
