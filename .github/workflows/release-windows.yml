@@ -124,15 +124,24 @@ jobs:
 
       # === E. Sign (skip, structure 內嵌於 build_release.ps1) ==========
 
-      # === F. Upload to release draft ===============================
-      - name: Upload installer to release draft
+      # === F. Create or update release draft ========================
+      - name: Create or update release draft
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = "${{ github.event.release.tag_name }}"
-          # 上傳檔名與 build 產物完全一致,不改名
-          gh release upload "$tag" "${{ env.INSTALLER_PATH }}" --clobber
+          $tag = "${{ inputs.tag }}"
+          # 重跑情境:草稿已存在則只覆蓋上傳資產;否則建新草稿並釘在 build 的 commit
+          gh release view "$tag" 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Draft '$tag' already exists; re-uploading installer with --clobber"
+            gh release upload "$tag" "$env:INSTALLER_PATH" --clobber
+          } else {
+            Write-Host "Creating draft release '$tag' targeting $env:RELEASE_SHA"
+            $createArgs = @("$tag", "$env:INSTALLER_PATH", "--draft", "--title", "$tag", "--generate-notes", "--target", "$env:RELEASE_SHA")
+            if ("${{ inputs.prerelease }}" -eq "true") { $createArgs += "--prerelease" }
+            gh release create @createArgs
+          }
 
       # === G. Workflow artifact (debug fallback) ====================
       - name: Upload installer as workflow artifact
