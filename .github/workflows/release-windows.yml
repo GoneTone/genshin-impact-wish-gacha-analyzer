@@ -162,11 +162,12 @@ jobs:
           $size = [math]::Round((Get-Item $exe).Length / 1MB, 2)
           $sha  = (Get-FileHash $exe -Algorithm SHA256).Hash
           @"
-          ## Release ${{ github.event.release.tag_name }}
+          ## Release ${{ inputs.tag }}
 
           - **Pubspec version**: ${{ env.PUBSPEC_VERSION }}
           - **Installer**: ``${{ env.INSTALLER_NAME }}``
           - **Size**: $size MB
           - **SHA-256**: ``$sha``
-          - **Uploaded to release**: ✓
+          - **Release commit**: ``${{ env.RELEASE_SHA }}``
+          - **Draft created**: ✓ — review and Publish manually
           "@ | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
