@@ -9,8 +9,8 @@ updates:
       timezone: "Asia/Taipei"
     open-pull-requests-limit: 30
     commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
+      prefix: "chore"
+      prefix-development: "chore"
       include: "scope"
     groups:
       dependencies:
@@ -29,8 +29,8 @@ updates:
       timezone: "Asia/Taipei"
     open-pull-requests-limit: 30
     commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
+      prefix: "chore"
+      prefix-development: "chore"
       include: "scope"
     groups:
       dependencies:
