@@ -33,7 +33,7 @@ jobs:
       - name: Checkout target branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.target_commitish }}
+          ref: master
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -68,7 +68,7 @@ jobs:
       - name: Parse tag & rewrite pubspec
         shell: pwsh
         run: |
-          $tag = "${{ github.event.release.tag_name }}"
+          $tag = "${{ inputs.tag }}"
           if ($tag -notmatch '^v(\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?)$') {
             throw "tag '$tag' does not match vX.Y.Z[-prerelease]"
           }
@@ -96,7 +96,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add pubspec.yaml
           git commit -m "chore(release): bump version to v${{ env.SEMVER }} [skip ci]"
-          git push origin HEAD:${{ github.event.release.target_commitish }}
+          git push origin HEAD:master
+
+      - name: Capture release commit SHA
+        shell: pwsh
+        run: |
+          $sha = (git rev-parse HEAD).Trim()
+          "RELEASE_SHA=$sha" | Out-File $env:GITHUB_ENV -Append
+          Write-Host "Release commit SHA: $sha"
 
       # === D. Build =================================================
       - name: Build Windows installer
