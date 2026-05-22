@@ -1,20 +1,27 @@
 name: release-windows
-run-name: release ${{ github.event.release.tag_name }}
+run-name: release ${{ inputs.tag }}
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (vX.Y.Z or vX.Y.Z-rc.N)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.event.release.id }}
+  group: release-${{ inputs.tag }}
   cancel-in-progress: false
 
 jobs:
   build-windows:
-    if: github.event.release.draft == true
     runs-on: windows-latest
 
     env:
