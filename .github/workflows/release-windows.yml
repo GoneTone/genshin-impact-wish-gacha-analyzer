@@ -131,9 +131,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "${{ inputs.tag }}"
-          # 重跑情境:草稿已存在則只覆蓋上傳資產;否則建新草稿並釘在 build 的 commit
-          gh release view "$tag" 2>$null
+          # inputs.prerelease 是 workflow_dispatch boolean,interpolation 後一律是字串 "true"/"false",故用字串比較
+          # --json/--jq 同時偵測 release 是否存在並取得 draft 狀態,順帶把 view 的 stdout 收進變數不污染 log
+          $isDraft = gh release view "$tag" --json isDraft --jq '.isDraft' 2>$null
           if ($LASTEXITCODE -eq 0) {
+            if ($isDraft -ne "true") {
+              throw "Release '$tag' already exists and is PUBLISHED; refusing to overwrite its assets."
+            }
             Write-Host "Draft '$tag' already exists; re-uploading installer with --clobber"
             gh release upload "$tag" "$env:INSTALLER_PATH" --clobber
           } else {
