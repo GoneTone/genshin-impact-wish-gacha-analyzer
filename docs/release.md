@@ -10,22 +10,21 @@
 
 ## 步驟
 
-1. **建立 release 草稿**
-   - GitHub repo → Releases → "Draft a new release"
-   - **Tag name**：`vX.Y.Z`（必須符合 semver；不要帶 `+build` 部分；prerelease 寫 `vX.Y.Z-rc.N`）
-   - **Target**：`master`
-   - **☑ Set as a draft**（要發 prerelease 另外勾「Set as a pre-release」）
-   - **Release notes**：自由填寫
-   - 點 **"Save draft"**
+1. **觸發 release workflow**
+   - GitHub repo → Actions → `release-windows` → **"Run workflow"**
+   - **tag**：`vX.Y.Z`（必須符合 semver；不要帶 `+build` 部分；prerelease 寫 `vX.Y.Z-rc.N`）
+   - **prerelease**：要發 prerelease 才勾選
+   - 點 **"Run workflow"**（CI 固定以 `master` 為發版基準）
 
 2. **等 CI 跑完**
    - 觸發 workflow：`release-windows`
    - Actions 頁面看 run 結果（run name = release tag）
 
 3. **確認 installer 已附上**
-   - 回到該 release 草稿頁面
+   - CI 成功後會自動建立一個 **草稿** release（標題 = tag），到該草稿頁面確認
    - Assets 區應該有 `Genshin_Impact_Wish_Gacha_Analyzer-Setup-X.Y.Z.exe`
-   - Workflow run 的 step summary 會顯示 SHA-256 / size
+   - Release notes 由 CI 自動產生底稿，Publish 前可自行編輯
+   - Workflow run 的 step summary 會顯示 SHA-256 / size / release commit
 
 4. **Publish**
    - 草稿頁面點 **"Publish release"**
@@ -35,15 +34,14 @@
 
 | 症狀 | 處理 |
 |---|---|
-| Workflow fail：tag 名不符 | 刪草稿、改 tag 名重建 |
-| Workflow fail：build / ISCC 失敗 | 看 step log；修代碼 push 到 master 後刪草稿重建 |
+| Workflow fail：tag 名不符 | 用正確 tag 重新 Run workflow（若已建草稿先刪草稿） |
+| Workflow fail：build / ISCC 失敗 | 看 step log；修代碼 push 到 master 後重新 Run workflow |
 | Workflow 成功但 release 沒 exe | 從 workflow run 下載 artifact (`windows-installer-X.Y.Z+N`)，手動拖到草稿 |
-| Pubspec push race（你在 CI 期間 push 了新 commit） | 刪草稿、本地 rebase、重建草稿 |
 
 ## 注意事項
 
 - **每次發版 CI 會自動 push 一個 pubspec bump commit 到 master**，commit author 顯示為 `github-actions[bot]`。
 - **發版前不要手動改 pubspec version**——讓 CI 改，避免雙方衝突。
-- **Tag 不要重用**：刪了草稿不會刪 tag，但 GitHub 允許舊 tag 重綁 release。為避免混亂，刪草稿時順手刪 tag：`git push origin :refs/tags/vX.Y.Z`。
+- **草稿不會建立 tag**：草稿狀態下 GitHub 不建 git tag，刪草稿即可重來；只有按 Publish 才會把 tag 打在草稿釘住的 commit 上。
 - **不要在 master 之外的 branch 發 release**：CI 會 push pubspec 到 release `target_commitish`，誤推到 dev branch 會把 dev branch 也 bump 版號。
 - **升 Flutter 版本走 PR 改 `.fvmrc`**：CI 與本地會同步切換。
