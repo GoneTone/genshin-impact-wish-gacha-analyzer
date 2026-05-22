@@ -77,7 +77,7 @@ jobs:
           $pubspecVersion = "$semver+$buildNumber"
 
           $content = Get-Content pubspec.yaml -Raw -Encoding UTF8
-          $updated = [regex]::Replace($content, '(?m)^version:\s*\S+\s*$', "version: $pubspecVersion", 1)
+          $updated = [regex]::Replace($content, '(?m)^version:\s*\S+', "version: $pubspecVersion", 1)
 
           if ($updated -eq $content) {
             "VERSION_CHANGED=false" | Out-File $env:GITHUB_ENV -Append
