@@ -146,6 +146,14 @@ jobs:
             $createArgs = @("$tag", "$env:INSTALLER_PATH", "--draft", "--title", "$tag", "--generate-notes", "--target", "$env:RELEASE_SHA")
             if ("${{ inputs.prerelease }}" -eq "true") { $createArgs += "--prerelease" }
             gh release create @createArgs
+
+            # 在自動產生的 What's Changed 底下附上固定文案(翻譯邀請/防毒說明,維護於 .github/release-footer.md)
+            # ConvertFrom-Json 取 body 為單一字串,避免 pwsh 把多行 stdout 切成陣列
+            $generated = (gh release view "$tag" --json body | ConvertFrom-Json).body
+            $footer = Get-Content .github/release-footer.md -Raw -Encoding UTF8
+            $bodyFile = Join-Path $env:RUNNER_TEMP "release_body.md"
+            Set-Content -Path $bodyFile -Value "$generated`n`n$footer" -Encoding UTF8 -NoNewline
+            gh release edit "$tag" --notes-file $bodyFile
           }
 
       # === G. Workflow artifact (debug fallback) ====================

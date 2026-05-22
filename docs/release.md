@@ -23,7 +23,7 @@
 3. **確認 installer 已附上**
    - CI 成功後會自動建立一個 **草稿** release（標題 = tag），到該草稿頁面確認
    - Assets 區應該有 `Genshin_Impact_Wish_Gacha_Analyzer-Setup-X.Y.Z.exe`
-   - Release notes 由 CI 自動產生底稿，Publish 前可自行編輯
+   - Release notes = 自動產生的 What's Changed ＋ 固定附帶的翻譯邀請／防毒說明（維護於 `.github/release-footer.md`），Publish 前可自行編輯
    - Workflow run 的 step summary 會顯示 SHA-256 / size / release commit
 
 4. **Publish**
