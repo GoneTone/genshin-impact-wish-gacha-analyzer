@@ -131,8 +131,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "${{ inputs.tag }}"
-          # inputs.prerelease 是 workflow_dispatch boolean,interpolation 後一律是字串 "true"/"false",故用字串比較
-          # --json/--jq 同時偵測 release 是否存在並取得 draft 狀態,順帶把 view 的 stdout 收進變數不污染 log
+          # inputs.prerelease 是 workflow_dispatch boolean，interpolation 後一律是字串 "true"/"false"，故用字串比較
+          # --json/--jq 同時偵測 release 是否存在並取得 draft 狀態，順帶把 view 的 stdout 收進變數不污染 log
           $isDraft = gh release view "$tag" --json isDraft --jq '.isDraft' 2>$null
           if ($LASTEXITCODE -eq 0) {
             if ($isDraft -ne "true") {
@@ -147,9 +147,9 @@ jobs:
             if ("${{ inputs.prerelease }}" -eq "true") { $createArgs += "--prerelease" }
             gh release create @createArgs
 
-            # 在自動產生的 What's Changed 底下附上固定文案(翻譯邀請/防毒說明,維護於 .github/release-footer.md)
-            # ConvertFrom-Json 取 body 為單一字串,避免 pwsh 把多行 stdout 切成陣列
-            # TrimEnd 去掉上游可能帶的尾換行,確保與 footer 之間固定剛好一個空行
+            # 在自動產生的 What's Changed 底下附上固定文案（翻譯邀請／防毒說明，維護於 .github/release-footer.md）
+            # ConvertFrom-Json 取 body 為單一字串，避免 pwsh 把多行 stdout 切成陣列
+            # TrimEnd 去掉上游可能帶的尾換行，確保與 footer 之間固定剛好一個空行
             $generated = (gh release view "$tag" --json body | ConvertFrom-Json).body.TrimEnd()
             $footer = Get-Content .github/release-footer.md -Raw -Encoding UTF8
             $bodyFile = Join-Path $env:RUNNER_TEMP "release_body.md"
