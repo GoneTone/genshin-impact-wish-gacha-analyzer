@@ -15,6 +15,7 @@
 文章：
 - 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
 - HoYoLAB：<https://www.hoyolab.com/genshin/article/552176>
+- 原神資訊站：<https://genshininfo.reh.tw/archives/97>
 
 ## 多國語言
 
