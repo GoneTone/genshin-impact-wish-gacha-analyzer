@@ -21,8 +21,8 @@ http.Response _searchOk(List<Map<String, dynamic>> list) => http.Response(
 
 Map<String, dynamic> _searchItem({
   required String name,
-  required String id,
-  required int subMenuId,
+  required dynamic id, // String or int
+  required dynamic subMenuId, // String or int
 }) => {
   'name': name,
   'entry_page_id': id,
@@ -168,6 +168,77 @@ void main() {
       final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
       await fetcher.searchEntryId(name: '胡桃', lang: 'zh-tw', client: mock);
       expect(capturedUrl.queryParameters['keyword'], '胡桃');
+    });
+
+    test('sub_menu id 為字串 "2" → 也視為命中', () async {
+      final mock = MockClient(
+        (req) async => _searchOk([
+          _searchItem(name: 'Hu Tao', id: '5125428', subMenuId: '2'),
+        ]),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final id = await fetcher.searchEntryId(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        client: mock,
+      );
+      expect(id, '5125428');
+    });
+
+    test('sub_menu id 為字串 "4" → 也視為命中', () async {
+      final mock = MockClient(
+        (req) async =>
+            _searchOk([_searchItem(name: 'Sword', id: '9001', subMenuId: '4')]),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final id = await fetcher.searchEntryId(
+        name: 'Sword',
+        lang: 'en-us',
+        client: mock,
+      );
+      expect(id, '9001');
+    });
+
+    test('sub_menu id 為字串 "1" → 不命中', () async {
+      final mock = MockClient(
+        (req) async =>
+            _searchOk([_searchItem(name: 'X', id: '111', subMenuId: '1')]),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final id = await fetcher.searchEntryId(
+        name: 'X',
+        lang: 'en-us',
+        client: mock,
+      );
+      expect(id, isNull);
+    });
+
+    test('sub_menu id 為非數字字串 → 不命中', () async {
+      final mock = MockClient(
+        (req) async =>
+            _searchOk([_searchItem(name: 'X', id: '111', subMenuId: 'foo')]),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final id = await fetcher.searchEntryId(
+        name: 'X',
+        lang: 'en-us',
+        client: mock,
+      );
+      expect(id, isNull);
+    });
+
+    test('entry_page_id 為 int → 也能解析成字串', () async {
+      final mock = MockClient(
+        (req) async =>
+            _searchOk([_searchItem(name: 'Hu Tao', id: 5125428, subMenuId: 2)]),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final id = await fetcher.searchEntryId(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        client: mock,
+      );
+      expect(id, '5125428');
     });
   });
 

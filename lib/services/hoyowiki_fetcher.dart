@@ -90,9 +90,15 @@ class HoyoWikiFetcher {
       final menu = item['menu'] as Map<String, dynamic>?;
       final subMenus = menu?['sub_menus'] as List<dynamic>?;
       if (subMenus == null || subMenus.isEmpty) continue;
-      final subMenuId = (subMenus.first as Map<String, dynamic>)['id'] as int?;
+      final subMenuIdRaw = (subMenus.first as Map<String, dynamic>)['id'];
+      final subMenuId = subMenuIdRaw is int
+          ? subMenuIdRaw
+          : subMenuIdRaw is String
+          ? int.tryParse(subMenuIdRaw)
+          : null;
       if (subMenuId != 2 && subMenuId != 4) continue;
-      final id = item['entry_page_id'] as String?;
+      final entryRaw = item['entry_page_id'];
+      final id = entryRaw is String ? entryRaw : entryRaw?.toString();
       if (id == null || id.isEmpty) continue;
       _log.info('search hit name=$name lang=$lang id=$id');
       return id;
