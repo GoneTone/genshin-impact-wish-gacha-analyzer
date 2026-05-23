@@ -398,7 +398,10 @@ class _EntryRow extends StatelessWidget {
                     message: entry.name,
                     preferBelow: false,
                     waitDuration: const Duration(milliseconds: 100),
+                    // mainAxisSize: min 讓 Row 收縮到 icon+text 實際寬度;
+                    // 否則 Row 預設吃滿父層,Tooltip 會以那整片寬區置中而飄到右側。
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (entry.sourceRecord != null) ...[
