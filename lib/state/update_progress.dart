@@ -72,3 +72,15 @@ class UpdateFailed extends UpdateProgress {
   /// 更新失敗的錯誤類型。
   final UpdateError error;
 }
+
+/// 主資料抓取完成後，正在補齊各物品的 HoyoWiki 圖示。
+class FetchingHoyoWiki extends UpdateProgress {
+  /// 建立 [FetchingHoyoWiki]。
+  const FetchingHoyoWiki({required this.doneCount, required this.totalCount});
+
+  /// 目前已完成的工作項數。
+  final int doneCount;
+
+  /// 本階段總工作項數（search + entry + download 加總）。
+  final int totalCount;
+}

@@ -64,6 +64,7 @@ class UpdateProgressDialog extends ConsumerWidget {
         ),
       ],
       FetchingBanner() => const <Widget>[],
+      FetchingHoyoWiki() => const <Widget>[],
       UpdateCompleted() || UpdateFailed() => [
         TextButton.icon(
           onPressed: r.clearProgress,
@@ -104,6 +105,11 @@ class _Title extends StatelessWidget {
         l.progressWaiting,
       ),
       FetchingBanner() => (
+        Icons.cloud_download_outlined,
+        tokens.textPrimary,
+        l.progressFetching,
+      ),
+      FetchingHoyoWiki() => (
         Icons.cloud_download_outlined,
         tokens.textPrimary,
         l.progressFetching,
@@ -192,6 +198,10 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
+      FetchingHoyoWiki() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const [LinearProgressIndicator()],
+      ),
       UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
