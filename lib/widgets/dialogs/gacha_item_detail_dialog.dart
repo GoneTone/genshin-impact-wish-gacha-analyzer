@@ -97,8 +97,8 @@ class GachaItemDetailDialog extends ConsumerWidget {
               borderRadius: BorderRadius.circular(AppRadius.sm),
               child: Image.file(
                 iconFile,
-                width: 48,
-                height: 48,
+                width: 64,
+                height: 64,
                 fit: BoxFit.cover,
                 errorBuilder: (_, e, st) {
                   Logger(
