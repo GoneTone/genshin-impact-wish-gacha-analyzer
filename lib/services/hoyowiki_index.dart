@@ -64,7 +64,7 @@ class HoyoWikiIndexStorage {
   HoyoWikiIndexStorage(this.baseDir);
 
   /// Logger 實例（hoyowiki 儲存）。
-  static final _log = Logger('wish.hoyowiki.storage');
+  static final _log = Logger('gacha.hoyowiki.storage');
 
   /// 資料根目錄。
   final Directory baseDir;

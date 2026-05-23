@@ -10,10 +10,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyow
 /// 頌願卡池（odes） gachaType 集合 — 不顯示 icon 也不顯示 placeholder。
 const _odesGachaTypes = {'2000', '1000'};
 
-/// 顯示一筆祈願物品的 icon；cache 未到 / 缺資料時顯示 [_Placeholder]。
-class WishItemIcon extends ConsumerWidget {
-  /// 建立 [WishItemIcon]。
-  const WishItemIcon({super.key, required this.record, required this.size});
+/// 顯示一筆卡池物品的 icon；cache 未到 / 缺資料時顯示 [_Placeholder]。
+class GachaItemIcon extends ConsumerWidget {
+  /// 建立 [GachaItemIcon]。
+  const GachaItemIcon({super.key, required this.record, required this.size});
 
   /// 祈願記錄；用其 name / lang / rankType / gachaType。
   final GachaRecord record;

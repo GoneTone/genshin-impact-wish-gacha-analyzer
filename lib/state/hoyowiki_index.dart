@@ -34,7 +34,7 @@ final hoyowikiIndexProvider =
 
 /// 包裝 [HoyoWikiIndexStorage] 的 Riverpod Notifier；mutation 後同步 persist。
 class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
-  static final _log = Logger('wish.hoyowiki.notifier');
+  static final _log = Logger('gacha.hoyowiki.notifier');
 
   Completer<void>? _loadCompleter;
 

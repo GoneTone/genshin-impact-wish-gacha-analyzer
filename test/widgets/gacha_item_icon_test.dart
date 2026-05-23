@@ -9,7 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyowiki_images.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 GachaRecord _rec({
   required String name,
@@ -40,7 +40,7 @@ void main() {
   late ProviderContainer container;
 
   setUp(() async {
-    tempDir = await Directory.systemTemp.createTemp('wish_item_icon_test_');
+    tempDir = await Directory.systemTemp.createTemp('gacha_item_icon_test_');
     container = ProviderContainer(
       overrides: [
         hoyowikiIndexStorageProvider.overrideWithValue(
@@ -65,21 +65,21 @@ void main() {
   testWidgets('頌願 gachaType → SizedBox.shrink', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        WishItemIcon(
+        GachaItemIcon(
           record: _rec(name: 'OdesItem', gachaType: '2000'),
           size: 20,
         ),
         container,
       ),
     );
-    final box = tester.getSize(find.byType(WishItemIcon));
+    final box = tester.getSize(find.byType(GachaItemIcon));
     expect(box, Size.zero);
   });
 
   testWidgets('空 index → placeholder', (tester) async {
     await tester.pumpWidget(
       _wrap(
-        WishItemIcon(
+        GachaItemIcon(
           record: _rec(name: 'Hu Tao', gachaType: '301'),
           size: 20,
         ),
@@ -87,8 +87,8 @@ void main() {
       ),
     );
     expect(find.byType(Image), findsNothing);
-    expect(find.byType(WishItemIcon), findsOneWidget);
-    final size = tester.getSize(find.byType(WishItemIcon));
+    expect(find.byType(GachaItemIcon), findsOneWidget);
+    final size = tester.getSize(find.byType(GachaItemIcon));
     expect(size.width, 20);
     expect(size.height, 20);
   });
@@ -106,7 +106,7 @@ void main() {
     );
     await tester.pumpWidget(
       _wrap(
-        WishItemIcon(
+        GachaItemIcon(
           record: _rec(name: 'Hu Tao', gachaType: '301'),
           size: 20,
         ),
@@ -136,7 +136,7 @@ void main() {
     });
     await tester.pumpWidget(
       _wrap(
-        WishItemIcon(
+        GachaItemIcon(
           record: _rec(name: 'Hu Tao', gachaType: '301'),
           size: 20,
         ),
@@ -176,7 +176,7 @@ void main() {
     await tester.runAsync(() async {
       await tester.pumpWidget(
         _wrap(
-          WishItemIcon(
+          GachaItemIcon(
             record: _rec(name: 'Hu Tao', gachaType: '301'),
             size: 20,
           ),
@@ -219,7 +219,7 @@ void main() {
         _wrap(
           PreloadedHoyoWikiImages(
             images: {'111': img},
-            child: WishItemIcon(
+            child: GachaItemIcon(
               record: _rec(name: 'Hu Tao', gachaType: '301'),
               size: 20,
             ),

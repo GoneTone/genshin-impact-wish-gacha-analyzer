@@ -11,7 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 GachaRecord _r({required String id, required int rank, required String name}) =>
     GachaRecord(
@@ -202,7 +202,7 @@ void main() {
     expect(find.byIcon(Icons.unfold_more), findsNWidgets(5));
   });
 
-  testWidgets('每列名稱欄前顯示 WishItemIcon', (tester) async {
+  testWidgets('每列名稱欄前顯示 GachaItemIcon', (tester) async {
     final records = [
       _r(id: '5', rank: 5, name: 'A'),
       _r(id: '4', rank: 4, name: 'B'),
@@ -221,7 +221,7 @@ void main() {
       ),
     );
 
-    // 三筆 record → 三個 WishItemIcon
-    expect(find.byType(WishItemIcon), findsNWidgets(3));
+    // 三筆 record → 三個 GachaItemIcon
+    expect(find.byType(GachaItemIcon), findsNWidgets(3));
   });
 }

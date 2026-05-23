@@ -12,7 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 TimelineEntry _e(String name, String gachaType, int pulls, DateTime time) =>
     TimelineEntry(
@@ -590,7 +590,7 @@ void main() {
     },
   );
 
-  testWidgets('每筆 entry 名稱前顯示 WishItemIcon', (tester) async {
+  testWidgets('每筆 entry 名稱前顯示 GachaItemIcon', (tester) async {
     late Directory tempDir;
     await tester.runAsync(() async {
       tempDir = await Directory.systemTemp.createTemp('timeline_v_icon_test_');
@@ -664,6 +664,6 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.byType(WishItemIcon), findsNWidgets(entries.length));
+    expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
   });
 }

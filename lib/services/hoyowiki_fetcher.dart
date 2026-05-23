@@ -50,8 +50,8 @@ class HoyoWikiFetcher {
   /// 單次 HTTP 請求超時。
   final Duration timeout;
 
-  /// Logger 實例（wish.hoyowiki 命名空間，對齊既有 `gacha.fetcher`）。
-  static final _log = Logger('wish.hoyowiki');
+  /// Logger 實例（gacha.hoyowiki 命名空間，對齊既有 `gacha.fetcher`）。
+  static final _log = Logger('gacha.hoyowiki');
 
   /// search API base URL。
   static final _searchBase = Uri.parse(

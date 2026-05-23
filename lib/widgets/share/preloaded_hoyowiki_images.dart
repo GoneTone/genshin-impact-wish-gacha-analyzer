@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
-final _log = Logger('wish.hoyowiki.preload');
+final _log = Logger('gacha.hoyowiki.preload');
 
 /// 提供分享圖 sync pipeline 用的預解碼 icon [ui.Image] map（key = hoyowiki_id）。
 class PreloadedHoyoWikiImages extends InheritedWidget {

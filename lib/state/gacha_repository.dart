@@ -643,13 +643,13 @@ class GachaRepository extends Notifier<GachaState> {
     final cacheDir = ref.read(hoyowikiCacheDirProvider);
     await indexNotifier.waitForLoad();
 
-    const wishGachaTypes = {'301', '302', '500', '200', '100'};
+    const hoyoWikiTargetGachaTypes = {'301', '302', '500', '200', '100'};
 
-    // 收集所有 UID 全部祈願 record 的 unique (name, lang)
+    // 收集所有 UID 全部卡池 record 的 unique (name, lang)
     final uniquePairs = <(String name, String lang)>{};
     for (final data in state.byUid.values) {
       for (final entry in data.banners.entries) {
-        if (!wishGachaTypes.contains(entry.key)) continue;
+        if (!hoyoWikiTargetGachaTypes.contains(entry.key)) continue;
         for (final r in entry.value) {
           if (r.name.isEmpty || r.lang.isEmpty) continue;
           uniquePairs.add((r.name, r.lang));

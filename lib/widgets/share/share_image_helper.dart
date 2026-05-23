@@ -49,7 +49,7 @@ final _log = Logger('share.image');
 ///
 /// [container] 為 Riverpod ProviderContainer；離屏 pipeline 是獨立樹，需透過
 /// [UncontrolledProviderScope] 顯式傳入，否則 tree 內 [ConsumerWidget]（如
-/// [WishItemIcon]）無法查到 providers。生產端從呼叫 Widget 的 ref 取得，
+/// [GachaItemIcon]）無法查到 providers。生產端從呼叫 Widget 的 ref 取得，
 /// 測試端自行建立並注入。
 Widget buildShareRenderTree({
   required Widget card,

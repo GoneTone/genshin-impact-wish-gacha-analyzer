@@ -5,7 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 /// 左側月份標籤欄的固定寬度。
 const double _monthColumnWidth = 80;
@@ -405,7 +405,7 @@ class _EntryRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (entry.sourceRecord != null) ...[
-                          WishItemIcon(record: entry.sourceRecord!, size: 32),
+                          GachaItemIcon(record: entry.sourceRecord!, size: 32),
                           const SizedBox(width: 6),
                         ],
                         Flexible(
