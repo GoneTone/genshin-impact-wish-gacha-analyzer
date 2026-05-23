@@ -301,7 +301,7 @@ class _EntryColumn extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (entry.sourceRecord != null) ...[
-              WishItemIcon(record: entry.sourceRecord!, size: 20),
+              WishItemIcon(record: entry.sourceRecord!, size: 32),
               const SizedBox(height: AppSpacing.xs),
             ],
             Text(
