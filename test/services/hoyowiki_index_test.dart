@@ -107,4 +107,66 @@ void main() {
       expect(loaded.searchMap, {'b::2': 'id2'});
     });
   });
+
+  group('hoyowikiCacheFile', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_cache_test_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+
+    test('icon kind + URL .png → <id>_icon.png', () {
+      final f = hoyowikiCacheFile(
+        baseDir: tempDir,
+        id: '5125428',
+        kind: HoyoWikiImageKind.icon,
+        url: 'https://x.example/path/icon.png',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+
+    test('header kind + URL .jpg → <id>_header.jpg', () {
+      final f = hoyowikiCacheFile(
+        baseDir: tempDir,
+        id: '5125428',
+        kind: HoyoWikiImageKind.header,
+        url: 'https://x.example/path/header.jpg',
+      );
+      expect(f.path, endsWith('5125428_header.jpg'));
+    });
+
+    test('URL 帶 query string → 仍取得乾淨副檔名', () {
+      final f = hoyowikiCacheFile(
+        baseDir: tempDir,
+        id: '5125428',
+        kind: HoyoWikiImageKind.icon,
+        url: 'https://x/icon.png?v=1&w=80',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+
+    test('URL 無副檔名 → default .png', () {
+      final f = hoyowikiCacheFile(
+        baseDir: tempDir,
+        id: '5125428',
+        kind: HoyoWikiImageKind.icon,
+        url: 'https://x/icon',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+
+    test('URL 為空字串 → default .png', () {
+      final f = hoyowikiCacheFile(
+        baseDir: tempDir,
+        id: '5125428',
+        kind: HoyoWikiImageKind.icon,
+        url: '',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+  });
 }

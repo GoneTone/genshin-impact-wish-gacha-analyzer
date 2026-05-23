@@ -110,3 +110,40 @@ class HoyoWikiIndexStorage {
     );
   }
 }
+
+/// HoyoWiki 圖片種類（對應 icon_url 與 header_img_url）。
+enum HoyoWikiImageKind {
+  /// 物品方形 icon。
+  icon,
+
+  /// 物品 header（banner 大圖）。
+  header,
+}
+
+/// 推導出 hoyowiki 圖檔在 [baseDir] 的快取路徑。
+///
+/// 檔名格式：`<id>_<kind>.<ext>`。`<ext>` 從 [url] 解析（去掉 query 後取
+/// 最後一個 `.` 之後）；無副檔名或 URL 為空字串時 default `png`。
+File hoyowikiCacheFile({
+  required Directory baseDir,
+  required String id,
+  required HoyoWikiImageKind kind,
+  required String url,
+}) {
+  final ext = _extFromUrl(url);
+  return File('${baseDir.path}/${id}_${kind.name}.$ext');
+}
+
+/// 從 [url] 推導副檔名（無則回 `png`）。
+String _extFromUrl(String url) {
+  if (url.isEmpty) return 'png';
+  final qIdx = url.indexOf('?');
+  final clean = qIdx >= 0 ? url.substring(0, qIdx) : url;
+  final dotIdx = clean.lastIndexOf('.');
+  final slashIdx = clean.lastIndexOf('/');
+  if (dotIdx <= slashIdx || dotIdx == clean.length - 1) return 'png';
+  final ext = clean.substring(dotIdx + 1).toLowerCase();
+  // 安全檢查：副檔名只能是常見 image 格式，避免 URL 怪異字串污染檔名。
+  const allowed = {'png', 'jpg', 'jpeg', 'webp', 'gif'};
+  return allowed.contains(ext) ? ext : 'png';
+}
