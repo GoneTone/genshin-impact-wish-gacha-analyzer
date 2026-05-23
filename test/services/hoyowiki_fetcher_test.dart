@@ -31,6 +31,18 @@ Map<String, dynamic> _searchItem({
   },
 };
 
+http.Response _entryOk({required String iconUrl, required String headerUrl}) =>
+    http.Response(
+      jsonEncode({
+        'retcode': 0,
+        'message': 'OK',
+        'data': {
+          'page': {'icon_url': iconUrl, 'header_img_url': headerUrl},
+        },
+      }),
+      200,
+    );
+
 void main() {
   group('HoyoWikiFetcher.searchEntryId', () {
     test('命中（sub_menu id=2）回 entry_page_id', () async {
@@ -154,6 +166,77 @@ void main() {
       final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
       await fetcher.searchEntryId(name: '胡桃', lang: 'zh-tw', client: mock);
       expect(capturedUrl.queryParameters['keyword'], '胡桃');
+    });
+  });
+
+  group('HoyoWikiFetcher.fetchEntryPage', () {
+    test('兩個 URL 都有 → 都回', () async {
+      final mock = MockClient(
+        (_) async => _entryOk(
+          iconUrl: 'https://x/icon.png',
+          headerUrl: 'https://x/header.png',
+        ),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      expect(entry.iconUrl, 'https://x/icon.png');
+      expect(entry.headerImgUrl, 'https://x/header.png');
+    });
+
+    test('icon_url 為空字串 → 照回空', () async {
+      final mock = MockClient(
+        (_) async => _entryOk(iconUrl: '', headerUrl: 'https://x/header.png'),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      expect(entry.iconUrl, '');
+      expect(entry.headerImgUrl, 'https://x/header.png');
+    });
+
+    test('header_img_url 為空字串 → 照回空', () async {
+      final mock = MockClient(
+        (_) async => _entryOk(iconUrl: 'https://x/icon.png', headerUrl: ''),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      expect(entry.iconUrl, 'https://x/icon.png');
+      expect(entry.headerImgUrl, '');
+    });
+
+    test('兩個 URL 都空字串 → 都回空', () async {
+      final mock = MockClient(
+        (_) async => _entryOk(iconUrl: '', headerUrl: ''),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      expect(entry.iconUrl, '');
+      expect(entry.headerImgUrl, '');
+    });
+
+    test('retcode != 0 → throw ApiErrorException', () async {
+      final mock = MockClient(
+        (_) async => http.Response(
+          jsonEncode({'retcode': -1, 'message': 'nope', 'data': null}),
+          200,
+        ),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      await expectLater(
+        () => fetcher.fetchEntryPage(id: '5125428', client: mock),
+        throwsA(isA<ApiErrorException>()),
+      );
+    });
+
+    test('URL 帶 entry_page_id query param', () async {
+      late Uri capturedUrl;
+      final mock = MockClient((req) async {
+        capturedUrl = req.url;
+        return _entryOk(iconUrl: '', headerUrl: '');
+      });
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      expect(capturedUrl.queryParameters['entry_page_id'], '5125428');
+      expect(capturedUrl.host, 'sg-act-public-api-static.hoyolab.com');
     });
   });
 }

@@ -45,6 +45,11 @@ class HoyoWikiFetcher {
     'https://sg-act-public-api.hoyolab.com/hoyowiki/genshin/wapi/search',
   );
 
+  /// entry_page API base URL（static 端點，不需 headers）。
+  static final _entryBase = Uri.parse(
+    'https://sg-act-public-api-static.hoyolab.com/hoyowiki/genshin/wapi/entry_page',
+  );
+
   /// 以 [name] 走 HoyoLab Wiki search API 取得對應的 entry_page_id。
   ///
   /// 命中需同時滿足：`data.list[].name == name` 且
@@ -93,5 +98,29 @@ class HoyoWikiFetcher {
     }
     _log.warning('search miss name=$name lang=$lang');
     return null;
+  }
+
+  /// 以 [id] 拉 entry_page，回 icon_url 與 header_img_url（均可能為空字串）。
+  /// retcode != 0 throw [ApiErrorException]。
+  Future<HoyoWikiEntryFetched> fetchEntryPage({
+    required String id,
+    required http.Client client,
+  }) async {
+    final url = _entryBase.replace(queryParameters: {'entry_page_id': id});
+    _log.fine('entry id=$id url=${sanitizeUrl(url.toString())}');
+    final res = await client.get(url).timeout(timeout);
+    final body = jsonDecode(res.body) as Map<String, dynamic>;
+    final retcode = body['retcode'] as int;
+    if (retcode != 0) {
+      _log.warning('entry retcode=$retcode id=$id msg=${body['message']}');
+      throw ApiErrorException(retcode, body['message'] as String? ?? '');
+    }
+    final page = body['data']?['page'] as Map<String, dynamic>?;
+    final iconUrl = (page?['icon_url'] as String?) ?? '';
+    final headerImgUrl = (page?['header_img_url'] as String?) ?? '';
+    _log.info(
+      'entry id=$id icon=${iconUrl.isNotEmpty} header=${headerImgUrl.isNotEmpty}',
+    );
+    return HoyoWikiEntryFetched(iconUrl: iconUrl, headerImgUrl: headerImgUrl);
   }
 }
