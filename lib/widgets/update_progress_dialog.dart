@@ -110,7 +110,7 @@ class _Title extends StatelessWidget {
         l.progressFetching,
       ),
       FetchingHoyoWiki() => (
-        Icons.cloud_download_outlined,
+        Icons.image_outlined,
         tokens.textPrimary,
         l.progressFetching,
       ),
@@ -198,9 +198,15 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
-      FetchingHoyoWiki() => Column(
+      FetchingHoyoWiki(:final doneCount, :final totalCount) => Column(
         mainAxisSize: MainAxisSize.min,
-        children: const [LinearProgressIndicator()],
+        children: [
+          LinearProgressIndicator(
+            value: totalCount == 0 ? null : doneCount / totalCount,
+          ),
+          const SizedBox(height: AppSpacing.l),
+          Text(l.updateProgressFetchingIcons(doneCount, totalCount)),
+        ],
       ),
       UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
         mainAxisSize: MainAxisSize.min,
