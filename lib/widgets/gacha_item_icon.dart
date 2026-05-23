@@ -15,7 +15,7 @@ class GachaItemIcon extends ConsumerWidget {
   /// 建立 [GachaItemIcon]。
   const GachaItemIcon({super.key, required this.record, required this.size});
 
-  /// 祈願記錄；用其 name / lang / rankType / gachaType。
+  /// 卡池記錄；用其 name / lang / rankType / gachaType。
   final GachaRecord record;
 
   /// icon 邊長（px，依使用情境調整：所有宿主一律 32）。
