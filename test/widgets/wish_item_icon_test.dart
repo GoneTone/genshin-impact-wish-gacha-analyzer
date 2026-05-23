@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyowiki_images.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
 
 GachaRecord _rec({
@@ -169,6 +171,51 @@ void main() {
       await tester.pump();
     });
     expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('PreloadedHoyoWikiImages 命中 → 顯示 RawImage', (tester) async {
+    await tester.runAsync(() async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '111');
+      await notifier.setEntry(
+        id: '111',
+        entry: HoyoWikiEntry(
+          iconUrl: 'https://x/icon.png',
+          headerImgUrl: '',
+          fetchedAt: DateTime.utc(2026, 5, 23),
+        ),
+      );
+
+      // 用 PictureRecorder 合成最小 ui.Image（比 instantiateImageCodec 更穩定）。
+      final recorder = ui.PictureRecorder();
+      Canvas(recorder).drawRect(
+        const Rect.fromLTWH(0, 0, 1, 1),
+        Paint()..color = const Color(0xFFFFFFFF),
+      );
+      final img = await recorder.endRecording().toImage(1, 1);
+      addTearDown(img.dispose);
+
+      await tester.pumpWidget(
+        _wrap(
+          PreloadedHoyoWikiImages(
+            images: {'111': img},
+            child: WishItemIcon(
+              record: _rec(name: 'Hu Tao', gachaType: '301'),
+              size: 20,
+            ),
+          ),
+          container,
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(RawImage), findsOneWidget);
+      expect(
+        find.byType(Image),
+        findsNothing,
+        reason: 'preloaded 命中應該用 RawImage 而非 Image.file',
+      );
+    });
   });
 }
 
