@@ -388,7 +388,7 @@ class _Row extends StatelessWidget {
             flex: 5,
             child: Row(
               children: [
-                WishItemIcon(record: record, size: 28),
+                WishItemIcon(record: record, size: 32),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
