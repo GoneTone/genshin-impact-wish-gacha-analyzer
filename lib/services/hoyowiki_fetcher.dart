@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
@@ -122,5 +123,23 @@ class HoyoWikiFetcher {
       'entry id=$id icon=${iconUrl.isNotEmpty} header=${headerImgUrl.isNotEmpty}',
     );
     return HoyoWikiEntryFetched(iconUrl: iconUrl, headerImgUrl: headerImgUrl);
+  }
+
+  /// GET [url] 的圖檔 bytes；任何失敗（非 2xx / 例外）回 null，caller 不寫檔
+  /// 並於下次更新重試。
+  Future<Uint8List?> downloadImage(String url, http.Client client) async {
+    try {
+      final res = await client.get(Uri.parse(url)).timeout(timeout);
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        return res.bodyBytes;
+      }
+      _log.warning(
+        'download non-2xx status=${res.statusCode} url=${sanitizeUrl(url)}',
+      );
+      return null;
+    } catch (e) {
+      _log.warning('download failed url=${sanitizeUrl(url)} err=$e');
+      return null;
+    }
   }
 }

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -237,6 +239,32 @@ void main() {
       await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(capturedUrl.queryParameters['entry_page_id'], '5125428');
       expect(capturedUrl.host, 'sg-act-public-api-static.hoyolab.com');
+    });
+  });
+
+  group('HoyoWikiFetcher.downloadImage', () {
+    test('200 OK → 回 bytes', () async {
+      final bytes = Uint8List.fromList([1, 2, 3, 4]);
+      final mock = MockClient((_) async => http.Response.bytes(bytes, 200));
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final out = await fetcher.downloadImage('https://x/icon.png', mock);
+      expect(out, bytes);
+    });
+
+    test('404 → 回 null', () async {
+      final mock = MockClient((_) async => http.Response('', 404));
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final out = await fetcher.downloadImage('https://x/icon.png', mock);
+      expect(out, isNull);
+    });
+
+    test('throw → 回 null', () async {
+      final mock = MockClient(
+        (_) async => throw const SocketException('connection refused'),
+      );
+      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final out = await fetcher.downloadImage('https://x/icon.png', mock);
+      expect(out, isNull);
     });
   });
 }
