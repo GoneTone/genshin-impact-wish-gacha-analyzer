@@ -152,6 +152,13 @@
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
   },
+  "updateProgressFetchingIcons": "補齊物品圖示 {done}/{total}",
+  "@updateProgressFetchingIcons": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
 
   "errorAuthExpired": "認證持續失效，請重新登入遊戲",
   "errorRateLimited": "請求過於頻繁，請稍後再試",

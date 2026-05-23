@@ -199,6 +199,17 @@
       }
     }
   },
+  "updateProgressFetchingIcons": "Fetching item icons {done}/{total}",
+  "@updateProgressFetchingIcons": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "Auth keeps expiring; please log in to the game again",
   "errorRateLimited": "Too many requests; please retry later",
   "errorServer": "Server error: {message}",
