@@ -77,7 +77,7 @@ void main() {
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {
             '301': [],
@@ -90,7 +90,7 @@ void main() {
       );
       await storage.save(
         BannerStorage(
-          uid: 'B',
+          uid: '100000002',
           lastUpdated: DateTime.utc(2026, 5, 9),
           banners: const {
             '301': [],
@@ -107,7 +107,7 @@ void main() {
     await tester.runAsync(() async {
       container = await _setupContainer(
         storage: storage,
-        prefs: {'pref.uidOrder': '["A","B"]'},
+        prefs: {'pref.uidOrder': '["100000001","100000002"]'},
       );
     });
     addTearDown(container.dispose);
@@ -116,9 +116,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    final textsA = tester.getTopLeft(find.text('A')).dy;
-    final textsB = tester.getTopLeft(find.text('B')).dy;
-    expect(textsA, lessThan(textsB), reason: 'A 應該在 B 之前（依自訂順序）');
+    final textsA = tester.getTopLeft(find.text('100000001')).dy;
+    final textsB = tester.getTopLeft(find.text('100000002')).dy;
+    expect(
+      textsA,
+      lessThan(textsB),
+      reason: '100000001 應該在 100000002 之前（依自訂順序）',
+    );
   });
 
   testWidgets('拖曳 row → 呼叫 setUidOrder', (tester) async {
@@ -126,7 +130,7 @@ void main() {
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 5, 9),
           banners: const {
             '301': [],
@@ -139,7 +143,7 @@ void main() {
       );
       await storage.save(
         BannerStorage(
-          uid: 'B',
+          uid: '100000002',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {
             '301': [],
@@ -166,12 +170,12 @@ void main() {
     final list = tester.widget<ReorderableListView>(
       find.byType(ReorderableListView),
     );
-    list.onReorder(0, 2); // 把第 0 個 (A) 移到第 1 個（之後）
+    list.onReorder(0, 2); // 把第 0 個 (100000001) 移到第 1 個（之後）
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
 
     final reloaded = await tester.runAsync(() => SettingsStorage.load());
-    expect(reloaded!.uidOrder, ['B', 'A']);
+    expect(reloaded!.uidOrder, ['100000002', '100000001']);
   });
 
   testWidgets('編輯別名 onSubmitted → 寫入 setUidAlias', (tester) async {
@@ -179,7 +183,7 @@ void main() {
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 5, 9),
           banners: const {
             '301': [],
@@ -209,7 +213,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     final reloaded = await tester.runAsync(() => SettingsStorage.load());
-    expect(reloaded!.uidAliases, {'A': '主帳號'});
+    expect(reloaded!.uidAliases, {'100000001': '主帳號'});
   });
 
   testWidgets('別名空字串 → 移除', (tester) async {
@@ -217,7 +221,7 @@ void main() {
     await tester.runAsync(() async {
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 5, 9),
           banners: const {
             '301': [],
@@ -234,7 +238,7 @@ void main() {
     await tester.runAsync(() async {
       container = await _setupContainer(
         storage: storage,
-        prefs: {'pref.uidAliases': '{"A":"舊名"}'},
+        prefs: {'pref.uidAliases': '{"100000001":"舊名"}'},
       );
     });
     addTearDown(container.dispose);

@@ -55,10 +55,11 @@ void main() {
     expect(await storage.load('not_exist'), isNull);
   });
 
-  test('listKnownUids 只列出 <uid>.json，忽略 .url.json 與其他檔', () async {
+  test('listKnownUids 只列出純數字 <uid>.json，忽略 .url.json 與非數字檔', () async {
     await File('${tempDir.path}/123.json').writeAsString('{}');
     await File('${tempDir.path}/456.json').writeAsString('{}');
     await File('${tempDir.path}/123.url.json').writeAsString('{}');
+    await File('${tempDir.path}/hoyowiki_index.json').writeAsString('{}');
     await File('${tempDir.path}/garbage.txt').writeAsString('');
 
     final uids = await storage.listKnownUids();

@@ -84,14 +84,14 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 5, 9), // 較新
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
@@ -115,8 +115,8 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
     final state = container.read(gachaRepositoryProvider);
-    expect(state.knownUids.toSet(), {'A', 'B'});
-    expect(state.activeUid, 'B');
+    expect(state.knownUids.toSet(), {'100000001', '100000002'});
+    expect(state.activeUid, '100000002');
   });
 
   test('AuthExpired 連續 2 次 → UpdateFailed with exact message', () async {
@@ -124,13 +124,13 @@ void main() {
     // 先 seed 一個 cached URL，讓 update 直接走 fetch path（跳過 MITM 階段）
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.saveCapturedUrl(
-      'A',
+      '100000001',
       'https://example.com/getGachaLog?authkey=expired',
     );
 
@@ -167,7 +167,7 @@ void main() {
     // 等 bootstrap 完成
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
 
     await container.read(gachaRepositoryProvider.notifier).update();
 
@@ -185,13 +185,13 @@ void main() {
     // seed cached URL，update 走 fetch 路徑（不進 MITM）
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.saveCapturedUrl(
-      'A',
+      '100000001',
       'https://example.com/getGachaLog?authkey=x',
     );
 
@@ -241,13 +241,13 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.saveCapturedUrl(
-      'A',
+      '100000001',
       'https://example.com/getGachaLog?authkey=x',
     );
 
@@ -283,20 +283,20 @@ void main() {
     // progress 應為 null（取消），不是 UpdateFailed
     expect(container.read(gachaRepositoryProvider).progress, isNull);
     // 既有資料保留
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
   test('probe 階段真實 ClientException（非取消） → UpdateFailed', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.saveCapturedUrl(
-      'A',
+      '100000001',
       'https://example.com/getGachaLog?authkey=x',
     );
 
@@ -359,19 +359,19 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 5, 9), // 較新
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
-    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': '100000001'});
 
     final container = ProviderContainer(
       overrides: [
@@ -389,7 +389,7 @@ void main() {
 
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
   test(
@@ -398,7 +398,7 @@ void main() {
       final storage = GachaStorage(tempDir);
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {
             '301': [],
@@ -411,7 +411,7 @@ void main() {
       );
       await storage.save(
         BannerStorage(
-          uid: 'B',
+          uid: '100000002',
           lastUpdated: DateTime.utc(2026, 5, 9),
           banners: const {
             '301': [],
@@ -440,10 +440,13 @@ void main() {
 
       container.read(gachaRepositoryProvider);
       await Future<void>.delayed(const Duration(milliseconds: 50));
-      expect(container.read(gachaRepositoryProvider).activeUid, 'B'); // 較新
+      expect(
+        container.read(gachaRepositoryProvider).activeUid,
+        '100000002',
+      ); // 較新
       // 寫回 settings
       final reloaded = await SettingsStorage.load();
-      expect(reloaded.lastActiveUid, 'B');
+      expect(reloaded.lastActiveUid, '100000002');
     },
   );
 
@@ -451,7 +454,7 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
@@ -473,29 +476,29 @@ void main() {
 
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
     final reloaded = await SettingsStorage.load();
-    expect(reloaded.lastActiveUid, 'A');
+    expect(reloaded.lastActiveUid, '100000001');
   });
 
   test('bootstrap：uidOrder 影響 fallback 順序', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     SharedPreferences.setMockInitialValues({
-      'pref.uidOrder': '["A","B"]', // 自訂 A 在前
+      'pref.uidOrder': '["100000001","100000002"]', // 自訂 100000001 在前
     });
 
     final container = ProviderContainer(
@@ -514,8 +517,8 @@ void main() {
 
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
-    // lastActiveUid 為 null → fallback 走 mergeUidOrder.first → 自訂順序的第一個 = A
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    // lastActiveUid 為 null → fallback 走 mergeUidOrder.first → 自訂順序的第一個 = 100000001
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
   test(
@@ -524,7 +527,7 @@ void main() {
       final storage = GachaStorage(tempDir);
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026),
           banners: const {
             '301': [],
@@ -536,7 +539,7 @@ void main() {
         ),
       );
       await storage.saveCapturedUrl(
-        'A',
+        '100000001',
         'https://example.com/getGachaLog?authkey=x',
       );
 
@@ -564,7 +567,7 @@ void main() {
                           'list': List.generate(
                             20,
                             (i) => {
-                              'uid': 'A',
+                              'uid': '100000001',
                               'gacha_type': '301',
                               'item_id': '',
                               'count': '1',
@@ -642,14 +645,14 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
@@ -671,32 +674,34 @@ void main() {
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
-    await container.read(gachaRepositoryProvider.notifier).setActiveUid('A');
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .setActiveUid('100000001');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
     final reloaded = await SettingsStorage.load();
-    expect(reloaded.lastActiveUid, 'A');
+    expect(reloaded.lastActiveUid, '100000001');
   });
 
   test('removeUid（非 active）→ 清 alias/order，lastActiveUid 不變', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     SharedPreferences.setMockInitialValues({
-      'pref.lastActiveUid': 'A',
-      'pref.uidAliases': '{"A":"主","B":"小"}',
-      'pref.uidOrder': '["A","B"]',
+      'pref.lastActiveUid': '100000001',
+      'pref.uidAliases': '{"100000001":"主","100000002":"小"}',
+      'pref.uidOrder': '["100000001","100000002"]',
     });
 
     final container = ProviderContainer(
@@ -715,31 +720,33 @@ void main() {
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
-    await container.read(gachaRepositoryProvider.notifier).removeUid('B');
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A');
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .removeUid('100000002');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
     final s = await SettingsStorage.load();
-    expect(s.lastActiveUid, 'A');
-    expect(s.uidAliases, {'A': '主'});
-    expect(s.uidOrder, ['A']);
+    expect(s.lastActiveUid, '100000001');
+    expect(s.uidAliases, {'100000001': '主'});
+    expect(s.uidOrder, ['100000001']);
   });
 
   test('removeUid（active）→ fallback 新 active 並寫回 lastActiveUid', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
-    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': '100000001'});
 
     final container = ProviderContainer(
       overrides: [
@@ -757,22 +764,24 @@ void main() {
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
-    await container.read(gachaRepositoryProvider.notifier).removeUid('A');
-    expect(container.read(gachaRepositoryProvider).activeUid, 'B');
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .removeUid('100000001');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000002');
     final s = await SettingsStorage.load();
-    expect(s.lastActiveUid, 'B');
+    expect(s.lastActiveUid, '100000002');
   });
 
   test('removeUid（最後一個）→ activeUid = null 且 lastActiveUid = null', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
-    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': '100000001'});
 
     final container = ProviderContainer(
       overrides: [
@@ -790,7 +799,9 @@ void main() {
     container.read(gachaRepositoryProvider);
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
-    await container.read(gachaRepositoryProvider.notifier).removeUid('A');
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .removeUid('100000001');
     expect(container.read(gachaRepositoryProvider).activeUid, isNull);
     final s = await SettingsStorage.load();
     expect(s.lastActiveUid, isNull);
@@ -800,19 +811,19 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     await storage.save(
       BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 1, 1),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
-    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'A'});
+    SharedPreferences.setMockInitialValues({'pref.lastActiveUid': '100000001'});
 
     final container = ProviderContainer(
       overrides: [
@@ -831,24 +842,24 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
     await container.read(gachaRepositoryProvider.notifier).clearActive();
-    expect(container.read(gachaRepositoryProvider).activeUid, 'B');
+    expect(container.read(gachaRepositoryProvider).activeUid, '100000002');
     final s = await SettingsStorage.load();
-    expect(s.lastActiveUid, 'B');
+    expect(s.lastActiveUid, '100000002');
   });
 
   test('clearAll 清掉所有 UID 偏好', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
     );
     SharedPreferences.setMockInitialValues({
-      'pref.lastActiveUid': 'A',
-      'pref.uidAliases': '{"A":"主"}',
-      'pref.uidOrder': '["A"]',
+      'pref.lastActiveUid': '100000001',
+      'pref.uidAliases': '{"100000001":"主"}',
+      'pref.uidOrder': '["100000001"]',
     });
 
     final container = ProviderContainer(
@@ -879,7 +890,7 @@ void main() {
     final storage = GachaStorage(tempDir);
     await storage.save(
       BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 9),
         banners: const {'301': [], '302': [], '500': [], '200': [], '100': []},
       ),
@@ -905,7 +916,10 @@ void main() {
     await container
         .read(gachaRepositoryProvider.notifier)
         .setActiveUid('GHOST');
-    expect(container.read(gachaRepositoryProvider).activeUid, 'A'); // 不變
+    expect(
+      container.read(gachaRepositoryProvider).activeUid,
+      '100000001',
+    ); // 不變
     final afterReload = await SettingsStorage.load();
     expect(afterReload.lastActiveUid, beforeReload.lastActiveUid);
   });
@@ -914,23 +928,23 @@ void main() {
     'importAccounts: per-UID overwrite preserves non-imported accounts',
     () async {
       final storage = GachaStorage(tempDir);
-      // Existing: A (old data), C (untouched)
+      // Existing: 100000001 (old data), 100000003 (untouched)
       await storage.save(
         BannerStorage(
-          uid: 'A',
+          uid: '100000001',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {'301': []},
         ),
       );
       await storage.save(
         BannerStorage(
-          uid: 'C',
+          uid: '100000003',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {'301': []},
         ),
       );
       SharedPreferences.setMockInitialValues({
-        'pref.uidAliases': jsonEncode({'C': '另一支'}),
+        'pref.uidAliases': jsonEncode({'100000003': '另一支'}),
       });
 
       final container = ProviderContainer(
@@ -950,19 +964,19 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
       final newA = BannerStorage(
-        uid: 'A',
+        uid: '100000001',
         lastUpdated: DateTime.utc(2026, 5, 12),
         banners: const {'301': [], '302': []},
       );
       final newB = BannerStorage(
-        uid: 'B',
+        uid: '100000002',
         lastUpdated: DateTime.utc(2026, 5, 12),
         banners: const {'301': []},
       );
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
-        lastActiveUid: 'A',
+        lastActiveUid: '100000001',
         accounts: [
           ExportedAccount(data: newA, alias: '主號'),
           ExportedAccount(data: newB),
@@ -977,18 +991,18 @@ void main() {
       expect(result.successAccounts, 2);
 
       final state = container.read(gachaRepositoryProvider);
-      expect(state.byUid.keys.toSet(), {'A', 'B', 'C'});
-      // A overwritten
-      expect(state.byUid['A']!.lastUpdated, DateTime.utc(2026, 5, 12));
-      // C preserved
-      expect(state.byUid['C']!.lastUpdated, DateTime.utc(2026, 1, 1));
-      expect(state.activeUid, 'A');
+      expect(state.byUid.keys.toSet(), {'100000001', '100000002', '100000003'});
+      // 100000001 overwritten
+      expect(state.byUid['100000001']!.lastUpdated, DateTime.utc(2026, 5, 12));
+      // 100000003 preserved
+      expect(state.byUid['100000003']!.lastUpdated, DateTime.utc(2026, 1, 1));
+      expect(state.activeUid, '100000001');
 
-      // Settings: alias on A (from bundle), alias on C (pre-existing, preserved)
+      // Settings: alias on 100000001 (from bundle), alias on 100000003 (pre-existing, preserved)
       final settings = container.read(settingsProvider);
-      expect(settings.uidAliases, {'A': '主號', 'C': '另一支'});
-      expect(settings.uidOrder.take(2).toList(), ['A', 'B']);
-      expect(settings.lastActiveUid, 'A');
+      expect(settings.uidAliases, {'100000001': '主號', '100000003': '另一支'});
+      expect(settings.uidOrder.take(2).toList(), ['100000001', '100000002']);
+      expect(settings.lastActiveUid, '100000001');
     },
   );
 
@@ -996,7 +1010,7 @@ void main() {
     'importAccounts: uidOrder merges imported order first, then remaining',
     () async {
       final storage = GachaStorage(tempDir);
-      for (final uid in ['A', 'C', 'D']) {
+      for (final uid in ['100000001', '100000003', '100000004']) {
         await storage.save(
           BannerStorage(
             uid: uid,
@@ -1007,7 +1021,7 @@ void main() {
       }
 
       SharedPreferences.setMockInitialValues({
-        'pref.uidOrder': jsonEncode(['D', 'A', 'C']),
+        'pref.uidOrder': jsonEncode(['100000004', '100000001', '100000003']),
       });
 
       final container = ProviderContainer(
@@ -1033,14 +1047,14 @@ void main() {
         accounts: [
           ExportedAccount(
             data: BannerStorage(
-              uid: 'B',
+              uid: '100000002',
               lastUpdated: DateTime.utc(2026, 5, 12),
               banners: const {'301': []},
             ),
           ),
           ExportedAccount(
             data: BannerStorage(
-              uid: 'A',
+              uid: '100000001',
               lastUpdated: DateTime.utc(2026, 5, 12),
               banners: const {'301': []},
             ),
@@ -1053,16 +1067,16 @@ void main() {
           .importAccounts(bundle);
 
       final order = container.read(settingsProvider).uidOrder;
-      // imported [B, A] first, then remaining custom order minus imported = [D, C]
-      expect(order, ['B', 'A', 'D', 'C']);
+      // imported [100000002, 100000001] first, then remaining custom order minus imported = [100000004, 100000003]
+      expect(order, ['100000002', '100000001', '100000004', '100000003']);
     },
   );
 
   test(
     'importAccounts: storage write failure marks UID failed and skips it',
     () async {
-      // Inject a storage that fails on UID == "B"
-      final storage = _FailingStorage(tempDir, failOnUid: 'B');
+      // Inject a storage that fails on UID == "100000002"
+      final storage = _FailingStorage(tempDir, failOnUid: '100000002');
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
@@ -1082,11 +1096,11 @@ void main() {
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
-        lastActiveUid: 'B',
+        lastActiveUid: '100000002',
         accounts: [
           ExportedAccount(
             data: BannerStorage(
-              uid: 'A',
+              uid: '100000001',
               lastUpdated: DateTime.utc(2026, 5, 12),
               banners: const {'301': []},
             ),
@@ -1094,7 +1108,7 @@ void main() {
           ),
           ExportedAccount(
             data: BannerStorage(
-              uid: 'B',
+              uid: '100000002',
               lastUpdated: DateTime.utc(2026, 5, 12),
               banners: const {'301': []},
             ),
@@ -1106,15 +1120,18 @@ void main() {
           .read(gachaRepositoryProvider.notifier)
           .importAccounts(bundle);
 
-      expect(result.failedUids, ['B']);
+      expect(result.failedUids, ['100000002']);
       expect(result.successAccounts, 1);
 
       final state = container.read(gachaRepositoryProvider);
-      expect(state.byUid.keys, ['A']);
-      // lastActiveUid asked for B (failed) → falls back to A
-      expect(state.activeUid, 'A');
-      // uidOrder doesn't contain failed B
-      expect(container.read(settingsProvider).uidOrder.contains('B'), isFalse);
+      expect(state.byUid.keys, ['100000001']);
+      // lastActiveUid asked for 100000002 (failed) → falls back to 100000001
+      expect(state.activeUid, '100000001');
+      // uidOrder doesn't contain failed 100000002
+      expect(
+        container.read(settingsProvider).uidOrder.contains('100000002'),
+        isFalse,
+      );
     },
   );
 
@@ -1122,15 +1139,17 @@ void main() {
     'importAccounts: bundle lastActiveUid switches active to it when imported',
     () async {
       final storage = GachaStorage(tempDir);
-      // Existing active = X (will remain after import)
+      // Existing active = 200000001 (will remain after import)
       await storage.save(
         BannerStorage(
-          uid: 'X',
+          uid: '200000001',
           lastUpdated: DateTime.utc(2026, 1, 1),
           banners: const {'301': []},
         ),
       );
-      SharedPreferences.setMockInitialValues({'pref.lastActiveUid': 'X'});
+      SharedPreferences.setMockInitialValues({
+        'pref.lastActiveUid': '200000001',
+      });
 
       final container = ProviderContainer(
         overrides: [
@@ -1148,16 +1167,16 @@ void main() {
       container.read(gachaRepositoryProvider);
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      expect(container.read(gachaRepositoryProvider).activeUid, 'X');
+      expect(container.read(gachaRepositoryProvider).activeUid, '200000001');
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
         appVersion: 'x',
-        lastActiveUid: 'Y',
+        lastActiveUid: '200000002',
         accounts: [
           ExportedAccount(
             data: BannerStorage(
-              uid: 'Y',
+              uid: '200000002',
               lastUpdated: DateTime.utc(2026, 5, 12),
               banners: const {'301': []},
             ),
@@ -1169,8 +1188,8 @@ void main() {
           .read(gachaRepositoryProvider.notifier)
           .importAccounts(bundle);
 
-      expect(container.read(gachaRepositoryProvider).activeUid, 'Y');
-      expect(container.read(settingsProvider).lastActiveUid, 'Y');
+      expect(container.read(gachaRepositoryProvider).activeUid, '200000002');
+      expect(container.read(settingsProvider).lastActiveUid, '200000002');
     },
   );
   group('logging instrumentation', () {

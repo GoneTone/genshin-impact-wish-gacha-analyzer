@@ -96,7 +96,31 @@ Future<void> main() async {
       if (!await hoyowikiCacheDir.exists()) {
         await hoyowikiCacheDir.create(recursive: true);
       }
-      final hoyowikiIndexStorage = HoyoWikiIndexStorage(gachaDir);
+
+      // 一次性 migration：把舊位置（gacha_data/hoyowiki_index.json）搬到新位置
+      // （hoyowiki_cache/hoyowiki_index.json）。舊位置會跟 listKnownUids 衝突，造成
+      // bootstrap 把 hoyowiki_index 當成 UID 載入而 crash。
+      final oldHoyowikiIndex = File('${gachaDir.path}/hoyowiki_index.json');
+      final newHoyowikiIndex = File(
+        '${hoyowikiCacheDir.path}/hoyowiki_index.json',
+      );
+      if (await oldHoyowikiIndex.exists()) {
+        if (await newHoyowikiIndex.exists()) {
+          // 兩邊都有 → 新的優先，刪舊的
+          await oldHoyowikiIndex.delete();
+          Logger(
+            'app.startup',
+          ).info('removed stale hoyowiki_index.json from gacha_data/');
+        } else {
+          // 只有舊 → 搬到新位置
+          await oldHoyowikiIndex.rename(newHoyowikiIndex.path);
+          Logger(
+            'app.startup',
+          ).info('migrated hoyowiki_index.json to hoyowiki_cache/');
+        }
+      }
+
+      final hoyowikiIndexStorage = HoyoWikiIndexStorage(hoyowikiCacheDir);
 
       runApp(
         ProviderScope(
