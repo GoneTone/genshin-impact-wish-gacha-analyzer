@@ -7,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dar
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
 
 /// 每個時間軸欄的固定寬度。
 const double _colWidth = 90;
@@ -299,6 +300,10 @@ class _EntryColumn extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (entry.sourceRecord != null) ...[
+              WishItemIcon(record: entry.sourceRecord!, size: 20),
+              const SizedBox(height: AppSpacing.xs),
+            ],
             Text(
               entry.name,
               maxLines: 1,
