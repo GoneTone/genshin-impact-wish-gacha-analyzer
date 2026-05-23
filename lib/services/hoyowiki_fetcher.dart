@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart'
     show ApiErrorException;
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 /// HoyoWiki entry_page API 抓到的 icon 與 header URL。
 class HoyoWikiEntryFetched {
@@ -55,6 +56,9 @@ class HoyoWikiFetcher {
     required http.Client client,
   }) async {
     final url = _searchBase.replace(queryParameters: {'keyword': name});
+    _log.fine(
+      'search name=$name lang=$lang url=${sanitizeUrl(url.toString())}',
+    );
     final res = await client
         .get(
           url,
