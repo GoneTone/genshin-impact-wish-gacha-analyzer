@@ -336,6 +336,7 @@ class BannerPage extends ConsumerWidget {
       l: l,
       suggestedName:
           'genshin_gacha_share_${type.gachaType}_${fileTimestamp()}.png',
+      recordsForPreload: records,
       buildCard: (icon, options) => ShareCard.banner(
         l: l,
         appVersion: appVersion,

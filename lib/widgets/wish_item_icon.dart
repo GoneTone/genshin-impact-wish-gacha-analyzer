@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyowiki_images.dart';
 
 /// 頌願卡池（odes） gachaType 集合 — 不顯示 icon 也不顯示 placeholder。
 const _odesGachaTypes = {'2000', '1000'};
@@ -30,11 +31,24 @@ class WishItemIcon extends ConsumerWidget {
     final cacheDir = ref.watch(hoyowikiCacheDirProvider);
     final tokens = Theme.of(context).gacha;
 
+    final preloaded = PreloadedHoyoWikiImages.maybeOf(context);
     final id = index.lookupId(name: record.name, lang: record.lang);
     final entry = id == null ? null : index.lookupEntry(id);
     final iconUrl = entry?.iconUrl;
 
     if (id != null && iconUrl != null && iconUrl.isNotEmpty) {
+      final preloadedImage = preloaded?.images[id];
+      if (preloadedImage != null) {
+        return SizedBox(
+          width: size,
+          height: size,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: RawImage(image: preloadedImage, fit: BoxFit.cover),
+          ),
+        );
+      }
+
       final file = hoyowikiCacheFile(
         baseDir: cacheDir,
         id: id,

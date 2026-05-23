@@ -6,11 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyowiki_images.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 
@@ -100,11 +103,13 @@ Widget buildShareRenderTree({
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
 /// 分享圖寬固定為 [kShareCardWidth]、高隨內容自適應（底部不留白、不裁切）；
 /// [suggestedName] 完整建議檔名（含時間戳）。
+/// [recordsForPreload] 用於 sync pipeline 前預解碼 hoyowiki icon。
 /// overview 與 banner 兩頁共用，避免重複骨架。
 Future<void> generateAndShareImage({
   required BuildContext context,
   required AppLocalizations l,
   required String suggestedName,
+  required Iterable<GachaRecord> recordsForPreload,
   required Widget Function(ui.Image icon, ShareImageOptions options) buildCard,
 }) async {
   final brightness = Theme.of(context).brightness;
@@ -117,11 +122,21 @@ Future<void> generateAndShareImage({
   if (!context.mounted) return;
 
   final container = ProviderScope.containerOf(context);
+  final hoyowikiIndex = container.read(hoyowikiIndexProvider);
+  final cacheDir = container.read(hoyowikiCacheDirProvider);
   final icon = await loadAppIconImage();
+  final preloaded = await preloadHoyoWikiImages(
+    index: hoyowikiIndex,
+    cacheDir: cacheDir,
+    records: recordsForPreload,
+  );
   try {
     final png = await renderWidgetToPng(
       buildShareRenderTree(
-        card: buildCard(icon, options),
+        card: PreloadedHoyoWikiImages(
+          images: preloaded,
+          child: buildCard(icon, options),
+        ),
         brightness: options.brightness,
         locale: locale,
         container: container,
@@ -147,5 +162,6 @@ Future<void> generateAndShareImage({
     );
   } finally {
     icon.dispose();
+    disposePreloadedHoyoWikiImages(preloaded);
   }
 }
