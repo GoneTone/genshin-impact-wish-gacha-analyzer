@@ -430,6 +430,11 @@ class GachaRepository extends Notifier<GachaState> {
       _log.warning('hoyowiki stage threw (ignored)', e, st);
     }
     if (!ref.mounted) return;
+    if (_cancelTriggered) {
+      // 使用者在 HoyoWiki 階段取消；清掉 progress 不要 emit UpdateCompleted
+      state = state.copyWith(clearProgress: true);
+      return;
+    }
     state = state.copyWith(
       progress: UpdateCompleted(
         totalNewRecords: totalNew,
@@ -676,6 +681,7 @@ class GachaRepository extends Notifier<GachaState> {
 
     // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
     final downloadTodo = <_HoyoWikiDownloadItem>[];
+    var total = searchTodo.length + entryTodo.length;
     void enqueueDownloadsForEntry(String id, HoyoWikiEntry entry) {
       for (final kind in HoyoWikiImageKind.values) {
         final url = kind == HoyoWikiImageKind.icon
@@ -690,6 +696,7 @@ class GachaRepository extends Notifier<GachaState> {
         );
         if (file.existsSync()) continue;
         downloadTodo.add(_HoyoWikiDownloadItem(id: id, kind: kind, url: url));
+        total++;
       }
     }
 
@@ -697,8 +704,6 @@ class GachaRepository extends Notifier<GachaState> {
       final e = index.lookupEntry(id);
       if (e != null) enqueueDownloadsForEntry(id, e);
     }
-
-    final total = searchTodo.length + entryTodo.length + downloadTodo.length;
     if (total == 0) return;
 
     final fetcherDelay = ref.read(hoyowikiFetcherProvider).rateLimit;
@@ -737,6 +742,7 @@ class GachaRepository extends Notifier<GachaState> {
                 ref.read(hoyowikiIndexProvider).lookupEntry(id),
               )) {
             entryTodo.add(id);
+            total++;
           }
         }
       } catch (e) {
@@ -786,6 +792,7 @@ class GachaRepository extends Notifier<GachaState> {
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
   @visibleForTesting
   Future<void> debugRunHoyoWikiOnly() async {
+    _cancelTriggered = false;
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     try {
       await _fetchHoyoWiki(cancellable.client);

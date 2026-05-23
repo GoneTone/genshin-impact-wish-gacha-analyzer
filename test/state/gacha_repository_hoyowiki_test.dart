@@ -137,6 +137,14 @@ void main() {
     expect(entryCalls, ['111']);
     // icon + header 兩個下載
     expect(downloadCalls.length, 2);
+
+    // bytes 確實落檔到 cache dir
+    final cacheFiles = tempDir
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.png'))
+        .toList();
+    expect(cacheFiles.length, 2, reason: 'icon + header cache files written');
   });
 
   test('hoyowiki 階段失敗不影響後續（每個 item 獨立 try/catch）', () async {
