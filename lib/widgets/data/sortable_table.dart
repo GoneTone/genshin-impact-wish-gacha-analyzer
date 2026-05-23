@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/wish_item_icon.dart';
 
 /// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
@@ -383,7 +384,23 @@ class _Row extends StatelessWidget {
               ' (${relativeTime(record.time, l)})',
             ),
           ),
-          Expanded(flex: 5, child: Text(record.name, style: highlight)),
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: [
+                WishItemIcon(record: record, size: 20),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    record.name,
+                    style: highlight,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(flex: 2, child: Text(record.itemType)),
           Expanded(
             flex: 2,
