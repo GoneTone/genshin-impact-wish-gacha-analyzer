@@ -166,7 +166,7 @@
       "total": { "type": "int" }
     }
   },
-  "updateProgressHoyoWikiDownloading": "下載物品圖示 {done}/{total}",
+  "updateProgressHoyoWikiDownloading": "下載物品圖片 {done}/{total}",
   "@updateProgressHoyoWikiDownloading": {
     "placeholders": {
       "done": { "type": "int" },

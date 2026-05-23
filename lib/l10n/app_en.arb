@@ -221,7 +221,7 @@
       }
     }
   },
-  "updateProgressHoyoWikiDownloading": "Downloading item icons {done}/{total}",
+  "updateProgressHoyoWikiDownloading": "Downloading item images {done}/{total}",
   "@updateProgressHoyoWikiDownloading": {
     "placeholders": {
       "done": {
