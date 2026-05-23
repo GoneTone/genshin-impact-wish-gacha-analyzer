@@ -402,7 +402,7 @@ class _EntryRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (entry.sourceRecord != null) ...[
-                          WishItemIcon(record: entry.sourceRecord!, size: 24),
+                          WishItemIcon(record: entry.sourceRecord!, size: 32),
                           const SizedBox(width: 6),
                         ],
                         Flexible(

@@ -18,7 +18,7 @@ class WishItemIcon extends ConsumerWidget {
   /// 祈願記錄；用其 name / lang / rankType / gachaType。
   final GachaRecord record;
 
-  /// icon 邊長（px，依使用情境調整：時間軸 24 / 表格 28 / 橫向時間軸 32）。
+  /// icon 邊長（px，依使用情境調整：表格 28 / 時間軸 32）。
   final double size;
 
   @override
