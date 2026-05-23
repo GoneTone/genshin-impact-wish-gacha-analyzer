@@ -152,8 +152,22 @@
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
   },
-  "updateProgressFetchingIcons": "補齊物品圖示 {done}/{total}",
-  "@updateProgressFetchingIcons": {
+  "updateProgressHoyoWikiSearching": "搜尋物品資料 {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "抓取物品詳情 {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "下載物品圖示 {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
     "placeholders": {
       "done": { "type": "int" },
       "total": { "type": "int" }

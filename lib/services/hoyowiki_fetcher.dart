@@ -8,6 +8,18 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart'
     show ApiErrorException;
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
+/// HoyoWiki search API 的命中結果。
+class HoyoWikiSearchHit {
+  /// 建立 [HoyoWikiSearchHit]。
+  const HoyoWikiSearchHit({required this.id, required this.menuId});
+
+  /// entry_page_id。
+  final String id;
+
+  /// 物品 menu_id（2＝角色，4＝武器）。
+  final int menuId;
+}
+
 /// HoyoWiki entry_page API 抓到的 icon 與 header URL。
 class HoyoWikiEntryFetched {
   /// 建立 [HoyoWikiEntryFetched]；URL 均可能為空字串。
@@ -51,12 +63,13 @@ class HoyoWikiFetcher {
     'https://sg-act-public-api-static.hoyolab.com/hoyowiki/genshin/wapi/entry_page',
   );
 
-  /// 以 [name] 走 HoyoLab Wiki search API 取得對應的 entry_page_id。
+  /// 以 [name] 走 HoyoLab Wiki search API 取得對應的 entry_page_id 與 menu_id。
   ///
   /// 命中需同時滿足：`data.list[].name == name` 且
   /// `data.list[].menu.sub_menus[0].id ∈ {2, 4}`。回傳第一筆符合的
-  /// `entry_page_id`；若無回 null；retcode != 0 throw [ApiErrorException]。
-  Future<String?> searchEntryId({
+  /// [HoyoWikiSearchHit]（含 id 與 menuId）；若無回 null；
+  /// retcode != 0 throw [ApiErrorException]。
+  Future<HoyoWikiSearchHit?> searchEntryId({
     required String name,
     required String lang,
     required http.Client client,
@@ -96,12 +109,12 @@ class HoyoWikiFetcher {
           : subMenuIdRaw is String
           ? int.tryParse(subMenuIdRaw)
           : null;
-      if (subMenuId != 2 && subMenuId != 4) continue;
+      if (subMenuId == null || (subMenuId != 2 && subMenuId != 4)) continue;
       final entryRaw = item['entry_page_id'];
       final id = entryRaw is String ? entryRaw : entryRaw?.toString();
       if (id == null || id.isEmpty) continue;
-      _log.info('search hit name=$name lang=$lang id=$id');
-      return id;
+      _log.info('search hit name=$name lang=$lang id=$id menuId=$subMenuId');
+      return HoyoWikiSearchHit(id: id, menuId: subMenuId);
     }
     _log.warning('search miss name=$name lang=$lang');
     return null;

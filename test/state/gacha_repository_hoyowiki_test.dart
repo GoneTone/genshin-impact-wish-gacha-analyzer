@@ -218,7 +218,7 @@ void main() {
     expect(searchCalls.length, 1, reason: '第二次不應再 search');
   });
 
-  test('entry 任一 URL 為空字串 → 下次重 entry', () async {
+  test('menu_id 2（角色）：兩個 URL 都空 → 下次重抓', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -263,6 +263,175 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoyoWikiOnly();
-    expect(entryCallCount, 2, reason: '兩個 URL 為空字串應視為 incomplete，下次重抓');
+    expect(entryCallCount, 2, reason: 'menu_id 2：兩個 URL 都空應視為 incomplete，下次重抓');
   });
+
+  test('menu_id 2（角色）：header 為空但 icon 有 → 下次仍重抓', () async {
+    var entryCallCount = 0;
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': 'Hu Tao',
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        entryCallCount++;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+
+    await notifier.debugRunHoyoWikiOnly();
+    expect(entryCallCount, 1);
+
+    await notifier.debugRunHoyoWikiOnly();
+    expect(entryCallCount, 2, reason: 'menu_id 2：header 空 → 嚴格規則，下次重抓');
+  });
+
+  test('menu_id 4（武器）：只有 icon 無 header → 不重抓', () async {
+    // 武器（menu_id 4）寬鬆規則：有任一 URL 就不重抓
+    var entryCallCount = 0;
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': 'Hu Tao',
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 4},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        entryCallCount++;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+
+    await notifier.debugRunHoyoWikiOnly();
+    expect(entryCallCount, 1);
+
+    await notifier.debugRunHoyoWikiOnly();
+    expect(entryCallCount, 1, reason: 'menu_id 4：有 icon → 寬鬆規則，不重抓');
+  });
+
+  test(
+    '_fetchHoyoWiki 三段 phase 依序推進（searching → fetchingEntries → downloading）',
+    () async {
+      final phases = <HoyoWikiPhase>[];
+      final apiClient = MockClient((req) async {
+        if (req.url.path.endsWith('/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '111',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (req.url.path.endsWith('/entry_page')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'page': {
+                  'icon_url': 'https://x/icon.png',
+                  'header_img_url': 'https://x/header.png',
+                },
+              },
+            }),
+            200,
+          );
+        }
+        return http.Response.bytes([1, 2, 3], 200);
+      });
+      final container = await setupContainer(apiClient: apiClient);
+
+      container.listen(gachaRepositoryProvider.select((s) => s.progress), (
+        _,
+        next,
+      ) {
+        if (next is FetchingHoyoWiki) phases.add(next.phase);
+      });
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugRunHoyoWikiOnly();
+
+      // 三段都出現過，且順序為 searching → fetchingEntries → downloading
+      expect(
+        phases,
+        containsAll([
+          HoyoWikiPhase.searching,
+          HoyoWikiPhase.fetchingEntries,
+          HoyoWikiPhase.downloading,
+        ]),
+      );
+      final firstSearchIdx = phases.indexOf(HoyoWikiPhase.searching);
+      final firstEntryIdx = phases.indexOf(HoyoWikiPhase.fetchingEntries);
+      final firstDownloadIdx = phases.indexOf(HoyoWikiPhase.downloading);
+      expect(firstSearchIdx, lessThan(firstEntryIdx));
+      expect(firstEntryIdx, lessThan(firstDownloadIdx));
+    },
+  );
 }

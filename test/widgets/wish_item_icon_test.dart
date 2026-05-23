@@ -97,7 +97,12 @@ void main() {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     // setSearch 涉及真實檔案 I/O（atomic rename），需在 runAsync 內執行。
     await tester.runAsync(
-      () => notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '111'),
+      () => notifier.setSearch(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        id: '111',
+        menuId: 2,
+      ),
     );
     await tester.pumpWidget(
       _wrap(
@@ -114,7 +119,12 @@ void main() {
   testWidgets('有 entry 但 cache 檔不存在 → placeholder', (tester) async {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     await tester.runAsync(() async {
-      await notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '111');
+      await notifier.setSearch(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        id: '111',
+        menuId: 2,
+      );
       await notifier.setEntry(
         id: '111',
         entry: HoyoWikiEntry(
@@ -140,7 +150,12 @@ void main() {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     final iconUrl = 'https://x/icon.png';
     await tester.runAsync(() async {
-      await notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '111');
+      await notifier.setSearch(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        id: '111',
+        menuId: 2,
+      );
       await notifier.setEntry(
         id: '111',
         entry: HoyoWikiEntry(
@@ -176,7 +191,12 @@ void main() {
   testWidgets('PreloadedHoyoWikiImages 命中 → 顯示 RawImage', (tester) async {
     await tester.runAsync(() async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
-      await notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '111');
+      await notifier.setSearch(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        id: '111',
+        menuId: 2,
+      );
       await notifier.setEntry(
         id: '111',
         entry: HoyoWikiEntry(

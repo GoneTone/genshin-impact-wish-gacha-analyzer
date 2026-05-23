@@ -73,14 +73,33 @@ class UpdateFailed extends UpdateProgress {
   final UpdateError error;
 }
 
+/// HoyoWiki 補圖階段的子步驟。
+enum HoyoWikiPhase {
+  /// 搜尋物品的 entry_page_id（HoyoWiki search API）。
+  searching,
+
+  /// 抓取物品詳情（HoyoWiki entry_page API）。
+  fetchingEntries,
+
+  /// 下載 icon 與 header 圖檔。
+  downloading,
+}
+
 /// 主資料抓取完成後，正在補齊各物品的 HoyoWiki 圖示。
 class FetchingHoyoWiki extends UpdateProgress {
   /// 建立 [FetchingHoyoWiki]。
-  const FetchingHoyoWiki({required this.doneCount, required this.totalCount});
+  const FetchingHoyoWiki({
+    required this.phase,
+    required this.doneCount,
+    required this.totalCount,
+  });
 
-  /// 目前已完成的工作項數。
+  /// 目前所在的子步驟。
+  final HoyoWikiPhase phase;
+
+  /// 該子步驟目前已完成的工作項數。
   final int doneCount;
 
-  /// 本階段總工作項數（search + entry + download 加總）。
+  /// 該子步驟的總工作項數。
   final int totalCount;
 }

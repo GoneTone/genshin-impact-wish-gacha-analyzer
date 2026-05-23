@@ -666,22 +666,26 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    bool needRefetchEntry(HoyoWikiEntry? e) =>
-        e == null || e.iconUrl.isEmpty || e.headerImgUrl.isEmpty;
+    // menu_id 感知的重抓判斷：角色（menu_id 2）任一 URL 空就重抓；
+    // 武器（menu_id 4）或未知則兩個都空才重抓（武器可能只有 icon）。
+    bool needRefetchEntry(HoyoWikiEntry? e, int? menuId) {
+      if (e == null) return true;
+      if (menuId == 2) return e.iconUrl.isEmpty || e.headerImgUrl.isEmpty;
+      return e.iconUrl.isEmpty && e.headerImgUrl.isEmpty;
+    }
 
-    // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或 URL 空的
+    // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或需重抓的
     final initialIds = uniquePairs
         .map((p) => index.lookupId(name: p.$1, lang: p.$2))
         .whereType<String>()
         .toSet();
     final entryTodo = <String>{
       for (final id in initialIds)
-        if (needRefetchEntry(index.lookupEntry(id))) id,
+        if (needRefetchEntry(index.lookupEntry(id), index.lookupMenuId(id))) id,
     };
 
     // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
     final downloadTodo = <_HoyoWikiDownloadItem>[];
-    var total = searchTodo.length + entryTodo.length;
     void enqueueDownloadsForEntry(String id, HoyoWikiEntry entry) {
       for (final kind in HoyoWikiImageKind.values) {
         final url = kind == HoyoWikiImageKind.icon
@@ -696,7 +700,6 @@ class GachaRepository extends Notifier<GachaState> {
         );
         if (file.existsSync()) continue;
         downloadTodo.add(_HoyoWikiDownloadItem(id: id, kind: kind, url: url));
-        total++;
       }
     }
 
@@ -704,88 +707,119 @@ class GachaRepository extends Notifier<GachaState> {
       final e = index.lookupEntry(id);
       if (e != null) enqueueDownloadsForEntry(id, e);
     }
-    if (total == 0) return;
+
+    // 三段加起來都沒工作就直接結束。
+    final totalInitial =
+        searchTodo.length + entryTodo.length + downloadTodo.length;
+    if (totalInitial == 0) return;
 
     final fetcherDelay = ref.read(hoyowikiFetcherProvider).rateLimit;
-    var done = 0;
 
-    void emit() {
-      if (!ref.mounted) return;
-      state = state.copyWith(
-        progress: FetchingHoyoWiki(doneCount: done, totalCount: total),
-      );
-    }
-
-    emit();
-
-    Future<bool> tickAndCheckCancel() async {
-      done++;
-      emit();
+    Future<bool> checkCancel() async {
       await Future<void>.delayed(fetcherDelay);
       if (!ref.mounted) return true;
       if (_cancelTriggered) return true;
       return false;
     }
 
-    // (1) search 階段
-    for (final pair in searchTodo) {
-      try {
-        final id = await fetcher.searchEntryId(
-          name: pair.$1,
-          lang: pair.$2,
-          client: client,
-        );
-        if (id != null) {
-          await indexNotifier.setSearch(name: pair.$1, lang: pair.$2, id: id);
-          if (!entryTodo.contains(id) &&
-              needRefetchEntry(
-                ref.read(hoyowikiIndexProvider).lookupEntry(id),
-              )) {
-            entryTodo.add(id);
-            total++;
-          }
-        }
-      } catch (e) {
-        _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
-      }
-      if (await tickAndCheckCancel()) return;
-    }
-
-    // (2) entry 階段
-    for (final id in entryTodo) {
-      try {
-        final fetched = await fetcher.fetchEntryPage(id: id, client: client);
-        final entry = HoyoWikiEntry(
-          iconUrl: fetched.iconUrl,
-          headerImgUrl: fetched.headerImgUrl,
-          fetchedAt: DateTime.now().toUtc(),
-        );
-        await indexNotifier.setEntry(id: id, entry: entry);
-        enqueueDownloadsForEntry(id, entry);
-      } catch (e) {
-        _log.warning('hoyowiki entry failed id=$id err=$e');
-      }
-      if (await tickAndCheckCancel()) return;
-    }
-
-    // (3) download 階段
-    for (final item in downloadTodo) {
-      try {
-        final bytes = await fetcher.downloadImage(item.url, client);
-        if (bytes != null) {
-          final file = hoyowikiCacheFile(
-            baseDir: cacheDir,
-            id: item.id,
-            kind: item.kind,
-            url: item.url,
+    // (1) search 階段：total 在進入前已知（固定）
+    if (searchTodo.isNotEmpty) {
+      for (var i = 0; i < searchTodo.length; i++) {
+        final pair = searchTodo[i];
+        try {
+          final hit = await fetcher.searchEntryId(
+            name: pair.$1,
+            lang: pair.$2,
+            client: client,
           );
-          await file.writeAsBytes(bytes, flush: true);
-          indexNotifier.bumpCacheRevision();
+          if (hit != null) {
+            await indexNotifier.setSearch(
+              name: pair.$1,
+              lang: pair.$2,
+              id: hit.id,
+              menuId: hit.menuId,
+            );
+            if (!entryTodo.contains(hit.id) &&
+                needRefetchEntry(
+                  ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
+                  hit.menuId,
+                )) {
+              entryTodo.add(hit.id);
+            }
+          }
+        } catch (e) {
+          _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
         }
-      } catch (e) {
-        _log.warning('hoyowiki download failed url=${item.url} err=$e');
+        if (!ref.mounted) return;
+        state = state.copyWith(
+          progress: FetchingHoyoWiki(
+            phase: HoyoWikiPhase.searching,
+            doneCount: i + 1,
+            totalCount: searchTodo.length,
+          ),
+        );
+        if (await checkCancel()) return;
       }
-      if (await tickAndCheckCancel()) return;
+    }
+
+    // (2) entry 階段：search 跑完後 entryTodo 已定（total 固定）
+    if (entryTodo.isNotEmpty) {
+      final entryList = entryTodo.toList();
+      for (var i = 0; i < entryList.length; i++) {
+        final id = entryList[i];
+        try {
+          final fetched = await fetcher.fetchEntryPage(id: id, client: client);
+          final entry = HoyoWikiEntry(
+            iconUrl: fetched.iconUrl,
+            headerImgUrl: fetched.headerImgUrl,
+            fetchedAt: DateTime.now().toUtc(),
+          );
+          await indexNotifier.setEntry(id: id, entry: entry);
+          enqueueDownloadsForEntry(id, entry);
+        } catch (e) {
+          _log.warning('hoyowiki entry failed id=$id err=$e');
+        }
+        if (!ref.mounted) return;
+        state = state.copyWith(
+          progress: FetchingHoyoWiki(
+            phase: HoyoWikiPhase.fetchingEntries,
+            doneCount: i + 1,
+            totalCount: entryList.length,
+          ),
+        );
+        if (await checkCancel()) return;
+      }
+    }
+
+    // (3) download 階段：entry 跑完後 downloadTodo 已定（total 固定）
+    if (downloadTodo.isNotEmpty) {
+      for (var i = 0; i < downloadTodo.length; i++) {
+        final item = downloadTodo[i];
+        try {
+          final bytes = await fetcher.downloadImage(item.url, client);
+          if (bytes != null) {
+            final file = hoyowikiCacheFile(
+              baseDir: cacheDir,
+              id: item.id,
+              kind: item.kind,
+              url: item.url,
+            );
+            await file.writeAsBytes(bytes, flush: true);
+            indexNotifier.bumpCacheRevision();
+          }
+        } catch (e) {
+          _log.warning('hoyowiki download failed url=${item.url} err=$e');
+        }
+        if (!ref.mounted) return;
+        state = state.copyWith(
+          progress: FetchingHoyoWiki(
+            phase: HoyoWikiPhase.downloading,
+            doneCount: i + 1,
+            totalCount: downloadTodo.length,
+          ),
+        );
+        if (await checkCancel()) return;
+      }
     }
   }
 

@@ -62,15 +62,21 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
   /// 等待初始 load 結束。
   Future<void> waitForLoad() => _loadCompleter?.future ?? Future.value();
 
-  /// 寫入一筆 search 對應並 persist。
+  /// 寫入一筆 search 對應（含 [menuId]）並 persist。
   Future<void> setSearch({
     required String name,
     required String lang,
     required String id,
+    required int menuId,
   }) async {
     final newSearch = Map<String, String>.from(state.searchMap)
       ..['$lang::$name'] = id;
-    final next = HoyoWikiIndex(searchMap: newSearch, entries: state.entries);
+    final newMenuIds = Map<String, int>.from(state.menuIds)..[id] = menuId;
+    final next = HoyoWikiIndex(
+      searchMap: newSearch,
+      entries: state.entries,
+      menuIds: newMenuIds,
+    );
     await _saveAndEmit(next);
   }
 
@@ -81,14 +87,22 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
   }) async {
     final newEntries = Map<String, HoyoWikiEntry>.from(state.entries)
       ..[id] = entry;
-    final next = HoyoWikiIndex(searchMap: state.searchMap, entries: newEntries);
+    final next = HoyoWikiIndex(
+      searchMap: state.searchMap,
+      entries: newEntries,
+      menuIds: state.menuIds,
+    );
     await _saveAndEmit(next);
   }
 
   /// 在 cache 檔案下載完成後呼叫；state 內容不變但 identity 換新，
   /// 觸發 watch hoyowikiIndexProvider 的 widget 重新 build 以挑到新檔。
   void bumpCacheRevision() {
-    state = HoyoWikiIndex(searchMap: state.searchMap, entries: state.entries);
+    state = HoyoWikiIndex(
+      searchMap: state.searchMap,
+      entries: state.entries,
+      menuIds: state.menuIds,
+    );
   }
 
   /// 內部 helper：寫檔 + emit。

@@ -25,10 +25,17 @@ class HoyoWikiEntry {
 /// 跨 UID 共用的 HoyoWiki lookup index。
 class HoyoWikiIndex {
   /// 建立 [HoyoWikiIndex]。
-  const HoyoWikiIndex({required this.searchMap, required this.entries});
+  const HoyoWikiIndex({
+    required this.searchMap,
+    required this.entries,
+    required this.menuIds,
+  });
 
   /// 建立空 index（無任何 search / entry）。
-  const HoyoWikiIndex.empty() : searchMap = const {}, entries = const {};
+  const HoyoWikiIndex.empty()
+    : searchMap = const {},
+      entries = const {},
+      menuIds = const {};
 
   /// `"<lang>::<name>"` → `hoyowiki_id`；只記錄成功命中的。
   final Map<String, String> searchMap;
@@ -36,12 +43,18 @@ class HoyoWikiIndex {
   /// `hoyowiki_id` → [HoyoWikiEntry]；URL 可能為空字串。
   final Map<String, HoyoWikiEntry> entries;
 
+  /// `hoyowiki_id` → `menu_id`（2＝角色，4＝武器）；search API 命中時寫入。
+  final Map<String, int> menuIds;
+
   /// 以 [name] + [lang] 查 hoyowiki_id；查無回 null。
   String? lookupId({required String name, required String lang}) =>
       searchMap['$lang::$name'];
 
   /// 以 [id] 查 entry；查無回 null。
   HoyoWikiEntry? lookupEntry(String id) => entries[id];
+
+  /// 以 [id] 查 menu_id；查無回 null。
+  int? lookupMenuId(String id) => menuIds[id];
 }
 
 /// 負責 `hoyowiki_index.json` 的讀寫（atomic write，跨 UID 共用）。
@@ -69,6 +82,9 @@ class HoyoWikiIndexStorage {
       final searchJson = (json['search'] as Map<String, dynamic>?) ?? const {};
       final entriesJson =
           (json['entries'] as Map<String, dynamic>?) ?? const {};
+      // 向後相容：舊 JSON 缺 menu_ids 欄位時回空 map。
+      final menuIdsJson =
+          (json['menu_ids'] as Map<String, dynamic>?) ?? const {};
       return HoyoWikiIndex(
         searchMap: searchJson.map((k, v) => MapEntry(k, v as String)),
         entries: entriesJson.map((k, v) {
@@ -82,6 +98,7 @@ class HoyoWikiIndexStorage {
             ),
           );
         }),
+        menuIds: menuIdsJson.map((k, v) => MapEntry(k, v as int)),
       );
     } catch (e, st) {
       _log.warning('load failed, return empty index', e, st);
@@ -101,12 +118,15 @@ class HoyoWikiIndexStorage {
           'fetched_at': v.fetchedAt.toUtc().toIso8601String(),
         }),
       ),
+      'menu_ids': index.menuIds,
     };
     final tmp = File('${_file.path}.tmp');
     await tmp.writeAsString(jsonEncode(json));
     await tmp.rename(_file.path);
     _log.fine(
-      'saved search=${index.searchMap.length} entries=${index.entries.length}',
+      'saved search=${index.searchMap.length} '
+      'entries=${index.entries.length} '
+      'menuIds=${index.menuIds.length}',
     );
   }
 }

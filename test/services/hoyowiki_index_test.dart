@@ -9,6 +9,7 @@ void main() {
       final index = HoyoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: const {},
+        menuIds: const {},
       );
       expect(index.lookupId(name: 'Hu Tao', lang: 'en-us'), '5125428');
     });
@@ -22,6 +23,7 @@ void main() {
       final index = HoyoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: const {},
+        menuIds: const {},
       );
       expect(index.lookupId(name: 'Hu Tao', lang: 'zh-tw'), isNull);
     });
@@ -37,6 +39,7 @@ void main() {
       final index = HoyoWikiIndex(
         searchMap: const {},
         entries: {'5125428': entry},
+        menuIds: const {},
       );
       expect(index.lookupEntry('5125428'), entry);
     });
@@ -44,6 +47,23 @@ void main() {
     test('未命中回 null', () {
       const index = HoyoWikiIndex.empty();
       expect(index.lookupEntry('5125428'), isNull);
+    });
+  });
+
+  group('HoyoWikiIndex.lookupMenuId', () {
+    test('命中回 menu_id', () {
+      final index = HoyoWikiIndex(
+        searchMap: const {},
+        entries: const {},
+        menuIds: const {'5125428': 2, '9001': 4},
+      );
+      expect(index.lookupMenuId('5125428'), 2);
+      expect(index.lookupMenuId('9001'), 4);
+    });
+
+    test('未命中回 null', () {
+      const index = HoyoWikiIndex.empty();
+      expect(index.lookupMenuId('5125428'), isNull);
     });
   });
 
@@ -68,7 +88,7 @@ void main() {
       expect(index.entries, isEmpty);
     });
 
-    test('save → load roundtrip', () async {
+    test('save → load roundtrip（含 menu_ids）', () async {
       final original = HoyoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: {
@@ -78,6 +98,7 @@ void main() {
             fetchedAt: DateTime.utc(2026, 5, 23, 8),
           ),
         },
+        menuIds: const {'5125428': 2},
       );
       await storage.save(original);
       final loaded = await storage.load();
@@ -88,6 +109,18 @@ void main() {
         loaded.entries['5125428']!.fetchedAt,
         DateTime.utc(2026, 5, 23, 8),
       );
+      expect(loaded.menuIds, {'5125428': 2});
+    });
+
+    test('load 無 menu_ids 欄位（舊格式）→ 空 map（向後相容）', () async {
+      // 直接寫一個不含 menu_ids 的舊格式 JSON
+      final f = File('${tempDir.path}/hoyowiki_index.json');
+      await f.writeAsString(
+        '{"version":1,"search":{"en-us::Hu Tao":"5125428"},"entries":{}}',
+      );
+      final loaded = await storage.load();
+      expect(loaded.searchMap, {'en-us::Hu Tao': '5125428'});
+      expect(loaded.menuIds, isEmpty);
     });
 
     test('atomic write 不留 .tmp 殘檔', () async {
@@ -98,10 +131,18 @@ void main() {
 
     test('save 兩次 → 後者覆蓋', () async {
       await storage.save(
-        HoyoWikiIndex(searchMap: const {'a::1': 'id1'}, entries: const {}),
+        HoyoWikiIndex(
+          searchMap: const {'a::1': 'id1'},
+          entries: const {},
+          menuIds: const {},
+        ),
       );
       await storage.save(
-        HoyoWikiIndex(searchMap: const {'b::2': 'id2'}, entries: const {}),
+        HoyoWikiIndex(
+          searchMap: const {'b::2': 'id2'},
+          entries: const {},
+          menuIds: const {},
+        ),
       );
       final loaded = await storage.load();
       expect(loaded.searchMap, {'b::2': 'id2'});

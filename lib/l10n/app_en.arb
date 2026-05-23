@@ -199,8 +199,30 @@
       }
     }
   },
-  "updateProgressFetchingIcons": "Fetching item icons {done}/{total}",
-  "@updateProgressFetchingIcons": {
+  "updateProgressHoyoWikiSearching": "Searching item data {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Fetching item details {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Downloading item icons {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
     "placeholders": {
       "done": {
         "type": "int"

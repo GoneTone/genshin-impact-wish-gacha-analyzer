@@ -35,19 +35,26 @@ void main() {
     expect(container.read(hoyowikiIndexProvider).searchMap, isEmpty);
   });
 
-  test('setSearch 更新 state 並 persist', () async {
+  test('setSearch 更新 state 並 persist（含 menuId）', () async {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     await notifier.waitForLoad();
-    await notifier.setSearch(name: 'Hu Tao', lang: 'en-us', id: '5125428');
+    await notifier.setSearch(
+      name: 'Hu Tao',
+      lang: 'en-us',
+      id: '5125428',
+      menuId: 2,
+    );
     expect(
       container
           .read(hoyowikiIndexProvider)
           .lookupId(name: 'Hu Tao', lang: 'en-us'),
       '5125428',
     );
+    expect(container.read(hoyowikiIndexProvider).lookupMenuId('5125428'), 2);
     // 重新 load 一次確認 persist
     final reloaded = await HoyoWikiIndexStorage(tempDir).load();
     expect(reloaded.lookupId(name: 'Hu Tao', lang: 'en-us'), '5125428');
+    expect(reloaded.lookupMenuId('5125428'), 2);
   });
 
   test('setEntry 更新 state 並 persist', () async {

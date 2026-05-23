@@ -198,16 +198,28 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
-      FetchingHoyoWiki(:final doneCount, :final totalCount) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          LinearProgressIndicator(
-            value: totalCount == 0 ? null : doneCount / totalCount,
-          ),
-          const SizedBox(height: AppSpacing.l),
-          Text(l.updateProgressFetchingIcons(doneCount, totalCount)),
-        ],
-      ),
+      FetchingHoyoWiki(:final phase, :final doneCount, :final totalCount) =>
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LinearProgressIndicator(
+              value: totalCount == 0 ? null : doneCount / totalCount,
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Text(switch (phase) {
+              HoyoWikiPhase.searching => l.updateProgressHoyoWikiSearching(
+                doneCount,
+                totalCount,
+              ),
+              HoyoWikiPhase.fetchingEntries =>
+                l.updateProgressHoyoWikiFetchingEntries(doneCount, totalCount),
+              HoyoWikiPhase.downloading => l.updateProgressHoyoWikiDownloading(
+                doneCount,
+                totalCount,
+              ),
+            }),
+          ],
+        ),
       UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
