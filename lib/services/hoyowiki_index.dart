@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:logging/logging.dart';
+
 /// HoyoWiki entry_page API 抓到的 icon 與 header 大圖 URL，以及抓取時間。
 class HoyoWikiEntry {
   /// 建立 [HoyoWikiEntry]；兩個 URL 均可能為空字串。
@@ -37,4 +42,71 @@ class HoyoWikiIndex {
 
   /// 以 [id] 查 entry；查無回 null。
   HoyoWikiEntry? lookupEntry(String id) => entries[id];
+}
+
+/// 負責 `hoyowiki_index.json` 的讀寫（atomic write，跨 UID 共用）。
+class HoyoWikiIndexStorage {
+  /// 建立 [HoyoWikiIndexStorage]，需指定資料根目錄 [baseDir]（通常與
+  /// `gachaStorageProvider` 共用 `<appSupport>/gacha_data/`）。
+  HoyoWikiIndexStorage(this.baseDir);
+
+  /// Logger 實例（hoyowiki 儲存）。
+  static final _log = Logger('wish.hoyowiki.storage');
+
+  /// 資料根目錄。
+  final Directory baseDir;
+
+  /// index 檔路徑。
+  File get _file => File('${baseDir.path}/hoyowiki_index.json');
+
+  /// 讀取 index；檔案不存在或解析失敗回空 index。
+  Future<HoyoWikiIndex> load() async {
+    final f = _file;
+    if (!await f.exists()) return const HoyoWikiIndex.empty();
+    try {
+      final text = await f.readAsString();
+      final json = jsonDecode(text) as Map<String, dynamic>;
+      final searchJson = (json['search'] as Map<String, dynamic>?) ?? const {};
+      final entriesJson =
+          (json['entries'] as Map<String, dynamic>?) ?? const {};
+      return HoyoWikiIndex(
+        searchMap: searchJson.map((k, v) => MapEntry(k, v as String)),
+        entries: entriesJson.map((k, v) {
+          final m = v as Map<String, dynamic>;
+          return MapEntry(
+            k,
+            HoyoWikiEntry(
+              iconUrl: (m['icon_url'] as String?) ?? '',
+              headerImgUrl: (m['header_img_url'] as String?) ?? '',
+              fetchedAt: DateTime.parse(m['fetched_at'] as String),
+            ),
+          );
+        }),
+      );
+    } catch (e, st) {
+      _log.warning('load failed, return empty index', e, st);
+      return const HoyoWikiIndex.empty();
+    }
+  }
+
+  /// 將 [index] 寫回磁碟（atomic rename）。
+  Future<void> save(HoyoWikiIndex index) async {
+    final json = {
+      'version': 1,
+      'search': index.searchMap,
+      'entries': index.entries.map(
+        (k, v) => MapEntry(k, {
+          'icon_url': v.iconUrl,
+          'header_img_url': v.headerImgUrl,
+          'fetched_at': v.fetchedAt.toUtc().toIso8601String(),
+        }),
+      ),
+    };
+    final tmp = File('${_file.path}.tmp');
+    await tmp.writeAsString(jsonEncode(json));
+    await tmp.rename(_file.path);
+    _log.fine(
+      'saved search=${index.searchMap.length} entries=${index.entries.length}',
+    );
+  }
 }
