@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 /// 可排序的祈願記錄表格，含分頁功能。
@@ -386,19 +387,22 @@ class _Row extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: Row(
-              children: [
-                GachaItemIcon(record: record, size: 32),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    record.name,
-                    style: highlight,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            child: GachaItemTapTarget(
+              record: record,
+              child: Row(
+                children: [
+                  GachaItemIcon(record: record, size: 32),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      record.name,
+                      style: highlight,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Expanded(flex: 2, child: Text(record.itemType)),
