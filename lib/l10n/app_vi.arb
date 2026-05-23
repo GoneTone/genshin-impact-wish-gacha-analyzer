@@ -199,6 +199,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "Đang tìm dữ liệu vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Đang lấy chi tiết vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Đang tải hình ảnh vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "Xác thực liên tục thất bại, vui lòng đăng nhập lại vào game",
   "errorRateLimited": "Yêu cầu quá thường xuyên, vui lòng thử lại sau",
   "errorServer": "Lỗi máy chủ: {message}",

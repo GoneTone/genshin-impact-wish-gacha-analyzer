@@ -195,6 +195,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "搜索物品数据 {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "抓取物品详情 {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "下载物品图片 {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "认证持续失效，请重新登录游戏",
   "errorRateLimited": "请求过于频繁，请稍后再试",
   "errorServer": "服务器错误：{message}",

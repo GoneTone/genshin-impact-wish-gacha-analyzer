@@ -199,6 +199,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "Recherche des données d'objet {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Récupération des détails d'objet {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Téléchargement des images d'objet {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "L'authentification a échoué en permanence, veuillez vous reconnecter au jeu",
   "errorRateLimited": "Trop de requêtes, veuillez réessayer plus tard",
   "errorServer": "Erreur serveur : {message}",

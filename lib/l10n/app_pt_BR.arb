@@ -199,6 +199,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "Pesquisando dados de itens {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Buscando detalhes de itens {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Baixando imagens de itens {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "Autenticação continua falhando, faça login no jogo novamente",
   "errorRateLimited": "Muitas solicitações, tente novamente mais tarde",
   "errorServer": "Erro no servidor: {message}",

@@ -199,6 +199,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "アイテムデータを検索中 {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "アイテム詳細を取得中 {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "アイテム画像をダウンロード中 {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "認証が継続して失効しています。ゲームに再ログインしてください",
   "errorRateLimited": "リクエストが多すぎます。しばらくしてから再試行してください",
   "errorServer": "サーバーエラー：{message}",

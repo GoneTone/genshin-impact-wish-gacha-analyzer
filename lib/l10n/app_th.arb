@@ -199,6 +199,39 @@
       }
     }
   },
+  "updateProgressHoyoWikiSearching": "กำลังค้นหาข้อมูลไอเทม {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "กำลังดึงรายละเอียดไอเทม {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "กำลังดาวน์โหลดรูปภาพไอเทม {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "errorAuthExpired": "การยืนยันตัวตนล้มเหลวต่อเนื่อง กรุณาเข้าสู่ระบบเกมใหม่",
   "errorRateLimited": "คำขอถี่เกินไป กรุณารอสักครู่แล้วลองใหม่",
   "errorServer": "เซิร์ฟเวอร์ผิดพลาด: {message}",
