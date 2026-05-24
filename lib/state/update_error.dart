@@ -38,3 +38,13 @@ class UpdateErrorOther extends UpdateError {
   /// 直接顯示給使用者的錯誤訊息。
   final String message;
 }
+
+/// 強制重抓 HoyoWiki 圖片時，清空 index 或 cache 目錄階段失敗。
+/// 通常是檔案被其他 process 鎖住（防毒掃描中等）。
+class UpdateErrorWipeHoyoWikiCache extends UpdateError {
+  /// 建立 [UpdateErrorWipeHoyoWikiCache]；[detail] 為例外訊息（已脫敏路徑）。
+  const UpdateErrorWipeHoyoWikiCache({required this.detail});
+
+  /// 例外訊息；絕對路徑應在外層 emit 前以 `sanitizeFsPath` 處理。
+  final String detail;
+}
