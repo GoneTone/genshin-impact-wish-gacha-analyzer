@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -344,6 +345,9 @@ class _DataManagement extends ConsumerWidget {
     final activeUid = ref.watch(
       gachaRepositoryProvider.select((s) => s.activeUid),
     );
+    final progress = ref.watch(
+      gachaRepositoryProvider.select((s) => s.progress),
+    );
 
     return Wrap(
       spacing: AppSpacing.s,
@@ -358,6 +362,20 @@ class _DataManagement extends ConsumerWidget {
           onPressed: () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
+        ),
+        Tooltip(
+          message: !hasData ? l.settingsRefetchHoyoWikiImagesEmpty : '',
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).gacha.stateDanger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: (!hasData || progress != null)
+                ? null
+                : () => _refetchHoyoWikiImages(context, ref),
+            icon: const Icon(Icons.refresh, size: 18),
+            label: Text(l.settingsRefetchHoyoWikiImagesTitle),
+          ),
         ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -660,6 +678,40 @@ class _DataManagement extends ConsumerWidget {
     );
     if (ok != true) return;
     await ref.read(gachaRepositoryProvider.notifier).clearAll();
+  }
+
+  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoyoWikiImages]。
+  Future<void> _refetchHoyoWikiImages(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showDialog<bool>(
+      context: ctx,
+      builder: (dialogCtx) => AlertDialog(
+        title: Text(l.confirmRefetchHoyoWikiTitle),
+        content: Text(l.confirmRefetchHoyoWikiBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogCtx).pop(false),
+            child: Text(l.actionCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogCtx).gacha.stateDanger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.of(dialogCtx).pop(true),
+            child: Text(l.confirmRefetchHoyoWikiConfirm),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    // 後端流程獨立於 dialog lifecycle；UpdateProgressDialog 由 app_shell.dart
+    // 既有 ref.listen 自動彈出。
+    unawaited(
+      ref
+          .read(gachaRepositoryProvider.notifier)
+          .forceRefetchAllHoyoWikiImages(),
+    );
   }
 }
 
