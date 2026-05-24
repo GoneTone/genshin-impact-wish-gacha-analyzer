@@ -631,7 +631,7 @@
   "updateErrorFormat": "Format de réponse inattendu",
   "updateErrorWipeHoyoWikiCache": "Échec du vidage du cache d'images : {detail}",
   "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
-  "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de wish, rien à retélécharger",
+  "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de vœux, rien à retélécharger",
   "confirmRefetchHoyoWikiTitle": "Forcer le re-téléchargement des images d'objets",
   "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoyoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
   "confirmRefetchHoyoWikiConfirm": "Lancer le re-téléchargement",

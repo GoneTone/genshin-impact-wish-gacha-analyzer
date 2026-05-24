@@ -631,7 +631,7 @@
   "updateErrorFormat": "Formato de respuesta inesperado",
   "updateErrorWipeHoyoWikiCache": "Error al limpiar caché de imágenes: {detail}",
   "settingsRefetchHoyoWikiImagesTitle": "Forzar redescarga de imágenes de objetos",
-  "settingsRefetchHoyoWikiImagesEmpty": "Aún no hay registros de wish, nada que redescargar",
+  "settingsRefetchHoyoWikiImagesEmpty": "Aún no hay registros de Gachapón, nada que redescargar",
   "confirmRefetchHoyoWikiTitle": "Forzar redescarga de imágenes de objetos",
   "confirmRefetchHoyoWikiBody": "Esto borrará toda la caché local de imágenes de objetos y las volverá a descargar desde HoyoWiki. Puede tardar varios minutos y consumir un tráfico considerable.",
   "confirmRefetchHoyoWikiConfirm": "Empezar redescarga",
