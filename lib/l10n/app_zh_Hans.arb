@@ -625,6 +625,12 @@
     }
   },
   "updateErrorFormat": "响应格式异常",
+  "updateErrorWipeHoyoWikiCache": "清除物品图片缓存失败：{detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "强制重抓物品图片",
+  "settingsRefetchHoyoWikiImagesEmpty": "尚无祈愿记录，无物品可重抓",
+  "confirmRefetchHoyoWikiTitle": "强制重抓物品图片",
+  "confirmRefetchHoyoWikiBody": "这会清空所有物品图片的本地缓存并重新从 HoyoWiki 抓取。视物品数量可能耗费数分钟流量与时间。",
+  "confirmRefetchHoyoWikiConfirm": "开始重抓",
   "settingsLogs": "日志调试",
   "@settingsLogs": {},
   "settingsLogsHint": "遇到问题时，可导出 log 给开发者协助排查。",

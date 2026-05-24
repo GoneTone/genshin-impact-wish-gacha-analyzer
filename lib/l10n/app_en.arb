@@ -629,6 +629,15 @@
     }
   },
   "updateErrorFormat": "Unexpected response format",
+  "updateErrorWipeHoyoWikiCache": "Failed to clear item-image cache: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
+  "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
+  "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
+  "confirmRefetchHoyoWikiBody": "This will clear all local item-image cache and re-download from HoyoWiki. May take several minutes and noticeable bandwidth.",
+  "confirmRefetchHoyoWikiConfirm": "Start re-fetching",
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
   "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",

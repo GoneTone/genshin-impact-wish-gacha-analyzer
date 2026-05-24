@@ -299,6 +299,27 @@
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",
 
+  "settingsRefetchHoyoWikiImagesTitle": "強制重抓物品圖片",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoyoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "尚無祈願紀錄，無物品可重抓",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "強制重抓物品圖片",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoyoWiki 抓取。視物品數量可能耗費數分鐘流量與時間。",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "開始重抓",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+
   "settingsExportData": "匯出資料",
   "settingsImportData": "匯入資料",
   "shareImageButton": "生成分享圖",

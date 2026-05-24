@@ -629,6 +629,12 @@
     }
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
+  "updateErrorWipeHoyoWikiCache": "ล้างแคชภาพไม่สำเร็จ: {detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "บังคับดึงภาพไอเทมใหม่",
+  "settingsRefetchHoyoWikiImagesEmpty": "ยังไม่มีบันทึก wish ไม่มีอะไรให้ดึงใหม่",
+  "confirmRefetchHoyoWikiTitle": "บังคับดึงภาพไอเทมใหม่",
+  "confirmRefetchHoyoWikiBody": "การทำเช่นนี้จะล้างแคชภาพไอเทมในเครื่องทั้งหมดและดาวน์โหลดใหม่จาก HoyoWiki อาจใช้เวลาหลายนาทีและใช้แบนด์วิดท์มาก",
+  "confirmRefetchHoyoWikiConfirm": "เริ่มดึงใหม่",
   "settingsLogs": "Logs ดีบัก",
   "@settingsLogs": {},
   "settingsLogsHint": "เมื่อพบปัญหา สามารถส่งออก log ให้นักพัฒนาช่วยตรวจสอบได้",

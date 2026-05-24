@@ -629,6 +629,12 @@
     }
   },
   "updateErrorFormat": "Formato de resposta inválido",
+  "updateErrorWipeHoyoWikiCache": "Falha ao limpar cache de imagens: {detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "Forçar nova obtenção de imagens dos itens",
+  "settingsRefetchHoyoWikiImagesEmpty": "Sem registros de wish ainda, nada para reobter",
+  "confirmRefetchHoyoWikiTitle": "Forçar nova obtenção de imagens dos itens",
+  "confirmRefetchHoyoWikiBody": "Isso limpará todo o cache local de imagens dos itens e fará o download novamente do HoyoWiki. Pode levar alguns minutos e consumir tráfego considerável.",
+  "confirmRefetchHoyoWikiConfirm": "Iniciar nova obtenção",
   "settingsLogs": "Logs de depuração",
   "@settingsLogs": {},
   "settingsLogsHint": "Em caso de problemas, exporte os logs para ajudar os desenvolvedores a diagnosticar.",
