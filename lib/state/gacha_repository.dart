@@ -475,6 +475,77 @@ class GachaRepository extends Notifier<GachaState> {
     await _runUpdate(forceRecapture: true);
   }
 
+  /// Logger 實例（force-refetch 流程）。
+  static final _refetchLog = Logger('wish.hoyowiki.refetch');
+
+  /// 強制重抓所有 UID 祈願紀錄聯集物品的 HoyoWiki 圖檔。
+  ///
+  /// 流程：
+  ///   1. 互斥檢查：`state.progress != null` 直接 no-op（UI 應已 disable 按鈕）。
+  ///   2. emit `Preparing`、建 cancellable client。
+  ///   3. `hoyowikiIndexProvider.notifier.resetAll()` 清 index + 刪 cache 目錄。
+  ///   4. 呼叫 [_fetchHoyoWiki] 跑既有三階段管線（它本就跨 UID 聚合 pairs）。
+  ///   5. 結束依取消狀態 emit `UpdateCompleted` 或清 progress。
+  ///   6. 清檔失敗時 emit `UpdateFailed(UpdateErrorWipeHoyoWikiCache)`。
+  Future<void> forceRefetchAllHoyoWikiImages() async {
+    if (state.progress != null) {
+      _refetchLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+
+    final totalUids = state.byUid.length;
+    _refetchLog.info('start, totalUids=$totalUids');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      try {
+        await ref.read(hoyowikiIndexProvider.notifier).resetAll();
+        if (!ref.mounted) return;
+        _refetchLog.info('wiped (index+cache cleared)');
+      } catch (e, st) {
+        _refetchLog.severe('wipeFailed', e, st);
+        if (!ref.mounted) return;
+        state = state.copyWith(
+          progress: UpdateFailed(UpdateErrorWipeHoyoWikiCache(e.toString())),
+        );
+        return;
+      }
+
+      try {
+        await _fetchHoyoWiki(cancellable.client);
+      } catch (e, st) {
+        _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _refetchLog.warning('cancelled');
+        state = state.copyWith(clearProgress: true);
+        return;
+      }
+
+      _refetchLog.info('done');
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+        ),
+      );
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
   /// 刪除目前作用中帳號的所有資料。
   Future<void> clearActive() async {
     final uid = state.activeUid;
