@@ -149,6 +149,51 @@ void main() {
     });
   });
 
+  group('HoyoWikiIndexStorage.clearAll', () {
+    test('既有 index 檔被覆寫為空殼', () async {
+      final dir = await Directory.systemTemp.createTemp('hoyowiki_storage_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
+      final storage = HoyoWikiIndexStorage(dir);
+      await storage.save(
+        HoyoWikiIndex(
+          searchMap: const {'en-us::Hu Tao': '111'},
+          entries: {
+            '111': HoyoWikiEntry(
+              iconUrl: 'https://x/icon.png',
+              headerImgUrl: 'https://x/header.png',
+              fetchedAt: DateTime.utc(2026, 5, 23),
+            ),
+          },
+          menuIds: const {'111': 2},
+        ),
+      );
+
+      await storage.clearAll();
+
+      final reloaded = await storage.load();
+      expect(reloaded.searchMap, isEmpty);
+      expect(reloaded.entries, isEmpty);
+      expect(reloaded.menuIds, isEmpty);
+    });
+
+    test('index 檔不存在時不爆，仍寫入空殼', () async {
+      final dir = await Directory.systemTemp.createTemp('hoyowiki_storage_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
+      final storage = HoyoWikiIndexStorage(dir);
+
+      await storage.clearAll();
+
+      final reloaded = await storage.load();
+      expect(reloaded.searchMap, isEmpty);
+      expect(reloaded.entries, isEmpty);
+      expect(reloaded.menuIds, isEmpty);
+    });
+  });
+
   group('hoyowikiCacheFile', () {
     late Directory tempDir;
 

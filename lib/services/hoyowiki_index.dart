@@ -129,6 +129,14 @@ class HoyoWikiIndexStorage {
       'menuIds=${index.menuIds.length}',
     );
   }
+
+  /// 將 index 重設為空（searchMap / entries / menuIds 全空），用於「強制重抓
+  /// 所有物品圖片」操作。覆寫策略與 [save] 相同（atomic rename），原檔不存在
+  /// 時直接寫入空殼。
+  Future<void> clearAll() async {
+    await save(const HoyoWikiIndex.empty());
+    _log.info('clearAll: index reset to empty');
+  }
 }
 
 /// HoyoWiki 圖片種類（對應 icon_url 與 header_img_url）。
