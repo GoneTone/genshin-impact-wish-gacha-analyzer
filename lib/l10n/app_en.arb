@@ -191,7 +191,7 @@
       }
     }
   },
-  "progressDoneImagesSummary": "Downloaded {count} item images",
+  "progressDoneImagesSummary": "{count, plural, =1{Downloaded {count} item image} other{Downloaded {count} item images}}",
   "@progressDoneImagesSummary": {
     "placeholders": {
       "count": {

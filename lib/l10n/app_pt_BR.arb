@@ -191,7 +191,7 @@
       }
     }
   },
-  "progressDoneImagesSummary": "{count} imagens de itens baixadas",
+  "progressDoneImagesSummary": "{count, plural, =1{{count} imagem de item baixada} other{{count} imagens de itens baixadas}}",
   "@progressDoneImagesSummary": {
     "placeholders": {
       "count": {

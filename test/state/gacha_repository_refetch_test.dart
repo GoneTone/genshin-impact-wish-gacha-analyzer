@@ -214,9 +214,12 @@ void main() {
         .forceRefetchAllHoYoWikiImages();
 
     expect(apiCalled, isFalse, reason: '沒 pairs 不該打 API');
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
     expect(
-      container.read(gachaRepositoryProvider).progress,
-      isA<UpdateCompleted>(),
+      (progress as UpdateCompleted).hoYoWikiImagesDownloaded,
+      0,
+      reason: '空紀錄路徑應 0 張下載',
     );
   });
 
@@ -267,9 +270,13 @@ void main() {
 
     // index 在 first 中已清，但第二次不該再 clear（難以單獨驗證）；
     // 改驗：`_isUpdating` 結束後 state.progress 為 UpdateCompleted 而非錯誤狀態
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
     expect(
-      container.read(gachaRepositoryProvider).progress,
-      isA<UpdateCompleted>(),
+      (progress as UpdateCompleted).hoYoWikiImagesDownloaded,
+      0,
+      reason:
+          '互斥早退後第一次 forceRefetch 的 download 數；MockClient 永遠回 404，bytes 永遠 null，downloaded 一直是 0',
     );
   });
 
