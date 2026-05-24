@@ -187,6 +187,14 @@
       }
     }
   },
+  "progressDoneImagesSummary": "下载 {count} 张物品图片",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ 部分失败：{names}",
   "@progressPartialFailed": {
     "placeholders": {

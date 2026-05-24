@@ -191,6 +191,14 @@
       }
     }
   },
+  "progressDoneImagesSummary": "アイテム画像を {count} 件ダウンロード",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ 一部失敗：{names}",
   "@progressPartialFailed": {
     "placeholders": {

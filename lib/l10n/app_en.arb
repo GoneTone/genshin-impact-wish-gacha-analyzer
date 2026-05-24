@@ -191,6 +191,14 @@
       }
     }
   },
+  "progressDoneImagesSummary": "Downloaded {count} item images",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Partial failure: {names}",
   "@progressPartialFailed": {
     "placeholders": {

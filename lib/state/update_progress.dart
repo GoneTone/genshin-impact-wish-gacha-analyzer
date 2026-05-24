@@ -52,6 +52,7 @@ class UpdateCompleted extends UpdateProgress {
     required this.totalNewRecords,
     required this.failedBanners,
     required this.updatedAt,
+    required this.hoYoWikiImagesDownloaded,
   });
 
   /// 本次更新新增的總紀錄數。
@@ -62,6 +63,10 @@ class UpdateCompleted extends UpdateProgress {
 
   /// 更新完成時間（UTC）。
   final DateTime updatedAt;
+
+  /// 本次補抓 HoYoWiki 圖片成功寫入磁碟的張數（icon + header 各算一張）。
+  /// 既有圖檔已存在不重抓的不算；只計入本次新下載成功的張數。
+  final int hoYoWikiImagesDownloaded;
 }
 
 /// 更新失敗。

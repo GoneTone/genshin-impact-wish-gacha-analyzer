@@ -191,6 +191,14 @@
       }
     }
   },
+  "progressDoneImagesSummary": "ดาวน์โหลดภาพไอเทมแล้ว {count} รายการ",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ บางส่วนล้มเหลว: {names}",
   "@progressPartialFailed": {
     "placeholders": {

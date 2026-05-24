@@ -220,22 +220,29 @@ class _Body extends StatelessWidget {
             }),
           ],
         ),
-      UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l.progressDoneSummary(totalNewRecords)),
-          if (failedBanners.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.s),
-            Text(
-              l.progressPartialFailed(
-                failedBanners.map(resolveBannerName).join('、'),
+      UpdateCompleted(
+        :final totalNewRecords,
+        :final failedBanners,
+        :final hoYoWikiImagesDownloaded,
+      ) =>
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l.progressDoneSummary(totalNewRecords)),
+            const SizedBox(height: AppSpacing.xs),
+            Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
+            if (failedBanners.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.progressPartialFailed(
+                  failedBanners.map(resolveBannerName).join('、'),
+                ),
+                style: TextStyle(color: tokens.stateDanger),
               ),
-              style: TextStyle(color: tokens.stateDanger),
-            ),
+            ],
           ],
-        ],
-      ),
+        ),
       UpdateFailed(:final error) => Text(_resolveError(error, l)),
       null => const SizedBox.shrink(),
     };

@@ -148,6 +148,13 @@
   "@progressDoneSummary": {
     "placeholders": { "count": { "type": "int" } }
   },
+  "progressDoneImagesSummary": "下載 {count} 張物品圖片",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "progressPartialFailed": "⚠ 部分失敗：{names}",
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }

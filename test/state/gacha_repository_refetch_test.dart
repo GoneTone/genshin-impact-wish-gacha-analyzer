@@ -165,10 +165,13 @@ void main() {
     expect(index.searchMap['en-us::StaleItem'], isNull);
     expect(index.searchMap['en-us::Hu Tao'], isNotNull);
 
-    // 結束 emit UpdateCompleted
+    // 結束 emit UpdateCompleted，並驗證圖片下載數（Hu Tao + Skyward Harp，各 icon+header = 4 張）
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
     expect(
-      container.read(gachaRepositoryProvider).progress,
-      isA<UpdateCompleted>(),
+      (progress as UpdateCompleted).hoYoWikiImagesDownloaded,
+      4,
+      reason: '兩個物品各有 icon+header，共下載 4 張',
     );
   });
 

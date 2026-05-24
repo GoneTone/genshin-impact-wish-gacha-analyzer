@@ -191,6 +191,14 @@
       }
     }
   },
+  "progressDoneImagesSummary": "Đã tải {count} ảnh vật phẩm",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Một phần thất bại: {names}",
   "@progressPartialFailed": {
     "placeholders": {

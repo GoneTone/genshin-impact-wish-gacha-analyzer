@@ -427,8 +427,9 @@ class GachaRepository extends Notifier<GachaState> {
     await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
     if (!ref.mounted) return;
     // HoYoWiki 補圖階段（best-effort，不影響 UpdateCompleted）
+    var hoYoWikiImagesDownloaded = 0;
     try {
-      await _fetchHoYoWiki(client);
+      hoYoWikiImagesDownloaded = await _fetchHoYoWiki(client);
     } catch (e, st) {
       _log.warning('hoyowiki stage threw (ignored)', e, st);
     }
@@ -443,6 +444,7 @@ class GachaRepository extends Notifier<GachaState> {
         totalNewRecords: totalNew,
         failedBanners: failed,
         updatedAt: updatedAt,
+        hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
       ),
     );
   }
@@ -519,8 +521,9 @@ class GachaRepository extends Notifier<GachaState> {
         return;
       }
 
+      var hoYoWikiImagesDownloaded = 0;
       try {
-        await _fetchHoYoWiki(cancellable.client);
+        hoYoWikiImagesDownloaded = await _fetchHoYoWiki(cancellable.client);
       } catch (e, st) {
         _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
@@ -538,6 +541,7 @@ class GachaRepository extends Notifier<GachaState> {
           totalNewRecords: 0,
           failedBanners: const [],
           updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
         ),
       );
     } finally {
@@ -710,7 +714,10 @@ class GachaRepository extends Notifier<GachaState> {
   ///
   /// 每筆獨立 try/catch：單筆失敗不終止整段。每筆完成更新 progress。整段失敗
   /// 不影響 `UpdateCompleted`。取消（`_cancelTriggered` 或 `!ref.mounted`）早退。
-  Future<void> _fetchHoYoWiki(http.Client client) async {
+  ///
+  /// 回傳本次成功寫入磁碟的圖片張數（icon + header 各算一張）。
+  Future<int> _fetchHoYoWiki(http.Client client) async {
+    var downloaded = 0;
     final fetcher = ref.read(hoyowikiFetcherProvider);
     final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
     final cacheDir = ref.read(hoyowikiCacheDirProvider);
@@ -784,7 +791,7 @@ class GachaRepository extends Notifier<GachaState> {
     // 三段加起來都沒工作就直接結束。
     final totalInitial =
         searchTodo.length + entryTodo.length + downloadTodo.length;
-    if (totalInitial == 0) return;
+    if (totalInitial == 0) return downloaded;
 
     final fetcherDelay = ref.read(hoyowikiFetcherProvider).rateLimit;
 
@@ -823,7 +830,7 @@ class GachaRepository extends Notifier<GachaState> {
         } catch (e) {
           _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
         }
-        if (!ref.mounted) return;
+        if (!ref.mounted) return downloaded;
         state = state.copyWith(
           progress: FetchingHoYoWiki(
             phase: HoYoWikiPhase.searching,
@@ -831,7 +838,7 @@ class GachaRepository extends Notifier<GachaState> {
             totalCount: searchTodo.length,
           ),
         );
-        if (await checkCancel()) return;
+        if (await checkCancel()) return downloaded;
       }
     }
 
@@ -852,7 +859,7 @@ class GachaRepository extends Notifier<GachaState> {
         } catch (e) {
           _log.warning('hoyowiki entry failed id=$id err=$e');
         }
-        if (!ref.mounted) return;
+        if (!ref.mounted) return downloaded;
         state = state.copyWith(
           progress: FetchingHoYoWiki(
             phase: HoYoWikiPhase.fetchingEntries,
@@ -860,7 +867,7 @@ class GachaRepository extends Notifier<GachaState> {
             totalCount: entryList.length,
           ),
         );
-        if (await checkCancel()) return;
+        if (await checkCancel()) return downloaded;
       }
     }
 
@@ -879,11 +886,12 @@ class GachaRepository extends Notifier<GachaState> {
             );
             await file.writeAsBytes(bytes, flush: true);
             indexNotifier.bumpCacheRevision();
+            downloaded++;
           }
         } catch (e) {
           _log.warning('hoyowiki download failed url=${item.url} err=$e');
         }
-        if (!ref.mounted) return;
+        if (!ref.mounted) return downloaded;
         state = state.copyWith(
           progress: FetchingHoYoWiki(
             phase: HoYoWikiPhase.downloading,
@@ -891,9 +899,10 @@ class GachaRepository extends Notifier<GachaState> {
             totalCount: downloadTodo.length,
           ),
         );
-        if (await checkCancel()) return;
+        if (await checkCancel()) return downloaded;
       }
     }
+    return downloaded;
   }
 
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
