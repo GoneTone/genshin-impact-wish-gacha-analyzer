@@ -137,6 +137,16 @@ class HoyoWikiIndexStorage {
     await save(const HoyoWikiIndex.empty());
     _log.info('clearAll: index reset to empty');
   }
+
+  /// 刪除 [baseDir] 內所有 HoyoWiki cache 圖檔並重建空目錄。
+  /// 目錄不存在時直接建立；失敗（權限被鎖等）直接拋給呼叫方處理。
+  Future<void> wipeCacheDirectory() async {
+    if (await baseDir.exists()) {
+      await baseDir.delete(recursive: true);
+    }
+    await baseDir.create(recursive: true);
+    _log.info('wipeCacheDirectory: cache cleared at ${baseDir.path}');
+  }
 }
 
 /// HoyoWiki 圖片種類（對應 icon_url 與 header_img_url）。

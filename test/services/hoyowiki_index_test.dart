@@ -194,6 +194,45 @@ void main() {
     });
   });
 
+  group('HoyoWikiIndexStorage.wipeCacheDirectory', () {
+    test('既有 cache 檔被刪光且目錄重建', () async {
+      final dir = await Directory.systemTemp.createTemp('hoyowiki_cache_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
+      // 放兩個 dummy cache 檔
+      await File('${dir.path}/111_icon.png').writeAsBytes([1, 2, 3]);
+      await File('${dir.path}/111_header.png').writeAsBytes([4, 5, 6]);
+
+      final storage = HoyoWikiIndexStorage(dir);
+      await storage.wipeCacheDirectory();
+
+      expect(await dir.exists(), isTrue, reason: '目錄應重建');
+      final remaining = dir
+          .listSync()
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.png') || f.path.endsWith('.jpg'))
+          .toList();
+      expect(remaining, isEmpty, reason: 'cache 圖檔應全被刪');
+    });
+
+    test('cache 目錄不存在時不爆，直接建空目錄', () async {
+      final parent = await Directory.systemTemp.createTemp('hoyowiki_cache_');
+      addTearDown(() async {
+        if (await parent.exists()) await parent.delete(recursive: true);
+      });
+      // 用一個不存在的子目錄做 baseDir
+      final dir = Directory('${parent.path}/missing');
+      expect(await dir.exists(), isFalse);
+      final storage = HoyoWikiIndexStorage(dir);
+
+      await storage.wipeCacheDirectory();
+
+      expect(await dir.exists(), isTrue);
+      expect(dir.listSync(), isEmpty);
+    });
+  });
+
   group('hoyowikiCacheFile', () {
     late Directory tempDir;
 
