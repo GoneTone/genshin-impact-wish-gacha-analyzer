@@ -633,7 +633,7 @@
   "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
   "settingsRefetchHoyoWikiImagesEmpty": "Chưa có bản ghi Cầu Nguyện, không có gì để tải lại",
   "confirmRefetchHoyoWikiTitle": "Buộc tải lại ảnh vật phẩm",
-  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoyoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoYoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
   "confirmRefetchHoyoWikiConfirm": "Bắt đầu tải lại",
   "settingsLogs": "Logs gỡ lỗi",
   "@settingsLogs": {},

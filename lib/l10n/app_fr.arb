@@ -633,7 +633,7 @@
   "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
   "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de vœux, rien à retélécharger",
   "confirmRefetchHoyoWikiTitle": "Forcer le re-téléchargement des images d'objets",
-  "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoyoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
+  "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoYoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
   "confirmRefetchHoyoWikiConfirm": "Lancer le re-téléchargement",
   "settingsLogs": "Journaux de débogage",
   "@settingsLogs": {},

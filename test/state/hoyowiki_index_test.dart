@@ -14,7 +14,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
       ],
@@ -52,7 +52,7 @@ void main() {
     );
     expect(container.read(hoyowikiIndexProvider).lookupMenuId('5125428'), 2);
     // 重新 load 一次確認 persist
-    final reloaded = await HoyoWikiIndexStorage(tempDir).load();
+    final reloaded = await HoYoWikiIndexStorage(tempDir).load();
     expect(reloaded.lookupId(name: 'Hu Tao', lang: 'en-us'), '5125428');
     expect(reloaded.lookupMenuId('5125428'), 2);
   });
@@ -60,7 +60,7 @@ void main() {
   test('setEntry 更新 state 並 persist', () async {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     await notifier.waitForLoad();
-    final entry = HoyoWikiEntry(
+    final entry = HoYoWikiEntry(
       iconUrl: 'https://x/icon.png',
       headerImgUrl: '',
       fetchedAt: DateTime.utc(2026, 5, 23),
@@ -70,7 +70,7 @@ void main() {
       container.read(hoyowikiIndexProvider).lookupEntry('5125428')?.iconUrl,
       'https://x/icon.png',
     );
-    final reloaded = await HoyoWikiIndexStorage(tempDir).load();
+    final reloaded = await HoYoWikiIndexStorage(tempDir).load();
     expect(reloaded.lookupEntry('5125428')?.iconUrl, 'https://x/icon.png');
   });
 
@@ -84,19 +84,19 @@ void main() {
     expect(after.searchMap, before.searchMap);
   });
 
-  group('HoyoWikiIndexNotifier.resetAll', () {
+  group('HoYoWikiIndexNotifier.resetAll', () {
     test('清空 index、刪除 cache 目錄、state identity 換新', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_notifier_');
       addTearDown(() async {
         if (await dir.exists()) await dir.delete(recursive: true);
       });
-      final storage = HoyoWikiIndexStorage(dir);
+      final storage = HoYoWikiIndexStorage(dir);
       // 預植 index 與一個 cache 檔
       await storage.save(
-        HoyoWikiIndex(
+        HoYoWikiIndex(
           searchMap: const {'en-us::Hu Tao': '111'},
           entries: {
-            '111': HoyoWikiEntry(
+            '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
               headerImgUrl: '',
               fetchedAt: DateTime.utc(2026, 5, 23),
@@ -126,7 +126,7 @@ void main() {
       expect(
         identical(after, before),
         isFalse,
-        reason: 'state = const HoyoWikiIndex.empty() 應換新 identity',
+        reason: 'state = const HoYoWikiIndex.empty() 應換新 identity',
       );
       // cache 檔應已刪
       expect(File('${dir.path}/111_icon.png').existsSync(), isFalse);

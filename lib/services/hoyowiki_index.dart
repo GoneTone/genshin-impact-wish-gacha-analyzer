@@ -4,36 +4,36 @@ import 'dart:io';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:logging/logging.dart';
 
-/// HoyoWiki entry_page API 抓到的 icon 與 header 大圖 URL，以及抓取時間。
-class HoyoWikiEntry {
-  /// 建立 [HoyoWikiEntry]；兩個 URL 均可能為空字串。
-  const HoyoWikiEntry({
+/// HoYoWiki entry_page API 抓到的 icon 與 header 大圖 URL，以及抓取時間。
+class HoYoWikiEntry {
+  /// 建立 [HoYoWikiEntry]；兩個 URL 均可能為空字串。
+  const HoYoWikiEntry({
     required this.iconUrl,
     required this.headerImgUrl,
     required this.fetchedAt,
   });
 
-  /// 物品 icon CDN URL；HoyoWiki 未上傳時為空字串。
+  /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
   final String iconUrl;
 
-  /// 物品 header（banner）CDN URL；HoyoWiki 未上傳時為空字串。
+  /// 物品 header（banner）CDN URL；HoYoWiki 未上傳時為空字串。
   final String headerImgUrl;
 
   /// 抓取時間（僅供 debug，不參與邏輯）。
   final DateTime fetchedAt;
 }
 
-/// 跨 UID 共用的 HoyoWiki lookup index。
-class HoyoWikiIndex {
-  /// 建立 [HoyoWikiIndex]。
-  const HoyoWikiIndex({
+/// 跨 UID 共用的 HoYoWiki lookup index。
+class HoYoWikiIndex {
+  /// 建立 [HoYoWikiIndex]。
+  const HoYoWikiIndex({
     required this.searchMap,
     required this.entries,
     required this.menuIds,
   });
 
   /// 建立空 index（無任何 search / entry）。
-  const HoyoWikiIndex.empty()
+  const HoYoWikiIndex.empty()
     : searchMap = const {},
       entries = const {},
       menuIds = const {};
@@ -41,8 +41,8 @@ class HoyoWikiIndex {
   /// `"<lang>::<name>"` → `hoyowiki_id`；只記錄成功命中的。
   final Map<String, String> searchMap;
 
-  /// `hoyowiki_id` → [HoyoWikiEntry]；URL 可能為空字串。
-  final Map<String, HoyoWikiEntry> entries;
+  /// `hoyowiki_id` → [HoYoWikiEntry]；URL 可能為空字串。
+  final Map<String, HoYoWikiEntry> entries;
 
   /// `hoyowiki_id` → `menu_id`（2＝角色，4＝武器）；search API 命中時寫入。
   final Map<String, int> menuIds;
@@ -52,17 +52,17 @@ class HoyoWikiIndex {
       searchMap['$lang::$name'];
 
   /// 以 [id] 查 entry；查無回 null。
-  HoyoWikiEntry? lookupEntry(String id) => entries[id];
+  HoYoWikiEntry? lookupEntry(String id) => entries[id];
 
   /// 以 [id] 查 menu_id；查無回 null。
   int? lookupMenuId(String id) => menuIds[id];
 }
 
 /// 負責 `hoyowiki_index.json` 的讀寫（atomic write，跨 UID 共用）。
-class HoyoWikiIndexStorage {
-  /// 建立 [HoyoWikiIndexStorage]，需指定資料根目錄 [baseDir]（通常與
+class HoYoWikiIndexStorage {
+  /// 建立 [HoYoWikiIndexStorage]，需指定資料根目錄 [baseDir]（通常與
   /// `gachaStorageProvider` 共用 `<appSupport>/gacha_data/`）。
-  HoyoWikiIndexStorage(this.baseDir);
+  HoYoWikiIndexStorage(this.baseDir);
 
   /// Logger 實例（hoyowiki 儲存）。
   static final _log = Logger('gacha.hoyowiki.storage');
@@ -74,9 +74,9 @@ class HoyoWikiIndexStorage {
   File get _file => File('${baseDir.path}/hoyowiki_index.json');
 
   /// 讀取 index；檔案不存在或解析失敗回空 index。
-  Future<HoyoWikiIndex> load() async {
+  Future<HoYoWikiIndex> load() async {
     final f = _file;
-    if (!await f.exists()) return const HoyoWikiIndex.empty();
+    if (!await f.exists()) return const HoYoWikiIndex.empty();
     try {
       final text = await f.readAsString();
       final json = jsonDecode(text) as Map<String, dynamic>;
@@ -86,13 +86,13 @@ class HoyoWikiIndexStorage {
       // 向後相容：舊 JSON 缺 menu_ids 欄位時回空 map。
       final menuIdsJson =
           (json['menu_ids'] as Map<String, dynamic>?) ?? const {};
-      return HoyoWikiIndex(
+      return HoYoWikiIndex(
         searchMap: searchJson.map((k, v) => MapEntry(k, v as String)),
         entries: entriesJson.map((k, v) {
           final m = v as Map<String, dynamic>;
           return MapEntry(
             k,
-            HoyoWikiEntry(
+            HoYoWikiEntry(
               iconUrl: (m['icon_url'] as String?) ?? '',
               headerImgUrl: (m['header_img_url'] as String?) ?? '',
               fetchedAt: DateTime.parse(m['fetched_at'] as String),
@@ -103,12 +103,12 @@ class HoyoWikiIndexStorage {
       );
     } catch (e, st) {
       _log.warning('load failed, return empty index', e, st);
-      return const HoyoWikiIndex.empty();
+      return const HoYoWikiIndex.empty();
     }
   }
 
   /// 將 [index] 寫回磁碟（atomic rename）。
-  Future<void> save(HoyoWikiIndex index) async {
+  Future<void> save(HoYoWikiIndex index) async {
     final json = {
       'version': 1,
       'search': index.searchMap,
@@ -135,11 +135,11 @@ class HoyoWikiIndexStorage {
   /// 所有物品圖片」操作。覆寫策略與 [save] 相同（atomic rename），原檔不存在
   /// 時直接寫入空殼。
   Future<void> clearAll() async {
-    await save(const HoyoWikiIndex.empty());
+    await save(const HoYoWikiIndex.empty());
     _log.info('clearAll: index reset to empty');
   }
 
-  /// 刪除 [baseDir] 內所有 HoyoWiki cache 圖檔並重建空目錄。
+  /// 刪除 [baseDir] 內所有 HoYoWiki cache 圖檔並重建空目錄。
   /// 目錄不存在時直接建立；失敗（權限被鎖等）直接拋給呼叫方處理。
   Future<void> wipeCacheDirectory() async {
     if (await baseDir.exists()) {
@@ -152,8 +152,8 @@ class HoyoWikiIndexStorage {
   }
 }
 
-/// HoyoWiki 圖片種類（對應 icon_url 與 header_img_url）。
-enum HoyoWikiImageKind {
+/// HoYoWiki 圖片種類（對應 icon_url 與 header_img_url）。
+enum HoYoWikiImageKind {
   /// 物品方形 icon。
   icon,
 
@@ -168,7 +168,7 @@ enum HoyoWikiImageKind {
 File hoyowikiCacheFile({
   required Directory baseDir,
   required String id,
-  required HoyoWikiImageKind kind,
+  required HoYoWikiImageKind kind,
   required String url,
 }) {
   final ext = _extFromUrl(url);

@@ -301,7 +301,7 @@
 
   "settingsRefetchHoyoWikiImagesTitle": "強制重抓物品圖片",
   "@settingsRefetchHoyoWikiImagesTitle": {
-    "description": "Settings → Data management → button: forcibly clears all cached HoyoWiki item images (icon + header) and re-fetches them from scratch."
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
   },
   "settingsRefetchHoyoWikiImagesEmpty": "尚無祈願紀錄，無物品可重抓",
   "@settingsRefetchHoyoWikiImagesEmpty": {
@@ -311,7 +311,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoyoWiki 抓取。視物品數量可能耗費數分鐘流量與時間。",
+  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoYoWiki 抓取。視物品數量可能耗費數分鐘流量與時間。",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },

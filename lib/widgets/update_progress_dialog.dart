@@ -64,7 +64,7 @@ class UpdateProgressDialog extends ConsumerWidget {
         ),
       ],
       FetchingBanner() => const <Widget>[],
-      FetchingHoyoWiki() => const <Widget>[],
+      FetchingHoYoWiki() => const <Widget>[],
       UpdateCompleted() || UpdateFailed() => [
         TextButton.icon(
           onPressed: r.clearProgress,
@@ -109,7 +109,7 @@ class _Title extends StatelessWidget {
         tokens.textPrimary,
         l.progressFetching,
       ),
-      FetchingHoyoWiki() => (
+      FetchingHoYoWiki() => (
         Icons.image_outlined,
         tokens.textPrimary,
         l.progressFetching,
@@ -198,7 +198,7 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
-      FetchingHoyoWiki(:final phase, :final doneCount, :final totalCount) =>
+      FetchingHoYoWiki(:final phase, :final doneCount, :final totalCount) =>
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -207,13 +207,13 @@ class _Body extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.l),
             Text(switch (phase) {
-              HoyoWikiPhase.searching => l.updateProgressHoyoWikiSearching(
+              HoYoWikiPhase.searching => l.updateProgressHoyoWikiSearching(
                 doneCount,
                 totalCount,
               ),
-              HoyoWikiPhase.fetchingEntries =>
+              HoYoWikiPhase.fetchingEntries =>
                 l.updateProgressHoyoWikiFetchingEntries(doneCount, totalCount),
-              HoyoWikiPhase.downloading => l.updateProgressHoyoWikiDownloading(
+              HoYoWikiPhase.downloading => l.updateProgressHoyoWikiDownloading(
                 doneCount,
                 totalCount,
               ),
@@ -249,7 +249,7 @@ class _Body extends StatelessWidget {
         UpdateErrorServer(:final details) => l.errorServer(details),
         UpdateErrorNoRecords() => l.errorNoRecords,
         UpdateErrorOther(:final message) => message,
-        UpdateErrorWipeHoyoWikiCache(:final detail) =>
+        UpdateErrorWipeHoYoWikiCache(:final detail) =>
           l.updateErrorWipeHoyoWikiCache(detail),
       };
 }

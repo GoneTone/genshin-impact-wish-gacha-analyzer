@@ -373,7 +373,7 @@ class _DataManagement extends ConsumerWidget {
             ),
             onPressed: (!hasData || progress != null)
                 ? null
-                : () => _refetchHoyoWikiImages(context, ref),
+                : () => _refetchHoYoWikiImages(context, ref),
             icon: const Icon(Icons.refresh, size: 18),
             label: Text(l.settingsRefetchHoyoWikiImagesTitle),
           ),
@@ -681,8 +681,8 @@ class _DataManagement extends ConsumerWidget {
     await ref.read(gachaRepositoryProvider.notifier).clearAll();
   }
 
-  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoyoWikiImages]。
-  Future<void> _refetchHoyoWikiImages(BuildContext ctx, WidgetRef ref) async {
+  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
+  Future<void> _refetchHoYoWikiImages(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showDialog<bool>(
       context: ctx,
@@ -711,7 +711,7 @@ class _DataManagement extends ConsumerWidget {
     unawaited(
       ref
           .read(gachaRepositoryProvider.notifier)
-          .forceRefetchAllHoyoWikiImages(),
+          .forceRefetchAllHoYoWikiImages(),
     );
   }
 }

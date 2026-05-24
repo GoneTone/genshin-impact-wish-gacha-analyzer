@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 void main() {
-  group('HoyoWikiIndex.lookupId', () {
+  group('HoYoWikiIndex.lookupId', () {
     test('命中回 id', () {
-      final index = HoyoWikiIndex(
+      final index = HoYoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: const {},
         menuIds: const {},
@@ -15,12 +15,12 @@ void main() {
     });
 
     test('未命中回 null', () {
-      const index = HoyoWikiIndex.empty();
+      const index = HoYoWikiIndex.empty();
       expect(index.lookupId(name: 'Hu Tao', lang: 'en-us'), isNull);
     });
 
     test('lang 不同 → 不命中', () {
-      final index = HoyoWikiIndex(
+      final index = HoYoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: const {},
         menuIds: const {},
@@ -29,14 +29,14 @@ void main() {
     });
   });
 
-  group('HoyoWikiIndex.lookupEntry', () {
+  group('HoYoWikiIndex.lookupEntry', () {
     test('命中回 entry', () {
-      final entry = HoyoWikiEntry(
+      final entry = HoYoWikiEntry(
         iconUrl: 'https://x/icon.png',
         headerImgUrl: 'https://x/header.png',
         fetchedAt: DateTime.utc(2026, 5, 23),
       );
-      final index = HoyoWikiIndex(
+      final index = HoYoWikiIndex(
         searchMap: const {},
         entries: {'5125428': entry},
         menuIds: const {},
@@ -45,14 +45,14 @@ void main() {
     });
 
     test('未命中回 null', () {
-      const index = HoyoWikiIndex.empty();
+      const index = HoYoWikiIndex.empty();
       expect(index.lookupEntry('5125428'), isNull);
     });
   });
 
-  group('HoyoWikiIndex.lookupMenuId', () {
+  group('HoYoWikiIndex.lookupMenuId', () {
     test('命中回 menu_id', () {
-      final index = HoyoWikiIndex(
+      final index = HoYoWikiIndex(
         searchMap: const {},
         entries: const {},
         menuIds: const {'5125428': 2, '9001': 4},
@@ -62,18 +62,18 @@ void main() {
     });
 
     test('未命中回 null', () {
-      const index = HoyoWikiIndex.empty();
+      const index = HoYoWikiIndex.empty();
       expect(index.lookupMenuId('5125428'), isNull);
     });
   });
 
-  group('HoyoWikiIndexStorage', () {
+  group('HoYoWikiIndexStorage', () {
     late Directory tempDir;
-    late HoyoWikiIndexStorage storage;
+    late HoYoWikiIndexStorage storage;
 
     setUp(() async {
       tempDir = await Directory.systemTemp.createTemp('hoyowiki_index_test_');
-      storage = HoyoWikiIndexStorage(tempDir);
+      storage = HoYoWikiIndexStorage(tempDir);
     });
 
     tearDown(() async {
@@ -89,10 +89,10 @@ void main() {
     });
 
     test('save → load roundtrip（含 menu_ids）', () async {
-      final original = HoyoWikiIndex(
+      final original = HoYoWikiIndex(
         searchMap: const {'en-us::Hu Tao': '5125428'},
         entries: {
-          '5125428': HoyoWikiEntry(
+          '5125428': HoYoWikiEntry(
             iconUrl: 'https://x/icon.png',
             headerImgUrl: '',
             fetchedAt: DateTime.utc(2026, 5, 23, 8),
@@ -124,21 +124,21 @@ void main() {
     });
 
     test('atomic write 不留 .tmp 殘檔', () async {
-      await storage.save(const HoyoWikiIndex.empty());
+      await storage.save(const HoYoWikiIndex.empty());
       final tmp = File('${tempDir.path}/hoyowiki_index.json.tmp');
       expect(await tmp.exists(), isFalse);
     });
 
     test('save 兩次 → 後者覆蓋', () async {
       await storage.save(
-        HoyoWikiIndex(
+        HoYoWikiIndex(
           searchMap: const {'a::1': 'id1'},
           entries: const {},
           menuIds: const {},
         ),
       );
       await storage.save(
-        HoyoWikiIndex(
+        HoYoWikiIndex(
           searchMap: const {'b::2': 'id2'},
           entries: const {},
           menuIds: const {},
@@ -149,18 +149,18 @@ void main() {
     });
   });
 
-  group('HoyoWikiIndexStorage.clearAll', () {
+  group('HoYoWikiIndexStorage.clearAll', () {
     test('既有 index 檔被覆寫為空殼', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_storage_');
       addTearDown(() async {
         if (await dir.exists()) await dir.delete(recursive: true);
       });
-      final storage = HoyoWikiIndexStorage(dir);
+      final storage = HoYoWikiIndexStorage(dir);
       await storage.save(
-        HoyoWikiIndex(
+        HoYoWikiIndex(
           searchMap: const {'en-us::Hu Tao': '111'},
           entries: {
-            '111': HoyoWikiEntry(
+            '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
               headerImgUrl: 'https://x/header.png',
               fetchedAt: DateTime.utc(2026, 5, 23),
@@ -183,7 +183,7 @@ void main() {
       addTearDown(() async {
         if (await dir.exists()) await dir.delete(recursive: true);
       });
-      final storage = HoyoWikiIndexStorage(dir);
+      final storage = HoYoWikiIndexStorage(dir);
 
       await storage.clearAll();
 
@@ -194,7 +194,7 @@ void main() {
     });
   });
 
-  group('HoyoWikiIndexStorage.wipeCacheDirectory', () {
+  group('HoYoWikiIndexStorage.wipeCacheDirectory', () {
     test('既有 cache 檔被刪光且目錄重建', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_cache_');
       addTearDown(() async {
@@ -204,7 +204,7 @@ void main() {
       await File('${dir.path}/111_icon.png').writeAsBytes([1, 2, 3]);
       await File('${dir.path}/111_header.png').writeAsBytes([4, 5, 6]);
 
-      final storage = HoyoWikiIndexStorage(dir);
+      final storage = HoYoWikiIndexStorage(dir);
       await storage.wipeCacheDirectory();
 
       expect(await dir.exists(), isTrue, reason: '目錄應重建');
@@ -224,7 +224,7 @@ void main() {
       // 用一個不存在的子目錄做 baseDir
       final dir = Directory('${parent.path}/missing');
       expect(await dir.exists(), isFalse);
-      final storage = HoyoWikiIndexStorage(dir);
+      final storage = HoYoWikiIndexStorage(dir);
 
       await storage.wipeCacheDirectory();
 
@@ -248,7 +248,7 @@ void main() {
       final f = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '5125428',
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: 'https://x.example/path/icon.png',
       );
       expect(f.path, endsWith('5125428_icon.png'));
@@ -258,7 +258,7 @@ void main() {
       final f = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '5125428',
-        kind: HoyoWikiImageKind.header,
+        kind: HoYoWikiImageKind.header,
         url: 'https://x.example/path/header.jpg',
       );
       expect(f.path, endsWith('5125428_header.jpg'));
@@ -268,7 +268,7 @@ void main() {
       final f = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '5125428',
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: 'https://x/icon.png?v=1&w=80',
       );
       expect(f.path, endsWith('5125428_icon.png'));
@@ -278,7 +278,7 @@ void main() {
       final f = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '5125428',
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: 'https://x/icon',
       );
       expect(f.path, endsWith('5125428_icon.png'));
@@ -288,7 +288,7 @@ void main() {
       final f = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '5125428',
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: '',
       );
       expect(f.path, endsWith('5125428_icon.png'));

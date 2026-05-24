@@ -15,8 +15,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 const _odesGachaTypes = {'2000', '1000'};
 
 /// 判斷 [record] 是否在 dialog 內有東西可顯示（至少有 icon 或 header 任一個
-/// HoyoWiki 圖片快取到本機）。頌願卡池一律 false。
-bool hasHoyoWikiContent(WidgetRef ref, GachaRecord record) {
+/// HoYoWiki 圖片快取到本機）。頌願卡池一律 false。
+bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (_odesGachaTypes.contains(record.gachaType)) return false;
   final index = ref.watch(hoyowikiIndexProvider);
   final id = index.lookupId(name: record.name, lang: record.lang);
@@ -25,7 +25,7 @@ bool hasHoyoWikiContent(WidgetRef ref, GachaRecord record) {
   if (entry == null) return false;
   final cacheDir = ref.watch(hoyowikiCacheDirProvider);
 
-  bool fileReady(String url, HoyoWikiImageKind kind) =>
+  bool fileReady(String url, HoYoWikiImageKind kind) =>
       url.isNotEmpty &&
       hoyowikiCacheFile(
         baseDir: cacheDir,
@@ -34,11 +34,11 @@ bool hasHoyoWikiContent(WidgetRef ref, GachaRecord record) {
         url: url,
       ).existsSync();
 
-  return fileReady(entry.iconUrl, HoyoWikiImageKind.icon) ||
-      fileReady(entry.headerImgUrl, HoyoWikiImageKind.header);
+  return fileReady(entry.iconUrl, HoYoWikiImageKind.icon) ||
+      fileReady(entry.headerImgUrl, HoYoWikiImageKind.header);
 }
 
-/// 點擊物品 icon / 名稱時彈出的 dialog；顯示 icon + 名稱（top）+ HoyoWiki
+/// 點擊物品 icon / 名稱時彈出的 dialog；顯示 icon + 名稱（top）+ HoYoWiki
 /// header 大圖（bottom）。缺哪個就不顯示哪個；`AppDialogSize.md` 寬度，
 /// header 用 `Flexible + BoxFit.contain` 吃剩餘高度，保證不撐爆視窗。
 class GachaItemDetailDialog extends ConsumerWidget {
@@ -66,7 +66,7 @@ class GachaItemDetailDialog extends ConsumerWidget {
         final f = hoyowikiCacheFile(
           baseDir: cacheDir,
           id: id,
-          kind: HoyoWikiImageKind.icon,
+          kind: HoYoWikiImageKind.icon,
           url: entry.iconUrl,
         );
         if (f.existsSync()) iconFile = f;
@@ -75,7 +75,7 @@ class GachaItemDetailDialog extends ConsumerWidget {
         final f = hoyowikiCacheFile(
           baseDir: cacheDir,
           id: id,
-          kind: HoyoWikiImageKind.header,
+          kind: HoYoWikiImageKind.header,
           url: entry.headerImgUrl,
         );
         if (f.existsSync()) headerFile = f;
@@ -172,7 +172,7 @@ Future<void> showGachaItemDetailDialog(
 }
 
 /// 把任意 [child]（通常是 icon + 名稱 Row/Column）包成可點區塊；
-/// [hasHoyoWikiContent] 為 false 時 passthrough，不加任何 hit affordance。
+/// [hasHoYoWikiContent] 為 false 時 passthrough，不加任何 hit affordance。
 class GachaItemTapTarget extends ConsumerWidget {
   /// 建立 [GachaItemTapTarget]。
   const GachaItemTapTarget({
@@ -181,7 +181,7 @@ class GachaItemTapTarget extends ConsumerWidget {
     required this.child,
   });
 
-  /// 對應的卡池 record；由 [hasHoyoWikiContent] 判定可點性。
+  /// 對應的卡池 record；由 [hasHoYoWikiContent] 判定可點性。
   final GachaRecord record;
 
   /// 被包裝的子 widget（icon + 名稱組合）。
@@ -189,7 +189,7 @@ class GachaItemTapTarget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!hasHoyoWikiContent(ref, record)) return child;
+    if (!hasHoYoWikiContent(ref, record)) return child;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(

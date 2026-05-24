@@ -633,7 +633,7 @@
   "settingsRefetchHoyoWikiImagesTitle": "アイテム画像を強制再取得",
   "settingsRefetchHoyoWikiImagesEmpty": "祈願記録がありません、再取得対象がありません",
   "confirmRefetchHoyoWikiTitle": "アイテム画像を強制再取得",
-  "confirmRefetchHoyoWikiBody": "ローカルのアイテム画像キャッシュをすべて削除し、HoyoWiki から再取得します。アイテム数に応じて数分かかり、相応の通信量を消費する場合があります。",
+  "confirmRefetchHoyoWikiBody": "ローカルのアイテム画像キャッシュをすべて削除し、HoYoWiki から再取得します。アイテム数に応じて数分かかり、相応の通信量を消費する場合があります。",
   "confirmRefetchHoyoWikiConfirm": "再取得を開始",
   "settingsLogs": "デバッグログ",
   "@settingsLogs": {},

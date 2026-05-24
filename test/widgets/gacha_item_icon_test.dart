@@ -44,7 +44,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
       ],
@@ -127,7 +127,7 @@ void main() {
       );
       await notifier.setEntry(
         id: '111',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://x/icon.png',
           headerImgUrl: '',
           fetchedAt: DateTime.utc(2026, 5, 23),
@@ -158,7 +158,7 @@ void main() {
       );
       await notifier.setEntry(
         id: '111',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: iconUrl,
           headerImgUrl: '',
           fetchedAt: DateTime.utc(2026, 5, 23),
@@ -167,7 +167,7 @@ void main() {
       final cacheFile = hoyowikiCacheFile(
         baseDir: tempDir,
         id: '111',
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: iconUrl,
       );
       await cacheFile.writeAsBytes(_minimalPng());
@@ -188,7 +188,7 @@ void main() {
     expect(find.byType(Image), findsOneWidget);
   });
 
-  testWidgets('PreloadedHoyoWikiImages 命中 → 顯示 RawImage', (tester) async {
+  testWidgets('PreloadedHoYoWikiImages 命中 → 顯示 RawImage', (tester) async {
     await tester.runAsync(() async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await notifier.setSearch(
@@ -199,7 +199,7 @@ void main() {
       );
       await notifier.setEntry(
         id: '111',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://x/icon.png',
           headerImgUrl: '',
           fetchedAt: DateTime.utc(2026, 5, 23),
@@ -217,7 +217,7 @@ void main() {
 
       await tester.pumpWidget(
         _wrap(
-          PreloadedHoyoWikiImages(
+          PreloadedHoYoWikiImages(
             images: {'111': img},
             child: GachaItemIcon(
               record: _rec(name: 'Hu Tao', gachaType: '301'),

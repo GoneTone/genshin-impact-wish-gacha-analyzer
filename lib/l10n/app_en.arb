@@ -636,7 +636,7 @@
   "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
   "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
   "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
-  "confirmRefetchHoyoWikiBody": "This will clear all locally cached item images and re-download them from HoyoWiki. May take several minutes and consume significant bandwidth.",
+  "confirmRefetchHoyoWikiBody": "This will clear all locally cached item images and re-download them from HoYoWiki. May take several minutes and consume significant bandwidth.",
   "confirmRefetchHoyoWikiConfirm": "Start re-fetching",
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},

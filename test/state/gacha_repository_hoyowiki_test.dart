@@ -60,11 +60,11 @@ void main() {
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
         hoyowikiFetcherProvider.overrideWithValue(
-          HoyoWikiFetcher(rateLimit: Duration.zero),
+          HoYoWikiFetcher(rateLimit: Duration.zero),
         ),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
@@ -80,7 +80,7 @@ void main() {
     return container;
   }
 
-  test('FetchingHoyoWiki 階段：祈願 record 進 worklist，頌願不進', () async {
+  test('FetchingHoYoWiki 階段：祈願 record 進 worklist，頌願不進', () async {
     final searchCalls = <String>[];
     final entryCalls = <String>[];
     final downloadCalls = <String>[];
@@ -130,7 +130,7 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     await container
         .read(gachaRepositoryProvider.notifier)
-        .debugRunHoyoWikiOnly();
+        .debugRunHoYoWikiOnly();
 
     // 只祈願 record (Hu Tao) 進 search，頌願 (OdesItem) 不進
     expect(searchCalls, ['Hu Tao']);
@@ -162,7 +162,7 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     await container
         .read(gachaRepositoryProvider.notifier)
-        .debugRunHoyoWikiOnly();
+        .debugRunHoYoWikiOnly();
 
     expect(searchCalls, ['Hu Tao']);
     // index 維持空（沒寫入失敗的）
@@ -211,10 +211,10 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     final notifier = container.read(gachaRepositoryProvider.notifier);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(searchCalls.length, 1);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(searchCalls.length, 1, reason: '第二次不應再 search');
   });
 
@@ -259,10 +259,10 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     final notifier = container.read(gachaRepositoryProvider.notifier);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 1);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 2, reason: 'menu_id 2：兩個 URL 都空應視為 incomplete，下次重抓');
   });
 
@@ -307,10 +307,10 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     final notifier = container.read(gachaRepositoryProvider.notifier);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 1);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 2, reason: 'menu_id 2：header 空 → 嚴格規則，下次重抓');
   });
 
@@ -356,17 +356,17 @@ void main() {
     final container = await setupContainer(apiClient: apiClient);
     final notifier = container.read(gachaRepositoryProvider.notifier);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 1);
 
-    await notifier.debugRunHoyoWikiOnly();
+    await notifier.debugRunHoYoWikiOnly();
     expect(entryCallCount, 1, reason: 'menu_id 4：有 icon → 寬鬆規則，不重抓');
   });
 
   test(
-    '_fetchHoyoWiki 三段 phase 依序推進（searching → fetchingEntries → downloading）',
+    '_fetchHoYoWiki 三段 phase 依序推進（searching → fetchingEntries → downloading）',
     () async {
-      final phases = <HoyoWikiPhase>[];
+      final phases = <HoYoWikiPhase>[];
       final apiClient = MockClient((req) async {
         if (req.url.path.endsWith('/search')) {
           return http.Response(
@@ -411,25 +411,25 @@ void main() {
         _,
         next,
       ) {
-        if (next is FetchingHoyoWiki) phases.add(next.phase);
+        if (next is FetchingHoYoWiki) phases.add(next.phase);
       });
 
       await container
           .read(gachaRepositoryProvider.notifier)
-          .debugRunHoyoWikiOnly();
+          .debugRunHoYoWikiOnly();
 
       // 三段都出現過，且順序為 searching → fetchingEntries → downloading
       expect(
         phases,
         containsAll([
-          HoyoWikiPhase.searching,
-          HoyoWikiPhase.fetchingEntries,
-          HoyoWikiPhase.downloading,
+          HoYoWikiPhase.searching,
+          HoYoWikiPhase.fetchingEntries,
+          HoYoWikiPhase.downloading,
         ]),
       );
-      final firstSearchIdx = phases.indexOf(HoyoWikiPhase.searching);
-      final firstEntryIdx = phases.indexOf(HoyoWikiPhase.fetchingEntries);
-      final firstDownloadIdx = phases.indexOf(HoyoWikiPhase.downloading);
+      final firstSearchIdx = phases.indexOf(HoYoWikiPhase.searching);
+      final firstEntryIdx = phases.indexOf(HoYoWikiPhase.fetchingEntries);
+      final firstDownloadIdx = phases.indexOf(HoYoWikiPhase.downloading);
       expect(firstSearchIdx, lessThan(firstEntryIdx));
       expect(firstEntryIdx, lessThan(firstDownloadIdx));
     },

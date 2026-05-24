@@ -7,42 +7,42 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
-/// HoyoWiki index 儲存層，main.dart 用 `overrideWithValue` 注入。
-final hoyowikiIndexStorageProvider = Provider<HoyoWikiIndexStorage>((ref) {
+/// HoYoWiki index 儲存層，main.dart 用 `overrideWithValue` 注入。
+final hoyowikiIndexStorageProvider = Provider<HoYoWikiIndexStorage>((ref) {
   throw UnimplementedError(
     'hoyowikiIndexStorageProvider must be overridden in main()',
   );
 });
 
-/// HoyoWiki 圖檔快取目錄，main.dart 用 `overrideWithValue` 注入。
+/// HoYoWiki 圖檔快取目錄，main.dart 用 `overrideWithValue` 注入。
 final hoyowikiCacheDirProvider = Provider<Directory>((ref) {
   throw UnimplementedError(
     'hoyowikiCacheDirProvider must be overridden in main()',
   );
 });
 
-/// HoyoWiki API fetcher；預設值即可，無需 override。
-final hoyowikiFetcherProvider = Provider<HoyoWikiFetcher>(
-  (ref) => HoyoWikiFetcher(),
+/// HoYoWiki API fetcher；預設值即可，無需 override。
+final hoyowikiFetcherProvider = Provider<HoYoWikiFetcher>(
+  (ref) => HoYoWikiFetcher(),
 );
 
-/// 當前載入的 [HoyoWikiIndex]；透過 [HoyoWikiIndexNotifier] 變更。
+/// 當前載入的 [HoYoWikiIndex]；透過 [HoYoWikiIndexNotifier] 變更。
 final hoyowikiIndexProvider =
-    NotifierProvider<HoyoWikiIndexNotifier, HoyoWikiIndex>(
-      HoyoWikiIndexNotifier.new,
+    NotifierProvider<HoYoWikiIndexNotifier, HoYoWikiIndex>(
+      HoYoWikiIndexNotifier.new,
     );
 
-/// 包裝 [HoyoWikiIndexStorage] 的 Riverpod Notifier；mutation 後同步 persist。
-class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
+/// 包裝 [HoYoWikiIndexStorage] 的 Riverpod Notifier；mutation 後同步 persist。
+class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   static final _log = Logger('gacha.hoyowiki.notifier');
 
   Completer<void>? _loadCompleter;
 
   @override
-  HoyoWikiIndex build() {
+  HoYoWikiIndex build() {
     _loadCompleter = Completer<void>();
     unawaited(_load());
-    return const HoyoWikiIndex.empty();
+    return const HoYoWikiIndex.empty();
   }
 
   /// 從 storage 載入並 emit 給 state。
@@ -72,7 +72,7 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
     final newSearch = Map<String, String>.from(state.searchMap)
       ..['$lang::$name'] = id;
     final newMenuIds = Map<String, int>.from(state.menuIds)..[id] = menuId;
-    final next = HoyoWikiIndex(
+    final next = HoYoWikiIndex(
       searchMap: newSearch,
       entries: state.entries,
       menuIds: newMenuIds,
@@ -83,11 +83,11 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
   /// 寫入一筆 entry 並 persist。
   Future<void> setEntry({
     required String id,
-    required HoyoWikiEntry entry,
+    required HoYoWikiEntry entry,
   }) async {
-    final newEntries = Map<String, HoyoWikiEntry>.from(state.entries)
+    final newEntries = Map<String, HoYoWikiEntry>.from(state.entries)
       ..[id] = entry;
-    final next = HoyoWikiIndex(
+    final next = HoYoWikiIndex(
       searchMap: state.searchMap,
       entries: newEntries,
       menuIds: state.menuIds,
@@ -98,7 +98,7 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
   /// 在 cache 檔案下載完成後呼叫；state 內容不變但 identity 換新，
   /// 觸發 watch hoyowikiIndexProvider 的 widget 重新 build 以挑到新檔。
   void bumpCacheRevision() {
-    state = HoyoWikiIndex(
+    state = HoYoWikiIndex(
       searchMap: state.searchMap,
       entries: state.entries,
       menuIds: state.menuIds,
@@ -106,8 +106,8 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
   }
 
   /// 強制重抓圖片用：清空整個 index 與 cache 目錄。
-  /// 呼叫後 state 為 [HoyoWikiIndex.empty]；磁碟側 index 檔已隨 cache
-  /// 目錄一併被 [HoyoWikiIndexStorage.wipeCacheDirectory] 刪除（下次
+  /// 呼叫後 state 為 [HoYoWikiIndex.empty]；磁碟側 index 檔已隨 cache
+  /// 目錄一併被 [HoYoWikiIndexStorage.wipeCacheDirectory] 刪除（下次
   /// `load()` 因檔案不存在會回空 index）。失敗（權限不足等）直接拋給
   /// 呼叫方 emit `UpdateFailed`。
   Future<void> resetAll() async {
@@ -115,12 +115,12 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
     await storage.clearAll();
     await storage.wipeCacheDirectory();
     if (!ref.mounted) return;
-    state = const HoyoWikiIndex.empty();
+    state = const HoYoWikiIndex.empty();
     _log.info('resetAll: index+cache wiped');
   }
 
   /// 內部 helper：寫檔 + emit。
-  Future<void> _saveAndEmit(HoyoWikiIndex next) async {
+  Future<void> _saveAndEmit(HoYoWikiIndex next) async {
     final storage = ref.read(hoyowikiIndexStorageProvider);
     await storage.save(next);
     if (!ref.mounted) return;

@@ -46,14 +46,14 @@ http.Response _entryOk({required String iconUrl, required String headerUrl}) =>
     );
 
 void main() {
-  group('HoyoWikiFetcher.searchEntryId', () {
-    test('命中（sub_menu id=2）回 HoyoWikiSearchHit（id + menuId）', () async {
+  group('HoYoWikiFetcher.searchEntryId', () {
+    test('命中（sub_menu id=2）回 HoYoWikiSearchHit（id + menuId）', () async {
       final mock = MockClient(
         (req) async => _searchOk([
           _searchItem(name: 'Hu Tao', id: '5125428', subMenuId: 2),
         ]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -63,12 +63,12 @@ void main() {
       expect(hit?.menuId, 2);
     });
 
-    test('命中（sub_menu id=4）回 HoyoWikiSearchHit', () async {
+    test('命中（sub_menu id=4）回 HoYoWikiSearchHit', () async {
       final mock = MockClient(
         (req) async =>
             _searchOk([_searchItem(name: 'Sword', id: '9001', subMenuId: 4)]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Sword',
         lang: 'en-us',
@@ -84,7 +84,7 @@ void main() {
           _searchItem(name: 'Hu Tao (foo)', id: '5125428', subMenuId: 2),
         ]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -99,7 +99,7 @@ void main() {
           _searchItem(name: 'Hu Tao', id: '5125428', subMenuId: 1),
         ]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -110,7 +110,7 @@ void main() {
 
     test('空 list → null', () async {
       final mock = MockClient((req) async => _searchOk(const []));
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       expect(
         await fetcher.searchEntryId(name: 'X', lang: 'en-us', client: mock),
         isNull,
@@ -125,7 +125,7 @@ void main() {
           _searchItem(name: 'Hu Tao', id: '333', subMenuId: 2),
         ]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -141,7 +141,7 @@ void main() {
           200,
         ),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       await expectLater(
         () => fetcher.searchEntryId(name: 'X', lang: 'en-us', client: mock),
         throwsA(isA<ApiErrorException>()),
@@ -154,7 +154,7 @@ void main() {
         captured = req;
         return _searchOk(const []);
       });
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       await fetcher.searchEntryId(name: 'Hu Tao', lang: 'zh-tw', client: mock);
       expect(captured.headers['Referer'], 'https://wiki.hoyolab.com/');
       expect(captured.headers['X-Rpc-Language'], 'zh-tw');
@@ -167,7 +167,7 @@ void main() {
         capturedUrl = req.url;
         return _searchOk(const []);
       });
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       await fetcher.searchEntryId(name: '胡桃', lang: 'zh-tw', client: mock);
       expect(capturedUrl.queryParameters['keyword'], '胡桃');
     });
@@ -178,7 +178,7 @@ void main() {
           _searchItem(name: 'Hu Tao', id: '5125428', subMenuId: '2'),
         ]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -193,7 +193,7 @@ void main() {
         (req) async =>
             _searchOk([_searchItem(name: 'Sword', id: '9001', subMenuId: '4')]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Sword',
         lang: 'en-us',
@@ -208,7 +208,7 @@ void main() {
         (req) async =>
             _searchOk([_searchItem(name: 'X', id: '111', subMenuId: '1')]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'X',
         lang: 'en-us',
@@ -222,7 +222,7 @@ void main() {
         (req) async =>
             _searchOk([_searchItem(name: 'X', id: '111', subMenuId: 'foo')]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'X',
         lang: 'en-us',
@@ -236,7 +236,7 @@ void main() {
         (req) async =>
             _searchOk([_searchItem(name: 'Hu Tao', id: 5125428, subMenuId: 2)]),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final hit = await fetcher.searchEntryId(
         name: 'Hu Tao',
         lang: 'en-us',
@@ -247,7 +247,7 @@ void main() {
     });
   });
 
-  group('HoyoWikiFetcher.fetchEntryPage', () {
+  group('HoYoWikiFetcher.fetchEntryPage', () {
     test('兩個 URL 都有 → 都回', () async {
       final mock = MockClient(
         (_) async => _entryOk(
@@ -255,7 +255,7 @@ void main() {
           headerUrl: 'https://x/header.png',
         ),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, 'https://x/icon.png');
       expect(entry.headerImgUrl, 'https://x/header.png');
@@ -265,7 +265,7 @@ void main() {
       final mock = MockClient(
         (_) async => _entryOk(iconUrl: '', headerUrl: 'https://x/header.png'),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, '');
       expect(entry.headerImgUrl, 'https://x/header.png');
@@ -275,7 +275,7 @@ void main() {
       final mock = MockClient(
         (_) async => _entryOk(iconUrl: 'https://x/icon.png', headerUrl: ''),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, 'https://x/icon.png');
       expect(entry.headerImgUrl, '');
@@ -285,7 +285,7 @@ void main() {
       final mock = MockClient(
         (_) async => _entryOk(iconUrl: '', headerUrl: ''),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, '');
       expect(entry.headerImgUrl, '');
@@ -298,7 +298,7 @@ void main() {
           200,
         ),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       await expectLater(
         () => fetcher.fetchEntryPage(id: '5125428', client: mock),
         throwsA(isA<ApiErrorException>()),
@@ -311,25 +311,25 @@ void main() {
         capturedUrl = req.url;
         return _entryOk(iconUrl: '', headerUrl: '');
       });
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(capturedUrl.queryParameters['entry_page_id'], '5125428');
       expect(capturedUrl.host, 'sg-act-public-api-static.hoyolab.com');
     });
   });
 
-  group('HoyoWikiFetcher.downloadImage', () {
+  group('HoYoWikiFetcher.downloadImage', () {
     test('200 OK → 回 bytes', () async {
       final bytes = Uint8List.fromList([1, 2, 3, 4]);
       final mock = MockClient((_) async => http.Response.bytes(bytes, 200));
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final out = await fetcher.downloadImage('https://x/icon.png', mock);
       expect(out, bytes);
     });
 
     test('404 → 回 null', () async {
       final mock = MockClient((_) async => http.Response('', 404));
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final out = await fetcher.downloadImage('https://x/icon.png', mock);
       expect(out, isNull);
     });
@@ -338,7 +338,7 @@ void main() {
       final mock = MockClient(
         (_) async => throw const SocketException('connection refused'),
       );
-      final fetcher = HoyoWikiFetcher(rateLimit: Duration.zero);
+      final fetcher = HoYoWikiFetcher(rateLimit: Duration.zero);
       final out = await fetcher.downloadImage('https://x/icon.png', mock);
       expect(out, isNull);
     });

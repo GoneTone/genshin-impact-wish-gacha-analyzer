@@ -125,7 +125,7 @@ Future<void> generateAndShareImage({
   final hoyowikiIndex = container.read(hoyowikiIndexProvider);
   final cacheDir = container.read(hoyowikiCacheDirProvider);
   final icon = await loadAppIconImage();
-  final preloaded = await preloadHoyoWikiImages(
+  final preloaded = await preloadHoYoWikiImages(
     index: hoyowikiIndex,
     cacheDir: cacheDir,
     records: recordsForPreload,
@@ -133,7 +133,7 @@ Future<void> generateAndShareImage({
   try {
     final png = await renderWidgetToPng(
       buildShareRenderTree(
-        card: PreloadedHoyoWikiImages(
+        card: PreloadedHoYoWikiImages(
           images: preloaded,
           child: buildCard(icon, options),
         ),
@@ -162,6 +162,6 @@ Future<void> generateAndShareImage({
     );
   } finally {
     icon.dispose();
-    disposePreloadedHoyoWikiImages(preloaded);
+    disposePreloadedHoYoWikiImages(preloaded);
   }
 }

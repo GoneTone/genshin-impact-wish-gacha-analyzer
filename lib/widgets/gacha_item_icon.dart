@@ -31,7 +31,7 @@ class GachaItemIcon extends ConsumerWidget {
     final cacheDir = ref.watch(hoyowikiCacheDirProvider);
     final tokens = Theme.of(context).gacha;
 
-    final preloaded = PreloadedHoyoWikiImages.maybeOf(context);
+    final preloaded = PreloadedHoYoWikiImages.maybeOf(context);
     final id = index.lookupId(name: record.name, lang: record.lang);
     final entry = id == null ? null : index.lookupEntry(id);
     final iconUrl = entry?.iconUrl;
@@ -52,7 +52,7 @@ class GachaItemIcon extends ConsumerWidget {
       final file = hoyowikiCacheFile(
         baseDir: cacheDir,
         id: id,
-        kind: HoyoWikiImageKind.icon,
+        kind: HoYoWikiImageKind.icon,
         url: iconUrl,
       );
       if (file.existsSync()) {

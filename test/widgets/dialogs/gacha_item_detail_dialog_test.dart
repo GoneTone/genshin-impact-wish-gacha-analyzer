@@ -44,7 +44,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
       ],
@@ -61,7 +61,7 @@ void main() {
     }
   });
 
-  /// 把 hasHoyoWikiContent 包成 widget context 內可呼叫的 helper。
+  /// 把 hasHoYoWikiContent 包成 widget context 內可呼叫的 helper。
   Future<bool> checkContent(WidgetTester tester, GachaRecord r) async {
     bool? out;
     await tester.pumpWidget(
@@ -69,7 +69,7 @@ void main() {
         container: container,
         child: Consumer(
           builder: (context, ref, _) {
-            out = hasHoyoWikiContent(ref, r);
+            out = hasHoYoWikiContent(ref, r);
             return const SizedBox();
           },
         ),
@@ -82,17 +82,17 @@ void main() {
   /// 讓 file-based Future 在 testWidgets 內能真正執行到完成。
   Future<void> seedIndex(
     WidgetTester tester,
-    HoyoWikiIndexNotifier notifier, {
+    HoYoWikiIndexNotifier notifier, {
     required String name,
     required String id,
-    required HoyoWikiEntry entry,
+    required HoYoWikiEntry entry,
   }) => tester.runAsync(
     () => notifier
         .setSearch(name: name, lang: 'en-us', id: id, menuId: 2)
         .then((_) => notifier.setEntry(id: id, entry: entry)),
   );
 
-  group('hasHoyoWikiContent', () {
+  group('hasHoYoWikiContent', () {
     testWidgets('gachaType 2000 (頌願) → false', (tester) async {
       expect(
         await checkContent(tester, _rec(name: 'Ode', gachaType: '2000')),
@@ -121,7 +121,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: '',
           headerImgUrl: '',
           fetchedAt: DateTime.now(),
@@ -140,7 +140,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -159,7 +159,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: '',
           fetchedAt: DateTime.now(),
@@ -179,7 +179,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: '',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -199,7 +199,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -248,7 +248,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -279,7 +279,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: '',
           fetchedAt: DateTime.now(),
@@ -307,7 +307,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: '',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -342,7 +342,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
           fetchedAt: DateTime.now(),
@@ -367,7 +367,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoyoWikiEntry(
+        entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
           headerImgUrl: '',
           fetchedAt: DateTime.now(),

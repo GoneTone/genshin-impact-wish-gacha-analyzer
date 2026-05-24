@@ -47,7 +47,7 @@ Widget _wrap(
 ProviderContainer _makeContainer(Directory tempDir) => ProviderContainer(
   overrides: [
     hoyowikiIndexStorageProvider.overrideWithValue(
-      HoyoWikiIndexStorage(tempDir),
+      HoYoWikiIndexStorage(tempDir),
     ),
     hoyowikiCacheDirProvider.overrideWithValue(tempDir),
   ],

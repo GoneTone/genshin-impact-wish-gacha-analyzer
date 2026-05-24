@@ -45,7 +45,7 @@ Future<ProviderContainer> _setupContainer({
         ),
       ),
       hoyowikiIndexStorageProvider.overrideWithValue(
-        HoyoWikiIndexStorage(tempDir),
+        HoYoWikiIndexStorage(tempDir),
       ),
       hoyowikiCacheDirProvider.overrideWithValue(tempDir),
       appVersionProvider.overrideWithValue('0.0.0-test'),

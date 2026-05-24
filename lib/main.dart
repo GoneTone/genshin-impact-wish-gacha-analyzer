@@ -96,7 +96,7 @@ Future<void> main() async {
       if (!await hoyowikiCacheDir.exists()) {
         await hoyowikiCacheDir.create(recursive: true);
       }
-      final hoyowikiIndexStorage = HoyoWikiIndexStorage(hoyowikiCacheDir);
+      final hoyowikiIndexStorage = HoYoWikiIndexStorage(hoyowikiCacheDir);
 
       runApp(
         ProviderScope(

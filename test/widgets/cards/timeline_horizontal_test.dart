@@ -385,7 +385,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
       ],

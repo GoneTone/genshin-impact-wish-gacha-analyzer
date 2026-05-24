@@ -8,10 +8,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart'
     show ApiErrorException;
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
-/// HoyoWiki search API 的命中結果。
-class HoyoWikiSearchHit {
-  /// 建立 [HoyoWikiSearchHit]。
-  const HoyoWikiSearchHit({required this.id, required this.menuId});
+/// HoYoWiki search API 的命中結果。
+class HoYoWikiSearchHit {
+  /// 建立 [HoYoWikiSearchHit]。
+  const HoYoWikiSearchHit({required this.id, required this.menuId});
 
   /// entry_page_id。
   final String id;
@@ -20,25 +20,25 @@ class HoyoWikiSearchHit {
   final int menuId;
 }
 
-/// HoyoWiki entry_page API 抓到的 icon 與 header URL。
-class HoyoWikiEntryFetched {
-  /// 建立 [HoyoWikiEntryFetched]；URL 均可能為空字串。
-  const HoyoWikiEntryFetched({
+/// HoYoWiki entry_page API 抓到的 icon 與 header URL。
+class HoYoWikiEntryFetched {
+  /// 建立 [HoYoWikiEntryFetched]；URL 均可能為空字串。
+  const HoYoWikiEntryFetched({
     required this.iconUrl,
     required this.headerImgUrl,
   });
 
-  /// 物品 icon CDN URL；HoyoWiki 未上傳時為空字串。
+  /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
   final String iconUrl;
 
-  /// 物品 header CDN URL；HoyoWiki 未上傳時為空字串。
+  /// 物品 header CDN URL；HoYoWiki 未上傳時為空字串。
   final String headerImgUrl;
 }
 
-/// 與 HoyoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
-class HoyoWikiFetcher {
-  /// 建立 [HoyoWikiFetcher]，可調整速率限制與逾時。
-  HoyoWikiFetcher({
+/// 與 HoYoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
+class HoYoWikiFetcher {
+  /// 建立 [HoYoWikiFetcher]，可調整速率限制與逾時。
+  HoYoWikiFetcher({
     this.rateLimit = const Duration(milliseconds: 600),
     this.timeout = const Duration(seconds: 10),
   });
@@ -63,13 +63,13 @@ class HoyoWikiFetcher {
     'https://sg-act-public-api-static.hoyolab.com/hoyowiki/genshin/wapi/entry_page',
   );
 
-  /// 以 [name] 走 HoyoLab Wiki search API 取得對應的 entry_page_id 與 menu_id。
+  /// 以 [name] 走 HoYoLab Wiki search API 取得對應的 entry_page_id 與 menu_id。
   ///
   /// 命中需同時滿足：`data.list[].name == name` 且
   /// `data.list[].menu.sub_menus[0].id ∈ {2, 4}`。回傳第一筆符合的
-  /// [HoyoWikiSearchHit]（含 id 與 menuId）；若無回 null；
+  /// [HoYoWikiSearchHit]（含 id 與 menuId）；若無回 null；
   /// retcode != 0 throw [ApiErrorException]。
-  Future<HoyoWikiSearchHit?> searchEntryId({
+  Future<HoYoWikiSearchHit?> searchEntryId({
     required String name,
     required String lang,
     required http.Client client,
@@ -114,7 +114,7 @@ class HoyoWikiFetcher {
       final id = entryRaw is String ? entryRaw : entryRaw?.toString();
       if (id == null || id.isEmpty) continue;
       _log.info('search hit name=$name lang=$lang id=$id menuId=$subMenuId');
-      return HoyoWikiSearchHit(id: id, menuId: subMenuId);
+      return HoYoWikiSearchHit(id: id, menuId: subMenuId);
     }
     _log.warning('search miss name=$name lang=$lang');
     return null;
@@ -122,7 +122,7 @@ class HoyoWikiFetcher {
 
   /// 以 [id] 拉 entry_page，回 icon_url 與 header_img_url（均可能為空字串）。
   /// retcode != 0 throw [ApiErrorException]。
-  Future<HoyoWikiEntryFetched> fetchEntryPage({
+  Future<HoYoWikiEntryFetched> fetchEntryPage({
     required String id,
     required http.Client client,
   }) async {
@@ -141,7 +141,7 @@ class HoyoWikiFetcher {
     _log.info(
       'entry id=$id icon=${iconUrl.isNotEmpty} header=${headerImgUrl.isNotEmpty}',
     );
-    return HoyoWikiEntryFetched(iconUrl: iconUrl, headerImgUrl: headerImgUrl);
+    return HoYoWikiEntryFetched(iconUrl: iconUrl, headerImgUrl: headerImgUrl);
   }
 
   /// GET [url] 的圖檔 bytes；任何失敗（非 2xx / 例外）回 null，caller 不寫檔

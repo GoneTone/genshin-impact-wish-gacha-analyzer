@@ -633,7 +633,7 @@
   "settingsRefetchHoyoWikiImagesTitle": "Forzar redescarga de imágenes de objetos",
   "settingsRefetchHoyoWikiImagesEmpty": "Aún no hay registros de Gachapón, nada que redescargar",
   "confirmRefetchHoyoWikiTitle": "Forzar redescarga de imágenes de objetos",
-  "confirmRefetchHoyoWikiBody": "Esto borrará toda la caché local de imágenes de objetos y las volverá a descargar desde HoyoWiki. Puede tardar varios minutos y consumir un tráfico considerable.",
+  "confirmRefetchHoyoWikiBody": "Esto borrará toda la caché local de imágenes de objetos y las volverá a descargar desde HoYoWiki. Puede tardar varios minutos y consumir un tráfico considerable.",
   "confirmRefetchHoyoWikiConfirm": "Empezar redescarga",
   "settingsLogs": "Diagnóstico de logs",
   "@settingsLogs": {},

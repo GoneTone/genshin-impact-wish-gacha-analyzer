@@ -124,9 +124,9 @@ void main() {
     final staleCache = File('${hoyowikiDir.path}/stale_icon.png');
     await staleCache.writeAsBytes([9, 9, 9]);
     // 預植 index 含舊資料，驗證 clearAll 會清光
-    final indexStorage = HoyoWikiIndexStorage(hoyowikiDir);
+    final indexStorage = HoYoWikiIndexStorage(hoyowikiDir);
     await indexStorage.save(
-      HoyoWikiIndex(
+      HoYoWikiIndex(
         searchMap: const {'en-us::StaleItem': '999'},
         entries: const {},
         menuIds: const {},
@@ -139,7 +139,7 @@ void main() {
         hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
         hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
         hoyowikiFetcherProvider.overrideWithValue(
-          HoyoWikiFetcher(rateLimit: Duration.zero),
+          HoYoWikiFetcher(rateLimit: Duration.zero),
         ),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
@@ -152,7 +152,7 @@ void main() {
 
     await container
         .read(gachaRepositoryProvider.notifier)
-        .forceRefetchAllHoyoWikiImages();
+        .forceRefetchAllHoYoWikiImages();
 
     // 跨 UID 去重後 search 兩次（Hu Tao + Skyward Harp）
     expect(searchCalls.toSet(), {'Hu Tao', 'Skyward Harp'});
@@ -191,11 +191,11 @@ void main() {
       overrides: [
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
         hoyowikiIndexStorageProvider.overrideWithValue(
-          HoyoWikiIndexStorage(tempDir),
+          HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
         hoyowikiFetcherProvider.overrideWithValue(
-          HoyoWikiFetcher(rateLimit: Duration.zero),
+          HoYoWikiFetcher(rateLimit: Duration.zero),
         ),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
@@ -208,7 +208,7 @@ void main() {
 
     await container
         .read(gachaRepositoryProvider.notifier)
-        .forceRefetchAllHoyoWikiImages();
+        .forceRefetchAllHoYoWikiImages();
 
     expect(apiCalled, isFalse, reason: '沒 pairs 不該打 API');
     expect(
@@ -228,10 +228,10 @@ void main() {
     });
     SharedPreferences.setMockInitialValues({});
 
-    final indexStorage = HoyoWikiIndexStorage(tempDir);
+    final indexStorage = HoYoWikiIndexStorage(tempDir);
     // 預植一筆 index 資料，驗證互斥早退**沒有**呼叫 resetAll
     await indexStorage.save(
-      HoyoWikiIndex(
+      HoYoWikiIndex(
         searchMap: const {'en-us::Existing': '111'},
         entries: const {},
         menuIds: const {},
@@ -244,7 +244,7 @@ void main() {
         hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
         hoyowikiFetcherProvider.overrideWithValue(
-          HoyoWikiFetcher(rateLimit: Duration.zero),
+          HoYoWikiFetcher(rateLimit: Duration.zero),
         ),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
@@ -258,8 +258,8 @@ void main() {
 
     // 模擬另一進度進行中（用 reflection 不易，改用呼叫 forceRefetch 兩次）：
     // 直接呼叫 forceRefetch 不 await，馬上再呼叫一次，第二次應 no-op。
-    final first = notifier.forceRefetchAllHoyoWikiImages();
-    final second = notifier.forceRefetchAllHoyoWikiImages();
+    final first = notifier.forceRefetchAllHoYoWikiImages();
+    final second = notifier.forceRefetchAllHoYoWikiImages();
     await Future.wait(<Future<void>>[first, second]);
 
     // index 在 first 中已清，但第二次不該再 clear（難以單獨驗證）；
@@ -270,7 +270,7 @@ void main() {
     );
   });
 
-  test('清檔失敗：emit UpdateFailed(UpdateErrorWipeHoyoWikiCache)', () async {
+  test('清檔失敗：emit UpdateFailed(UpdateErrorWipeHoYoWikiCache)', () async {
     final apiClient = MockClient((req) async => http.Response('', 404));
 
     final tempDir = await Directory.systemTemp.createTemp(
@@ -293,7 +293,7 @@ void main() {
         hoyowikiIndexStorageProvider.overrideWithValue(throwingStorage),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
         hoyowikiFetcherProvider.overrideWithValue(
-          HoyoWikiFetcher(rateLimit: Duration.zero),
+          HoYoWikiFetcher(rateLimit: Duration.zero),
         ),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
@@ -306,19 +306,19 @@ void main() {
 
     await container
         .read(gachaRepositoryProvider.notifier)
-        .forceRefetchAllHoyoWikiImages();
+        .forceRefetchAllHoYoWikiImages();
 
     final progress = container.read(gachaRepositoryProvider).progress;
     expect(progress, isA<UpdateFailed>());
     expect(
       (progress as UpdateFailed).error,
-      isA<UpdateErrorWipeHoyoWikiCache>(),
+      isA<UpdateErrorWipeHoYoWikiCache>(),
     );
   });
 }
 
 /// 覆寫 [clearAll] 使其拋出 [FileSystemException]，用於測試清檔失敗路徑。
-class _ThrowingClearAllStorage extends HoyoWikiIndexStorage {
+class _ThrowingClearAllStorage extends HoYoWikiIndexStorage {
   _ThrowingClearAllStorage(super.baseDir);
 
   @override
