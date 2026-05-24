@@ -124,6 +124,9 @@ final gachaRepositoryProvider = NotifierProvider<GachaRepository, GachaState>(
 class GachaRepository extends Notifier<GachaState> {
   static final _log = Logger('gacha.repo');
 
+  /// Logger 實例（force-refetch 流程，獨立子樹以利日誌過濾）。
+  static final _refetchLog = Logger('gacha.hoyowiki.refetch');
+
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
 
@@ -475,9 +478,6 @@ class GachaRepository extends Notifier<GachaState> {
     await _runUpdate(forceRecapture: true);
   }
 
-  /// Logger 實例（force-refetch 流程）。
-  static final _refetchLog = Logger('wish.hoyowiki.refetch');
-
   /// 強制重抓所有 UID 祈願紀錄聯集物品的 HoyoWiki 圖檔。
   ///
   /// 流程：
@@ -512,7 +512,9 @@ class GachaRepository extends Notifier<GachaState> {
         _refetchLog.severe('wipeFailed', e, st);
         if (!ref.mounted) return;
         state = state.copyWith(
-          progress: UpdateFailed(UpdateErrorWipeHoyoWikiCache(e.toString())),
+          progress: UpdateFailed(
+            UpdateErrorWipeHoyoWikiCache(sanitizeFsPath(e.toString())),
+          ),
         );
         return;
       }
