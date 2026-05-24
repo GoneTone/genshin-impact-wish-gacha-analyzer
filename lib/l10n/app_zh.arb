@@ -446,6 +446,13 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常",
+  "updateErrorWipeHoyoWikiCache": "清除物品圖片快取失敗：{detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": { "type": "String" }
+    }
+  },
   "settingsLogs": "Logs 偵錯",
   "@settingsLogs": {},
   "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",

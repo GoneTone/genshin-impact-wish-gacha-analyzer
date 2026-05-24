@@ -249,6 +249,7 @@ class _Body extends StatelessWidget {
         UpdateErrorServer(:final details) => l.errorServer(details),
         UpdateErrorNoRecords() => l.errorNoRecords,
         UpdateErrorOther(:final message) => message,
-        UpdateErrorWipeHoyoWikiCache(:final detail) => detail,
+        UpdateErrorWipeHoyoWikiCache(:final detail) =>
+          l.updateErrorWipeHoyoWikiCache(detail),
       };
 }
