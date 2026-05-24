@@ -304,22 +304,23 @@ class _HeaderCell extends StatelessWidget {
       Icon(icon, size: 14, color: iconColor),
     ];
     final cell = InkWell(
+      mouseCursor: SystemMouseCursors.click,
       onTap: () => onTap(column),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: alignEnd
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
-          children: children,
-        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: children),
       ),
     );
     return Expanded(
       flex: flex,
-      child: tooltip == null
-          ? Tooltip(message: tip, child: cell)
-          : Tooltip(message: '${tooltip!} · $tip', child: cell),
+      child: Align(
+        alignment: alignEnd
+            ? AlignmentDirectional.centerEnd
+            : AlignmentDirectional.centerStart,
+        child: tooltip == null
+            ? Tooltip(message: tip, child: cell)
+            : Tooltip(message: '${tooltip!} · $tip', child: cell),
+      ),
     );
   }
 }
@@ -387,21 +388,25 @@ class _Row extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: GachaItemTapTarget(
-              record: record,
-              child: Row(
-                children: [
-                  GachaItemIcon(record: record, size: 32),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      record.name,
-                      style: highlight,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: GachaItemTapTarget(
+                record: record,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GachaItemIcon(record: record, size: 32),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        record.name,
+                        style: highlight,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
