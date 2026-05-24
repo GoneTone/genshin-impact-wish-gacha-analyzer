@@ -144,7 +144,7 @@ void main() {
     expect(tester.widget<FilledButton>(btn).onPressed, isNotNull);
   });
 
-  testWidgets('點按鈕 → AlertDialog 出現 → 取消不呼叫 repository', (tester) async {
+  testWidgets('點按鈕 → 確認 dialog 出現 → 取消不呼叫 repository', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final storage = GachaStorage(tempDir);
     late ProviderContainer container;
@@ -184,7 +184,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '強制重抓物品圖片'));
     await tester.pumpAndSettle();
 
-    // AlertDialog 內容存在
+    // 確認 dialog 內容存在
     expect(find.text('開始重抓'), findsOneWidget);
 
     // 點取消
@@ -193,5 +193,12 @@ void main() {
 
     // Dialog 關閉
     expect(find.text('開始重抓'), findsNothing);
+
+    // 取消路徑不會 emit Preparing，state.progress 仍為 null
+    expect(
+      container.read(gachaRepositoryProvider).progress,
+      isNull,
+      reason: '取消後不應啟動 progress',
+    );
   });
 }
