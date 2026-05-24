@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:logging/logging.dart';
 
 /// HoyoWiki entry_page API 抓到的 icon 與 header 大圖 URL，以及抓取時間。
@@ -145,7 +146,9 @@ class HoyoWikiIndexStorage {
       await baseDir.delete(recursive: true);
     }
     await baseDir.create(recursive: true);
-    _log.info('wipeCacheDirectory: cache cleared at ${baseDir.path}');
+    _log.info(
+      'wipeCacheDirectory: cache cleared at ${sanitizeFsPath(baseDir.path)}',
+    );
   }
 }
 
