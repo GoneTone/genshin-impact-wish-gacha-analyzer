@@ -85,7 +85,7 @@ void main() {
   });
 
   group('HoyoWikiIndexNotifier.resetAll', () {
-    test('清空 index、刪除 cache 目錄、cacheRevision 遞增', () async {
+    test('清空 index、刪除 cache 目錄、state identity 換新', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_notifier_');
       addTearDown(() async {
         if (await dir.exists()) await dir.delete(recursive: true);
@@ -126,7 +126,7 @@ void main() {
       expect(
         identical(after, before),
         isFalse,
-        reason: 'bumpCacheRevision 應換新 identity',
+        reason: 'state = const HoyoWikiIndex.empty() 應換新 identity',
       );
       // cache 檔應已刪
       expect(File('${dir.path}/111_icon.png').existsSync(), isFalse);

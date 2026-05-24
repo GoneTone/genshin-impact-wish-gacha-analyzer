@@ -105,16 +105,17 @@ class HoyoWikiIndexNotifier extends Notifier<HoyoWikiIndex> {
     );
   }
 
-  /// 強制重抓圖片用：清空整個 index、刪除 cache 目錄、bump revision。
-  /// 呼叫後 state 為 [HoyoWikiIndex.empty]；磁碟側 index 檔為空殼、cache
-  /// 目錄為空。失敗（權限不足等）直接拋給呼叫方 emit `UpdateFailed`。
+  /// 強制重抓圖片用：清空整個 index 與 cache 目錄。
+  /// 呼叫後 state 為 [HoyoWikiIndex.empty]；磁碟側 index 檔已隨 cache
+  /// 目錄一併被 [HoyoWikiIndexStorage.wipeCacheDirectory] 刪除（下次
+  /// `load()` 因檔案不存在會回空 index）。失敗（權限不足等）直接拋給
+  /// 呼叫方 emit `UpdateFailed`。
   Future<void> resetAll() async {
     final storage = ref.read(hoyowikiIndexStorageProvider);
     await storage.clearAll();
     await storage.wipeCacheDirectory();
     if (!ref.mounted) return;
     state = const HoyoWikiIndex.empty();
-    bumpCacheRevision();
     _log.info('resetAll: index+cache wiped');
   }
 
