@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -193,6 +193,7 @@
   },
   "progressDoneImagesSummary": "{count, plural, =1{{count} imagem de item baixada} other{{count} imagens de itens baixadas}}",
   "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
       "count": {
         "type": "int"
@@ -211,15 +212,21 @@
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "progressPartialImportFailed": "⚠ Falha parcial na importação: {uids}",
   "@progressPartialImportFailed": {
     "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
     "placeholders": {
-      "uids": { "type": "String" }
+      "uids": {
+        "type": "String"
+      }
     }
   },
   "updateProgressHoyoWikiSearching": "Pesquisando dados de itens {done}/{total}",
@@ -434,6 +441,26 @@
   "pagerLast": "Última página",
   "settingsClearActive": "Limpar dados da conta atual",
   "settingsClearAll": "Limpar todos os dados",
+  "settingsRefetchHoyoWikiImagesTitle": "Forçar nova obtenção de imagens dos itens",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Sem registros de Orar ainda, nada para baixar novamente",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Forçar nova obtenção de imagens dos itens",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Isso limpará todo o cache local de imagens dos itens e fará o download novamente do HoYoWiki. Pode levar alguns minutos e consumir tráfego considerável.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Iniciar nova obtenção",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
   "settingsExportData": "Exportar dados",
   "settingsImportData": "Importar dados",
   "shareImageButton": "Gerar imagem para compartilhar",
@@ -653,11 +680,14 @@
   },
   "updateErrorFormat": "Formato de resposta inválido",
   "updateErrorWipeHoyoWikiCache": "Falha ao limpar cache de imagens: {detail}",
-  "settingsRefetchHoyoWikiImagesTitle": "Forçar nova obtenção de imagens dos itens",
-  "settingsRefetchHoyoWikiImagesEmpty": "Sem registros de Orar ainda, nada para baixar novamente",
-  "confirmRefetchHoyoWikiTitle": "Forçar nova obtenção de imagens dos itens",
-  "confirmRefetchHoyoWikiBody": "Isso limpará todo o cache local de imagens dos itens e fará o download novamente do HoYoWiki. Pode levar alguns minutos e consumir tráfego considerável.",
-  "confirmRefetchHoyoWikiConfirm": "Iniciar nova obtenção",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogs": "Logs de depuração",
   "@settingsLogs": {},
   "settingsLogsHint": "Em caso de problemas, exporte os logs para ajudar os desenvolvedores a diagnosticar.",
