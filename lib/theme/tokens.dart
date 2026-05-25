@@ -142,15 +142,15 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     textPrimary: Color(0xFFFFFFFF),
     textSecondary: Color(0xFFDDE3EE),
     textMuted: Color(0xFF8A92A6),
-    fiveStar: Color(0xFFCD8E48),
+    fiveStar: Color(0xFFD6A268),
     fourStar: Color(0xFFB594C5),
     threeStar: Color(0xFF73A8C5),
     twoStar: Color(0xFF6DAD8A),
     oneStar: Color(0xFFA3A2A3),
-    accentPrimary: Color(0xFFCD8E48),
+    accentPrimary: Color(0xFFD6A268),
     stateDanger: Color(0xFFE6736B),
     stateSuccess: Color(0xFF46B07A),
-    stateWarning: Color(0xFFCD8E48),
+    stateWarning: Color(0xFFD6A268),
   );
 
   /// Light = 由 dark 衍生（背景反轉、卡池色稍降亮度）
@@ -163,15 +163,15 @@ class GachaTokens extends ThemeExtension<GachaTokens> {
     textPrimary: Color(0xFF0C1220),
     textSecondary: Color(0xFF2C3245),
     textMuted: Color(0xFF6A7080),
-    fiveStar: Color(0xFF8D5A25),
+    fiveStar: Color(0xFFAD6F2E),
     fourStar: Color(0xFF7E589A),
     threeStar: Color(0xFF437897),
     twoStar: Color(0xFF467B62),
     oneStar: Color(0xFF686769),
-    accentPrimary: Color(0xFF8D5A25),
+    accentPrimary: Color(0xFFAD6F2E),
     stateDanger: Color(0xFFC62828),
     stateSuccess: Color(0xFF2E7D32),
-    stateWarning: Color(0xFF8D5A25),
+    stateWarning: Color(0xFFAD6F2E),
   );
 
   @override
