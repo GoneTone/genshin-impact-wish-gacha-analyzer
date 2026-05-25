@@ -193,6 +193,7 @@
   },
   "progressDoneImagesSummary": "ดาวน์โหลดภาพไอเทมแล้ว {count} รายการ",
   "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
       "count": {
         "type": "int"
@@ -211,15 +212,21 @@
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "progressPartialImportFailed": "⚠ การนำเข้าบางส่วนล้มเหลว: {uids}",
   "@progressPartialImportFailed": {
     "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
     "placeholders": {
-      "uids": { "type": "String" }
+      "uids": {
+        "type": "String"
+      }
     }
   },
   "updateProgressHoyoWikiSearching": "กำลังค้นหาข้อมูลไอเทม {done}/{total}",
@@ -434,6 +441,26 @@
   "pagerLast": "หน้าสุดท้าย",
   "settingsClearActive": "ล้างข้อมูลบัญชีปัจจุบัน",
   "settingsClearAll": "ล้างข้อมูลทั้งหมด",
+  "settingsRefetchHoyoWikiImagesTitle": "บังคับดึงภาพไอเทมใหม่",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "ยังไม่มีบันทึกการอธิษฐาน ไม่มีอะไรให้ดึงใหม่",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "บังคับดึงภาพไอเทมใหม่",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "การทำเช่นนี้จะล้างแคชภาพไอเทมในเครื่องทั้งหมดและดาวน์โหลดใหม่จาก HoYoWiki อาจใช้เวลาหลายนาทีและใช้แบนด์วิดท์มาก",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "เริ่มดึงใหม่",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
   "settingsExportData": "ส่งออกข้อมูล",
   "settingsImportData": "นำเข้าข้อมูล",
   "shareImageButton": "สร้างภาพแชร์",
@@ -653,11 +680,14 @@
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
   "updateErrorWipeHoyoWikiCache": "ล้างแคชภาพไม่สำเร็จ: {detail}",
-  "settingsRefetchHoyoWikiImagesTitle": "บังคับดึงภาพไอเทมใหม่",
-  "settingsRefetchHoyoWikiImagesEmpty": "ยังไม่มีบันทึกการอธิษฐาน ไม่มีอะไรให้ดึงใหม่",
-  "confirmRefetchHoyoWikiTitle": "บังคับดึงภาพไอเทมใหม่",
-  "confirmRefetchHoyoWikiBody": "การทำเช่นนี้จะล้างแคชภาพไอเทมในเครื่องทั้งหมดและดาวน์โหลดใหม่จาก HoYoWiki อาจใช้เวลาหลายนาทีและใช้แบนด์วิดท์มาก",
-  "confirmRefetchHoyoWikiConfirm": "เริ่มดึงใหม่",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogs": "Logs ดีบัก",
   "@settingsLogs": {},
   "settingsLogsHint": "เมื่อพบปัญหา สามารถส่งออก log ให้นักพัฒนาช่วยตรวจสอบได้",
