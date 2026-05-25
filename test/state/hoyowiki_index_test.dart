@@ -132,4 +132,58 @@ void main() {
       expect(File('${dir.path}/111_icon.png').existsSync(), isFalse);
     });
   });
+
+  group('HoYoWikiIndexNotifier concurrent writes', () {
+    test('並發 setEntry 全部寫入不丟失', () async {
+      final raceTempDir = await Directory.systemTemp.createTemp(
+        'hoyowiki_index_race_',
+      );
+      addTearDown(() async {
+        if (await raceTempDir.exists()) {
+          await raceTempDir.delete(recursive: true);
+        }
+      });
+      final raceContainer = ProviderContainer(
+        overrides: [
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            _SlowSaveStorage(raceTempDir),
+          ),
+        ],
+      );
+      addTearDown(raceContainer.dispose);
+      final notifier = raceContainer.read(hoyowikiIndexProvider.notifier);
+      await notifier.waitForLoad();
+
+      // 同時跑 10 個 setEntry：無 lock 時各自從相同 baseline Map.from(state.entries)
+      // 拿快照、寫回時後者覆蓋前者，final 只剩最後一筆。
+      await Future.wait([
+        for (var i = 0; i < 10; i++)
+          notifier.setEntry(
+            id: 'id_$i',
+            entry: HoYoWikiEntry(
+              iconUrl: 'http://x/$i.png',
+              headerImgUrl: '',
+              fetchedAt: DateTime.utc(2026, 5, 24),
+            ),
+          ),
+      ]);
+
+      final finalState = raceContainer.read(hoyowikiIndexProvider);
+      expect(finalState.entries.length, 10);
+      for (var i = 0; i < 10; i++) {
+        expect(finalState.entries['id_$i']?.iconUrl, 'http://x/$i.png');
+      }
+    });
+  });
+}
+
+/// 強制 save 內出現 async gap，迫使 read-modify-write race 觀察得到。
+class _SlowSaveStorage extends HoYoWikiIndexStorage {
+  _SlowSaveStorage(super.baseDir);
+
+  @override
+  Future<void> save(HoYoWikiIndex index) async {
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+    await super.save(index);
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
@@ -38,6 +39,9 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
 
   Completer<void>? _loadCompleter;
 
+  /// 保護 setSearch / setEntry 的 read-modify-write，避免並發 worker 互相覆蓋。
+  final _lock = Lock();
+
   @override
   HoYoWikiIndex build() {
     _loadCompleter = Completer<void>();
@@ -69,15 +73,17 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     required String id,
     required int menuId,
   }) async {
-    final newSearch = Map<String, String>.from(state.searchMap)
-      ..['$lang::$name'] = id;
-    final newMenuIds = Map<String, int>.from(state.menuIds)..[id] = menuId;
-    final next = HoYoWikiIndex(
-      searchMap: newSearch,
-      entries: state.entries,
-      menuIds: newMenuIds,
-    );
-    await _saveAndEmit(next);
+    await _lock.synchronized(() async {
+      final newSearch = Map<String, String>.from(state.searchMap)
+        ..['$lang::$name'] = id;
+      final newMenuIds = Map<String, int>.from(state.menuIds)..[id] = menuId;
+      final next = HoYoWikiIndex(
+        searchMap: newSearch,
+        entries: state.entries,
+        menuIds: newMenuIds,
+      );
+      await _saveAndEmit(next);
+    });
   }
 
   /// 寫入一筆 entry 並 persist。
@@ -85,14 +91,16 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     required String id,
     required HoYoWikiEntry entry,
   }) async {
-    final newEntries = Map<String, HoYoWikiEntry>.from(state.entries)
-      ..[id] = entry;
-    final next = HoYoWikiIndex(
-      searchMap: state.searchMap,
-      entries: newEntries,
-      menuIds: state.menuIds,
-    );
-    await _saveAndEmit(next);
+    await _lock.synchronized(() async {
+      final newEntries = Map<String, HoYoWikiEntry>.from(state.entries)
+        ..[id] = entry;
+      final next = HoYoWikiIndex(
+        searchMap: state.searchMap,
+        entries: newEntries,
+        menuIds: state.menuIds,
+      );
+      await _saveAndEmit(next);
+    });
   }
 
   /// 在 cache 檔案下載完成後呼叫；state 內容不變但 identity 換新，
