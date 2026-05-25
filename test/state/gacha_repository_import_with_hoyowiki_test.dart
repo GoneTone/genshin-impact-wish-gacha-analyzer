@@ -261,4 +261,66 @@ void main() {
     expect(progress, isA<UpdateCompleted>(),
         reason: '第一次跑完應 emit UpdateCompleted；第二次 no-op 不會覆寫');
   });
+
+  test('HoYoWiki 階段取消：import 仍寫入、emit UpdateCompleted', () async {
+    // 用 search endpoint 立刻回 404，讓 search 階段瞬間結束、
+    // 進 entry 階段前 isAborted 檢查觸發。
+    final searchCalled = <String>[];
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        searchCalled.add(req.url.queryParameters['keyword']!);
+        return http.Response('', 404);
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+
+    final tempDir =
+        await Directory.systemTemp.createTemp('gacha_import_cancel_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container =
+        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: '1001',
+      accounts: [
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1001',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [_rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301')],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+      ],
+    );
+
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    // 同 microtask 觸發 cancel：_runImport 已啟動，HoYoWiki 階段早退保證。
+    final future = notifier.importAccountsAndFetchHoYoWiki(bundle);
+    notifier.cancelPreparing();
+    await future;
+
+    final state = container.read(gachaRepositoryProvider);
+    // import 不可回滾：byUid 仍包含 1001
+    expect(state.byUid.containsKey('1001'), isTrue,
+        reason: 'import 寫入無法回滾');
+    final progress = state.progress;
+    expect(progress, isA<UpdateCompleted>(),
+        reason: '取消仍 emit UpdateCompleted（不像 forceRefetch 的 clearProgress）');
+    final completed = progress as UpdateCompleted;
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 1);
+  });
 }
