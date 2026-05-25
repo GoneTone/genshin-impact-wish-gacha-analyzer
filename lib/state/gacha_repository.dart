@@ -793,7 +793,7 @@ class GachaRepository extends Notifier<GachaState> {
         searchTodo.length + entryTodo.length + downloadTodo.length;
     if (totalInitial == 0) return downloaded;
 
-    final fetcherDelay = ref.read(hoyowikiFetcherProvider).rateLimit;
+    final fetcherDelay = Duration.zero;
 
     Future<bool> checkCancel() async {
       await Future<void>.delayed(fetcherDelay);

@@ -63,9 +63,7 @@ void main() {
           HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
-        hoyowikiFetcherProvider.overrideWithValue(
-          HoYoWikiFetcher(rateLimit: Duration.zero),
-        ),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
         ),

@@ -37,15 +37,22 @@ class HoYoWikiEntryFetched {
 
 /// 與 HoYoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
 class HoYoWikiFetcher {
-  /// 建立 [HoYoWikiFetcher]，可調整速率限制與逾時。
+  /// 建立 [HoYoWikiFetcher]，可調整各階段並行度與逾時。
   HoYoWikiFetcher({
-    this.rateLimit = const Duration(milliseconds: 600),
+    this.searchConcurrency = 8,
+    this.entryConcurrency = 8,
+    this.downloadConcurrency = 8,
     this.timeout = const Duration(seconds: 10),
   });
 
-  /// 兩次 API 呼叫之間的最短間隔（由 caller 透過 `Future.delayed` 控制，
-  /// fetcher 本身不主動 delay）。
-  final Duration rateLimit;
+  /// search 階段 worker-pool 同時 in-flight 上限。
+  final int searchConcurrency;
+
+  /// entry_page 階段 worker-pool 同時 in-flight 上限。
+  final int entryConcurrency;
+
+  /// download 階段 worker-pool 同時 in-flight 上限。
+  final int downloadConcurrency;
 
   /// 單次 HTTP 請求超時。
   final Duration timeout;

@@ -138,9 +138,7 @@ void main() {
         gachaStorageProvider.overrideWithValue(storage),
         hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
         hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
-        hoyowikiFetcherProvider.overrideWithValue(
-          HoYoWikiFetcher(rateLimit: Duration.zero),
-        ),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
         ),
@@ -197,9 +195,7 @@ void main() {
           HoYoWikiIndexStorage(tempDir),
         ),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
-        hoyowikiFetcherProvider.overrideWithValue(
-          HoYoWikiFetcher(rateLimit: Duration.zero),
-        ),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
         ),
@@ -249,9 +245,7 @@ void main() {
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
         hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
-        hoyowikiFetcherProvider.overrideWithValue(
-          HoYoWikiFetcher(rateLimit: Duration.zero),
-        ),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
         ),
@@ -302,9 +296,7 @@ void main() {
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
         hoyowikiIndexStorageProvider.overrideWithValue(throwingStorage),
         hoyowikiCacheDirProvider.overrideWithValue(tempDir),
-        hoyowikiFetcherProvider.overrideWithValue(
-          HoYoWikiFetcher(rateLimit: Duration.zero),
-        ),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(client: apiClient, cancel: () {}),
         ),
