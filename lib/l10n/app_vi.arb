@@ -207,6 +207,21 @@
       }
     }
   },
+  "progressDoneImportSummary": "Đã nhập {accounts} tài khoản ({records} bản ghi)",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Nhập một phần thất bại: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
   "updateProgressHoyoWikiSearching": "Đang tìm dữ liệu vật phẩm {done}/{total}",
   "@updateProgressHoyoWikiSearching": {
     "placeholders": {

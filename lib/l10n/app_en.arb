@@ -207,6 +207,21 @@
       }
     }
   },
+  "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account ({records} records)} other{Imported {accounts} accounts ({records} records)}}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Partial import failure: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
   "updateProgressHoyoWikiSearching": "Searching item data {done}/{total}",
   "@updateProgressHoyoWikiSearching": {
     "placeholders": {

@@ -207,6 +207,21 @@
       }
     }
   },
+  "progressDoneImportSummary": "{accounts} 件のアカウントをインポート（{records} 件の記録）",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ 一部のインポートに失敗：{uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
   "updateProgressHoyoWikiSearching": "アイテムデータを検索中 {done}/{total}",
   "@updateProgressHoyoWikiSearching": {
     "placeholders": {

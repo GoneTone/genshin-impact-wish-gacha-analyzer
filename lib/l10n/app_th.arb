@@ -207,6 +207,21 @@
       }
     }
   },
+  "progressDoneImportSummary": "นำเข้า {accounts} บัญชี ({records} รายการ)",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ การนำเข้าบางส่วนล้มเหลว: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
   "updateProgressHoyoWikiSearching": "กำลังค้นหาข้อมูลไอเทม {done}/{total}",
   "@updateProgressHoyoWikiSearching": {
     "placeholders": {

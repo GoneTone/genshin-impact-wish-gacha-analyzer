@@ -203,6 +203,19 @@
       }
     }
   },
+  "progressDoneImportSummary": "本次导入 {accounts} 个账号（共 {records} 条记录）",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ 部分导入失败：{uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": { "uids": { "type": "String" } }
+  },
   "updateProgressHoyoWikiSearching": "搜索物品数据 {done}/{total}",
   "@updateProgressHoyoWikiSearching": {
     "placeholders": {
