@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
@@ -47,7 +46,6 @@ class FetchingBanner extends UpdateProgress {
 }
 
 /// 帳號批次匯入的結果摘要。
-@immutable
 class ImportResult {
   /// 建立 [ImportResult]。
   const ImportResult({
