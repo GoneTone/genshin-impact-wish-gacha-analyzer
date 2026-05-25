@@ -237,6 +237,34 @@ void main() {
       );
     });
   });
+
+  testWidgets('placeholder 應顯示 Icons.question_mark 且 size = host * 0.55', (
+    tester,
+  ) async {
+    for (final rank in [3, 4, 5]) {
+      await tester.pumpWidget(
+        _wrap(
+          GachaItemIcon(
+            record: _rec(
+              name: 'Missing $rank',
+              gachaType: '301',
+              rankType: rank,
+            ),
+            size: 32,
+          ),
+          container,
+        ),
+      );
+      final iconFinder = find.byIcon(Icons.question_mark);
+      expect(
+        iconFinder,
+        findsOneWidget,
+        reason: 'rank=$rank placeholder 應含 question_mark',
+      );
+      final icon = tester.widget<Icon>(iconFinder);
+      expect(icon.size, 32 * 0.55, reason: 'rank=$rank icon size');
+    }
+  });
 }
 
 /// 最小可解碼 1x1 透明 PNG。
