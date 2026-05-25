@@ -985,7 +985,7 @@ void main() {
 
       final result = await container
           .read(gachaRepositoryProvider.notifier)
-          .importAccounts(bundle);
+          .debugImportOnly(bundle);
 
       expect(result.failedUids, isEmpty);
       expect(result.successAccounts, 2);
@@ -1064,7 +1064,7 @@ void main() {
 
       await container
           .read(gachaRepositoryProvider.notifier)
-          .importAccounts(bundle);
+          .debugImportOnly(bundle);
 
       final order = container.read(settingsProvider).uidOrder;
       // imported [100000002, 100000001] first, then remaining custom order minus imported = [100000004, 100000003]
@@ -1118,7 +1118,7 @@ void main() {
 
       final result = await container
           .read(gachaRepositoryProvider.notifier)
-          .importAccounts(bundle);
+          .debugImportOnly(bundle);
 
       expect(result.failedUids, ['100000002']);
       expect(result.successAccounts, 1);
@@ -1186,7 +1186,7 @@ void main() {
 
       await container
           .read(gachaRepositoryProvider.notifier)
-          .importAccounts(bundle);
+          .debugImportOnly(bundle);
 
       expect(container.read(gachaRepositoryProvider).activeUid, '200000002');
       expect(container.read(settingsProvider).lastActiveUid, '200000002');

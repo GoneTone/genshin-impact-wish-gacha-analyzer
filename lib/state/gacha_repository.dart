@@ -553,7 +553,10 @@ class GachaRepository extends Notifier<GachaState> {
   }
 
   /// 批次匯入 [AccountsBundle]，合併現有帳號資料與偏好設定。
-  Future<ImportResult> importAccounts(AccountsBundle bundle) async {
+  ///
+  /// 純資料層操作，**不**啟動 progress 或 HoYoWiki 圖片抓取。
+  /// 對外入口請用 [importAccountsAndFetchHoYoWiki]。
+  Future<ImportResult> _runImport(AccountsBundle bundle) async {
     final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
@@ -646,6 +649,16 @@ class GachaRepository extends Notifier<GachaState> {
       failedUids: failed,
     );
   }
+
+  /// 測試用：暴露 [_runImport] 給單元測試（驗證純 import 邏輯，
+  /// 不必 mock HoYoWiki fetcher）。生產勿用。
+  @visibleForTesting
+  Future<ImportResult> debugImportOnly(AccountsBundle bundle) =>
+      _runImport(bundle);
+
+  /// 臨時轉接：Task 4 完成後改由 [importAccountsAndFetchHoYoWiki] 取代。
+  Future<ImportResult> importAccounts(AccountsBundle bundle) =>
+      _runImport(bundle);
 
   /// 依 uidOrder 與最後更新時間挑選 fallback 作用中 UID。
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
