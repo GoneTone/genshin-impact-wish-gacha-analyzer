@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
@@ -45,6 +46,26 @@ class FetchingBanner extends UpdateProgress {
   final int newRecordsSoFar;
 }
 
+/// 匯入流程的結果摘要，供 [UpdateCompleted] 在 dialog 顯示。
+@immutable
+class ImportSummary {
+  /// 建立 [ImportSummary]。
+  const ImportSummary({
+    required this.successAccounts,
+    required this.totalRecords,
+    required this.failedUids,
+  });
+
+  /// 成功寫入 storage 的帳號數。
+  final int successAccounts;
+
+  /// 成功匯入的總祈願紀錄數。
+  final int totalRecords;
+
+  /// 寫入 storage 失敗的 UID 列表（空 list 表示全成功）。
+  final List<String> failedUids;
+}
+
 /// 更新完成。
 class UpdateCompleted extends UpdateProgress {
   /// 建立 [UpdateCompleted]。
@@ -53,9 +74,10 @@ class UpdateCompleted extends UpdateProgress {
     required this.failedBanners,
     required this.updatedAt,
     required this.hoYoWikiImagesDownloaded,
+    this.importSummary,
   });
 
-  /// 本次更新新增的總紀錄數。
+  /// 本次更新新增的總紀錄數（update 流程用；import 流程為 0）。
   final int totalNewRecords;
 
   /// 拉取失敗的 banner 名稱 key 列表。
@@ -67,6 +89,9 @@ class UpdateCompleted extends UpdateProgress {
   /// 本次補抓 HoYoWiki 圖片成功寫入磁碟的張數（icon + header 各算一張）。
   /// 既有圖檔已存在不重抓的不算；只計入本次新下載成功的張數。
   final int hoYoWikiImagesDownloaded;
+
+  /// 匯入流程的結果摘要；非 import 入口為 null。
+  final ImportSummary? importSummary;
 }
 
 /// 更新失敗。
