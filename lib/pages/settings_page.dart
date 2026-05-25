@@ -360,7 +360,7 @@ class _DataManagement extends ConsumerWidget {
           label: Text(l.settingsExportData),
         ),
         OutlinedButton.icon(
-          onPressed: () => _import(context, ref),
+          onPressed: progress != null ? null : () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
         ),
@@ -615,38 +615,12 @@ class _DataManagement extends ConsumerWidget {
     if (ok != true) return;
     if (!ctx.mounted) return;
 
-    final result = await ref
-        .read(gachaRepositoryProvider.notifier)
-        .importAccounts(filteredBundle);
-    if (!ctx.mounted) return;
-
-    final SnackBar snack;
-    if (result.failedUids.isEmpty) {
-      Logger('accounts.io').info(
-        'import: success=${result.successAccounts} '
-        'records=${result.totalRecords}',
-      );
-      snack = SnackBar(
-        content: Text(
-          l.settingsImportSuccess(result.successAccounts, result.totalRecords),
-        ),
-      );
-    } else {
-      Logger('accounts.io').warning(
-        'import partial: success=${result.successAccounts} '
-        'failed=[${result.failedUids.join(",")}]',
-      );
-      snack = SnackBar(
-        content: Text(
-          l.settingsImportPartial(
-            result.successAccounts,
-            filteredBundle.accounts.length,
-            result.failedUids.join(', '),
-          ),
-        ),
-      );
-    }
-    ScaffoldMessenger.of(ctx).showSnackBar(snack);
+    // fire-and-forget：progress dialog 由 app_shell 既有 ref.listen 自動接管。
+    unawaited(
+      ref
+          .read(gachaRepositoryProvider.notifier)
+          .importAccountsAndFetchHoYoWiki(filteredBundle),
+    );
   }
 
   /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。

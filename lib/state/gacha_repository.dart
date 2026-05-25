@@ -721,10 +721,6 @@ class GachaRepository extends Notifier<GachaState> {
   Future<ImportResult> debugImportOnly(AccountsBundle bundle) =>
       _runImport(bundle);
 
-  /// 臨時轉接：Task 4 完成後改由 [importAccountsAndFetchHoYoWiki] 取代。
-  Future<ImportResult> importAccounts(AccountsBundle bundle) =>
-      _runImport(bundle);
-
   /// 依 uidOrder 與最後更新時間挑選 fallback 作用中 UID。
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
     if (byUid.isEmpty) return null;
