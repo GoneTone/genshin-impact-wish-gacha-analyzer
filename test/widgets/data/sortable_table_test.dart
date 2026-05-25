@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 GachaRecord _r({required String id, required int rank, required String name}) =>
     GachaRecord(
@@ -19,17 +25,50 @@ GachaRecord _r({required String id, required int rank, required String name}) =>
       lang: 'zh-tw',
     );
 
-Widget _wrap(Widget child, {Locale locale = const Locale('zh')}) => MaterialApp(
-  theme: buildDarkTheme(),
-  locale: locale,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  home: Scaffold(
-    body: SingleChildScrollView(child: SizedBox(width: 1200, child: child)),
+/// 建立含 [UncontrolledProviderScope] 的測試包裝 widget。
+Widget _wrap(
+  Widget child, {
+  Locale locale = const Locale('zh'),
+  required ProviderContainer container,
+}) => UncontrolledProviderScope(
+  container: container,
+  child: MaterialApp(
+    theme: buildDarkTheme(),
+    locale: locale,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(
+      body: SingleChildScrollView(child: SizedBox(width: 1200, child: child)),
+    ),
   ),
 );
 
+/// 建立測試用 [ProviderContainer]，override 需要 main() 注入的 provider。
+ProviderContainer _makeContainer(Directory tempDir) => ProviderContainer(
+  overrides: [
+    hoyowikiIndexStorageProvider.overrideWithValue(
+      HoYoWikiIndexStorage(tempDir),
+    ),
+    hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+  ],
+);
+
 void main() {
+  late Directory tempDir;
+  late ProviderContainer container;
+
+  setUp(() async {
+    tempDir = await Directory.systemTemp.createTemp('sortable_table_test_');
+    container = _makeContainer(tempDir);
+  });
+
+  tearDown(() async {
+    container.dispose();
+    try {
+      await tempDir.delete(recursive: true);
+    } catch (_) {}
+  });
+
   testWidgets('ja locale → rank cell uses ★N order (pill + plain)', (
     tester,
   ) async {
@@ -48,6 +87,7 @@ void main() {
           onSortColumnTapped: (_) {},
         ),
         locale: const Locale('ja'),
+        container: container,
       ),
     );
     expect(find.text('★5'), findsOneWidget);
@@ -75,6 +115,7 @@ void main() {
           mainRank: 5,
           onSortColumnTapped: (_) {},
         ),
+        container: container,
       ),
     );
     expect(find.text('A'), findsOneWidget);
@@ -101,6 +142,7 @@ void main() {
           mainRank: 5,
           onSortColumnTapped: (_) {},
         ),
+        container: container,
       ),
     );
     final dropdown = tester.widget<DropdownButton<int>>(
@@ -122,6 +164,7 @@ void main() {
           mainRank: 5,
           onSortColumnTapped: (c) => tapped = c,
         ),
+        container: container,
       ),
     );
     await tester.tap(find.text('時間'));
@@ -151,10 +194,34 @@ void main() {
           mainRank: 5,
           onSortColumnTapped: (_) {},
         ),
+        container: container,
       ),
     );
     expect(find.byIcon(Icons.arrow_downward), findsOneWidget);
     // 其餘 5 個欄位都顯示 unfold_more
     expect(find.byIcon(Icons.unfold_more), findsNWidgets(5));
+  });
+
+  testWidgets('每列名稱欄前顯示 GachaItemIcon', (tester) async {
+    final records = [
+      _r(id: '5', rank: 5, name: 'A'),
+      _r(id: '4', rank: 4, name: 'B'),
+      _r(id: '3', rank: 3, name: 'C'),
+    ];
+    final rows = buildRecordRows(records);
+    await tester.pumpWidget(
+      _wrap(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+        container: container,
+      ),
+    );
+
+    // 三筆 record → 三個 GachaItemIcon
+    expect(find.byType(GachaItemIcon), findsNWidgets(3));
   });
 }

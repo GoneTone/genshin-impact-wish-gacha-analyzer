@@ -1,0 +1,427 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+
+/// 建立測試用的 [GachaRecord]，預設 5★ 角色、英文 lang。
+GachaRecord _rec({
+  required String id,
+  required String uid,
+  required String name,
+  required String gachaType,
+  String lang = 'en-us',
+}) => GachaRecord(
+  id: id,
+  uid: uid,
+  gachaType: gachaType,
+  name: name,
+  itemType: 'Character',
+  rankType: 5,
+  time: DateTime(2026, 5, 24),
+  lang: lang,
+);
+
+/// 建立模擬 HoYoWiki API 的 [MockClient]：[onSearch] 可監聽搜尋呼叫的 keyword。
+http.Client _hoYoWikiMockClient({void Function(String keyword)? onSearch}) =>
+    MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        final kw = req.url.queryParameters['keyword']!;
+        onSearch?.call(kw);
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': kw,
+                  'entry_page_id': 'eid_$kw',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        final id = req.url.queryParameters['entry_page_id']!;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {
+                'icon_url': 'https://x/${id}_icon.png',
+                'header_img_url': 'https://x/${id}_header.png',
+              },
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+
+/// 啟動測試用 [ProviderContainer]，覆寫 storage / hoyowiki / http 依賴並完成 bootstrap。
+Future<ProviderContainer> _bootstrap({
+  required Directory tempDir,
+  required http.Client apiClient,
+}) async {
+  final storage = GachaStorage(tempDir);
+  final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
+  await hoyowikiDir.create();
+  final indexStorage = HoYoWikiIndexStorage(hoyowikiDir);
+
+  final container = ProviderContainer(
+    overrides: [
+      gachaStorageProvider.overrideWithValue(storage),
+      hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
+      hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
+      hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+      cancellableHttpClientFactoryProvider.overrideWithValue(
+        () => CancellableHttpClient(client: apiClient, cancel: () {}),
+      ),
+    ],
+  );
+  await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+  await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+  return container;
+}
+
+void main() {
+  test('主路徑：import + 增量補圖 → emit UpdateCompleted with importSummary', () async {
+    final searchCalls = <String>[];
+    final apiClient = _hoYoWikiMockClient(onSearch: searchCalls.add);
+
+    final tempDir = await Directory.systemTemp.createTemp('gacha_import_main_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    // 構造 bundle：兩個帳號、各一筆祈願紀錄
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: '1001',
+      accounts: [
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1001',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [
+                _rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301'),
+              ],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1002',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [],
+              '302': [],
+              '500': [],
+              '200': [
+                _rec(
+                  id: '2',
+                  uid: '1002',
+                  name: 'Skyward Harp',
+                  gachaType: '200',
+                ),
+              ],
+              '100': [],
+            },
+          ),
+        ),
+      ],
+    );
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importAccountsAndFetchHoYoWiki(bundle);
+
+    // 跨 UID 去重後 search 兩次
+    expect(searchCalls.toSet(), {'Hu Tao', 'Skyward Harp'});
+
+    // byUid 含兩個帳號
+    final state = container.read(gachaRepositoryProvider);
+    expect(state.byUid.keys.toSet(), {'1001', '1002'});
+
+    // 結束 emit UpdateCompleted；importSummary 與圖片下載數齊全
+    final progress = state.progress;
+    expect(progress, isA<UpdateCompleted>());
+    final completed = progress as UpdateCompleted;
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 2);
+    expect(completed.importSummary!.failedUids, isEmpty);
+    expect(completed.importSummary!.totalRecords, 2);
+    expect(
+      completed.hoYoWikiImagesDownloaded,
+      4,
+      reason: 'Hu Tao + Skyward Harp，各 icon+header = 4 張',
+    );
+  });
+
+  test('空 bundle：不打 HoYoWiki API、emit UpdateCompleted with images=0', () async {
+    var apiCalled = false;
+    final apiClient = MockClient((req) async {
+      apiCalled = true;
+      return http.Response('', 404);
+    });
+
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_empty_',
+    );
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: null,
+      accounts: const [],
+    );
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importAccountsAndFetchHoYoWiki(bundle);
+
+    expect(apiCalled, isFalse, reason: '空 bundle 不該有任何 unique pair → 不打 API');
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
+    final completed = progress as UpdateCompleted;
+    expect(completed.hoYoWikiImagesDownloaded, 0);
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 0);
+    expect(completed.importSummary!.totalRecords, 0);
+    expect(completed.importSummary!.failedUids, isEmpty);
+  });
+
+  test('互斥早退：state.progress 非 null 時 no-op', () async {
+    final apiClient = MockClient((req) async => http.Response('', 404));
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_mutex_',
+    );
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    final emptyBundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: null,
+      accounts: const [],
+    );
+
+    // 第一次：保持 reference 但不 await，立刻 fire-and-forget。
+    final first = notifier.importAccountsAndFetchHoYoWiki(emptyBundle);
+    // 第二次：應立刻 no-op（早退）；progress 已被第一次設為 Preparing。
+    final second = notifier.importAccountsAndFetchHoYoWiki(emptyBundle);
+    await Future.wait(<Future<void>>[first, second]);
+
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(
+      progress,
+      isA<UpdateCompleted>(),
+      reason: '第一次跑完應 emit UpdateCompleted；第二次 no-op 不會覆寫',
+    );
+  });
+
+  test('HoYoWiki 階段取消：import 仍寫入、emit UpdateCompleted', () async {
+    // 用 search endpoint 立刻回 404，讓 search 階段瞬間結束、
+    // 進 entry 階段前 isAborted 檢查觸發。
+    final searchCalled = <String>[];
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        searchCalled.add(req.url.queryParameters['keyword']!);
+        return http.Response('', 404);
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_cancel_',
+    );
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: '1001',
+      accounts: [
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1001',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [
+                _rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301'),
+              ],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+      ],
+    );
+
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    // 同 microtask 觸發 cancel：_runImport 已啟動，HoYoWiki 階段早退保證。
+    final future = notifier.importAccountsAndFetchHoYoWiki(bundle);
+    notifier.cancelPreparing();
+    await future;
+
+    final state = container.read(gachaRepositoryProvider);
+    // import 不可回滾：byUid 仍包含 1001
+    expect(state.byUid.containsKey('1001'), isTrue, reason: 'import 寫入無法回滾');
+    final progress = state.progress;
+    expect(
+      progress,
+      isA<UpdateCompleted>(),
+      reason: '取消仍 emit UpdateCompleted（不像 forceRefetch 的 clearProgress）',
+    );
+    final completed = progress as UpdateCompleted;
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 1);
+  });
+
+  test('部分 UID 寫 storage 失敗：importSummary.failedUids 非空', () async {
+    final apiClient = _hoYoWikiMockClient();
+
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_partial_',
+    );
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final failStorage = _SelectiveFailureStorage(tempDir, '1002');
+    final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
+    await hoyowikiDir.create();
+    final indexStorage = HoYoWikiIndexStorage(hoyowikiDir);
+
+    final container = ProviderContainer(
+      overrides: [
+        gachaStorageProvider.overrideWithValue(failStorage),
+        hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
+        hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(client: apiClient, cancel: () {}),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: '1001',
+      accounts: [
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1001',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [
+                _rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301'),
+              ],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1002',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [
+                _rec(id: '2', uid: '1002', name: 'Other', gachaType: '301'),
+              ],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+      ],
+    );
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importAccountsAndFetchHoYoWiki(bundle);
+
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
+    final completed = progress as UpdateCompleted;
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 1);
+    expect(completed.importSummary!.failedUids, ['1002']);
+  });
+}
+
+/// 對特定 UID 寫入時拋例外，用於測 partial-failure 路徑。
+class _SelectiveFailureStorage extends GachaStorage {
+  _SelectiveFailureStorage(super.baseDir, this._failUid);
+  final String _failUid;
+
+  @override
+  Future<void> save(BannerStorage data) async {
+    if (data.uid == _failUid) {
+      throw const FileSystemException('simulated save failure');
+    }
+    return super.save(data);
+  }
+}

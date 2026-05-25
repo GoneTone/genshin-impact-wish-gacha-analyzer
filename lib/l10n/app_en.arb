@@ -191,11 +191,67 @@
       }
     }
   },
+  "progressDoneImagesSummary": "{count, plural, =1{Downloaded {count} item image} other{Downloaded {count} item images}}",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Partial failure: {names}",
   "@progressPartialFailed": {
     "placeholders": {
       "names": {
         "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account ({records} records)} other{Imported {accounts} accounts ({records} records)}}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Partial import failure: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Searching item data {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Fetching item details {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Downloading item images {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
@@ -596,6 +652,15 @@
     }
   },
   "updateErrorFormat": "Unexpected response format",
+  "updateErrorWipeHoyoWikiCache": "Failed to clear item-image cache: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
+  "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
+  "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
+  "confirmRefetchHoyoWikiBody": "This will clear all locally cached item images and re-download them from HoYoWiki. May take several minutes and consume significant bandwidth.",
+  "confirmRefetchHoyoWikiConfirm": "Start re-fetching",
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
   "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",

@@ -64,6 +64,7 @@ class UpdateProgressDialog extends ConsumerWidget {
         ),
       ],
       FetchingBanner() => const <Widget>[],
+      FetchingHoYoWiki() => const <Widget>[],
       UpdateCompleted() || UpdateFailed() => [
         TextButton.icon(
           onPressed: r.clearProgress,
@@ -105,6 +106,11 @@ class _Title extends StatelessWidget {
       ),
       FetchingBanner() => (
         Icons.cloud_download_outlined,
+        tokens.textPrimary,
+        l.progressFetching,
+      ),
+      FetchingHoYoWiki() => (
+        Icons.image_outlined,
         tokens.textPrimary,
         l.progressFetching,
       ),
@@ -192,22 +198,70 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
-      UpdateCompleted(:final totalNewRecords, :final failedBanners) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l.progressDoneSummary(totalNewRecords)),
-          if (failedBanners.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.s),
-            Text(
-              l.progressPartialFailed(
-                failedBanners.map(resolveBannerName).join('、'),
-              ),
-              style: TextStyle(color: tokens.stateDanger),
+      FetchingHoYoWiki(:final phase, :final doneCount, :final totalCount) =>
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LinearProgressIndicator(
+              value: totalCount == 0 ? null : doneCount / totalCount,
             ),
+            const SizedBox(height: AppSpacing.l),
+            Text(switch (phase) {
+              HoYoWikiPhase.searching => l.updateProgressHoyoWikiSearching(
+                doneCount,
+                totalCount,
+              ),
+              HoYoWikiPhase.fetchingEntries =>
+                l.updateProgressHoyoWikiFetchingEntries(doneCount, totalCount),
+              HoYoWikiPhase.downloading => l.updateProgressHoyoWikiDownloading(
+                doneCount,
+                totalCount,
+              ),
+            }),
           ],
-        ],
-      ),
+        ),
+      UpdateCompleted(
+        :final totalNewRecords,
+        :final failedBanners,
+        :final hoYoWikiImagesDownloaded,
+        :final importSummary,
+      ) =>
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (importSummary != null)
+              Text(
+                l.progressDoneImportSummary(
+                  importSummary.successAccounts,
+                  importSummary.totalRecords,
+                ),
+              )
+            else
+              Text(l.progressDoneSummary(totalNewRecords)),
+            const SizedBox(height: AppSpacing.xs),
+            Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
+            if (failedBanners.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.progressPartialFailed(
+                  failedBanners.map(resolveBannerName).join('、'),
+                ),
+                style: TextStyle(color: tokens.stateDanger),
+              ),
+            ],
+            if (importSummary != null &&
+                importSummary.failedUids.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.progressPartialImportFailed(
+                  importSummary.failedUids.join(', '),
+                ),
+                style: TextStyle(color: tokens.stateDanger),
+              ),
+            ],
+          ],
+        ),
       UpdateFailed(:final error) => Text(_resolveError(error, l)),
       null => const SizedBox.shrink(),
     };
@@ -221,5 +275,7 @@ class _Body extends StatelessWidget {
         UpdateErrorServer(:final details) => l.errorServer(details),
         UpdateErrorNoRecords() => l.errorNoRecords,
         UpdateErrorOther(:final message) => message,
+        UpdateErrorWipeHoYoWikiCache(:final detail) =>
+          l.updateErrorWipeHoyoWikiCache(detail),
       };
 }

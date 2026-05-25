@@ -191,11 +191,67 @@
       }
     }
   },
+  "progressDoneImagesSummary": "アイテム画像を {count} 件ダウンロード",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ 一部失敗：{names}",
   "@progressPartialFailed": {
     "placeholders": {
       "names": {
         "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts} 件のアカウントをインポート（{records} 件の記録）",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ 一部のインポートに失敗：{uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "アイテムデータを検索中 {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "アイテム詳細を取得中 {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "アイテム画像をダウンロード中 {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
@@ -596,6 +652,12 @@
     }
   },
   "updateErrorFormat": "応答フォーマットが異常です",
+  "updateErrorWipeHoyoWikiCache": "アイテム画像キャッシュのクリアに失敗：{detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "アイテム画像を強制再取得",
+  "settingsRefetchHoyoWikiImagesEmpty": "祈願記録がありません、再取得対象がありません",
+  "confirmRefetchHoyoWikiTitle": "アイテム画像を強制再取得",
+  "confirmRefetchHoyoWikiBody": "ローカルのアイテム画像キャッシュをすべて削除し、HoYoWiki から再取得します。アイテム数に応じて数分かかり、相応の通信量を消費する場合があります。",
+  "confirmRefetchHoyoWikiConfirm": "再取得を開始",
   "settingsLogs": "デバッグログ",
   "@settingsLogs": {},
   "settingsLogsHint": "問題が発生した際は、ログをエクスポートして開発者の調査にご協力ください。",

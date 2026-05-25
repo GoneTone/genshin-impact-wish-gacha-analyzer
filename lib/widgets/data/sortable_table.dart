@@ -6,6 +6,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 /// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
@@ -302,22 +304,23 @@ class _HeaderCell extends StatelessWidget {
       Icon(icon, size: 14, color: iconColor),
     ];
     final cell = InkWell(
+      mouseCursor: SystemMouseCursors.click,
       onTap: () => onTap(column),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: alignEnd
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
-          children: children,
-        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: children),
       ),
     );
     return Expanded(
       flex: flex,
-      child: tooltip == null
-          ? Tooltip(message: tip, child: cell)
-          : Tooltip(message: '${tooltip!} · $tip', child: cell),
+      child: Align(
+        alignment: alignEnd
+            ? AlignmentDirectional.centerEnd
+            : AlignmentDirectional.centerStart,
+        child: tooltip == null
+            ? Tooltip(message: tip, child: cell)
+            : Tooltip(message: '${tooltip!} · $tip', child: cell),
+      ),
     );
   }
 }
@@ -383,7 +386,30 @@ class _Row extends StatelessWidget {
               ' (${relativeTime(record.time, l)})',
             ),
           ),
-          Expanded(flex: 5, child: Text(record.name, style: highlight)),
+          Expanded(
+            flex: 5,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: GachaItemTapTarget(
+                record: record,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GachaItemIcon(record: record, size: 32),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        record.name,
+                        style: highlight,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Expanded(flex: 2, child: Text(record.itemType)),
           Expanded(
             flex: 2,

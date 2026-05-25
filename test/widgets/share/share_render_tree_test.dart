@@ -1,12 +1,16 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
 
@@ -44,15 +48,31 @@ void main() {
   // null-check），渲染不會 throw、只會替換成 ErrorWidget，必須靠 onError 攔。
   late List<FlutterErrorDetails> collected;
   FlutterExceptionHandler? prevOnError;
+  late Directory tempDir;
+  late ProviderContainer container;
 
-  setUp(() {
+  setUp(() async {
     collected = <FlutterErrorDetails>[];
     prevOnError = FlutterError.onError;
     FlutterError.onError = (details) => collected.add(details);
+    tempDir = await Directory.systemTemp.createTemp('share_render_tree_test_');
+    container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
   });
 
-  tearDown(() {
+  tearDown(() async {
     FlutterError.onError = prevOnError;
+    container.dispose();
+    try {
+      await tempDir.delete(recursive: true);
+    } catch (_) {}
   });
 
   testWidgets('buildShareRenderTree 渲染 banner 卡（含雙圓餅）不應拋錯', (t) async {
@@ -78,6 +98,7 @@ void main() {
           card: card,
           brightness: Brightness.dark,
           locale: const Locale('zh'),
+          container: container,
         ),
         width: kShareCardWidth,
       );
@@ -131,6 +152,7 @@ void main() {
           card: card,
           brightness: Brightness.dark,
           locale: const Locale('zh'),
+          container: container,
         ),
         width: kShareCardWidth,
       );

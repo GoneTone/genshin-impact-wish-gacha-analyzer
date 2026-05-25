@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 TimelineEntry _e(String name, String gachaType, int pulls, DateTime time) =>
     TimelineEntry(
@@ -364,4 +371,82 @@ void main() {
       expect(find.byIcon(Icons.chevron_right), findsNothing);
     },
   );
+
+  testWidgets('每欄名稱上方顯示 GachaItemIcon', (tester) async {
+    late Directory tempDir;
+    await tester.runAsync(() async {
+      tempDir = await Directory.systemTemp.createTemp('timeline_h_icon_test_');
+    });
+    addTearDown(() async {
+      try {
+        await tempDir.delete(recursive: true);
+      } catch (_) {}
+    });
+    final container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    addTearDown(container.dispose);
+    await tester.runAsync(
+      () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+    );
+
+    final records = [
+      GachaRecord(
+        id: '1',
+        uid: '100000001',
+        gachaType: '301',
+        name: '夜蘭',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2025, 4, 1),
+        lang: 'zh-tw',
+      ),
+      GachaRecord(
+        id: '2',
+        uid: '100000001',
+        gachaType: '301',
+        name: '納西妲',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2025, 3, 1),
+        lang: 'zh-tw',
+      ),
+    ];
+    final entries = buildTimelineEntries(records, targetRank: 5);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: SizedBox(
+              width: 1000,
+              height: 160,
+              child: Builder(
+                builder: (ctx) {
+                  final colors = BannerColors.of(Theme.of(ctx).brightness);
+                  return TimelineHorizontal(
+                    entries: entries,
+                    colors: colors,
+                    targetRank: 5,
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
+  });
 }

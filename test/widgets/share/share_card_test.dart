@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
@@ -46,15 +50,24 @@ List<GachaRecord> _crossMonthFives(int count) => [
     ),
 ];
 
-Future<void> _pump(WidgetTester t, Widget card) async {
+Future<void> _pump(
+  WidgetTester t,
+  Widget card,
+  ProviderContainer container,
+) async {
   await t.pumpWidget(
-    MaterialApp(
-      theme: buildDarkTheme(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('zh'),
-      home: Scaffold(
-        body: SingleChildScrollView(child: SizedBox(width: 1200, child: card)),
+    UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: SizedBox(width: 1200, child: card),
+          ),
+        ),
       ),
     ),
   );
@@ -79,6 +92,29 @@ double _leftColumnHeight(WidgetTester t, AppLocalizations l) {
 }
 
 void main() {
+  late Directory tempDir;
+  late ProviderContainer container;
+
+  setUp(() async {
+    tempDir = await Directory.systemTemp.createTemp('share_card_test_');
+    container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+  });
+
+  tearDown(() async {
+    container.dispose();
+    try {
+      await tempDir.delete(recursive: true);
+    } catch (_) {}
+  });
+
   testWidgets('卡池模式渲染且無 overflow（遮罩 UID）', (t) async {
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     final card = ShareCard.banner(
@@ -92,7 +128,7 @@ void main() {
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
     expect(find.textContaining('800xxxxxx'), findsOneWidget);
     expect(find.textContaining('800123456'), findsNothing);
@@ -111,7 +147,7 @@ void main() {
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
 
     // 結構斷言：stat 橫排 Row 帶 Key('shareStatRow')。
@@ -150,7 +186,7 @@ void main() {
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
 
     // 鎖住「已改用 App 元件」：回退到自製 _StatTile/_ShareTimeline 會失敗。
@@ -183,7 +219,7 @@ void main() {
         '2000': [_r('2000', 5, '某五星')],
       },
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
 
     expect(find.byType(StatCard), findsNWidgets(6));
@@ -213,7 +249,7 @@ void main() {
       records: _crossMonthFives(12),
       targetRank: 5,
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     // 直接裁切方案：不可有 RenderFlex overflow 或任何 error。
     expect(t.takeException(), isNull);
 
@@ -256,7 +292,7 @@ void main() {
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
 
     // 資料少時，右欄卡仍被強制撐到左欄高（卡內底部為留白，非縮小、
@@ -290,7 +326,7 @@ void main() {
         '2000': [_r('2000', 5, '某五星')],
       },
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
 
     expect(find.byType(TimelineVertical), findsNWidgets(2));
@@ -311,7 +347,7 @@ void main() {
         '2000': [_r('2000', 5, '某五星')],
       },
     );
-    await _pump(t, card);
+    await _pump(t, card, container);
     expect(t.takeException(), isNull);
     expect(find.textContaining('800123456'), findsOneWidget);
   });

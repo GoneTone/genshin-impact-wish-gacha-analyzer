@@ -17,6 +17,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/logging.dart'
@@ -90,10 +92,20 @@ Future<void> main() async {
       }
       final storage = GachaStorage(gachaDir);
 
+      final hoyowikiCacheDir = Directory('${supportDir.path}/hoyowiki_cache');
+      if (!await hoyowikiCacheDir.exists()) {
+        await hoyowikiCacheDir.create(recursive: true);
+      }
+      final hoyowikiIndexStorage = HoYoWikiIndexStorage(hoyowikiCacheDir);
+
       runApp(
         ProviderScope(
           overrides: [
             gachaStorageProvider.overrideWithValue(storage),
+            hoyowikiIndexStorageProvider.overrideWithValue(
+              hoyowikiIndexStorage,
+            ),
+            hoyowikiCacheDirProvider.overrideWithValue(hoyowikiCacheDir),
             appVersionProvider.overrideWithValue(pkgInfo.version),
             logServiceProvider.overrideWithValue(logService),
           ],

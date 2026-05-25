@@ -30,6 +30,7 @@ dependencies:
   pub_semver: ^2.2.0
   markdown_widget: ^2.3.2+8
   super_clipboard: ^0.9.1
+  synchronized: ^3.4.0
 
 dev_dependencies:
   flutter_test:

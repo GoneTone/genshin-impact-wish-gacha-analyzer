@@ -191,11 +191,67 @@
       }
     }
   },
+  "progressDoneImagesSummary": "Đã tải {count} ảnh vật phẩm",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Một phần thất bại: {names}",
   "@progressPartialFailed": {
     "placeholders": {
       "names": {
         "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "Đã nhập {accounts} tài khoản ({records} bản ghi)",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Nhập một phần thất bại: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Đang tìm dữ liệu vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Đang lấy chi tiết vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Đang tải hình ảnh vật phẩm {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
@@ -596,6 +652,12 @@
     }
   },
   "updateErrorFormat": "Định dạng phản hồi bất thường",
+  "updateErrorWipeHoyoWikiCache": "Không xóa được bộ nhớ đệm ảnh: {detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
+  "settingsRefetchHoyoWikiImagesEmpty": "Chưa có bản ghi Cầu Nguyện, không có gì để tải lại",
+  "confirmRefetchHoyoWikiTitle": "Buộc tải lại ảnh vật phẩm",
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoYoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
+  "confirmRefetchHoyoWikiConfirm": "Bắt đầu tải lại",
   "settingsLogs": "Logs gỡ lỗi",
   "@settingsLogs": {},
   "settingsLogsHint": "Khi gặp sự cố, có thể xuất log để nhà phát triển hỗ trợ kiểm tra.",

@@ -14,6 +14,9 @@ class GachaStorage {
   /// Logger 實例（gacha 儲存）。
   static final _log = Logger('gacha.storage');
 
+  /// Genshin UID 模式：純數字。
+  static final _uidPattern = RegExp(r'^\d+$');
+
   /// `<applicationSupportDirectory>/gacha_data/`，main.dart 創建後傳入
   final Directory baseDir;
 
@@ -60,7 +63,11 @@ class GachaStorage {
       // 必須是 <uid>.json，但不是 <uid>.url.json
       if (name.endsWith('.url.json')) continue;
       if (!name.endsWith('.json')) continue;
-      uids.add(name.substring(0, name.length - '.json'.length));
+      final uid = name.substring(0, name.length - '.json'.length);
+      // UID 一律全數字（Genshin server-generated）；非數字檔名忽略，
+      // 避免把 hoyowiki_index.json 之類的 metadata 誤當成 UID 載入。
+      if (!_uidPattern.hasMatch(uid)) continue;
+      uids.add(uid);
     }
     return uids;
   }

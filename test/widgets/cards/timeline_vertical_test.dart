@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 TimelineEntry _e(String name, String gachaType, int pulls, DateTime time) =>
     TimelineEntry(
@@ -580,6 +587,162 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('item-19'), findsOneWidget);
       expect(find.text(l.timelineLoadMore(5)), findsOneWidget);
+    },
+  );
+
+  testWidgets('每筆 entry 名稱前顯示 GachaItemIcon', (tester) async {
+    late Directory tempDir;
+    await tester.runAsync(() async {
+      tempDir = await Directory.systemTemp.createTemp('timeline_v_icon_test_');
+    });
+    addTearDown(() async {
+      try {
+        await tempDir.delete(recursive: true);
+      } catch (_) {}
+    });
+    final container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    addTearDown(container.dispose);
+    await tester.runAsync(
+      () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+    );
+
+    final records = [
+      GachaRecord(
+        id: '1',
+        uid: '100000001',
+        gachaType: '301',
+        name: '夜蘭',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2025, 4, 1),
+        lang: 'zh-tw',
+      ),
+      GachaRecord(
+        id: '2',
+        uid: '100000001',
+        gachaType: '301',
+        name: '納西妲',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2025, 3, 1),
+        lang: 'zh-tw',
+      ),
+    ];
+    final entries = buildTimelineEntries(records, targetRank: 5);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Builder(
+              builder: (ctx) {
+                final colors = BannerColors.of(Theme.of(ctx).brightness);
+                return SizedBox(
+                  width: 600,
+                  child: TimelineVertical(
+                    entries: entries,
+                    colors: colors,
+                    targetRank: 5,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
+  });
+
+  testWidgets(
+    'Tooltip 不被 GachaItemTapTarget 包裝破壞：longPress 名稱會疊出 tooltip overlay',
+    (tester) async {
+      late Directory tempDir;
+      await tester.runAsync(() async {
+        tempDir = await Directory.systemTemp.createTemp('timeline_v_tooltip_');
+      });
+      addTearDown(() async {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      });
+      final container = ProviderContainer(
+        overrides: [
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+        ],
+      );
+      addTearDown(container.dispose);
+      await tester.runAsync(
+        () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+      );
+
+      final records = [
+        GachaRecord(
+          id: '1',
+          uid: '100000001',
+          gachaType: '301',
+          name: '夜蘭',
+          itemType: '角色',
+          rankType: 5,
+          time: DateTime(2025, 4, 1),
+          lang: 'zh-tw',
+        ),
+      ];
+      final entries = buildTimelineEntries(records, targetRank: 5);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: buildDarkTheme(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (ctx) {
+                  final colors = BannerColors.of(Theme.of(ctx).brightness);
+                  return SizedBox(
+                    width: 600,
+                    child: TimelineVertical(
+                      entries: entries,
+                      colors: colors,
+                      targetRank: 5,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // 初始：元件內 name 只應有一個。
+      expect(find.text('夜蘭'), findsOneWidget);
+
+      // 長按名稱 → 觸發 Tooltip。Tooltip 在 GachaItemTapTarget 外層,
+      // 應該不被內層 GestureDetector(onTap) 吞掉。
+      await tester.longPress(find.text('夜蘭'));
+      await tester.pumpAndSettle();
+
+      // Tooltip overlay 疊上後,name 應為 2 個（元件內 + overlay）。
+      expect(find.text('夜蘭'), findsNWidgets(2));
     },
   );
 }

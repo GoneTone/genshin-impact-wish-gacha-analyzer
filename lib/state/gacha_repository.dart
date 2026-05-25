@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -9,10 +11,13 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/concurrent_pool.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
@@ -22,25 +27,6 @@ export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 /// probeUid 回傳 null 時拋出，轉成 [UpdateErrorNoRecords]。
 class _NoRecordsException implements Exception {
   const _NoRecordsException();
-}
-
-/// 帳號批次匯入的結果摘要。
-class ImportResult {
-  /// 建立 [ImportResult]。
-  const ImportResult({
-    required this.successAccounts,
-    required this.totalRecords,
-    required this.failedUids,
-  });
-
-  /// 成功匯入的帳號數。
-  final int successAccounts;
-
-  /// 成功匯入的總紀錄數。
-  final int totalRecords;
-
-  /// 匯入失敗的 UID 列表。
-  final List<String> failedUids;
 }
 
 /// 祈願資料整體狀態，包含帳號資料、更新進度與 bootstrap 旗標。
@@ -120,6 +106,19 @@ final gachaRepositoryProvider = NotifierProvider<GachaRepository, GachaState>(
 class GachaRepository extends Notifier<GachaState> {
   static final _log = Logger('gacha.repo');
 
+  /// Logger 實例（force-refetch 流程，獨立子樹以利日誌過濾）。
+  static final _refetchLog = Logger('gacha.hoyowiki.refetch');
+
+  /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
+  static final _importLog = Logger('gacha.import');
+
+  /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
+  Completer<void>? _bootstrapCompleter;
+
+  /// 等待初次 bootstrap 完成（load 既有 UID 與 settings）。
+  Future<void> waitForBootstrap() =>
+      _bootstrapCompleter?.future ?? Future.value();
+
   @override
   GachaState build() {
     _bootstrapLoad();
@@ -128,47 +127,52 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 從本地存檔載入全部帳號資料，完成後設定 [GachaState.isBootstrapping] 為 false。
   Future<void> _bootstrapLoad() async {
-    final storage = ref.read(gachaStorageProvider);
-    final settingsNotifier = ref.read(settingsProvider.notifier);
-    await settingsNotifier.waitForLoad();
-    if (!ref.mounted) return;
-
-    final uids = await storage.listKnownUids();
-    if (!ref.mounted) return;
-
-    final byUid = <String, BannerStorage>{};
-    for (final uid in uids) {
-      final data = await storage.load(uid);
+    _bootstrapCompleter = Completer<void>();
+    try {
+      final storage = ref.read(gachaStorageProvider);
+      final settingsNotifier = ref.read(settingsProvider.notifier);
+      await settingsNotifier.waitForLoad();
       if (!ref.mounted) return;
-      if (data != null) byUid[uid] = data;
-    }
 
-    if (byUid.isEmpty) {
-      state = state.copyWith(byUid: byUid, isBootstrapping: false);
-      return;
-    }
-
-    final settings = ref.read(settingsProvider);
-    final ordered = mergeUidOrder(
-      knownUids: byUid.keys,
-      customOrder: settings.uidOrder,
-      lastUpdatedOf: (u) => byUid[u]!.lastUpdated,
-    );
-
-    final saved = settings.lastActiveUid;
-    final activeUid = (saved != null && byUid.containsKey(saved))
-        ? saved
-        : ordered.first;
-
-    state = state.copyWith(
-      byUid: byUid,
-      activeUid: activeUid,
-      isBootstrapping: false,
-    );
-
-    if (saved != activeUid) {
-      await settingsNotifier.setLastActiveUid(activeUid);
+      final uids = await storage.listKnownUids();
       if (!ref.mounted) return;
+
+      final byUid = <String, BannerStorage>{};
+      for (final uid in uids) {
+        final data = await storage.load(uid);
+        if (!ref.mounted) return;
+        if (data != null) byUid[uid] = data;
+      }
+
+      if (byUid.isEmpty) {
+        state = state.copyWith(byUid: byUid, isBootstrapping: false);
+        return;
+      }
+
+      final settings = ref.read(settingsProvider);
+      final ordered = mergeUidOrder(
+        knownUids: byUid.keys,
+        customOrder: settings.uidOrder,
+        lastUpdatedOf: (u) => byUid[u]!.lastUpdated,
+      );
+
+      final saved = settings.lastActiveUid;
+      final activeUid = (saved != null && byUid.containsKey(saved))
+          ? saved
+          : ordered.first;
+
+      state = state.copyWith(
+        byUid: byUid,
+        activeUid: activeUid,
+        isBootstrapping: false,
+      );
+
+      if (saved != activeUid) {
+        await settingsNotifier.setLastActiveUid(activeUid);
+        if (!ref.mounted) return;
+      }
+    } finally {
+      _bootstrapCompleter?.complete();
     }
   }
 
@@ -403,17 +407,31 @@ class GachaRepository extends Notifier<GachaState> {
       'update completed: uid=${sanitizeUid(uid)} '
       'totalNew=$totalNew failed=[${failed.join(",")}]',
     );
+    state = state.copyWith(byUid: newByUid, activeUid: uid);
+    if (!ref.mounted) return;
+    await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
+    if (!ref.mounted) return;
+    // HoYoWiki 補圖階段（best-effort，不影響 UpdateCompleted）
+    var hoYoWikiImagesDownloaded = 0;
+    try {
+      hoYoWikiImagesDownloaded = await _fetchHoYoWiki(client);
+    } catch (e, st) {
+      _log.warning('hoyowiki stage threw (ignored)', e, st);
+    }
+    if (!ref.mounted) return;
+    if (_cancelTriggered) {
+      // 使用者在 HoYoWiki 階段取消；清掉 progress 不要 emit UpdateCompleted
+      state = state.copyWith(clearProgress: true);
+      return;
+    }
     state = state.copyWith(
-      byUid: newByUid,
-      activeUid: uid,
       progress: UpdateCompleted(
         totalNewRecords: totalNew,
         failedBanners: failed,
         updatedAt: updatedAt,
+        hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
       ),
     );
-    if (!ref.mounted) return;
-    await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
   }
 
   /// 防 re-entrancy 旗標，update 進行中為 true。
@@ -447,6 +465,140 @@ class GachaRepository extends Notifier<GachaState> {
     await _runUpdate(forceRecapture: true);
   }
 
+  /// 強制重抓所有 UID 祈願紀錄聯集物品的 HoYoWiki 圖檔。
+  ///
+  /// 流程：
+  ///   1. 互斥檢查：`state.progress != null` 直接 no-op（UI 應已 disable 按鈕）。
+  ///   2. emit `Preparing`、建 cancellable client。
+  ///   3. `hoyowikiIndexProvider.notifier.resetAll()` 清 index + 刪 cache 目錄。
+  ///   4. 呼叫 [_fetchHoYoWiki] 跑既有三階段管線（它本就跨 UID 聚合 pairs）。
+  ///   5. 結束依取消狀態 emit `UpdateCompleted` 或清 progress。
+  ///   6. 清檔失敗時 emit `UpdateFailed(UpdateErrorWipeHoYoWikiCache)`。
+  Future<void> forceRefetchAllHoYoWikiImages() async {
+    if (state.progress != null) {
+      _refetchLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+
+    final totalUids = state.byUid.length;
+    _refetchLog.info('start, totalUids=$totalUids');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      try {
+        await ref.read(hoyowikiIndexProvider.notifier).resetAll();
+        if (!ref.mounted) return;
+        _refetchLog.info('wiped (index+cache cleared)');
+      } catch (e, st) {
+        _refetchLog.severe('wipeFailed', e, st);
+        if (!ref.mounted) return;
+        state = state.copyWith(
+          progress: UpdateFailed(
+            UpdateErrorWipeHoYoWikiCache(sanitizeFsPath(e.toString())),
+          ),
+        );
+        return;
+      }
+
+      var hoYoWikiImagesDownloaded = 0;
+      try {
+        hoYoWikiImagesDownloaded = await _fetchHoYoWiki(cancellable.client);
+      } catch (e, st) {
+        _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _refetchLog.warning('cancelled');
+        state = state.copyWith(clearProgress: true);
+        return;
+      }
+
+      _refetchLog.info('done');
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
+        ),
+      );
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
+  /// 匯入帳號 bundle，並接續以增量方式抓取 HoYoWiki 圖片。
+  ///
+  /// 流程：
+  ///   1. 互斥檢查：`state.progress != null` 直接 no-op。
+  ///   2. emit `Preparing`、建 cancellable client。
+  ///   3. 跑 [_runImport] 寫入 storage 與更新 settings。
+  ///   4. 跑 [_fetchHoYoWiki] 三階段（best-effort，例外 warn-log）。
+  ///   5. 結束一律 emit `UpdateCompleted(importSummary: ...)`，不論取消與否。
+  ///      取消時 import 已寫入 storage 無法回滾，仍透過 dialog 告知使用者
+  ///      「資料已匯入、圖片下載被略過」。
+  Future<void> importAccountsAndFetchHoYoWiki(AccountsBundle bundle) async {
+    if (state.progress != null) {
+      _importLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _importLog.info('start, accounts=${bundle.accounts.length}');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      final result = await _runImport(bundle);
+      if (!ref.mounted) return;
+      _importLog.info(
+        'import done: success=${result.successAccounts} '
+        'failed=[${result.failedUids.map(sanitizeUid).join(",")}] '
+        'records=${result.totalRecords}',
+      );
+
+      var images = 0;
+      try {
+        images = await _fetchHoYoWiki(cancellable.client);
+      } catch (e, st) {
+        _importLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _importLog.info('cancelled during hoyowiki, still emitting completed');
+      }
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: images,
+          importSummary: result,
+        ),
+      );
+      _importLog.info('done, images=$images');
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
   /// 刪除目前作用中帳號的所有資料。
   Future<void> clearActive() async {
     final uid = state.activeUid;
@@ -466,7 +618,10 @@ class GachaRepository extends Notifier<GachaState> {
   }
 
   /// 批次匯入 [AccountsBundle]，合併現有帳號資料與偏好設定。
-  Future<ImportResult> importAccounts(AccountsBundle bundle) async {
+  ///
+  /// 純資料層操作，**不**啟動 progress 或 HoYoWiki 圖片抓取。
+  /// 對外入口請用 [importAccountsAndFetchHoYoWiki]。
+  Future<ImportResult> _runImport(AccountsBundle bundle) async {
     final storage = ref.read(gachaStorageProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
@@ -560,6 +715,12 @@ class GachaRepository extends Notifier<GachaState> {
     );
   }
 
+  /// 測試用：暴露 [_runImport] 給單元測試（驗證純 import 邏輯，
+  /// 不必 mock HoYoWiki fetcher）。生產勿用。
+  @visibleForTesting
+  Future<ImportResult> debugImportOnly(AccountsBundle bundle) =>
+      _runImport(bundle);
+
   /// 依 uidOrder 與最後更新時間挑選 fallback 作用中 UID。
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
     if (byUid.isEmpty) return null;
@@ -595,6 +756,237 @@ class GachaRepository extends Notifier<GachaState> {
     _log.info('cleared uid=${sanitizeUid(uid)}');
   }
 
+  /// 補齊所有 UID 中祈願類 record 的 HoYoWiki icon / header。
+  ///
+  /// 流程：
+  ///   1. 收集所有 UID 的祈願類 record（gachaType ∈ {301, 302, 500, 200, 100}）
+  ///      取 unique (name, lang)。
+  ///   2. 對 index.search 缺對應的跑 search；命中時寫 index.search 並把 id 加入
+  ///      entry worklist。
+  ///   3. 對 index.entries 缺或任一 URL 為空字串的 id 跑 entry_page；成功時寫
+  ///      index.entries 並把非空 URL 加入 download worklist。
+  ///   4. 對 cache 檔不存在的 (id, kind, url) 下載寫檔；成功後呼叫
+  ///      [HoYoWikiIndexNotifier.bumpCacheRevision] 觸發 UI rebuild。
+  ///
+  /// 每筆獨立 try/catch：單筆失敗不終止整段。每筆完成更新 progress。整段失敗
+  /// 不影響 `UpdateCompleted`。取消（`_cancelTriggered` 或 `!ref.mounted`）早退。
+  ///
+  /// 回傳本次成功寫入磁碟的圖片張數（icon + header 各算一張）。
+  Future<int> _fetchHoYoWiki(http.Client client) async {
+    var downloaded = 0;
+    final fetcher = ref.read(hoyowikiFetcherProvider);
+    final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
+    final cacheDir = ref.read(hoyowikiCacheDirProvider);
+    await indexNotifier.waitForLoad();
+
+    const hoyoWikiTargetGachaTypes = {'301', '302', '500', '200', '100'};
+
+    // 收集所有 UID 全部卡池 record 的 unique (name, lang)
+    final uniquePairs = <(String name, String lang)>{};
+    for (final data in state.byUid.values) {
+      for (final entry in data.banners.entries) {
+        if (!hoyoWikiTargetGachaTypes.contains(entry.key)) continue;
+        for (final r in entry.value) {
+          if (r.name.isEmpty || r.lang.isEmpty) continue;
+          uniquePairs.add((r.name, r.lang));
+        }
+      }
+    }
+
+    // 切三段 worklist
+    var index = ref.read(hoyowikiIndexProvider);
+    final searchTodo = <(String, String)>[];
+    for (final pair in uniquePairs) {
+      if (index.lookupId(name: pair.$1, lang: pair.$2) == null) {
+        searchTodo.add(pair);
+      }
+    }
+
+    // menu_id 感知的重抓判斷：角色（menu_id 2）任一 URL 空就重抓；
+    // 武器（menu_id 4）或未知則兩個都空才重抓（武器可能只有 icon）。
+    bool needRefetchEntry(HoYoWikiEntry? e, int? menuId) {
+      if (e == null) return true;
+      if (menuId == 2) return e.iconUrl.isEmpty || e.headerImgUrl.isEmpty;
+      return e.iconUrl.isEmpty && e.headerImgUrl.isEmpty;
+    }
+
+    // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或需重抓的
+    final initialIds = uniquePairs
+        .map((p) => index.lookupId(name: p.$1, lang: p.$2))
+        .whereType<String>()
+        .toSet();
+    final entryTodo = <String>{
+      for (final id in initialIds)
+        if (needRefetchEntry(index.lookupEntry(id), index.lookupMenuId(id))) id,
+    };
+
+    // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
+    final downloadTodo = <_HoYoWikiDownloadItem>[];
+    void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
+      for (final kind in HoYoWikiImageKind.values) {
+        final url = kind == HoYoWikiImageKind.icon
+            ? entry.iconUrl
+            : entry.headerImgUrl;
+        if (url.isEmpty) continue;
+        final file = hoyowikiCacheFile(
+          baseDir: cacheDir,
+          id: id,
+          kind: kind,
+          url: url,
+        );
+        if (file.existsSync()) continue;
+        downloadTodo.add(_HoYoWikiDownloadItem(id: id, kind: kind, url: url));
+      }
+    }
+
+    for (final id in initialIds) {
+      final e = index.lookupEntry(id);
+      if (e != null) enqueueDownloadsForEntry(id, e);
+    }
+
+    // 三段加起來都沒工作就直接結束。
+    final totalInitial =
+        searchTodo.length + entryTodo.length + downloadTodo.length;
+    if (totalInitial == 0) return downloaded;
+
+    bool isAborted() => !ref.mounted || _cancelTriggered;
+
+    // (1) search 階段
+    if (searchTodo.isNotEmpty) {
+      var doneSearch = 0;
+      await runConcurrent<(String, String)>(
+        items: searchTodo,
+        concurrency: fetcher.searchConcurrency,
+        shouldAbort: isAborted,
+        worker: (pair) async {
+          try {
+            final hit = await fetcher.searchEntryId(
+              name: pair.$1,
+              lang: pair.$2,
+              client: client,
+            );
+            if (hit != null) {
+              await indexNotifier.setSearch(
+                name: pair.$1,
+                lang: pair.$2,
+                id: hit.id,
+                menuId: hit.menuId,
+              );
+              if (!entryTodo.contains(hit.id) &&
+                  needRefetchEntry(
+                    ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
+                    hit.menuId,
+                  )) {
+                entryTodo.add(hit.id);
+              }
+            }
+          } catch (e) {
+            _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
+          }
+          if (!ref.mounted) return;
+          doneSearch++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.searching,
+              doneCount: doneSearch,
+              totalCount: searchTodo.length,
+            ),
+          );
+        },
+      );
+      if (isAborted()) return downloaded;
+    }
+
+    // (2) entry 階段
+    if (entryTodo.isNotEmpty) {
+      final entryList = entryTodo.toList();
+      var doneEntry = 0;
+      await runConcurrent<String>(
+        items: entryList,
+        concurrency: fetcher.entryConcurrency,
+        shouldAbort: isAborted,
+        worker: (id) async {
+          try {
+            final fetched = await fetcher.fetchEntryPage(
+              id: id,
+              client: client,
+            );
+            final entry = HoYoWikiEntry(
+              iconUrl: fetched.iconUrl,
+              headerImgUrl: fetched.headerImgUrl,
+              fetchedAt: DateTime.now().toUtc(),
+            );
+            await indexNotifier.setEntry(id: id, entry: entry);
+            enqueueDownloadsForEntry(id, entry);
+          } catch (e) {
+            _log.warning('hoyowiki entry failed id=$id err=$e');
+          }
+          if (!ref.mounted) return;
+          doneEntry++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.fetchingEntries,
+              doneCount: doneEntry,
+              totalCount: entryList.length,
+            ),
+          );
+        },
+      );
+      if (isAborted()) return downloaded;
+    }
+
+    // (3) download 階段
+    if (downloadTodo.isNotEmpty) {
+      var doneDownload = 0;
+      await runConcurrent<_HoYoWikiDownloadItem>(
+        items: downloadTodo,
+        concurrency: fetcher.downloadConcurrency,
+        shouldAbort: isAborted,
+        worker: (item) async {
+          try {
+            final bytes = await fetcher.downloadImage(item.url, client);
+            if (bytes != null) {
+              final file = hoyowikiCacheFile(
+                baseDir: cacheDir,
+                id: item.id,
+                kind: item.kind,
+                url: item.url,
+              );
+              await file.writeAsBytes(bytes, flush: true);
+              indexNotifier.bumpCacheRevision();
+              downloaded++;
+            }
+          } catch (e) {
+            _log.warning('hoyowiki download failed url=${item.url} err=$e');
+          }
+          if (!ref.mounted) return;
+          doneDownload++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.downloading,
+              doneCount: doneDownload,
+              totalCount: downloadTodo.length,
+            ),
+          );
+        },
+      );
+      if (isAborted()) return downloaded;
+    }
+    return downloaded;
+  }
+
+  /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
+  @visibleForTesting
+  Future<void> debugRunHoYoWikiOnly() async {
+    _cancelTriggered = false;
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    try {
+      await _fetchHoYoWiki(cancellable.client);
+    } finally {
+      cancellable.client.close();
+    }
+  }
+
   /// 將各種 exception 轉換成對應的 [UpdateError] 子類，供 UI 顯示。
   UpdateError _friendlyError(Object e) => switch (e) {
     _NoRecordsException() => const UpdateErrorNoRecords(),
@@ -613,4 +1005,23 @@ class GachaRepository extends Notifier<GachaState> {
   void debugSetProgress(UpdateProgress p) {
     state = state.copyWith(progress: p);
   }
+}
+
+/// HoYoWiki 下載佇列的單一工作項。
+class _HoYoWikiDownloadItem {
+  /// 建立 [_HoYoWikiDownloadItem]。
+  const _HoYoWikiDownloadItem({
+    required this.id,
+    required this.kind,
+    required this.url,
+  });
+
+  /// HoYoWiki entry_page_id。
+  final String id;
+
+  /// 圖片種類（icon 或 header）。
+  final HoYoWikiImageKind kind;
+
+  /// 圖片 CDN URL。
+  final String url;
 }

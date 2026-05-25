@@ -5,6 +5,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 /// 左側月份標籤欄的固定寬度。
 const double _monthColumnWidth = 80;
@@ -315,6 +317,30 @@ class _EntryRow extends StatelessWidget {
   /// 主題 token。
   final GachaTokens tokens;
 
+  /// 名稱行：可選 icon + 粗體名稱文字的 [Row]。
+  Widget get _nameRow => Row(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      if (entry.sourceRecord != null) ...[
+        GachaItemIcon(record: entry.sourceRecord!, size: 32),
+        const SizedBox(width: 6),
+      ],
+      Flexible(
+        child: Text(
+          entry.name,
+          style: TextStyle(
+            color: colors.colorFor(entry.gachaType),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ],
+  );
+
   /// 將 [DateTime] 格式化為 `MM/dd` 字串。
   static String _formatShortDate(DateTime t) {
     String two(int n) => n.toString().padLeft(2, '0');
@@ -393,18 +419,18 @@ class _EntryRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // mainAxisSize: min 讓 Row 收縮到 icon+text 實際寬度；
+                  // 否則 Row 預設吃滿父層，Tooltip 會以那整片寬區置中而飄到右側。
                   Tooltip(
                     message: entry.name,
                     preferBelow: false,
                     waitDuration: const Duration(milliseconds: 100),
-                    child: Text(
-                      entry.name,
-                      style: TextStyle(
-                        color: accent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
+                    child: entry.sourceRecord != null
+                        ? GachaItemTapTarget(
+                            record: entry.sourceRecord!,
+                            child: _nameRow,
+                          )
+                        : _nameRow,
                   ),
                   const SizedBox(height: 2),
                   Tooltip(

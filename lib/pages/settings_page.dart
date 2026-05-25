@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -29,6 +30,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -344,6 +346,9 @@ class _DataManagement extends ConsumerWidget {
     final activeUid = ref.watch(
       gachaRepositoryProvider.select((s) => s.activeUid),
     );
+    final progress = ref.watch(
+      gachaRepositoryProvider.select((s) => s.progress),
+    );
 
     return Wrap(
       spacing: AppSpacing.s,
@@ -355,9 +360,23 @@ class _DataManagement extends ConsumerWidget {
           label: Text(l.settingsExportData),
         ),
         OutlinedButton.icon(
-          onPressed: () => _import(context, ref),
+          onPressed: progress != null ? null : () => _import(context, ref),
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
+        ),
+        Tooltip(
+          message: !hasData ? l.settingsRefetchHoyoWikiImagesEmpty : '',
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).gacha.stateDanger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: (!hasData || progress != null)
+                ? null
+                : () => _refetchHoYoWikiImages(context, ref),
+            icon: const Icon(Icons.refresh, size: 18),
+            label: Text(l.settingsRefetchHoyoWikiImagesTitle),
+          ),
         ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -596,38 +615,12 @@ class _DataManagement extends ConsumerWidget {
     if (ok != true) return;
     if (!ctx.mounted) return;
 
-    final result = await ref
-        .read(gachaRepositoryProvider.notifier)
-        .importAccounts(filteredBundle);
-    if (!ctx.mounted) return;
-
-    final SnackBar snack;
-    if (result.failedUids.isEmpty) {
-      Logger('accounts.io').info(
-        'import: success=${result.successAccounts} '
-        'records=${result.totalRecords}',
-      );
-      snack = SnackBar(
-        content: Text(
-          l.settingsImportSuccess(result.successAccounts, result.totalRecords),
-        ),
-      );
-    } else {
-      Logger('accounts.io').warning(
-        'import partial: success=${result.successAccounts} '
-        'failed=[${result.failedUids.join(",")}]',
-      );
-      snack = SnackBar(
-        content: Text(
-          l.settingsImportPartial(
-            result.successAccounts,
-            filteredBundle.accounts.length,
-            result.failedUids.join(', '),
-          ),
-        ),
-      );
-    }
-    ScaffoldMessenger.of(ctx).showSnackBar(snack);
+    // fire-and-forget：progress dialog 由 app_shell 既有 ref.listen 自動接管。
+    unawaited(
+      ref
+          .read(gachaRepositoryProvider.notifier)
+          .importAccountsAndFetchHoYoWiki(filteredBundle),
+    );
   }
 
   /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。
@@ -660,6 +653,40 @@ class _DataManagement extends ConsumerWidget {
     );
     if (ok != true) return;
     await ref.read(gachaRepositoryProvider.notifier).clearAll();
+  }
+
+  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
+  Future<void> _refetchHoYoWikiImages(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showDialog<bool>(
+      context: ctx,
+      builder: (dialogCtx) => AppDialog(
+        title: Text(l.confirmRefetchHoyoWikiTitle),
+        content: Text(l.confirmRefetchHoyoWikiBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogCtx).pop(false),
+            child: Text(l.actionCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(dialogCtx).gacha.stateDanger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.of(dialogCtx).pop(true),
+            child: Text(l.confirmRefetchHoyoWikiConfirm),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    // 後端流程獨立於 dialog lifecycle；UpdateProgressDialog 由 app_shell.dart
+    // 既有 ref.listen 自動彈出。
+    unawaited(
+      ref
+          .read(gachaRepositoryProvider.notifier)
+          .forceRefetchAllHoYoWikiImages(),
+    );
   }
 }
 

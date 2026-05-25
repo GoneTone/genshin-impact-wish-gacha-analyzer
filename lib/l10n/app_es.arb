@@ -191,11 +191,67 @@
       }
     }
   },
+  "progressDoneImagesSummary": "{count, plural, =1{{count} imagen de objeto descargada} other{{count} imágenes de objetos descargadas}}",
+  "@progressDoneImagesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Parcialmente fallido: {names}",
   "@progressPartialFailed": {
     "placeholders": {
       "names": {
         "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{1 cuenta importada ({records} registros)} other{{accounts} cuentas importadas ({records} registros)}}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Importación parcialmente fallida: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": { "type": "String" }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Buscando datos del objeto {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Obteniendo detalles del objeto {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Descargando imágenes del objeto {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
@@ -596,6 +652,12 @@
     }
   },
   "updateErrorFormat": "Formato de respuesta inesperado",
+  "updateErrorWipeHoyoWikiCache": "Error al limpiar caché de imágenes: {detail}",
+  "settingsRefetchHoyoWikiImagesTitle": "Forzar redescarga de imágenes de objetos",
+  "settingsRefetchHoyoWikiImagesEmpty": "Aún no hay registros de Gachapón, nada que redescargar",
+  "confirmRefetchHoyoWikiTitle": "Forzar redescarga de imágenes de objetos",
+  "confirmRefetchHoyoWikiBody": "Esto borrará toda la caché local de imágenes de objetos y las volverá a descargar desde HoYoWiki. Puede tardar varios minutos y consumir un tráfico considerable.",
+  "confirmRefetchHoyoWikiConfirm": "Empezar redescarga",
   "settingsLogs": "Diagnóstico de logs",
   "@settingsLogs": {},
   "settingsLogsHint": "Si encuentras algún problema, exporta los logs para que el desarrollador pueda ayudarte a diagnosticarlo.",

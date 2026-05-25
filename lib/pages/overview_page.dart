@@ -180,6 +180,7 @@ class OverviewPage extends ConsumerWidget {
       context: context,
       l: l,
       suggestedName: 'genshin_gacha_share_overview_${fileTimestamp()}.png',
+      recordsForPreload: activeData.banners.values.expand((records) => records),
       buildCard: (icon, options) => ShareCard.overview(
         l: l,
         appVersion: appVersion,

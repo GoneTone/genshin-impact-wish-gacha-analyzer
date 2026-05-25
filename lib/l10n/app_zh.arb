@@ -148,9 +148,50 @@
   "@progressDoneSummary": {
     "placeholders": { "count": { "type": "int" } }
   },
+  "progressDoneImagesSummary": "下載 {count} 張物品圖片",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "progressPartialFailed": "⚠ 部分失敗：{names}",
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
+  },
+  "progressDoneImportSummary": "本次匯入 {accounts} 個帳號（共 {records} 筆紀錄）",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "placeholders": {
+      "accounts": { "type": "int" },
+      "records":  { "type": "int" }
+    }
+  },
+  "progressPartialImportFailed": "⚠ 部分匯入失敗：{uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": { "uids": { "type": "String" } }
+  },
+  "updateProgressHoyoWikiSearching": "搜尋物品資料 {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "抓取物品詳情 {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "下載物品圖片 {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
   },
 
   "errorAuthExpired": "認證持續失效，請重新登入遊戲",
@@ -277,6 +318,27 @@
 
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",
+
+  "settingsRefetchHoyoWikiImagesTitle": "強制重抓物品圖片",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "尚無祈願紀錄，無物品可重抓",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "強制重抓物品圖片",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoYoWiki 抓取。視物品數量可能耗費數分鐘流量與時間。",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "開始重抓",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
 
   "settingsExportData": "匯出資料",
   "settingsImportData": "匯入資料",
@@ -425,6 +487,13 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常",
+  "updateErrorWipeHoyoWikiCache": "清除物品圖片快取失敗：{detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": { "type": "String" }
+    }
+  },
   "settingsLogs": "Logs 偵錯",
   "@settingsLogs": {},
   "settingsLogsHint": "遇到問題時，可匯出 log 給開發者協助排查。",
