@@ -121,6 +121,9 @@ class HoYoWikiIndexStorage {
       ),
       'menu_ids': index.menuIds,
     };
+    // baseDir 可能在啟動後被外部刪除（例如使用者手動清快取資料夾），這裡先
+    // ensure 父目錄存在，否則寫 .tmp 會噴 PathNotFoundException。
+    await baseDir.create(recursive: true);
     final tmp = File('${_file.path}.tmp');
     await tmp.writeAsString(jsonEncode(json));
     await tmp.rename(_file.path);
