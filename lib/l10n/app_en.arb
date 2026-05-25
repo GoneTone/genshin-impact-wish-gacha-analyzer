@@ -193,6 +193,7 @@
   },
   "progressDoneImagesSummary": "{count, plural, =1{Downloaded {count} item image} other{Downloaded {count} item images}}",
   "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
       "count": {
         "type": "int"
@@ -211,15 +212,21 @@
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "progressPartialImportFailed": "⚠ Partial import failure: {uids}",
   "@progressPartialImportFailed": {
     "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
     "placeholders": {
-      "uids": { "type": "String" }
+      "uids": {
+        "type": "String"
+      }
     }
   },
   "updateProgressHoyoWikiSearching": "Searching item data {done}/{total}",
@@ -434,6 +441,26 @@
   "pagerLast": "Last",
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
+  "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "This will clear all locally cached item images and re-download them from HoYoWiki. May take several minutes and consume significant bandwidth.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Start re-fetching",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
   "settingsExportData": "Export data",
   "settingsImportData": "Import data",
   "shareImageButton": "Generate share image",
@@ -654,13 +681,13 @@
   "updateErrorFormat": "Unexpected response format",
   "updateErrorWipeHoyoWikiCache": "Failed to clear item-image cache: {detail}",
   "@updateErrorWipeHoyoWikiCache": {
-    "placeholders": { "detail": { "type": "String" } }
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
   },
-  "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
-  "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
-  "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
-  "confirmRefetchHoyoWikiBody": "This will clear all locally cached item images and re-download them from HoYoWiki. May take several minutes and consume significant bandwidth.",
-  "confirmRefetchHoyoWikiConfirm": "Start re-fetching",
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
   "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
