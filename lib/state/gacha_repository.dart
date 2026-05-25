@@ -29,25 +29,6 @@ class _NoRecordsException implements Exception {
   const _NoRecordsException();
 }
 
-/// 帳號批次匯入的結果摘要。
-class ImportResult {
-  /// 建立 [ImportResult]。
-  const ImportResult({
-    required this.successAccounts,
-    required this.totalRecords,
-    required this.failedUids,
-  });
-
-  /// 成功匯入的帳號數。
-  final int successAccounts;
-
-  /// 成功匯入的總紀錄數。
-  final int totalRecords;
-
-  /// 匯入失敗的 UID 列表。
-  final List<String> failedUids;
-}
-
 /// 祈願資料整體狀態，包含帳號資料、更新進度與 bootstrap 旗標。
 @immutable
 class GachaState {

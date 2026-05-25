@@ -46,23 +46,23 @@ class FetchingBanner extends UpdateProgress {
   final int newRecordsSoFar;
 }
 
-/// 匯入流程的結果摘要，供 [UpdateCompleted] 在 dialog 顯示。
+/// 帳號批次匯入的結果摘要。
 @immutable
-class ImportSummary {
-  /// 建立 [ImportSummary]。
-  const ImportSummary({
+class ImportResult {
+  /// 建立 [ImportResult]。
+  const ImportResult({
     required this.successAccounts,
     required this.totalRecords,
     required this.failedUids,
   });
 
-  /// 成功寫入 storage 的帳號數。
+  /// 成功匯入的帳號數。
   final int successAccounts;
 
-  /// 成功匯入的總祈願紀錄數。
+  /// 成功匯入的總紀錄數。
   final int totalRecords;
 
-  /// 寫入 storage 失敗的 UID 列表（空 list 表示全成功）。
+  /// 匯入失敗的 UID 列表。
   final List<String> failedUids;
 }
 
@@ -91,7 +91,7 @@ class UpdateCompleted extends UpdateProgress {
   final int hoYoWikiImagesDownloaded;
 
   /// 匯入流程的結果摘要；非 import 入口為 null。
-  final ImportSummary? importSummary;
+  final ImportResult? importSummary;
 }
 
 /// 更新失敗。
