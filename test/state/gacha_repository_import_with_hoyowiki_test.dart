@@ -229,4 +229,36 @@ void main() {
     expect(completed.importSummary!.totalRecords, 0);
     expect(completed.importSummary!.failedUids, isEmpty);
   });
+
+  test('互斥早退：state.progress 非 null 時 no-op', () async {
+    final apiClient = MockClient((req) async => http.Response('', 404));
+    final tempDir =
+        await Directory.systemTemp.createTemp('gacha_import_mutex_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container =
+        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    final emptyBundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: null,
+      accounts: const [],
+    );
+
+    // 第一次：保持 reference 但不 await，立刻 fire-and-forget。
+    final first = notifier.importAccountsAndFetchHoYoWiki(emptyBundle);
+    // 第二次：應立刻 no-op（早退）；progress 已被第一次設為 Preparing。
+    final second = notifier.importAccountsAndFetchHoYoWiki(emptyBundle);
+    await Future.wait(<Future<void>>[first, second]);
+
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>(),
+        reason: '第一次跑完應 emit UpdateCompleted；第二次 no-op 不會覆寫');
+  });
 }
