@@ -638,6 +638,6 @@ void main() {
     await repoFuture;
 
     // 50 筆中只應 dispatch 少數幾筆（不可能 50 全跑）
-    expect(dispatched.length, lessThan(50));
+    expect(dispatched.length, lessThan(10));
   });
 }
