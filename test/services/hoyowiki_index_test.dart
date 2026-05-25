@@ -192,6 +192,25 @@ void main() {
       expect(reloaded.entries, isEmpty);
       expect(reloaded.menuIds, isEmpty);
     });
+
+    test('baseDir 整個被外部刪除時不爆（force refetch 場景）', () async {
+      final parent = await Directory.systemTemp.createTemp('hoyowiki_storage_');
+      addTearDown(() async {
+        if (await parent.exists()) await parent.delete(recursive: true);
+      });
+      // 模擬「使用者手動刪除整個 hoyowiki_cache/」：baseDir 直接不存在。
+      final dir = Directory('${parent.path}/missing_cache');
+      expect(await dir.exists(), isFalse);
+      final storage = HoYoWikiIndexStorage(dir);
+
+      await storage.clearAll();
+
+      expect(await dir.exists(), isTrue, reason: 'save 應自動建立缺失的父目錄');
+      final reloaded = await storage.load();
+      expect(reloaded.searchMap, isEmpty);
+      expect(reloaded.entries, isEmpty);
+      expect(reloaded.menuIds, isEmpty);
+    });
   });
 
   group('HoYoWikiIndexStorage.wipeCacheDirectory', () {
