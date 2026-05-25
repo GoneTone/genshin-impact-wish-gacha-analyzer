@@ -7,6 +7,7 @@ void main() {
   group('runConcurrent', () {
     test('N 個 worker 真同時 in-flight', () async {
       final completers = List.generate(8, (_) => Completer<void>());
+      final allArrived = Completer<void>();
       var maxInFlight = 0;
       var current = 0;
       final futures = runConcurrent<int>(
@@ -16,12 +17,13 @@ void main() {
         worker: (i) async {
           current++;
           if (current > maxInFlight) maxInFlight = current;
+          if (current == 4 && !allArrived.isCompleted) allArrived.complete();
           await completers[i].future;
           current--;
         },
       );
-      // 等所有 worker 都進到 await
-      await Future<void>.delayed(const Duration(milliseconds: 10));
+      // 等 4 個 worker 全部都進到 await（明確訊號，非掛鐘等待）
+      await allArrived.future.timeout(const Duration(seconds: 5));
       expect(maxInFlight, 4);
       for (final c in completers) {
         c.complete();
