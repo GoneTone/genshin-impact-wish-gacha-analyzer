@@ -534,6 +534,71 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
+  static final _importLog = Logger('gacha.import');
+
+  /// 匯入帳號 bundle，並接續以增量方式抓取 HoYoWiki 圖片。
+  ///
+  /// 流程：
+  ///   1. 互斥檢查：`state.progress != null` 直接 no-op。
+  ///   2. emit `Preparing`、建 cancellable client。
+  ///   3. 跑 [_runImport] 寫入 storage 與更新 settings。
+  ///   4. 跑 [_fetchHoYoWiki] 三階段（best-effort，例外 warn-log）。
+  ///   5. 結束一律 emit `UpdateCompleted(importSummary: ...)`，不論取消與否。
+  ///      取消時 import 已寫入 storage 無法回滾，仍透過 dialog 告知使用者
+  ///      「資料已匯入、圖片下載被略過」。
+  Future<void> importAccountsAndFetchHoYoWiki(AccountsBundle bundle) async {
+    if (state.progress != null) {
+      _importLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _importLog.info('start, accounts=${bundle.accounts.length}');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      final result = await _runImport(bundle);
+      if (!ref.mounted) return;
+      _importLog.info(
+        'import done: success=${result.successAccounts} '
+        'failed=[${result.failedUids.join(",")}] '
+        'records=${result.totalRecords}',
+      );
+
+      var images = 0;
+      try {
+        images = await _fetchHoYoWiki(cancellable.client);
+      } catch (e, st) {
+        _importLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _importLog.info('cancelled during hoyowiki, still emitting completed');
+      }
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: images,
+          importSummary: result,
+        ),
+      );
+      _importLog.info('done, images=$images');
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
   /// 刪除目前作用中帳號的所有資料。
   Future<void> clearActive() async {
     final uid = state.activeUid;
