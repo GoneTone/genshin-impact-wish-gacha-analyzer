@@ -8,5 +8,6 @@ Color accentForRank(int rank, GachaTokens t) => switch (rank) {
   4 => t.fourStar,
   3 => t.threeStar,
   2 => t.twoStar,
+  1 => t.oneStar,
   _ => t.textMuted,
 };

@@ -54,6 +54,13 @@ void main() {
   });
 
   tearDown(() async {
+    // 清 process-wide ImageCache（含 live image listeners），避免「完整 chain」
+    // 那一 case 留下的 Image.file 背景 codec 在 tempDir 被刪後仍嘗試讀檔，
+    // 害下一個 testWidgets 收到 ImageResourceService 拋的「Codec failed to
+    // produce an image」。Linux CI 上 tempDir.delete 必定成功，曾觀察到 flaky。
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+
     // Windows 上 Image.file 可能持有檔案 handle，忽略刪除失敗。
     if (await tempDir.exists()) {
       try {
