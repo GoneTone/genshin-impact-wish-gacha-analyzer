@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -432,4 +433,211 @@ void main() {
       expect(firstEntryIdx, lessThan(firstDownloadIdx));
     },
   );
+
+  test('download 階段 concurrency 生效（N workers 同時 in-flight）', () async {
+    final pending = <Completer<List<int>>>[];
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': req.url.queryParameters['keyword'],
+                  'entry_page_id': '111_${req.url.queryParameters['keyword']}',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        final id = req.url.queryParameters['entry_page_id']!;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {
+                'icon_url': 'https://x/$id-icon.png',
+                'header_img_url': '',
+              },
+            },
+          }),
+          200,
+        );
+      }
+      // image download
+      final c = Completer<List<int>>();
+      pending.add(c);
+      final bytes = await c.future;
+      return http.Response.bytes(bytes, 200);
+    });
+
+    tempDir = await Directory.systemTemp.createTemp('gacha_concurrency_test_');
+    SharedPreferences.setMockInitialValues({});
+    final storage = GachaStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: '801057625',
+        lastUpdated: DateTime.utc(2026, 5, 23),
+        banners: {
+          '301': [
+            for (var i = 0; i < 12; i++)
+              _rec(id: '$i', name: 'Char$i', gachaType: '301'),
+          ],
+          '302': [],
+          '500': [],
+          '200': [],
+          '100': [],
+        },
+      ),
+    );
+
+    final container = ProviderContainer(
+      overrides: [
+        gachaStorageProvider.overrideWithValue(storage),
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+        hoyowikiFetcherProvider.overrideWithValue(
+          HoYoWikiFetcher(
+            searchConcurrency: 4,
+            entryConcurrency: 4,
+            downloadConcurrency: 3,
+          ),
+        ),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(client: apiClient, cancel: () {}),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+    final repoFuture = container
+        .read(gachaRepositoryProvider.notifier)
+        .debugRunHoYoWikiOnly();
+
+    // 等到 download 階段湧出 N 個 in-flight
+    final deadline = DateTime.now().add(const Duration(seconds: 5));
+    while (pending.length < 3 && DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+    }
+
+    expect(
+      pending.length,
+      3,
+      reason: 'download concurrency = 3 應同時 in-flight 3 筆',
+    );
+
+    // 完成所有 pending 讓 pipeline 跑完
+    for (final c in pending) {
+      if (!c.isCompleted) c.complete(List<int>.filled(4, 0));
+    }
+    // 後續 9 筆會陸續上來
+    while (pending.length < 12) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      for (final c in pending.where((c) => !c.isCompleted)) {
+        c.complete(List<int>.filled(4, 0));
+      }
+    }
+    await repoFuture;
+  });
+
+  test('cancel 在 worker 取下一筆前生效，其餘 item 不被 dispatch', () async {
+    final dispatched = <String>[];
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        final kw = req.url.queryParameters['keyword']!;
+        dispatched.add(kw);
+        // 慢慢回應，留時間讓 cancel 生效
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': kw,
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response('{}', 200);
+    });
+
+    tempDir = await Directory.systemTemp.createTemp('gacha_cancel_test_');
+    SharedPreferences.setMockInitialValues({});
+    final storage = GachaStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: '801057625',
+        lastUpdated: DateTime.utc(2026, 5, 23),
+        banners: {
+          '301': [
+            for (var i = 0; i < 50; i++)
+              _rec(id: '$i', name: 'Char$i', gachaType: '301'),
+          ],
+          '302': [],
+          '500': [],
+          '200': [],
+          '100': [],
+        },
+      ),
+    );
+
+    final container = ProviderContainer(
+      overrides: [
+        gachaStorageProvider.overrideWithValue(storage),
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+        hoyowikiFetcherProvider.overrideWithValue(
+          HoYoWikiFetcher(searchConcurrency: 2),
+        ),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(client: apiClient, cancel: () {}),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+    // 開跑 + 馬上取消（cancelPreparing 設 _cancelTriggered = true）
+    final repoFuture = container
+        .read(gachaRepositoryProvider.notifier)
+        .debugRunHoYoWikiOnly();
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    container.read(gachaRepositoryProvider.notifier).cancelPreparing();
+    await repoFuture;
+
+    // 50 筆中只應 dispatch 少數幾筆（不可能 50 全跑）
+    expect(dispatched.length, lessThan(50));
+  });
 }

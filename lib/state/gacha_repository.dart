@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/concurrent_pool.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
@@ -793,114 +794,128 @@ class GachaRepository extends Notifier<GachaState> {
         searchTodo.length + entryTodo.length + downloadTodo.length;
     if (totalInitial == 0) return downloaded;
 
-    final fetcherDelay = Duration.zero;
+    bool isAborted() => !ref.mounted || _cancelTriggered;
 
-    Future<bool> checkCancel() async {
-      await Future<void>.delayed(fetcherDelay);
-      if (!ref.mounted) return true;
-      if (_cancelTriggered) return true;
-      return false;
-    }
-
-    // (1) search 階段：total 在進入前已知（固定）
+    // (1) search 階段
     if (searchTodo.isNotEmpty) {
-      for (var i = 0; i < searchTodo.length; i++) {
-        final pair = searchTodo[i];
-        try {
-          final hit = await fetcher.searchEntryId(
-            name: pair.$1,
-            lang: pair.$2,
-            client: client,
-          );
-          if (hit != null) {
-            await indexNotifier.setSearch(
+      var doneSearch = 0;
+      await runConcurrent<(String, String)>(
+        items: searchTodo,
+        concurrency: fetcher.searchConcurrency,
+        shouldAbort: isAborted,
+        worker: (pair) async {
+          try {
+            final hit = await fetcher.searchEntryId(
               name: pair.$1,
               lang: pair.$2,
-              id: hit.id,
-              menuId: hit.menuId,
+              client: client,
             );
-            if (!entryTodo.contains(hit.id) &&
-                needRefetchEntry(
-                  ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
-                  hit.menuId,
-                )) {
-              entryTodo.add(hit.id);
+            if (hit != null) {
+              await indexNotifier.setSearch(
+                name: pair.$1,
+                lang: pair.$2,
+                id: hit.id,
+                menuId: hit.menuId,
+              );
+              if (!entryTodo.contains(hit.id) &&
+                  needRefetchEntry(
+                    ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
+                    hit.menuId,
+                  )) {
+                entryTodo.add(hit.id);
+              }
             }
+          } catch (e) {
+            _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
           }
-        } catch (e) {
-          _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
-        }
-        if (!ref.mounted) return downloaded;
-        state = state.copyWith(
-          progress: FetchingHoYoWiki(
-            phase: HoYoWikiPhase.searching,
-            doneCount: i + 1,
-            totalCount: searchTodo.length,
-          ),
-        );
-        if (await checkCancel()) return downloaded;
-      }
+          if (!ref.mounted) return;
+          doneSearch++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.searching,
+              doneCount: doneSearch,
+              totalCount: searchTodo.length,
+            ),
+          );
+        },
+      );
+      if (isAborted()) return downloaded;
     }
 
-    // (2) entry 階段：search 跑完後 entryTodo 已定（total 固定）
+    // (2) entry 階段
     if (entryTodo.isNotEmpty) {
       final entryList = entryTodo.toList();
-      for (var i = 0; i < entryList.length; i++) {
-        final id = entryList[i];
-        try {
-          final fetched = await fetcher.fetchEntryPage(id: id, client: client);
-          final entry = HoYoWikiEntry(
-            iconUrl: fetched.iconUrl,
-            headerImgUrl: fetched.headerImgUrl,
-            fetchedAt: DateTime.now().toUtc(),
+      var doneEntry = 0;
+      await runConcurrent<String>(
+        items: entryList,
+        concurrency: fetcher.entryConcurrency,
+        shouldAbort: isAborted,
+        worker: (id) async {
+          try {
+            final fetched = await fetcher.fetchEntryPage(
+              id: id,
+              client: client,
+            );
+            final entry = HoYoWikiEntry(
+              iconUrl: fetched.iconUrl,
+              headerImgUrl: fetched.headerImgUrl,
+              fetchedAt: DateTime.now().toUtc(),
+            );
+            await indexNotifier.setEntry(id: id, entry: entry);
+            enqueueDownloadsForEntry(id, entry);
+          } catch (e) {
+            _log.warning('hoyowiki entry failed id=$id err=$e');
+          }
+          if (!ref.mounted) return;
+          doneEntry++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.fetchingEntries,
+              doneCount: doneEntry,
+              totalCount: entryList.length,
+            ),
           );
-          await indexNotifier.setEntry(id: id, entry: entry);
-          enqueueDownloadsForEntry(id, entry);
-        } catch (e) {
-          _log.warning('hoyowiki entry failed id=$id err=$e');
-        }
-        if (!ref.mounted) return downloaded;
-        state = state.copyWith(
-          progress: FetchingHoYoWiki(
-            phase: HoYoWikiPhase.fetchingEntries,
-            doneCount: i + 1,
-            totalCount: entryList.length,
-          ),
-        );
-        if (await checkCancel()) return downloaded;
-      }
+        },
+      );
+      if (isAborted()) return downloaded;
     }
 
-    // (3) download 階段：entry 跑完後 downloadTodo 已定（total 固定）
+    // (3) download 階段
     if (downloadTodo.isNotEmpty) {
-      for (var i = 0; i < downloadTodo.length; i++) {
-        final item = downloadTodo[i];
-        try {
-          final bytes = await fetcher.downloadImage(item.url, client);
-          if (bytes != null) {
-            final file = hoyowikiCacheFile(
-              baseDir: cacheDir,
-              id: item.id,
-              kind: item.kind,
-              url: item.url,
-            );
-            await file.writeAsBytes(bytes, flush: true);
-            indexNotifier.bumpCacheRevision();
-            downloaded++;
+      var doneDownload = 0;
+      await runConcurrent<_HoYoWikiDownloadItem>(
+        items: downloadTodo,
+        concurrency: fetcher.downloadConcurrency,
+        shouldAbort: isAborted,
+        worker: (item) async {
+          try {
+            final bytes = await fetcher.downloadImage(item.url, client);
+            if (bytes != null) {
+              final file = hoyowikiCacheFile(
+                baseDir: cacheDir,
+                id: item.id,
+                kind: item.kind,
+                url: item.url,
+              );
+              await file.writeAsBytes(bytes, flush: true);
+              indexNotifier.bumpCacheRevision();
+              downloaded++;
+            }
+          } catch (e) {
+            _log.warning('hoyowiki download failed url=${item.url} err=$e');
           }
-        } catch (e) {
-          _log.warning('hoyowiki download failed url=${item.url} err=$e');
-        }
-        if (!ref.mounted) return downloaded;
-        state = state.copyWith(
-          progress: FetchingHoYoWiki(
-            phase: HoYoWikiPhase.downloading,
-            doneCount: i + 1,
-            totalCount: downloadTodo.length,
-          ),
-        );
-        if (await checkCancel()) return downloaded;
-      }
+          if (!ref.mounted) return;
+          doneDownload++;
+          state = state.copyWith(
+            progress: FetchingHoYoWiki(
+              phase: HoYoWikiPhase.downloading,
+              doneCount: doneDownload,
+              totalCount: downloadTodo.length,
+            ),
+          );
+        },
+      );
+      if (isAborted()) return downloaded;
     }
     return downloaded;
   }
