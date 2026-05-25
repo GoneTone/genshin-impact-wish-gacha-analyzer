@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 
+/// 建立測試用的 [GachaRecord]，預設 5★ 角色、英文 lang。
 GachaRecord _rec({
   required String id,
   required String uid,
@@ -34,6 +35,7 @@ GachaRecord _rec({
   lang: lang,
 );
 
+/// 建立模擬 HoYoWiki API 的 [MockClient]：[onSearch] 可監聽搜尋呼叫的 keyword。
 http.Client _hoYoWikiMockClient({void Function(String keyword)? onSearch}) =>
     MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -77,6 +79,7 @@ http.Client _hoYoWikiMockClient({void Function(String keyword)? onSearch}) =>
       return http.Response.bytes([1, 2, 3], 200);
     });
 
+/// 啟動測試用 [ProviderContainer]，覆寫 storage / hoyowiki / http 依賴並完成 bootstrap。
 Future<ProviderContainer> _bootstrap({
   required Directory tempDir,
   required http.Client apiClient,

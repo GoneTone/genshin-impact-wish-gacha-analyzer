@@ -109,6 +109,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// Logger 實例（force-refetch 流程，獨立子樹以利日誌過濾）。
   static final _refetchLog = Logger('gacha.hoyowiki.refetch');
 
+  /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
+  static final _importLog = Logger('gacha.import');
+
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
 
@@ -534,9 +537,6 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
-  static final _importLog = Logger('gacha.import');
-
   /// 匯入帳號 bundle，並接續以增量方式抓取 HoYoWiki 圖片。
   ///
   /// 流程：
@@ -566,7 +566,7 @@ class GachaRepository extends Notifier<GachaState> {
       if (!ref.mounted) return;
       _importLog.info(
         'import done: success=${result.successAccounts} '
-        'failed=[${result.failedUids.join(",")}] '
+        'failed=[${result.failedUids.map(sanitizeUid).join(",")}] '
         'records=${result.totalRecords}',
       );
 
