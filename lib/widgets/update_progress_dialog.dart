@@ -224,12 +224,21 @@ class _Body extends StatelessWidget {
         :final totalNewRecords,
         :final failedBanners,
         :final hoYoWikiImagesDownloaded,
+        :final importSummary,
       ) =>
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l.progressDoneSummary(totalNewRecords)),
+            if (importSummary != null)
+              Text(
+                l.progressDoneImportSummary(
+                  importSummary.successAccounts,
+                  importSummary.totalRecords,
+                ),
+              )
+            else
+              Text(l.progressDoneSummary(totalNewRecords)),
             const SizedBox(height: AppSpacing.xs),
             Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
             if (failedBanners.isNotEmpty) ...[
@@ -237,6 +246,16 @@ class _Body extends StatelessWidget {
               Text(
                 l.progressPartialFailed(
                   failedBanners.map(resolveBannerName).join('、'),
+                ),
+                style: TextStyle(color: tokens.stateDanger),
+              ),
+            ],
+            if (importSummary != null &&
+                importSummary.failedUids.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.progressPartialImportFailed(
+                  importSummary.failedUids.join(', '),
                 ),
                 style: TextStyle(color: tokens.stateDanger),
               ),
