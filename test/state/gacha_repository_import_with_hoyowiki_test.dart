@@ -189,23 +189,22 @@ void main() {
     );
   });
 
-  test('空 bundle：不打 HoYoWiki API、emit UpdateCompleted with images=0',
-      () async {
+  test('空 bundle：不打 HoYoWiki API、emit UpdateCompleted with images=0', () async {
     var apiCalled = false;
     final apiClient = MockClient((req) async {
       apiCalled = true;
       return http.Response('', 404);
     });
 
-    final tempDir =
-        await Directory.systemTemp.createTemp('gacha_import_empty_');
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_empty_',
+    );
     addTearDown(() async {
       if (await tempDir.exists()) await tempDir.delete(recursive: true);
     });
     SharedPreferences.setMockInitialValues({});
 
-    final container =
-        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
     addTearDown(container.dispose);
 
     final bundle = AccountsBundle(
@@ -232,15 +231,15 @@ void main() {
 
   test('互斥早退：state.progress 非 null 時 no-op', () async {
     final apiClient = MockClient((req) async => http.Response('', 404));
-    final tempDir =
-        await Directory.systemTemp.createTemp('gacha_import_mutex_');
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_mutex_',
+    );
     addTearDown(() async {
       if (await tempDir.exists()) await tempDir.delete(recursive: true);
     });
     SharedPreferences.setMockInitialValues({});
 
-    final container =
-        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
     addTearDown(container.dispose);
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
@@ -258,8 +257,11 @@ void main() {
     await Future.wait(<Future<void>>[first, second]);
 
     final progress = container.read(gachaRepositoryProvider).progress;
-    expect(progress, isA<UpdateCompleted>(),
-        reason: '第一次跑完應 emit UpdateCompleted；第二次 no-op 不會覆寫');
+    expect(
+      progress,
+      isA<UpdateCompleted>(),
+      reason: '第一次跑完應 emit UpdateCompleted；第二次 no-op 不會覆寫',
+    );
   });
 
   test('HoYoWiki 階段取消：import 仍寫入、emit UpdateCompleted', () async {
@@ -274,15 +276,15 @@ void main() {
       return http.Response.bytes([1, 2, 3], 200);
     });
 
-    final tempDir =
-        await Directory.systemTemp.createTemp('gacha_import_cancel_');
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_cancel_',
+    );
     addTearDown(() async {
       if (await tempDir.exists()) await tempDir.delete(recursive: true);
     });
     SharedPreferences.setMockInitialValues({});
 
-    final container =
-        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    final container = await _bootstrap(tempDir: tempDir, apiClient: apiClient);
     addTearDown(container.dispose);
 
     final bundle = AccountsBundle(
@@ -295,7 +297,9 @@ void main() {
             uid: '1001',
             lastUpdated: DateTime.utc(2026, 5, 25),
             banners: {
-              '301': [_rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301')],
+              '301': [
+                _rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301'),
+              ],
               '302': [],
               '500': [],
               '200': [],
@@ -314,11 +318,13 @@ void main() {
 
     final state = container.read(gachaRepositoryProvider);
     // import 不可回滾：byUid 仍包含 1001
-    expect(state.byUid.containsKey('1001'), isTrue,
-        reason: 'import 寫入無法回滾');
+    expect(state.byUid.containsKey('1001'), isTrue, reason: 'import 寫入無法回滾');
     final progress = state.progress;
-    expect(progress, isA<UpdateCompleted>(),
-        reason: '取消仍 emit UpdateCompleted（不像 forceRefetch 的 clearProgress）');
+    expect(
+      progress,
+      isA<UpdateCompleted>(),
+      reason: '取消仍 emit UpdateCompleted（不像 forceRefetch 的 clearProgress）',
+    );
     final completed = progress as UpdateCompleted;
     expect(completed.importSummary, isNotNull);
     expect(completed.importSummary!.successAccounts, 1);
@@ -327,8 +333,9 @@ void main() {
   test('部分 UID 寫 storage 失敗：importSummary.failedUids 非空', () async {
     final apiClient = _hoYoWikiMockClient();
 
-    final tempDir =
-        await Directory.systemTemp.createTemp('gacha_import_partial_');
+    final tempDir = await Directory.systemTemp.createTemp(
+      'gacha_import_partial_',
+    );
     addTearDown(() async {
       if (await tempDir.exists()) await tempDir.delete(recursive: true);
     });
@@ -364,7 +371,9 @@ void main() {
             uid: '1001',
             lastUpdated: DateTime.utc(2026, 5, 25),
             banners: {
-              '301': [_rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301')],
+              '301': [
+                _rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301'),
+              ],
               '302': [],
               '500': [],
               '200': [],
@@ -377,7 +386,9 @@ void main() {
             uid: '1002',
             lastUpdated: DateTime.utc(2026, 5, 25),
             banners: {
-              '301': [_rec(id: '2', uid: '1002', name: 'Other', gachaType: '301')],
+              '301': [
+                _rec(id: '2', uid: '1002', name: 'Other', gachaType: '301'),
+              ],
               '302': [],
               '500': [],
               '200': [],
