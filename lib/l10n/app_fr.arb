@@ -193,6 +193,7 @@
   },
   "progressDoneImagesSummary": "{count, plural, =1{{count} image d'objet téléchargée} other{{count} images d'objets téléchargées}}",
   "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
       "count": {
         "type": "int"
@@ -211,15 +212,21 @@
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "progressPartialImportFailed": "⚠ Échec partiel de l'import : {uids}",
   "@progressPartialImportFailed": {
     "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
     "placeholders": {
-      "uids": { "type": "String" }
+      "uids": {
+        "type": "String"
+      }
     }
   },
   "updateProgressHoyoWikiSearching": "Recherche des données d'objet {done}/{total}",
@@ -434,6 +441,26 @@
   "pagerLast": "Dernière page",
   "settingsClearActive": "Effacer les données du compte actuel",
   "settingsClearAll": "Effacer toutes les données",
+  "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de vœux, rien à retélécharger",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Forcer le re-téléchargement des images d'objets",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoYoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Lancer le re-téléchargement",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
   "settingsExportData": "Exporter les données",
   "settingsImportData": "Importer des données",
   "shareImageButton": "Générer une image de partage",
@@ -653,11 +680,14 @@
   },
   "updateErrorFormat": "Format de réponse inattendu",
   "updateErrorWipeHoyoWikiCache": "Échec du vidage du cache d'images : {detail}",
-  "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
-  "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de vœux, rien à retélécharger",
-  "confirmRefetchHoyoWikiTitle": "Forcer le re-téléchargement des images d'objets",
-  "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoYoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
-  "confirmRefetchHoyoWikiConfirm": "Lancer le re-téléchargement",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogs": "Journaux de débogage",
   "@settingsLogs": {},
   "settingsLogsHint": "En cas de problème, exportez les journaux et envoyez-les au développeur pour l'aider à diagnostiquer.",
