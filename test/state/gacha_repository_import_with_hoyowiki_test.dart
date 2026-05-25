@@ -323,4 +323,94 @@ void main() {
     expect(completed.importSummary, isNotNull);
     expect(completed.importSummary!.successAccounts, 1);
   });
+
+  test('部分 UID 寫 storage 失敗：importSummary.failedUids 非空', () async {
+    final apiClient = _hoYoWikiMockClient();
+
+    final tempDir =
+        await Directory.systemTemp.createTemp('gacha_import_partial_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final failStorage = _SelectiveFailureStorage(tempDir, '1002');
+    final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
+    await hoyowikiDir.create();
+    final indexStorage = HoYoWikiIndexStorage(hoyowikiDir);
+
+    final container = ProviderContainer(
+      overrides: [
+        gachaStorageProvider.overrideWithValue(failStorage),
+        hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
+        hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
+        hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(client: apiClient, cancel: () {}),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+    await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: '1001',
+      accounts: [
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1001',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [_rec(id: '1', uid: '1001', name: 'Hu Tao', gachaType: '301')],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+        ExportedAccount(
+          data: BannerStorage(
+            uid: '1002',
+            lastUpdated: DateTime.utc(2026, 5, 25),
+            banners: {
+              '301': [_rec(id: '2', uid: '1002', name: 'Other', gachaType: '301')],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        ),
+      ],
+    );
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importAccountsAndFetchHoYoWiki(bundle);
+
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
+    final completed = progress as UpdateCompleted;
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 1);
+    expect(completed.importSummary!.failedUids, ['1002']);
+  });
+}
+
+/// 對特定 UID 寫入時拋例外，用於測 partial-failure 路徑。
+class _SelectiveFailureStorage extends GachaStorage {
+  _SelectiveFailureStorage(super.baseDir, this._failUid);
+  final String _failUid;
+
+  @override
+  Future<void> save(BannerStorage data) async {
+    if (data.uid == _failUid) {
+      throw const FileSystemException('simulated save failure');
+    }
+    return super.save(data);
+  }
 }
