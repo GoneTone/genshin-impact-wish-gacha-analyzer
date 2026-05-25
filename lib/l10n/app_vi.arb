@@ -193,6 +193,7 @@
   },
   "progressDoneImagesSummary": "Đã tải {count} ảnh vật phẩm",
   "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
       "count": {
         "type": "int"
@@ -211,15 +212,21 @@
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
-      "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
     }
   },
   "progressPartialImportFailed": "⚠ Nhập một phần thất bại: {uids}",
   "@progressPartialImportFailed": {
     "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
     "placeholders": {
-      "uids": { "type": "String" }
+      "uids": {
+        "type": "String"
+      }
     }
   },
   "updateProgressHoyoWikiSearching": "Đang tìm dữ liệu vật phẩm {done}/{total}",
@@ -434,6 +441,26 @@
   "pagerLast": "Trang cuối",
   "settingsClearActive": "Xóa dữ liệu tài khoản hiện tại",
   "settingsClearAll": "Xóa tất cả dữ liệu",
+  "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Chưa có bản ghi Cầu Nguyện, không có gì để tải lại",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Buộc tải lại ảnh vật phẩm",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoYoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Bắt đầu tải lại",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
   "settingsExportData": "Xuất dữ liệu",
   "settingsImportData": "Nhập dữ liệu",
   "shareImageButton": "Tạo ảnh chia sẻ",
@@ -653,11 +680,14 @@
   },
   "updateErrorFormat": "Định dạng phản hồi bất thường",
   "updateErrorWipeHoyoWikiCache": "Không xóa được bộ nhớ đệm ảnh: {detail}",
-  "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
-  "settingsRefetchHoyoWikiImagesEmpty": "Chưa có bản ghi Cầu Nguyện, không có gì để tải lại",
-  "confirmRefetchHoyoWikiTitle": "Buộc tải lại ảnh vật phẩm",
-  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoYoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
-  "confirmRefetchHoyoWikiConfirm": "Bắt đầu tải lại",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogs": "Logs gỡ lỗi",
   "@settingsLogs": {},
   "settingsLogsHint": "Khi gặp sự cố, có thể xuất log để nhà phát triển hỗ trợ kiểm tra.",
