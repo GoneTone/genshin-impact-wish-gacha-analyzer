@@ -71,7 +71,7 @@ class GachaItemIcon extends ConsumerWidget {
   }
 }
 
-/// 缺 icon 時的固定尺寸方塊；底色依 rank 上色。
+/// 缺 icon 時的固定尺寸方塊；底色依 rank 上色，中央疊一個 `?` icon。
 class _Placeholder extends StatelessWidget {
   /// 建立 [_Placeholder]。
   const _Placeholder({
@@ -103,6 +103,9 @@ class _Placeholder extends StatelessWidget {
         color: accent.withValues(alpha: 0.18),
         border: Border.all(color: accent.withValues(alpha: 0.40)),
         borderRadius: BorderRadius.circular(4),
+      ),
+      child: Center(
+        child: Icon(Icons.question_mark, size: size * 0.55, color: accent),
       ),
     );
   }
