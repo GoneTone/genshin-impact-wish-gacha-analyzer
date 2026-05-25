@@ -188,4 +188,45 @@ void main() {
       reason: 'Hu Tao + Skyward Harp，各 icon+header = 4 張',
     );
   });
+
+  test('空 bundle：不打 HoYoWiki API、emit UpdateCompleted with images=0',
+      () async {
+    var apiCalled = false;
+    final apiClient = MockClient((req) async {
+      apiCalled = true;
+      return http.Response('', 404);
+    });
+
+    final tempDir =
+        await Directory.systemTemp.createTemp('gacha_import_empty_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+
+    final container =
+        await _bootstrap(tempDir: tempDir, apiClient: apiClient);
+    addTearDown(container.dispose);
+
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 5, 25),
+      appVersion: 'x',
+      lastActiveUid: null,
+      accounts: const [],
+    );
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importAccountsAndFetchHoYoWiki(bundle);
+
+    expect(apiCalled, isFalse, reason: '空 bundle 不該有任何 unique pair → 不打 API');
+    final progress = container.read(gachaRepositoryProvider).progress;
+    expect(progress, isA<UpdateCompleted>());
+    final completed = progress as UpdateCompleted;
+    expect(completed.hoYoWikiImagesDownloaded, 0);
+    expect(completed.importSummary, isNotNull);
+    expect(completed.importSummary!.successAccounts, 0);
+    expect(completed.importSummary!.totalRecords, 0);
+    expect(completed.importSummary!.failedUids, isEmpty);
+  });
 }
