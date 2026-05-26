@@ -296,7 +296,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   currentFile,
                   key: ValueKey(currentFile.path),
                   fit: BoxFit.contain,
-                  alignment: Alignment.topCenter,
+                  alignment: Alignment.center,
                   // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
                   // 解碼完才換；配合 precacheImage 消除「閃一下」。
                   gaplessPlayback: true,
