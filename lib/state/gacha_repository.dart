@@ -833,12 +833,43 @@ class GachaRepository extends Notifier<GachaState> {
 
     // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
     final downloadTodo = <_HoYoWikiDownloadItem>[];
+    final seenUrls = <String>{}; // 跨 entry/lang 去重，避免重複 enqueue
+
     void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
-      final url = entry.iconUrl;
-      if (url.isEmpty) return;
-      final file = hoyowikiIconCacheFile(baseDir: cacheDir, id: id, url: url);
-      if (file.existsSync()) return;
-      downloadTodo.add(_HoYoWikiDownloadItem(id: id, url: url));
+      // icon
+      if (entry.iconUrl.isNotEmpty) {
+        final iconFile = hoyowikiIconCacheFile(
+          baseDir: cacheDir,
+          id: id,
+          url: entry.iconUrl,
+        );
+        if (!iconFile.existsSync() && seenUrls.add('icon::${entry.iconUrl}')) {
+          downloadTodo.add(
+            _HoYoWikiDownloadItem(id: id, url: entry.iconUrl, isGallery: false),
+          );
+        }
+      }
+      // gallery：迭代所有 lang 的 pic + list[].img，URL 去重
+      for (final gallery in entry.galleryByLang.values) {
+        void enqueue(String url) {
+          if (url.isEmpty) return;
+          final f = hoyowikiGalleryCacheFile(
+            baseDir: cacheDir,
+            id: id,
+            url: url,
+          );
+          if (f.existsSync()) return;
+          if (!seenUrls.add('gallery::$id::$url')) return;
+          downloadTodo.add(
+            _HoYoWikiDownloadItem(id: id, url: url, isGallery: true),
+          );
+        }
+
+        enqueue(gallery.picUrl);
+        for (final it in gallery.list) {
+          enqueue(it.imgUrl);
+        }
+      }
     }
 
     final initialIds = uniquePairs
@@ -957,17 +988,25 @@ class GachaRepository extends Notifier<GachaState> {
           try {
             final bytes = await fetcher.downloadImage(item.url, client);
             if (bytes != null) {
-              final file = hoyowikiIconCacheFile(
-                baseDir: cacheDir,
-                id: item.id,
-                url: item.url,
-              );
+              final file = item.isGallery
+                  ? hoyowikiGalleryCacheFile(
+                      baseDir: cacheDir,
+                      id: item.id,
+                      url: item.url,
+                    )
+                  : hoyowikiIconCacheFile(
+                      baseDir: cacheDir,
+                      id: item.id,
+                      url: item.url,
+                    );
               await file.writeAsBytes(bytes, flush: true);
               indexNotifier.bumpCacheRevision();
               downloaded++;
             }
           } catch (e) {
-            _log.warning('hoyowiki download failed url=${item.url} err=$e');
+            _log.warning(
+              'hoyowiki download failed url=${sanitizeUrl(item.url)} err=$e',
+            );
           }
           if (!ref.mounted) return;
           doneDownload++;
@@ -1017,14 +1056,21 @@ class GachaRepository extends Notifier<GachaState> {
   }
 }
 
-/// HoYoWiki 下載佇列的單一工作項（過渡：gallery 在 Task 9 加入）。
+/// HoYoWiki 下載佇列的單一工作項。
 class _HoYoWikiDownloadItem {
   /// 建立 [_HoYoWikiDownloadItem]。
-  const _HoYoWikiDownloadItem({required this.id, required this.url});
+  const _HoYoWikiDownloadItem({
+    required this.id,
+    required this.url,
+    required this.isGallery,
+  });
 
   /// HoYoWiki entry_page_id。
   final String id;
 
   /// 圖片 URL。
   final String url;
+
+  /// true → gallery 圖（用 hash 命名）；false → icon。
+  final bool isGallery;
 }

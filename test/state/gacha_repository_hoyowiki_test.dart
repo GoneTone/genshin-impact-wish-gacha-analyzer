@@ -727,6 +727,253 @@ void main() {
     });
   });
 
+  group('hoyowiki gallery download', () {
+    test('gallery 圖檔下載到 <id>_gallery_<hash>.<ext>', () async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_dl_');
+      SharedPreferences.setMockInitialValues({});
+
+      final apiClient = MockClient((req) async {
+        final url = req.url.toString();
+        if (url.contains('/wapi/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'message': 'OK',
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '12345',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2, 'name': 'c'},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (url.contains('/wapi/entry_page')) {
+          return http.Response.bytes(
+            utf8.encode(
+              jsonEncode({
+                'retcode': 0,
+                'message': 'OK',
+                'data': {
+                  'page': {
+                    'icon_url': 'https://x/icon.png',
+                    'modules': [
+                      {
+                        'components': [
+                          {
+                            'component_id': 'gallery_character',
+                            'data': jsonEncode({
+                              'pic': 'https://x/card.png',
+                              'list': [
+                                {
+                                  'id': 'a',
+                                  'key': 'k',
+                                  'img': 'https://x/a.gif',
+                                  'imgDesc': '',
+                                },
+                              ],
+                            }),
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              }),
+            ),
+            200,
+          );
+        }
+        return http.Response.bytes(
+          [0x89, 0x50, 0x4E, 0x47],
+          200,
+          headers: {'content-type': 'image/png'},
+        );
+      });
+
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 5, 26),
+          banners: {
+            '301': [_rec(id: '1', name: 'Hu Tao', gachaType: '301')],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+            '2000': [],
+            '1000': [],
+          },
+        ),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+          hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(client: apiClient, cancel: () {}),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(() async {
+        if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      });
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugRunHoYoWikiOnly();
+
+      final files = Directory(tempDir.path)
+          .listSync()
+          .whereType<File>()
+          .map((f) => f.uri.pathSegments.last)
+          .toList();
+      expect(files.any((f) => f == '12345_icon.png'), isTrue);
+      expect(
+        files.any(
+          (f) => RegExp(r'^12345_gallery_[0-9a-f]{12}\.gif$').hasMatch(f),
+        ),
+        isTrue,
+      );
+      expect(
+        files.any(
+          (f) => RegExp(r'^12345_gallery_[0-9a-f]{12}\.png$').hasMatch(f),
+        ),
+        isTrue,
+      );
+    });
+
+    test('跨 lang 同 URL 只下載一次', () async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_dedupe_');
+      SharedPreferences.setMockInitialValues({});
+
+      var imageDownloadCount = 0;
+      final apiClient = MockClient((req) async {
+        final url = req.url.toString();
+        if (url.contains('/wapi/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'message': 'OK',
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '12345',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2, 'name': 'c'},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (url.contains('/wapi/entry_page')) {
+          // 兩個 lang 都回完全相同的圖 URL → 應該共用一份檔
+          return http.Response.bytes(
+            utf8.encode(
+              jsonEncode({
+                'retcode': 0,
+                'message': 'OK',
+                'data': {
+                  'page': {
+                    'icon_url': 'https://x/icon.png',
+                    'modules': [
+                      {
+                        'components': [
+                          {
+                            'component_id': 'gallery_character',
+                            'data': jsonEncode({
+                              'pic': 'https://x/shared.png',
+                              'list': [],
+                            }),
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              }),
+            ),
+            200,
+          );
+        }
+        imageDownloadCount++;
+        return http.Response.bytes(
+          [0x89, 0x50, 0x4E, 0x47],
+          200,
+          headers: {'content-type': 'image/png'},
+        );
+      });
+
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 5, 26),
+          banners: {
+            '301': [
+              _rec(id: '1', name: 'Hu Tao', gachaType: '301', lang: 'zh-tw'),
+              _rec(id: '2', name: 'Hu Tao', gachaType: '301', lang: 'en-us'),
+            ],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+            '2000': [],
+            '1000': [],
+          },
+        ),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+          hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(client: apiClient, cancel: () {}),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(() async {
+        if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      });
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugRunHoYoWikiOnly();
+
+      // icon (1) + shared.png (1, 跨 lang 共用) = 2 次 image download
+      expect(imageDownloadCount, 2);
+    });
+  });
+
   test('cancel 在 worker 取下一筆前生效，其餘 item 不被 dispatch', () async {
     final dispatched = <String>[];
     final apiClient = MockClient((req) async {
