@@ -168,6 +168,8 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
 
     return AppDialog(
       size: AppDialogSize.md,
+      // 物品 dialog 含大圖預覽，需要更高空間；AppDialog 仍會 fit 小視窗。
+      maxHeight: 880,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

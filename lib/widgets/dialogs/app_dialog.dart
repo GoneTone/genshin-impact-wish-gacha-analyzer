@@ -28,10 +28,14 @@ enum AppDialogSize {
 /// 專案統一使用的 dialog 容器。包裝 `AlertDialog` 並自動套寬高上限：
 ///
 /// - 寬：`min(size.maxWidth, mq.size.width - 80)`
-/// - 高：`min(720, mq.size.height - 120)`（透過 `AlertDialog.constraints` 設定）
+/// - 高：`min(maxHeight ?? 720, mq.size.height - 120)`（透過
+///   `AlertDialog.constraints` 設定）
 ///
 /// 整體需要捲動時設 `scrollable: true`；內容已自帶捲動元件（`ListView` 等）
 /// 維持預設 `false` 避免雙層捲動衝突。
+///
+/// 個別 dialog 內容明顯較高（如含大圖預覽）可透過 `maxHeight` 顯式覆寫高度
+/// 上限；其他 dialog 維持預設 720 上限。
 ///
 /// 不要再自己手寫 `AlertDialog` + `ConstrainedBox` + `math.min(...)` — 用這個。
 class AppDialog extends StatelessWidget {
@@ -43,6 +47,7 @@ class AppDialog extends StatelessWidget {
     this.actions = const <Widget>[],
     this.size = AppDialogSize.sm,
     this.scrollable = false,
+    this.maxHeight,
   });
 
   /// dialog 標題 widget，傳給 [AlertDialog.title]。
@@ -60,11 +65,16 @@ class AppDialog extends StatelessWidget {
   /// true 時整體內容可捲動；內容已自帶捲動元件時維持預設 false。
   final bool scrollable;
 
+  /// dialog 整體最大高度上限；null 時用預設 720。實際高度仍受
+  /// `mq.size.height - 120` 限制，小視窗下會自動 fit。
+  final double? maxHeight;
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final dialogWidth = math.min(size.maxWidth, mq.size.width - 80);
-    final maxHeight = math.min(720.0, mq.size.height - 120);
+    final ceiling = maxHeight ?? 720.0;
+    final dialogMaxHeight = math.min(ceiling, mq.size.height - 120);
 
     Widget body = SizedBox(width: dialogWidth, child: content);
     if (scrollable) {
@@ -72,7 +82,7 @@ class AppDialog extends StatelessWidget {
     }
 
     return AlertDialog(
-      constraints: BoxConstraints(maxHeight: maxHeight),
+      constraints: BoxConstraints(maxHeight: dialogMaxHeight),
       title: title,
       content: body,
       actions: actions.isEmpty ? null : actions,

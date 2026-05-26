@@ -12,6 +12,7 @@ Future<void> _pumpDialog(
   required AppDialogSize size,
   bool scrollable = false,
   Widget? content,
+  double? maxHeight,
 }) async {
   tester.view.physicalSize = surfaceSize;
   tester.view.devicePixelRatio = 1.0;
@@ -32,6 +33,7 @@ Future<void> _pumpDialog(
                 builder: (_) => AppDialog(
                   size: size,
                   scrollable: scrollable,
+                  maxHeight: maxHeight,
                   title: const Text('Title'),
                   content: content ?? const Text('Body'),
                   actions: [
@@ -139,6 +141,47 @@ void main() {
     );
     expect(cb.constraints.maxHeight, 480);
   });
+
+  testWidgets('explicit maxHeight overrides default 720 in tall window', (
+    tester,
+  ) async {
+    await _pumpDialog(
+      tester,
+      surfaceSize: const Size(1280, 1080),
+      size: AppDialogSize.md,
+      maxHeight: 880,
+    );
+    final cb = tester.widget<ConstrainedBox>(
+      find
+          .descendant(
+            of: find.byType(AlertDialog),
+            matching: find.byType(ConstrainedBox),
+          )
+          .first,
+    );
+    expect(cb.constraints.maxHeight, 880);
+  });
+
+  testWidgets(
+    'explicit maxHeight still capped by mq.height - 120 in short window',
+    (tester) async {
+      await _pumpDialog(
+        tester,
+        surfaceSize: const Size(1280, 600),
+        size: AppDialogSize.md,
+        maxHeight: 880,
+      );
+      final cb = tester.widget<ConstrainedBox>(
+        find
+            .descendant(
+              of: find.byType(AlertDialog),
+              matching: find.byType(ConstrainedBox),
+            )
+            .first,
+      );
+      expect(cb.constraints.maxHeight, 480);
+    },
+  );
 
   testWidgets('scrollable: true wraps content in SingleChildScrollView', (
     tester,
