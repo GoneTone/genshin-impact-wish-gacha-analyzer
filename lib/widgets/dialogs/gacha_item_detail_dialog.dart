@@ -207,7 +207,22 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   const SizedBox(height: 8),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 120),
-                    child: SingleChildScrollView(child: Html(data: desc)),
+                    child: SingleChildScrollView(
+                      child: Html(
+                        data: desc,
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize(
+                              theme.textTheme.bodyMedium?.fontSize ?? 14,
+                            ),
+                            color: tokens.textSecondary,
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
+                          ),
+                          'p': Style(margin: Margins.zero),
+                        },
+                      ),
+                    ),
                   ),
                 ],
                 if (tags.isNotEmpty) ...[
@@ -219,6 +234,11 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       for (final t in tags)
                         Chip(
                           label: Text(t),
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(color: tokens.borderSubtle),
+                          labelStyle: theme.textTheme.bodySmall?.copyWith(
+                            color: tokens.textSecondary,
+                          ),
                           visualDensity: VisualDensity.compact,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
