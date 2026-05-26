@@ -205,7 +205,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                 ),
                 if (desc.trim().isNotEmpty)
                   ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 120),
+                    constraints: const BoxConstraints(maxHeight: 80),
                     child: SingleChildScrollView(
                       child: Html(
                         data: desc,
