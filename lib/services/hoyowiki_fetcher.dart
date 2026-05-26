@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart'
     show ApiErrorException;
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 /// HoYoWiki search API 的命中結果。
@@ -20,13 +21,17 @@ class HoYoWikiSearchHit {
   final int menuId;
 }
 
-/// HoYoWiki entry_page API 抓到的 icon URL（過渡：gallery 在 Task 6 加入）。
+/// HoYoWiki entry_page API 抓到的 icon URL 與（可能）gallery 整組資料。
 class HoYoWikiEntryFetched {
-  /// 建立 [HoYoWikiEntryFetched]；icon 可能為空字串。
-  const HoYoWikiEntryFetched({required this.iconUrl});
+  /// 建立 [HoYoWikiEntryFetched]；icon 可能為空字串；gallery 可能為 null（無
+  /// `gallery_character` module 或 data 解析失敗）。
+  const HoYoWikiEntryFetched({required this.iconUrl, required this.gallery});
 
   /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
   final String iconUrl;
+
+  /// 該 lang 的 gallery 整組（pic + list）；無資料時為 null。
+  final HoYoWikiGalleryData? gallery;
 }
 
 /// 與 HoYoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
@@ -121,25 +126,93 @@ class HoYoWikiFetcher {
     return null;
   }
 
-  /// 以 [id] 拉 entry_page，回 icon_url（可能為空字串）。
+  /// 從 entry_page response 的 `modules[]` 找出 `gallery_character`
+  /// component 並 JSON 解析其 `data` 字串。失敗或空回 null。
+  static HoYoWikiGalleryData? _parseGalleryCharacterModule(
+    List<dynamic> modules,
+  ) {
+    for (final m in modules) {
+      final components =
+          (m as Map<String, dynamic>)['components'] as List<dynamic>?;
+      if (components == null) continue;
+      for (final c in components) {
+        final comp = c as Map<String, dynamic>;
+        if (comp['component_id'] != 'gallery_character') continue;
+        final dataStr = comp['data'] as String?;
+        if (dataStr == null || dataStr.isEmpty) return null;
+        try {
+          final data = jsonDecode(dataStr) as Map<String, dynamic>;
+          final picUrl = (data['pic'] as String?) ?? '';
+          final listJson = (data['list'] as List<dynamic>?) ?? const [];
+          final list = <HoYoWikiGalleryItem>[];
+          for (final item in listJson) {
+            final mi = item as Map<String, dynamic>;
+            final gid = mi['id'] as String?;
+            final key = mi['key'] as String?;
+            final img = mi['img'] as String?;
+            if (gid == null ||
+                gid.isEmpty ||
+                key == null ||
+                key.isEmpty ||
+                img == null ||
+                img.isEmpty) {
+              _log.warning(
+                'gallery item missing fields id=$gid key=$key imgEmpty=${img == null || img.isEmpty}',
+              );
+              continue;
+            }
+            list.add(
+              HoYoWikiGalleryItem(
+                id: gid,
+                key: key,
+                imgUrl: img,
+                imgDescHtml: (mi['imgDesc'] as String?) ?? '',
+              ),
+            );
+          }
+          if (picUrl.isEmpty && list.isEmpty) return null;
+          return HoYoWikiGalleryData(picUrl: picUrl, list: list);
+        } catch (e, st) {
+          _log.warning('gallery data parse failed', e, st);
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+  /// 以 [id] 與 [lang] 拉 entry_page，回 icon_url 與該 lang 的 gallery 整組。
+  /// 必送 `X-Rpc-Language: $lang` header 以拿到對應語言的 gallery 文字。
   /// retcode != 0 throw [ApiErrorException]。
   Future<HoYoWikiEntryFetched> fetchEntryPage({
     required String id,
+    required String lang,
     required http.Client client,
   }) async {
     final url = _entryBase.replace(queryParameters: {'entry_page_id': id});
-    _log.fine('entry id=$id url=${sanitizeUrl(url.toString())}');
-    final res = await client.get(url).timeout(timeout);
+    _log.fine('entry id=$id lang=$lang url=${sanitizeUrl(url.toString())}');
+    final res = await client
+        .get(url, headers: {'X-Rpc-Language': lang})
+        .timeout(timeout);
     final body = jsonDecode(res.body) as Map<String, dynamic>;
     final retcode = body['retcode'] as int;
     if (retcode != 0) {
-      _log.warning('entry retcode=$retcode id=$id msg=${body['message']}');
+      _log.warning(
+        'entry retcode=$retcode id=$id lang=$lang msg=${body['message']}',
+      );
       throw ApiErrorException(retcode, body['message'] as String? ?? '');
     }
     final page = body['data']?['page'] as Map<String, dynamic>?;
     final iconUrl = (page?['icon_url'] as String?) ?? '';
-    _log.info('entry id=$id icon=${iconUrl.isNotEmpty}');
-    return HoYoWikiEntryFetched(iconUrl: iconUrl);
+    final modules = (page?['modules'] as List<dynamic>?) ?? const [];
+    final gallery = _parseGalleryCharacterModule(modules);
+    _log.info(
+      'entry id=$id lang=$lang icon=${iconUrl.isNotEmpty} '
+      'gallery=${gallery != null} '
+      'pic=${gallery?.picUrl.isNotEmpty == true} '
+      'list=${gallery?.list.length ?? 0}',
+    );
+    return HoYoWikiEntryFetched(iconUrl: iconUrl, gallery: gallery);
   }
 
   /// GET [url] 的圖檔 bytes；任何失敗（非 2xx / 例外）回 null，caller 不寫檔

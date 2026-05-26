@@ -896,8 +896,10 @@ class GachaRepository extends Notifier<GachaState> {
         shouldAbort: isAborted,
         worker: (id) async {
           try {
+            // TODO(Task 8): lang from per-lang entryTodo pair
             final fetched = await fetcher.fetchEntryPage(
               id: id,
+              lang: 'en-us',
               client: client,
             );
             final entry = HoYoWikiEntry(

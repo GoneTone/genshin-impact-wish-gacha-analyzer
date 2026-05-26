@@ -252,14 +252,22 @@ void main() {
         (_) async => _entryOk(iconUrl: 'https://x/icon.png'),
       );
       final fetcher = HoYoWikiFetcher();
-      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      final entry = await fetcher.fetchEntryPage(
+        id: '5125428',
+        lang: 'en-us',
+        client: mock,
+      );
       expect(entry.iconUrl, 'https://x/icon.png');
     });
 
     test('icon_url 為空字串 → 照回空', () async {
       final mock = MockClient((_) async => _entryOk(iconUrl: ''));
       final fetcher = HoYoWikiFetcher();
-      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      final entry = await fetcher.fetchEntryPage(
+        id: '5125428',
+        lang: 'en-us',
+        client: mock,
+      );
       expect(entry.iconUrl, '');
     });
 
@@ -272,7 +280,8 @@ void main() {
       );
       final fetcher = HoYoWikiFetcher();
       await expectLater(
-        () => fetcher.fetchEntryPage(id: '5125428', client: mock),
+        () =>
+            fetcher.fetchEntryPage(id: '5125428', lang: 'en-us', client: mock),
         throwsA(isA<ApiErrorException>()),
       );
     });
@@ -284,9 +293,169 @@ void main() {
         return _entryOk(iconUrl: '');
       });
       final fetcher = HoYoWikiFetcher();
-      await fetcher.fetchEntryPage(id: '5125428', client: mock);
+      await fetcher.fetchEntryPage(id: '5125428', lang: 'en-us', client: mock);
       expect(capturedUrl.queryParameters['entry_page_id'], '5125428');
       expect(capturedUrl.host, 'sg-act-public-api-static.hoyolab.com');
+    });
+  });
+
+  group('HoYoWikiFetcher.fetchEntryPage gallery', () {
+    http.Response entryWithGallery({
+      required String iconUrl,
+      required String galleryDataJson,
+    }) {
+      final body = jsonEncode({
+        'retcode': 0,
+        'message': 'OK',
+        'data': {
+          'page': {
+            'icon_url': iconUrl,
+            'modules': [
+              {
+                'components': [
+                  {'component_id': 'something_else', 'data': '{}'},
+                  {
+                    'component_id': 'gallery_character',
+                    'data': galleryDataJson,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+      return http.Response.bytes(
+        utf8.encode(body),
+        200,
+        headers: {'content-type': 'application/json; charset=utf-8'},
+      );
+    }
+
+    test('帶 X-Rpc-Language header', () async {
+      String? capturedLang;
+      final mock = MockClient((req) async {
+        capturedLang = req.headers['X-Rpc-Language'];
+        return entryWithGallery(
+          iconUrl: 'https://x/icon.png',
+          galleryDataJson: '{"pic":"https://x/card.png","list":[]}',
+        );
+      });
+      await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(capturedLang, 'zh-tw');
+    });
+
+    test('正常解析 gallery_character', () async {
+      final mock = MockClient(
+        (req) async => entryWithGallery(
+          iconUrl: 'https://x/icon.png',
+          galleryDataJson: jsonEncode({
+            'pic': 'https://x/card.png',
+            'list': [
+              {
+                'id': 'gallery_character8511',
+                'key': '原畫',
+                'img': 'https://x/orig.png',
+                'imgDesc': '<p>衣裝「魔女獵裝」</p>',
+              },
+              {
+                'id': 'gallery_character99418',
+                'key': '閒置動作１',
+                'img': 'https://x/idle.gif',
+                'imgDesc': '',
+              },
+            ],
+          }),
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.iconUrl, 'https://x/icon.png');
+      expect(res.gallery, isNotNull);
+      expect(res.gallery!.picUrl, 'https://x/card.png');
+      expect(res.gallery!.list, hasLength(2));
+      expect(res.gallery!.list[0].key, '原畫');
+      expect(res.gallery!.list[1].imgUrl, 'https://x/idle.gif');
+      expect(res.gallery!.list[1].imgDescHtml, '');
+    });
+
+    test('無 gallery_character module → gallery 為 null', () async {
+      final mock = MockClient(
+        (req) async => http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'message': 'OK',
+            'data': {
+              'page': {'icon_url': 'https://x/icon.png', 'modules': []},
+            },
+          }),
+          200,
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.gallery, isNull);
+    });
+
+    test('data 非合法 JSON → gallery 為 null（不 throw）', () async {
+      final mock = MockClient(
+        (req) async => entryWithGallery(
+          iconUrl: 'https://x/icon.png',
+          galleryDataJson: '{not json',
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.gallery, isNull);
+    });
+
+    test('list[i] 缺 img 整筆 skip，其餘照存', () async {
+      final mock = MockClient(
+        (req) async => entryWithGallery(
+          iconUrl: 'https://x/icon.png',
+          galleryDataJson: jsonEncode({
+            'pic': 'https://x/card.png',
+            'list': [
+              {'id': 'a', 'key': 'A', 'img': 'https://x/a.png', 'imgDesc': ''},
+              {'id': 'b', 'key': 'B', 'img': '', 'imgDesc': ''},
+              {'id': 'c', 'key': 'C', 'img': 'https://x/c.png', 'imgDesc': ''},
+            ],
+          }),
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.gallery!.list.map((it) => it.id).toList(), ['a', 'c']);
+    });
+
+    test('pic 與 list 皆空 → gallery 為 null', () async {
+      final mock = MockClient(
+        (req) async => entryWithGallery(
+          iconUrl: 'https://x/icon.png',
+          galleryDataJson: jsonEncode({'pic': '', 'list': []}),
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.gallery, isNull);
     });
   });
 
