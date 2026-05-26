@@ -168,8 +168,8 @@ void main() {
     expect(progress, isA<UpdateCompleted>());
     expect(
       (progress as UpdateCompleted).hoYoWikiImagesDownloaded,
-      4,
-      reason: '兩個物品各有 icon+header，共下載 4 張',
+      2,
+      reason: '兩個物品各有 icon，共下載 2 張（過渡版本）',
     );
   });
 

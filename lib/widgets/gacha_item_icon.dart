@@ -49,10 +49,9 @@ class GachaItemIcon extends ConsumerWidget {
         );
       }
 
-      final file = hoyowikiCacheFile(
+      final file = hoyowikiIconCacheFile(
         baseDir: cacheDir,
         id: id,
-        kind: HoYoWikiImageKind.icon,
         url: iconUrl,
       );
       if (file.existsSync()) {

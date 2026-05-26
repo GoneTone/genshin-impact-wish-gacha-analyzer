@@ -33,17 +33,16 @@ Map<String, dynamic> _searchItem({
   },
 };
 
-http.Response _entryOk({required String iconUrl, required String headerUrl}) =>
-    http.Response(
-      jsonEncode({
-        'retcode': 0,
-        'message': 'OK',
-        'data': {
-          'page': {'icon_url': iconUrl, 'header_img_url': headerUrl},
-        },
-      }),
-      200,
-    );
+http.Response _entryOk({required String iconUrl}) => http.Response(
+  jsonEncode({
+    'retcode': 0,
+    'message': 'OK',
+    'data': {
+      'page': {'icon_url': iconUrl},
+    },
+  }),
+  200,
+);
 
 void main() {
   group('HoYoWikiFetcher.searchEntryId', () {
@@ -248,47 +247,20 @@ void main() {
   });
 
   group('HoYoWikiFetcher.fetchEntryPage', () {
-    test('兩個 URL 都有 → 都回', () async {
+    test('icon_url 有值 → 照回', () async {
       final mock = MockClient(
-        (_) async => _entryOk(
-          iconUrl: 'https://x/icon.png',
-          headerUrl: 'https://x/header.png',
-        ),
+        (_) async => _entryOk(iconUrl: 'https://x/icon.png'),
       );
       final fetcher = HoYoWikiFetcher();
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, 'https://x/icon.png');
-      expect(entry.headerImgUrl, 'https://x/header.png');
     });
 
     test('icon_url 為空字串 → 照回空', () async {
-      final mock = MockClient(
-        (_) async => _entryOk(iconUrl: '', headerUrl: 'https://x/header.png'),
-      );
+      final mock = MockClient((_) async => _entryOk(iconUrl: ''));
       final fetcher = HoYoWikiFetcher();
       final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
       expect(entry.iconUrl, '');
-      expect(entry.headerImgUrl, 'https://x/header.png');
-    });
-
-    test('header_img_url 為空字串 → 照回空', () async {
-      final mock = MockClient(
-        (_) async => _entryOk(iconUrl: 'https://x/icon.png', headerUrl: ''),
-      );
-      final fetcher = HoYoWikiFetcher();
-      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
-      expect(entry.iconUrl, 'https://x/icon.png');
-      expect(entry.headerImgUrl, '');
-    });
-
-    test('兩個 URL 都空字串 → 都回空', () async {
-      final mock = MockClient(
-        (_) async => _entryOk(iconUrl: '', headerUrl: ''),
-      );
-      final fetcher = HoYoWikiFetcher();
-      final entry = await fetcher.fetchEntryPage(id: '5125428', client: mock);
-      expect(entry.iconUrl, '');
-      expect(entry.headerImgUrl, '');
     });
 
     test('retcode != 0 → throw ApiErrorException', () async {
@@ -309,7 +281,7 @@ void main() {
       late Uri capturedUrl;
       final mock = MockClient((req) async {
         capturedUrl = req.url;
-        return _entryOk(iconUrl: '', headerUrl: '');
+        return _entryOk(iconUrl: '');
       });
       final fetcher = HoYoWikiFetcher();
       await fetcher.fetchEntryPage(id: '5125428', client: mock);

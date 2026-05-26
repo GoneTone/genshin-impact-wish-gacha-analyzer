@@ -114,7 +114,7 @@ void main() {
       );
     });
 
-    testWidgets('entry 兩 URL 都空 → false', (tester) async {
+    testWidgets('entry iconUrl 空 → false', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await seedIndex(
         tester,
@@ -123,7 +123,7 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: '',
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
@@ -133,7 +133,7 @@ void main() {
       );
     });
 
-    testWidgets('URL 存在但 cache file 未到 → false', (tester) async {
+    testWidgets('icon URL 存在但 cache file 未到 → false', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await seedIndex(
         tester,
@@ -142,7 +142,7 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
@@ -152,7 +152,7 @@ void main() {
       );
     });
 
-    testWidgets('只 icon file 存在 → true', (tester) async {
+    testWidgets('icon file 存在 → true', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await seedIndex(
         tester,
@@ -161,54 +161,11 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
       await tester.runAsync(() => _touchFile(tempDir, 'x1_icon.png'));
-      expect(
-        await checkContent(tester, _rec(name: 'X', gachaType: '301')),
-        isTrue,
-      );
-    });
-
-    testWidgets('只 header file 存在 → true', (tester) async {
-      final notifier = container.read(hoyowikiIndexProvider.notifier);
-      await seedIndex(
-        tester,
-        notifier,
-        name: 'X',
-        id: 'x1',
-        entry: HoYoWikiEntry(
-          iconUrl: '',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
-          fetchedAt: DateTime.now(),
-        ),
-      );
-      await tester.runAsync(() => _touchFile(tempDir, 'x1_header.png'));
-      expect(
-        await checkContent(tester, _rec(name: 'X', gachaType: '301')),
-        isTrue,
-      );
-    });
-
-    testWidgets('兩者都存在 → true', (tester) async {
-      final notifier = container.read(hoyowikiIndexProvider.notifier);
-      await seedIndex(
-        tester,
-        notifier,
-        name: 'X',
-        id: 'x1',
-        entry: HoYoWikiEntry(
-          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
-          fetchedAt: DateTime.now(),
-        ),
-      );
-      await tester.runAsync(() async {
-        await _touchFile(tempDir, 'x1_icon.png');
-        await _touchFile(tempDir, 'x1_header.png');
-      });
       expect(
         await checkContent(tester, _rec(name: 'X', gachaType: '301')),
         isTrue,
@@ -239,7 +196,7 @@ void main() {
   }
 
   group('GachaItemDetailDialog 渲染', () {
-    testWidgets('兩圖齊全 → title row 有 icon Image + name，content 有 header Image', (
+    testWidgets('icon 存在 → title row 有 icon Image + name，content 為空殼', (
       tester,
     ) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
@@ -250,47 +207,19 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
       await tester.runAsync(() async {
         await _touchFile(tempDir, 'x1_icon.png');
-        await _touchFile(tempDir, 'x1_header.png');
       });
 
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
 
       expect(find.byType(GachaItemDetailDialog), findsOneWidget);
       expect(find.text('X'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(GachaItemDetailDialog),
-          matching: find.byType(Image),
-        ),
-        findsNWidgets(2),
-      );
-    });
-
-    testWidgets('只 icon → 整個 dialog 只有一個 Image', (tester) async {
-      final notifier = container.read(hoyowikiIndexProvider.notifier);
-      await seedIndex(
-        tester,
-        notifier,
-        name: 'X',
-        id: 'x1',
-        entry: HoYoWikiEntry(
-          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: '',
-          fetchedAt: DateTime.now(),
-        ),
-      );
-      await tester.runAsync(() => _touchFile(tempDir, 'x1_icon.png'));
-
-      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
-
-      expect(find.byType(GachaItemDetailDialog), findsOneWidget);
-      expect(find.text('X'), findsOneWidget);
+      // 過渡版本：只有 icon（content 是 SizedBox.shrink()）
       expect(
         find.descendant(
           of: find.byType(GachaItemDetailDialog),
@@ -300,7 +229,7 @@ void main() {
       );
     });
 
-    testWidgets('只 header → 只有 header Image，沒有 icon Image', (tester) async {
+    testWidgets('icon 不存在 → dialog 只顯示 name，無 Image', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await seedIndex(
         tester,
@@ -309,11 +238,10 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: '',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
-      await tester.runAsync(() => _touchFile(tempDir, 'x1_header.png'));
 
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
 
@@ -324,7 +252,7 @@ void main() {
           of: find.byType(GachaItemDetailDialog),
           matching: find.byType(Image),
         ),
-        findsOneWidget,
+        findsNothing,
       );
     });
 
@@ -344,13 +272,12 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: 'https://cdn.hoyolab.com/x_header.png',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );
       await tester.runAsync(() async {
         await _touchFile(tempDir, 'x1_icon.png');
-        await _touchFile(tempDir, 'x1_header.png');
       });
 
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
@@ -369,7 +296,7 @@ void main() {
         id: 'x1',
         entry: HoYoWikiEntry(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.now(),
         ),
       );

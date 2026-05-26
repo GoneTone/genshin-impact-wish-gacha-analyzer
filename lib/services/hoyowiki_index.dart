@@ -5,20 +5,21 @@ import 'package:crypto/crypto.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:logging/logging.dart';
 
-/// HoYoWiki entry_page API 抓到的 icon 與 header 大圖 URL，以及抓取時間。
+/// HoYoWiki entry_page API 抓到的 icon URL 與各語言 gallery 整組資料。
 class HoYoWikiEntry {
-  /// 建立 [HoYoWikiEntry]；兩個 URL 均可能為空字串。
+  /// 建立 [HoYoWikiEntry]；`iconUrl` 可能為空字串。
   const HoYoWikiEntry({
     required this.iconUrl,
-    required this.headerImgUrl,
+    required this.galleryByLang,
     required this.fetchedAt,
   });
 
-  /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
+  /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。lang-agnostic。
   final String iconUrl;
 
-  /// 物品 header（banner）CDN URL；HoYoWiki 未上傳時為空字串。
-  final String headerImgUrl;
+  /// 各語言抓到的整組 gallery；key 為 record.lang（zh-tw / en / ja / ...）。
+  /// 某 lang 不在 map = 該 lang 還沒抓過（或抓過但 entry 無 gallery_character）。
+  final Map<String, HoYoWikiGalleryData> galleryByLang;
 
   /// 抓取時間（僅供 debug，不參與邏輯）。
   final DateTime fetchedAt;
@@ -117,25 +118,66 @@ class HoYoWikiIndexStorage {
     try {
       final text = await f.readAsString();
       final json = jsonDecode(text) as Map<String, dynamic>;
+      final version = json['version'] as int? ?? 1;
       final searchJson = (json['search'] as Map<String, dynamic>?) ?? const {};
       final entriesJson =
           (json['entries'] as Map<String, dynamic>?) ?? const {};
-      // 向後相容：舊 JSON 缺 menu_ids 欄位時回空 map。
       final menuIdsJson =
           (json['menu_ids'] as Map<String, dynamic>?) ?? const {};
+
+      var droppedV1 = 0;
+      final entries = entriesJson.map((k, v) {
+        final m = v as Map<String, dynamic>;
+        final iconUrl = (m['icon_url'] as String?) ?? '';
+        final fetchedAt = DateTime.parse(m['fetched_at'] as String);
+        Map<String, HoYoWikiGalleryData> galleryByLang;
+        if (version >= 2 && m['gallery_by_lang'] is Map) {
+          final gJson = m['gallery_by_lang'] as Map<String, dynamic>;
+          galleryByLang = gJson.map((lang, raw) {
+            final gm = raw as Map<String, dynamic>;
+            final listJson = (gm['list'] as List<dynamic>?) ?? const [];
+            return MapEntry(
+              lang,
+              HoYoWikiGalleryData(
+                picUrl: (gm['pic_url'] as String?) ?? '',
+                list: listJson
+                    .map((e) {
+                      final em = e as Map<String, dynamic>;
+                      return HoYoWikiGalleryItem(
+                        id: (em['id'] as String?) ?? '',
+                        key: (em['key'] as String?) ?? '',
+                        imgUrl: (em['img_url'] as String?) ?? '',
+                        imgDescHtml: (em['img_desc_html'] as String?) ?? '',
+                      );
+                    })
+                    .toList(growable: false),
+              ),
+            );
+          });
+        } else {
+          // v1 or missing: drop header_img_url, gallery starts empty -> will refetch
+          galleryByLang = const {};
+          droppedV1++;
+        }
+        return MapEntry(
+          k,
+          HoYoWikiEntry(
+            iconUrl: iconUrl,
+            galleryByLang: galleryByLang,
+            fetchedAt: fetchedAt,
+          ),
+        );
+      });
+
+      if (droppedV1 > 0) {
+        _log.info(
+          'migrate v1 → v2: $droppedV1 entries reset (header_img_url dropped)',
+        );
+      }
+
       return HoYoWikiIndex(
         searchMap: searchJson.map((k, v) => MapEntry(k, v as String)),
-        entries: entriesJson.map((k, v) {
-          final m = v as Map<String, dynamic>;
-          return MapEntry(
-            k,
-            HoYoWikiEntry(
-              iconUrl: (m['icon_url'] as String?) ?? '',
-              headerImgUrl: (m['header_img_url'] as String?) ?? '',
-              fetchedAt: DateTime.parse(m['fetched_at'] as String),
-            ),
-          );
-        }),
+        entries: entries,
         menuIds: menuIdsJson.map((k, v) => MapEntry(k, v as int)),
       );
     } catch (e, st) {
@@ -147,19 +189,31 @@ class HoYoWikiIndexStorage {
   /// 將 [index] 寫回磁碟（atomic rename）。
   Future<void> save(HoYoWikiIndex index) async {
     final json = {
-      'version': 1,
+      'version': 2,
       'search': index.searchMap,
       'entries': index.entries.map(
         (k, v) => MapEntry(k, {
           'icon_url': v.iconUrl,
-          'header_img_url': v.headerImgUrl,
           'fetched_at': v.fetchedAt.toUtc().toIso8601String(),
+          'gallery_by_lang': v.galleryByLang.map(
+            (lang, g) => MapEntry(lang, {
+              'pic_url': g.picUrl,
+              'list': g.list
+                  .map(
+                    (it) => {
+                      'id': it.id,
+                      'key': it.key,
+                      'img_url': it.imgUrl,
+                      'img_desc_html': it.imgDescHtml,
+                    },
+                  )
+                  .toList(),
+            }),
+          ),
         }),
       ),
       'menu_ids': index.menuIds,
     };
-    // baseDir 可能在啟動後被外部刪除（例如使用者手動清快取資料夾），這裡先
-    // ensure 父目錄存在，否則寫 .tmp 會噴 PathNotFoundException。
     await baseDir.create(recursive: true);
     final tmp = File('${_file.path}.tmp');
     await tmp.writeAsString(jsonEncode(json));
@@ -190,29 +244,6 @@ class HoYoWikiIndexStorage {
       'wipeCacheDirectory: cache cleared at ${sanitizeFsPath(baseDir.path)}',
     );
   }
-}
-
-/// HoYoWiki 圖片種類（對應 icon_url 與 header_img_url）。
-enum HoYoWikiImageKind {
-  /// 物品方形 icon。
-  icon,
-
-  /// 物品 header（banner 大圖）。
-  header,
-}
-
-/// 推導出 hoyowiki 圖檔在 [baseDir] 的快取路徑。
-///
-/// 檔名格式：`<id>_<kind>.<ext>`。`<ext>` 從 [url] 解析（去掉 query 後取
-/// 最後一個 `.` 之後）；無副檔名或 URL 為空字串時 default `png`。
-File hoyowikiCacheFile({
-  required Directory baseDir,
-  required String id,
-  required HoYoWikiImageKind kind,
-  required String url,
-}) {
-  final ext = _extFromUrl(url);
-  return File('${baseDir.path}/${id}_${kind.name}.$ext');
 }
 
 /// 推導 icon 的 cache 路徑：`<id>_icon.<ext>`。

@@ -20,19 +20,13 @@ class HoYoWikiSearchHit {
   final int menuId;
 }
 
-/// HoYoWiki entry_page API 抓到的 icon 與 header URL。
+/// HoYoWiki entry_page API 抓到的 icon URL（過渡：gallery 在 Task 6 加入）。
 class HoYoWikiEntryFetched {
-  /// 建立 [HoYoWikiEntryFetched]；URL 均可能為空字串。
-  const HoYoWikiEntryFetched({
-    required this.iconUrl,
-    required this.headerImgUrl,
-  });
+  /// 建立 [HoYoWikiEntryFetched]；icon 可能為空字串。
+  const HoYoWikiEntryFetched({required this.iconUrl});
 
   /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
   final String iconUrl;
-
-  /// 物品 header CDN URL；HoYoWiki 未上傳時為空字串。
-  final String headerImgUrl;
 }
 
 /// 與 HoYoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
@@ -127,7 +121,7 @@ class HoYoWikiFetcher {
     return null;
   }
 
-  /// 以 [id] 拉 entry_page，回 icon_url 與 header_img_url（均可能為空字串）。
+  /// 以 [id] 拉 entry_page，回 icon_url（可能為空字串）。
   /// retcode != 0 throw [ApiErrorException]。
   Future<HoYoWikiEntryFetched> fetchEntryPage({
     required String id,
@@ -144,11 +138,8 @@ class HoYoWikiFetcher {
     }
     final page = body['data']?['page'] as Map<String, dynamic>?;
     final iconUrl = (page?['icon_url'] as String?) ?? '';
-    final headerImgUrl = (page?['header_img_url'] as String?) ?? '';
-    _log.info(
-      'entry id=$id icon=${iconUrl.isNotEmpty} header=${headerImgUrl.isNotEmpty}',
-    );
-    return HoYoWikiEntryFetched(iconUrl: iconUrl, headerImgUrl: headerImgUrl);
+    _log.info('entry id=$id icon=${iconUrl.isNotEmpty}');
+    return HoYoWikiEntryFetched(iconUrl: iconUrl);
   }
 
   /// GET [url] 的圖檔 bytes；任何失敗（非 2xx / 例外）回 null，caller 不寫檔

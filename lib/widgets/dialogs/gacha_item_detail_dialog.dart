@@ -14,8 +14,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 /// 頌願卡池 gachaType 集合 — 永遠不可點（對應 GachaItemIcon 內 _odesGachaTypes）。
 const _odesGachaTypes = {'2000', '1000'};
 
-/// 判斷 [record] 是否在 dialog 內有東西可顯示（至少有 icon 或 header 任一個
-/// HoYoWiki 圖片快取到本機）。頌願卡池一律 false。
+/// 判斷 [record] 是否在 dialog 內有東西可顯示（icon 快取到本機）。
+/// 頌願卡池一律 false。
 bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (_odesGachaTypes.contains(record.gachaType)) return false;
   final index = ref.watch(hoyowikiIndexProvider);
@@ -24,23 +24,15 @@ bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   final entry = index.lookupEntry(id);
   if (entry == null) return false;
   final cacheDir = ref.watch(hoyowikiCacheDirProvider);
-
-  bool fileReady(String url, HoYoWikiImageKind kind) =>
-      url.isNotEmpty &&
-      hoyowikiCacheFile(
+  return entry.iconUrl.isNotEmpty &&
+      hoyowikiIconCacheFile(
         baseDir: cacheDir,
         id: id,
-        kind: kind,
-        url: url,
+        url: entry.iconUrl,
       ).existsSync();
-
-  return fileReady(entry.iconUrl, HoYoWikiImageKind.icon) ||
-      fileReady(entry.headerImgUrl, HoYoWikiImageKind.header);
 }
 
-/// 點擊物品 icon / 名稱時彈出的 dialog；顯示 icon + 名稱（top）+ HoYoWiki
-/// header 大圖（bottom）。缺哪個就不顯示哪個；`AppDialogSize.md` 寬度，
-/// header 用 `Flexible + BoxFit.contain` 吃剩餘高度，保證不撐爆視窗。
+/// 點擊物品 icon / 名稱時彈出的 dialog；顯示 icon + 名稱（過渡：gallery UI 在 Task 10 加入）。
 class GachaItemDetailDialog extends ConsumerWidget {
   /// 建立 [GachaItemDetailDialog]。
   const GachaItemDetailDialog({super.key, required this.record});
@@ -60,26 +52,13 @@ class GachaItemDetailDialog extends ConsumerWidget {
     final entry = id == null ? null : index.lookupEntry(id);
 
     File? iconFile;
-    File? headerFile;
-    if (id != null && entry != null) {
-      if (entry.iconUrl.isNotEmpty) {
-        final f = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: HoYoWikiImageKind.icon,
-          url: entry.iconUrl,
-        );
-        if (f.existsSync()) iconFile = f;
-      }
-      if (entry.headerImgUrl.isNotEmpty) {
-        final f = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: HoYoWikiImageKind.header,
-          url: entry.headerImgUrl,
-        );
-        if (f.existsSync()) headerFile = f;
-      }
+    if (id != null && entry != null && entry.iconUrl.isNotEmpty) {
+      final f = hoyowikiIconCacheFile(
+        baseDir: cacheDir,
+        id: id,
+        url: entry.iconUrl,
+      );
+      if (f.existsSync()) iconFile = f;
     }
 
     final nameColor = switch (record.rankType) {
@@ -123,30 +102,7 @@ class GachaItemDetailDialog extends ConsumerWidget {
           ),
         ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (headerFile != null)
-            Flexible(
-              fit: FlexFit.loose,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                child: Image.file(
-                  headerFile,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.topCenter,
-                  errorBuilder: (_, e, st) {
-                    Logger(
-                      'gacha.hoyowiki.detail',
-                    ).warning('header errorBuilder id=$id', e, st);
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-            ),
-        ],
-      ),
+      content: const SizedBox.shrink(), // 過渡：gallery UI 在 Task 10 加入
       actions: [
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),

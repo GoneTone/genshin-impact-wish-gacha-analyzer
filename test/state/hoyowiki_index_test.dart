@@ -62,7 +62,7 @@ void main() {
     await notifier.waitForLoad();
     final entry = HoYoWikiEntry(
       iconUrl: 'https://x/icon.png',
-      headerImgUrl: '',
+      galleryByLang: const {},
       fetchedAt: DateTime.utc(2026, 5, 23),
     );
     await notifier.setEntry(id: '5125428', entry: entry);
@@ -98,7 +98,7 @@ void main() {
           entries: {
             '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
-              headerImgUrl: '',
+              galleryByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 23),
             ),
           },
@@ -162,7 +162,7 @@ void main() {
             id: 'id_$i',
             entry: HoYoWikiEntry(
               iconUrl: 'http://x/$i.png',
-              headerImgUrl: '',
+              galleryByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 24),
             ),
           ),

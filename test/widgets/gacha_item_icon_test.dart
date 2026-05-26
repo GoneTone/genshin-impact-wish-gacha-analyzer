@@ -136,7 +136,7 @@ void main() {
         id: '111',
         entry: HoYoWikiEntry(
           iconUrl: 'https://x/icon.png',
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.utc(2026, 5, 23),
         ),
       );
@@ -167,14 +167,13 @@ void main() {
         id: '111',
         entry: HoYoWikiEntry(
           iconUrl: iconUrl,
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.utc(2026, 5, 23),
         ),
       );
-      final cacheFile = hoyowikiCacheFile(
+      final cacheFile = hoyowikiIconCacheFile(
         baseDir: tempDir,
         id: '111',
-        kind: HoYoWikiImageKind.icon,
         url: iconUrl,
       );
       await cacheFile.writeAsBytes(_minimalPng());
@@ -208,7 +207,7 @@ void main() {
         id: '111',
         entry: HoYoWikiEntry(
           iconUrl: 'https://x/icon.png',
-          headerImgUrl: '',
+          galleryByLang: const {},
           fetchedAt: DateTime.utc(2026, 5, 23),
         ),
       );

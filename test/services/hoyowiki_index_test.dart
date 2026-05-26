@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
     test('命中回 entry', () {
       final entry = HoYoWikiEntry(
         iconUrl: 'https://x/icon.png',
-        headerImgUrl: 'https://x/header.png',
+        galleryByLang: const {},
         fetchedAt: DateTime.utc(2026, 5, 23),
       );
       final index = HoYoWikiIndex(
@@ -94,7 +95,7 @@ void main() {
         entries: {
           '5125428': HoYoWikiEntry(
             iconUrl: 'https://x/icon.png',
-            headerImgUrl: '',
+            galleryByLang: const {},
             fetchedAt: DateTime.utc(2026, 5, 23, 8),
           ),
         },
@@ -104,7 +105,7 @@ void main() {
       final loaded = await storage.load();
       expect(loaded.searchMap, original.searchMap);
       expect(loaded.entries['5125428']!.iconUrl, 'https://x/icon.png');
-      expect(loaded.entries['5125428']!.headerImgUrl, '');
+      expect(loaded.entries['5125428']!.galleryByLang, isEmpty);
       expect(
         loaded.entries['5125428']!.fetchedAt,
         DateTime.utc(2026, 5, 23, 8),
@@ -162,7 +163,7 @@ void main() {
           entries: {
             '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
-              headerImgUrl: 'https://x/header.png',
+              galleryByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 23),
             ),
           },
@@ -327,65 +328,87 @@ void main() {
     });
   });
 
-  group('hoyowikiCacheFile', () {
+  group('HoYoWikiIndexStorage v2', () {
     late Directory tempDir;
 
     setUp(() async {
-      tempDir = await Directory.systemTemp.createTemp('hoyowiki_cache_test_');
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_v2_');
     });
 
     tearDown(() async {
-      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
     });
 
-    test('icon kind + URL .png → <id>_icon.png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: 'https://x.example/path/icon.png',
+    test('save+load round trip：含 galleryByLang', () async {
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final entry = HoYoWikiEntry(
+        iconUrl: 'https://x/icon.png',
+        galleryByLang: const {
+          'zh-tw': HoYoWikiGalleryData(
+            picUrl: 'https://x/card.png',
+            list: [
+              HoYoWikiGalleryItem(
+                id: 'gallery_character8511',
+                key: '原畫',
+                imgUrl: 'https://x/orig.png',
+                imgDescHtml: '<p>衣裝</p>',
+              ),
+            ],
+          ),
+        },
+        fetchedAt: DateTime.utc(2026, 5, 26),
       );
-      expect(f.path, endsWith('5125428_icon.png'));
+      await storage.save(
+        HoYoWikiIndex(
+          searchMap: const {'zh-tw::布倫妮': '12345'},
+          entries: {'12345': entry},
+          menuIds: const {'12345': 2},
+        ),
+      );
+
+      final loaded = await storage.load();
+      final got = loaded.lookupEntry('12345')!;
+      expect(got.iconUrl, 'https://x/icon.png');
+      expect(got.galleryByLang.keys.toList(), ['zh-tw']);
+      expect(got.galleryByLang['zh-tw']!.picUrl, 'https://x/card.png');
+      expect(got.galleryByLang['zh-tw']!.list.single.key, '原畫');
+      expect(got.galleryByLang['zh-tw']!.list.single.imgDescHtml, '<p>衣裝</p>');
     });
 
-    test('header kind + URL .jpg → <id>_header.jpg', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.header,
-        url: 'https://x.example/path/header.jpg',
+    test('v1 載入：丟棄 header_img_url，galleryByLang 為空', () async {
+      // 手寫 v1 JSON 模擬舊版資料
+      final file = File('${tempDir.path}/hoyowiki_index.json');
+      await file.writeAsString(
+        jsonEncode({
+          'version': 1,
+          'search': {'zh-tw::布倫妮': '12345'},
+          'menu_ids': {'12345': 2},
+          'entries': {
+            '12345': {
+              'icon_url': 'https://x/icon.png',
+              'header_img_url': 'https://x/header.png',
+              'fetched_at': '2026-05-20T00:00:00.000Z',
+            },
+          },
+        }),
       );
-      expect(f.path, endsWith('5125428_header.jpg'));
+
+      final loaded = await HoYoWikiIndexStorage(tempDir).load();
+      final got = loaded.lookupEntry('12345')!;
+      expect(got.iconUrl, 'https://x/icon.png');
+      expect(got.galleryByLang, isEmpty);
+      expect(loaded.lookupId(name: '布倫妮', lang: 'zh-tw'), '12345');
+      expect(loaded.lookupMenuId('12345'), 2);
     });
 
-    test('URL 帶 query string → 仍取得乾淨副檔名', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: 'https://x/icon.png?v=1&w=80',
-      );
-      expect(f.path, endsWith('5125428_icon.png'));
-    });
-
-    test('URL 無副檔名 → default .png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: 'https://x/icon',
-      );
-      expect(f.path, endsWith('5125428_icon.png'));
-    });
-
-    test('URL 為空字串 → default .png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: '',
-      );
-      expect(f.path, endsWith('5125428_icon.png'));
+    test('檔案不存在 → 回空 index', () async {
+      final loaded = await HoYoWikiIndexStorage(tempDir).load();
+      expect(loaded.entries, isEmpty);
+      expect(loaded.searchMap, isEmpty);
     });
   });
 }

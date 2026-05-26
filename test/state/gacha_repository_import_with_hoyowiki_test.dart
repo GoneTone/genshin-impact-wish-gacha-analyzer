@@ -184,8 +184,8 @@ void main() {
     expect(completed.importSummary!.totalRecords, 2);
     expect(
       completed.hoYoWikiImagesDownloaded,
-      4,
-      reason: 'Hu Tao + Skyward Harp，各 icon+header = 4 張',
+      2,
+      reason: 'Hu Tao + Skyward Harp，各 icon = 2 張（過渡版本）',
     );
   });
 

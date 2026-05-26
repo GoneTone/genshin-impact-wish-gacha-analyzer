@@ -802,12 +802,11 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    // menu_id 感知的重抓判斷：角色（menu_id 2）任一 URL 空就重抓；
-    // 武器（menu_id 4）或未知則兩個都空才重抓（武器可能只有 icon）。
+    // menu_id 感知的重抓判斷：角色（menu_id 2）icon 空就重抓；
+    // 武器（menu_id 4）或未知則 icon 空才重抓。
     bool needRefetchEntry(HoYoWikiEntry? e, int? menuId) {
       if (e == null) return true;
-      if (menuId == 2) return e.iconUrl.isEmpty || e.headerImgUrl.isEmpty;
-      return e.iconUrl.isEmpty && e.headerImgUrl.isEmpty;
+      return e.iconUrl.isEmpty;
     }
 
     // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或需重抓的
@@ -823,20 +822,11 @@ class GachaRepository extends Notifier<GachaState> {
     // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
     final downloadTodo = <_HoYoWikiDownloadItem>[];
     void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
-      for (final kind in HoYoWikiImageKind.values) {
-        final url = kind == HoYoWikiImageKind.icon
-            ? entry.iconUrl
-            : entry.headerImgUrl;
-        if (url.isEmpty) continue;
-        final file = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: kind,
-          url: url,
-        );
-        if (file.existsSync()) continue;
-        downloadTodo.add(_HoYoWikiDownloadItem(id: id, kind: kind, url: url));
-      }
+      final url = entry.iconUrl;
+      if (url.isEmpty) return;
+      final file = hoyowikiIconCacheFile(baseDir: cacheDir, id: id, url: url);
+      if (file.existsSync()) return;
+      downloadTodo.add(_HoYoWikiDownloadItem(id: id, url: url));
     }
 
     for (final id in initialIds) {
@@ -913,7 +903,7 @@ class GachaRepository extends Notifier<GachaState> {
             );
             final entry = HoYoWikiEntry(
               iconUrl: fetched.iconUrl,
-              headerImgUrl: fetched.headerImgUrl,
+              galleryByLang: const {},
               fetchedAt: DateTime.now().toUtc(),
             );
             await indexNotifier.setEntry(id: id, entry: entry);
@@ -946,10 +936,9 @@ class GachaRepository extends Notifier<GachaState> {
           try {
             final bytes = await fetcher.downloadImage(item.url, client);
             if (bytes != null) {
-              final file = hoyowikiCacheFile(
+              final file = hoyowikiIconCacheFile(
                 baseDir: cacheDir,
                 id: item.id,
-                kind: item.kind,
                 url: item.url,
               );
               await file.writeAsBytes(bytes, flush: true);
@@ -1007,21 +996,14 @@ class GachaRepository extends Notifier<GachaState> {
   }
 }
 
-/// HoYoWiki 下載佇列的單一工作項。
+/// HoYoWiki 下載佇列的單一工作項（過渡：gallery 在 Task 9 加入）。
 class _HoYoWikiDownloadItem {
   /// 建立 [_HoYoWikiDownloadItem]。
-  const _HoYoWikiDownloadItem({
-    required this.id,
-    required this.kind,
-    required this.url,
-  });
+  const _HoYoWikiDownloadItem({required this.id, required this.url});
 
   /// HoYoWiki entry_page_id。
   final String id;
 
-  /// 圖片種類（icon 或 header）。
-  final HoYoWikiImageKind kind;
-
-  /// 圖片 CDN URL。
+  /// 圖片 URL。
   final String url;
 }

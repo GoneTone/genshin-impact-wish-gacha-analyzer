@@ -134,8 +134,8 @@ void main() {
     // 只祈願 record (Hu Tao) 進 search，頌願 (OdesItem) 不進
     expect(searchCalls, ['Hu Tao']);
     expect(entryCalls, ['111']);
-    // icon + header 兩個下載
-    expect(downloadCalls.length, 2);
+    // 過渡版本：只下載 icon（gallery 在 Task 6 加入）
+    expect(downloadCalls.length, 1);
 
     // bytes 確實落檔到 cache dir
     final cacheFiles = tempDir
@@ -143,7 +143,7 @@ void main() {
         .whereType<File>()
         .where((f) => f.path.endsWith('.png'))
         .toList();
-    expect(cacheFiles.length, 2, reason: 'icon + header cache files written');
+    expect(cacheFiles.length, 1, reason: 'icon cache file written');
   });
 
   test('hoyowiki 階段失敗不影響後續（每個 item 獨立 try/catch）', () async {
@@ -265,7 +265,7 @@ void main() {
     expect(entryCallCount, 2, reason: 'menu_id 2：兩個 URL 都空應視為 incomplete，下次重抓');
   });
 
-  test('menu_id 2（角色）：header 為空但 icon 有 → 下次仍重抓', () async {
+  test('icon 有值 → 下次不重抓（不管 menu_id）', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -295,7 +295,7 @@ void main() {
           jsonEncode({
             'retcode': 0,
             'data': {
-              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+              'page': {'icon_url': 'https://x/icon.png'},
             },
           }),
           200,
@@ -310,11 +310,10 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoYoWikiOnly();
-    expect(entryCallCount, 2, reason: 'menu_id 2：header 空 → 嚴格規則，下次重抓');
+    expect(entryCallCount, 1, reason: 'icon 有值 → 不重抓');
   });
 
-  test('menu_id 4（武器）：只有 icon 無 header → 不重抓', () async {
-    // 武器（menu_id 4）寬鬆規則：有任一 URL 就不重抓
+  test('menu_id 4（武器）：icon 有值 → 不重抓', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -344,7 +343,7 @@ void main() {
           jsonEncode({
             'retcode': 0,
             'data': {
-              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+              'page': {'icon_url': 'https://x/icon.png'},
             },
           }),
           200,
@@ -359,7 +358,7 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoYoWikiOnly();
-    expect(entryCallCount, 1, reason: 'menu_id 4：有 icon → 寬鬆規則，不重抓');
+    expect(entryCallCount, 1, reason: 'icon 有值 → 不重抓');
   });
 
   test(
