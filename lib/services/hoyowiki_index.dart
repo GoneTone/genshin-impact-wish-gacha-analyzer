@@ -23,6 +23,42 @@ class HoYoWikiEntry {
   final DateTime fetchedAt;
 }
 
+/// 單一 lang 的整組 gallery（pic 卡片 + list 圖文），對應 HoYoWiki entry_page
+/// `gallery_character` component 解出的內容。
+class HoYoWikiGalleryData {
+  /// 建立 [HoYoWikiGalleryData]。
+  const HoYoWikiGalleryData({required this.picUrl, required this.list});
+
+  /// 卡片大圖 URL；可能為空字串（API 未提供）。
+  final String picUrl;
+
+  /// gallery 內所有圖片條目，依 API 順序。
+  final List<HoYoWikiGalleryItem> list;
+}
+
+/// gallery 內單一圖片條目（對應 list[i]）。
+class HoYoWikiGalleryItem {
+  /// 建立 [HoYoWikiGalleryItem]。
+  const HoYoWikiGalleryItem({
+    required this.id,
+    required this.key,
+    required this.imgUrl,
+    required this.imgDescHtml,
+  });
+
+  /// HoYoWiki 給的條目 ID（如 `gallery_character8511`）。
+  final String id;
+
+  /// chip 顯示標籤（lang-specific，如「原畫」／「閒置動作１」）。
+  final String key;
+
+  /// 圖片 URL（png/jpg/webp/gif；跨 lang 可能不同）。
+  final String imgUrl;
+
+  /// 圖片描述（HTML，含 `<p>` 段落；可能為空字串）。
+  final String imgDescHtml;
+}
+
 /// 跨 UID 共用的 HoYoWiki lookup index。
 class HoYoWikiIndex {
   /// 建立 [HoYoWikiIndex]。
