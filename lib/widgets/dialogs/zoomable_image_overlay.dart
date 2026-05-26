@@ -152,9 +152,11 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
           child: Listener(
             onPointerSignal: _onPointerSignal,
             child: GestureDetector(
-              // image 像素外的暗區（BoxFit.contain 留白）也視為背景，點擊關閉。
+              // image 像素外的暗區（BoxFit.contain 留白）也視為背景，點擊立即關閉。
+              // 只掛 onTap（不掛 onDoubleTap），TapGR 不會被 DoubleTapGR
+              // arbitration 卡住 kDoubleTapTimeout（300ms）才 fire；雙擊縮放下放到
+              // image 上的內層 GestureDetector 處理。
               onTap: () => _close('outside-image'),
-              onDoubleTapDown: _onDoubleTapDown,
               child: InteractiveViewer(
                 transformationController: _ctrl,
                 panEnabled: true,
@@ -187,12 +189,16 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                         width: w,
                         height: h,
                         child: GestureDetector(
-                          // 吸收 image 像素上的單擊，避免「想看細節點到圖片就關掉」。
-                          // 雙擊 / 滾輪 / 拖曳走外層 GestureDetector / Listener /
-                          // InteractiveViewer，此處 opaque 只攔截 onTap，其他手勢
-                          // 正常傳到上層。
+                          // 此層雙重職責：
+                          // (1) 吸收 image 像素上的單擊（onTap 空 callback），
+                          //     避免「想看細節點到圖片就關掉」。
+                          // (2) 承擔雙擊縮放（onDoubleTapDown），讓外層 GD 維持
+                          //     單純 onTap 不受 DoubleTapGR arbitration 拖延。
+                          // 滾輪走 Listener、拖曳走 InteractiveViewer pan，皆不受
+                          // 此處 opaque 影響（pan 在 movement>slop 時贏 arena）。
                           behavior: HitTestBehavior.opaque,
                           onTap: () {},
+                          onDoubleTapDown: _onDoubleTapDown,
                           child: Image(
                             image: _imageProvider,
                             fit: BoxFit.contain,

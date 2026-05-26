@@ -330,12 +330,14 @@ void main() {
     // 可靠的 file codec 同步路徑，因此這裡只測結構，行為由使用者 manual 驗證。
 
     testWidgets(
-      'image is wrapped by an opaque tap-absorber inside a SizedBox',
+      'inner GD (image absorber) carries onTap (empty absorber) and onDoubleTapDown (zoom)',
       (tester) async {
         await openOverlay(tester);
 
-        // Image 外應該包一層 GestureDetector(opaque, onTap != null)，避免單擊圖片
-        // 像素時被外層 onTap close 抓走。
+        // Image 外那層 GestureDetector 同時負責：
+        //   (1) 吸收 image 像素上的單擊（onTap 空），避免「想看細節點到圖片就關掉」。
+        //   (2) 承擔雙擊縮放（onDoubleTapDown）。
+        // 雙擊集中在此層才能讓外層 GD 維持單純 onTap、暗區 tap 立即關閉。
         final innerGd = tester.widget<GestureDetector>(
           find
               .ancestor(
@@ -346,6 +348,7 @@ void main() {
         );
         expect(innerGd.behavior, HitTestBehavior.opaque);
         expect(innerGd.onTap, isNotNull);
+        expect(innerGd.onDoubleTapDown, isNotNull);
 
         // 該 GestureDetector 要在 LayoutBuilder 出來的 SizedBox 內，這樣 hit-test
         // 範圍才會是 image painted rect 而非整個 viewer。
@@ -367,12 +370,13 @@ void main() {
     );
 
     testWidgets(
-      'outer InteractiveViewer wrapper has onTap that closes on dim-area tap',
+      'outer InteractiveViewer wrapper has onTap (no onDoubleTap) for instant dim-area close',
       (tester) async {
         await openOverlay(tester);
 
-        // 找到包住 InteractiveViewer 的最近 GestureDetector → 必須有 onTap
-        // （供 image 像素區以外的暗區 tap 觸發 close）和 onDoubleTapDown（雙擊縮放）。
+        // 包住 InteractiveViewer 的 GestureDetector 必須只有 onTap、不可掛
+        // onDoubleTap*：與 DoubleTapGR 在同一 arena 競爭會讓 onTap 被
+        // kDoubleTapTimeout（300ms）卡住才 fire，造成可感知延遲。
         final outerGd = tester.widget<GestureDetector>(
           find
               .ancestor(
@@ -382,7 +386,8 @@ void main() {
               .first,
         );
         expect(outerGd.onTap, isNotNull);
-        expect(outerGd.onDoubleTapDown, isNotNull);
+        expect(outerGd.onDoubleTap, isNull);
+        expect(outerGd.onDoubleTapDown, isNull);
       },
     );
   });
