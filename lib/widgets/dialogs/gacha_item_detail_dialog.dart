@@ -312,8 +312,27 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
           if (current != null && current.descHtml.trim().isNotEmpty) ...[
             const SizedBox(height: 12),
             ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 160),
-              child: SingleChildScrollView(child: Html(data: current.descHtml)),
+              // 5 行字高（fontSize × lineHeight × 5）；超出 scroll。
+              constraints: BoxConstraints(
+                maxHeight:
+                    (theme.textTheme.bodyMedium?.fontSize ?? 14) * 1.5 * 5,
+              ),
+              child: SingleChildScrollView(
+                child: Html(
+                  data: current.descHtml,
+                  style: {
+                    'body': Style(
+                      fontSize: FontSize(
+                        theme.textTheme.bodyMedium?.fontSize ?? 14,
+                      ),
+                      lineHeight: LineHeight(1.5),
+                      margin: Margins.zero,
+                      padding: HtmlPaddings.zero,
+                    ),
+                    'p': Style(margin: Margins.zero),
+                  },
+                ),
+              ),
             ),
           ],
         ],
