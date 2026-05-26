@@ -313,7 +313,16 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
             ),
           if (current != null && current.descHtml.trim().isNotEmpty) ...[
             const SizedBox(height: 12),
-            Html(data: current.descHtml),
+            // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
+            // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
+            // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
+            Html(
+              data: current.descHtml,
+              style: {
+                'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+                'p': Style(margin: Margins.symmetric(vertical: 4)),
+              },
+            ),
           ],
         ],
       ),
