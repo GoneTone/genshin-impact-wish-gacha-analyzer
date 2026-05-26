@@ -234,17 +234,25 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       for (final t in tags)
                         Chip(
                           label: Text(t),
-                          backgroundColor: tokens.surfaceCardHigh,
+                          // 用 textPrimary 加 alpha 做半透明色塊：dark 主題疊
+                          // 出比表面亮一階的灰、light 主題疊出比表面暗一階
+                          // 的灰，兩個情境下都自動跟 dialog 背景拉開層次。
+                          backgroundColor: tokens.textPrimary.withValues(
+                            alpha: 0.08,
+                          ),
                           side: BorderSide.none,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(AppRadius.sm),
                             ),
                           ),
-                          labelStyle: theme.textTheme.bodyMedium?.copyWith(
-                            color: tokens.textPrimary,
+                          labelStyle: theme.textTheme.bodySmall?.copyWith(
+                            color: tokens.textSecondary,
+                            fontWeight: FontWeight.w500,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s,
+                          ),
                           visualDensity: VisualDensity.compact,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
