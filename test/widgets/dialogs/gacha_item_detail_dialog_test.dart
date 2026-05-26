@@ -306,6 +306,95 @@ void main() {
 
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets('desc 為空字串 → title 區不渲染 desc Html', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
+      // gallery null + desc 空：整個 dialog 內無 Html widget。
+      expect(find.byType(Html), findsNothing);
+    });
+
+    testWidgets('desc 帶 HTML → title 區渲染 Html 且文字可見', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(
+            gallery: null,
+            desc: '<p>Hello desc</p>',
+            tags: [],
+          ),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
+      expect(find.byType(Html), findsOneWidget);
+      expect(find.textContaining('Hello desc'), findsOneWidget);
+    });
+
+    testWidgets('tags 3 個 → Wrap 內 3 個 Chip 顯示 label 文字', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(
+            gallery: null,
+            desc: '',
+            tags: ['Pyro', '4★', 'Polearm'],
+          ),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
+      expect(find.byType(Chip), findsNWidgets(3));
+      expect(find.text('Pyro'), findsOneWidget);
+      expect(find.text('4★'), findsOneWidget);
+      expect(find.text('Polearm'), findsOneWidget);
+    });
+
+    testWidgets('tags 為空 list → Chip 不渲染', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
+      expect(find.byType(Chip), findsNothing);
+    });
   });
 
   group('GachaItemTapTarget', () {

@@ -82,6 +82,8 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     final entry = id == null ? null : index.lookupEntry(id);
     final page = entry?.pageByLang[record.lang];
     final gallery = page?.gallery;
+    final desc = page?.desc ?? '';
+    final tags = page?.tags ?? const <String>[];
 
     File? iconFile;
     if (id != null && entry != null && entry.iconUrl.isNotEmpty) {
@@ -166,6 +168,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     return AppDialog(
       size: AppDialogSize.md,
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (iconFile != null) ...[
             ClipRRect(
@@ -186,14 +189,43 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
             const SizedBox(width: 12),
           ],
           Expanded(
-            child: Text(
-              record.name,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: nameColor,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  record.name,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: nameColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (desc.trim().isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 120),
+                    child: SingleChildScrollView(child: Html(data: desc)),
+                  ),
+                ],
+                if (tags.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final t in tags)
+                        Chip(
+                          label: Text(t),
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                    ],
+                  ),
+                ],
+              ],
             ),
           ),
         ],
