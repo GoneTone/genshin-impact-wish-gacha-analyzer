@@ -716,5 +716,6 @@
       }
     }
   },
-  "settingsLogsClearConfirmBody": "Ceci supprimera définitivement tous les fichiers du dossier logs/. Si vous avez besoin des journaux pour signaler un problème, exportez-les d'abord. Saisissez CLEAR pour confirmer."
+  "settingsLogsClearConfirmBody": "Ceci supprimera définitivement tous les fichiers du dossier logs/. Si vous avez besoin des journaux pour signaler un problème, exportez-les d'abord. Saisissez CLEAR pour confirmer.",
+  "galleryCardLabel": "Carte"
 }

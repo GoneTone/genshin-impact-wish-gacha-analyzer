@@ -712,5 +712,6 @@
       }
     }
   },
-  "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。"
+  "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。",
+  "galleryCardLabel": "卡片"
 }

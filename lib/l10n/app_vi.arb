@@ -716,5 +716,6 @@
       }
     }
   },
-  "settingsLogsClearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn tất cả tệp trong logs/. Nếu cần logs để báo cáo sự cố, vui lòng xuất trước. Nhập CLEAR để xác nhận."
+  "settingsLogsClearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn tất cả tệp trong logs/. Nếu cần logs để báo cáo sự cố, vui lòng xuất trước. Nhập CLEAR để xác nhận.",
+  "galleryCardLabel": "Card"
 }

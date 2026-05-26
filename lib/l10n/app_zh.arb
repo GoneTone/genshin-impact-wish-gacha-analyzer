@@ -516,5 +516,10 @@
   "@settingsLogsExportFailed": {
     "placeholders": { "error": { "type": "String" } }
   },
-  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。"
+  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。",
+
+  "galleryCardLabel": "卡片",
+  "@galleryCardLabel": {
+    "description": "Gallery 圖集中「卡片（pic）」chip 分頁的標籤。對應 hoyowiki entry_page gallery_character.pic 的 chip 標籤；非物品本身名稱。"
+  }
 }
