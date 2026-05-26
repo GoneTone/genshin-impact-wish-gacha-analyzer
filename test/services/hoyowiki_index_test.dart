@@ -252,6 +252,81 @@ void main() {
     });
   });
 
+  group('hoyowikiIconCacheFile', () {
+    final baseDir = Directory.systemTemp;
+
+    test('組合為 <id>_icon.<ext>', () {
+      final f = hoyowikiIconCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/icon.png',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+
+    test('無副檔名時 fallback png', () {
+      final f = hoyowikiIconCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/icon',
+      );
+      expect(f.path, endsWith('5125428_icon.png'));
+    });
+  });
+
+  group('hoyowikiGalleryCacheFile', () {
+    final baseDir = Directory.systemTemp;
+
+    test('同 URL → 同檔名', () {
+      final a = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.png',
+      );
+      final b = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.png',
+      );
+      expect(a.path, b.path);
+    });
+
+    test('不同 URL → 不同檔名', () {
+      final a = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.png',
+      );
+      final b = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/b.png',
+      );
+      expect(a.path, isNot(b.path));
+    });
+
+    test('檔名格式為 <id>_gallery_<hash12>.<ext>', () {
+      final f = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.gif',
+      );
+      expect(
+        RegExp(r'5125428_gallery_[0-9a-f]{12}\.gif$').hasMatch(f.path),
+        isTrue,
+      );
+    });
+
+    test('帶 query string 不影響 ext 推導', () {
+      final f = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.webp?token=abc',
+      );
+      expect(f.path, endsWith('.webp'));
+    });
+  });
+
   group('hoyowikiCacheFile', () {
     late Directory tempDir;
 

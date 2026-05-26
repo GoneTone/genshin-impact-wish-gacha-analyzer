@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:logging/logging.dart';
 
@@ -212,6 +213,26 @@ File hoyowikiCacheFile({
 }) {
   final ext = _extFromUrl(url);
   return File('${baseDir.path}/${id}_${kind.name}.$ext');
+}
+
+/// 推導 icon 的 cache 路徑：`<id>_icon.<ext>`。
+File hoyowikiIconCacheFile({
+  required Directory baseDir,
+  required String id,
+  required String url,
+}) {
+  return File('${baseDir.path}/${id}_icon.${_extFromUrl(url)}');
+}
+
+/// 推導 gallery 圖片（pic 或 list[].img）的 cache 路徑：
+/// `<id>_gallery_<sha1Hex前12碼>.<ext>`。同 URL 自然同檔，跨 lang 同 URL 共用。
+File hoyowikiGalleryCacheFile({
+  required Directory baseDir,
+  required String id,
+  required String url,
+}) {
+  final hash = sha1.convert(utf8.encode(url)).toString().substring(0, 12);
+  return File('${baseDir.path}/${id}_gallery_$hash.${_extFromUrl(url)}');
 }
 
 /// 從 [url] 推導副檔名（無則回 `png`）。
