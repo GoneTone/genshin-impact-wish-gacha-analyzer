@@ -107,6 +107,14 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   void _zoomAt({required Offset localFocal, required double scaleDelta}) {
     final current = _ctrl.value.getMaxScaleOnAxis();
     final next = (current * scaleDelta).clamp(_minScale, _maxScale);
+    // 回到 fit（_minScale）→ 強制單位矩陣，否則 focal-centered 縮放公式會留下
+    // translation 殘量，讓 scale=1 時圖片仍偏離 viewport（要拖一下 InteractiveViewer
+    // 的 pan handler 才會 clamp 回來）。InteractiveViewer 的 constrained=true 只
+    // 在使用者互動 pan 時 clamp，手動寫 matrix 必須自己處理。
+    if ((next - _minScale).abs() < 1e-6) {
+      _ctrl.value = Matrix4.identity();
+      return;
+    }
     final actual = next / current;
     if ((actual - 1).abs() < 1e-6) return;
     _ctrl.value =

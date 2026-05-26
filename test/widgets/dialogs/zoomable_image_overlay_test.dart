@@ -322,6 +322,73 @@ void main() {
       await doubleTapAt(tester, center);
       expect(currentScale(tester), closeTo(1.0, 1e-6));
     });
+
+    testWidgets(
+      'double-tap back to fit at off-center clears translation (no out-of-frame residue)',
+      (tester) async {
+        await openOverlay(tester);
+        // 在偏左上點雙擊放大到 2x — 會產生 focal-centered translation。
+        final ivRect = tester.getRect(find.byType(InteractiveViewer));
+        final offCenter = Offset(
+          ivRect.left + ivRect.width * 0.25,
+          ivRect.top + ivRect.height * 0.25,
+        );
+        await doubleTapAt(tester, offCenter);
+        expect(currentScale(tester), closeTo(2.0, 1e-6));
+
+        // 再雙擊回 fit — matrix 必須是 identity（scale=1 AND translation=0），
+        // 否則圖片會偏離 viewport，要拖一下才會 snap 回來。
+        await doubleTapAt(tester, offCenter);
+        expect(currentScale(tester), closeTo(1.0, 1e-6));
+
+        final iv = tester.widget<InteractiveViewer>(
+          find.byType(InteractiveViewer),
+        );
+        final translation = iv.transformationController!.value.getTranslation();
+        expect(translation.x, closeTo(0, 1e-6));
+        expect(translation.y, closeTo(0, 1e-6));
+      },
+    );
+
+    testWidgets(
+      'wheel-zoom-out clamped to minScale also resets matrix to identity',
+      (tester) async {
+        await openOverlay(tester);
+        final center = tester.getCenter(find.byType(InteractiveViewer));
+        // 焦點刻意偏中心以製造非零 translation。
+        final offCenter = Offset(center.dx + 80, center.dy + 60);
+        final pointer = TestPointer(1, PointerDeviceKind.mouse);
+        await tester.sendEventToBinding(pointer.hover(offCenter));
+        for (var i = 0; i < 6; i++) {
+          await tester.sendEventToBinding(
+            PointerScrollEvent(
+              position: offCenter,
+              scrollDelta: const Offset(0, -100),
+            ),
+          );
+          await tester.pump();
+        }
+        expect(currentScale(tester), greaterThan(1.5));
+
+        // zoom out 大量格數確保 clamp 到 minScale。
+        for (var i = 0; i < 20; i++) {
+          await tester.sendEventToBinding(
+            PointerScrollEvent(
+              position: offCenter,
+              scrollDelta: const Offset(0, 100),
+            ),
+          );
+          await tester.pump();
+        }
+        expect(currentScale(tester), closeTo(1.0, 1e-6));
+        final iv = tester.widget<InteractiveViewer>(
+          find.byType(InteractiveViewer),
+        );
+        final translation = iv.transformationController!.value.getTranslation();
+        expect(translation.x, closeTo(0, 1e-6));
+        expect(translation.y, closeTo(0, 1e-6));
+      },
+    );
   });
 
   group('ZoomableImageOverlay tap-to-close structure', () {
