@@ -719,5 +719,6 @@
   "settingsLogsClearConfirmBody": "Isso excluirá permanentemente todos os arquivos na pasta logs/. Se precisar dos logs para reportar um problema, exporte-os primeiro. Digite CLEAR para confirmar.",
   "galleryCardLabel": "Cartão",
   "galleryIconLabel": "Ícone",
-  "actionViewOnHoYoWiki": "Ver no HoYoWiki"
+  "actionViewOnHoYoWiki": "Ver no HoYoWiki",
+  "actionCloseImagePreview": "Fechar prévia da imagem"
 }

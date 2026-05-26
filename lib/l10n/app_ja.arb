@@ -719,5 +719,6 @@
   "settingsLogsClearConfirmBody": "logs/ 内のすべてのファイルを完全に削除します。問題報告の前にログが必要な場合は、先にエクスポートしてください。確認のため CLEAR と入力してください。",
   "galleryCardLabel": "カード",
   "galleryIconLabel": "アイコン",
-  "actionViewOnHoYoWiki": "HoYoWiki で開く"
+  "actionViewOnHoYoWiki": "HoYoWiki で開く",
+  "actionCloseImagePreview": "画像プレビューを閉じる"
 }

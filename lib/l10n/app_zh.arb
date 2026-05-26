@@ -531,5 +531,10 @@
   "actionViewOnHoYoWiki": "前往 HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+
+  "actionCloseImagePreview": "關閉圖片預覽",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
   }
 }

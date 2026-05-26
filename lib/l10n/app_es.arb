@@ -719,5 +719,6 @@
   "settingsLogsClearConfirmBody": "Esto eliminará permanentemente todos los archivos en logs/. Si necesitas los logs para reportar un problema, expórtalos primero. Escribe CLEAR para confirmar.",
   "galleryCardLabel": "Carta",
   "galleryIconLabel": "Icono",
-  "actionViewOnHoYoWiki": "Ver en HoYoWiki"
+  "actionViewOnHoYoWiki": "Ver en HoYoWiki",
+  "actionCloseImagePreview": "Cerrar vista previa de la imagen"
 }

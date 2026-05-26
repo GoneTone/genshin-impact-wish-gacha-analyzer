@@ -719,5 +719,6 @@
   "settingsLogsClearConfirmBody": "การดำเนินการนี้จะลบไฟล์ทั้งหมดใน logs/ อย่างถาวร หากต้องการ logs สำหรับรายงานปัญหา กรุณาส่งออกก่อน กรุณาพิมพ์ CLEAR เพื่อยืนยัน",
   "galleryCardLabel": "Card",
   "galleryIconLabel": "ไอคอน",
-  "actionViewOnHoYoWiki": "เปิดใน HoYoWiki"
+  "actionViewOnHoYoWiki": "เปิดใน HoYoWiki",
+  "actionCloseImagePreview": "ปิดตัวอย่างรูปภาพ"
 }
