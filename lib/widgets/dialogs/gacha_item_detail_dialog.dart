@@ -234,11 +234,17 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       for (final t in tags)
                         Chip(
                           label: Text(t),
-                          backgroundColor: Colors.transparent,
-                          side: BorderSide(color: tokens.borderSubtle),
-                          labelStyle: theme.textTheme.bodySmall?.copyWith(
-                            color: tokens.textSecondary,
+                          backgroundColor: tokens.surfaceCardHigh,
+                          side: BorderSide.none,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppRadius.sm),
+                            ),
                           ),
+                          labelStyle: theme.textTheme.bodyMedium?.copyWith(
+                            color: tokens.textPrimary,
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           visualDensity: VisualDensity.compact,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
