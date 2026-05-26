@@ -802,8 +802,7 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    // menu_id 感知的重抓判斷：角色（menu_id 2）icon 空就重抓；
-    // 武器（menu_id 4）或未知則 icon 空才重抓。
+    /// 過渡：目前只用 iconUrl 判定重抓；Task 8 會改為 menuId + galleryByLang[lang] 為主。
     bool needRefetchEntry(HoYoWikiEntry? e, int? menuId) {
       if (e == null) return true;
       return e.iconUrl.isEmpty;

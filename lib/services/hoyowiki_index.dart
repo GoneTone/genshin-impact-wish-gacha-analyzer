@@ -125,6 +125,7 @@ class HoYoWikiIndexStorage {
       final menuIdsJson =
           (json['menu_ids'] as Map<String, dynamic>?) ?? const {};
 
+      final isV1 = version < 2;
       var droppedV1 = 0;
       final entries = entriesJson.map((k, v) {
         final m = v as Map<String, dynamic>;
@@ -155,9 +156,9 @@ class HoYoWikiIndexStorage {
             );
           });
         } else {
-          // v1 or missing: drop header_img_url, gallery starts empty -> will refetch
+          // v1 or missing gallery_by_lang: gallery starts empty → will refetch
           galleryByLang = const {};
-          droppedV1++;
+          if (isV1) droppedV1++;
         }
         return MapEntry(
           k,
@@ -169,7 +170,7 @@ class HoYoWikiIndexStorage {
         );
       });
 
-      if (droppedV1 > 0) {
+      if (isV1 && droppedV1 > 0) {
         _log.info(
           'migrate v1 → v2: $droppedV1 entries reset (header_img_url dropped)',
         );
