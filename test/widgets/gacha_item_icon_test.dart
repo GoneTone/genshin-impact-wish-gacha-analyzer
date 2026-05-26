@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -132,12 +133,12 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.utc(2026, 5, 23),
+          gallery: null,
         ),
       );
     });
@@ -163,13 +164,10 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
-          iconUrl: iconUrl,
-          galleryByLang: const {},
-          fetchedAt: DateTime.utc(2026, 5, 23),
-        ),
+        lang: 'en-us',
+        fetched: HoYoWikiEntryFetched(iconUrl: iconUrl, gallery: null),
       );
       final cacheFile = hoyowikiIconCacheFile(
         baseDir: tempDir,
@@ -203,12 +201,12 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.utc(2026, 5, 23),
+          gallery: null,
         ),
       );
 

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -85,11 +86,13 @@ void main() {
     HoYoWikiIndexNotifier notifier, {
     required String name,
     required String id,
-    required HoYoWikiEntry entry,
+    required HoYoWikiEntryFetched fetched,
   }) => tester.runAsync(
     () => notifier
         .setSearch(name: name, lang: 'en-us', id: id, menuId: 2)
-        .then((_) => notifier.setEntry(id: id, entry: entry)),
+        .then(
+          (_) => notifier.mergeEntry(id: id, lang: 'en-us', fetched: fetched),
+        ),
   );
 
   group('hasHoYoWikiContent', () {
@@ -121,11 +124,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
-          iconUrl: '',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
-        ),
+        fetched: const HoYoWikiEntryFetched(iconUrl: '', gallery: null),
       );
       expect(
         await checkContent(tester, _rec(name: 'X', gachaType: '301')),
@@ -140,10 +139,9 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
+          gallery: null,
         ),
       );
       expect(
@@ -159,10 +157,9 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
+          gallery: null,
         ),
       );
       await tester.runAsync(() => _touchFile(tempDir, 'x1_icon.png'));
@@ -205,10 +202,9 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
+          gallery: null,
         ),
       );
       await tester.runAsync(() async {
@@ -236,11 +232,7 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
-          iconUrl: '',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
-        ),
+        fetched: const HoYoWikiEntryFetched(iconUrl: '', gallery: null),
       );
 
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
@@ -270,10 +262,9 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
+          gallery: null,
         ),
       );
       await tester.runAsync(() async {
@@ -294,10 +285,9 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        entry: HoYoWikiEntry(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          galleryByLang: const {},
-          fetchedAt: DateTime.now(),
+          gallery: null,
         ),
       );
       await tester.runAsync(() => _touchFile(tempDir, 'x1_icon.png'));

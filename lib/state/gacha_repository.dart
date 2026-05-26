@@ -902,13 +902,19 @@ class GachaRepository extends Notifier<GachaState> {
               lang: 'en-us',
               client: client,
             );
-            final entry = HoYoWikiEntry(
-              iconUrl: fetched.iconUrl,
-              galleryByLang: const {},
-              fetchedAt: DateTime.now().toUtc(),
+            await indexNotifier.mergeEntry(
+              id: id,
+              lang: 'en-us', // TODO(Task 8): from per-lang pair
+              fetched: fetched,
             );
-            await indexNotifier.setEntry(id: id, entry: entry);
-            enqueueDownloadsForEntry(id, entry);
+            enqueueDownloadsForEntry(
+              id,
+              HoYoWikiEntry(
+                iconUrl: fetched.iconUrl,
+                galleryByLang: const {},
+                fetchedAt: DateTime.now().toUtc(),
+              ),
+            );
           } catch (e) {
             _log.warning('hoyowiki entry failed id=$id err=$e');
           }

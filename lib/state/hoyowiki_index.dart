@@ -39,7 +39,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
 
   Completer<void>? _loadCompleter;
 
-  /// 保護 setSearch / setEntry 的 read-modify-write，避免並發 worker 互相覆蓋。
+  /// 保護 setSearch / mergeEntry 的 read-modify-write，避免並發 worker 互相覆蓋。
   final _lock = Lock();
 
   @override
@@ -86,20 +86,38 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     });
   }
 
-  /// 寫入一筆 entry 並 persist。
-  Future<void> setEntry({
+  /// 把單一 lang 的 fetch 結果 merge 進既有 entry（不覆蓋其他 lang）。icon 採
+  /// 「非空覆寫」策略，避免某 lang 抓回空 icon 把既有好值清掉。
+  Future<void> mergeEntry({
     required String id,
-    required HoYoWikiEntry entry,
+    required String lang,
+    required HoYoWikiEntryFetched fetched,
   }) async {
     await _lock.synchronized(() async {
+      final existing = state.entries[id];
+      final mergedGallery = <String, HoYoWikiGalleryData>{
+        if (existing != null) ...existing.galleryByLang,
+        if (fetched.gallery != null) lang: fetched.gallery!,
+      };
+      final iconUrl = fetched.iconUrl.isNotEmpty
+          ? fetched.iconUrl
+          : (existing?.iconUrl ?? '');
+      final merged = HoYoWikiEntry(
+        iconUrl: iconUrl,
+        galleryByLang: mergedGallery,
+        fetchedAt: DateTime.now().toUtc(),
+      );
       final newEntries = Map<String, HoYoWikiEntry>.from(state.entries)
-        ..[id] = entry;
+        ..[id] = merged;
       final next = HoYoWikiIndex(
         searchMap: state.searchMap,
         entries: newEntries,
         menuIds: state.menuIds,
       );
       await _saveAndEmit(next);
+      _log.fine(
+        'merge gallery id=$id lang=$lang has=${fetched.gallery != null}',
+      );
     });
   }
 
