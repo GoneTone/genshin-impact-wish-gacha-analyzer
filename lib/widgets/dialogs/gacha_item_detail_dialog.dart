@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
 const _odesGachaTypes = {'2000', '1000'};
@@ -290,24 +291,36 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
           if (chipEntries.length > 1) const SizedBox(height: 12),
           if (currentFile != null)
             Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                child: Image.file(
-                  currentFile,
-                  key: ValueKey(currentFile.path),
-                  fit: BoxFit.contain,
-                  alignment: Alignment.center,
-                  // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
-                  // 解碼完才換；配合 precacheImage 消除「閃一下」。
-                  gaplessPlayback: true,
-                  errorBuilder: (_, e, st) {
-                    Logger('gacha.hoyowiki.detail').warning(
-                      'gallery image errorBuilder id=$id path=${currentFile.path}',
-                      e,
-                      st,
-                    );
-                    return const SizedBox.shrink();
+              child: MouseRegion(
+                cursor: SystemMouseCursors.zoomIn,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Logger(
+                      'gacha.hoyowiki.detail',
+                    ).info('open zoom id=$id path=${currentFile.path}');
+                    showZoomableImageOverlay(context, imageFile: currentFile);
                   },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    child: Image.file(
+                      currentFile,
+                      key: ValueKey(currentFile.path),
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                      // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
+                      // 解碼完才換；配合 precacheImage 消除「閃一下」。
+                      gaplessPlayback: true,
+                      errorBuilder: (_, e, st) {
+                        Logger('gacha.hoyowiki.detail').warning(
+                          'gallery image errorBuilder id=$id path=${currentFile.path}',
+                          e,
+                          st,
+                        );
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),

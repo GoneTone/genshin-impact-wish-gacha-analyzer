@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
 GachaRecord _rec({
   required String name,
@@ -759,6 +760,177 @@ void main() {
           matching: find.byType(Image),
         ),
         findsNWidgets(2), // title icon + content icon
+      );
+    });
+
+    testWidgets('點 gallery 主圖 → 開啟 ZoomableImageOverlay', (tester) async {
+      late File picFile;
+      late File origFile;
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, '12345_icon.png');
+        picFile = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/card.png',
+        );
+        await _touchFile(tempDir, picFile.uri.pathSegments.last);
+        origFile = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/orig.png',
+        );
+        await _touchFile(tempDir, origFile.uri.pathSegments.last);
+        await seedEntry(
+          '12345',
+          'Hu Tao',
+          'en-us',
+          _entryWith(
+            iconUrl: 'https://x/icon.png',
+            picUrl: 'https://x/card.png',
+            list: [
+              HoYoWikiGalleryItem(
+                id: 'a',
+                key: 'Original',
+                imgUrl: 'https://x/orig.png',
+                imgDescHtml: '',
+              ),
+            ],
+          ),
+        );
+      });
+
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      final mainImage = find.descendant(
+        of: find.byType(GachaItemDetailDialog),
+        matching: find.byWidgetPredicate(
+          (w) =>
+              w is Image &&
+              w.image is FileImage &&
+              (w.image as FileImage).file.path.endsWith(
+                origFile.uri.pathSegments.last,
+              ),
+        ),
+      );
+      expect(mainImage, findsOneWidget);
+
+      await tester.tap(mainImage);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.byType(ZoomableImageOverlay), findsOneWidget);
+      final overlayImg = tester.widget<Image>(
+        find.descendant(
+          of: find.byType(ZoomableImageOverlay),
+          matching: find.byType(Image),
+        ),
+      );
+      expect(overlayImg.image, isA<FileImage>());
+      expect((overlayImg.image as FileImage).file.path, origFile.path);
+    });
+
+    testWidgets('切到「卡片」chip 後點主圖 → overlay 開的是 pic 檔', (tester) async {
+      late File picFile;
+      late File origFile;
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, '12345_icon.png');
+        picFile = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/card.png',
+        );
+        await _touchFile(tempDir, picFile.uri.pathSegments.last);
+        origFile = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/orig.png',
+        );
+        await _touchFile(tempDir, origFile.uri.pathSegments.last);
+        await seedEntry(
+          '12345',
+          'Hu Tao',
+          'en-us',
+          _entryWith(
+            iconUrl: 'https://x/icon.png',
+            picUrl: 'https://x/card.png',
+            list: [
+              HoYoWikiGalleryItem(
+                id: 'a',
+                key: 'Original',
+                imgUrl: 'https://x/orig.png',
+                imgDescHtml: '',
+              ),
+            ],
+          ),
+        );
+      });
+
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      await tester.tap(find.text('Card'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final mainImage = find.descendant(
+        of: find.byType(GachaItemDetailDialog),
+        matching: find.byWidgetPredicate(
+          (w) =>
+              w is Image &&
+              w.image is FileImage &&
+              (w.image as FileImage).file.path.endsWith(
+                picFile.uri.pathSegments.last,
+              ),
+        ),
+      );
+      await tester.tap(mainImage);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final overlayImg = tester.widget<Image>(
+        find.descendant(
+          of: find.byType(ZoomableImageOverlay),
+          matching: find.byType(Image),
+        ),
+      );
+      expect((overlayImg.image as FileImage).file.path, picFile.path);
+    });
+
+    testWidgets('gallery 主圖 wrapper 有 zoomIn cursor', (tester) async {
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, '12345_icon.png');
+        final origFile = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/orig.png',
+        );
+        await _touchFile(tempDir, origFile.uri.pathSegments.last);
+        await seedEntry(
+          '12345',
+          'Hu Tao',
+          'en-us',
+          _entryWith(
+            iconUrl: 'https://x/icon.png',
+            picUrl: '',
+            list: [
+              HoYoWikiGalleryItem(
+                id: 'a',
+                key: 'Original',
+                imgUrl: 'https://x/orig.png',
+                imgDescHtml: '',
+              ),
+            ],
+          ),
+        );
+      });
+
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      final mouseRegions = tester.widgetList<MouseRegion>(
+        find.descendant(
+          of: find.byType(GachaItemDetailDialog),
+          matching: find.byType(MouseRegion),
+        ),
+      );
+      expect(
+        mouseRegions.any((m) => m.cursor == SystemMouseCursors.zoomIn),
+        isTrue,
       );
     });
   });
