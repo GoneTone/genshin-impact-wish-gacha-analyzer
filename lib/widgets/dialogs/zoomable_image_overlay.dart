@@ -38,8 +38,8 @@ class ZoomableImageOverlay extends StatefulWidget {
 
 /// [ZoomableImageOverlay] 的 state — 後續 task 會接入 `_ctrl` / wheel / double-tap。
 class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
-  /// 關 overlay 並 log 來源。[reason] 走 `esc | backdrop | button` 三選一。
-  void _close(BuildContext context, String reason) {
+  /// 關 overlay 並 log 來源。[reason] 走 `backdrop | button` 二選一；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
+  void _close(String reason) {
     Logger('gacha.hoyowiki.zoom').info('overlay close reason=$reason');
     Navigator.of(context).pop();
   }
@@ -53,7 +53,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
         Positioned.fill(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => _close(context, 'backdrop'),
+            onTap: () => _close('backdrop'),
           ),
         ),
         // 中央圖片區 — 留 48px padding 給 backdrop tap 區。
@@ -84,7 +84,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
             child: IconButton(
               tooltip: l.actionCloseImagePreview,
               icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => _close(context, 'button'),
+              onPressed: () => _close('button'),
             ),
           ),
         ),
