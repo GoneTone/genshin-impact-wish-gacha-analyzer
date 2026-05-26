@@ -271,13 +271,56 @@ void main() {
       final pointer = TestPointer(1, PointerDeviceKind.mouse);
       await tester.sendEventToBinding(pointer.hover(center));
       await tester.sendEventToBinding(
-        PointerScrollEvent(
-          position: center,
-          scrollDelta: const Offset(100, 0),
-        ),
+        PointerScrollEvent(position: center, scrollDelta: const Offset(100, 0)),
       );
       await tester.pump();
       expect(currentScale(tester), 1.0);
+    });
+  });
+
+  group('ZoomableImageOverlay double-tap toggle', () {
+    double currentScale(WidgetTester tester) {
+      final iv = tester.widget<InteractiveViewer>(
+        find.byType(InteractiveViewer),
+      );
+      return iv.transformationController!.value.getMaxScaleOnAxis();
+    }
+
+    Future<void> doubleTapAt(WidgetTester tester, Offset position) async {
+      await tester.tapAt(position);
+      await tester.pump(kDoubleTapMinTime);
+      await tester.tapAt(position);
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    testWidgets('from fit (scale=1), double-tap goes to 2x', (tester) async {
+      await openOverlay(tester);
+      expect(currentScale(tester), 1.0);
+      await doubleTapAt(
+        tester,
+        tester.getCenter(find.byType(InteractiveViewer)),
+      );
+      expect(currentScale(tester), closeTo(2.0, 1e-6));
+    });
+
+    testWidgets('from non-fit, double-tap returns to fit (1x)', (tester) async {
+      await openOverlay(tester);
+      // 先用滾輪把它升到 3x 左右。
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      final pointer = TestPointer(1, PointerDeviceKind.mouse);
+      await tester.sendEventToBinding(pointer.hover(center));
+      for (var i = 0; i < 12; i++) {
+        await tester.sendEventToBinding(
+          PointerScrollEvent(
+            position: center,
+            scrollDelta: const Offset(0, -100),
+          ),
+        );
+        await tester.pump();
+      }
+      expect(currentScale(tester), greaterThan(2.5));
+      await doubleTapAt(tester, center);
+      expect(currentScale(tester), closeTo(1.0, 1e-6));
     });
   });
 }

@@ -48,6 +48,9 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 滑鼠滾輪每一格的縮放係數（×1.1 in / ÷1.1 out）。
   static const double _wheelStep = 1.1;
 
+  /// 雙擊時的目標 scale；fit ↔ 2x 切換。
+  static const double _doubleTapScale = 2.0;
+
   /// 控制 InteractiveViewer 的 Matrix4；wheel / double-tap 會手動設置 scale，
   /// InteractiveViewer 自動處理 pan。
   final TransformationController _ctrl = TransformationController();
@@ -89,6 +92,14 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     _zoomAt(localFocal: event.localPosition, scaleDelta: delta);
   }
 
+  /// 雙擊：當前接近 fit → 放大到 [_doubleTapScale]；否則回 fit。以 tap 落點為焦點縮放。
+  void _onDoubleTapDown(TapDownDetails details) {
+    final current = _ctrl.value.getMaxScaleOnAxis();
+    final atFit = (current - _minScale).abs() < 0.05;
+    final target = atFit ? _doubleTapScale : _minScale;
+    _zoomAt(localFocal: details.localPosition, scaleDelta: target / current);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -106,25 +117,28 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
           padding: const EdgeInsets.all(48),
           child: Listener(
             onPointerSignal: _onPointerSignal,
-            child: InteractiveViewer(
-              transformationController: _ctrl,
-              panEnabled: true,
-              // wheel / double-tap 自管 scale，避免兩套 scale source 打架。
-              scaleEnabled: false,
-              minScale: _minScale,
-              maxScale: _maxScale,
-              child: Center(
-                child: Image.file(
-                  widget.imageFile,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, e, st) {
-                    Logger('gacha.hoyowiki.zoom').warning(
-                      'image errorBuilder file=${widget.imageFile.path}',
-                      e,
-                      st,
-                    );
-                    return const SizedBox.shrink();
-                  },
+            child: GestureDetector(
+              onDoubleTapDown: _onDoubleTapDown,
+              child: InteractiveViewer(
+                transformationController: _ctrl,
+                panEnabled: true,
+                // wheel / double-tap 自管 scale，避免兩套 scale source 打架。
+                scaleEnabled: false,
+                minScale: _minScale,
+                maxScale: _maxScale,
+                child: Center(
+                  child: Image.file(
+                    widget.imageFile,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, e, st) {
+                      Logger('gacha.hoyowiki.zoom').warning(
+                        'image errorBuilder file=${widget.imageFile.path}',
+                        e,
+                        st,
+                      );
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ),
               ),
             ),
