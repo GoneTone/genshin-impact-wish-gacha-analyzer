@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
@@ -283,6 +284,18 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
         ],
       ),
       actions: [
+        TextButton.icon(
+          icon: const Icon(Icons.open_in_new, size: 18),
+          label: Text(l.actionViewOnHoYoWiki),
+          onPressed: id == null
+              ? null
+              : () {
+                  Logger('gacha.hoyowiki.detail').info('open wiki id=$id');
+                  openExternalUrl(
+                    Uri.parse('https://wiki.hoyolab.com/pc/genshin/entry/$id'),
+                  );
+                },
+        ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l.actionClose),

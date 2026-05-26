@@ -395,6 +395,36 @@ void main() {
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
       expect(find.byType(Chip), findsNothing);
     });
+
+    testWidgets('actions 區顯示「前往 HoYoWiki」按鈕，label 與 icon 正確', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+      expect(find.text(l.actionViewOnHoYoWiki), findsOneWidget);
+      expect(find.byIcon(Icons.open_in_new), findsOneWidget);
+      final btn = tester.widget<TextButton>(
+        find.ancestor(
+          of: find.text(l.actionViewOnHoYoWiki),
+          matching: find.byType(TextButton),
+        ),
+      );
+      expect(btn.onPressed, isNotNull);
+    });
   });
 
   group('GachaItemTapTarget', () {
