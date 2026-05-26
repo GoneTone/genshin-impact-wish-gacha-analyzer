@@ -240,7 +240,8 @@ class HoYoWikiFetcher {
     final iconUrl = (page?['icon_url'] as String?) ?? '';
     final modules = (page?['modules'] as List<dynamic>?) ?? const [];
     final gallery = _parseGalleryCharacterModule(modules);
-    final desc = (page?['desc'] as String?) ?? '';
+    final descRaw = page?['desc'];
+    final desc = descRaw is String ? descRaw : '';
     final tags = _parseTags(page?['filter_values']);
     _log.info(
       'entry id=$id lang=$lang icon=${iconUrl.isNotEmpty} '

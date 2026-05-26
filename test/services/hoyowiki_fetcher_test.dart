@@ -533,7 +533,16 @@ void main() {
 
     test('desc 為非 string 型別 → 空字串', () async {
       final mock = MockClient(
-        (req) async => entryWithDescAndTags(desc: '', filterValues: null),
+        (req) async => http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'message': 'OK',
+            'data': {
+              'page': {'icon_url': '', 'desc': 12345, 'modules': []},
+            },
+          }),
+          200,
+        ),
       );
       final res = await HoYoWikiFetcher().fetchEntryPage(
         id: '12345',

@@ -205,9 +205,12 @@ class HoYoWikiIndexStorage {
       });
 
       if (!isV3 && droppedLegacy > 0) {
+        final droppedField = version == 1
+            ? 'header_img_url'
+            : 'gallery_by_lang';
         _log.info(
           'migrate v$version → v3: $droppedLegacy entries reset '
-          '(gallery_by_lang dropped)',
+          '($droppedField dropped)',
         );
       }
 
