@@ -266,8 +266,11 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
           ),
         ],
       ),
+      // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
+      // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
+      // 變動，dialog 整體高度仍固定（只有 image 區大小被重新分配）。
       content: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: currentFile != null ? MainAxisSize.max : MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (chipEntries.length > 1)
@@ -286,8 +289,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
             ),
           if (chipEntries.length > 1) const SizedBox(height: 12),
           if (currentFile != null)
-            Flexible(
-              fit: FlexFit.loose,
+            Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppRadius.md),
                 child: Image.file(
