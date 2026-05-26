@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -44,6 +45,9 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 縮放最大值。
   static const double _maxScale = 5.0;
 
+  /// 滑鼠滾輪每一格的縮放係數（×1.1 in / ÷1.1 out）。
+  static const double _wheelStep = 1.1;
+
   /// 控制 InteractiveViewer 的 Matrix4；wheel / double-tap 會手動設置 scale，
   /// InteractiveViewer 自動處理 pan。
   final TransformationController _ctrl = TransformationController();
@@ -58,6 +62,29 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   void _close(String reason) {
     Logger('gacha.hoyowiki.zoom').info('overlay close reason=$reason');
     Navigator.of(context).pop();
+  }
+
+  /// 以 [localFocal]（Listener / InteractiveViewer 局部座標）為中心套用 [scaleDelta]
+  /// 倍縮放。公式：T(focal) · S(delta) · T(-focal) · M，確保焦點 scene 位置在縮放後不動。
+  /// 新 scale 會 clamp 在 [_minScale]..[_maxScale]。
+  void _zoomAt({required Offset localFocal, required double scaleDelta}) {
+    final current = _ctrl.value.getMaxScaleOnAxis();
+    final next = (current * scaleDelta).clamp(_minScale, _maxScale);
+    final actual = next / current;
+    if ((actual - 1).abs() < 1e-6) return;
+    _ctrl.value =
+        (Matrix4.identity()
+          ..translateByDouble(localFocal.dx, localFocal.dy, 0, 1)
+          ..scaleByDouble(actual, actual, actual, 1)
+          ..translateByDouble(-localFocal.dx, -localFocal.dy, 0, 1)) *
+        _ctrl.value;
+  }
+
+  /// 處理 mouse wheel：向上（scrollDelta.dy < 0）放大、向下縮小，以游標為中心。
+  void _onPointerSignal(PointerSignalEvent event) {
+    if (event is! PointerScrollEvent) return;
+    final delta = event.scrollDelta.dy < 0 ? _wheelStep : 1 / _wheelStep;
+    _zoomAt(localFocal: event.localPosition, scaleDelta: delta);
   }
 
   @override
@@ -75,25 +102,28 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
         // 中央圖片區 — 留 48px padding 給 backdrop tap 區。
         Padding(
           padding: const EdgeInsets.all(48),
-          child: InteractiveViewer(
-            transformationController: _ctrl,
-            panEnabled: true,
-            // wheel / double-tap 自管 scale，避免兩套 scale source 打架。
-            scaleEnabled: false,
-            minScale: _minScale,
-            maxScale: _maxScale,
-            child: Center(
-              child: Image.file(
-                widget.imageFile,
-                fit: BoxFit.contain,
-                errorBuilder: (_, e, st) {
-                  Logger('gacha.hoyowiki.zoom').warning(
-                    'image errorBuilder file=${widget.imageFile.path}',
-                    e,
-                    st,
-                  );
-                  return const SizedBox.shrink();
-                },
+          child: Listener(
+            onPointerSignal: _onPointerSignal,
+            child: InteractiveViewer(
+              transformationController: _ctrl,
+              panEnabled: true,
+              // wheel / double-tap 自管 scale，避免兩套 scale source 打架。
+              scaleEnabled: false,
+              minScale: _minScale,
+              maxScale: _maxScale,
+              child: Center(
+                child: Image.file(
+                  widget.imageFile,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, e, st) {
+                    Logger('gacha.hoyowiki.zoom').warning(
+                      'image errorBuilder file=${widget.imageFile.path}',
+                      e,
+                      st,
+                    );
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ),
           ),

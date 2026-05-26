@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -169,21 +170,99 @@ void main() {
   });
 
   group('ZoomableImageOverlay InteractiveViewer wiring', () {
-    testWidgets('uses InteractiveViewer with scaleEnabled=false, panEnabled=true', (
-      tester,
-    ) async {
-      await openOverlay(tester);
-      final iv = tester.widget<InteractiveViewer>(find.byType(InteractiveViewer));
-      expect(iv.scaleEnabled, isFalse);
-      expect(iv.panEnabled, isTrue);
-      expect(iv.minScale, 1.0);
-      expect(iv.maxScale, 5.0);
-    });
+    testWidgets(
+      'uses InteractiveViewer with scaleEnabled=false, panEnabled=true',
+      (tester) async {
+        await openOverlay(tester);
+        final iv = tester.widget<InteractiveViewer>(
+          find.byType(InteractiveViewer),
+        );
+        expect(iv.scaleEnabled, isFalse);
+        expect(iv.panEnabled, isTrue);
+        expect(iv.minScale, 1.0);
+        expect(iv.maxScale, 5.0);
+      },
+    );
 
     testWidgets('initial transform is identity (scale = 1)', (tester) async {
       await openOverlay(tester);
-      final iv = tester.widget<InteractiveViewer>(find.byType(InteractiveViewer));
+      final iv = tester.widget<InteractiveViewer>(
+        find.byType(InteractiveViewer),
+      );
       expect(iv.transformationController!.value.getMaxScaleOnAxis(), 1.0);
+    });
+  });
+
+  group('ZoomableImageOverlay wheel zoom', () {
+    /// 抓取當前 InteractiveViewer 的 scale。
+    double currentScale(WidgetTester tester) {
+      final iv = tester.widget<InteractiveViewer>(
+        find.byType(InteractiveViewer),
+      );
+      return iv.transformationController!.value.getMaxScaleOnAxis();
+    }
+
+    /// 對 [position] 派發一次滾輪事件。[deltaY] 為 scrollDelta.dy；負值 = 向上 = 放大。
+    Future<void> sendWheel(
+      WidgetTester tester,
+      Offset position,
+      double deltaY,
+    ) async {
+      final pointer = TestPointer(1, PointerDeviceKind.mouse);
+      await tester.sendEventToBinding(pointer.hover(position));
+      await tester.sendEventToBinding(
+        PointerScrollEvent(position: position, scrollDelta: Offset(0, deltaY)),
+      );
+      await tester.pump();
+    }
+
+    testWidgets('wheel up zooms in (scale > 1)', (tester) async {
+      await openOverlay(tester);
+      expect(currentScale(tester), 1.0);
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      await sendWheel(tester, center, -100);
+      expect(currentScale(tester), greaterThan(1.0));
+    });
+
+    testWidgets('wheel down at fit stays at minScale', (tester) async {
+      await openOverlay(tester);
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      await sendWheel(tester, center, 100);
+      expect(currentScale(tester), 1.0);
+    });
+
+    testWidgets('many wheel ups clamp at maxScale (5.0)', (tester) async {
+      await openOverlay(tester);
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      // 1.1^20 ≈ 6.7 > 5.0；確保打到上限。
+      for (var i = 0; i < 20; i++) {
+        await sendWheel(tester, center, -100);
+      }
+      expect(currentScale(tester), closeTo(5.0, 1e-6));
+    });
+
+    testWidgets('cursor-centered: zoom at offset keeps scene point at cursor', (
+      tester,
+    ) async {
+      await openOverlay(tester);
+      final ivFinder = find.byType(InteractiveViewer);
+      final ivCenter = tester.getCenter(ivFinder);
+      final ivRect = tester.getRect(ivFinder);
+      // 選一個離中心明顯偏右下的點。
+      final focal = Offset(ivCenter.dx + 100, ivCenter.dy + 80);
+      final focalLocal = focal - ivRect.topLeft;
+
+      final iv = tester.widget<InteractiveViewer>(ivFinder);
+      final ctrl = iv.transformationController!;
+
+      // scale = 1 時，scene point 對應 cursor 局部座標的「圖內位置」= focalLocal
+      // （恆等變換）。
+      final beforeScene = ctrl.toScene(focalLocal);
+
+      await sendWheel(tester, focal, -100);
+      // 縮放後，同一 scene point 應該還是落在 focalLocal 附近（cursor-centered 不變）。
+      final afterScene = ctrl.toScene(focalLocal);
+      expect((afterScene - beforeScene).distance, lessThan(1.0));
     });
   });
 }
