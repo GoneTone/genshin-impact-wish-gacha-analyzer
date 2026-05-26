@@ -955,7 +955,7 @@ class GachaRepository extends Notifier<GachaState> {
               lang: pair.lang,
               fetched: fetched,
             );
-            // download enqueue 用既有 icon-only 邏輯（Task 9 會擴成含 gallery）
+            // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
             final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
           } catch (e) {

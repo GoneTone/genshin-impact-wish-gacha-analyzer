@@ -185,7 +185,8 @@ void main() {
     expect(
       completed.hoYoWikiImagesDownloaded,
       2,
-      reason: 'Hu Tao + Skyward Harp，各 icon = 2 張（過渡版本）',
+      reason: 'Hu Tao + Skyward Harp 各 1 張 icon = 2 張（兩個 entry 的 mock '
+          'response 都沒有 gallery_character module，所以 gallery 不下載）',
     );
   });
 

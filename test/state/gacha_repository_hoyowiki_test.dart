@@ -134,7 +134,8 @@ void main() {
     // 只祈願 record (Hu Tao) 進 search，頌願 (OdesItem) 不進
     expect(searchCalls, ['Hu Tao']);
     expect(entryCalls, ['111']);
-    // 過渡版本：只下載 icon（gallery 在 Task 6 加入）
+    // 該 entry 沒有 gallery_character module（mock response 未含 modules），
+    // 所以 enqueueDownloadsForEntry 只會排 icon 一張。
     expect(downloadCalls.length, 1);
 
     // bytes 確實落檔到 cache dir
