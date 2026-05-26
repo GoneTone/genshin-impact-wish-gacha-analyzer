@@ -323,4 +323,67 @@ void main() {
       expect(currentScale(tester), closeTo(1.0, 1e-6));
     });
   });
+
+  group('ZoomableImageOverlay tap-to-close structure', () {
+    // 行為層測試（dim 區 tap 真的關 / image 區 tap 真的不關）需要 image
+    // 實際 decode 完成才能驗證 SizedBox 縮到 painted rect；testWidgets 沒有
+    // 可靠的 file codec 同步路徑，因此這裡只測結構，行為由使用者 manual 驗證。
+
+    testWidgets(
+      'image is wrapped by an opaque tap-absorber inside a SizedBox',
+      (tester) async {
+        await openOverlay(tester);
+
+        // Image 外應該包一層 GestureDetector(opaque, onTap != null)，避免單擊圖片
+        // 像素時被外層 onTap close 抓走。
+        final innerGd = tester.widget<GestureDetector>(
+          find
+              .ancestor(
+                of: find.byType(Image),
+                matching: find.byType(GestureDetector),
+              )
+              .first,
+        );
+        expect(innerGd.behavior, HitTestBehavior.opaque);
+        expect(innerGd.onTap, isNotNull);
+
+        // 該 GestureDetector 要在 LayoutBuilder 出來的 SizedBox 內，這樣 hit-test
+        // 範圍才會是 image painted rect 而非整個 viewer。
+        expect(
+          find.ancestor(
+            of: find.byType(Image),
+            matching: find.byType(SizedBox),
+          ),
+          findsWidgets,
+        );
+        expect(
+          find.ancestor(
+            of: find.byType(Image),
+            matching: find.byType(LayoutBuilder),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'outer InteractiveViewer wrapper has onTap that closes on dim-area tap',
+      (tester) async {
+        await openOverlay(tester);
+
+        // 找到包住 InteractiveViewer 的最近 GestureDetector → 必須有 onTap
+        // （供 image 像素區以外的暗區 tap 觸發 close）和 onDoubleTapDown（雙擊縮放）。
+        final outerGd = tester.widget<GestureDetector>(
+          find
+              .ancestor(
+                of: find.byType(InteractiveViewer),
+                matching: find.byType(GestureDetector),
+              )
+              .first,
+        );
+        expect(outerGd.onTap, isNotNull);
+        expect(outerGd.onDoubleTapDown, isNotNull);
+      },
+    );
+  });
 }

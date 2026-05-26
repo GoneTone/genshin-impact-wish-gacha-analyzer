@@ -55,13 +55,47 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// InteractiveViewer 自動處理 pan。
   final TransformationController _ctrl = TransformationController();
 
+  /// 共用的 [FileImage] provider；同時餵給 [Image] 渲染與 [_stream] 取得 intrinsic size，
+  /// 避免兩次 decode。
+  late final FileImage _imageProvider = FileImage(widget.imageFile);
+
+  /// [_imageProvider] resolve 出的 stream；用來監聽 decode 完成事件以取得 intrinsic size。
+  ImageStream? _stream;
+
+  /// 監聽 image decode 完成的 listener；[dispose] 內 removeListener 解除註冊。
+  late final ImageStreamListener _streamListener = ImageStreamListener((
+    info,
+    _,
+  ) {
+    if (!mounted) return;
+    setState(() {
+      _imageSize = Size(
+        info.image.width.toDouble(),
+        info.image.height.toDouble(),
+      );
+    });
+  });
+
+  /// image 的 intrinsic 大小；null 時為 decode 尚未完成。用來把 image 像素區的
+  /// tap absorber 精準框在 BoxFit.contain 後的 painted rect 上，讓暗區的 tap
+  /// 能傳到外層 GestureDetector 觸發關閉。
+  Size? _imageSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _stream = _imageProvider.resolve(ImageConfiguration.empty);
+    _stream!.addListener(_streamListener);
+  }
+
   @override
   void dispose() {
+    _stream?.removeListener(_streamListener);
     _ctrl.dispose();
     super.dispose();
   }
 
-  /// 關 overlay 並 log 來源。[reason] 走 `backdrop | button` 二選一；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
+  /// 關 overlay 並 log 來源。[reason] 走 `backdrop | outside-image | button` 三選一；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
   void _close(String reason) {
     Logger('gacha.hoyowiki.zoom').info('overlay close reason=$reason');
     Navigator.of(context).pop();
@@ -118,6 +152,8 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
           child: Listener(
             onPointerSignal: _onPointerSignal,
             child: GestureDetector(
+              // image 像素外的暗區（BoxFit.contain 留白）也視為背景，點擊關閉。
+              onTap: () => _close('outside-image'),
               onDoubleTapDown: _onDoubleTapDown,
               child: InteractiveViewer(
                 transformationController: _ctrl,
@@ -127,16 +163,50 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                 minScale: _minScale,
                 maxScale: _maxScale,
                 child: Center(
-                  child: Image.file(
-                    widget.imageFile,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, e, st) {
-                      Logger('gacha.hoyowiki.zoom').warning(
-                        'image errorBuilder file=${widget.imageFile.path}',
-                        e,
-                        st,
+                  // 把 image 包進 SizedBox 並 size 到 BoxFit.contain 後的 painted
+                  // rect，讓內層 GestureDetector absorber 只覆蓋圖片像素區；image
+                  // 外的 letterbox 暗區留給外層 GestureDetector 處理 onTap 關閉。
+                  // _imageSize 為 null（decode 尚未完成）時退化為填滿可用空間，
+                  // 此時 absorber 暫時覆蓋整個 viewer；本地檔案 decode 通常在
+                  // 第一幀就完成，使用者察覺不到。
+                  child: LayoutBuilder(
+                    builder: (_, constraints) {
+                      final imgSize = _imageSize;
+                      double w = constraints.maxWidth;
+                      double h = constraints.maxHeight;
+                      if (imgSize != null &&
+                          imgSize.width > 0 &&
+                          imgSize.height > 0) {
+                        final scale = (w / imgSize.width) < (h / imgSize.height)
+                            ? w / imgSize.width
+                            : h / imgSize.height;
+                        w = imgSize.width * scale;
+                        h = imgSize.height * scale;
+                      }
+                      return SizedBox(
+                        width: w,
+                        height: h,
+                        child: GestureDetector(
+                          // 吸收 image 像素上的單擊，避免「想看細節點到圖片就關掉」。
+                          // 雙擊 / 滾輪 / 拖曳走外層 GestureDetector / Listener /
+                          // InteractiveViewer，此處 opaque 只攔截 onTap，其他手勢
+                          // 正常傳到上層。
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {},
+                          child: Image(
+                            image: _imageProvider,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, e, st) {
+                              Logger('gacha.hoyowiki.zoom').warning(
+                                'image errorBuilder file=${widget.imageFile.path}',
+                                e,
+                                st,
+                              );
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ),
                       );
-                      return const SizedBox.shrink();
                     },
                   ),
                 ),
