@@ -264,5 +264,20 @@ void main() {
       final afterScene = ctrl.toScene(focalLocal);
       expect((afterScene - beforeScene).distance, lessThan(1.0));
     });
+
+    testWidgets('horizontal wheel scroll does not zoom', (tester) async {
+      await openOverlay(tester);
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      final pointer = TestPointer(1, PointerDeviceKind.mouse);
+      await tester.sendEventToBinding(pointer.hover(center));
+      await tester.sendEventToBinding(
+        PointerScrollEvent(
+          position: center,
+          scrollDelta: const Offset(100, 0),
+        ),
+      );
+      await tester.pump();
+      expect(currentScale(tester), 1.0);
+    });
   });
 }

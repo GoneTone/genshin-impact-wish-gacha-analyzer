@@ -81,8 +81,10 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   }
 
   /// 處理 mouse wheel：向上（scrollDelta.dy < 0）放大、向下縮小，以游標為中心。
+  /// 純水平滾動（dy == 0）忽略，避免 trackpad 兩指水平滑動誤觸發縮放。
   void _onPointerSignal(PointerSignalEvent event) {
     if (event is! PointerScrollEvent) return;
+    if (event.scrollDelta.dy == 0) return;
     final delta = event.scrollDelta.dy < 0 ? _wheelStep : 1 / _wheelStep;
     _zoomAt(localFocal: event.localPosition, scaleDelta: delta);
   }
