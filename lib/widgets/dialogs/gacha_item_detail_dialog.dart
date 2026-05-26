@@ -292,7 +292,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
           if (currentFile != null)
             Expanded(
               child: MouseRegion(
-                cursor: SystemMouseCursors.zoomIn,
+                cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {

@@ -14,7 +14,7 @@ Future<void> showZoomableImageOverlay(
   Logger('gacha.hoyowiki.zoom').info('overlay open file=${imageFile.path}');
   return showDialog<void>(
     context: context,
-    barrierColor: Colors.black.withValues(alpha: 0.92),
+    barrierColor: Colors.black.withValues(alpha: 0.75),
     // barrierDismissible: true 讓 Flutter Navigator 內建 ESC 關閉生效。
     barrierDismissible: true,
     builder: (_) => Dialog(

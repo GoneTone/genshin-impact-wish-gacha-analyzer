@@ -893,7 +893,7 @@ void main() {
       expect((overlayImg.image as FileImage).file.path, picFile.path);
     });
 
-    testWidgets('gallery 主圖 wrapper 有 zoomIn cursor', (tester) async {
+    testWidgets('gallery 主圖 wrapper 有 click cursor', (tester) async {
       await tester.runAsync(() async {
         await _touchFile(tempDir, '12345_icon.png');
         final origFile = hoyowikiGalleryCacheFile(
@@ -929,7 +929,7 @@ void main() {
         ),
       );
       expect(
-        mouseRegions.any((m) => m.cursor == SystemMouseCursors.zoomIn),
+        mouseRegions.any((m) => m.cursor == SystemMouseCursors.click),
         isTrue,
       );
     });
