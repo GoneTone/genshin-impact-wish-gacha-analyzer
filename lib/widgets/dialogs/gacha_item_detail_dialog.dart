@@ -64,7 +64,9 @@ class GachaItemDetailDialog extends ConsumerStatefulWidget {
       _GachaItemDetailDialogState();
 }
 
+/// [GachaItemDetailDialog] 的 state：維護 chip 列當前選中索引。
 class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
+  /// 當前選中 chip 的 index；點 chip 時 setState 更新；超出範圍由 `clampedIndex` 收斂。
   int _selectedIndex = 0;
 
   @override
