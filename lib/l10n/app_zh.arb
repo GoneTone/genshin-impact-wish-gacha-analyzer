@@ -520,11 +520,11 @@
 
   "galleryCardLabel": "卡片",
   "@galleryCardLabel": {
-    "description": "Gallery 圖集中「卡片（pic）」chip 分頁的標籤。對應 hoyowiki entry_page gallery_character.pic 的 chip 標籤；非物品本身名稱。"
+    "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
   },
 
   "galleryIconLabel": "圖示",
   "@galleryIconLabel": {
-    "description": "Gallery 圖集中「圖示（icon）」chip 分頁的標籤；放在 chip 列最後一張，讓武器等沒有 gallery_character module 的物品也至少能開 dialog 看 icon 大圖。"
+    "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
   }
 }
