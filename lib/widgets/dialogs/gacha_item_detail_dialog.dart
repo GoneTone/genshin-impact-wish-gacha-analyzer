@@ -203,8 +203,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (desc.trim().isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                if (desc.trim().isNotEmpty)
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 120),
                     child: SingleChildScrollView(
@@ -224,7 +223,6 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       ),
                     ),
                   ),
-                ],
                 if (tags.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Wrap(
