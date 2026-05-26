@@ -1,4 +1,5 @@
 {
   "@@locale": "sr",
-  "galleryCardLabel": "Card"
+  "galleryCardLabel": "Card",
+  "galleryIconLabel": "Иконица"
 }

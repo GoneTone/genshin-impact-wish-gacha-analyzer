@@ -165,27 +165,20 @@ void main() {
       );
     });
 
-    testWidgets('icon file + gallery pic 存在 → true', (tester) async {
-      const picUrl = 'https://cdn.hoyolab.com/x_card.png';
+    testWidgets('icon file 存在 → true（gallery 可缺，武器路徑）', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
       await seedIndex(
         tester,
         notifier,
         name: 'X',
         id: 'x1',
-        fetched: HoYoWikiEntryFetched(
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: HoYoWikiGalleryData(picUrl: picUrl, list: const []),
+          gallery: null,
         ),
       );
       await tester.runAsync(() async {
         await _touchFile(tempDir, 'x1_icon.png');
-        final picFile = hoyowikiGalleryCacheFile(
-          baseDir: tempDir,
-          id: 'x1',
-          url: picUrl,
-        );
-        await _touchFile(tempDir, picFile.uri.pathSegments.last);
       });
       expect(
         await checkContent(tester, _rec(name: 'X', gachaType: '301')),
@@ -239,13 +232,13 @@ void main() {
 
       expect(find.byType(GachaItemDetailDialog), findsOneWidget);
       expect(find.text('X'), findsOneWidget);
-      // gallery null → content 無 Image，title 只有 icon 一張
+      // gallery null：title 1 張 icon + content Icon chip 1 張 icon (chip 列只一項自動隱藏)
       expect(
         find.descendant(
           of: find.byType(GachaItemDetailDialog),
           matching: find.byType(Image),
         ),
-        findsOneWidget,
+        findsNWidgets(2),
       );
     });
 
@@ -446,7 +439,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    testWidgets('chip 列含 list 順序 + 最後是卡片', (tester) async {
+    testWidgets('chip 列順序：list → 卡片 → Icon', (tester) async {
       late File picFile;
       late File origFile;
       await tester.runAsync(() async {
@@ -485,6 +478,13 @@ void main() {
       await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
       expect(find.text('Original'), findsOneWidget);
       expect(find.text('Card'), findsOneWidget); // app_en.arb galleryCardLabel
+      expect(find.text('Icon'), findsOneWidget); // app_en.arb galleryIconLabel
+      // 順序：ChoiceChip 在 widget tree 內的出現順序對應 chipEntries 順序
+      final chipLabels = tester
+          .widgetList<ChoiceChip>(find.byType(ChoiceChip))
+          .map((c) => (c.label as Text).data)
+          .toList();
+      expect(chipLabels, ['Original', 'Card', 'Icon']);
     });
 
     testWidgets('點切「卡片」chip → 圖片切到 pic', (tester) async {
@@ -583,12 +583,14 @@ void main() {
       expect(find.byType(Html), findsNothing);
     });
 
-    testWidgets('hasHoYoWikiContent 在缺 gallery 時為 false', (tester) async {
+    testWidgets('武器路徑：缺 gallery 仍可開 dialog，chip 列只一個 Icon 自動隱藏', (
+      tester,
+    ) async {
       await tester.runAsync(() async {
         await _touchFile(tempDir, '12345_icon.png');
         await container
             .read(hoyowikiIndexProvider.notifier)
-            .setSearch(name: 'Hu Tao', lang: 'en-us', id: '12345', menuId: 2);
+            .setSearch(name: 'Hu Tao', lang: 'en-us', id: '12345', menuId: 4);
         await container
             .read(hoyowikiIndexProvider.notifier)
             .mergeEntry(
@@ -601,11 +603,24 @@ void main() {
             );
       });
 
+      // 可點：hasHoYoWikiContent 為 true（只要有 icon）
       final got = await checkContent(
         tester,
         _rec(name: 'Hu Tao', gachaType: '301'),
       );
-      expect(got, isFalse);
+      expect(got, isTrue);
+
+      // dialog 開：chip 列只有 1 個（Icon）→ 不顯示 chip 列
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      expect(find.byType(ChoiceChip), findsNothing);
+      // 但 content 仍有 icon 圖（chipEntries[0].file）
+      expect(
+        find.descendant(
+          of: find.byType(GachaItemDetailDialog),
+          matching: find.byType(Image),
+        ),
+        findsNWidgets(2), // title icon + content icon
+      );
     });
   });
 }

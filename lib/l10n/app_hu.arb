@@ -1,4 +1,5 @@
 {
   "@@locale": "hu",
-  "galleryCardLabel": "Kártya"
+  "galleryCardLabel": "Kártya",
+  "galleryIconLabel": "Ikon"
 }

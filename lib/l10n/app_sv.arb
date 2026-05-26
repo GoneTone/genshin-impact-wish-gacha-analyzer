@@ -1,4 +1,5 @@
 {
   "@@locale": "sv",
-  "galleryCardLabel": "Card"
+  "galleryCardLabel": "Card",
+  "galleryIconLabel": "Ikon"
 }

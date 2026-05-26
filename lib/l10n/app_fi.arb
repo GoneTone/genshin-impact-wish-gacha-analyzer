@@ -1,4 +1,5 @@
 {
   "@@locale": "fi",
-  "galleryCardLabel": "Kortti"
+  "galleryCardLabel": "Kortti",
+  "galleryIconLabel": "Kuvake"
 }

@@ -1,4 +1,5 @@
 {
   "@@locale": "ro",
-  "galleryCardLabel": "Card"
+  "galleryCardLabel": "Card",
+  "galleryIconLabel": "Pictogramă"
 }

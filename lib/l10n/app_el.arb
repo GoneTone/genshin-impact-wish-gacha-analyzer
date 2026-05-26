@@ -1,4 +1,5 @@
 {
   "@@locale": "el",
-  "galleryCardLabel": "Κάρτα"
+  "galleryCardLabel": "Κάρτα",
+  "galleryIconLabel": "Εικονίδιο"
 }

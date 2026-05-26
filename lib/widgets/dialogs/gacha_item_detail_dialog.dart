@@ -15,8 +15,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
 const _odesGachaTypes = {'2000', '1000'};
 
-/// 判斷 [record] 是否在 dialog 內有東西可顯示。需 icon 檔到位且
-/// `record.lang` 的 gallery 有任一張 cache 檔到位。
+/// 判斷 [record] 是否在 dialog 內有東西可顯示。可點性放寬為「icon 檔在即可」
+/// — gallery 可能因為武器頁等 entry 沒有 `gallery_character` module 而為空，
+/// 此時 dialog 仍會顯示 icon 大圖（chip 列只有 Icon 一個項目，自動隱藏 chip 列）。
 bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (_odesGachaTypes.contains(record.gachaType)) return false;
   final index = ref.watch(hoyowikiIndexProvider);
@@ -24,30 +25,13 @@ bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (id == null) return false;
   final entry = index.lookupEntry(id);
   if (entry == null) return false;
-  final cacheDir = ref.watch(hoyowikiCacheDirProvider);
-
   if (entry.iconUrl.isEmpty) return false;
-  if (!hoyowikiIconCacheFile(
+  final cacheDir = ref.watch(hoyowikiCacheDirProvider);
+  return hoyowikiIconCacheFile(
     baseDir: cacheDir,
     id: id,
     url: entry.iconUrl,
-  ).existsSync()) {
-    return false;
-  }
-
-  final gallery = entry.galleryByLang[record.lang];
-  if (gallery == null) return false;
-
-  bool ready(String url) =>
-      url.isNotEmpty &&
-      hoyowikiGalleryCacheFile(
-        baseDir: cacheDir,
-        id: id,
-        url: url,
-      ).existsSync();
-
-  if (ready(gallery.picUrl)) return true;
-  return gallery.list.any((it) => ready(it.imgUrl));
+  ).existsSync();
 }
 
 /// 物品 dialog — title 為 icon + 名稱；content 為頂部 chip 列 +
@@ -92,23 +76,49 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
       if (f.existsSync()) iconFile = f;
     }
 
-    // chip 順序：list 全部 + pic（最後）
+    // chip 順序：gallery list → pic 卡片 → Icon。各 chip 只有 cache 檔存在才加。
+    // Icon chip 永遠最後一個（hasHoYoWikiContent 已保證 icon 存在；此處仍 defensively check）。
     final chipEntries = <_GalleryChipEntry>[];
-    if (gallery != null) {
-      for (final it in gallery.list) {
-        chipEntries.add(
-          _GalleryChipEntry(
-            label: it.key,
+    if (id != null) {
+      if (gallery != null) {
+        for (final it in gallery.list) {
+          final f = hoyowikiGalleryCacheFile(
+            baseDir: cacheDir,
+            id: id,
             url: it.imgUrl,
-            descHtml: it.imgDescHtml,
-          ),
-        );
+          );
+          if (f.existsSync()) {
+            chipEntries.add(
+              _GalleryChipEntry(
+                label: it.key,
+                file: f,
+                descHtml: it.imgDescHtml,
+              ),
+            );
+          }
+        }
+        if (gallery.picUrl.isNotEmpty) {
+          final f = hoyowikiGalleryCacheFile(
+            baseDir: cacheDir,
+            id: id,
+            url: gallery.picUrl,
+          );
+          if (f.existsSync()) {
+            chipEntries.add(
+              _GalleryChipEntry(
+                label: l.galleryCardLabel,
+                file: f,
+                descHtml: '',
+              ),
+            );
+          }
+        }
       }
-      if (gallery.picUrl.isNotEmpty) {
+      if (iconFile != null) {
         chipEntries.add(
           _GalleryChipEntry(
-            label: l.galleryCardLabel,
-            url: gallery.picUrl,
+            label: l.galleryIconLabel,
+            file: iconFile,
             descHtml: '',
           ),
         );
@@ -119,16 +129,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
         ? -1
         : _selectedIndex.clamp(0, chipEntries.length - 1);
     final current = clampedIndex >= 0 ? chipEntries[clampedIndex] : null;
-
-    File? currentFile;
-    if (id != null && current != null) {
-      final f = hoyowikiGalleryCacheFile(
-        baseDir: cacheDir,
-        id: id,
-        url: current.url,
-      );
-      if (f.existsSync()) currentFile = f;
-    }
+    final currentFile = current?.file;
 
     final nameColor = switch (record.rankType) {
       5 => tokens.fiveStar,
@@ -202,7 +203,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   alignment: Alignment.topCenter,
                   errorBuilder: (_, e, st) {
                     Logger('gacha.hoyowiki.detail').warning(
-                      'gallery image errorBuilder id=$id url=${current?.url}',
+                      'gallery image errorBuilder id=$id path=${currentFile.path}',
                       e,
                       st,
                     );
@@ -230,22 +231,23 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
   }
 }
 
-/// 內部：單一 chip 條目（chip 標籤 + 對應圖片 URL + 描述 HTML）。
+/// 內部：單一 chip 條目（chip 標籤 + pre-resolved 本地圖檔 + 描述 HTML）。
 class _GalleryChipEntry {
   /// 建立 [_GalleryChipEntry]。
   const _GalleryChipEntry({
     required this.label,
-    required this.url,
+    required this.file,
     required this.descHtml,
   });
 
-  /// chip 顯示的文字（list[i].key 或 app i18n galleryCardLabel）。
+  /// chip 顯示的文字（list[i].key、galleryCardLabel 或 galleryIconLabel）。
   final String label;
 
-  /// 對應圖片 URL（用於推導 cache file path）。
-  final String url;
+  /// 該 chip 對應的本地 cache 檔（icon 走 hoyowikiIconCacheFile、其餘走 gallery hash）；
+  /// 在 build 時就 resolve 並 existsSync 過濾，所以此處保證實體存在。
+  final File file;
 
-  /// 描述 HTML；trim 後為空則不繪描述區。
+  /// 描述 HTML；trim 後為空則不繪描述區（pic / icon 均為空）。
   final String descHtml;
 }
 

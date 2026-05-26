@@ -717,5 +717,6 @@
     }
   },
   "settingsLogsClearConfirmBody": "This will permanently delete all files in logs/. Export them first if you need them for bug reports. Type CLEAR to confirm.",
-  "galleryCardLabel": "Card"
+  "galleryCardLabel": "Card",
+  "galleryIconLabel": "Icon"
 }

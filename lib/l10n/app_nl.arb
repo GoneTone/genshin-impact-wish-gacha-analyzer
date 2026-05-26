@@ -1,4 +1,5 @@
 {
   "@@locale": "nl",
-  "galleryCardLabel": "Kaart"
+  "galleryCardLabel": "Kaart",
+  "galleryIconLabel": "Pictogram"
 }

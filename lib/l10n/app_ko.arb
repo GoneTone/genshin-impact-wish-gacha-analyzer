@@ -1,4 +1,5 @@
 {
   "@@locale": "ko",
-  "galleryCardLabel": "카드"
+  "galleryCardLabel": "카드",
+  "galleryIconLabel": "아이콘"
 }
