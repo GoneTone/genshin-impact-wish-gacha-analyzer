@@ -484,4 +484,99 @@ void main() {
       expect(out, isNull);
     });
   });
+
+  group('HoYoWikiFetcher._parseTags', () {
+    test('多 group 攤平、保留出現順序', () {
+      final input = {
+        'character_property': {
+          'values': ['生命之契'],
+        },
+        'character_rarity': {
+          'values': ['4星'],
+        },
+        'character_region': {
+          'values': ['蒙德'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['生命之契', '4星', '蒙德']);
+    });
+
+    test('跨 group 重複 value 去重、保留首次出現位置', () {
+      final input = {
+        'g1': {
+          'values': ['A', 'B'],
+        },
+        'g2': {
+          'values': ['B', 'C'],
+        },
+        'g3': {
+          'values': ['A'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['A', 'B', 'C']);
+    });
+
+    test('filter_values 為 null → 空 list', () {
+      expect(HoYoWikiFetcher.parseTagsDebug(null), const <String>[]);
+    });
+
+    test('filter_values 非 map → 空 list', () {
+      expect(HoYoWikiFetcher.parseTagsDebug('not a map'), const <String>[]);
+      expect(HoYoWikiFetcher.parseTagsDebug(123), const <String>[]);
+      expect(HoYoWikiFetcher.parseTagsDebug([]), const <String>[]);
+    });
+
+    test('group 缺 values key → 該 group skip', () {
+      final input = {
+        'g1': {
+          'values': ['A'],
+        },
+        'g2': {'something_else': 'x'},
+        'g3': {
+          'values': ['B'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['A', 'B']);
+    });
+
+    test('group 的 values 非 list → 該 group skip', () {
+      final input = {
+        'g1': {
+          'values': ['A'],
+        },
+        'g2': {'values': 'not a list'},
+        'g3': {
+          'values': ['B'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['A', 'B']);
+    });
+
+    test('value 非 string → skip', () {
+      final input = {
+        'g1': {
+          'values': ['A', 123, null, 'B'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['A', 'B']);
+    });
+
+    test('value trim 後為空字串 → skip', () {
+      final input = {
+        'g1': {
+          'values': ['A', '   ', '\t\n', 'B'],
+        },
+      };
+      expect(HoYoWikiFetcher.parseTagsDebug(input), ['A', 'B']);
+    });
+
+    test('回傳 List.unmodifiable（不可變）', () {
+      final out = HoYoWikiFetcher.parseTagsDebug({
+        'g1': {
+          'values': ['A'],
+        },
+      });
+      expect(() => out.add('x'), throwsUnsupportedError);
+    });
+  });
 }

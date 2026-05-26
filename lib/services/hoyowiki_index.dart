@@ -61,6 +61,28 @@ class HoYoWikiGalleryItem {
   final String imgDescHtml;
 }
 
+/// 某一個 lang 抓到的整組 entry_page 資料（gallery + desc + tags）。
+/// 三個欄位永遠來自同一次 entry_page API 呼叫，原子性寫入。
+class HoYoWikiPageData {
+  /// 建立 [HoYoWikiPageData]。
+  const HoYoWikiPageData({
+    required this.gallery,
+    required this.desc,
+    required this.tags,
+  });
+
+  /// 該 lang 的 gallery_character 整組（pic + list）；entry 無
+  /// `gallery_character` module 時為 null（例：武器頁）。
+  final HoYoWikiGalleryData? gallery;
+
+  /// 該 lang 的 `data.page.desc`；可能為純文字或含 HTML，可能為空字串。
+  final String desc;
+
+  /// 該 lang 的 `data.page.filter_values.*.values[]` 全部攤平後去重、保留
+  /// 首次出現順序的 tag list；可能為空 list。
+  final List<String> tags;
+}
+
 /// 跨 UID 共用的 HoYoWiki lookup index。
 class HoYoWikiIndex {
   /// 建立 [HoYoWikiIndex]。

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
@@ -125,6 +125,39 @@ class HoYoWikiFetcher {
     _log.warning('search miss name=$name lang=$lang');
     return null;
   }
+
+  /// 從 entry_page response 的 `data.page.filter_values` 攤平所有 group 的
+  /// `values[]`，保留首次出現順序去重後回傳。例：
+  ///
+  ///   {character_property: {values: ['生命之契']},
+  ///    character_rarity: {values: ['4星']},
+  ///    character_region: {values: ['蒙德']}}
+  ///   → ['生命之契', '4星', '蒙德']
+  ///
+  /// Map 遍歷順序：Dart `Map` 保證 insertion order，`jsonDecode` 回傳的是
+  /// `LinkedHashMap`，所以「filter_values 出現順序」對同一份 JSON 穩定。
+  static List<String> _parseTags(Object? filterValues) {
+    if (filterValues is! Map) return const [];
+    final out = <String>[];
+    final seen = <String>{};
+    for (final v in filterValues.values) {
+      if (v is! Map) continue;
+      final values = v['values'];
+      if (values is! List) continue;
+      for (final s in values) {
+        if (s is! String) continue;
+        final t = s.trim();
+        if (t.isEmpty) continue;
+        if (seen.add(t)) out.add(t);
+      }
+    }
+    return List.unmodifiable(out);
+  }
+
+  /// 測試用：暴露 [_parseTags] 給單元測試。生產勿用。
+  @visibleForTesting
+  static List<String> parseTagsDebug(Object? filterValues) =>
+      _parseTags(filterValues);
 
   /// 從 entry_page response 的 `modules[]` 找出 `gallery_character`
   /// component 並 JSON 解析其 `data` 字串。失敗或空回 null。
