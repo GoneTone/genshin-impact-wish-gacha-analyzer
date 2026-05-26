@@ -36,8 +36,24 @@ class ZoomableImageOverlay extends StatefulWidget {
   State<ZoomableImageOverlay> createState() => _ZoomableImageOverlayState();
 }
 
-/// [ZoomableImageOverlay] 的 state — 後續 task 會接入 `_ctrl` / wheel / double-tap。
+/// [ZoomableImageOverlay] 的 state — 管理 [_ctrl] 縮放矩陣與 close 路徑。
 class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
+  /// 縮放最小值（= fit，整圖可見）。
+  static const double _minScale = 1.0;
+
+  /// 縮放最大值。
+  static const double _maxScale = 5.0;
+
+  /// 控制 InteractiveViewer 的 Matrix4；wheel / double-tap 會手動設置 scale，
+  /// InteractiveViewer 自動處理 pan。
+  final TransformationController _ctrl = TransformationController();
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
   /// 關 overlay 並 log 來源。[reason] 走 `backdrop | button` 二選一；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
   void _close(String reason) {
     Logger('gacha.hoyowiki.zoom').info('overlay close reason=$reason');
@@ -59,18 +75,26 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
         // 中央圖片區 — 留 48px padding 給 backdrop tap 區。
         Padding(
           padding: const EdgeInsets.all(48),
-          child: Center(
-            child: Image.file(
-              widget.imageFile,
-              fit: BoxFit.contain,
-              errorBuilder: (_, e, st) {
-                Logger('gacha.hoyowiki.zoom').warning(
-                  'image errorBuilder file=${widget.imageFile.path}',
-                  e,
-                  st,
-                );
-                return const SizedBox.shrink();
-              },
+          child: InteractiveViewer(
+            transformationController: _ctrl,
+            panEnabled: true,
+            // wheel / double-tap 自管 scale，避免兩套 scale source 打架。
+            scaleEnabled: false,
+            minScale: _minScale,
+            maxScale: _maxScale,
+            child: Center(
+              child: Image.file(
+                widget.imageFile,
+                fit: BoxFit.contain,
+                errorBuilder: (_, e, st) {
+                  Logger('gacha.hoyowiki.zoom').warning(
+                    'image errorBuilder file=${widget.imageFile.path}',
+                    e,
+                    st,
+                  );
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
         ),

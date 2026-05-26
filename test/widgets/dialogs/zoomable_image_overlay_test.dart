@@ -167,4 +167,23 @@ void main() {
       expect(find.byType(ZoomableImageOverlay), findsNothing);
     });
   });
+
+  group('ZoomableImageOverlay InteractiveViewer wiring', () {
+    testWidgets('uses InteractiveViewer with scaleEnabled=false, panEnabled=true', (
+      tester,
+    ) async {
+      await openOverlay(tester);
+      final iv = tester.widget<InteractiveViewer>(find.byType(InteractiveViewer));
+      expect(iv.scaleEnabled, isFalse);
+      expect(iv.panEnabled, isTrue);
+      expect(iv.minScale, 1.0);
+      expect(iv.maxScale, 5.0);
+    });
+
+    testWidgets('initial transform is identity (scale = 1)', (tester) async {
+      await openOverlay(tester);
+      final iv = tester.widget<InteractiveViewer>(find.byType(InteractiveViewer));
+      expect(iv.transformationController!.value.getMaxScaleOnAxis(), 1.0);
+    });
+  });
 }
