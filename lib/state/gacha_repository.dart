@@ -802,21 +802,34 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    /// 過渡：目前只用 iconUrl 判定重抓；Task 8 會改為 menuId + galleryByLang[lang] 為主。
-    bool needRefetchEntry(HoYoWikiEntry? e, int? menuId) {
-      if (e == null) return true;
-      return e.iconUrl.isEmpty;
+    /// 重抓判定：entry 或 menuId 缺失，或該 lang 還沒有 gallery → true。
+    bool needRefetchEntry(HoYoWikiEntry? entry, int? menuId, String lang) {
+      if (entry == null) return true;
+      if (menuId == null) return true;
+      if (!entry.galleryByLang.containsKey(lang)) return true;
+      return false;
     }
 
-    // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或需重抓的
-    final initialIds = uniquePairs
-        .map((p) => index.lookupId(name: p.$1, lang: p.$2))
-        .whereType<String>()
-        .toSet();
-    final entryTodo = <String>{
-      for (final id in initialIds)
-        if (needRefetchEntry(index.lookupEntry(id), index.lookupMenuId(id))) id,
-    };
+    // entryTodo 初始：走過所有 record lang+name，蒐集需要重抓的 (id, lang) pair
+    final allLangs = uniquePairs.map((p) => p.$2).toSet();
+    final namesByLang = <String, Set<String>>{};
+    for (final pair in uniquePairs) {
+      namesByLang.putIfAbsent(pair.$2, () => {}).add(pair.$1);
+    }
+    final entryTodo = <({String id, String lang})>{};
+    for (final lang in allLangs) {
+      for (final name in namesByLang[lang] ?? const <String>{}) {
+        final id = index.lookupId(name: name, lang: lang);
+        if (id == null) continue;
+        if (needRefetchEntry(
+          index.lookupEntry(id),
+          index.lookupMenuId(id),
+          lang,
+        )) {
+          entryTodo.add((id: id, lang: lang));
+        }
+      }
+    }
 
     // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
     final downloadTodo = <_HoYoWikiDownloadItem>[];
@@ -828,6 +841,10 @@ class GachaRepository extends Notifier<GachaState> {
       downloadTodo.add(_HoYoWikiDownloadItem(id: id, url: url));
     }
 
+    final initialIds = uniquePairs
+        .map((p) => index.lookupId(name: p.$1, lang: p.$2))
+        .whereType<String>()
+        .toSet();
     for (final id in initialIds) {
       final e = index.lookupEntry(id);
       if (e != null) enqueueDownloadsForEntry(id, e);
@@ -861,12 +878,13 @@ class GachaRepository extends Notifier<GachaState> {
                 id: hit.id,
                 menuId: hit.menuId,
               );
-              if (!entryTodo.contains(hit.id) &&
+              if (!entryTodo.contains((id: hit.id, lang: pair.$2)) &&
                   needRefetchEntry(
                     ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
                     hit.menuId,
+                    pair.$2,
                   )) {
-                entryTodo.add(hit.id);
+                entryTodo.add((id: hit.id, lang: pair.$2));
               }
             }
           } catch (e) {
@@ -890,33 +908,29 @@ class GachaRepository extends Notifier<GachaState> {
     if (entryTodo.isNotEmpty) {
       final entryList = entryTodo.toList();
       var doneEntry = 0;
-      await runConcurrent<String>(
+      await runConcurrent<({String id, String lang})>(
         items: entryList,
         concurrency: fetcher.entryConcurrency,
         shouldAbort: isAborted,
-        worker: (id) async {
+        worker: (pair) async {
           try {
-            // TODO(Task 8): lang from per-lang entryTodo pair
             final fetched = await fetcher.fetchEntryPage(
-              id: id,
-              lang: 'en-us',
+              id: pair.id,
+              lang: pair.lang,
               client: client,
             );
             await indexNotifier.mergeEntry(
-              id: id,
-              lang: 'en-us', // TODO(Task 8): from per-lang pair
+              id: pair.id,
+              lang: pair.lang,
               fetched: fetched,
             );
-            enqueueDownloadsForEntry(
-              id,
-              HoYoWikiEntry(
-                iconUrl: fetched.iconUrl,
-                galleryByLang: const {},
-                fetchedAt: DateTime.now().toUtc(),
-              ),
-            );
+            // download enqueue 用既有 icon-only 邏輯（Task 9 會擴成含 gallery）
+            final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
+            if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
           } catch (e) {
-            _log.warning('hoyowiki entry failed id=$id err=$e');
+            _log.warning(
+              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} err=$e',
+            );
           }
           if (!ref.mounted) return;
           doneEntry++;

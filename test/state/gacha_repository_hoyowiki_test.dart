@@ -265,7 +265,7 @@ void main() {
     expect(entryCallCount, 2, reason: 'menu_id 2：兩個 URL 都空應視為 incomplete，下次重抓');
   });
 
-  test('icon 有值 → 下次不重抓（不管 menu_id）', () async {
+  test('icon 有值且 gallery 有資料 → 下次不重抓（不管 menu_id）', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -295,7 +295,29 @@ void main() {
           jsonEncode({
             'retcode': 0,
             'data': {
-              'page': {'icon_url': 'https://x/icon.png'},
+              'page': {
+                'icon_url': 'https://x/icon.png',
+                'modules': [
+                  {
+                    'components': [
+                      {
+                        'component_id': 'gallery_character',
+                        'data': jsonEncode({
+                          'pic': '',
+                          'list': [
+                            {
+                              'id': 'a',
+                              'key': 'k',
+                              'img': 'https://x/a.png',
+                              'imgDesc': '',
+                            },
+                          ],
+                        }),
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           }),
           200,
@@ -310,10 +332,10 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoYoWikiOnly();
-    expect(entryCallCount, 1, reason: 'icon 有值 → 不重抓');
+    expect(entryCallCount, 1, reason: 'icon 有值且 gallery 有資料 → 不重抓');
   });
 
-  test('menu_id 4（武器）：icon 有值 → 不重抓', () async {
+  test('menu_id 4（武器）：icon 有值且 gallery 有資料 → 不重抓', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -343,7 +365,29 @@ void main() {
           jsonEncode({
             'retcode': 0,
             'data': {
-              'page': {'icon_url': 'https://x/icon.png'},
+              'page': {
+                'icon_url': 'https://x/icon.png',
+                'modules': [
+                  {
+                    'components': [
+                      {
+                        'component_id': 'gallery_character',
+                        'data': jsonEncode({
+                          'pic': '',
+                          'list': [
+                            {
+                              'id': 'a',
+                              'key': 'k',
+                              'img': 'https://x/a.png',
+                              'imgDesc': '',
+                            },
+                          ],
+                        }),
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           }),
           200,
@@ -358,7 +402,7 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoYoWikiOnly();
-    expect(entryCallCount, 1, reason: 'icon 有值 → 不重抓');
+    expect(entryCallCount, 1, reason: 'icon 有值且 gallery 有資料 → 不重抓');
   });
 
   test(
@@ -553,6 +597,134 @@ void main() {
       }
     }
     await repoFuture;
+  });
+
+  group('hoyowiki per-lang entry fetch', () {
+    test('同 id 兩 lang 都會發 entry_page 請求', () async {
+      final entryReqs = <String>[];
+      final apiClient = MockClient((req) async {
+        final url = req.url.toString();
+        if (url.contains('/wapi/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'message': 'OK',
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '12345',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2, 'name': 'Character'},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (url.contains('/wapi/entry_page')) {
+          final lang = req.headers['X-Rpc-Language'] ?? '';
+          final id = Uri.parse(url).queryParameters['entry_page_id'] ?? '';
+          entryReqs.add('$id::$lang');
+          return http.Response.bytes(
+            utf8.encode(
+              jsonEncode({
+                'retcode': 0,
+                'message': 'OK',
+                'data': {
+                  'page': {
+                    'icon_url': 'https://x/icon.png',
+                    'modules': [
+                      {
+                        'components': [
+                          {
+                            'component_id': 'gallery_character',
+                            'data': jsonEncode({
+                              'pic': 'https://x/p.png',
+                              'list': [
+                                {
+                                  'id': 'a',
+                                  'key': 'k-$lang',
+                                  'img': 'https://x/a.png',
+                                  'imgDesc': '',
+                                },
+                              ],
+                            }),
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              }),
+            ),
+            200,
+          );
+        }
+        return http.Response.bytes(
+          [0x89, 0x50, 0x4E, 0x47],
+          200,
+          headers: {'content-type': 'image/png'},
+        );
+      });
+
+      // 兩筆 record 同 name 不同 lang
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_perlang_');
+      SharedPreferences.setMockInitialValues({});
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 5, 26),
+          banners: {
+            '301': [
+              _rec(id: '1', name: 'Hu Tao', gachaType: '301', lang: 'zh-tw'),
+              _rec(id: '2', name: 'Hu Tao', gachaType: '301', lang: 'en-us'),
+            ],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+            '2000': [],
+            '1000': [],
+          },
+        ),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+          hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(client: apiClient, cancel: () {}),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(() async {
+        if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      });
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugRunHoYoWikiOnly();
+
+      expect(entryReqs.toSet(), {'12345::zh-tw', '12345::en-us'});
+
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      expect(entry.galleryByLang.keys.toSet(), {'zh-tw', 'en-us'});
+      expect(entry.galleryByLang['zh-tw']!.list.single.key, 'k-zh-tw');
+      expect(entry.galleryByLang['en-us']!.list.single.key, 'k-en-us');
+    });
   });
 
   test('cancel 在 worker 取下一筆前生效，其餘 item 不被 dispatch', () async {
