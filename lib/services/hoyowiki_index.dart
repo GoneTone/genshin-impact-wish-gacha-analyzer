@@ -5,21 +5,22 @@ import 'package:crypto/crypto.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:logging/logging.dart';
 
-/// HoYoWiki entry_page API 抓到的 icon URL 與各語言 gallery 整組資料。
+/// HoYoWiki entry_page API 抓到的 icon URL 與各語言整組 page 資料。
 class HoYoWikiEntry {
   /// 建立 [HoYoWikiEntry]；`iconUrl` 可能為空字串。
   const HoYoWikiEntry({
     required this.iconUrl,
-    required this.galleryByLang,
+    required this.pageByLang,
     required this.fetchedAt,
   });
 
   /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。lang-agnostic。
   final String iconUrl;
 
-  /// 各語言抓到的整組 gallery；key 為 record.lang（zh-tw / en / ja / ...）。
-  /// 某 lang 不在 map = 該 lang 還沒抓過（或抓過但 entry 無 gallery_character）。
-  final Map<String, HoYoWikiGalleryData> galleryByLang;
+  /// 各語言整組 page 資料；key 為 `record.lang`（zh-tw / en / ja / ...）。
+  /// 某 lang 不在 map 內 = 該 lang 還沒抓過。`gallery` 可能為 null（entry 無
+  /// `gallery_character` module，如武器頁），但 `desc` / `tags` 仍可能有值。
+  final Map<String, HoYoWikiPageData> pageByLang;
 
   /// 抓取時間（僅供 debug，不參與邏輯）。
   final DateTime fetchedAt;
@@ -147,22 +148,23 @@ class HoYoWikiIndexStorage {
       final menuIdsJson =
           (json['menu_ids'] as Map<String, dynamic>?) ?? const {};
 
-      final isV1 = version < 2;
-      var droppedV1 = 0;
+      final isV3 = version >= 3;
+      var droppedLegacy = 0;
       final entries = entriesJson.map((k, v) {
         final m = v as Map<String, dynamic>;
         final iconUrl = (m['icon_url'] as String?) ?? '';
         final fetchedAt = DateTime.parse(m['fetched_at'] as String);
-        Map<String, HoYoWikiGalleryData> galleryByLang;
-        if (version >= 2 && m['gallery_by_lang'] is Map) {
-          final gJson = m['gallery_by_lang'] as Map<String, dynamic>;
-          galleryByLang = gJson.map((lang, raw) {
-            final gm = raw as Map<String, dynamic>;
-            final listJson = (gm['list'] as List<dynamic>?) ?? const [];
-            return MapEntry(
-              lang,
-              HoYoWikiGalleryData(
-                picUrl: (gm['pic_url'] as String?) ?? '',
+        Map<String, HoYoWikiPageData> pageByLang;
+        if (isV3 && m['page_by_lang'] is Map) {
+          final pJson = m['page_by_lang'] as Map<String, dynamic>;
+          pageByLang = pJson.map((lang, raw) {
+            final pm = raw as Map<String, dynamic>;
+            HoYoWikiGalleryData? gallery;
+            final gJson = pm['gallery'];
+            if (gJson is Map) {
+              final listJson = (gJson['list'] as List<dynamic>?) ?? const [];
+              gallery = HoYoWikiGalleryData(
+                picUrl: (gJson['pic_url'] as String?) ?? '',
                 list: listJson
                     .map((e) {
                       final em = e as Map<String, dynamic>;
@@ -174,27 +176,38 @@ class HoYoWikiIndexStorage {
                       );
                     })
                     .toList(growable: false),
+              );
+            }
+            final tagsJson = (pm['tags'] as List<dynamic>?) ?? const [];
+            return MapEntry(
+              lang,
+              HoYoWikiPageData(
+                gallery: gallery,
+                desc: (pm['desc'] as String?) ?? '',
+                tags: tagsJson.whereType<String>().toList(growable: false),
               ),
             );
           });
         } else {
-          // v1 or missing gallery_by_lang: gallery starts empty → will refetch
-          galleryByLang = const {};
-          if (isV1) droppedV1++;
+          // v1（header）／ v2（gallery_by_lang）→ v3：reset page_by_lang，
+          // 下次 update 由 needRefetchEntry 觸發 per-lang 重抓補齊。
+          pageByLang = const {};
+          droppedLegacy++;
         }
         return MapEntry(
           k,
           HoYoWikiEntry(
             iconUrl: iconUrl,
-            galleryByLang: galleryByLang,
+            pageByLang: pageByLang,
             fetchedAt: fetchedAt,
           ),
         );
       });
 
-      if (isV1 && droppedV1 > 0) {
+      if (!isV3 && droppedLegacy > 0) {
         _log.info(
-          'migrate v1 → v2: $droppedV1 entries reset (header_img_url dropped)',
+          'migrate v$version → v3: $droppedLegacy entries reset '
+          '(gallery_by_lang dropped)',
         );
       }
 
@@ -212,25 +225,30 @@ class HoYoWikiIndexStorage {
   /// 將 [index] 寫回磁碟（atomic rename）。
   Future<void> save(HoYoWikiIndex index) async {
     final json = {
-      'version': 2,
+      'version': 3,
       'search': index.searchMap,
       'entries': index.entries.map(
         (k, v) => MapEntry(k, {
           'icon_url': v.iconUrl,
           'fetched_at': v.fetchedAt.toUtc().toIso8601String(),
-          'gallery_by_lang': v.galleryByLang.map(
-            (lang, g) => MapEntry(lang, {
-              'pic_url': g.picUrl,
-              'list': g.list
-                  .map(
-                    (it) => {
-                      'id': it.id,
-                      'key': it.key,
-                      'img_url': it.imgUrl,
-                      'img_desc_html': it.imgDescHtml,
-                    },
-                  )
-                  .toList(),
+          'page_by_lang': v.pageByLang.map(
+            (lang, p) => MapEntry(lang, {
+              if (p.gallery != null)
+                'gallery': {
+                  'pic_url': p.gallery!.picUrl,
+                  'list': p.gallery!.list
+                      .map(
+                        (it) => {
+                          'id': it.id,
+                          'key': it.key,
+                          'img_url': it.imgUrl,
+                          'img_desc_html': it.imgDescHtml,
+                        },
+                      )
+                      .toList(),
+                },
+              'desc': p.desc,
+              'tags': p.tags,
             }),
           ),
         }),

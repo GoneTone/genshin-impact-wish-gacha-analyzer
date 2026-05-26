@@ -43,9 +43,17 @@ HoYoWikiEntry _entryWith({
   required String picUrl,
   required List<HoYoWikiGalleryItem> list,
   String lang = 'en-us',
+  String desc = '',
+  List<String> tags = const [],
 }) => HoYoWikiEntry(
   iconUrl: iconUrl,
-  galleryByLang: {lang: HoYoWikiGalleryData(picUrl: picUrl, list: list)},
+  pageByLang: {
+    lang: HoYoWikiPageData(
+      gallery: HoYoWikiGalleryData(picUrl: picUrl, list: list),
+      desc: desc,
+      tags: tags,
+    ),
+  },
   fetchedAt: DateTime.utc(2026, 5, 26),
 );
 
@@ -139,7 +147,10 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        fetched: const HoYoWikiEntryFetched(iconUrl: '', gallery: null),
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: '',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
       );
       expect(
         await checkContent(tester, _rec(name: 'X', gachaType: '301')),
@@ -156,7 +167,7 @@ void main() {
         id: 'x1',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
       expect(
@@ -174,7 +185,7 @@ void main() {
         id: 'x1',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
       await tester.runAsync(() async {
@@ -221,7 +232,7 @@ void main() {
         id: 'x1',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
       await tester.runAsync(() async {
@@ -249,7 +260,10 @@ void main() {
         notifier,
         name: 'X',
         id: 'x1',
-        fetched: const HoYoWikiEntryFetched(iconUrl: '', gallery: null),
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: '',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
       );
 
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
@@ -281,7 +295,7 @@ void main() {
         id: 'x1',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
       await tester.runAsync(() async {
@@ -305,7 +319,11 @@ void main() {
         id: 'x1',
         fetched: HoYoWikiEntryFetched(
           iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
-          gallery: HoYoWikiGalleryData(picUrl: picUrl, list: const []),
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(picUrl: picUrl, list: const []),
+            desc: '',
+            tags: const [],
+          ),
         ),
       );
       await tester.runAsync(() async {
@@ -409,7 +427,9 @@ void main() {
         lang: lang,
         fetched: HoYoWikiEntryFetched(
           iconUrl: entry.iconUrl,
-          gallery: entry.galleryByLang[lang],
+          page:
+              entry.pageByLang[lang] ??
+              const HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
     }
@@ -598,7 +618,7 @@ void main() {
               lang: 'en-us',
               fetched: const HoYoWikiEntryFetched(
                 iconUrl: 'https://x/icon.png',
-                gallery: null,
+                page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
               ),
             );
       });

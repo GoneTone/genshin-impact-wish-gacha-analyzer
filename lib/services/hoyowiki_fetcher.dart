@@ -21,17 +21,18 @@ class HoYoWikiSearchHit {
   final int menuId;
 }
 
-/// HoYoWiki entry_page API 抓到的 icon URL 與（可能）gallery 整組資料。
+/// HoYoWiki entry_page API 抓到的 icon URL 與該 lang 的整組 page 資料。
 class HoYoWikiEntryFetched {
-  /// 建立 [HoYoWikiEntryFetched]；icon 可能為空字串；gallery 可能為 null（無
-  /// `gallery_character` module 或 data 解析失敗）。
-  const HoYoWikiEntryFetched({required this.iconUrl, required this.gallery});
+  /// 建立 [HoYoWikiEntryFetched]；icon 可能為空字串；`page.gallery` 可能為
+  /// null（entry 無 `gallery_character` module），`page.desc` / `page.tags`
+  /// 可能為空。
+  const HoYoWikiEntryFetched({required this.iconUrl, required this.page});
 
   /// 物品 icon CDN URL；HoYoWiki 未上傳時為空字串。
   final String iconUrl;
 
-  /// 該 lang 的 gallery 整組（pic + list）；無資料時為 null。
-  final HoYoWikiGalleryData? gallery;
+  /// 該 lang 的整組 page 資料（gallery + desc + tags）。
+  final HoYoWikiPageData page;
 }
 
 /// 與 HoYoLab Wiki API 互動的 fetcher，涵蓋 search / entry_page / image download。
@@ -239,13 +240,19 @@ class HoYoWikiFetcher {
     final iconUrl = (page?['icon_url'] as String?) ?? '';
     final modules = (page?['modules'] as List<dynamic>?) ?? const [];
     final gallery = _parseGalleryCharacterModule(modules);
+    final desc = (page?['desc'] as String?) ?? '';
+    final tags = _parseTags(page?['filter_values']);
     _log.info(
       'entry id=$id lang=$lang icon=${iconUrl.isNotEmpty} '
       'gallery=${gallery != null} '
       'pic=${gallery?.picUrl.isNotEmpty == true} '
-      'list=${gallery?.list.length ?? 0}',
+      'list=${gallery?.list.length ?? 0} '
+      'desc=${desc.isNotEmpty} tags=${tags.length}',
     );
-    return HoYoWikiEntryFetched(iconUrl: iconUrl, gallery: gallery);
+    return HoYoWikiEntryFetched(
+      iconUrl: iconUrl,
+      page: HoYoWikiPageData(gallery: gallery, desc: desc, tags: tags),
+    );
   }
 
   /// GET [url] 的圖檔 bytes；任何失敗（非 2xx / 例外）回 null，caller 不寫檔

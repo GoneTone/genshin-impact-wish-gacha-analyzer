@@ -218,7 +218,7 @@ void main() {
     expect(searchCalls.length, 1, reason: '第二次不應再 search');
   });
 
-  test('menu_id 2（角色）：兩個 URL 都空 → 下次重抓', () async {
+  test('該 lang 已有 page（即便空）→ 下次不重抓（pageByLang.containsKey 即視為已抓）', () async {
     var entryCallCount = 0;
     final apiClient = MockClient((req) async {
       if (req.url.path.endsWith('/search')) {
@@ -263,7 +263,11 @@ void main() {
     expect(entryCallCount, 1);
 
     await notifier.debugRunHoYoWikiOnly();
-    expect(entryCallCount, 2, reason: 'menu_id 2：兩個 URL 都空應視為 incomplete，下次重抓');
+    expect(
+      entryCallCount,
+      1,
+      reason: '新模型下 pageByLang 寫入即視為已抓；空 desc / 無 gallery 不再觸發重抓',
+    );
   });
 
   test('icon 有值且 gallery 有資料 → 下次不重抓（不管 menu_id）', () async {
@@ -722,9 +726,9 @@ void main() {
       expect(entryReqs.toSet(), {'12345::zh-tw', '12345::en-us'});
 
       final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
-      expect(entry.galleryByLang.keys.toSet(), {'zh-tw', 'en-us'});
-      expect(entry.galleryByLang['zh-tw']!.list.single.key, 'k-zh-tw');
-      expect(entry.galleryByLang['en-us']!.list.single.key, 'k-en-us');
+      expect(entry.pageByLang.keys.toSet(), {'zh-tw', 'en-us'});
+      expect(entry.pageByLang['zh-tw']!.gallery!.list.single.key, 'k-zh-tw');
+      expect(entry.pageByLang['en-us']!.gallery!.list.single.key, 'k-en-us');
     });
   });
 

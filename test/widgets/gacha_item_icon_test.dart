@@ -138,7 +138,7 @@ void main() {
         lang: 'en-us',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
     });
@@ -167,7 +167,10 @@ void main() {
       await notifier.mergeEntry(
         id: '111',
         lang: 'en-us',
-        fetched: HoYoWikiEntryFetched(iconUrl: iconUrl, gallery: null),
+        fetched: HoYoWikiEntryFetched(
+          iconUrl: iconUrl,
+          page: const HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
       );
       final cacheFile = hoyowikiIconCacheFile(
         baseDir: tempDir,
@@ -206,7 +209,7 @@ void main() {
         lang: 'en-us',
         fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          gallery: null,
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
 

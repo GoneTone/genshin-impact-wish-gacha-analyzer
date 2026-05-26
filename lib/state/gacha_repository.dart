@@ -802,11 +802,11 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    /// 重抓判定：entry 或 menuId 缺失，或該 lang 還沒有 gallery → true。
+    /// 重抓判定：entry 或 menuId 缺失，或該 lang 還沒有 page → true。
     bool needRefetchEntry(HoYoWikiEntry? entry, int? menuId, String lang) {
       if (entry == null) return true;
       if (menuId == null) return true;
-      if (!entry.galleryByLang.containsKey(lang)) return true;
+      if (!entry.pageByLang.containsKey(lang)) return true;
       return false;
     }
 
@@ -849,8 +849,10 @@ class GachaRepository extends Notifier<GachaState> {
           );
         }
       }
-      // gallery：迭代所有 lang 的 pic + list[].img，URL 去重
-      for (final gallery in entry.galleryByLang.values) {
+      // gallery：迭代所有 lang 的 page，gallery 為 null 跳過（如武器頁）
+      for (final page in entry.pageByLang.values) {
+        final g = page.gallery;
+        if (g == null) continue;
         void enqueue(String url) {
           if (url.isEmpty) return;
           final f = hoyowikiGalleryCacheFile(
@@ -865,8 +867,8 @@ class GachaRepository extends Notifier<GachaState> {
           );
         }
 
-        enqueue(gallery.picUrl);
-        for (final it in gallery.list) {
+        enqueue(g.picUrl);
+        for (final it in g.list) {
           enqueue(it.imgUrl);
         }
       }

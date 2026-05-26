@@ -80,7 +80,8 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     final cacheDir = ref.watch(hoyowikiCacheDirProvider);
     final id = index.lookupId(name: record.name, lang: record.lang);
     final entry = id == null ? null : index.lookupEntry(id);
-    final gallery = entry?.galleryByLang[record.lang];
+    final page = entry?.pageByLang[record.lang];
+    final gallery = page?.gallery;
 
     File? iconFile;
     if (id != null && entry != null && entry.iconUrl.isNotEmpty) {

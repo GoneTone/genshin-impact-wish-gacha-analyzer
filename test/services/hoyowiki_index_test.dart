@@ -34,7 +34,7 @@ void main() {
     test('命中回 entry', () {
       final entry = HoYoWikiEntry(
         iconUrl: 'https://x/icon.png',
-        galleryByLang: const {},
+        pageByLang: const {},
         fetchedAt: DateTime.utc(2026, 5, 23),
       );
       final index = HoYoWikiIndex(
@@ -95,7 +95,7 @@ void main() {
         entries: {
           '5125428': HoYoWikiEntry(
             iconUrl: 'https://x/icon.png',
-            galleryByLang: const {},
+            pageByLang: const {},
             fetchedAt: DateTime.utc(2026, 5, 23, 8),
           ),
         },
@@ -105,7 +105,7 @@ void main() {
       final loaded = await storage.load();
       expect(loaded.searchMap, original.searchMap);
       expect(loaded.entries['5125428']!.iconUrl, 'https://x/icon.png');
-      expect(loaded.entries['5125428']!.galleryByLang, isEmpty);
+      expect(loaded.entries['5125428']!.pageByLang, isEmpty);
       expect(
         loaded.entries['5125428']!.fetchedAt,
         DateTime.utc(2026, 5, 23, 8),
@@ -163,7 +163,7 @@ void main() {
           entries: {
             '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
-              galleryByLang: const {},
+              pageByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 23),
             ),
           },
@@ -328,11 +328,11 @@ void main() {
     });
   });
 
-  group('HoYoWikiIndexStorage v2', () {
+  group('HoYoWikiIndexStorage v3 schema', () {
     late Directory tempDir;
 
     setUp(() async {
-      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_v2_');
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_v3_');
     });
 
     tearDown(() async {
@@ -343,66 +343,136 @@ void main() {
       }
     });
 
-    test('save+load round trip：含 galleryByLang', () async {
+    test('round trip：page_by_lang 完整保存 gallery + desc + tags', () async {
       final storage = HoYoWikiIndexStorage(tempDir);
-      final entry = HoYoWikiEntry(
-        iconUrl: 'https://x/icon.png',
-        galleryByLang: const {
-          'zh-tw': HoYoWikiGalleryData(
-            picUrl: 'https://x/card.png',
-            list: [
-              HoYoWikiGalleryItem(
-                id: 'gallery_character8511',
-                key: '原畫',
-                imgUrl: 'https://x/orig.png',
-                imgDescHtml: '<p>衣裝</p>',
+      final index = HoYoWikiIndex(
+        searchMap: const {'zh-tw::胡桃': '5125428'},
+        entries: {
+          '5125428': HoYoWikiEntry(
+            iconUrl: 'https://x/icon.png',
+            pageByLang: {
+              'zh-tw': const HoYoWikiPageData(
+                gallery: HoYoWikiGalleryData(
+                  picUrl: 'https://x/card.png',
+                  list: [
+                    HoYoWikiGalleryItem(
+                      id: 'g1',
+                      key: '原畫',
+                      imgUrl: 'https://x/c.png',
+                      imgDescHtml: '<p>x</p>',
+                    ),
+                  ],
+                ),
+                desc: '「往生堂」...',
+                tags: ['生命之契', '4星', '蒙德'],
               ),
-            ],
+            },
+            fetchedAt: DateTime.utc(2026, 5, 26),
           ),
         },
-        fetchedAt: DateTime.utc(2026, 5, 26),
+        menuIds: const {'5125428': 2},
       );
-      await storage.save(
-        HoYoWikiIndex(
-          searchMap: const {'zh-tw::布倫妮': '12345'},
-          entries: {'12345': entry},
-          menuIds: const {'12345': 2},
-        ),
-      );
-
-      final loaded = await storage.load();
-      final got = loaded.lookupEntry('12345')!;
-      expect(got.iconUrl, 'https://x/icon.png');
-      expect(got.galleryByLang.keys.toList(), ['zh-tw']);
-      expect(got.galleryByLang['zh-tw']!.picUrl, 'https://x/card.png');
-      expect(got.galleryByLang['zh-tw']!.list.single.key, '原畫');
-      expect(got.galleryByLang['zh-tw']!.list.single.imgDescHtml, '<p>衣裝</p>');
+      await storage.save(index);
+      final reloaded = await storage.load();
+      final page = reloaded.lookupEntry('5125428')!.pageByLang['zh-tw']!;
+      expect(page.gallery!.picUrl, 'https://x/card.png');
+      expect(page.gallery!.list, hasLength(1));
+      expect(page.desc, '「往生堂」...');
+      expect(page.tags, ['生命之契', '4星', '蒙德']);
     });
 
-    test('v1 載入：丟棄 header_img_url，galleryByLang 為空', () async {
-      // 手寫 v1 JSON 模擬舊版資料
-      final file = File('${tempDir.path}/hoyowiki_index.json');
-      await file.writeAsString(
-        jsonEncode({
-          'version': 1,
-          'search': {'zh-tw::布倫妮': '12345'},
-          'menu_ids': {'12345': 2},
+    test('gallery 為 null 的 page（武器頁）也能 round trip', () async {
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final index = HoYoWikiIndex(
+        searchMap: const {'en-us::Sword': '9001'},
+        entries: {
+          '9001': HoYoWikiEntry(
+            iconUrl: 'https://x/sword.png',
+            pageByLang: const {
+              'en-us': HoYoWikiPageData(
+                gallery: null,
+                desc: 'A sharp blade.',
+                tags: ['4★', 'Sword'],
+              ),
+            },
+            fetchedAt: DateTime.utc(2026, 5, 26),
+          ),
+        },
+        menuIds: const {'9001': 4},
+      );
+      await storage.save(index);
+      final reloaded = await storage.load();
+      final page = reloaded.lookupEntry('9001')!.pageByLang['en-us']!;
+      expect(page.gallery, isNull);
+      expect(page.desc, 'A sharp blade.');
+      expect(page.tags, ['4★', 'Sword']);
+    });
+  });
+
+  group('HoYoWikiIndexStorage v1/v2 → v3 migration', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_mig_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test(
+      'v2 cache 載入：pageByLang reset 為空、icon_url / search / menu_ids 保留',
+      () async {
+        final v2 = {
+          'version': 2,
+          'search': {'zh-tw::胡桃': '5125428'},
+          'menu_ids': {'5125428': 2},
           'entries': {
-            '12345': {
+            '5125428': {
               'icon_url': 'https://x/icon.png',
-              'header_img_url': 'https://x/header.png',
-              'fetched_at': '2026-05-20T00:00:00.000Z',
+              'fetched_at': '2026-05-25T10:00:00.000Z',
+              'gallery_by_lang': {
+                'zh-tw': {'pic_url': 'https://x/card.png', 'list': []},
+              },
             },
           },
-        }),
-      );
+        };
+        final f = File('${tempDir.path}/hoyowiki_index.json');
+        await f.writeAsString(jsonEncode(v2));
+        final storage = HoYoWikiIndexStorage(tempDir);
+        final loaded = await storage.load();
+        final entry = loaded.lookupEntry('5125428')!;
+        expect(entry.iconUrl, 'https://x/icon.png');
+        expect(entry.pageByLang, isEmpty);
+        expect(loaded.lookupId(name: '胡桃', lang: 'zh-tw'), '5125428');
+        expect(loaded.lookupMenuId('5125428'), 2);
+      },
+    );
 
-      final loaded = await HoYoWikiIndexStorage(tempDir).load();
-      final got = loaded.lookupEntry('12345')!;
-      expect(got.iconUrl, 'https://x/icon.png');
-      expect(got.galleryByLang, isEmpty);
-      expect(loaded.lookupId(name: '布倫妮', lang: 'zh-tw'), '12345');
-      expect(loaded.lookupMenuId('12345'), 2);
+    test('v1 cache 載入：pageByLang reset 為空、header_img_url 丟棄', () async {
+      final v1 = {
+        'version': 1,
+        'search': {'en-us::Sword': '9001'},
+        'menu_ids': {'9001': 4},
+        'entries': {
+          '9001': {
+            'icon_url': 'https://x/sword.png',
+            'header_img_url': 'https://x/header.png',
+            'fetched_at': '2026-05-25T10:00:00.000Z',
+          },
+        },
+      };
+      final f = File('${tempDir.path}/hoyowiki_index.json');
+      await f.writeAsString(jsonEncode(v1));
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final loaded = await storage.load();
+      final entry = loaded.lookupEntry('9001')!;
+      expect(entry.iconUrl, 'https://x/sword.png');
+      expect(entry.pageByLang, isEmpty);
     });
 
     test('檔案不存在 → 回空 index', () async {

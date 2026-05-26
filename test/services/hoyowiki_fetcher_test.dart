@@ -377,12 +377,12 @@ void main() {
         client: mock,
       );
       expect(res.iconUrl, 'https://x/icon.png');
-      expect(res.gallery, isNotNull);
-      expect(res.gallery!.picUrl, 'https://x/card.png');
-      expect(res.gallery!.list, hasLength(2));
-      expect(res.gallery!.list[0].key, '原畫');
-      expect(res.gallery!.list[1].imgUrl, 'https://x/idle.gif');
-      expect(res.gallery!.list[1].imgDescHtml, '');
+      expect(res.page.gallery, isNotNull);
+      expect(res.page.gallery!.picUrl, 'https://x/card.png');
+      expect(res.page.gallery!.list, hasLength(2));
+      expect(res.page.gallery!.list[0].key, '原畫');
+      expect(res.page.gallery!.list[1].imgUrl, 'https://x/idle.gif');
+      expect(res.page.gallery!.list[1].imgDescHtml, '');
     });
 
     test('無 gallery_character module → gallery 為 null', () async {
@@ -403,7 +403,7 @@ void main() {
         lang: 'zh-tw',
         client: mock,
       );
-      expect(res.gallery, isNull);
+      expect(res.page.gallery, isNull);
     });
 
     test('data 非合法 JSON → gallery 為 null（不 throw）', () async {
@@ -418,7 +418,7 @@ void main() {
         lang: 'zh-tw',
         client: mock,
       );
-      expect(res.gallery, isNull);
+      expect(res.page.gallery, isNull);
     });
 
     test('list[i] 缺 img 整筆 skip，其餘照存', () async {
@@ -440,7 +440,7 @@ void main() {
         lang: 'zh-tw',
         client: mock,
       );
-      expect(res.gallery!.list.map((it) => it.id).toList(), ['a', 'c']);
+      expect(res.page.gallery!.list.map((it) => it.id).toList(), ['a', 'c']);
     });
 
     test('pic 與 list 皆空 → gallery 為 null', () async {
@@ -455,7 +455,105 @@ void main() {
         lang: 'zh-tw',
         client: mock,
       );
-      expect(res.gallery, isNull);
+      expect(res.page.gallery, isNull);
+    });
+  });
+
+  group('HoYoWikiFetcher.fetchEntryPage desc + tags', () {
+    http.Response entryWithDescAndTags({
+      required String desc,
+      required Map<String, dynamic>? filterValues,
+    }) {
+      final body = jsonEncode({
+        'retcode': 0,
+        'message': 'OK',
+        'data': {
+          'page': {
+            'icon_url': '',
+            'desc': desc,
+            'filter_values': filterValues,
+            'modules': const [],
+          },
+        },
+      });
+      return http.Response.bytes(
+        utf8.encode(body),
+        200,
+        headers: {'content-type': 'application/json; charset=utf-8'},
+      );
+    }
+
+    test('正常解析 desc + tags', () async {
+      final mock = MockClient(
+        (req) async => entryWithDescAndTags(
+          desc: '「往生堂」第七十七代堂主...',
+          filterValues: {
+            'character_property': {
+              'values': ['生命之契'],
+            },
+            'character_rarity': {
+              'values': ['4星'],
+            },
+            'character_region': {
+              'values': ['蒙德'],
+            },
+          },
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.page.desc, '「往生堂」第七十七代堂主...');
+      expect(res.page.tags, ['生命之契', '4星', '蒙德']);
+      expect(res.page.gallery, isNull);
+    });
+
+    test('desc 缺 key → 空字串', () async {
+      final mock = MockClient(
+        (req) async => http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'message': 'OK',
+            'data': {
+              'page': {'icon_url': '', 'modules': []},
+            },
+          }),
+          200,
+        ),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.page.desc, '');
+    });
+
+    test('desc 為非 string 型別 → 空字串', () async {
+      final mock = MockClient(
+        (req) async => entryWithDescAndTags(desc: '', filterValues: null),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.page.desc, '');
+    });
+
+    test('filter_values 為 null → tags 空 list', () async {
+      final mock = MockClient(
+        (req) async =>
+            entryWithDescAndTags(desc: 'something', filterValues: null),
+      );
+      final res = await HoYoWikiFetcher().fetchEntryPage(
+        id: '12345',
+        lang: 'zh-tw',
+        client: mock,
+      );
+      expect(res.page.tags, const <String>[]);
     });
   });
 

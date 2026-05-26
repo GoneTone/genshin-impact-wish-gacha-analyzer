@@ -86,8 +86,8 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     });
   }
 
-  /// 把單一 lang 的 fetch 結果 merge 進既有 entry（不覆蓋其他 lang）。icon 採
-  /// 「非空覆寫」策略，避免某 lang 抓回空 icon 把既有好值清掉。
+  /// 把單一 lang 的 fetch 結果 merge 進既有 entry（不覆蓋其他 lang）。icon
+  /// 採「非空覆寫」策略，避免某 lang 抓回空 icon 把既有好值清掉。
   Future<void> mergeEntry({
     required String id,
     required String lang,
@@ -95,16 +95,16 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   }) async {
     await _lock.synchronized(() async {
       final existing = state.entries[id];
-      final mergedGallery = <String, HoYoWikiGalleryData>{
-        if (existing != null) ...existing.galleryByLang,
-        if (fetched.gallery != null) lang: fetched.gallery!,
+      final mergedPage = <String, HoYoWikiPageData>{
+        if (existing != null) ...existing.pageByLang,
+        lang: fetched.page,
       };
       final iconUrl = fetched.iconUrl.isNotEmpty
           ? fetched.iconUrl
           : (existing?.iconUrl ?? '');
       final merged = HoYoWikiEntry(
         iconUrl: iconUrl,
-        galleryByLang: mergedGallery,
+        pageByLang: mergedPage,
         fetchedAt: DateTime.now().toUtc(),
       );
       final newEntries = Map<String, HoYoWikiEntry>.from(state.entries)
@@ -116,7 +116,8 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
       );
       await _saveAndEmit(next);
       _log.fine(
-        'merge gallery id=$id lang=$lang has=${fetched.gallery != null}',
+        'merge page id=$id lang=$lang gallery=${fetched.page.gallery != null} '
+        'desc=${fetched.page.desc.isNotEmpty} tags=${fetched.page.tags.length}',
       );
     });
   }
