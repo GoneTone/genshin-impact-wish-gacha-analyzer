@@ -184,6 +184,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   ChoiceChip(
                     label: Text(chipEntries[i].label),
                     selected: i == clampedIndex,
+                    showCheckmark: false,
                     onSelected: (_) => setState(() => _selectedIndex = i),
                   ),
               ],
