@@ -53,6 +53,22 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
   /// 當前選中 chip 的 index；點 chip 時 setState 更新；超出範圍由 `clampedIndex` 收斂。
   int _selectedIndex = 0;
 
+  /// 已排程預載的圖檔路徑；避免每次 setState 重新呼叫 precacheImage。
+  final Set<String> _precachedPaths = {};
+
+  /// 將 chip 對應圖預載入 ImageCache，讓首次顯示與切 chip 不必等 codec async
+  /// decode（這是「第一次讀圖會閃一下」的根因）。
+  void _precacheChipImages(
+    BuildContext context,
+    List<_GalleryChipEntry> entries,
+  ) {
+    for (final e in entries) {
+      if (_precachedPaths.add(e.file.path)) {
+        precacheImage(FileImage(e.file), context);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -131,6 +147,15 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     final current = clampedIndex >= 0 ? chipEntries[clampedIndex] : null;
     final currentFile = current?.file;
 
+    // 排程所有 chip 圖預載；ImageCache 已 dedupe + 我們也記 _precachedPaths
+    // 雙保險避免重排。post-frame 是避開 build 內直接 schedule async 的 lint。
+    if (chipEntries.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _precacheChipImages(context, chipEntries);
+      });
+    }
+
     final nameColor = switch (record.rankType) {
       5 => tokens.fiveStar,
       4 => tokens.fourStar,
@@ -201,6 +226,9 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   key: ValueKey(currentFile.path),
                   fit: BoxFit.contain,
                   alignment: Alignment.topCenter,
+                  // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
+                  // 解碼完才換；配合 precacheImage 消除「閃一下」。
+                  gaplessPlayback: true,
                   errorBuilder: (_, e, st) {
                     Logger('gacha.hoyowiki.detail').warning(
                       'gallery image errorBuilder id=$id path=${currentFile.path}',
