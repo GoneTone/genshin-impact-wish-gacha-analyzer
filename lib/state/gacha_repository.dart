@@ -836,41 +836,16 @@ class GachaRepository extends Notifier<GachaState> {
     final seenUrls = <String>{}; // 跨 entry/lang 去重，避免重複 enqueue
 
     void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
-      // icon
-      if (entry.iconUrl.isNotEmpty) {
-        final iconFile = hoyowikiIconCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          url: entry.iconUrl,
-        );
-        if (!iconFile.existsSync() && seenUrls.add('icon::${entry.iconUrl}')) {
-          downloadTodo.add(
-            _HoYoWikiDownloadItem(id: id, url: entry.iconUrl, isGallery: false),
-          );
-        }
-      }
-      // gallery：迭代所有 lang 的 page，gallery 為 null 跳過（如武器頁）
-      for (final page in entry.pageByLang.values) {
-        final g = page.gallery;
-        if (g == null) continue;
-        void enqueue(String url) {
-          if (url.isEmpty) return;
-          final f = hoyowikiGalleryCacheFile(
-            baseDir: cacheDir,
-            id: id,
-            url: url,
-          );
-          if (f.existsSync()) return;
-          if (!seenUrls.add('gallery::$id::$url')) return;
-          downloadTodo.add(
-            _HoYoWikiDownloadItem(id: id, url: url, isGallery: true),
-          );
-        }
-
-        enqueue(g.picUrl);
-        for (final it in g.list) {
-          enqueue(it.imgUrl);
-        }
+      // gallery 大圖改 lazy：由 GachaItemDetailDialog 打開時下載。
+      // 此處僅 enqueue icon — icon 在祈願列表常駐顯示，維持預下載。
+      if (entry.iconUrl.isEmpty) return;
+      final iconFile = hoyowikiIconCacheFile(
+        baseDir: cacheDir,
+        id: id,
+        url: entry.iconUrl,
+      );
+      if (!iconFile.existsSync() && seenUrls.add('icon::${entry.iconUrl}')) {
+        downloadTodo.add(_HoYoWikiDownloadItem(id: id, url: entry.iconUrl));
       }
     }
 
@@ -990,17 +965,11 @@ class GachaRepository extends Notifier<GachaState> {
           try {
             final bytes = await fetcher.downloadImage(item.url, client);
             if (bytes != null) {
-              final file = item.isGallery
-                  ? hoyowikiGalleryCacheFile(
-                      baseDir: cacheDir,
-                      id: item.id,
-                      url: item.url,
-                    )
-                  : hoyowikiIconCacheFile(
-                      baseDir: cacheDir,
-                      id: item.id,
-                      url: item.url,
-                    );
+              final file = hoyowikiIconCacheFile(
+                baseDir: cacheDir,
+                id: item.id,
+                url: item.url,
+              );
               await file.writeAsBytes(bytes, flush: true);
               indexNotifier.bumpCacheRevision();
               downloaded++;
@@ -1061,18 +1030,11 @@ class GachaRepository extends Notifier<GachaState> {
 /// HoYoWiki 下載佇列的單一工作項。
 class _HoYoWikiDownloadItem {
   /// 建立 [_HoYoWikiDownloadItem]。
-  const _HoYoWikiDownloadItem({
-    required this.id,
-    required this.url,
-    required this.isGallery,
-  });
+  const _HoYoWikiDownloadItem({required this.id, required this.url});
 
   /// HoYoWiki entry_page_id。
   final String id;
 
   /// 圖片 URL。
   final String url;
-
-  /// true → gallery 圖（用 hash 命名）；false → icon。
-  final bool isGallery;
 }
