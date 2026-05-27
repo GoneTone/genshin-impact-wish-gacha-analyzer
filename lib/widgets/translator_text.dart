@@ -90,6 +90,10 @@ class _TranslatorTextState extends State<TranslatorText> {
   /// 各 [LinkSegment] 對應的手勢辨識器，與 [_segments] 的連結型段落一一對應。
   final List<TapGestureRecognizer> _recognizers = [];
 
+  /// 當前 hover 中的連結索引（以 [LinkSegment] 在所有 link 中的順序計，0-based）；
+  /// 為 null 代表目前沒有任何連結被 hover。
+  int? _hoveredLinkIndex;
+
   @override
   void initState() {
     super.initState();
@@ -101,6 +105,7 @@ class _TranslatorTextState extends State<TranslatorText> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.raw != widget.raw) {
       _disposeRecognizers();
+      _hoveredLinkIndex = null;
       _rebuild();
     }
   }
@@ -131,30 +136,41 @@ class _TranslatorTextState extends State<TranslatorText> {
     _recognizers.clear();
   }
 
+  /// 切換目前 hover 中的連結索引；不變則略過 setState 以避免無謂重 build。
+  void _setHovered(int? index) {
+    if (_hoveredLinkIndex != index) {
+      setState(() => _hoveredLinkIndex = index);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final baseStyle = widget.style ?? DefaultTextStyle.of(context).style;
-    final linkColor = Theme.of(context).colorScheme.primary;
+    final baseColor = linkBaseColor(theme);
+    final hoverColor = linkHoverColor(theme);
 
+    final children = <InlineSpan>[];
     var linkIndex = 0;
-    return Text.rich(
-      TextSpan(
-        children: [
-          for (final seg in _segments)
-            if (seg is TextSegment)
-              TextSpan(text: seg.text, style: baseStyle)
-            else if (seg is LinkSegment)
-              TextSpan(
-                text: seg.text,
-                style: baseStyle.copyWith(
-                  color: linkColor,
-                  decoration: TextDecoration.underline,
-                ),
-                mouseCursor: SystemMouseCursors.click,
-                recognizer: _recognizers[linkIndex++],
-              ),
-        ],
-      ),
-    );
+    for (final seg in _segments) {
+      if (seg is TextSegment) {
+        children.add(TextSpan(text: seg.text, style: baseStyle));
+      } else if (seg is LinkSegment) {
+        final i = linkIndex++;
+        final color = i == _hoveredLinkIndex ? hoverColor : baseColor;
+        children.add(
+          TextSpan(
+            text: seg.text,
+            style: baseStyle.copyWith(color: color),
+            mouseCursor: SystemMouseCursors.click,
+            recognizer: _recognizers[i],
+            onEnter: (_) => _setHovered(i),
+            onExit: (_) => _setHovered(null),
+          ),
+        );
+      }
+    }
+
+    return Text.rich(TextSpan(children: children));
   }
 }

@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 void main() {
@@ -75,7 +77,7 @@ void main() {
   });
 
   group('TranslatorText widget', () {
-    testWidgets('含連結時：連結 span 有 underline 與 recognizer，純文字 span 沒有', (
+    testWidgets('含連結時：連結 span 無底線、有 recognizer 與 click cursor，純文字 span 沒有', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -99,12 +101,62 @@ void main() {
       final spans = ourSpan.children!.cast<TextSpan>();
 
       final linkSpan = spans.firstWhere((s) => s.text == '世界へいわ');
-      expect(linkSpan.style?.decoration, TextDecoration.underline);
+      expect(
+        linkSpan.style?.decoration,
+        anyOf(isNull, equals(TextDecoration.none)),
+      );
       expect(linkSpan.recognizer, isNotNull);
       expect(linkSpan.mouseCursor, SystemMouseCursors.click);
 
       final textSpan = spans.firstWhere((s) => s.text == 'jj、');
       expect(textSpan.recognizer, isNull);
+    });
+
+    testWidgets('hover 連結 span：顏色從 base 變為 hover，移出後復原', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: TranslatorText(
+                raw: '<a href="https://example.test">link</a>',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      TextSpan readLinkSpan() {
+        final richText = tester.widget<RichText>(
+          find.descendant(
+            of: find.byType(TranslatorText),
+            matching: find.byType(RichText),
+          ),
+        );
+        final wrapper = richText.text as TextSpan;
+        final ourSpan = wrapper.children!.single as TextSpan;
+        final spans = ourSpan.children!.cast<TextSpan>();
+        return spans.firstWhere((s) => s.text == 'link');
+      }
+
+      final theme = Theme.of(tester.element(find.byType(TranslatorText)));
+      final expectedBase = linkBaseColor(theme);
+      final expectedHover = linkHoverColor(theme);
+      expect(expectedBase, isNot(equals(expectedHover)));
+
+      expect(readLinkSpan().style?.color, equals(expectedBase));
+
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+      await tester.pump();
+
+      await gesture.moveTo(tester.getCenter(find.byType(TranslatorText)));
+      await tester.pump();
+      expect(readLinkSpan().style?.color, equals(expectedHover));
+
+      await gesture.moveTo(Offset.zero);
+      await tester.pump();
+      expect(readLinkSpan().style?.color, equals(expectedBase));
     });
 
     testWidgets('純文字輸入：所有 span 都沒有 recognizer', (tester) async {

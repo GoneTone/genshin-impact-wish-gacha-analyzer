@@ -5,7 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 void main() {
-  testWidgets('預設樣式：primary color + underline', (tester) async {
+  testWidgets('預設樣式：primary color，無底線', (tester) async {
     final theme = buildDarkTheme();
     await tester.pumpWidget(
       MaterialApp(
@@ -22,7 +22,10 @@ void main() {
     ).style.merge(textWidget.style);
 
     expect(effectiveStyle.color, theme.colorScheme.primary);
-    expect(effectiveStyle.decoration, TextDecoration.underline);
+    expect(
+      effectiveStyle.decoration,
+      anyOf(isNull, equals(TextDecoration.none)),
+    );
   });
 
   testWidgets('hover 時 cursor 為 SystemMouseCursors.click', (tester) async {

@@ -75,15 +75,7 @@ MarkdownConfig _markdownConfig(ThemeData theme) {
       ? MarkdownConfig.darkConfig
       : MarkdownConfig.defaultConfig;
   return base.copy(
-    configs: [
-      LinkConfig(
-        style: TextStyle(
-          color: theme.colorScheme.primary,
-          decoration: TextDecoration.underline,
-          decorationColor: theme.colorScheme.primary,
-        ),
-      ),
-    ],
+    configs: [LinkConfig(style: TextStyle(color: linkBaseColor(theme)))],
   );
 }
 
