@@ -453,7 +453,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "Cela effacera tout le cache local des images d'objets et les téléchargera à nouveau depuis HoYoWiki. Peut prendre plusieurs minutes et consommer une bande passante importante.",
+  "confirmRefetchHoyoWikiBody": "Ceci effacera le cache local de toutes les images d'objets et re-téléchargera les icônes depuis HoYoWiki. Les images de détail seront téléchargées à la demande lors de la prochaine ouverture de l'objet. Selon le nombre d'objets, cela peut prendre plusieurs minutes.",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -461,6 +461,51 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+
+  "settingsImageCache": "Cache d'images",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Total",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Icônes",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Images détaillées",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Calcul…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Impossible de lire la taille du cache",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Effacer les images détaillées",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Effacer les images détaillées ?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Environ {size} d'images de détail seront supprimées ; le cache des icônes est conservé. Elles seront re-téléchargées la prochaine fois que vous ouvrirez le détail.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Effacer",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+
   "settingsExportData": "Exporter les données",
   "settingsImportData": "Importer des données",
   "shareImageButton": "Générer une image de partage",
@@ -720,5 +765,16 @@
   "galleryCardLabel": "Carte",
   "galleryIconLabel": "Icône",
   "actionViewOnHoYoWiki": "Voir sur HoYoWiki",
+
+  "galleryLazyLoadFailed": "Échec du chargement de l'image",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "Réessayer",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
   "actionCloseImagePreview": "Fermer l'aperçu de l'image"
 }

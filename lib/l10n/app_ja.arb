@@ -453,7 +453,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "ローカルのアイテム画像キャッシュをすべて削除し、HoYoWiki から再取得します。アイテム数に応じて数分かかり、相応の通信量を消費する場合があります。",
+  "confirmRefetchHoyoWikiBody": "すべての物品画像のローカルキャッシュを消去し、HoYoWiki から小アイコンを再ダウンロードします。物品詳細の大きな画像は次回開いた際に自動的にダウンロードされます。物品数によっては数分かかる場合があります。",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -461,6 +461,51 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+
+  "settingsImageCache": "画像キャッシュ",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "合計",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "アイコン",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "詳細画像",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "計算中…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "キャッシュサイズを読み取れません",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "詳細画像をクリア",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "詳細画像をクリアしますか？",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "アイテム詳細画像 約 {size} を削除します。小アイコンキャッシュは保持されます。次回アイテム詳細を開いたときに再ダウンロードされます。",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "クリア",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+
   "settingsExportData": "データをエクスポート",
   "settingsImportData": "データをインポート",
   "shareImageButton": "シェア画像を生成",
@@ -720,5 +765,16 @@
   "galleryCardLabel": "カード",
   "galleryIconLabel": "アイコン",
   "actionViewOnHoYoWiki": "HoYoWiki で開く",
+
+  "galleryLazyLoadFailed": "画像の読み込みに失敗しました",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "再試行",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
   "actionCloseImagePreview": "画像プレビューを閉じる"
 }

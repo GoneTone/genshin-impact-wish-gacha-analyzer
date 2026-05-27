@@ -453,7 +453,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "การทำเช่นนี้จะล้างแคชภาพไอเทมในเครื่องทั้งหมดและดาวน์โหลดใหม่จาก HoYoWiki อาจใช้เวลาหลายนาทีและใช้แบนด์วิดท์มาก",
+  "confirmRefetchHoyoWikiBody": "จะล้างแคชรูปภาพไอเทมทั้งหมดในเครื่องและดาวน์โหลดไอคอนใหม่จาก HoYoWiki รูปรายละเอียดจะถูกดาวน์โหลดเมื่อเปิดไอเทมครั้งถัดไป อาจใช้เวลาหลายนาทีขึ้นอยู่กับจำนวนไอเทม",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -461,6 +461,51 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+
+  "settingsImageCache": "แคชรูปภาพ",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "รวม",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "ไอคอน",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "รูปรายละเอียด",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "กำลังคำนวณ…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "ไม่สามารถอ่านขนาดแคชได้",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "ล้างรูปรายละเอียด",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "ล้างรูปรายละเอียดหรือไม่?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "จะลบรูปรายละเอียดประมาณ {size} แคชไอคอนจะถูกเก็บไว้ จะดาวน์โหลดใหม่เมื่อเปิดรายละเอียดครั้งถัดไป",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "ล้าง",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+
   "settingsExportData": "ส่งออกข้อมูล",
   "settingsImportData": "นำเข้าข้อมูล",
   "shareImageButton": "สร้างภาพแชร์",
@@ -720,5 +765,16 @@
   "galleryCardLabel": "Card",
   "galleryIconLabel": "ไอคอน",
   "actionViewOnHoYoWiki": "เปิดใน HoYoWiki",
+
+  "galleryLazyLoadFailed": "โหลดรูปภาพไม่สำเร็จ",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "ลองอีกครั้ง",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
   "actionCloseImagePreview": "ปิดตัวอย่างรูปภาพ"
 }
