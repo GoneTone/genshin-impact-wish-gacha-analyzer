@@ -160,7 +160,7 @@ jobs:
       # === G. Workflow artifact (debug fallback) ====================
       - name: Upload installer as workflow artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-installer-${{ env.PUBSPEC_VERSION }}
           path: build/installer/*.exe
