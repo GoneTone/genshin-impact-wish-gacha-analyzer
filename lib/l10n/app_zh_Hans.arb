@@ -282,6 +282,9 @@
   "settingsLocaleSystem": "跟随系统",
   "settingsDataManagement": "数据管理",
   "settingsAccountManagement": "账号管理",
+  "settingsPrivacySectionTitle": "隐私",
+  "settingsMaskUidInUi": "遮蔽界面中的 UID",
+  "settingsMaskUidInUiHint": "开启后，画面与账号清单中的 UID 会以前 3 码搭配 x 显示（例如 123xxxxx），适合直播或屏幕分享时使用。分享图、导出文件、删除确认框不受影响。",
   "settingsAbout": "关于",
   "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {

@@ -286,6 +286,18 @@
   "settingsLocaleSystem": "Follow system",
   "settingsDataManagement": "Data management",
   "settingsAccountManagement": "Account management",
+  "settingsPrivacySectionTitle": "Privacy",
+  "@settingsPrivacySectionTitle": {
+    "description": "Settings page section title for privacy-related toggles."
+  },
+  "settingsMaskUidInUi": "Mask UID in interface",
+  "@settingsMaskUidInUi": {
+    "description": "Settings toggle label: when on, UIDs are masked in the app UI."
+  },
+  "settingsMaskUidInUiHint": "When on, UIDs in the interface and account list show the first 3 digits with the rest masked (e.g. 123xxxxx). Useful for streaming or screen sharing. Share images, exported files, and the delete confirmation dialog are not affected.",
+  "@settingsMaskUidInUiHint": {
+    "description": "Settings toggle subtitle: explains scope of the maskUidInUi setting."
+  },
   "settingsAbout": "About",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {

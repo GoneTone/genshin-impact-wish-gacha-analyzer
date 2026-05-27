@@ -286,6 +286,9 @@
   "settingsLocaleSystem": "システムに合わせる",
   "settingsDataManagement": "データ管理",
   "settingsAccountManagement": "アカウント管理",
+  "settingsPrivacySectionTitle": "プライバシー",
+  "settingsMaskUidInUi": "画面上の UID をマスク",
+  "settingsMaskUidInUiHint": "オンにすると、画面とアカウント一覧の UID が先頭 3 桁と残りを x でマスクして表示されます（例：123xxxxx）。配信や画面共有時に便利です。共有画像、エクスポートファイル、削除確認ダイアログは影響を受けません。",
   "settingsAbout": "このツールについて",
   "settingsAboutVersion": "バージョン {version}",
   "@settingsAboutVersion": {
