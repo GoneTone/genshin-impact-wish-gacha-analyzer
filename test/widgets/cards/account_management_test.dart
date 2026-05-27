@@ -256,4 +256,63 @@ void main() {
     final reloaded = await tester.runAsync(() => SettingsStorage.load());
     expect(reloaded!.uidAliases, isEmpty);
   });
+
+  group('AccountManagement: maskUidInUi', () {
+    /// 建立含單一 UID 的 storage 並 pump AccountManagement，回傳預熱完成的 container。
+    Future<ProviderContainer> pumpWithUid(
+      WidgetTester tester, {
+      required String uid,
+      required bool maskUidInUi,
+    }) async {
+      final storage = GachaStorage(tempDir);
+      await tester.runAsync(() async {
+        await storage.save(
+          BannerStorage(
+            uid: uid,
+            lastUpdated: DateTime.utc(2026, 5, 9),
+            banners: const {
+              '301': [],
+              '302': [],
+              '500': [],
+              '200': [],
+              '100': [],
+            },
+          ),
+        );
+      });
+      late ProviderContainer container;
+      await tester.runAsync(() async {
+        container = await _setupContainer(
+          storage: storage,
+          prefs: {'pref.maskUidInUi': maskUidInUi},
+        );
+      });
+      addTearDown(container.dispose);
+      await tester.pumpWidget(_wrap(container));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      return container;
+    }
+
+    testWidgets('maskUidInUi=false 顯示完整 UID', (tester) async {
+      await pumpWithUid(tester, uid: '123456789', maskUidInUi: false);
+      expect(find.text('123456789'), findsOneWidget);
+      expect(find.text('123xxxxxx'), findsNothing);
+    });
+
+    testWidgets('maskUidInUi=true 顯示遮蔽 UID', (tester) async {
+      await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
+      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123456789'), findsNothing);
+    });
+
+    testWidgets('刪除確認 dialog 仍顯示完整 UID（隱私模式下）', (tester) async {
+      await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
+      await tester.tap(find.byIcon(Icons.delete_outline).first);
+      await tester.pumpAndSettle();
+      // confirm dialog 透過 i18n confirmClearActiveBody({uid}) 把完整 UID 嵌入訊息，
+      // 即使介面隱私模式啟用也要顯示完整碼，避免使用者誤刪錯帳號。
+      expect(find.textContaining('123456789'), findsWidgets);
+    });
+  });
 }

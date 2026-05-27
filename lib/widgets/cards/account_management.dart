@@ -8,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
@@ -26,6 +27,7 @@ class AccountManagement extends ConsumerWidget {
     );
     final uidAliases = ref.watch(settingsProvider.select((s) => s.uidAliases));
     final uidOrder = ref.watch(settingsProvider.select((s) => s.uidOrder));
+    final maskUid = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
     final notifier = ref.read(gachaRepositoryProvider.notifier);
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
@@ -70,6 +72,7 @@ class AccountManagement extends ConsumerWidget {
                 lastUpdated: byUid[uid]!.lastUpdated,
                 isActive: uid == activeUid,
                 alias: uidAliases[uid] ?? '',
+                maskUid: maskUid,
                 onSetActive: () => notifier.setActiveUid(uid),
                 onRemove: () => _remove(context, ref, uid),
                 onAliasSubmit: (value) =>
@@ -117,6 +120,7 @@ class _Row extends StatefulWidget {
     required this.lastUpdated,
     required this.isActive,
     required this.alias,
+    required this.maskUid,
     required this.onSetActive,
     required this.onRemove,
     required this.onAliasSubmit,
@@ -136,6 +140,9 @@ class _Row extends StatefulWidget {
 
   /// 使用者自訂別名；空字串表示未設定。
   final String alias;
+
+  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  final bool maskUid;
 
   /// 點擊「切換」後呼叫。
   final VoidCallback onSetActive;
@@ -221,7 +228,7 @@ class _RowState extends State<_Row> {
                 Row(
                   children: [
                     Text(
-                      widget.uid,
+                      displayUid(widget.uid, mask: widget.maskUid),
                       style: TextStyle(
                         color: tokens.textPrimary,
                         fontWeight: FontWeight.w600,
