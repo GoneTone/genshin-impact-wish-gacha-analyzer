@@ -1,3 +1,11 @@
 {
-  "@@locale": "ko"
+  "@@locale": "ko",
+  "galleryCardLabel": "카드",
+  "@galleryCardLabel": {
+    "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
+  },
+  "galleryIconLabel": "아이콘",
+  "@galleryIconLabel": {
+    "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
+  }
 }
