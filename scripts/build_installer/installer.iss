@@ -92,12 +92,23 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; \
     Flags: nowait postinstall skipifsilent
 
+[CustomMessages]
+UninstallRemoveDataBody=Also remove user data?%n%nThis will permanently delete the contents of:%n%1%n%nincluding banner records, settings, caches and logs. This cannot be undone.
+tradchinese.UninstallRemoveDataBody=是否要同時移除使用者資料？%n%n將永久刪除位於以下目錄的所有內容：%n%1%n%n包含卡池記錄、設定、快取與 log。此操作無法復原。
+simpchinese.UninstallRemoveDataBody=是否要同时移除用户数据？%n%n将永久删除位于以下目录的所有内容：%n%1%n%n包含卡池记录、设定、缓存与 log。此操作无法复原。
+
 [Code]
 const
   UninstallPath = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall';
   DisplayNameNeedle = 'Genshin Impact Wish Gacha Analyzer';
   // 新版自己的 Inno Setup 卸載 key 名稱（用於排除），格式固定為 "{AppId}_is1"
   SelfUninstKey = '{#MyAppId}_is1';
+
+var
+  // 解除安裝期間記錄使用者是否選擇連同移除 %APPDATA% 內的使用者資料。
+  // usUninstall 階段由 MsgBox 設定，usPostUninstall 階段讀取以決定是否 DelTree。
+  // Inno Setup 啟動 uninstaller process 時 Pascal Boolean 預設為 False，符合「預設不刪」語意。
+  ShouldRemoveUserData: Boolean;
 
 // 收集所有判定為「舊版」的 UninstallString
 procedure CollectOldUninstallers(RootKey: Integer; const SubPath: String; List: TStringList);
@@ -209,5 +220,35 @@ begin
     // 若 uninstaller 不存在（殘留註冊表項）→ ShellExec 失敗，但舊版已壞，讓新版蓋過去
   finally
     Olds.Free;
+  end;
+end;
+
+// 解除安裝流程：usUninstall 階段詢問使用者是否同時移除使用者資料，
+// usPostUninstall 階段依旗標執行 DelTree（主程式檔已被卸載，避免 file lock）。
+// silent 模式（/VERYSILENT、/SILENT）下 MsgBox 自動回傳預設按鈕值 = IDNO，
+// 結果與「預設不勾」一致。
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  UserDataDir: String;
+begin
+  UserDataDir := ExpandConstant('{userappdata}\tw.reh\genshin_impact_wish_gacha_analyzer');
+  case CurUninstallStep of
+    usUninstall:
+      begin
+        ShouldRemoveUserData :=
+          MsgBox(
+            FmtMessage(CustomMessage('UninstallRemoveDataBody'), [UserDataDir]),
+            mbConfirmation,
+            MB_YESNO or MB_DEFBUTTON2
+          ) = IDYES;
+      end;
+    usPostUninstall:
+      begin
+        if ShouldRemoveUserData then
+        begin
+          if not DelTree(UserDataDir, True, True, True) then
+            Log('uninstall: DelTree failed for ' + UserDataDir);
+        end;
+      end;
   end;
 end;
