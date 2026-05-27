@@ -71,12 +71,6 @@ class SettingsPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
-                title: l.settingsPrivacySectionTitle,
-                icon: Icons.shield_outlined,
-                child: const _PrivacySection(),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              SectionCard(
                 title: l.settingsLanguage,
                 icon: Icons.language,
                 child: _LocaleDropdown(
@@ -84,6 +78,12 @@ class SettingsPage extends ConsumerWidget {
                   onChanged: notifier.setLocale,
                   l: l,
                 ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsPrivacySectionTitle,
+                icon: Icons.shield_outlined,
+                child: const _PrivacySection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(

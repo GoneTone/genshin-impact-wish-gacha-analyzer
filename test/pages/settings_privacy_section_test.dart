@@ -112,19 +112,26 @@ void main() {
     final container = await pumpSettingsPage(tester);
     expect(container.read(settingsProvider).maskUidInUi, false);
 
-    await tester.tap(find.byKey(const ValueKey('settings.maskUidInUiSwitch')));
+    final switchFinder = find.byKey(
+      const ValueKey('settings.maskUidInUiSwitch'),
+    );
+    await tester.ensureVisible(switchFinder);
+    await tester.pump();
+    await tester.tap(switchFinder);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(container.read(settingsProvider).maskUidInUi, true);
   });
 
-  testWidgets('Section sits between Appearance and Language', (tester) async {
+  testWidgets('Section sits between Language and Data Management', (
+    tester,
+  ) async {
     await pumpSettingsPage(tester);
-    final appearanceY = tester.getTopLeft(find.text('Appearance')).dy;
-    final privacyY = tester.getTopLeft(find.text('Privacy')).dy;
     final languageY = tester.getTopLeft(find.text('Language')).dy;
-    expect(appearanceY, lessThan(privacyY));
-    expect(privacyY, lessThan(languageY));
+    final privacyY = tester.getTopLeft(find.text('Privacy')).dy;
+    final dataManagementY = tester.getTopLeft(find.text('Data management')).dy;
+    expect(languageY, lessThan(privacyY));
+    expect(privacyY, lessThan(dataManagementY));
   });
 }
