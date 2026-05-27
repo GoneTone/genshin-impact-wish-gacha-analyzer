@@ -461,7 +461,6 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
-
   "settingsImageCache": "Cache d'images",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."
@@ -498,14 +497,15 @@
   "@confirmClearGalleryCacheBody": {
     "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
     "placeholders": {
-      "size": { "type": "String" }
+      "size": {
+        "type": "String"
+      }
     }
   },
   "confirmClearGalleryCacheConfirm": "Effacer",
   "@confirmClearGalleryCacheConfirm": {
     "description": "Confirm button label for clearing gallery cache."
   },
-
   "settingsExportData": "Exporter les données",
   "settingsImportData": "Importer des données",
   "shareImageButton": "Générer une image de partage",
@@ -763,18 +763,27 @@
   },
   "settingsLogsClearConfirmBody": "Ceci supprimera définitivement tous les fichiers du dossier logs/. Si vous avez besoin des journaux pour signaler un problème, exportez-les d'abord. Saisissez CLEAR pour confirmer.",
   "galleryCardLabel": "Carte",
+  "@galleryCardLabel": {
+    "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
+  },
   "galleryIconLabel": "Icône",
+  "@galleryIconLabel": {
+    "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
+  },
   "actionViewOnHoYoWiki": "Voir sur HoYoWiki",
-
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
   "galleryLazyLoadFailed": "Échec du chargement de l'image",
   "@galleryLazyLoadFailed": {
     "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
   },
-
   "actionRetry": "Réessayer",
   "@actionRetry": {
     "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
   },
-
-  "actionCloseImagePreview": "Fermer l'aperçu de l'image"
+  "actionCloseImagePreview": "Fermer l'aperçu de l'image",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  }
 }
