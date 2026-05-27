@@ -130,7 +130,7 @@ void main() {
     expect(find.text('2.1 MB'), findsOneWidget);
   });
 
-  testWidgets('無資料時強制重抓按鈕 disabled，清除詳情圖快取按鈕 enabled', (tester) async {
+  testWidgets('無資料時強制重抓按鈕 disabled，詳情圖快取空時清除按鈕 disabled', (tester) async {
     SharedPreferences.setMockInitialValues({});
     late ProviderContainer container;
 
@@ -158,8 +158,35 @@ void main() {
     expect(clearBtn, findsOneWidget);
     expect(
       tester.widget<FilledButton>(clearBtn).onPressed,
+      isNull,
+      reason: '詳情圖快取為空（galleryBytes == 0）時清除按鈕應 disabled',
+    );
+  });
+
+  testWidgets('詳情圖有快取時清除按鈕 enabled', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    late ProviderContainer container;
+
+    await tester.runAsync(() async {
+      // 放一個 gallery 檔案使 galleryBytes > 0（路徑需含 '_gallery_' 才被計入）
+      await touch('item_gallery_xxxxxxxxxxxx.png', 1024 * 512);
+      container = await _setupContainer(
+        storage: GachaStorage(tempDir),
+        tempDir: tempDir,
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(_wrap(container));
+      await container.read(hoyowikiCacheUsageProvider.future);
+      await tester.pump();
+    });
+
+    final clearBtn = find.widgetWithText(FilledButton, '清除詳情圖快取');
+    expect(clearBtn, findsOneWidget);
+    expect(
+      tester.widget<FilledButton>(clearBtn).onPressed,
       isNotNull,
-      reason: '用量載入後清除詳情圖快取按鈕應 enabled',
+      reason: '詳情圖有快取時清除按鈕應 enabled',
     );
   });
 }

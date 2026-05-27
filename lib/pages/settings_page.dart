@@ -364,7 +364,9 @@ class _DataManagement extends ConsumerWidget {
       runSpacing: AppSpacing.s,
       children: [
         OutlinedButton.icon(
-          onPressed: !hasData ? null : () => _export(context, ref),
+          onPressed: (!hasData || progress != null)
+              ? null
+              : () => _export(context, ref),
           icon: const Icon(Icons.download_outlined, size: 18),
           label: Text(l.settingsExportData),
         ),
@@ -378,7 +380,7 @@ class _DataManagement extends ConsumerWidget {
             backgroundColor: Theme.of(context).gacha.stateDanger,
             foregroundColor: Colors.white,
           ),
-          onPressed: activeUid == null
+          onPressed: (activeUid == null || progress != null)
               ? null
               : () => _clearActive(context, ref, activeUid),
           icon: const Icon(Icons.delete_outline, size: 18),
@@ -389,7 +391,9 @@ class _DataManagement extends ConsumerWidget {
             backgroundColor: Theme.of(context).gacha.stateDanger,
             foregroundColor: Colors.white,
           ),
-          onPressed: !hasData ? null : () => _clearAll(context, ref),
+          onPressed: (!hasData || progress != null)
+              ? null
+              : () => _clearAll(context, ref),
           icon: const Icon(Icons.delete_forever_outlined, size: 18),
           label: Text(l.settingsClearAll),
         ),
@@ -722,7 +726,13 @@ class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
                 backgroundColor: tokens.stateDanger,
                 foregroundColor: Colors.white,
               ),
-              onPressed: usageAsync.value == null
+              onPressed:
+                  (progress != null ||
+                      usageAsync.when(
+                        loading: () => true,
+                        error: (e, _) => false,
+                        data: (u) => u.galleryBytes <= 0,
+                      ))
                   ? null
                   : () => _clearGallery(context),
               icon: const Icon(Icons.delete_sweep_outlined, size: 18),
