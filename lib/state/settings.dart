@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 
@@ -70,6 +71,13 @@ class SettingsNotifier extends Notifier<AppSettings> {
       clearSkippedReleaseTag: tag == null,
     );
     await SettingsStorage.save(state);
+  }
+
+  /// 切換「遮蔽介面 UID」設定並持久化；變更值同步寫入 log。
+  Future<void> setMaskUidInUi(bool value) async {
+    state = state.copyWith(maskUidInUi: value);
+    await SettingsStorage.save(state);
+    Logger('app.settings').info('maskUidInUi toggled=$value');
   }
 
   /// 從 aliases 與 uidOrder 中移除指定 UID 並持久化。

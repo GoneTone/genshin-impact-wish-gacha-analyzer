@@ -193,4 +193,27 @@ void main() {
       expect(s.skippedReleaseTag, isNull);
     });
   });
+
+  group('maskUidInUi', () {
+    test('defaults to false when key absent', () async {
+      final s = await SettingsStorage.load();
+      expect(s.maskUidInUi, false);
+    });
+
+    test('roundtrips true', () async {
+      await SettingsStorage.save(
+        AppSettings.defaults.copyWith(maskUidInUi: true),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.maskUidInUi, true);
+    });
+
+    test('roundtrips false explicitly', () async {
+      await SettingsStorage.save(
+        AppSettings.defaults.copyWith(maskUidInUi: false),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.maskUidInUi, false);
+    });
+  });
 }

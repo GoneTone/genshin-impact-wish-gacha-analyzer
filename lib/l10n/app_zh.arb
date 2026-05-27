@@ -216,6 +216,9 @@
   "settingsLocaleSystem": "跟隨系統",
   "settingsDataManagement": "資料管理",
   "settingsAccountManagement": "帳號管理",
+  "settingsPrivacySectionTitle": "隱私",
+  "settingsMaskUidInUi": "遮蔽介面中的 UID",
+  "settingsMaskUidInUiHint": "開啟後，畫面與帳號清單中的 UID 會以前 3 碼搭配 x 顯示（例如 123xxxxx），適合實況或螢幕分享時使用。分享圖、匯出檔案、刪除確認框不受影響。",
   "settingsAbout": "關於",
   "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {

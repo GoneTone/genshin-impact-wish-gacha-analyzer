@@ -80,6 +80,7 @@ class AppSettings {
     this.uidAliases = const {},
     this.uidOrder = const [],
     this.skippedReleaseTag,
+    this.maskUidInUi = false,
   });
 
   /// 外觀主題。
@@ -100,6 +101,9 @@ class AppSettings {
   /// 使用者選擇跳過的 release tag（已讀過不再提示）。
   final String? skippedReleaseTag;
 
+  /// 是否在介面中遮蔽 UID（前 3 碼搭配 `x`）；資料檔與刪除確認框不受影響。
+  final bool maskUidInUi;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -117,6 +121,7 @@ class AppSettings {
     List<String>? uidOrder,
     String? skippedReleaseTag,
     bool clearSkippedReleaseTag = false,
+    bool? maskUidInUi,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -128,6 +133,7 @@ class AppSettings {
     skippedReleaseTag: clearSkippedReleaseTag
         ? null
         : (skippedReleaseTag ?? this.skippedReleaseTag),
+    maskUidInUi: maskUidInUi ?? this.maskUidInUi,
   );
 }
 
@@ -154,6 +160,9 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：使用者跳過的 release tag。
   static const _kSkippedReleaseTag = 'pref.skippedReleaseTag';
 
+  /// SharedPreferences key：是否在介面中遮蔽 UID。
+  static const _kMaskUidInUi = 'pref.maskUidInUi';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -164,6 +173,7 @@ abstract final class SettingsStorage {
       uidAliases: _parseAliases(prefs.getString(_kUidAliases)),
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
+      maskUidInUi: prefs.getBool(_kMaskUidInUi) ?? false,
     );
   }
 
@@ -184,6 +194,7 @@ abstract final class SettingsStorage {
     } else {
       await prefs.setString(_kSkippedReleaseTag, s.skippedReleaseTag!);
     }
+    await prefs.setBool(_kMaskUidInUi, s.maskUidInUi);
   }
 
   /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。

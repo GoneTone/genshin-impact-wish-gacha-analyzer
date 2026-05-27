@@ -286,6 +286,9 @@
   "settingsLocaleSystem": "Seguir el sistema",
   "settingsDataManagement": "Gestión de datos",
   "settingsAccountManagement": "Gestión de cuentas",
+  "settingsPrivacySectionTitle": "Privacidad",
+  "settingsMaskUidInUi": "Ocultar UID en la interfaz",
+  "settingsMaskUidInUiHint": "Cuando está activado, los UID en la interfaz y la lista de cuentas muestran los primeros 3 dígitos y el resto enmascarado (por ejemplo, 123xxxxx). Útil para transmisiones en vivo o al compartir pantalla. Las imágenes para compartir, los archivos exportados y el diálogo de confirmación de eliminación no se ven afectados.",
   "settingsAbout": "Sobre",
   "settingsAboutVersion": "Versión {version}",
   "@settingsAboutVersion": {

@@ -168,4 +168,84 @@ void main() {
       expect(aliasText.maxLines, 1);
     });
   });
+
+  group('AccountTriggerLabel: maskUid', () {
+    testWidgets('displays full uid when maskUid=false', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountTriggerLabel(activeUid: '123456789', maskUid: false),
+        ),
+      );
+      expect(find.text('123456789'), findsOneWidget);
+    });
+
+    testWidgets('displays masked uid when maskUid=true', (tester) async {
+      await tester.pumpWidget(
+        _wrap(const AccountTriggerLabel(activeUid: '123456789', maskUid: true)),
+      );
+      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123456789'), findsNothing);
+    });
+
+    testWidgets('with alias: still masks the (uid) suffix', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountTriggerLabel(
+            activeUid: '123456789',
+            alias: '主帳',
+            maskUid: true,
+          ),
+        ),
+      );
+      expect(find.text('主帳'), findsOneWidget);
+      expect(find.text(' (123xxxxxx)'), findsOneWidget);
+      expect(find.text(' (123456789)'), findsNothing);
+    });
+
+    testWidgets('with alias: maskUid=false shows full', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountTriggerLabel(
+            activeUid: '123456789',
+            alias: '主帳',
+            maskUid: false,
+          ),
+        ),
+      );
+      expect(find.text(' (123456789)'), findsOneWidget);
+    });
+  });
+
+  group('AccountMenuLabel: maskUid', () {
+    testWidgets('without alias shows masked uid as primary', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountMenuLabel(
+            uid: '123456789',
+            isActive: false,
+            maskUid: true,
+          ),
+        ),
+      );
+      expect(find.text('123xxxxxx'), findsOneWidget);
+    });
+
+    testWidgets('with alias: alias primary, masked uid as subtitle', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          const AccountMenuLabel(
+            uid: '123456789',
+            alias: '主帳',
+            isActive: false,
+            maskUid: true,
+          ),
+        ),
+      );
+      expect(find.text('主帳'), findsOneWidget);
+      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123456789'), findsNothing);
+    });
+  });
 }
