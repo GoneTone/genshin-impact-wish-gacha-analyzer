@@ -17,7 +17,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # 同 repo PR 才 checkout head 分支本身（供正規化後 commit 回去）；
           # push 與 fork PR 回退到預設 ref，避免 fork 分支名在本 repo 不存在而失敗。
