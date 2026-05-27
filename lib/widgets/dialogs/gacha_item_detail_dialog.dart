@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
@@ -112,6 +113,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
       setState(() {
         _loadStates[file.path] = _GalleryReady(file);
       });
+      ref.invalidate(hoyowikiCacheUsageProvider);
       _log.info(
         'lazy fetch ok id=$id bytes=${bytes.length} '
         'path=${sanitizeFsPath(file.path)}',

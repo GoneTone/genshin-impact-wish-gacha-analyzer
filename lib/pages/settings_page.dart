@@ -653,12 +653,27 @@ class _DataManagement extends ConsumerWidget {
 
 /// 圖片快取區塊：顯示用量（icon / gallery / 總計），提供「清除詳情圖快取」
 /// 與「強制重抓物品圖片」按鈕。
-class _ImageCacheSection extends ConsumerWidget {
+class _ImageCacheSection extends ConsumerStatefulWidget {
   /// 建立 [_ImageCacheSection]。
   const _ImageCacheSection();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ImageCacheSection> createState() => _ImageCacheSectionState();
+}
+
+/// [_ImageCacheSection] 的 state。
+class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
+  @override
+  Widget build(BuildContext context) {
+    // 任何進度（更新、匯入、強制重抓）結束時 → cache 容量可能已變動，刷新。
+    // 進度從非 null → null（包含 UpdateCompleted 與 clearProgress 取消路徑）
+    // 都會落地此 listener。
+    ref.listen(gachaRepositoryProvider.select((s) => s.progress), (prev, next) {
+      if (prev != null && next == null) {
+        ref.invalidate(hoyowikiCacheUsageProvider);
+      }
+    });
+
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final tokens = theme.gacha;
@@ -709,7 +724,7 @@ class _ImageCacheSection extends ConsumerWidget {
               ),
               onPressed: usageAsync.value == null
                   ? null
-                  : () => _clearGallery(context, ref),
+                  : () => _clearGallery(context),
               icon: const Icon(Icons.delete_sweep_outlined, size: 18),
               label: Text(l.settingsImageCacheClearGallery),
             ),
@@ -722,7 +737,7 @@ class _ImageCacheSection extends ConsumerWidget {
                 ),
                 onPressed: (!hasData || progress != null)
                     ? null
-                    : () => _refetchAll(context, ref),
+                    : () => _refetchAll(context),
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(l.settingsRefetchHoyoWikiImagesTitle),
               ),
@@ -734,7 +749,7 @@ class _ImageCacheSection extends ConsumerWidget {
   }
 
   /// 顯示「清除詳情圖快取」確認 dialog，確認後呼叫 `deleteGalleryCacheFiles`。
-  Future<void> _clearGallery(BuildContext ctx, WidgetRef ref) async {
+  Future<void> _clearGallery(BuildContext ctx) async {
     final l = AppLocalizations.of(ctx)!;
     final usage = ref.read(hoyowikiCacheUsageProvider).value;
     final sizeText = usage == null ? '' : formatBytes(usage.galleryBytes);
@@ -769,6 +784,7 @@ class _ImageCacheSection extends ConsumerWidget {
     } catch (e, st) {
       Logger('gacha.hoyowiki.storage').warning('clear gallery failed', e, st);
       if (!ctx.mounted) return;
+      ref.invalidate(hoyowikiCacheUsageProvider);
       ScaffoldMessenger.of(
         ctx,
       ).showSnackBar(SnackBar(content: Text(l.settingsImageCacheFailed)));
@@ -776,7 +792,7 @@ class _ImageCacheSection extends ConsumerWidget {
   }
 
   /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
-  Future<void> _refetchAll(BuildContext ctx, WidgetRef ref) async {
+  Future<void> _refetchAll(BuildContext ctx) async {
     final l = AppLocalizations.of(ctx)!;
     final ok = await showDialog<bool>(
       context: ctx,
