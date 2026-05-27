@@ -22,7 +22,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/format_bytes.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
@@ -81,6 +84,12 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsImageCache,
+                icon: Icons.image_outlined,
+                child: const _ImageCacheSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -364,20 +373,6 @@ class _DataManagement extends ConsumerWidget {
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
         ),
-        Tooltip(
-          message: !hasData ? l.settingsRefetchHoyoWikiImagesEmpty : '',
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).gacha.stateDanger,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: (!hasData || progress != null)
-                ? null
-                : () => _refetchHoYoWikiImages(context, ref),
-            icon: const Icon(Icons.refresh, size: 18),
-            label: Text(l.settingsRefetchHoyoWikiImagesTitle),
-          ),
-        ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
             backgroundColor: Theme.of(context).gacha.stateDanger,
@@ -654,38 +649,225 @@ class _DataManagement extends ConsumerWidget {
     if (ok != true) return;
     await ref.read(gachaRepositoryProvider.notifier).clearAll();
   }
+}
 
-  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
-  Future<void> _refetchHoYoWikiImages(BuildContext ctx, WidgetRef ref) async {
+/// 圖片快取區塊：顯示用量（icon / gallery / 總計），提供「清除詳情圖快取」
+/// 與「強制重抓物品圖片」按鈕。
+class _ImageCacheSection extends ConsumerWidget {
+  /// 建立 [_ImageCacheSection]。
+  const _ImageCacheSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    final usageAsync = ref.watch(hoyowikiCacheUsageProvider);
+    final hasData = ref.watch(
+      gachaRepositoryProvider.select((s) => s.byUid.isNotEmpty),
+    );
+    final progress = ref.watch(
+      gachaRepositoryProvider.select((s) => s.progress),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        usageAsync.when(
+          loading: () => _UsageRows(
+            total: l.settingsImageCacheCalculating,
+            icons: l.settingsImageCacheCalculating,
+            gallery: l.settingsImageCacheCalculating,
+            muted: true,
+            tokens: tokens,
+            theme: theme,
+            l: l,
+          ),
+          error: (e, st) => Text(
+            l.settingsImageCacheFailed,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.stateDanger,
+            ),
+          ),
+          data: (u) => _UsageRows(
+            total: formatBytes(u.totalBytes),
+            icons: formatBytes(u.iconBytes),
+            gallery: formatBytes(u.galleryBytes),
+            muted: false,
+            tokens: tokens,
+            theme: theme,
+            l: l,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        Wrap(
+          spacing: AppSpacing.s,
+          runSpacing: AppSpacing.s,
+          children: [
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: tokens.stateDanger,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: usageAsync.value == null
+                  ? null
+                  : () => _clearGallery(context, ref),
+              icon: const Icon(Icons.delete_sweep_outlined, size: 18),
+              label: Text(l.settingsImageCacheClearGallery),
+            ),
+            Tooltip(
+              message: !hasData ? l.settingsRefetchHoyoWikiImagesEmpty : '',
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: tokens.stateDanger,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: (!hasData || progress != null)
+                    ? null
+                    : () => _refetchAll(context, ref),
+                icon: const Icon(Icons.refresh, size: 18),
+                label: Text(l.settingsRefetchHoyoWikiImagesTitle),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 顯示「清除詳情圖快取」確認 dialog，確認後呼叫 `deleteGalleryCacheFiles`。
+  Future<void> _clearGallery(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
+    final usage = ref.read(hoyowikiCacheUsageProvider).value;
+    final sizeText = usage == null ? '' : formatBytes(usage.galleryBytes);
     final ok = await showDialog<bool>(
       context: ctx,
-      builder: (dialogCtx) => AppDialog(
-        title: Text(l.confirmRefetchHoyoWikiTitle),
-        content: Text(l.confirmRefetchHoyoWikiBody),
+      builder: (d) => AppDialog(
+        title: Text(l.confirmClearGalleryCacheTitle),
+        content: Text(l.confirmClearGalleryCacheBody(sizeText)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(dialogCtx).pop(false),
+            onPressed: () => Navigator.of(d).pop(false),
             child: Text(l.actionCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(dialogCtx).gacha.stateDanger,
+              backgroundColor: Theme.of(d).gacha.stateDanger,
               foregroundColor: Colors.white,
             ),
-            onPressed: () => Navigator.of(dialogCtx).pop(true),
+            onPressed: () => Navigator.of(d).pop(true),
+            child: Text(l.confirmClearGalleryCacheConfirm),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      final storage = ref.read(hoyowikiIndexStorageProvider);
+      await storage.deleteGalleryCacheFiles();
+      if (!ctx.mounted) return;
+      ref.invalidate(hoyowikiCacheUsageProvider);
+      Logger('gacha.hoyowiki.storage').info('user cleared gallery cache');
+    } catch (e, st) {
+      Logger('gacha.hoyowiki.storage').warning('clear gallery failed', e, st);
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(
+        ctx,
+      ).showSnackBar(SnackBar(content: Text(l.settingsImageCacheFailed)));
+    }
+  }
+
+  /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
+  Future<void> _refetchAll(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final ok = await showDialog<bool>(
+      context: ctx,
+      builder: (d) => AppDialog(
+        title: Text(l.confirmRefetchHoyoWikiTitle),
+        content: Text(l.confirmRefetchHoyoWikiBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(d).pop(false),
+            child: Text(l.actionCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(d).gacha.stateDanger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.of(d).pop(true),
             child: Text(l.confirmRefetchHoyoWikiConfirm),
           ),
         ],
       ),
     );
     if (ok != true) return;
-    // 後端流程獨立於 dialog lifecycle；UpdateProgressDialog 由 app_shell.dart
-    // 既有 ref.listen 自動彈出。
     unawaited(
       ref
           .read(gachaRepositoryProvider.notifier)
           .forceRefetchAllHoYoWikiImages(),
+    );
+  }
+}
+
+/// 「總計 / 小圖示 / 詳情圖」三行用量顯示。
+class _UsageRows extends StatelessWidget {
+  /// 建立 [_UsageRows]。
+  const _UsageRows({
+    required this.total,
+    required this.icons,
+    required this.gallery,
+    required this.muted,
+    required this.tokens,
+    required this.theme,
+    required this.l,
+  });
+
+  /// 總計顯示文字（格式化後的 bytes 字串或「計算中…」）。
+  final String total;
+
+  /// 小圖示 bytes 字串。
+  final String icons;
+
+  /// 詳情圖 bytes 字串。
+  final String gallery;
+
+  /// 是否套用 textMuted 風格（loading 狀態下）。
+  final bool muted;
+
+  /// 主題 gacha tokens。
+  final GachaTokens tokens;
+
+  /// 當前 ThemeData。
+  final ThemeData theme;
+
+  /// 當前 i18n 字串實例。
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
+    final labelStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: muted ? tokens.textMuted : tokens.textPrimary,
+    );
+    final secondaryStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: muted ? tokens.textMuted : tokens.textSecondary,
+    );
+    Widget row(String label, String value, TextStyle? style) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: style)),
+          Text(value, style: style),
+        ],
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        row(l.settingsImageCacheTotal, total, labelStyle),
+        row(l.settingsImageCacheIcons, icons, secondaryStyle),
+        row(l.settingsImageCacheGallery, gallery, secondaryStyle),
+      ],
     );
   }
 }
