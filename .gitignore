@@ -50,8 +50,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local design specs / brainstorming notes (not tracked)
-/docs/superpowers/
+# Local brainstorming scratchpad (not tracked); design specs/plans under docs/superpowers/ ARE tracked
 /.superpowers/
 
 # One-shot porting tool (run once, then discard locally — not tracked)
