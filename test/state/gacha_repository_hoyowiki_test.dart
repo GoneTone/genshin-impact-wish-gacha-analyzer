@@ -733,7 +733,9 @@ void main() {
   });
 
   group('hoyowiki gallery download', () {
-    test('gallery 圖檔下載到 <id>_gallery_<hash>.<ext>', () async {
+    // gallery 大圖改 lazy fetch（commit 5bf10c3），update flow 只下 icon；
+    // 此測試改為確認：icon 落檔、gallery 元資料寫入 index、但 cache 目錄無 gallery 檔。
+    test('update flow 僅下 icon；gallery URL 存入 index 但不預先落檔', () async {
       tempDir = await Directory.systemTemp.createTemp('hoyowiki_dl_');
       SharedPreferences.setMockInitialValues({});
 
@@ -849,22 +851,26 @@ void main() {
           .whereType<File>()
           .map((f) => f.uri.pathSegments.last)
           .toList();
+      // icon 仍由 update flow 預下
       expect(files.any((f) => f == '12345_icon.png'), isTrue);
+      // gallery 大圖不再由 update flow 下載；cache 目錄中不應出現 gallery 檔
       expect(
-        files.any(
-          (f) => RegExp(r'^12345_gallery_[0-9a-f]{12}\.gif$').hasMatch(f),
-        ),
-        isTrue,
+        files.any((f) => RegExp(r'^12345_gallery_').hasMatch(f)),
+        isFalse,
+        reason: 'gallery 改 lazy fetch，update flow 不應寫入 gallery 快取檔',
       );
-      expect(
-        files.any(
-          (f) => RegExp(r'^12345_gallery_[0-9a-f]{12}\.png$').hasMatch(f),
-        ),
-        isTrue,
-      );
+
+      // gallery URL 仍完整寫入 index（供 dialog lazy fetch 使用）
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      final gallery = entry.pageByLang['en-us']?.gallery;
+      expect(gallery, isNotNull, reason: 'gallery 元資料應存在 index 中');
+      expect(gallery!.picUrl, 'https://x/card.png');
+      expect(gallery.list.single.imgUrl, 'https://x/a.gif');
     });
 
-    test('跨 lang 同 URL 只下載一次', () async {
+    // gallery 大圖改 lazy fetch（commit 5bf10c3），update flow 只下 icon；
+    // 跨 lang 的去重邏輯仍存在於 icon 層；此測試確認 icon 只下一次（= 1）。
+    test('跨 lang 同 icon URL 只下載一次；gallery 不在 update flow 下載', () async {
       tempDir = await Directory.systemTemp.createTemp('hoyowiki_dedupe_');
       SharedPreferences.setMockInitialValues({});
 
@@ -894,7 +900,7 @@ void main() {
           );
         }
         if (url.contains('/wapi/entry_page')) {
-          // 兩個 lang 都回完全相同的圖 URL → 應該共用一份檔
+          // 兩個 lang 都回完全相同的圖 URL
           return http.Response.bytes(
             utf8.encode(
               jsonEncode({
@@ -974,8 +980,9 @@ void main() {
           .read(gachaRepositoryProvider.notifier)
           .debugRunHoYoWikiOnly();
 
-      // icon (1) + shared.png (1, 跨 lang 共用) = 2 次 image download
-      expect(imageDownloadCount, 2);
+      // icon (1, 跨 lang 共用同 URL 只下一次) = 1 次 image download；
+      // gallery shared.png 不在 update flow 下載（lazy fetch by dialog）
+      expect(imageDownloadCount, 1);
     });
   });
 
