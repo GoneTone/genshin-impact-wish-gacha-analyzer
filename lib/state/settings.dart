@@ -77,7 +77,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
   Future<void> setMaskUidInUi(bool value) async {
     state = state.copyWith(maskUidInUi: value);
     await SettingsStorage.save(state);
-    Logger('app.settings').info('maskUidInUi toggled', value);
+    Logger('app.settings').info('maskUidInUi toggled=$value');
   }
 
   /// 從 aliases 與 uidOrder 中移除指定 UID 並持久化。

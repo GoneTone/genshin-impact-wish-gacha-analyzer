@@ -195,10 +195,6 @@ void main() {
   });
 
   group('maskUidInUi', () {
-    setUp(() async {
-      SharedPreferences.setMockInitialValues(<String, Object>{});
-    });
-
     test('defaults to false when key absent', () async {
       final s = await SettingsStorage.load();
       expect(s.maskUidInUi, false);
