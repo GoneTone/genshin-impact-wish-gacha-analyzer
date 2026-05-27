@@ -533,6 +533,16 @@
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
   },
 
+  "galleryLazyLoadFailed": "圖片載入失敗",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "重試",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
   "actionCloseImagePreview": "關閉圖片預覽",
   "@actionCloseImagePreview": {
     "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
