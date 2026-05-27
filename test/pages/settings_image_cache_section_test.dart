@@ -78,6 +78,8 @@ void main() {
   });
 
   tearDown(() async {
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     if (await tempDir.exists()) {
       try {
         await tempDir.delete(recursive: true);

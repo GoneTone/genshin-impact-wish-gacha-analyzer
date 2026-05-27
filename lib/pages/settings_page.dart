@@ -679,7 +679,6 @@ class _ImageCacheSection extends ConsumerWidget {
             icons: l.settingsImageCacheCalculating,
             gallery: l.settingsImageCacheCalculating,
             muted: true,
-            tokens: tokens,
             theme: theme,
             l: l,
           ),
@@ -694,7 +693,6 @@ class _ImageCacheSection extends ConsumerWidget {
             icons: formatBytes(u.iconBytes),
             gallery: formatBytes(u.galleryBytes),
             muted: false,
-            tokens: tokens,
             theme: theme,
             l: l,
           ),
@@ -802,6 +800,8 @@ class _ImageCacheSection extends ConsumerWidget {
       ),
     );
     if (ok != true) return;
+    // 後端流程獨立於 dialog lifecycle；UpdateProgressDialog 由 app_shell.dart
+    // 既有 ref.listen 自動彈出。
     unawaited(
       ref
           .read(gachaRepositoryProvider.notifier)
@@ -818,7 +818,6 @@ class _UsageRows extends StatelessWidget {
     required this.icons,
     required this.gallery,
     required this.muted,
-    required this.tokens,
     required this.theme,
     required this.l,
   });
@@ -835,9 +834,6 @@ class _UsageRows extends StatelessWidget {
   /// 是否套用 textMuted 風格（loading 狀態下）。
   final bool muted;
 
-  /// 主題 gacha tokens。
-  final GachaTokens tokens;
-
   /// 當前 ThemeData。
   final ThemeData theme;
 
@@ -846,6 +842,7 @@ class _UsageRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tokens = theme.gacha;
     final labelStyle = theme.textTheme.bodyMedium?.copyWith(
       color: muted ? tokens.textMuted : tokens.textPrimary,
     );
