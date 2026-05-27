@@ -8,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 
 /// AppBar 上的 UID 切換按鈕，點擊後展開帳號選單。
 class UidIndicator extends ConsumerWidget {
@@ -20,6 +21,7 @@ class UidIndicator extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(gachaRepositoryProvider.notifier);
     final activeUid = state.activeUid;
+    final maskUid = settings.maskUidInUi;
     final l = AppLocalizations.of(context)!;
 
     final orderedUids = state.byUid.isEmpty
@@ -50,6 +52,7 @@ class UidIndicator extends ConsumerWidget {
                   uid: uid,
                   alias: settings.uidAliases[uid],
                   isActive: uid == activeUid,
+                  maskUid: maskUid,
                 ),
               ),
             ],
@@ -110,6 +113,7 @@ class UidIndicator extends ConsumerWidget {
       child: AccountTriggerLabel(
         activeUid: activeUid,
         alias: activeUid == null ? null : settings.uidAliases[activeUid],
+        maskUid: maskUid,
       ),
     );
   }
@@ -119,13 +123,21 @@ class UidIndicator extends ConsumerWidget {
 /// 無 alias 顯示 UID;activeUid==null 顯示「未同步」。
 class AccountTriggerLabel extends StatelessWidget {
   /// 建立 [AccountTriggerLabel]。
-  const AccountTriggerLabel({super.key, this.activeUid, this.alias});
+  const AccountTriggerLabel({
+    super.key,
+    this.activeUid,
+    this.alias,
+    this.maskUid = false,
+  });
 
   /// 當前登入的 UID，`null` 表示尚未同步。
   final String? activeUid;
 
   /// 使用者自訂的帳號別名。
   final String? alias;
+
+  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  final bool maskUid;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +152,7 @@ class AccountTriggerLabel extends StatelessWidget {
       ]);
     }
     final hasAlias = alias != null && alias!.isNotEmpty;
+    final shown = displayUid(uid, mask: maskUid);
     return _row([
       const Icon(Icons.person_outline, size: 18),
       const SizedBox(width: AppSpacing.xs),
@@ -148,9 +161,9 @@ class AccountTriggerLabel extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 160),
           child: Text(alias!, maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
-        Text(' ($uid)'),
+        Text(' ($shown)'),
       ] else
-        Text(uid),
+        Text(shown),
       const Icon(Icons.arrow_drop_down, size: 18),
     ]);
   }
@@ -209,6 +222,7 @@ class AccountMenuLabel extends StatelessWidget {
     required this.uid,
     required this.isActive,
     this.alias,
+    this.maskUid = false,
   });
 
   /// 帳號 UID。
@@ -220,12 +234,16 @@ class AccountMenuLabel extends StatelessWidget {
   /// 是否為當前使用中的帳號。
   final bool isActive;
 
+  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  final bool maskUid;
+
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).gacha;
     final l = AppLocalizations.of(context)!;
     final hasAlias = alias != null && alias!.isNotEmpty;
-    final primary = hasAlias ? alias! : uid;
+    final shownUid = displayUid(uid, mask: maskUid);
+    final primary = hasAlias ? alias! : shownUid;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 280),
@@ -250,7 +268,10 @@ class AccountMenuLabel extends StatelessWidget {
             ],
           ),
           if (hasAlias)
-            Text(uid, style: TextStyle(fontSize: 12, color: tokens.textMuted)),
+            Text(
+              shownUid,
+              style: TextStyle(fontSize: 12, color: tokens.textMuted),
+            ),
         ],
       ),
     );
