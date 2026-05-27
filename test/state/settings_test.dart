@@ -218,4 +218,42 @@ void main() {
     final reloaded = await SettingsStorage.load();
     expect(reloaded.skippedReleaseTag, isNull);
   });
+
+  group('setMaskUidInUi', () {
+    setUp(() async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+    });
+
+    test('default state is false', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(settingsProvider.notifier).waitForLoad();
+      expect(container.read(settingsProvider).maskUidInUi, false);
+    });
+
+    test('toggles state and persists', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(settingsProvider.notifier).waitForLoad();
+
+      await container.read(settingsProvider.notifier).setMaskUidInUi(true);
+      expect(container.read(settingsProvider).maskUidInUi, true);
+
+      final reloaded = await SettingsStorage.load();
+      expect(reloaded.maskUidInUi, true);
+    });
+
+    test('toggles back to false and persists', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(settingsProvider.notifier).waitForLoad();
+      await container.read(settingsProvider.notifier).setMaskUidInUi(true);
+
+      await container.read(settingsProvider.notifier).setMaskUidInUi(false);
+      expect(container.read(settingsProvider).maskUidInUi, false);
+
+      final reloaded = await SettingsStorage.load();
+      expect(reloaded.maskUidInUi, false);
+    });
+  });
 }
