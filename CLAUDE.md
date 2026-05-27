@@ -10,6 +10,7 @@
 - **標點依語言慣例**：CJK 語境（繁體中文 (台灣)、日文等）一律用全形標點 `，。！？；：（）「」『』、──`，涵蓋註解、dartdoc、UI 文字（ARB）、commit message、PR 描述、設計文件。英文／純程式碼語境維持半形 `. , ( ) ! ? : ;`。中英混排以**主語言**為準（中文句子內含英文短語，標點仍用全形）。
 - **方法應該有 dartdoc**：所有宣告（top-level function、class、constructor、method、field、typedef、enum；含 private `_xxx`）寫一行 `///` dartdoc 說明其作用，讓讀者不必讀實作就知道在做什麼。Flutter override（`build()`、`createState()`、`dispose()`、`initState()`、`didChangeDependencies()` 等簽名已自明的）不寫。
 - **`rust_builder/` 勿手動改**：`rust_builder/` 是 flutter_rust_bridge 自動產生的 FFI plugin glue（含 `cargokit/`），只負責把 `rust/` 編進 Flutter 原生建置流程，本身沒有業務邏輯。要改 Rust 邏輯改 `rust/`（crate `genshin_capture_core`）；要改 Dart 綁定改 `flutter_rust_bridge.yaml` 後重跑 frb codegen。Rust 編譯由 cargokit 自動掛在 `flutter build` 的 CMake 流程上，**不需另外手動 `cargo build`**，但建置機需安裝 Rust toolchain（cargo）。
+- **簡單改動免 spec**：純樣式微調（顏色、間距、icon 換掉、字串小改）、單檔 typo、單一 bug fix、純機械重構（重新命名、抽常數）、翻譯補字串等，可直接動手實作不必走 brainstorming → spec → plan 流程；若使用者下指令時已自帶設計判斷（明確的 what + why）也同樣免 spec。需要 spec 的判準：跨多檔影響架構、新增 widget／service／資料流、需要驗收條件超過「跑 analyze + test 全綠」的功能。把 spec 留給真正會影響後人維護的決策。
 
 ## 提交前品質檢查
 
