@@ -87,6 +87,12 @@ class SettingsPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
+                title: l.settingsAccountManagement,
+                icon: Icons.manage_accounts_outlined,
+                child: const AccountManagement(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
@@ -96,12 +102,6 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsImageCache,
                 icon: Icons.image_outlined,
                 child: const _ImageCacheSection(),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              SectionCard(
-                title: l.settingsAccountManagement,
-                icon: Icons.manage_accounts_outlined,
-                child: const AccountManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
