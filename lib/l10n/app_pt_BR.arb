@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -464,7 +464,6 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
-
   "settingsImageCache": "Cache de imagens",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."
@@ -501,14 +500,15 @@
   "@confirmClearGalleryCacheBody": {
     "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
     "placeholders": {
-      "size": { "type": "String" }
+      "size": {
+        "type": "String"
+      }
     }
   },
   "confirmClearGalleryCacheConfirm": "Limpar",
   "@confirmClearGalleryCacheConfirm": {
     "description": "Confirm button label for clearing gallery cache."
   },
-
   "settingsExportData": "Exportar dados",
   "settingsImportData": "Importar dados",
   "shareImageButton": "Gerar imagem para compartilhar",
@@ -766,18 +766,27 @@
   },
   "settingsLogsClearConfirmBody": "Isso excluirá permanentemente todos os arquivos na pasta logs/. Se precisar dos logs para reportar um problema, exporte-os primeiro. Digite CLEAR para confirmar.",
   "galleryCardLabel": "Cartão",
+  "@galleryCardLabel": {
+    "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
+  },
   "galleryIconLabel": "Ícone",
+  "@galleryIconLabel": {
+    "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
+  },
   "actionViewOnHoYoWiki": "Ver no HoYoWiki",
-
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
   "galleryLazyLoadFailed": "Falha ao carregar a imagem",
   "@galleryLazyLoadFailed": {
     "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
   },
-
   "actionRetry": "Tentar novamente",
   "@actionRetry": {
     "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
   },
-
-  "actionCloseImagePreview": "Fechar prévia da imagem"
+  "actionCloseImagePreview": "Fechar prévia da imagem",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  }
 }
