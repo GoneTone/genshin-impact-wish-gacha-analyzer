@@ -71,6 +71,12 @@ class SettingsPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
+                title: l.settingsPrivacySectionTitle,
+                icon: Icons.shield_outlined,
+                child: const _PrivacySection(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
                 title: l.settingsLanguage,
                 icon: Icons.language,
                 child: _LocaleDropdown(
@@ -891,6 +897,38 @@ class _UsageRows extends StatelessWidget {
         row(l.settingsImageCacheIcons, icons, secondaryStyle),
         row(l.settingsImageCacheGallery, gallery, secondaryStyle),
       ],
+    );
+  }
+}
+
+/// 隱私設定區塊：目前僅含「遮蔽介面 UID」開關。
+class _PrivacySection extends ConsumerWidget {
+  /// 建立 [_PrivacySection]。
+  const _PrivacySection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    final maskUid = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
+    final notifier = ref.read(settingsProvider.notifier);
+
+    return SwitchListTile(
+      key: const ValueKey('settings.maskUidInUiSwitch'),
+      value: maskUid,
+      title: Text(l.settingsMaskUidInUi),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: AppSpacing.xs),
+        child: Text(
+          l.settingsMaskUidInUiHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: tokens.textSecondary,
+          ),
+        ),
+      ),
+      contentPadding: EdgeInsets.zero,
+      onChanged: notifier.setMaskUidInUi,
     );
   }
 }
