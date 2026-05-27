@@ -61,6 +61,9 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
   /// 已排程 precacheImage 的本地圖檔路徑；避免每次 setState 重新呼叫。
   final Set<String> _precachedPaths = {};
 
+  /// 是否已有 precache 排程於下一個 frame；避免每次 setState 重排相同 callback。
+  bool _precacheScheduled = false;
+
   /// 每張 gallery 圖的下載／載入狀態，key 為「該圖的本地 cache 檔絕對路徑」。
   /// 同 URL 撞同 hash → 自然共用同一 entry，跨 chip 自然 dedup。
   final Map<String, _GalleryLoadState> _loadStates = {};
@@ -346,8 +349,11 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     final current = clampedIndex >= 0 ? chipEntries[clampedIndex] : null;
 
     // 排程所有已就緒 chip 圖預載；post-frame 是避開 build 內直接 schedule async 的 lint。
-    if (chipEntries.isNotEmpty) {
+    // 以 _precacheScheduled flag 確保每個 frame 最多只排一次，避免每次 setState 累積 callback。
+    if (chipEntries.isNotEmpty && !_precacheScheduled) {
+      _precacheScheduled = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        _precacheScheduled = false;
         if (!mounted) return;
         _precacheChipImages(context, chipEntries);
       });
