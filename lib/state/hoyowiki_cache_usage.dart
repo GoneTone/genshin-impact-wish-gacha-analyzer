@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as p;
 
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+
+/// Logger 實例（gacha.hoyowiki.usage 命名空間，對齊既有 gacha.hoyowiki.* 樹）。
+final _log = Logger('gacha.hoyowiki.usage');
 
 /// HoYoWiki 圖片快取用量分項。
 @immutable
@@ -32,25 +34,24 @@ class HoYoWikiCacheUsage {
 /// 失敗（權限等）讓 `FutureProvider` 自然進 `AsyncError` 狀態。
 final hoyowikiCacheUsageProvider =
     FutureProvider.autoDispose<HoYoWikiCacheUsage>((ref) async {
-      final log = Logger('gacha.hoyowiki.usage');
-      final dir = ref.watch(hoyowikiCacheDirProvider);
+      final dir = ref.read(hoyowikiCacheDirProvider);
       if (!await dir.exists()) {
-        log.fine('cache dir not exist → zero');
+        _log.fine('cache dir not exist → zero');
         return const HoYoWikiCacheUsage(iconBytes: 0, galleryBytes: 0);
       }
       var iconBytes = 0;
       var galleryBytes = 0;
       await for (final entity in dir.list()) {
         if (entity is! File) continue;
-        final base = p.basename(entity.path);
+        final path = entity.path;
         final size = await entity.length();
-        if (base.contains('_gallery_')) {
+        if (path.contains('_gallery_')) {
           galleryBytes += size;
-        } else if (base.contains('_icon.')) {
+        } else if (path.contains('_icon.')) {
           iconBytes += size;
         }
       }
-      log.fine('scan done icon=$iconBytes gallery=$galleryBytes');
+      _log.fine('scan done icon=$iconBytes gallery=$galleryBytes');
       return HoYoWikiCacheUsage(
         iconBytes: iconBytes,
         galleryBytes: galleryBytes,
