@@ -1,21 +1,29 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
-/// 頌願卡池 gachaType 集合 — 永遠不可點（對應 GachaItemIcon 內 _odesGachaTypes）。
+/// 頌願卡池 gachaType 集合 — 永遠不可點。
 const _odesGachaTypes = {'2000', '1000'};
 
-/// 判斷 [record] 是否在 dialog 內有東西可顯示（至少有 icon 或 header 任一個
-/// HoYoWiki 圖片快取到本機）。頌願卡池一律 false。
+/// 判斷 [record] 是否在 dialog 內有東西可顯示。可點性放寬為「icon 檔在即可」
+/// — gallery 可能因為武器頁等 entry 沒有 `gallery_character` module 而為空，
+/// 此時 dialog 仍會顯示 icon 大圖（chip 列只有 Icon 一個項目，自動隱藏 chip 列）。
 bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (_odesGachaTypes.contains(record.gachaType)) return false;
   final index = ref.watch(hoyowikiIndexProvider);
@@ -23,25 +31,18 @@ bool hasHoYoWikiContent(WidgetRef ref, GachaRecord record) {
   if (id == null) return false;
   final entry = index.lookupEntry(id);
   if (entry == null) return false;
+  if (entry.iconUrl.isEmpty) return false;
   final cacheDir = ref.watch(hoyowikiCacheDirProvider);
-
-  bool fileReady(String url, HoYoWikiImageKind kind) =>
-      url.isNotEmpty &&
-      hoyowikiCacheFile(
-        baseDir: cacheDir,
-        id: id,
-        kind: kind,
-        url: url,
-      ).existsSync();
-
-  return fileReady(entry.iconUrl, HoYoWikiImageKind.icon) ||
-      fileReady(entry.headerImgUrl, HoYoWikiImageKind.header);
+  return hoyowikiIconCacheFile(
+    baseDir: cacheDir,
+    id: id,
+    url: entry.iconUrl,
+  ).existsSync();
 }
 
-/// 點擊物品 icon / 名稱時彈出的 dialog；顯示 icon + 名稱（top）+ HoYoWiki
-/// header 大圖（bottom）。缺哪個就不顯示哪個；`AppDialogSize.md` 寬度，
-/// header 用 `Flexible + BoxFit.contain` 吃剩餘高度，保證不撐爆視窗。
-class GachaItemDetailDialog extends ConsumerWidget {
+/// 物品 dialog — title 為 icon + 名稱；content 為頂部 chip 列 +
+/// 中央 gallery 圖（含 GIF）+ 下方 imgDesc HTML 描述。
+class GachaItemDetailDialog extends ConsumerStatefulWidget {
   /// 建立 [GachaItemDetailDialog]。
   const GachaItemDetailDialog({super.key, required this.record});
 
@@ -49,37 +50,315 @@ class GachaItemDetailDialog extends ConsumerWidget {
   final GachaRecord record;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GachaItemDetailDialog> createState() =>
+      _GachaItemDetailDialogState();
+}
+
+/// [GachaItemDetailDialog] 的 state：維護 chip 列當前選中索引與 lazy 下載狀態。
+class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
+  /// 當前選中 chip 的 index；點 chip 時 setState 更新；超出範圍由 `clampedIndex` 收斂。
+  int _selectedIndex = 0;
+
+  /// 已排程 precacheImage 的本地圖檔路徑；避免每次 setState 重新呼叫。
+  final Set<String> _precachedPaths = {};
+
+  /// 是否已有 precache 排程於下一個 frame；避免每次 setState 重排相同 callback。
+  bool _precacheScheduled = false;
+
+  /// 每張 gallery 圖的下載／載入狀態，key 為「該圖的本地 cache 檔絕對路徑」。
+  /// 同 URL 撞同 hash → 自然共用同一 entry，跨 chip 自然 dedup。
+  final Map<String, _GalleryLoadState> _loadStates = {};
+
+  /// initState 後使用的 http client（dispose 時 close 中斷 in-flight 請求）。
+  late final http.Client _client;
+
+  /// 該 dialog 的 logger。
+  static final _log = Logger('gacha.hoyowiki.detail');
+
+  @override
+  void initState() {
+    super.initState();
+    _client = http.Client();
+  }
+
+  @override
+  void dispose() {
+    _client.close();
+    super.dispose();
+  }
+
+  /// 對 [url] 做 lazy 下載；成功寫入 cache 並 setState 為 [_GalleryReady]；
+  /// 失敗 setState 為 [_GalleryFailed]。重複呼叫（例如重試）安全。
+  Future<void> _fetchAndCache({
+    required String id,
+    required String url,
+    required File file,
+  }) async {
+    final fetcher = ref.read(hoyowikiFetcherProvider);
+    try {
+      final bytes = await fetcher.downloadImage(url, _client);
+      if (bytes == null) {
+        if (!mounted) return;
+        setState(() {
+          _loadStates[file.path] = _GalleryFailed(
+            const FormatException('downloadImage returned null'),
+          );
+        });
+        _log.warning('lazy fetch returned null id=$id url=${sanitizeUrl(url)}');
+        return;
+      }
+      await file.parent.create(recursive: true);
+      await file.writeAsBytes(bytes);
+      if (!mounted) return;
+      setState(() {
+        _loadStates[file.path] = _GalleryReady(file);
+      });
+      ref.invalidate(hoyowikiCacheUsageProvider);
+      _log.info(
+        'lazy fetch ok id=$id bytes=${bytes.length} '
+        'path=${sanitizeFsPath(file.path)}',
+      );
+    } catch (e, st) {
+      if (!mounted) return;
+      setState(() {
+        _loadStates[file.path] = _GalleryFailed(e);
+      });
+      _log.warning('lazy fetch failed id=$id url=${sanitizeUrl(url)}', e, st);
+    }
+  }
+
+  /// 對某張圖檔由 [_GalleryFailed] 重試，改回 [_GalleryLoading] 並再次呼叫
+  /// [_fetchAndCache]。
+  void _retry({required String id, required String url, required File file}) {
+    setState(() {
+      _loadStates[file.path] = const _GalleryLoading();
+    });
+    unawaited(_fetchAndCache(id: id, url: url, file: file));
+  }
+
+  /// 只 precache [_GalleryReady] 的圖檔；未下載完的 chip 略過。
+  void _precacheChipImages(
+    BuildContext context,
+    List<_GalleryChipEntry> entries,
+  ) {
+    for (final e in entries) {
+      final st = _loadStates[e.file.path];
+      if (st is! _GalleryReady) continue;
+      if (_precachedPaths.add(e.file.path)) {
+        precacheImage(FileImage(e.file), context);
+      }
+    }
+  }
+
+  /// 依當前 chip 的 [_GalleryLoadState] 顯示對應內容：
+  ///   - Ready → Image.file（可點開縮放）
+  ///   - Loading → CircularProgressIndicator
+  ///   - Failed → Icon + 重試按鈕
+  Widget _buildCurrentImageArea(
+    BuildContext context,
+    _GalleryChipEntry current,
+  ) {
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    final l = AppLocalizations.of(context)!;
+    final state = _loadStates[current.file.path] ?? const _GalleryLoading();
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: switch (state) {
+        _GalleryReady(:final file) => MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              _log.info('open zoom path=${sanitizeFsPath(file.path)}');
+              showZoomableImageOverlay(context, imageFile: file);
+            },
+            child: Image.file(
+              file,
+              key: ValueKey(file.path),
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+              // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
+              // 解碼完才換；配合 precacheImage 消除「閃一下」。
+              gaplessPlayback: true,
+              errorBuilder: (_, e, st) {
+                _log.warning(
+                  'gallery image errorBuilder path=${sanitizeFsPath(file.path)}',
+                  e,
+                  st,
+                );
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+        _GalleryLoading() => Center(
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: tokens.textSecondary,
+            ),
+          ),
+        ),
+        _GalleryFailed() => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.broken_image_outlined,
+                size: 48,
+                color: tokens.textMuted,
+              ),
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l.galleryLazyLoadFailed,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: tokens.textSecondary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              TextButton.icon(
+                onPressed: () => _retry(
+                  id: _extractIdFromPath(current.file.path) ?? '',
+                  url: current.url,
+                  file: current.file,
+                ),
+                icon: const Icon(Icons.refresh, size: 18),
+                label: Text(l.actionRetry),
+              ),
+            ],
+          ),
+        ),
+      },
+    );
+  }
+
+  /// 從 cache 檔路徑反推 hoyowiki id（僅用於 retry log 標籤，失敗回 null）。
+  /// 路徑樣式：`.../<id>_gallery_<hash>.<ext>` 或 `.../<id>_icon.<ext>`。
+  String? _extractIdFromPath(String path) {
+    final base = path.split(Platform.pathSeparator).last;
+    final underscoreIdx = base.indexOf('_');
+    if (underscoreIdx <= 0) return null;
+    return base.substring(0, underscoreIdx);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final tokens = theme.gacha;
+    final record = widget.record;
 
     final index = ref.watch(hoyowikiIndexProvider);
     final cacheDir = ref.watch(hoyowikiCacheDirProvider);
     final id = index.lookupId(name: record.name, lang: record.lang);
     final entry = id == null ? null : index.lookupEntry(id);
+    final page = entry?.pageByLang[record.lang];
+    final gallery = page?.gallery;
+    final desc = page?.desc ?? '';
+    final tags = page?.tags ?? const <String>[];
 
     File? iconFile;
-    File? headerFile;
-    if (id != null && entry != null) {
-      if (entry.iconUrl.isNotEmpty) {
-        final f = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: HoYoWikiImageKind.icon,
-          url: entry.iconUrl,
-        );
-        if (f.existsSync()) iconFile = f;
+    if (id != null && entry != null && entry.iconUrl.isNotEmpty) {
+      final f = hoyowikiIconCacheFile(
+        baseDir: cacheDir,
+        id: id,
+        url: entry.iconUrl,
+      );
+      if (f.existsSync()) iconFile = f;
+    }
+
+    // chip 順序：gallery list → pic 卡片 → Icon。Icon chip 永遠最後一個。
+    final chipEntries = <_GalleryChipEntry>[];
+    if (id != null) {
+      if (gallery != null) {
+        for (final it in gallery.list) {
+          if (it.imgUrl.isEmpty) continue;
+          final f = hoyowikiGalleryCacheFile(
+            baseDir: cacheDir,
+            id: id,
+            url: it.imgUrl,
+          );
+          chipEntries.add(
+            _GalleryChipEntry(
+              label: it.key,
+              url: it.imgUrl,
+              file: f,
+              descHtml: it.imgDescHtml,
+              kind: _ChipKind.galleryList,
+            ),
+          );
+        }
+        if (gallery.picUrl.isNotEmpty) {
+          final f = hoyowikiGalleryCacheFile(
+            baseDir: cacheDir,
+            id: id,
+            url: gallery.picUrl,
+          );
+          chipEntries.add(
+            _GalleryChipEntry(
+              label: l.galleryCardLabel,
+              url: gallery.picUrl,
+              file: f,
+              descHtml: '',
+              kind: _ChipKind.galleryPic,
+            ),
+          );
+        }
       }
-      if (entry.headerImgUrl.isNotEmpty) {
-        final f = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: HoYoWikiImageKind.header,
-          url: entry.headerImgUrl,
+      if (iconFile != null) {
+        chipEntries.add(
+          _GalleryChipEntry(
+            label: l.galleryIconLabel,
+            url: entry?.iconUrl ?? '',
+            file: iconFile,
+            descHtml: '',
+            kind: _ChipKind.icon,
+          ),
         );
-        if (f.existsSync()) headerFile = f;
       }
+    }
+
+    // 同步 _loadStates：首次出現的 gallery chip 若本地已有檔 → _GalleryReady；
+    // 否則 → _GalleryLoading 並觸發背景下載。Icon chip 永遠 _GalleryReady。
+    for (final ce in chipEntries) {
+      if (_loadStates.containsKey(ce.file.path)) continue;
+      switch (ce.kind) {
+        case _ChipKind.icon:
+          _loadStates[ce.file.path] = _GalleryReady(ce.file);
+        case _ChipKind.galleryList:
+        case _ChipKind.galleryPic:
+          if (ce.file.existsSync()) {
+            _loadStates[ce.file.path] = _GalleryReady(ce.file);
+          } else {
+            _loadStates[ce.file.path] = const _GalleryLoading();
+            final theId = id!;
+            final theUrl = ce.url;
+            final theFile = ce.file;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              unawaited(_fetchAndCache(id: theId, url: theUrl, file: theFile));
+            });
+          }
+      }
+    }
+
+    final clampedIndex = chipEntries.isEmpty
+        ? -1
+        : _selectedIndex.clamp(0, chipEntries.length - 1);
+    final current = clampedIndex >= 0 ? chipEntries[clampedIndex] : null;
+
+    // 排程所有已就緒 chip 圖預載；post-frame 是避開 build 內直接 schedule async 的 lint。
+    // 以 _precacheScheduled flag 確保每個 frame 最多只排一次，避免每次 setState 累積 callback。
+    if (chipEntries.isNotEmpty && !_precacheScheduled) {
+      _precacheScheduled = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _precacheScheduled = false;
+        if (!mounted) return;
+        _precacheChipImages(context, chipEntries);
+      });
     }
 
     final nameColor = switch (record.rankType) {
@@ -90,7 +369,10 @@ class GachaItemDetailDialog extends ConsumerWidget {
 
     return AppDialog(
       size: AppDialogSize.md,
+      // 物品 dialog 含大圖預覽，需要更高空間；AppDialog 仍會 fit 小視窗。
+      maxHeight: 880,
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (iconFile != null) ...[
             ClipRRect(
@@ -101,9 +383,7 @@ class GachaItemDetailDialog extends ConsumerWidget {
                 height: 64,
                 fit: BoxFit.cover,
                 errorBuilder: (_, e, st) {
-                  Logger(
-                    'gacha.hoyowiki.detail',
-                  ).warning('icon errorBuilder id=$id', e, st);
+                  _log.warning('icon errorBuilder id=$id', e, st);
                   return const SizedBox.shrink();
                 },
               ),
@@ -111,43 +391,133 @@ class GachaItemDetailDialog extends ConsumerWidget {
             const SizedBox(width: 12),
           ],
           Expanded(
-            child: Text(
-              record.name,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: nameColor,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  record.name,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: nameColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (desc.trim().isNotEmpty)
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 120),
+                    child: SingleChildScrollView(
+                      child: Html(
+                        data: desc,
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize(
+                              theme.textTheme.bodyMedium?.fontSize ?? 14,
+                            ),
+                            color: tokens.textSecondary,
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
+                          ),
+                          'p': Style(margin: Margins.zero),
+                        },
+                      ),
+                    ),
+                  ),
+                if (tags.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final t in tags)
+                        Chip(
+                          label: Text(t),
+                          // 用 textPrimary 加 alpha 做半透明色塊：dark 主題
+                          // 疊出比表面亮一階的灰、light 主題疊出比表面暗一
+                          // 階的灰，兩個情境下都自動跟 dialog 背景拉開層次。
+                          // 0.15 alpha 經對比測試在兩主題下都有明確色塊感。
+                          backgroundColor: tokens.textPrimary.withValues(
+                            alpha: 0.15,
+                          ),
+                          side: BorderSide.none,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppRadius.sm),
+                            ),
+                          ),
+                          labelStyle: theme.textTheme.bodySmall?.copyWith(
+                            color: tokens.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                    ],
+                  ),
+                ],
+              ],
             ),
           ),
         ],
       ),
+      // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
+      // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
+      // 變動，dialog 整體高度仍固定（只有 image 區大小被重新分配）。
       content: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: current != null ? MainAxisSize.max : MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (headerFile != null)
-            Flexible(
-              fit: FlexFit.loose,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                child: Image.file(
-                  headerFile,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.topCenter,
-                  errorBuilder: (_, e, st) {
-                    Logger(
-                      'gacha.hoyowiki.detail',
-                    ).warning('header errorBuilder id=$id', e, st);
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
+          if (chipEntries.length > 1)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (var i = 0; i < chipEntries.length; i++)
+                  ChoiceChip(
+                    label: Text(chipEntries[i].label),
+                    selected: i == clampedIndex,
+                    showCheckmark: false,
+                    onSelected: (_) => setState(() => _selectedIndex = i),
+                  ),
+              ],
             ),
+          if (chipEntries.length > 1) const SizedBox(height: 12),
+          if (current != null) ...[
+            Expanded(child: _buildCurrentImageArea(context, current)),
+          ],
+          if (current != null && current.descHtml.trim().isNotEmpty) ...[
+            const SizedBox(height: 12),
+            // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
+            // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
+            // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
+            Html(
+              data: current.descHtml,
+              style: {
+                'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+                'p': Style(margin: Margins.symmetric(vertical: 4)),
+              },
+            ),
+          ],
         ],
       ),
       actions: [
+        TextButton.icon(
+          icon: const Icon(Icons.open_in_new, size: 18),
+          label: Text(l.actionViewOnHoYoWiki),
+          onPressed: id == null
+              ? null
+              : () {
+                  _log.info('open wiki id=$id');
+                  openExternalUrl(
+                    Uri.parse('https://wiki.hoyolab.com/pc/genshin/entry/$id'),
+                  );
+                },
+        ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l.actionClose),
@@ -157,12 +527,51 @@ class GachaItemDetailDialog extends ConsumerWidget {
   }
 }
 
-/// 顯示 [GachaItemDetailDialog]。集中 log 與 [showDialog] 呼叫。
+/// chip 類別 — icon 永遠 ready（已由 hasHoYoWikiContent 把關），gallery 走 lazy。
+enum _ChipKind {
+  /// gallery list[i].imgUrl。
+  galleryList,
+
+  /// gallery picUrl。
+  galleryPic,
+
+  /// entry.iconUrl（已預下載，永遠 ready）。
+  icon,
+}
+
+/// 內部：單一 chip 條目。
+class _GalleryChipEntry {
+  /// 建立 [_GalleryChipEntry]。
+  const _GalleryChipEntry({
+    required this.label,
+    required this.url,
+    required this.file,
+    required this.descHtml,
+    required this.kind,
+  });
+
+  /// chip 顯示文字。
+  final String label;
+
+  /// 該 chip 對應的遠端 URL（icon chip 為 entry.iconUrl，gallery chip 為對應 gallery URL）。
+  final String url;
+
+  /// 該 chip 對應的本地 cache 檔（可能尚未存在，由 [_GachaItemDetailDialogState._loadStates] 追蹤狀態）。
+  final File file;
+
+  /// 描述 HTML；trim 後為空則不繪描述區。
+  final String descHtml;
+
+  /// chip 類別 — icon 永遠 ready（已由 hasHoYoWikiContent 把關），gallery 走 lazy。
+  final _ChipKind kind;
+}
+
+/// 顯示 [GachaItemDetailDialog]。
 Future<void> showGachaItemDetailDialog(
   BuildContext context,
   GachaRecord record,
 ) {
-  Logger('gacha.hoyowiki.detail').info(
+  _log.info(
     'open name=${record.name} lang=${record.lang} rank=${record.rankType}',
   );
   return showDialog<void>(
@@ -171,8 +580,10 @@ Future<void> showGachaItemDetailDialog(
   );
 }
 
-/// 把任意 [child]（通常是 icon + 名稱 Row/Column）包成可點區塊；
-/// [hasHoYoWikiContent] 為 false 時 passthrough，不加任何 hit affordance。
+/// module-level logger，供 [showGachaItemDetailDialog] 使用。
+final _log = Logger('gacha.hoyowiki.detail');
+
+/// 把任意 [child] 包成可點區塊；[hasHoYoWikiContent] 為 false 時 passthrough。
 class GachaItemTapTarget extends ConsumerWidget {
   /// 建立 [GachaItemTapTarget]。
   const GachaItemTapTarget({
@@ -181,10 +592,10 @@ class GachaItemTapTarget extends ConsumerWidget {
     required this.child,
   });
 
-  /// 對應的卡池 record；由 [hasHoYoWikiContent] 判定可點性。
+  /// 對應 record。
   final GachaRecord record;
 
-  /// 被包裝的子 widget（icon + 名稱組合）。
+  /// 子 widget。
   final Widget child;
 
   @override
@@ -199,4 +610,34 @@ class GachaItemTapTarget extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// gallery 圖檔的下載／載入狀態，由 [_GachaItemDetailDialogState._loadStates] 管理。
+sealed class _GalleryLoadState {
+  /// 建立 [_GalleryLoadState]。
+  const _GalleryLoadState();
+}
+
+/// 下載中（initState 觸發後尚未完成，或使用者按下重試後）。
+class _GalleryLoading extends _GalleryLoadState {
+  /// 建立 [_GalleryLoading]。
+  const _GalleryLoading();
+}
+
+/// 本地已有 cache 檔，可直接 `Image.file` 顯示。
+class _GalleryReady extends _GalleryLoadState {
+  /// 建立 [_GalleryReady]。
+  const _GalleryReady(this.file);
+
+  /// 對應的本地 cache 檔（已保證 existsSync）。
+  final File file;
+}
+
+/// 下載失敗，UI 顯示 placeholder + 重試按鈕。
+class _GalleryFailed extends _GalleryLoadState {
+  /// 建立 [_GalleryFailed]。
+  const _GalleryFailed(this.error);
+
+  /// 失敗原因，用於 log；UI 不顯示。
+  final Object error;
 }

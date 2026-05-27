@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
     test('命中回 entry', () {
       final entry = HoYoWikiEntry(
         iconUrl: 'https://x/icon.png',
-        headerImgUrl: 'https://x/header.png',
+        pageByLang: const {},
         fetchedAt: DateTime.utc(2026, 5, 23),
       );
       final index = HoYoWikiIndex(
@@ -94,7 +95,7 @@ void main() {
         entries: {
           '5125428': HoYoWikiEntry(
             iconUrl: 'https://x/icon.png',
-            headerImgUrl: '',
+            pageByLang: const {},
             fetchedAt: DateTime.utc(2026, 5, 23, 8),
           ),
         },
@@ -104,7 +105,7 @@ void main() {
       final loaded = await storage.load();
       expect(loaded.searchMap, original.searchMap);
       expect(loaded.entries['5125428']!.iconUrl, 'https://x/icon.png');
-      expect(loaded.entries['5125428']!.headerImgUrl, '');
+      expect(loaded.entries['5125428']!.pageByLang, isEmpty);
       expect(
         loaded.entries['5125428']!.fetchedAt,
         DateTime.utc(2026, 5, 23, 8),
@@ -162,7 +163,7 @@ void main() {
           entries: {
             '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
-              headerImgUrl: 'https://x/header.png',
+              pageByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 23),
             ),
           },
@@ -213,6 +214,56 @@ void main() {
     });
   });
 
+  group('HoYoWikiIndexStorage.deleteGalleryCacheFiles', () {
+    late Directory tempDir;
+    late HoYoWikiIndexStorage storage;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_test_');
+      storage = HoYoWikiIndexStorage(tempDir);
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    Future<File> touch(String name) async {
+      final f = File('${tempDir.path}/$name');
+      await f.writeAsBytes([0]);
+      return f;
+    }
+
+    test('只刪 *_gallery_* 檔，icon 與 index JSON 保留', () async {
+      final icon = await touch('abc_icon.png');
+      final gal1 = await touch('abc_gallery_aaaaaaaaaaaa.png');
+      final gal2 = await touch('def_gallery_bbbbbbbbbbbb.jpg');
+      final idx = await touch('hoyowiki_index.json');
+
+      await storage.deleteGalleryCacheFiles();
+
+      expect(icon.existsSync(), isTrue);
+      expect(gal1.existsSync(), isFalse);
+      expect(gal2.existsSync(), isFalse);
+      expect(idx.existsSync(), isTrue);
+    });
+
+    test('目錄不存在 → 不拋例外', () async {
+      await tempDir.delete(recursive: true);
+      await storage.deleteGalleryCacheFiles();
+      // 沒拋就算過
+    });
+
+    test('沒有任何 gallery 檔 → no-op', () async {
+      await touch('abc_icon.png');
+      await storage.deleteGalleryCacheFiles();
+      expect(File('${tempDir.path}/abc_icon.png').existsSync(), isTrue);
+    });
+  });
+
   group('HoYoWikiIndexStorage.wipeCacheDirectory', () {
     test('既有 cache 檔被刪光且目錄重建', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_cache_');
@@ -252,65 +303,232 @@ void main() {
     });
   });
 
-  group('hoyowikiCacheFile', () {
-    late Directory tempDir;
+  group('hoyowikiIconCacheFile', () {
+    final baseDir = Directory.systemTemp;
 
-    setUp(() async {
-      tempDir = await Directory.systemTemp.createTemp('hoyowiki_cache_test_');
-    });
-
-    tearDown(() async {
-      if (await tempDir.exists()) await tempDir.delete(recursive: true);
-    });
-
-    test('icon kind + URL .png → <id>_icon.png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
+    test('組合為 <id>_icon.<ext>', () {
+      final f = hoyowikiIconCacheFile(
+        baseDir: baseDir,
         id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: 'https://x.example/path/icon.png',
+        url: 'https://x/icon.png',
       );
       expect(f.path, endsWith('5125428_icon.png'));
     });
 
-    test('header kind + URL .jpg → <id>_header.jpg', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
+    test('無副檔名時 fallback png', () {
+      final f = hoyowikiIconCacheFile(
+        baseDir: baseDir,
         id: '5125428',
-        kind: HoYoWikiImageKind.header,
-        url: 'https://x.example/path/header.jpg',
-      );
-      expect(f.path, endsWith('5125428_header.jpg'));
-    });
-
-    test('URL 帶 query string → 仍取得乾淨副檔名', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: 'https://x/icon.png?v=1&w=80',
-      );
-      expect(f.path, endsWith('5125428_icon.png'));
-    });
-
-    test('URL 無副檔名 → default .png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
-        id: '5125428',
-        kind: HoYoWikiImageKind.icon,
         url: 'https://x/icon',
       );
       expect(f.path, endsWith('5125428_icon.png'));
     });
+  });
 
-    test('URL 為空字串 → default .png', () {
-      final f = hoyowikiCacheFile(
-        baseDir: tempDir,
+  group('hoyowikiGalleryCacheFile', () {
+    final baseDir = Directory.systemTemp;
+
+    test('同 URL → 同檔名', () {
+      final a = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
         id: '5125428',
-        kind: HoYoWikiImageKind.icon,
-        url: '',
+        url: 'https://x/a.png',
       );
-      expect(f.path, endsWith('5125428_icon.png'));
+      final b = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.png',
+      );
+      expect(a.path, b.path);
+    });
+
+    test('不同 URL → 不同檔名', () {
+      final a = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.png',
+      );
+      final b = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/b.png',
+      );
+      expect(a.path, isNot(b.path));
+    });
+
+    test('檔名格式為 <id>_gallery_<hash12>.<ext>', () {
+      final f = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.gif',
+      );
+      expect(
+        RegExp(r'5125428_gallery_[0-9a-f]{12}\.gif$').hasMatch(f.path),
+        isTrue,
+      );
+    });
+
+    test('帶 query string 不影響 ext 推導', () {
+      final f = hoyowikiGalleryCacheFile(
+        baseDir: baseDir,
+        id: '5125428',
+        url: 'https://x/a.webp?token=abc',
+      );
+      expect(f.path, endsWith('.webp'));
+    });
+  });
+
+  group('HoYoWikiIndexStorage v3 schema', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_v3_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test('round trip：page_by_lang 完整保存 gallery + desc + tags', () async {
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final index = HoYoWikiIndex(
+        searchMap: const {'zh-tw::胡桃': '5125428'},
+        entries: {
+          '5125428': HoYoWikiEntry(
+            iconUrl: 'https://x/icon.png',
+            pageByLang: {
+              'zh-tw': const HoYoWikiPageData(
+                gallery: HoYoWikiGalleryData(
+                  picUrl: 'https://x/card.png',
+                  list: [
+                    HoYoWikiGalleryItem(
+                      id: 'g1',
+                      key: '原畫',
+                      imgUrl: 'https://x/c.png',
+                      imgDescHtml: '<p>x</p>',
+                    ),
+                  ],
+                ),
+                desc: '「往生堂」...',
+                tags: ['生命之契', '4星', '蒙德'],
+              ),
+            },
+            fetchedAt: DateTime.utc(2026, 5, 26),
+          ),
+        },
+        menuIds: const {'5125428': 2},
+      );
+      await storage.save(index);
+      final reloaded = await storage.load();
+      final page = reloaded.lookupEntry('5125428')!.pageByLang['zh-tw']!;
+      expect(page.gallery!.picUrl, 'https://x/card.png');
+      expect(page.gallery!.list, hasLength(1));
+      expect(page.desc, '「往生堂」...');
+      expect(page.tags, ['生命之契', '4星', '蒙德']);
+    });
+
+    test('gallery 為 null 的 page（武器頁）也能 round trip', () async {
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final index = HoYoWikiIndex(
+        searchMap: const {'en-us::Sword': '9001'},
+        entries: {
+          '9001': HoYoWikiEntry(
+            iconUrl: 'https://x/sword.png',
+            pageByLang: const {
+              'en-us': HoYoWikiPageData(
+                gallery: null,
+                desc: 'A sharp blade.',
+                tags: ['4★', 'Sword'],
+              ),
+            },
+            fetchedAt: DateTime.utc(2026, 5, 26),
+          ),
+        },
+        menuIds: const {'9001': 4},
+      );
+      await storage.save(index);
+      final reloaded = await storage.load();
+      final page = reloaded.lookupEntry('9001')!.pageByLang['en-us']!;
+      expect(page.gallery, isNull);
+      expect(page.desc, 'A sharp blade.');
+      expect(page.tags, ['4★', 'Sword']);
+    });
+  });
+
+  group('HoYoWikiIndexStorage v1/v2 → v3 migration', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_mig_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test(
+      'v2 cache 載入：pageByLang reset 為空、icon_url / search / menu_ids 保留',
+      () async {
+        final v2 = {
+          'version': 2,
+          'search': {'zh-tw::胡桃': '5125428'},
+          'menu_ids': {'5125428': 2},
+          'entries': {
+            '5125428': {
+              'icon_url': 'https://x/icon.png',
+              'fetched_at': '2026-05-25T10:00:00.000Z',
+              'gallery_by_lang': {
+                'zh-tw': {'pic_url': 'https://x/card.png', 'list': []},
+              },
+            },
+          },
+        };
+        final f = File('${tempDir.path}/hoyowiki_index.json');
+        await f.writeAsString(jsonEncode(v2));
+        final storage = HoYoWikiIndexStorage(tempDir);
+        final loaded = await storage.load();
+        final entry = loaded.lookupEntry('5125428')!;
+        expect(entry.iconUrl, 'https://x/icon.png');
+        expect(entry.pageByLang, isEmpty);
+        expect(loaded.lookupId(name: '胡桃', lang: 'zh-tw'), '5125428');
+        expect(loaded.lookupMenuId('5125428'), 2);
+      },
+    );
+
+    test('v1 cache 載入：pageByLang reset 為空、header_img_url 丟棄', () async {
+      final v1 = {
+        'version': 1,
+        'search': {'en-us::Sword': '9001'},
+        'menu_ids': {'9001': 4},
+        'entries': {
+          '9001': {
+            'icon_url': 'https://x/sword.png',
+            'header_img_url': 'https://x/header.png',
+            'fetched_at': '2026-05-25T10:00:00.000Z',
+          },
+        },
+      };
+      final f = File('${tempDir.path}/hoyowiki_index.json');
+      await f.writeAsString(jsonEncode(v1));
+      final storage = HoYoWikiIndexStorage(tempDir);
+      final loaded = await storage.load();
+      final entry = loaded.lookupEntry('9001')!;
+      expect(entry.iconUrl, 'https://x/sword.png');
+      expect(entry.pageByLang, isEmpty);
+    });
+
+    test('檔案不存在 → 回空 index', () async {
+      final loaded = await HoYoWikiIndexStorage(tempDir).load();
+      expect(loaded.entries, isEmpty);
+      expect(loaded.searchMap, isEmpty);
     });
   });
 }

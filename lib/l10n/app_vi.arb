@@ -453,7 +453,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa toàn bộ bộ nhớ đệm ảnh vật phẩm cục bộ và tải lại từ HoYoWiki. Có thể mất vài phút và tiêu tốn lưu lượng đáng kể.",
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xoá bộ nhớ đệm hình ảnh vật phẩm cục bộ và tải lại biểu tượng từ HoYoWiki. Ảnh chi tiết sẽ được tải khi bạn mở vật phẩm lần tới. Tuỳ vào số lượng vật phẩm, có thể mất vài phút.",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -461,6 +461,51 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+
+  "settingsImageCache": "Bộ nhớ đệm hình ảnh",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Tổng",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Biểu tượng",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Ảnh chi tiết",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Đang tính…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Không thể đọc kích thước bộ nhớ đệm",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Xoá ảnh chi tiết",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Xoá ảnh chi tiết?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Khoảng {size} ảnh chi tiết sẽ bị xoá; bộ nhớ đệm biểu tượng được giữ lại. Sẽ tải lại lần tới khi bạn mở chi tiết vật phẩm.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Xoá",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+
   "settingsExportData": "Xuất dữ liệu",
   "settingsImportData": "Nhập dữ liệu",
   "shareImageButton": "Tạo ảnh chia sẻ",
@@ -716,5 +761,20 @@
       }
     }
   },
-  "settingsLogsClearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn tất cả tệp trong logs/. Nếu cần logs để báo cáo sự cố, vui lòng xuất trước. Nhập CLEAR để xác nhận."
+  "settingsLogsClearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn tất cả tệp trong logs/. Nếu cần logs để báo cáo sự cố, vui lòng xuất trước. Nhập CLEAR để xác nhận.",
+  "galleryCardLabel": "Card",
+  "galleryIconLabel": "Biểu tượng",
+  "actionViewOnHoYoWiki": "Xem trên HoYoWiki",
+
+  "galleryLazyLoadFailed": "Tải ảnh thất bại",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "Thử lại",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
+  "actionCloseImagePreview": "Đóng bản xem trước hình ảnh"
 }

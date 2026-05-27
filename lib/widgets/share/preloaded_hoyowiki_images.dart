@@ -50,12 +50,7 @@ Future<Map<String, ui.Image>> preloadHoYoWikiImages({
     final entry = index.lookupEntry(id);
     final url = entry?.iconUrl;
     if (entry == null || url == null || url.isEmpty) continue;
-    final file = hoyowikiCacheFile(
-      baseDir: cacheDir,
-      id: id,
-      kind: HoYoWikiImageKind.icon,
-      url: url,
-    );
+    final file = hoyowikiIconCacheFile(baseDir: cacheDir, id: id, url: url);
     if (!file.existsSync()) continue;
     try {
       final bytes = await file.readAsBytes();

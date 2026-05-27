@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -132,12 +133,12 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          headerImgUrl: '',
-          fetchedAt: DateTime.utc(2026, 5, 23),
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
     });
@@ -163,18 +164,17 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
+        lang: 'en-us',
+        fetched: HoYoWikiEntryFetched(
           iconUrl: iconUrl,
-          headerImgUrl: '',
-          fetchedAt: DateTime.utc(2026, 5, 23),
+          page: const HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
-      final cacheFile = hoyowikiCacheFile(
+      final cacheFile = hoyowikiIconCacheFile(
         baseDir: tempDir,
         id: '111',
-        kind: HoYoWikiImageKind.icon,
         url: iconUrl,
       );
       await cacheFile.writeAsBytes(_minimalPng());
@@ -204,12 +204,12 @@ void main() {
         id: '111',
         menuId: 2,
       );
-      await notifier.setEntry(
+      await notifier.mergeEntry(
         id: '111',
-        entry: HoYoWikiEntry(
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
           iconUrl: 'https://x/icon.png',
-          headerImgUrl: '',
-          fetchedAt: DateTime.utc(2026, 5, 23),
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
         ),
       );
 

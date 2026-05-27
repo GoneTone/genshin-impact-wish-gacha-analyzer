@@ -331,13 +331,57 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoYoWiki 抓取。視物品數量可能耗費數分鐘流量與時間。",
+  "confirmRefetchHoyoWikiBody": "這會清空所有物品圖片的本機快取並重新從 HoYoWiki 抓取小圖示。物品詳情大圖會在你下次打開該物品時自動下載。視物品數量可能耗費數分鐘流量與時間。",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
   "confirmRefetchHoyoWikiConfirm": "開始重抓",
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
+  },
+
+  "settingsImageCache": "圖片快取",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "總計",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "小圖示",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "詳情圖",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "計算中…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "無法讀取快取大小",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "清除詳情圖快取",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "清除詳情圖快取？",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "將刪除約 {size} 的物品詳情圖檔，小圖示快取保留。下次打開物品詳情時會重新下載。",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "清除",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
   },
 
   "settingsExportData": "匯出資料",
@@ -516,5 +560,35 @@
   "@settingsLogsExportFailed": {
     "placeholders": { "error": { "type": "String" } }
   },
-  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。"
+  "settingsLogsClearConfirmBody": "這會永久刪除 logs/ 內所有檔案。若回報問題前需要 logs，請先匯出。輸入 CLEAR 確認。",
+
+  "galleryCardLabel": "卡片",
+  "@galleryCardLabel": {
+    "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
+  },
+
+  "galleryIconLabel": "圖示",
+  "@galleryIconLabel": {
+    "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
+  },
+
+  "actionViewOnHoYoWiki": "前往 HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+
+  "galleryLazyLoadFailed": "圖片載入失敗",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "重試",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
+  "actionCloseImagePreview": "關閉圖片預覽",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  }
 }

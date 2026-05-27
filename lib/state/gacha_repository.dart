@@ -802,43 +802,57 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
 
-    // menu_id 感知的重抓判斷：角色（menu_id 2）任一 URL 空就重抓；
-    // 武器（menu_id 4）或未知則兩個都空才重抓（武器可能只有 icon）。
-    bool needRefetchEntry(HoYoWikiEntry? e, int? menuId) {
-      if (e == null) return true;
-      if (menuId == 2) return e.iconUrl.isEmpty || e.headerImgUrl.isEmpty;
-      return e.iconUrl.isEmpty && e.headerImgUrl.isEmpty;
+    /// 重抓判定：entry 或 menuId 缺失，或該 lang 還沒有 page → true。
+    bool needRefetchEntry(HoYoWikiEntry? entry, int? menuId, String lang) {
+      if (entry == null) return true;
+      if (menuId == null) return true;
+      if (!entry.pageByLang.containsKey(lang)) return true;
+      return false;
     }
 
-    // entryTodo 初始：現有 search 對應的所有 id 中，entry 缺或需重抓的
+    // entryTodo 初始：走過所有 record lang+name，蒐集需要重抓的 (id, lang) pair
+    final allLangs = uniquePairs.map((p) => p.$2).toSet();
+    final namesByLang = <String, Set<String>>{};
+    for (final pair in uniquePairs) {
+      namesByLang.putIfAbsent(pair.$2, () => {}).add(pair.$1);
+    }
+    final entryTodo = <({String id, String lang})>{};
+    for (final lang in allLangs) {
+      for (final name in namesByLang[lang] ?? const <String>{}) {
+        final id = index.lookupId(name: name, lang: lang);
+        if (id == null) continue;
+        if (needRefetchEntry(
+          index.lookupEntry(id),
+          index.lookupMenuId(id),
+          lang,
+        )) {
+          entryTodo.add((id: id, lang: lang));
+        }
+      }
+    }
+
+    // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
+    final downloadTodo = <_HoYoWikiDownloadItem>[];
+    final seenUrls = <String>{}; // 跨 entry/lang 去重，避免重複 enqueue
+
+    void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
+      // gallery 大圖改 lazy：由 GachaItemDetailDialog 打開時下載。
+      // 此處僅 enqueue icon — icon 在祈願列表常駐顯示，維持預下載。
+      if (entry.iconUrl.isEmpty) return;
+      final iconFile = hoyowikiIconCacheFile(
+        baseDir: cacheDir,
+        id: id,
+        url: entry.iconUrl,
+      );
+      if (!iconFile.existsSync() && seenUrls.add('icon::${entry.iconUrl}')) {
+        downloadTodo.add(_HoYoWikiDownloadItem(id: id, url: entry.iconUrl));
+      }
+    }
+
     final initialIds = uniquePairs
         .map((p) => index.lookupId(name: p.$1, lang: p.$2))
         .whereType<String>()
         .toSet();
-    final entryTodo = <String>{
-      for (final id in initialIds)
-        if (needRefetchEntry(index.lookupEntry(id), index.lookupMenuId(id))) id,
-    };
-
-    // downloadTodo 初始：現有 entry 的非空 URL 中，cache 檔不存在的
-    final downloadTodo = <_HoYoWikiDownloadItem>[];
-    void enqueueDownloadsForEntry(String id, HoYoWikiEntry entry) {
-      for (final kind in HoYoWikiImageKind.values) {
-        final url = kind == HoYoWikiImageKind.icon
-            ? entry.iconUrl
-            : entry.headerImgUrl;
-        if (url.isEmpty) continue;
-        final file = hoyowikiCacheFile(
-          baseDir: cacheDir,
-          id: id,
-          kind: kind,
-          url: url,
-        );
-        if (file.existsSync()) continue;
-        downloadTodo.add(_HoYoWikiDownloadItem(id: id, kind: kind, url: url));
-      }
-    }
-
     for (final id in initialIds) {
       final e = index.lookupEntry(id);
       if (e != null) enqueueDownloadsForEntry(id, e);
@@ -872,12 +886,13 @@ class GachaRepository extends Notifier<GachaState> {
                 id: hit.id,
                 menuId: hit.menuId,
               );
-              if (!entryTodo.contains(hit.id) &&
+              if (!entryTodo.contains((id: hit.id, lang: pair.$2)) &&
                   needRefetchEntry(
                     ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
                     hit.menuId,
+                    pair.$2,
                   )) {
-                entryTodo.add(hit.id);
+                entryTodo.add((id: hit.id, lang: pair.$2));
               }
             }
           } catch (e) {
@@ -901,25 +916,29 @@ class GachaRepository extends Notifier<GachaState> {
     if (entryTodo.isNotEmpty) {
       final entryList = entryTodo.toList();
       var doneEntry = 0;
-      await runConcurrent<String>(
+      await runConcurrent<({String id, String lang})>(
         items: entryList,
         concurrency: fetcher.entryConcurrency,
         shouldAbort: isAborted,
-        worker: (id) async {
+        worker: (pair) async {
           try {
             final fetched = await fetcher.fetchEntryPage(
-              id: id,
+              id: pair.id,
+              lang: pair.lang,
               client: client,
             );
-            final entry = HoYoWikiEntry(
-              iconUrl: fetched.iconUrl,
-              headerImgUrl: fetched.headerImgUrl,
-              fetchedAt: DateTime.now().toUtc(),
+            await indexNotifier.mergeEntry(
+              id: pair.id,
+              lang: pair.lang,
+              fetched: fetched,
             );
-            await indexNotifier.setEntry(id: id, entry: entry);
-            enqueueDownloadsForEntry(id, entry);
+            // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
+            final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
+            if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
           } catch (e) {
-            _log.warning('hoyowiki entry failed id=$id err=$e');
+            _log.warning(
+              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} err=$e',
+            );
           }
           if (!ref.mounted) return;
           doneEntry++;
@@ -946,10 +965,9 @@ class GachaRepository extends Notifier<GachaState> {
           try {
             final bytes = await fetcher.downloadImage(item.url, client);
             if (bytes != null) {
-              final file = hoyowikiCacheFile(
+              final file = hoyowikiIconCacheFile(
                 baseDir: cacheDir,
                 id: item.id,
-                kind: item.kind,
                 url: item.url,
               );
               await file.writeAsBytes(bytes, flush: true);
@@ -957,7 +975,9 @@ class GachaRepository extends Notifier<GachaState> {
               downloaded++;
             }
           } catch (e) {
-            _log.warning('hoyowiki download failed url=${item.url} err=$e');
+            _log.warning(
+              'hoyowiki download failed url=${sanitizeUrl(item.url)} err=$e',
+            );
           }
           if (!ref.mounted) return;
           doneDownload++;
@@ -1010,18 +1030,11 @@ class GachaRepository extends Notifier<GachaState> {
 /// HoYoWiki 下載佇列的單一工作項。
 class _HoYoWikiDownloadItem {
   /// 建立 [_HoYoWikiDownloadItem]。
-  const _HoYoWikiDownloadItem({
-    required this.id,
-    required this.kind,
-    required this.url,
-  });
+  const _HoYoWikiDownloadItem({required this.id, required this.url});
 
   /// HoYoWiki entry_page_id。
   final String id;
 
-  /// 圖片種類（icon 或 header）。
-  final HoYoWikiImageKind kind;
-
-  /// 圖片 CDN URL。
+  /// 圖片 URL。
   final String url;
 }

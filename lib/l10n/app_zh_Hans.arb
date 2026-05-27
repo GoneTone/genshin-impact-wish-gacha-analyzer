@@ -449,7 +449,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "这会清空所有物品图片的本地缓存并重新从 HoYoWiki 抓取。视物品数量可能耗费数分钟流量与时间。",
+  "confirmRefetchHoyoWikiBody": "这会清空所有物品图片的本机缓存并重新从 HoYoWiki 抓取小图标。物品详情大图会在你下次打开该物品时自动下载。视物品数量可能耗费数分钟流量与时间。",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -457,6 +457,51 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+
+  "settingsImageCache": "图片缓存",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "总计",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "小图标",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "详情图",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "计算中…",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "无法读取缓存大小",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearGallery": "清除详情图",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "清除详情图？",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "将删除约 {size} 的物品详情图，小图标缓存保留。下次打开物品详情时会重新下载。",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "清除",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+
   "settingsExportData": "导出数据",
   "settingsImportData": "导入数据",
   "shareImageButton": "生成分享图",
@@ -712,5 +757,20 @@
       }
     }
   },
-  "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。"
+  "settingsLogsClearConfirmBody": "这会永久删除 logs/ 内所有文件。若报告问题前需要 logs，请先导出。输入 CLEAR 确认。",
+  "galleryCardLabel": "卡片",
+  "galleryIconLabel": "图标",
+  "actionViewOnHoYoWiki": "前往 HoYoWiki",
+
+  "galleryLazyLoadFailed": "图片加载失败",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+
+  "actionRetry": "重试",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+
+  "actionCloseImagePreview": "关闭图片预览"
 }

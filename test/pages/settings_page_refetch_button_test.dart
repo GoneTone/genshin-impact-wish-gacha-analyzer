@@ -181,7 +181,15 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    await tester.tap(find.widgetWithText(FilledButton, '強制重抓物品圖片'));
+    // 按鈕已移至 _ImageCacheSection，需先捲動使其進入視窗再點擊。
+    final refetchBtn = find.widgetWithText(FilledButton, '強制重抓物品圖片');
+    await tester.scrollUntilVisible(
+      refetchBtn,
+      100,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(refetchBtn);
     await tester.pumpAndSettle();
 
     // 確認 dialog 內容存在

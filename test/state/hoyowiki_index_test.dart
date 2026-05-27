@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 
@@ -57,15 +58,17 @@ void main() {
     expect(reloaded.lookupMenuId('5125428'), 2);
   });
 
-  test('setEntry 更新 state 並 persist', () async {
+  test('mergeEntry 更新 state 並 persist', () async {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     await notifier.waitForLoad();
-    final entry = HoYoWikiEntry(
-      iconUrl: 'https://x/icon.png',
-      headerImgUrl: '',
-      fetchedAt: DateTime.utc(2026, 5, 23),
+    await notifier.mergeEntry(
+      id: '5125428',
+      lang: 'en-us',
+      fetched: const HoYoWikiEntryFetched(
+        iconUrl: 'https://x/icon.png',
+        page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+      ),
     );
-    await notifier.setEntry(id: '5125428', entry: entry);
     expect(
       container.read(hoyowikiIndexProvider).lookupEntry('5125428')?.iconUrl,
       'https://x/icon.png',
@@ -98,7 +101,7 @@ void main() {
           entries: {
             '111': HoYoWikiEntry(
               iconUrl: 'https://x/icon.png',
-              headerImgUrl: '',
+              pageByLang: const {},
               fetchedAt: DateTime.utc(2026, 5, 23),
             ),
           },
@@ -134,7 +137,7 @@ void main() {
   });
 
   group('HoYoWikiIndexNotifier concurrent writes', () {
-    test('並發 setEntry 全部寫入不丟失', () async {
+    test('並發 mergeEntry 全部寫入不丟失', () async {
       final raceTempDir = await Directory.systemTemp.createTemp(
         'hoyowiki_index_race_',
       );
@@ -154,25 +157,187 @@ void main() {
       final notifier = raceContainer.read(hoyowikiIndexProvider.notifier);
       await notifier.waitForLoad();
 
-      // 同時跑 10 個 setEntry：無 lock 時各自從相同 baseline Map.from(state.entries)
+      // 同時跑 10 個 mergeEntry：無 lock 時各自從相同 baseline Map.from(state.entries)
       // 拿快照、寫回時後者覆蓋前者，final 只剩最後一筆。
-      await Future.wait([
-        for (var i = 0; i < 10; i++)
-          notifier.setEntry(
+      await Future.wait(
+        List.generate(
+          10,
+          (i) => notifier.mergeEntry(
             id: 'id_$i',
-            entry: HoYoWikiEntry(
+            lang: 'en-us',
+            fetched: HoYoWikiEntryFetched(
               iconUrl: 'http://x/$i.png',
-              headerImgUrl: '',
-              fetchedAt: DateTime.utc(2026, 5, 24),
+              page: const HoYoWikiPageData(gallery: null, desc: '', tags: []),
             ),
           ),
-      ]);
+        ),
+      );
 
       final finalState = raceContainer.read(hoyowikiIndexProvider);
       expect(finalState.entries.length, 10);
       for (var i = 0; i < 10; i++) {
         expect(finalState.entries['id_$i']?.iconUrl, 'http://x/$i.png');
       }
+    });
+  });
+
+  group('HoYoWikiIndexNotifier.mergeEntry', () {
+    late Directory tempDir;
+    late ProviderContainer container;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('mergeEntry_test_');
+      container = ProviderContainer(
+        overrides: [
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+        ],
+      );
+      addTearDown(container.dispose);
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test('首次寫入：lang gallery 寫進去', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(
+              picUrl: 'https://x/card.png',
+              list: [
+                HoYoWikiGalleryItem(
+                  id: 'a',
+                  key: '原畫',
+                  imgUrl: 'https://x/a.png',
+                  imgDescHtml: '',
+                ),
+              ],
+            ),
+            desc: '',
+            tags: [],
+          ),
+        ),
+      );
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      expect(entry.iconUrl, 'https://x/icon.png');
+      expect(entry.pageByLang['zh-tw']!.gallery!.list.single.key, '原畫');
+    });
+
+    test('第二次寫入不同 lang：既有 lang 保留', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(picUrl: 'https://x/zh.png', list: []),
+            desc: '',
+            tags: [],
+          ),
+        ),
+      );
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(picUrl: 'https://x/en.png', list: []),
+            desc: '',
+            tags: [],
+          ),
+        ),
+      );
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      expect(entry.pageByLang.keys.toSet(), {'zh-tw', 'en-us'});
+      expect(entry.pageByLang['zh-tw']!.gallery!.picUrl, 'https://x/zh.png');
+      expect(entry.pageByLang['en-us']!.gallery!.picUrl, 'https://x/en.png');
+    });
+
+    test('icon 非空覆寫：空 icon 不會把既有好值清掉', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(picUrl: 'https://x/zh.png', list: []),
+            desc: '',
+            tags: [],
+          ),
+        ),
+      );
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: '',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(picUrl: 'https://x/en.png', list: []),
+            desc: '',
+            tags: [],
+          ),
+        ),
+      );
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      expect(entry.iconUrl, 'https://x/icon.png');
+    });
+
+    test('gallery 為 null：寫入該 lang page（含空 gallery），icon 仍可更新', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '12345',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
+      );
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('12345')!;
+      expect(entry.iconUrl, 'https://x/icon.png');
+      expect(entry.pageByLang.keys.toSet(), {'zh-tw'});
+      expect(entry.pageByLang['zh-tw']!.gallery, isNull);
+    });
+
+    test('mergeEntry 寫入完整 page（gallery + desc + tags）', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '5125428',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(
+            gallery: HoYoWikiGalleryData(
+              picUrl: 'https://x/card.png',
+              list: [],
+            ),
+            desc: '「往生堂」...',
+            tags: ['生命之契', '4星'],
+          ),
+        ),
+      );
+      final page = container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('5125428')!
+          .pageByLang['zh-tw']!;
+      expect(page.gallery!.picUrl, 'https://x/card.png');
+      expect(page.desc, '「往生堂」...');
+      expect(page.tags, ['生命之契', '4星']);
     });
   });
 }
