@@ -214,6 +214,56 @@ void main() {
     });
   });
 
+  group('HoYoWikiIndexStorage.deleteGalleryCacheFiles', () {
+    late Directory tempDir;
+    late HoYoWikiIndexStorage storage;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_storage_test_');
+      storage = HoYoWikiIndexStorage(tempDir);
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    Future<File> touch(String name) async {
+      final f = File('${tempDir.path}/$name');
+      await f.writeAsBytes([0]);
+      return f;
+    }
+
+    test('只刪 *_gallery_* 檔，icon 與 index JSON 保留', () async {
+      final icon = await touch('abc_icon.png');
+      final gal1 = await touch('abc_gallery_aaaaaaaaaaaa.png');
+      final gal2 = await touch('def_gallery_bbbbbbbbbbbb.jpg');
+      final idx = await touch('hoyowiki_index.json');
+
+      await storage.deleteGalleryCacheFiles();
+
+      expect(icon.existsSync(), isTrue);
+      expect(gal1.existsSync(), isFalse);
+      expect(gal2.existsSync(), isFalse);
+      expect(idx.existsSync(), isTrue);
+    });
+
+    test('目錄不存在 → 不拋例外', () async {
+      await tempDir.delete(recursive: true);
+      await storage.deleteGalleryCacheFiles();
+      // 沒拋就算過
+    });
+
+    test('沒有任何 gallery 檔 → no-op', () async {
+      await touch('abc_icon.png');
+      await storage.deleteGalleryCacheFiles();
+      expect(File('${tempDir.path}/abc_icon.png').existsSync(), isTrue);
+    });
+  });
+
   group('HoYoWikiIndexStorage.wipeCacheDirectory', () {
     test('既有 cache 檔被刪光且目錄重建', () async {
       final dir = await Directory.systemTemp.createTemp('hoyowiki_cache_');

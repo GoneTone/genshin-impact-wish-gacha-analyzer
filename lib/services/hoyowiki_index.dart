@@ -277,6 +277,33 @@ class HoYoWikiIndexStorage {
     _log.info('clearAll: index reset to empty');
   }
 
+  /// 刪除 [baseDir] 內所有 `*_gallery_*` 圖檔。Icon 檔與 `hoyowiki_index.json`
+  /// 保留 — gallery URL metadata 仍在 index，下次打開物品詳情可 lazy 重抓。
+  /// 目錄不存在直接 no-op。失敗（權限被鎖等）直接拋給呼叫方處理。
+  Future<void> deleteGalleryCacheFiles() async {
+    if (!await baseDir.exists()) {
+      _log.fine('deleteGalleryCacheFiles: dir not exist, no-op');
+      return;
+    }
+    var deleted = 0;
+    await for (final entity in baseDir.list()) {
+      if (entity is! File) continue;
+      if (!entity.path.contains('_gallery_')) continue;
+      try {
+        await entity.delete();
+        deleted++;
+      } catch (e, st) {
+        _log.warning(
+          'deleteGalleryCacheFiles: delete failed path=${sanitizeFsPath(entity.path)}',
+          e,
+          st,
+        );
+        rethrow;
+      }
+    }
+    _log.info('deleteGalleryCacheFiles: removed $deleted gallery file(s)');
+  }
+
   /// 刪除 [baseDir] 內所有 HoYoWiki cache 圖檔並重建空目錄。
   /// 目錄不存在時直接建立；失敗（權限被鎖等）直接拋給呼叫方處理。
   Future<void> wipeCacheDirectory() async {
