@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -734,7 +734,11 @@
   "currentReleaseNotFound": "Notas da versão não encontradas para {version}",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "currentReleaseOpenOnGithub": "Ver no GitHub",
   "@currentReleaseOpenOnGithub": {
