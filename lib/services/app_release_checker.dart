@@ -76,6 +76,15 @@ class ReleaseCheckFormat extends ReleaseCheckError {
   const ReleaseCheckFormat();
 }
 
+/// 找不到指定 tag 對應的 release（HTTP 404）。
+class ReleaseCheckNotFound extends ReleaseCheckError {
+  /// 建立 [ReleaseCheckNotFound]，[tag] 為查詢的 tag（含 v 前綴）。
+  const ReleaseCheckNotFound(this.tag);
+
+  /// 查詢的 tag，例如 `v1.1.0`。
+  final String tag;
+}
+
 /// 內部 helper：剝掉 leading 'v' 後嘗試 Version.parse；無法 parse 則回 null。
 Version? _parseTag(String tag) {
   final stripped = tag.startsWith('v') ? tag.substring(1) : tag;
@@ -83,6 +92,54 @@ Version? _parseTag(String tag) {
     return Version.parse(stripped);
   } catch (_) {
     return null;
+  }
+}
+
+/// 共用 GET + 解析骨架：對 [uri] 發 GitHub API 請求，統一處理
+/// 超時 / 網路 / rate limit / 一般非 200 / JSON 解碼錯誤，回傳已
+/// `jsonDecode` 的 body。
+///
+/// [specialStatusErrors] 讓 caller 宣告「特定 status code 要對應到自訂
+/// [ReleaseCheckError]」（例如 `fetchReleaseByVersion` 用 `{404:
+/// ReleaseCheckNotFound(tag)}`）；這些 status 會在 rate limit / 一般非 200
+/// 檢查之前優先觸發，避免被通用分支吃掉。
+///
+/// 失敗時拋 [ReleaseCheckError] 的具體子類。
+Future<dynamic> _githubGet(
+  Uri uri, {
+  required http.Client client,
+  Map<int, ReleaseCheckError> specialStatusErrors = const {},
+}) async {
+  final http.Response resp;
+  try {
+    resp = await client
+        .get(uri, headers: const {'Accept': 'application/vnd.github+json'})
+        .timeout(const Duration(seconds: 10));
+  } on TimeoutException {
+    throw const ReleaseCheckTimeout();
+  } on SocketException {
+    throw const ReleaseCheckNetwork();
+  } on http.ClientException {
+    throw const ReleaseCheckNetwork();
+  }
+
+  final special = specialStatusErrors[resp.statusCode];
+  if (special != null) {
+    throw special;
+  }
+  if (resp.statusCode == 429 ||
+      (resp.statusCode == 403 &&
+          resp.headers['x-ratelimit-remaining'] == '0')) {
+    throw const ReleaseCheckRateLimited();
+  }
+  if (resp.statusCode != 200) {
+    throw ReleaseCheckServer(resp.statusCode);
+  }
+
+  try {
+    return jsonDecode(resp.body);
+  } on FormatException {
+    throw const ReleaseCheckFormat();
   }
 }
 
@@ -108,34 +165,7 @@ Future<List<AppRelease>> fetchNewerReleases({
   }
 
   final uri = Uri.parse('${AppRepo.apiBase}/releases');
-  final http.Response resp;
-  try {
-    resp = await client
-        .get(uri, headers: const {'Accept': 'application/vnd.github+json'})
-        .timeout(const Duration(seconds: 10));
-  } on TimeoutException {
-    throw const ReleaseCheckTimeout();
-  } on SocketException {
-    throw const ReleaseCheckNetwork();
-  } on http.ClientException {
-    throw const ReleaseCheckNetwork();
-  }
-
-  if (resp.statusCode == 429 ||
-      (resp.statusCode == 403 &&
-          resp.headers['x-ratelimit-remaining'] == '0')) {
-    throw const ReleaseCheckRateLimited();
-  }
-  if (resp.statusCode != 200) {
-    throw ReleaseCheckServer(resp.statusCode);
-  }
-
-  final dynamic decoded;
-  try {
-    decoded = jsonDecode(resp.body);
-  } on FormatException {
-    throw const ReleaseCheckFormat();
-  }
+  final decoded = await _githubGet(uri, client: client);
   if (decoded is! List) throw const ReleaseCheckFormat();
 
   final out = <AppRelease>[];
@@ -166,4 +196,53 @@ Future<List<AppRelease>> fetchNewerReleases({
     (a, b) => Version.parse(b.version).compareTo(Version.parse(a.version)),
   );
   return out;
+}
+
+/// 抓指定 [version] 對應的單一 GitHub Release。
+///
+/// [version] 可帶 SemVer build metadata（例如 `1.1.0+2`，這是 Flutter
+/// `pubspec.yaml` / `PackageInfo.version` 的標準格式）；內部會剝掉 build
+/// metadata、補上 `v` 前綴後組成 tag（如 `v1.1.0`）查詢。
+///
+/// 與 [fetchNewerReleases] 不同，這個函式不過濾 `draft` / `prerelease`；
+/// 使用者主動查指定 tag 即表示想看那個版本，無論其發佈狀態。
+///
+/// 失敗時拋 [ReleaseCheckError] 的具體子類；指定 tag 不存在時拋
+/// [ReleaseCheckNotFound]。
+Future<AppRelease> fetchReleaseByVersion({
+  required String version,
+  required http.Client client,
+}) async {
+  final Version parsed;
+  try {
+    parsed = Version.parse(version);
+  } catch (_) {
+    throw const ReleaseCheckFormat();
+  }
+  final core = '${parsed.major}.${parsed.minor}.${parsed.patch}';
+  final tag = 'v$core';
+  final uri = Uri.parse('${AppRepo.apiBase}/releases/tags/$tag');
+
+  final decoded = await _githubGet(
+    uri,
+    client: client,
+    specialStatusErrors: {404: ReleaseCheckNotFound(tag)},
+  );
+  if (decoded is! Map) throw const ReleaseCheckFormat();
+  final raw = decoded;
+  final tagName = raw['tag_name'];
+  if (tagName is! String) throw const ReleaseCheckFormat();
+  final parsedTag = _parseTag(tagName);
+  if (parsedTag == null) throw const ReleaseCheckFormat();
+  final published = DateTime.tryParse(raw['published_at']?.toString() ?? '');
+  if (published == null) throw const ReleaseCheckFormat();
+
+  return AppRelease(
+    tagName: tagName,
+    version: parsedTag.toString(),
+    name: (raw['name'] as String?) ?? '',
+    body: (raw['body'] as String?) ?? '',
+    htmlUrl: (raw['html_url'] as String?) ?? '',
+    publishedAt: published,
+  );
 }

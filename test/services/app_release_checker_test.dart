@@ -261,4 +261,194 @@ void main() {
       );
     });
   });
+
+  group('fetchReleaseByVersion — happy path', () {
+    test('200 + valid JSON → AppRelease', () async {
+      late Uri requested;
+      final client = MockClient((req) async {
+        requested = req.url;
+        return http.Response(
+          jsonEncode(
+            _release(
+              tag: 'v1.1.0',
+              published: '2026-05-27T00:00:00Z',
+              name: 'v1.1.0',
+              body: '## Features\n- foo\n- bar',
+              htmlUrl: 'https://github.com/o/r/releases/tag/v1.1.0',
+            ),
+          ),
+          200,
+        );
+      });
+
+      final release = await fetchReleaseByVersion(
+        version: '1.1.0',
+        client: client,
+      );
+
+      expect(requested.path, endsWith('/releases/tags/v1.1.0'));
+      expect(release.tagName, 'v1.1.0');
+      expect(release.version, '1.1.0');
+      expect(release.name, 'v1.1.0');
+      expect(release.body, '## Features\n- foo\n- bar');
+      expect(release.htmlUrl, 'https://github.com/o/r/releases/tag/v1.1.0');
+      expect(release.publishedAt, DateTime.utc(2026, 5, 27));
+    });
+
+    test('version 帶 build metadata → endpoint 用核心 SemVer', () async {
+      late Uri requested;
+      final client = MockClient((req) async {
+        requested = req.url;
+        return http.Response(
+          jsonEncode(
+            _release(tag: 'v1.1.0', published: '2026-05-27T00:00:00Z'),
+          ),
+          200,
+        );
+      });
+
+      await fetchReleaseByVersion(version: '1.1.0+2', client: client);
+
+      expect(requested.path, endsWith('/releases/tags/v1.1.0'));
+    });
+  });
+
+  group('fetchReleaseByVersion — errors', () {
+    test('404 → ReleaseCheckNotFound (tag = v1.1.0)', () async {
+      final client = MockClient((_) async => http.Response('Not Found', 404));
+      try {
+        await fetchReleaseByVersion(version: '1.1.0', client: client);
+        fail('expected throw');
+      } on ReleaseCheckNotFound catch (e) {
+        expect(e.tag, 'v1.1.0');
+      }
+    });
+
+    test('5xx → ReleaseCheckServer(status)', () async {
+      final client = MockClient((_) async => http.Response('boom', 503));
+      try {
+        await fetchReleaseByVersion(version: '1.1.0', client: client);
+        fail('expected throw');
+      } on ReleaseCheckServer catch (e) {
+        expect(e.status, 503);
+      }
+    });
+
+    test('429 → ReleaseCheckRateLimited', () async {
+      final client = MockClient(
+        (_) async => http.Response('rate limited', 429),
+      );
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckRateLimited>()),
+      );
+    });
+
+    test('403 + x-ratelimit-remaining: 0 → ReleaseCheckRateLimited', () async {
+      final client = MockClient(
+        (_) async => http.Response(
+          'forbidden',
+          403,
+          headers: const {'x-ratelimit-remaining': '0'},
+        ),
+      );
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckRateLimited>()),
+      );
+    });
+
+    test('200 但 body 不是 JSON object → ReleaseCheckFormat', () async {
+      final client = MockClient(
+        (_) async => http.Response(jsonEncode([1, 2, 3]), 200),
+      );
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckFormat>()),
+      );
+    });
+
+    test('200 但缺 tag_name → ReleaseCheckFormat', () async {
+      final client = MockClient(
+        (_) async => http.Response(
+          jsonEncode({'published_at': '2026-05-27T00:00:00Z'}),
+          200,
+        ),
+      );
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckFormat>()),
+      );
+    });
+
+    test('200 但 tag_name 無法 parse → ReleaseCheckFormat', () async {
+      final client = MockClient(
+        (_) async => http.Response(
+          jsonEncode({
+            'tag_name': 'weird-tag',
+            'published_at': '2026-05-27T00:00:00Z',
+          }),
+          200,
+        ),
+      );
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckFormat>()),
+      );
+    });
+
+    test('SocketException → ReleaseCheckNetwork', () async {
+      final client = MockClient((_) async {
+        throw const SocketException('offline');
+      });
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckNetwork>()),
+      );
+    });
+
+    test('http.ClientException → ReleaseCheckNetwork', () async {
+      final client = MockClient((_) async {
+        throw http.ClientException('connection reset');
+      });
+      expect(
+        () => fetchReleaseByVersion(version: '1.1.0', client: client),
+        throwsA(isA<ReleaseCheckNetwork>()),
+      );
+    });
+
+    test('TimeoutException 觸發 → ReleaseCheckTimeout', () {
+      fakeAsync((async) {
+        final client = MockClient((_) async {
+          await Future<void>.delayed(const Duration(seconds: 15));
+          return http.Response(
+            jsonEncode(
+              _release(tag: 'v1.1.0', published: '2026-05-27T00:00:00Z'),
+            ),
+            200,
+          );
+        });
+
+        Object? caught;
+        fetchReleaseByVersion(version: '1.1.0', client: client).then(
+          (_) {},
+          onError: (Object e) {
+            caught = e;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 11));
+
+        expect(caught, isA<ReleaseCheckTimeout>());
+      });
+    });
+
+    test('version 無法 parse → ReleaseCheckFormat', () async {
+      final client = MockClient((_) async => http.Response('', 200));
+      expect(
+        () => fetchReleaseByVersion(version: 'not-a-version', client: client),
+        throwsA(isA<ReleaseCheckFormat>()),
+      );
+    });
+  });
 }

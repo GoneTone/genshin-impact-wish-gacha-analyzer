@@ -727,6 +727,27 @@
     }
   },
   "updateErrorFormat": "Formato de resposta inválido",
+  "currentReleaseTitle": "Notas da versão atual",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Notas da versão não encontradas para {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "currentReleaseOpenOnGithub": "Ver no GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Ir para a página de Releases do GitHub",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Ver notas da versão",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
   "updateErrorWipeHoyoWikiCache": "Falha ao limpar cache de imagens: {detail}",
   "@updateErrorWipeHoyoWikiCache": {
     "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",

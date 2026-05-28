@@ -35,6 +35,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
@@ -273,6 +274,15 @@ class _AboutContent extends ConsumerWidget {
         Row(
           children: [
             Expanded(child: Text(l.settingsAboutVersion(version))),
+            const SizedBox(width: AppSpacing.s),
+            OutlinedButton.icon(
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) => CurrentReleaseDialog(version: version),
+              ),
+              icon: const Icon(Icons.description_outlined, size: 18),
+              label: Text(l.aboutViewReleaseNotes),
+            ),
             const SizedBox(width: AppSpacing.s),
             OutlinedButton.icon(
               onPressed: checking
