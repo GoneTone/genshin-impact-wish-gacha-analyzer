@@ -727,6 +727,27 @@
     }
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
+  "currentReleaseTitle": "บันทึกการอัปเดตเวอร์ชันปัจจุบัน",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "ไม่พบบันทึกการอัปเดตสำหรับ {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "currentReleaseOpenOnGithub": "ดูบน GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "ไปที่หน้า GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "ดูบันทึกการอัปเดต",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
   "updateErrorWipeHoyoWikiCache": "ล้างแคชภาพไม่สำเร็จ: {detail}",
   "@updateErrorWipeHoyoWikiCache": {
     "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
