@@ -64,10 +64,12 @@ The utility may trigger anti-virus software during installation and execution. T
 
 ![Overview page](docs/images/en/1.png)
 ![Character Event Wish page](docs/images/en/2.png)
-![Event Ode page](docs/images/en/3.png)
-![Settings page](docs/images/en/4.png)
-![Share image options](docs/images/en/5.png)
-![Share image](docs/images/en/6.png)
+![Weapon Event Wish page](docs/images/en/3.png)
+![Event Ode page](docs/images/en/4.png)
+![Settings page](docs/images/en/5.png)
+![Share image options](docs/images/en/6.png)
+![Share image](docs/images/en/7.png)
+![Item details](docs/images/en/8.png)
 
 ## Development
 

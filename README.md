@@ -64,10 +64,12 @@
 
 ![綜合數據頁](docs/images/zh-Hant/1.png)
 ![角色活動祈願頁](docs/images/zh-Hant/2.png)
-![活動頌願頁](docs/images/zh-Hant/3.png)
-![設定頁](docs/images/zh-Hant/4.png)
-![分享圖生成設定](docs/images/zh-Hant/5.png)
-![分享圖](docs/images/zh-Hant/6.png)
+![武器活動祈願頁](docs/images/zh-Hant/3.png)
+![活動頌願頁](docs/images/zh-Hant/4.png)
+![設定頁](docs/images/zh-Hant/5.png)
+![分享圖生成設定](docs/images/zh-Hant/6.png)
+![分享圖](docs/images/zh-Hant/7.png)
+![物品詳情顯示](docs/images/zh-Hant/8.png)
 
 ## 開發
 
