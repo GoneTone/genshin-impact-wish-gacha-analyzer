@@ -276,6 +276,15 @@ class _AboutContent extends ConsumerWidget {
             Expanded(child: Text(l.settingsAboutVersion(version))),
             const SizedBox(width: AppSpacing.s),
             OutlinedButton.icon(
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) => CurrentReleaseDialog(version: version),
+              ),
+              icon: const Icon(Icons.description_outlined, size: 18),
+              label: Text(l.aboutViewReleaseNotes),
+            ),
+            const SizedBox(width: AppSpacing.s),
+            OutlinedButton.icon(
               onPressed: checking
                   ? null
                   : () => ref
@@ -289,15 +298,6 @@ class _AboutContent extends ConsumerWidget {
                     )
                   : const Icon(Icons.refresh, size: 18),
               label: Text(checking ? l.updateChecking : l.updateCheckButton),
-            ),
-            const SizedBox(width: AppSpacing.s),
-            OutlinedButton.icon(
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) => CurrentReleaseDialog(version: version),
-              ),
-              icon: const Icon(Icons.description_outlined, size: 18),
-              label: Text(l.aboutViewReleaseNotes),
             ),
           ],
         ),
