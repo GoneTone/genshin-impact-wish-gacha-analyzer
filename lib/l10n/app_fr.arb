@@ -740,7 +740,7 @@
   "@currentReleaseOpenOnGithub": {
     "description": "Action button: open this release page on github.com in the external browser."
   },
-  "currentReleaseOpenReleasesPage": "Aller à la page des versions GitHub",
+  "currentReleaseOpenReleasesPage": "Aller à la page Releases de GitHub",
   "@currentReleaseOpenReleasesPage": {
     "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
   },

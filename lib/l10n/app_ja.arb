@@ -731,7 +731,7 @@
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
   },
-  "currentReleaseNotFound": "{version} に対応するリリースノートが見つかりません",
+  "currentReleaseNotFound": "{version} に対応する更新内容が見つかりません",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
     "placeholders": { "version": { "type": "String" } }
