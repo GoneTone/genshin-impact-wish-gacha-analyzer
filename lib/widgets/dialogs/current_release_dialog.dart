@@ -37,10 +37,10 @@ class CurrentReleaseDialog extends ConsumerWidget {
         ],
       ),
       content: async.when(
-        loading: () => _LoadingSkeleton(theme: theme),
+        loading: () => const _LoadingSkeleton(),
         data: (release) => ReleaseNotesContent(release: release),
         error: (e, _) =>
-            _ErrorBlock(error: e, version: version, l: l, theme: theme),
+            _ErrorBlock(error: e as ReleaseCheckError, version: version),
       ),
       actions: _actionsFor(context, ref, l, async),
     );
@@ -72,8 +72,9 @@ class CurrentReleaseDialog extends ConsumerWidget {
         ),
       ],
       error: (e, _) {
+        final err = e as ReleaseCheckError;
         final terminalError =
-            e is ReleaseCheckNotFound || e is ReleaseCheckRateLimited;
+            err is ReleaseCheckNotFound || err is ReleaseCheckRateLimited;
         if (terminalError) {
           return [
             closeButton,
@@ -104,14 +105,12 @@ class CurrentReleaseDialog extends ConsumerWidget {
 
 /// 三態 loading 狀態下的灰色占位卡片，視覺極簡（不引入 shimmer 套件）。
 class _LoadingSkeleton extends StatelessWidget {
-  /// 建立 [_LoadingSkeleton]，[theme] 用於取出 token 配色。
-  const _LoadingSkeleton({required this.theme});
-
-  /// 取色用的主題。
-  final ThemeData theme;
+  /// 建立 [_LoadingSkeleton]。
+  const _LoadingSkeleton();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final tokens = theme.gacha;
     return Card(
       margin: EdgeInsets.zero,
@@ -163,28 +162,19 @@ class _LoadingSkeleton extends StatelessWidget {
 /// 三態 error 狀態下的訊息區塊，把 [error] 對應到 i18n 字串並顯示在 icon 旁。
 class _ErrorBlock extends StatelessWidget {
   /// 建立 [_ErrorBlock]。
-  const _ErrorBlock({
-    required this.error,
-    required this.version,
-    required this.l,
-    required this.theme,
-  });
+  const _ErrorBlock({required this.error, required this.version});
 
-  /// 來自 provider 的錯誤物件，應為 [ReleaseCheckError] 子類。
-  final Object error;
+  /// 來自 provider 的錯誤物件。
+  final ReleaseCheckError error;
 
   /// 目前查詢的版本字串，用於 not-found 訊息插值。
   final String version;
 
-  /// 訊息字串取用的 localizations。
-  final AppLocalizations l;
-
-  /// 取色與字體用的主題。
-  final ThemeData theme;
-
   @override
   Widget build(BuildContext context) {
-    final message = _messageFor(error);
+    final theme = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
+    final message = _messageFor(l, error);
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Row(
@@ -200,15 +190,16 @@ class _ErrorBlock extends StatelessWidget {
 
   /// 把 [ReleaseCheckError] 子類對應到既有 `update*` i18n 字串，
   /// 維持與「檢查更新」流程的訊息一致性。
-  String _messageFor(Object e) {
-    if (e is ReleaseCheckNotFound) return l.currentReleaseNotFound(version);
-    if (e is ReleaseCheckNetwork) return l.updateErrorNetwork;
-    if (e is ReleaseCheckTimeout) return l.updateErrorTimeout;
-    if (e is ReleaseCheckRateLimited) return l.updateErrorRateLimited;
-    if (e is ReleaseCheckServer) {
-      return l.updateErrorServer(e.status.toString());
-    }
-    if (e is ReleaseCheckFormat) return l.updateErrorFormat;
-    return e.toString();
+  String _messageFor(AppLocalizations l, ReleaseCheckError e) {
+    return switch (e) {
+      ReleaseCheckNotFound() => l.currentReleaseNotFound(version),
+      ReleaseCheckNetwork() => l.updateErrorNetwork,
+      ReleaseCheckTimeout() => l.updateErrorTimeout,
+      ReleaseCheckRateLimited() => l.updateErrorRateLimited,
+      ReleaseCheckServer(:final status) => l.updateErrorServer(
+        status.toString(),
+      ),
+      ReleaseCheckFormat() => l.updateErrorFormat,
+    };
   }
 }
