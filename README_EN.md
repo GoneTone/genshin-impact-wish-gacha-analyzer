@@ -51,7 +51,7 @@ The utility may trigger anti-virus software during installation and execution. T
 - Rarity distribution pie chart
 - Item type distribution pie chart
 - Wish history table: multi-column sort, fuzzy search, rarity and item-type filters, pagination
-- Auto-fetched character / weapon icons and details (from HoYoWiki): shown in the history table and timelines; click an item to view official artwork, description, and tags — with a one-click jump to HoYoWiki
+- Auto-fetched character / weapon icons and details (from [HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)): shown in the history table and timelines; click an item to view official artwork, description, and tags — with a one-click jump to HoYoWiki
 - Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
 - Export / Import accounts as JSON
 - Dark / Light theme toggle
