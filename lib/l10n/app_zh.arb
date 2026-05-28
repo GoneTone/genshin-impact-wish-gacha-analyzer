@@ -534,7 +534,7 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常",
-  "currentReleaseTitle": "目前版本更新內容",
+  "currentReleaseTitle": "目前版本的更新內容",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
   },
@@ -543,11 +543,11 @@
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
     "placeholders": { "version": { "type": "String" } }
   },
-  "currentReleaseOpenOnGithub": "在 GitHub 上開啟",
+  "currentReleaseOpenOnGithub": "前往 GitHub 查看",
   "@currentReleaseOpenOnGithub": {
     "description": "Action button: open this release page on github.com in the external browser."
   },
-  "currentReleaseOpenReleasesPage": "開啟 GitHub Releases 頁面",
+  "currentReleaseOpenReleasesPage": "前往 GitHub Releases 頁面",
   "@currentReleaseOpenReleasesPage": {
     "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
   },
