@@ -45,15 +45,18 @@ The utility may trigger anti-virus software during installation and execution. T
 - Incremental updates merge new records without overwriting old ones, so entries that fall off the official history won't disappear
 - Total pulls and 5★ / 4★ / 3★ / 2★ counts with their share of the total
 - Dual pity progress (5★ and 4★) showing remaining pulls until pity
+- Average pulls per 5★ / 4★ hit (per-banner and overall)
 - Per-gacha 5★ timeline
 - Bar chart comparing each gacha's highest-rarity counts
 - Rarity distribution pie chart
 - Item type distribution pie chart
 - Wish history table: multi-column sort, fuzzy search, rarity and item-type filters, pagination
+- Auto-fetched character / weapon icons and details (from HoYoWiki): shown in the history table and timelines; click an item to view official artwork, description, and tags — with a one-click jump to HoYoWiki
 - Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
 - Export / Import accounts as JSON
 - Dark / Light theme toggle
 - Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
+- Optional UID masking in the UI (first 3 digits only) for added privacy
 - Automatic update check on launch, with a manual trigger in Settings
 - All data stays on your machine — nothing is uploaded
 
