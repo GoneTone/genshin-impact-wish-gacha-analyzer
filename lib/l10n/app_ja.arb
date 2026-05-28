@@ -734,7 +734,11 @@
   "currentReleaseNotFound": "{version} に対応する更新内容が見つかりません",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "currentReleaseOpenOnGithub": "GitHub で表示",
   "@currentReleaseOpenOnGithub": {
