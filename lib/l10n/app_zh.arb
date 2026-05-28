@@ -534,6 +534,27 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常",
+  "currentReleaseTitle": "目前版本更新內容",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "找不到 {version} 對應的更新內容",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "currentReleaseOpenOnGithub": "在 GitHub 上開啟",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "開啟 GitHub Releases 頁面",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "查看更新內容",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
   "updateErrorWipeHoyoWikiCache": "清除物品圖片快取失敗：{detail}",
   "@updateErrorWipeHoyoWikiCache": {
     "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
