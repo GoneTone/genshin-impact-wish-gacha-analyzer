@@ -117,16 +117,26 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
   }
 
   /// 把 service error 轉成穩定 token，UI 端拿 token 解 i18n。
+  ///
+  /// 注意：此 helper 目前**只**服務 [fetchNewerReleases] 流（list
+  /// endpoint，不會 404）。`ReleaseCheckNotFound` 由 `CurrentReleaseDialog`
+  /// 走 `fetchReleaseByVersion` 自行 i18n。若日後要把這個 helper 接到
+  /// 任何**可能 404** 的新流程，請先加上專屬的 `notFound` token 與對應
+  /// i18n 字串，再來修這個 switch；別偷懶 fallback 成 `'format'`，否則
+  /// 404 會被使用者看成「格式錯誤」。
   String _localizeError(ReleaseCheckError e) => switch (e) {
     ReleaseCheckNetwork() => 'network',
     ReleaseCheckTimeout() => 'timeout',
     ReleaseCheckRateLimited() => 'rateLimited',
     ReleaseCheckServer(:final status) => 'server:$status',
     ReleaseCheckFormat() => 'format',
-    // fetchNewerReleases 走 /releases（list endpoint）不會 404，此分支
-    // 為 sealed exhaustiveness 而存在；真正消費 404 的是
-    // CurrentReleaseDialog（fetchReleaseByVersion 流）。
-    ReleaseCheckNotFound() => 'format',
+    ReleaseCheckNotFound() => throw UnsupportedError(
+      'AppReleaseNotifier._localizeError received ReleaseCheckNotFound. '
+      'This error is only producible by fetchReleaseByVersion (currently '
+      'consumed by CurrentReleaseDialog, which does its own i18n). '
+      'If you are reusing _localizeError for a flow that can hit 404, '
+      'add a proper "notFound" token and i18n string instead.',
+    ),
   };
 }
 

@@ -95,6 +95,54 @@ Version? _parseTag(String tag) {
   }
 }
 
+/// 共用 GET + 解析骨架：對 [uri] 發 GitHub API 請求，統一處理
+/// 超時 / 網路 / rate limit / 一般非 200 / JSON 解碼錯誤，回傳已
+/// `jsonDecode` 的 body。
+///
+/// [specialStatusErrors] 讓 caller 宣告「特定 status code 要對應到自訂
+/// [ReleaseCheckError]」（例如 `fetchReleaseByVersion` 用 `{404:
+/// ReleaseCheckNotFound(tag)}`）；這些 status 會在 rate limit / 一般非 200
+/// 檢查之前優先觸發，避免被通用分支吃掉。
+///
+/// 失敗時拋 [ReleaseCheckError] 的具體子類。
+Future<dynamic> _githubGet(
+  Uri uri, {
+  required http.Client client,
+  Map<int, ReleaseCheckError> specialStatusErrors = const {},
+}) async {
+  final http.Response resp;
+  try {
+    resp = await client
+        .get(uri, headers: const {'Accept': 'application/vnd.github+json'})
+        .timeout(const Duration(seconds: 10));
+  } on TimeoutException {
+    throw const ReleaseCheckTimeout();
+  } on SocketException {
+    throw const ReleaseCheckNetwork();
+  } on http.ClientException {
+    throw const ReleaseCheckNetwork();
+  }
+
+  final special = specialStatusErrors[resp.statusCode];
+  if (special != null) {
+    throw special;
+  }
+  if (resp.statusCode == 429 ||
+      (resp.statusCode == 403 &&
+          resp.headers['x-ratelimit-remaining'] == '0')) {
+    throw const ReleaseCheckRateLimited();
+  }
+  if (resp.statusCode != 200) {
+    throw ReleaseCheckServer(resp.statusCode);
+  }
+
+  try {
+    return jsonDecode(resp.body);
+  } on FormatException {
+    throw const ReleaseCheckFormat();
+  }
+}
+
 /// 抓 GitHub Releases API，過濾 prerelease/draft，回傳比 [currentVersion]
 /// 新的 release（新到舊）。空 list = 無更新。
 ///
@@ -117,34 +165,7 @@ Future<List<AppRelease>> fetchNewerReleases({
   }
 
   final uri = Uri.parse('${AppRepo.apiBase}/releases');
-  final http.Response resp;
-  try {
-    resp = await client
-        .get(uri, headers: const {'Accept': 'application/vnd.github+json'})
-        .timeout(const Duration(seconds: 10));
-  } on TimeoutException {
-    throw const ReleaseCheckTimeout();
-  } on SocketException {
-    throw const ReleaseCheckNetwork();
-  } on http.ClientException {
-    throw const ReleaseCheckNetwork();
-  }
-
-  if (resp.statusCode == 429 ||
-      (resp.statusCode == 403 &&
-          resp.headers['x-ratelimit-remaining'] == '0')) {
-    throw const ReleaseCheckRateLimited();
-  }
-  if (resp.statusCode != 200) {
-    throw ReleaseCheckServer(resp.statusCode);
-  }
-
-  final dynamic decoded;
-  try {
-    decoded = jsonDecode(resp.body);
-  } on FormatException {
-    throw const ReleaseCheckFormat();
-  }
+  final decoded = await _githubGet(uri, client: client);
   if (decoded is! List) throw const ReleaseCheckFormat();
 
   final out = <AppRelease>[];
@@ -202,37 +223,11 @@ Future<AppRelease> fetchReleaseByVersion({
   final tag = 'v$core';
   final uri = Uri.parse('${AppRepo.apiBase}/releases/tags/$tag');
 
-  final http.Response resp;
-  try {
-    resp = await client
-        .get(uri, headers: const {'Accept': 'application/vnd.github+json'})
-        .timeout(const Duration(seconds: 10));
-  } on TimeoutException {
-    throw const ReleaseCheckTimeout();
-  } on SocketException {
-    throw const ReleaseCheckNetwork();
-  } on http.ClientException {
-    throw const ReleaseCheckNetwork();
-  }
-
-  if (resp.statusCode == 404) {
-    throw ReleaseCheckNotFound(tag);
-  }
-  if (resp.statusCode == 429 ||
-      (resp.statusCode == 403 &&
-          resp.headers['x-ratelimit-remaining'] == '0')) {
-    throw const ReleaseCheckRateLimited();
-  }
-  if (resp.statusCode != 200) {
-    throw ReleaseCheckServer(resp.statusCode);
-  }
-
-  final dynamic decoded;
-  try {
-    decoded = jsonDecode(resp.body);
-  } on FormatException {
-    throw const ReleaseCheckFormat();
-  }
+  final decoded = await _githubGet(
+    uri,
+    client: client,
+    specialStatusErrors: {404: ReleaseCheckNotFound(tag)},
+  );
   if (decoded is! Map) throw const ReleaseCheckFormat();
   final raw = decoded;
   final tagName = raw['tag_name'];
