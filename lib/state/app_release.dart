@@ -123,6 +123,10 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
     ReleaseCheckRateLimited() => 'rateLimited',
     ReleaseCheckServer(:final status) => 'server:$status',
     ReleaseCheckFormat() => 'format',
+    // fetchNewerReleases 走 /releases（list endpoint）不會 404，此分支
+    // 為 sealed exhaustiveness 而存在；真正消費 404 的是
+    // CurrentReleaseDialog（fetchReleaseByVersion 流）。
+    ReleaseCheckNotFound() => 'format',
   };
 }
 
