@@ -5,7 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 /// 五星一覽聚合的 logger。
-final _log = Logger('wish.fiveStar');
+final _log = Logger('gacha.fiveStar');
 
 /// 五星一覽的單一條目：一個不重複的五星物品 + 其累計抽到次數。
 @immutable
