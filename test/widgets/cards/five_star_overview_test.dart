@@ -11,6 +11,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 GachaRecord _r(String id, String name, DateTime time) => GachaRecord(
   id: id,
@@ -64,7 +65,7 @@ void main() {
     await tester.pumpWidget(_wrap(c, const FiveStarOverview(items: [])));
     await tester.pump();
     expect(find.byType(GachaItemTapTarget), findsNothing);
-    expect(find.textContaining('×'), findsNothing);
+    expect(find.byType(GachaItemIcon), findsNothing); // 空清單不繪任何 chip
   });
 
   testWidgets('顯示每個物品的次數徽章', (tester) async {

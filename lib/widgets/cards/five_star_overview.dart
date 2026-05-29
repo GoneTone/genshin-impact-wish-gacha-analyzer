@@ -116,11 +116,18 @@ class _FiveStarChip extends StatelessWidget {
       ),
     );
 
-    if (!interactive) return stack;
+    // 徽章以 right/bottom: -2 微微外溢 SizedBox；靠右下 padding 把溢出量收進
+    // chip 自身的 box，避免放進會裁切的容器時邊角被切掉。
+    final chip = Padding(
+      padding: const EdgeInsets.only(right: 2, bottom: 2),
+      child: stack,
+    );
+
+    if (!interactive) return chip;
     return Tooltip(
       message: item.representative.name,
       waitDuration: const Duration(milliseconds: 100),
-      child: GachaItemTapTarget(record: item.representative, child: stack),
+      child: GachaItemTapTarget(record: item.representative, child: chip),
     );
   }
 }
