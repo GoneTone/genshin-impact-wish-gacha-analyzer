@@ -278,6 +278,9 @@
   "pageOverviewOdesSection": "Tổng quan Ca Tụng",
   "pageBannerRecordList": "Danh sách bản ghi",
   "fiveStarOverviewTitle": "Tổng quan 5 sao",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "Cài Đặt",
   "settingsAppearance": "Giao Diện",
   "settingsThemeSystem": "Theo hệ thống",
