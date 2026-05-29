@@ -1,7 +1,7 @@
 {
   "@@locale": "ja",
   "localeNativeName": "日本語",
-  "localeTranslator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>、<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslator": "jj、<a href=\"https://home.gamer.com.tw/homeindex.php?owner=XMoiswnX\">世界へいわ</a>、<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "翻訳者：{translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."

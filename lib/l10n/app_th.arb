@@ -1,7 +1,7 @@
 {
   "@@locale": "th",
   "localeNativeName": "ภาษาไทย",
-  "localeTranslator": "Armzyaec1234, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslator": "Armzyaec1234, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "ผู้แปล: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."

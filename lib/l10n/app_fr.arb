@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "localeNativeName": "Français",
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traducteur : {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."

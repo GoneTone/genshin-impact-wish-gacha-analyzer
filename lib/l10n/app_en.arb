@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "localeNativeName": "English",
-  "localeTranslator": "Zanah_68, pan93412, Lemon7777, <a href=\"https://claude.com/claude-code\">Claude Code (Opus 4.7)</a>",
+  "localeTranslator": "Zanah_68, pan93412, Lemon7777, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Translator: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
