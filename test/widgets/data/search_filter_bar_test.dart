@@ -53,11 +53,7 @@ void main() {
       _wrap(
         SearchFilterBar(
           state: const RecordFilterState(filter: RecordFilter(), sort: null),
-          availableItemTypes: const [
-            kItemKindCharacter,
-            kItemKindWeapon,
-            '裝扮',
-          ],
+          availableItemTypes: const [kItemKindCharacter, kItemKindWeapon, '裝扮'],
           onFilterChanged: (_) {},
           onClear: () {},
         ),
