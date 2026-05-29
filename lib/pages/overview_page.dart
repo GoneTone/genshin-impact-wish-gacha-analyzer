@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
@@ -16,6 +18,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
@@ -143,6 +146,10 @@ class OverviewPage extends ConsumerWidget {
             timeline: gachaSec.timeline,
             timelineNowPulls: gachaSec.timelineNowPulls,
             timelineRank: gachaSec.timelineRank,
+            fiveStarItems: buildFiveStarCollectionAcrossBanners(
+              gachaSec.banners,
+              index: ref.watch(hoyowikiIndexProvider),
+            ),
           ),
           const SizedBox(height: AppSpacing.xxxl),
           Divider(
@@ -207,6 +214,7 @@ class _OverviewSection extends StatelessWidget {
     required this.timeline,
     required this.timelineNowPulls,
     required this.timelineRank,
+    this.fiveStarItems = const [],
   });
 
   /// 段落標題文字。
@@ -238,6 +246,9 @@ class _OverviewSection extends StatelessWidget {
 
   /// timeline 目標稀有度。
   final int timelineRank;
+
+  /// 此段的五星一覽清單；空清單時不顯示該區塊（頌願段一律空）。
+  final List<FiveStarCollectionItem> fiveStarItems;
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +406,15 @@ class _OverviewSection extends StatelessWidget {
         ),
 
         const SizedBox(height: AppSpacing.xl),
+        if (fiveStarItems.isNotEmpty) ...[
+          InlineSectionTitle(
+            icon: Icons.star_outline,
+            title: l.fiveStarOverviewTitle,
+          ),
+          const SizedBox(height: AppSpacing.s),
+          FiveStarOverview(items: fiveStarItems),
+          const SizedBox(height: AppSpacing.xl),
+        ],
         InlineSectionTitle(
           icon: Icons.timeline,
           title: l.timelineTopRarityTitle(
