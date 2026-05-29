@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
@@ -100,10 +101,11 @@ class OverviewSections {
 }
 
 /// 從 [activeBanners] 建構 [OverviewSections]，供 OverviewPage 與 ShareCard 共用，
-/// 避免兩處複製分組邏輯。
+/// 避免兩處複製分組邏輯。[index] 傳入 [computeGachaStats] 以消除跨語系類型分裂。
 OverviewSections buildOverviewSections(
-  Map<String, List<GachaRecord>> activeBanners,
-) {
+  Map<String, List<GachaRecord>> activeBanners, {
+  required HoYoWikiIndex index,
+}) {
   final gachaList = gachaTypes
       .where((t) => t.category == GachaCategory.gacha)
       .toList(growable: false);
@@ -162,7 +164,7 @@ OverviewSections buildOverviewSections(
     gacha: GachaSectionData(
       types: gachaList,
       banners: gachaBanners,
-      stats: computeGachaStats(gachaAll),
+      stats: computeGachaStats(gachaAll, index: index),
       timeline: gachaTimeline,
       timelineRank: gachaTimelineRank,
       timelineNowPulls: gachaTimelineNowPulls,
@@ -178,7 +180,7 @@ OverviewSections buildOverviewSections(
     odes: OdesSectionData(
       types: odesList,
       banners: odesBanners,
-      stats: computeGachaStats(odesAll),
+      stats: computeGachaStats(odesAll, index: index),
       eventFiveCount: eventFive,
       standardFourCount: standardFour,
       timeline: odesTimeline,

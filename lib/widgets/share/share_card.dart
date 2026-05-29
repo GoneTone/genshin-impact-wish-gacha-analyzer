@@ -108,7 +108,7 @@ class ShareCard extends StatelessWidget {
     required int targetRank,
     required HoYoWikiIndex index,
   }) {
-    final stats = computeGachaStats(records);
+    final stats = computeGachaStats(records, index: index);
     // threshold: 0 — 此處只取 averageInterval，不需 pity progress/distance
     // （與 gacha_pity.dart 的 averageIntervalAcrossBanners 同一慣例）。
     final fiveAvg = computePity(records, threshold: 0, rank: 5).averageInterval;
@@ -160,7 +160,7 @@ class ShareCard extends StatelessWidget {
     required Map<String, List<GachaRecord>> banners,
     required HoYoWikiIndex index,
   }) {
-    final s = buildOverviewSections(banners);
+    final s = buildOverviewSections(banners, index: index);
     final g = s.gacha;
     final o = s.odes;
     // '2000'/'1000' 必定存在：o.types 來自 lib/data/gacha_types.dart 的靜態常數，

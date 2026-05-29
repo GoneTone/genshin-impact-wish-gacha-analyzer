@@ -90,7 +90,10 @@ class BannerPage extends ConsumerWidget {
       );
     }
 
-    final stats = computeGachaStats(records);
+    final stats = computeGachaStats(
+      records,
+      index: ref.watch(hoyowikiIndexProvider),
+    );
     final primary = type.primaryPity;
     final secondary = type.secondaryPity;
     final primaryPityData = computePity(
