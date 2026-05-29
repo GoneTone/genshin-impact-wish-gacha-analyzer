@@ -10,12 +10,15 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
@@ -115,6 +118,10 @@ class BannerPage extends ConsumerWidget {
             .toSet()
             .toList()
           ..sort();
+    final fiveStarItems = buildFiveStarCollection(
+      records,
+      index: ref.watch(hoyowikiIndexProvider),
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -293,6 +300,15 @@ class BannerPage extends ConsumerWidget {
           ),
 
           const SizedBox(height: AppSpacing.xl),
+          if (fiveStarItems.isNotEmpty) ...[
+            InlineSectionTitle(
+              icon: Icons.star_outline,
+              title: l.fiveStarOverviewTitle,
+            ),
+            const SizedBox(height: AppSpacing.s),
+            FiveStarOverview(items: fiveStarItems),
+            const SizedBox(height: AppSpacing.xl),
+          ],
           InlineSectionTitle(
             icon: Icons.table_chart_outlined,
             title: l.pageBannerRecordList,
