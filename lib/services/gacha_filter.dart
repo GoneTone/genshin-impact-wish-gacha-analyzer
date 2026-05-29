@@ -27,7 +27,9 @@ class RecordFilter {
   /// 稀有度篩選。
   final RarityFilter rarity;
 
-  /// 物品類型篩選；null 表示不限。
+  /// 物品類型篩選；null 表示不限。儲存 [itemTypeKeyOf] 的產物（canonical 鍵如
+  /// `kind:character`，或查無 menu_id 時 fallback 的原始 itemType 字串），與
+  /// `RecordRow.itemTypeKey` 同一套詞彙比對。
   final String? itemType;
 
   /// 關鍵字搜尋字串。

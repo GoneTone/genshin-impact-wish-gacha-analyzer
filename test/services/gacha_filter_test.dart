@@ -92,6 +92,8 @@ void main() {
   group('filterRecordRows', () {
     late List<RecordRow> rows;
     setUp(() {
+      // 空 index → itemTypeKey fallback 回原始 itemType 字串，故以下測試仍用
+      //「武器」「角色」這類原始字串當 filter 值比對（canonical 鍵的過濾另有測試）。
       rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     });
 

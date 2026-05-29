@@ -56,7 +56,7 @@ void main() {
           availableItemTypes: const [
             kItemKindCharacter,
             kItemKindWeapon,
-            'raw:costume',
+            '裝扮',
           ],
           onFilterChanged: (_) {},
           onClear: () {},
