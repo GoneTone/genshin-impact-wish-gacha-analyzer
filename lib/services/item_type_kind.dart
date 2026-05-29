@@ -6,7 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 /// 永不碰撞。
 const kItemKindCharacter = 'kind:character';
 
-/// 武器類型聚合鍵。
+/// 武器類型聚合鍵；`kind:` 前綴用意見 [kItemKindCharacter]。
 const kItemKindWeapon = 'kind:weapon';
 
 /// 解析單筆 [r] 的類型聚合鍵：以 HoYoWiki [index] 的 menu_id 判定（2＝角色、

@@ -5,6 +5,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
 
+/// 建立測試用 [GachaRecord]；name／lang 必填，itemType 預設「角色」。
 GachaRecord _r({
   required String name,
   required String lang,
