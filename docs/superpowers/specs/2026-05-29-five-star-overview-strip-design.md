@@ -19,8 +19,8 @@
 ## 核心語意
 
 - **去重 + 計數**：每個不重複的五星物品只有一個圓形 Icon；右下角徽章 = 該物品在範圍內被抽到的**總次數（份數）**，恆顯示（次數為 1 也顯示「1」）。
-- **合併鍵**：以**物品名稱**（`GachaRecord.name`）為鍵。單一帳號內語系一致，同名即同物。
-- **代表 record**：取該物品**最近一次**被抽到的 `GachaRecord`，用其 `name` / `lang` / `gachaType` 餵 `GachaItemIcon` 做圖示查找與 tooltip。
+- **合併鍵**：以 **HoYoWiki id** 為鍵（`HoYoWikiIndex.lookupId(name, lang)`）。如此跨語系匯入的資料（同一物品在不同語系名稱不同，例如「雷電將軍」／「Raiden Shogun」）能正確合併為同一個。lookup miss（index 無對應或尚未快取）時 fallback 用 `name` 當鍵（即 `key = id ?? name`），無法跨語系合併屬可接受的退化情形。
+- **代表 record**：取該物品（同合併鍵中）**最近一次**被抽到的 `GachaRecord`，用其 `name` / `lang` / `gachaType` 餵 `GachaItemIcon` 做圖示查找與 tooltip。圖示以 id 查找，跨語系合併時任一代表皆可正確顯圖；tooltip 顯示最近一筆的名稱（其語系）。
 - **排序**：依 `count` **降冪**；次數相同時，以「最近抽到時間」**降冪**作為 tie-break（抽到次數最多者排最前，左上起逐行往下）。
 - **綜合頁／綜合分享圖**：同物品**跨祈願卡池合併、次數相加**（例如某常駐五星在角色池與常駐池都出過，算同一個，次數累加），形成一條合併的五星一覽。
 - **卡池頁／卡池分享圖**：僅該卡池自身的 records。
@@ -47,16 +47,23 @@ class FiveStarCollectionItem {
   final int count;                  // 該物品被抽到的總次數
 }
 
-/// 單一 records 來源：取 rankType == 5，依 name 合併計數，依規則排序。
-List<FiveStarCollectionItem> buildFiveStarCollection(List<GachaRecord> records);
+/// 單一 records 來源：取 rankType == 5，依「HoYoWiki id（缺則 name）」合併
+/// 計數，依規則排序。
+List<FiveStarCollectionItem> buildFiveStarCollection(
+  List<GachaRecord> records, {
+  required HoYoWikiIndex index,
+});
 
-/// 跨卡池：合併多卡池後，同 name 跨卡池累加，再依規則排序。
+/// 跨卡池：合併多卡池後，同合併鍵跨卡池累加，再依規則排序。
 List<FiveStarCollectionItem> buildFiveStarCollectionAcrossBanners(
-  Map<String, List<GachaRecord>> banners,
-);
+  Map<String, List<GachaRecord>> banners, {
+  required HoYoWikiIndex index,
+});
 ```
 
+- 合併鍵由內部 helper 計算：`index.lookupId(name, lang) ?? name`。
 - 跨卡池版可在內部攤平所有 records 後委派給單一版的合併邏輯，避免重複。
+- `index` 由呼叫端從 `hoyowikiIndexProvider` 取得（頁面 / 分享圖流程皆已可存取）。
 - 關鍵節點埋 `Logger('wish.fiveStar')`：聚合後不重複物品數、跨卡池合併前後筆數等；敏感資料沿用既有脫敏規則（本功能不涉 URL／UID，主要記數量級 context）。
 
 ### 2. 呈現 widget（新檔 `lib/widgets/cards/five_star_overview.dart`）
@@ -72,13 +79,14 @@ List<FiveStarCollectionItem> buildFiveStarCollectionAcrossBanners(
 ### 4. 版面定位
 
 - **`banner_page.dart`**：在「祈願記錄列表」`InlineSectionTitle`（現約 `:296`）**上方**插入獨立區塊：
-  `InlineSectionTitle(icon: Icons.star_outline, title: l.fiveStarOverviewTitle)` + `FiveStarOverview(items: buildFiveStarCollection(records))`。無五星時整段隱藏。
-- **`overview_page.dart`**：`_OverviewSection` 新增一個可選參數（聚合後的 `List<FiveStarCollectionItem>`，或預建好的 widget），**只在 gacha 段**傳入；放在時間軸 `InlineSectionTitle`（現約 `:398`）**上方**。odes 段不傳 → 完全不動。
+  `InlineSectionTitle(icon: Icons.star_outline, title: l.fiveStarOverviewTitle)` + `FiveStarOverview(items: buildFiveStarCollection(records, index: ref.watch(hoyowikiIndexProvider)))`。無五星時整段隱藏。
+- **`overview_page.dart`**：`_OverviewSection` 新增一個可選參數（聚合後的 `List<FiveStarCollectionItem>`，或預建好的 widget），**只在 gacha 段**傳入（以 `buildFiveStarCollectionAcrossBanners(gachaSec.banners, index: ...)` 算得）；放在時間軸 `InlineSectionTitle`（現約 `:398`）**上方**。odes 段不傳 → 完全不動。
 
 ### 5. 分享圖（`lib/widgets/share/share_card.dart`）
 
-- `ShareCard.banner`：以 `records` 算 `buildFiveStarCollection(records)`。
-- `ShareCard.overview`：以 `buildOverviewSections(banners).gacha.banners` 算 `buildFiveStarCollectionAcrossBanners(...)`（僅祈願卡池）。
+- 兩個 factory 皆新增 `required HoYoWikiIndex index` 參數；呼叫端（`banner_page._generateBannerShare` / `overview_page._generateOverviewShare`）從 `ref.read(hoyowikiIndexProvider)` 傳入（`generateAndShareImage` 流程同一容器已可取得）。
+- `ShareCard.banner`：以 `records` 算 `buildFiveStarCollection(records, index: index)`。
+- `ShareCard.overview`：以 `buildOverviewSections(banners).gacha.banners` 算 `buildFiveStarCollectionAcrossBanners(..., index: index)`（僅祈願卡池）。
 - 在 `build` 的 `content` Column **最尾端**（所有 `_SectionView` 之後）加一個 `_FiveStarShareSection`：標題（`l.fiveStarOverviewTitle`）+ `FiveStarOverview(interactive: false)`。資料於 factory 階段算好存入欄位，build 階段渲染。
 - 圖示渲染：沿用既有 `PreloadedHoYoWikiImages` + `UncontrolledProviderScope` 機制（`buildShareRenderTree` 已具備），`recordsForPreload` 既已涵蓋所需 records（卡池 = 該池；綜合 = 全卡池），無需新增預載管線。
 - 分享圖寬固定 1200px、高隨內容自適應；`Wrap` 自然增高即可，不需裁切。
@@ -101,7 +109,9 @@ List<FiveStarCollectionItem> buildFiveStarCollectionAcrossBanners(
 - **單元測試**（`buildFiveStarCollection` / `buildFiveStarCollectionAcrossBanners`）：
   - 去重計數正確；
   - 排序：次數降冪、同次數以最近時間降冪 tie-break；
-  - 跨卡池同名合併、次數相加；
+  - 跨卡池同物品合併、次數相加；
+  - **跨語系合併**：同 id 不同語系名稱（例如「雷電將軍」／「Raiden Shogun」）合併為一；
+  - **fallback**：index lookup miss 時退化以 name 為鍵，不誤併不同物；
   - 只取 5★（排除 4★／3★）；
   - 空輸入回傳空清單；
   - 代表 record 取最近一次。
@@ -114,4 +124,3 @@ List<FiveStarCollectionItem> buildFiveStarCollectionAcrossBanners(
 - 不為單卡池頁加卡池色環（方案 A 統一金環）。
 - 不加「展開／收合」「載入更多」「上限 N 個」等控制；既然需求是不限行數，全部顯示。
 - 不動頌願任何呈現。
-- 不為跨卡池合併引入 HoYoWiki id 作為合併鍵（名稱足夠；單帳號語系一致）。
