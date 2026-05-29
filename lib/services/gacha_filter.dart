@@ -135,6 +135,8 @@ List<RecordRow> sortRecordRows(List<RecordRow> rows, TableSort? sort) {
     case SortColumn.name:
       cmp = (a, b) => a.record.name.compareTo(b.record.name);
     case SortColumn.kind:
+      // 依聚合鍵（語言無關）字典序排，canonical 的角色／武器各自聚集；
+      // 刻意不依在地化標籤排序，避免排序結果隨 UI 語言變動。
       cmp = (a, b) => a.itemTypeKey.compareTo(b.itemTypeKey);
     case SortColumn.rarity:
       cmp = (a, b) => a.record.rankType.compareTo(b.record.rankType);
