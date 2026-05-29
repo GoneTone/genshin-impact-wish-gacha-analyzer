@@ -74,6 +74,13 @@ void main() {
     test('autolink <url> 形式不被改寫', () {
       expect(linkifyGithubReferences('<$base/pull/70>'), '<$base/pull/70>');
     });
+
+    test('已是 markdown 連結的 @提及 不再被包一層', () {
+      expect(
+        linkifyGithubReferences('[@GoneTone](https://github.com/GoneTone)'),
+        '[@GoneTone](https://github.com/GoneTone)',
+      );
+    });
   });
 
   group('linkifyGithubReferences — 組合', () {

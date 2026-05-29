@@ -22,7 +22,7 @@ final RegExp _commitRe = RegExp('(?<![(<])$_repo/commit/([0-9a-fA-F]{7,40})');
 /// 比對 `@提及`：群組 1 為使用者名（GitHub 命名規則），群組 2 為可選的
 /// `[bot]` 後綴。前置 negative lookbehind 擋掉 email／路徑樣式。
 final RegExp _mentionRe = RegExp(
-  r'(?<![A-Za-z0-9._%+@/-])@([A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)(\[bot\])?',
+  r'(?<![A-Za-z0-9._%+@/\[-])@([A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)(\[bot\])?',
 );
 
 /// 把 release notes Markdown [body] 內本專案的 GitHub 連結與 `@提及`，改寫成
