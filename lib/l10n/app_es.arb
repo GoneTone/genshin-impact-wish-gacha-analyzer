@@ -131,6 +131,8 @@
   "statsItemTypeDistribution": "Distribución por tipo",
   "statsNoData": "Datos no encontrados",
   "kindUnknown": "Desconocido",
+  "kindCharacter": "Personaje",
+  "kindWeapon": "Arma",
   "tableTime": "Hora de recepcion",
   "tableName": "Nombre",
   "tableKind": "Tipo",

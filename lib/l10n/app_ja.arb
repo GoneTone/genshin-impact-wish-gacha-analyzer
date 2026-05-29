@@ -131,6 +131,8 @@
   "statsItemTypeDistribution": "タイプ分布",
   "statsNoData": "データがありません",
   "kindUnknown": "不明",
+  "kindCharacter": "キャラクター",
+  "kindWeapon": "武器",
   "tableTime": "日時",
   "tableName": "名称",
   "tableKind": "タイプ",

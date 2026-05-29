@@ -127,6 +127,8 @@
   "statsItemTypeDistribution": "类型分布",
   "statsNoData": "无数据",
   "kindUnknown": "未知",
+  "kindCharacter": "角色",
+  "kindWeapon": "武器",
   "tableTime": "时间",
   "tableName": "名称",
   "tableKind": "类型",

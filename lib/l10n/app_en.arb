@@ -131,6 +131,8 @@
   "statsItemTypeDistribution": "Type Distribution",
   "statsNoData": "No data",
   "kindUnknown": "Unknown",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
   "tableTime": "Time",
   "tableName": "Name",
   "tableKind": "Type",

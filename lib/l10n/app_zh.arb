@@ -106,6 +106,8 @@
   "statsNoData": "無資料",
 
   "kindUnknown": "未知",
+  "kindCharacter": "角色",
+  "kindWeapon": "武器",
 
   "tableTime": "時間",
   "tableName": "名稱",

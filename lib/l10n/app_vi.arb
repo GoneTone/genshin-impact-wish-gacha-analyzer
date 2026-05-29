@@ -131,6 +131,8 @@
   "statsItemTypeDistribution": "Phân bổ loại vật phẩm",
   "statsNoData": "Không có dữ liệu",
   "kindUnknown": "Không rõ",
+  "kindCharacter": "Nhân Vật",
+  "kindWeapon": "Vũ Khí",
   "tableTime": "Thời Gian",
   "tableName": "Tên",
   "tableKind": "Loại",

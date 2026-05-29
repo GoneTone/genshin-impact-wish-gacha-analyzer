@@ -131,6 +131,8 @@
   "statsItemTypeDistribution": "การกระจายประเภทไอเทม",
   "statsNoData": "ไม่มีข้อมูล",
   "kindUnknown": "ไม่ทราบ",
+  "kindCharacter": "ตัวละคร",
+  "kindWeapon": "อาวุธ",
   "tableTime": "เวลาที่ได้รับ",
   "tableName": "ชื่อ",
   "tableKind": "รูปแบบ",
