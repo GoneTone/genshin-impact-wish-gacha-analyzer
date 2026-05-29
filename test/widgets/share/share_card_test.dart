@@ -127,6 +127,7 @@ void main() {
       title: '角色活動祈願',
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -146,6 +147,7 @@ void main() {
       title: '角色活動祈願',
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -185,6 +187,7 @@ void main() {
       title: '角色活動祈願',
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -218,6 +221,7 @@ void main() {
         '301': [_r('301', 5, '那維萊特'), _r('301', 3, '冷刃')],
         '2000': [_r('2000', 5, '某五星')],
       },
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -248,6 +252,7 @@ void main() {
       title: '角色活動祈願',
       records: _crossMonthFives(12),
       targetRank: 5,
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     // 直接裁切方案：不可有 RenderFlex overflow 或任何 error。
@@ -291,6 +296,7 @@ void main() {
       title: '角色活動祈願',
       records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾'), _r('301', 3, '冷刃')],
       targetRank: 5,
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -325,6 +331,7 @@ void main() {
         '301': _crossMonthFives(16),
         '2000': [_r('2000', 5, '某五星')],
       },
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
@@ -346,6 +353,7 @@ void main() {
         '301': [_r('301', 5, '那維萊特'), _r('301', 3, '冷刃')],
         '2000': [_r('2000', 5, '某五星')],
       },
+      index: const HoYoWikiIndex.empty(),
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);

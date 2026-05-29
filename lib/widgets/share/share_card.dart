@@ -9,6 +9,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_uid_mask.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
@@ -20,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.d
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 
 /// 分享圖固定寬度（邏輯像素）。
@@ -86,7 +89,9 @@ class ShareCard extends StatelessWidget {
     required this.uid,
     required this.updatedAt,
     required List<_Section> sections,
-  }) : _sections = sections;
+    required List<FiveStarCollectionItem> fiveStar,
+  }) : _sections = sections,
+       _fiveStar = fiveStar;
 
   /// 單一卡池頁分享。
   factory ShareCard.banner({
@@ -99,6 +104,7 @@ class ShareCard extends StatelessWidget {
     required String title,
     required List<GachaRecord> records,
     required int targetRank,
+    required HoYoWikiIndex index,
   }) {
     final stats = computeGachaStats(records);
     // threshold: 0 — 此處只取 averageInterval，不需 pity progress/distance
@@ -137,6 +143,7 @@ class ShareCard extends StatelessWidget {
           ],
         ),
       ],
+      fiveStar: buildFiveStarCollection(records, index: index),
     );
   }
 
@@ -149,6 +156,7 @@ class ShareCard extends StatelessWidget {
     required String uid,
     required DateTime updatedAt,
     required Map<String, List<GachaRecord>> banners,
+    required HoYoWikiIndex index,
   }) {
     final s = buildOverviewSections(banners);
     final g = s.gacha;
@@ -212,6 +220,10 @@ class ShareCard extends StatelessWidget {
           ],
         ),
       ],
+      fiveStar: buildFiveStarCollectionAcrossBanners(
+        s.gacha.banners,
+        index: index,
+      ),
     );
   }
 
@@ -235,6 +247,9 @@ class ShareCard extends StatelessWidget {
 
   /// 各段內容（卡池模式 1 段；綜合模式 2 段）。
   final List<_Section> _sections;
+
+  /// 尾端五星一覽清單（banner = 該池；overview = 跨祈願卡池合併）。
+  final List<FiveStarCollectionItem> _fiveStar;
 
   /// 格式化「佔比 · 平均間隔」副標題字串；avg 為 null 時只回傳佔比。
   static String? _rateAvg(AppLocalizations l, double rate, double? avg) {
@@ -276,6 +291,17 @@ class ShareCard extends StatelessWidget {
             brightness: options.brightness,
             tokens: tokens,
           ),
+        ],
+        if (_fiveStar.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.xl),
+          Divider(color: tokens.borderEmphasis, height: 1, thickness: 1),
+          const SizedBox(height: AppSpacing.xl),
+          Text(
+            l.fiveStarOverviewTitle,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.m),
+          FiveStarOverview(items: _fiveStar, interactive: false),
         ],
       ],
     );

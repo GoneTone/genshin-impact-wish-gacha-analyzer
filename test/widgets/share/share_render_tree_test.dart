@@ -92,6 +92,7 @@ void main() {
           _r('301', 3, '冷刃'),
         ],
         targetRank: 5,
+        index: const HoYoWikiIndex.empty(),
       );
       final png = await renderWidgetToPng(
         buildShareRenderTree(
@@ -146,6 +147,7 @@ void main() {
           '301': [_r('301', 5, '那維萊特'), _r('301', 3, '冷刃')],
           '2000': [_r('2000', 5, '某五星')],
         },
+        index: const HoYoWikiIndex.empty(),
       );
       final png = await renderWidgetToPng(
         buildShareRenderTree(

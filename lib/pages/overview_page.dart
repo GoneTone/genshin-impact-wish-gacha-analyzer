@@ -196,6 +196,7 @@ class OverviewPage extends ConsumerWidget {
         uid: activeData.uid,
         updatedAt: activeData.lastUpdated.toLocal(),
         banners: activeData.banners,
+        index: ref.read(hoyowikiIndexProvider),
       ),
     );
   }

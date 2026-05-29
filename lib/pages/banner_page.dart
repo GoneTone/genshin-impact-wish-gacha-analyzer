@@ -363,6 +363,7 @@ class BannerPage extends ConsumerWidget {
         title: type.resolveName(l),
         records: records,
         targetRank: type.primaryPity.rank,
+        index: ref.read(hoyowikiIndexProvider),
       ),
     );
   }
