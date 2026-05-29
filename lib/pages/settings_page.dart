@@ -1007,7 +1007,7 @@ class _LogsSection extends ConsumerWidget {
     final stamp = fileTimestamp(now);
 
     final loc = await getSaveLocation(
-      suggestedName: 'gwga_logs_$stamp.log',
+      suggestedName: 'giwga_logs_$stamp.log',
       acceptedTypeGroups: const [
         XTypeGroup(label: 'Log', extensions: ['log']),
       ],
