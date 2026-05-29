@@ -278,6 +278,9 @@
   "pageOverviewOdesSection": "Vue d'ensemble des odes",
   "pageBannerRecordList": "Liste des enregistrements",
   "fiveStarOverviewTitle": "Aperçu 5 étoiles",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "Paramètres",
   "settingsAppearance": "Apparence",
   "settingsThemeSystem": "Suivre le système",
