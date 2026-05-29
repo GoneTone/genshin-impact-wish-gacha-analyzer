@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 GachaRecord _r({
   required String id,
@@ -91,7 +92,9 @@ void main() {
   group('filterRecordRows', () {
     late List<RecordRow> rows;
     setUp(() {
-      rows = buildRecordRows(records);
+      // 空 index → itemTypeKey fallback 回原始 itemType 字串，故以下測試仍用
+      //「武器」「角色」這類原始字串當 filter 值比對（canonical 鍵的過濾另有測試）。
+      rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     });
 
     test('5★ + 武器 → 只剩 1 row，且 totalIndex / pity 不變', () {
@@ -115,6 +118,29 @@ void main() {
       expect(out.length, rows.length);
     });
 
+    test('filterRecordRows 依 itemTypeKey 過濾', () {
+      final kindRows = [
+        RecordRow(
+          record: _r(id: 'a', rank: 4, itemType: '角色', name: '煙緋'),
+          totalIndex: 1,
+          mainPityIndex: 1,
+          itemTypeKey: 'kind:character',
+        ),
+        RecordRow(
+          record: _r(id: 'b', rank: 4, itemType: '武器', name: '匣裡龍吟'),
+          totalIndex: 2,
+          mainPityIndex: 2,
+          itemTypeKey: 'kind:weapon',
+        ),
+      ];
+      final out = filterRecordRows(
+        kindRows,
+        const RecordFilter(itemType: 'kind:character'),
+      );
+      expect(out.length, 1);
+      expect(out.first.itemTypeKey, 'kind:character');
+    });
+
     test('搜尋 query 過濾 row 集', () {
       final out = filterRecordRows(rows, const RecordFilter(query: '夜'));
       expect(out.map((r) => r.record.id), ['5']);
@@ -124,7 +150,7 @@ void main() {
   group('sortRecordRows', () {
     late List<RecordRow> rows;
     setUp(() {
-      rows = buildRecordRows(records);
+      rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     });
 
     test('null → 不排序，保持輸入順序', () {
@@ -216,12 +242,28 @@ void main() {
       expect(out.length, rows.length);
     });
 
-    test('kind 排序（按 itemType）', () {
-      final out = sortRecordRows(
+    test('SortColumn.kind 依 itemTypeKey 排序', () {
+      final rows = [
+        RecordRow(
+          record: _r(id: 'a', rank: 4, itemType: '武器', name: '匣裡龍吟'),
+          totalIndex: 1,
+          mainPityIndex: 1,
+          itemTypeKey: 'kind:weapon',
+        ),
+        RecordRow(
+          record: _r(id: 'b', rank: 5, itemType: '角色', name: '夜蘭'),
+          totalIndex: 2,
+          mainPityIndex: 2,
+          itemTypeKey: 'kind:character',
+        ),
+      ];
+      final sorted = sortRecordRows(
         rows,
         const TableSort(column: SortColumn.kind, direction: SortDirection.asc),
       );
-      expect(out.length, rows.length);
+      // 'kind:character' < 'kind:weapon' 字典序，asc 時 character 在前
+      expect(sorted.first.itemTypeKey, 'kind:character');
+      expect(sorted.last.itemTypeKey, 'kind:weapon');
     });
   });
 }

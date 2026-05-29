@@ -27,7 +27,9 @@ class RecordFilter {
   /// 稀有度篩選。
   final RarityFilter rarity;
 
-  /// 物品類型篩選；null 表示不限。
+  /// 物品類型篩選；null 表示不限。儲存 [itemTypeKeyOf] 的產物（canonical 鍵如
+  /// `kind:character`，或查無 menu_id 時 fallback 的原始 itemType 字串），與
+  /// `RecordRow.itemTypeKey` 同一套詞彙比對。
   final String? itemType;
 
   /// 關鍵字搜尋字串。
@@ -114,7 +116,7 @@ List<RecordRow> filterRecordRows(List<RecordRow> rows, RecordFilter f) {
         final r = row.record;
         if (f.rarity == RarityFilter.fiveStar && r.rankType != 5) return false;
         if (f.rarity == RarityFilter.fourStar && r.rankType != 4) return false;
-        if (f.itemType != null && r.itemType != f.itemType) return false;
+        if (f.itemType != null && row.itemTypeKey != f.itemType) return false;
         if (q.isNotEmpty && !r.name.toLowerCase().contains(q)) return false;
         return true;
       })
@@ -133,7 +135,9 @@ List<RecordRow> sortRecordRows(List<RecordRow> rows, TableSort? sort) {
     case SortColumn.name:
       cmp = (a, b) => a.record.name.compareTo(b.record.name);
     case SortColumn.kind:
-      cmp = (a, b) => a.record.itemType.compareTo(b.record.itemType);
+      // 依聚合鍵（語言無關）字典序排，canonical 的角色／武器各自聚集；
+      // 刻意不依在地化標籤排序，避免排序結果隨 UI 語言變動。
+      cmp = (a, b) => a.itemTypeKey.compareTo(b.itemTypeKey);
     case SortColumn.rarity:
       cmp = (a, b) => a.record.rankType.compareTo(b.record.rankType);
     case SortColumn.totalIndex:

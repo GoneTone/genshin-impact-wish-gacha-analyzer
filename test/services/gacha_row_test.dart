@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 GachaRecord _r({required String id, required int rank, DateTime? time}) =>
     GachaRecord(
@@ -17,7 +18,10 @@ GachaRecord _r({required String id, required int rank, DateTime? time}) =>
 void main() {
   group('buildRecordRows', () {
     test('空 list → const []', () {
-      expect(buildRecordRows(const []), isEmpty);
+      expect(
+        buildRecordRows(const [], index: const HoYoWikiIndex.empty()),
+        isEmpty,
+      );
     });
 
     test('totalIndex 從 1 開始累計，最舊=1、最新=N，且輸出順序與輸入一致 (desc by time)', () {
@@ -29,7 +33,7 @@ void main() {
         _r(id: '2', rank: 3),
         _r(id: '1', rank: 3),
       ];
-      final rows = buildRecordRows(records);
+      final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
       expect(rows.map((r) => r.record.id).toList(), ['5', '4', '3', '2', '1']);
       expect(rows.map((r) => r.totalIndex).toList(), [5, 4, 3, 2, 1]);
     });
@@ -40,7 +44,7 @@ void main() {
         _r(id: '2', rank: 3),
         _r(id: '1', rank: 4),
       ];
-      final rows = buildRecordRows(records);
+      final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
       expect(rows.map((r) => r.mainPityIndex).toList(), [3, 2, 1]);
     });
 
@@ -55,7 +59,7 @@ void main() {
         _r(id: '2', rank: 3), // pity = 2
         _r(id: '1', rank: 3), // pity = 1
       ];
-      final rows = buildRecordRows(records);
+      final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
       // 以 id 對應驗證 pity
       final byId = {for (final r in rows) r.record.id: r};
       expect(byId['1']!.mainPityIndex, 1);
@@ -67,9 +71,42 @@ void main() {
 
     test('首抽即 5★ → 該抽 pity = 1', () {
       final records = [_r(id: '1', rank: 5)];
-      final rows = buildRecordRows(records);
+      final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
       expect(rows.first.totalIndex, 1);
       expect(rows.first.mainPityIndex, 1);
+    });
+
+    test('itemTypeKey: menu_id 命中用 canonical，miss fallback 原始字串', () {
+      final index = HoYoWikiIndex(
+        searchMap: const {'zh-tw::迪希雅': 'c1'},
+        entries: const {},
+        menuIds: const {'c1': 2},
+      );
+      final records = [
+        GachaRecord(
+          id: '1',
+          uid: '1',
+          gachaType: '301',
+          name: '迪希雅',
+          itemType: '角色',
+          rankType: 5,
+          time: DateTime(2025, 1, 2),
+          lang: 'zh-tw',
+        ),
+        GachaRecord(
+          id: '2',
+          uid: '1',
+          gachaType: '301',
+          name: '某武器',
+          itemType: '武器',
+          rankType: 4,
+          time: DateTime(2025, 1, 1),
+          lang: 'zh-tw',
+        ),
+      ];
+      final rows = buildRecordRows(records, index: index);
+      expect(rows[0].itemTypeKey, 'kind:character'); // 迪希雅命中
+      expect(rows[1].itemTypeKey, '武器'); // 未命中 → 原始字串
     });
   });
 }

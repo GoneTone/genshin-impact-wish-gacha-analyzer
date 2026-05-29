@@ -51,7 +51,10 @@ class OverviewPage extends ConsumerWidget {
       return EmptyState.noSync(context);
     }
 
-    final sections = buildOverviewSections(activeData.banners);
+    final sections = buildOverviewSections(
+      activeData.banners,
+      index: ref.watch(hoyowikiIndexProvider),
+    );
     final gachaSec = sections.gacha;
     final odesSec = sections.odes;
     final bannerColors = BannerColors.of(Theme.of(context).brightness);

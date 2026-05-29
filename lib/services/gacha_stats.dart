@@ -1,4 +1,8 @@
+import 'package:logging/logging.dart';
+
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
 
 /// 單一卡池的祈願統計摘要。
 class GachaStats {
@@ -27,7 +31,8 @@ class GachaStats {
   /// 2★ 數量。
   final int twoStarCount;
 
-  /// 各物品類型的抽數，key = itemType 字串。
+  /// 各物品類型的抽數，key = [itemTypeKeyOf] 產物（canonical 鍵如 `kind:character`，
+  /// 或查無 menu_id 時 fallback 的原始 itemType 字串）。
   final Map<String, int> byItemType;
 
   /// 計算 [n] 在總抽數中的占比；總抽數為 0 時回傳 0.0。
@@ -53,9 +58,17 @@ class GachaStats {
   }
 }
 
-/// 從 [records] 計算統計摘要。
-GachaStats computeGachaStats(List<GachaRecord> records) {
+/// 祈願統計 logger。
+final _log = Logger('gacha.stats');
+
+/// 從 [records] 計算統計摘要；[index] 用於將 itemType 原始字串聚合為
+/// 語言無關的類型鍵（[itemTypeKeyOf]），消除跨語系分裂。
+GachaStats computeGachaStats(
+  List<GachaRecord> records, {
+  required HoYoWikiIndex index,
+}) {
   var five = 0, four = 0, three = 0, two = 0;
+  var canonical = 0, fallback = 0;
   final byItemType = <String, int>{};
   for (final r in records) {
     switch (r.rankType) {
@@ -68,7 +81,19 @@ GachaStats computeGachaStats(List<GachaRecord> records) {
       case 2:
         two++;
     }
-    byItemType[r.itemType] = (byItemType[r.itemType] ?? 0) + 1;
+    final key = itemTypeKeyOf(r, index);
+    if (key == kItemKindCharacter || key == kItemKindWeapon) {
+      canonical++;
+    } else {
+      fallback++;
+    }
+    byItemType[key] = (byItemType[key] ?? 0) + 1;
+  }
+  if (records.isNotEmpty) {
+    _log.fine(
+      'computeGachaStats: total=${records.length} '
+      'canonicalKind=$canonical rawFallback=$fallback',
+    );
   }
   return GachaStats(
     total: records.length,

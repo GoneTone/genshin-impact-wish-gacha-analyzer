@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
 
 GachaRecord _r(String gt, int rank, String name, DateTime t) => GachaRecord(
@@ -21,7 +22,10 @@ void main() {
       '2000': [_r('2000', 5, '某五星', t)],
     };
 
-    final sections = buildOverviewSections(activeBanners);
+    final sections = buildOverviewSections(
+      activeBanners,
+      index: const HoYoWikiIndex.empty(),
+    );
 
     expect(sections.gacha.stats.total, 2);
     expect(sections.gacha.stats.fiveStarCount, 1);
@@ -31,7 +35,10 @@ void main() {
   });
 
   test('buildOverviewSections 空輸入不拋例外、各欄位回傳零值', () {
-    final sections = buildOverviewSections(const <String, List<GachaRecord>>{});
+    final sections = buildOverviewSections(
+      const <String, List<GachaRecord>>{},
+      index: const HoYoWikiIndex.empty(),
+    );
 
     expect(sections.gacha.stats.total, 0);
     expect(sections.odes.stats.total, 0);
@@ -48,7 +55,10 @@ void main() {
       '2000': [_r('2000', 5, '某頌願五星', t)],
     };
 
-    final sections = buildOverviewSections(activeBanners);
+    final sections = buildOverviewSections(
+      activeBanners,
+      index: const HoYoWikiIndex.empty(),
+    );
 
     expect(sections.gacha.stats.total, 0);
     expect(sections.odes.eventFiveCount, 1);

@@ -3,6 +3,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
@@ -410,7 +411,7 @@ class _Row extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(flex: 2, child: Text(record.itemType)),
+          Expanded(flex: 2, child: Text(itemTypeKeyLabel(row.itemTypeKey, l))),
           Expanded(
             flex: 2,
             child: accent != null

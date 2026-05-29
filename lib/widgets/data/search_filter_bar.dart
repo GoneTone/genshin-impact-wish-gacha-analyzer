@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
@@ -21,7 +22,7 @@ class SearchFilterBar extends StatefulWidget {
   /// 當前篩選狀態。
   final RecordFilterState state;
 
-  /// 當前 banner 出現過的 itemType 字串集合（已排序、去重），用來建構動態 dropdown。
+  /// 當前 banner 出現過的類型聚合鍵集合（已排序、去重），用來建構動態 dropdown。
   final List<String> availableItemTypes;
 
   /// 篩選條件變更時的回呼。
@@ -129,7 +130,10 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               child: Text(l.filterKindAll),
             ),
             for (final t in widget.availableItemTypes)
-              DropdownMenuItem<String?>(value: t, child: Text(t)),
+              DropdownMenuItem<String?>(
+                value: t,
+                child: Text(itemTypeKeyLabel(t, l)),
+              ),
           ],
         ),
         if (widget.state.filter.hasAny)

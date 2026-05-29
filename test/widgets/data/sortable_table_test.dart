@@ -77,7 +77,7 @@ void main() {
       _r(id: '4', rank: 4, name: 'B'), // accent != null → _Pill
       _r(id: '3', rank: 3, name: 'C'), // accent == null → 純 Text 分支
     ];
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     await tester.pumpWidget(
       _wrap(
         SortableTable(
@@ -106,7 +106,7 @@ void main() {
       _r(id: '4', rank: 4, name: 'B'),
       _r(id: '3', rank: 3, name: 'C'),
     ];
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     await tester.pumpWidget(
       _wrap(
         SortableTable(
@@ -133,7 +133,7 @@ void main() {
       45,
       (i) => _r(id: '${i + 1}', rank: 4, name: 'r$i'),
     );
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     await tester.pumpWidget(
       _wrap(
         SortableTable(
@@ -154,7 +154,7 @@ void main() {
 
   testWidgets('表頭點擊呼叫 onSortColumnTapped(對應欄)', (tester) async {
     final records = [_r(id: '1', rank: 5, name: 'A')];
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     SortColumn? tapped;
     await tester.pumpWidget(
       _wrap(
@@ -182,7 +182,7 @@ void main() {
 
   testWidgets('當前排序欄顯示 arrow_downward；其他欄維持 unfold_more', (tester) async {
     final records = [_r(id: '1', rank: 5, name: 'A')];
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     await tester.pumpWidget(
       _wrap(
         SortableTable(
@@ -202,13 +202,33 @@ void main() {
     expect(find.byIcon(Icons.unfold_more), findsNWidgets(5));
   });
 
+  testWidgets('類型欄顯示 itemTypeKeyLabel 結果（fallback 原始字串）', (tester) async {
+    // _r 產的 record.itemType = '角色'；empty index → itemTypeKey = '角色'（fallback）
+    // itemTypeKeyLabel('角色', l) 原樣回傳 '角色'
+    final records = [_r(id: '1', rank: 5, name: 'A')];
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
+    await tester.pumpWidget(
+      _wrap(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+        container: container,
+      ),
+    );
+    // 類型欄應顯示 itemTypeKeyLabel(row.itemTypeKey='角色', l) = '角色'
+    expect(find.text('角色'), findsOneWidget);
+  });
+
   testWidgets('每列名稱欄前顯示 GachaItemIcon', (tester) async {
     final records = [
       _r(id: '5', rank: 5, name: 'A'),
       _r(id: '4', rank: 4, name: 'B'),
       _r(id: '3', rank: 3, name: 'C'),
     ];
-    final rows = buildRecordRows(records);
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     await tester.pumpWidget(
       _wrap(
         SortableTable(

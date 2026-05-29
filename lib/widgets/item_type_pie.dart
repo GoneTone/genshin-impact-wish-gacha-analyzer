@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 
@@ -53,7 +54,7 @@ List<DistributionEntry> itemTypeDistributionEntries(
     for (final (i, e) in sorted.indexed)
       DistributionEntry(
         color: palette[i % palette.length],
-        name: e.key.isEmpty ? l.kindUnknown : e.key,
+        name: itemTypeKeyLabel(e.key, l),
         count: e.value,
         rate: stats.total == 0 ? 0.0 : e.value / stats.total,
       ),
