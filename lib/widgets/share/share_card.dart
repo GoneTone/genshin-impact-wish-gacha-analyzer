@@ -51,6 +51,7 @@ class _Section {
     required this.timelineNowPulls,
     required this.isAcrossBanners,
     required this.statLines,
+    this.fiveStar = const [],
   });
 
   /// 段落標題文字（例如祈願段名稱或卡池名稱）。
@@ -74,6 +75,9 @@ class _Section {
   /// 左欄數字摘要列：label + value + subtitle（subtitle 可空）+ accent 語意。
   final List<(String label, String value, String? sub, _StatAccent accent)>
   statLines;
+
+  /// 此段尾端的五星一覽清單（祈願段才有；頌願段為空 → 不顯示）。
+  final List<FiveStarCollectionItem> fiveStar;
 }
 
 /// 分享圖固定寬版面（版面 B：左數字+雙圓餅，右垂直時間軸）。
@@ -89,9 +93,7 @@ class ShareCard extends StatelessWidget {
     required this.uid,
     required this.updatedAt,
     required List<_Section> sections,
-    required List<FiveStarCollectionItem> fiveStar,
-  }) : _sections = sections,
-       _fiveStar = fiveStar;
+  }) : _sections = sections;
 
   /// 單一卡池頁分享。
   factory ShareCard.banner({
@@ -141,9 +143,9 @@ class ShareCard extends StatelessWidget {
               _StatAccent.rank4,
             ),
           ],
+          fiveStar: buildFiveStarCollection(records, index: index),
         ),
       ],
-      fiveStar: buildFiveStarCollection(records, index: index),
     );
   }
 
@@ -195,6 +197,10 @@ class ShareCard extends StatelessWidget {
               _StatAccent.rank4,
             ),
           ],
+          fiveStar: buildFiveStarCollectionAcrossBanners(
+            s.gacha.banners,
+            index: index,
+          ),
         ),
         _Section(
           title: l.pageOverviewOdesSection,
@@ -220,10 +226,6 @@ class ShareCard extends StatelessWidget {
           ],
         ),
       ],
-      fiveStar: buildFiveStarCollectionAcrossBanners(
-        s.gacha.banners,
-        index: index,
-      ),
     );
   }
 
@@ -247,9 +249,6 @@ class ShareCard extends StatelessWidget {
 
   /// 各段內容（卡池模式 1 段；綜合模式 2 段）。
   final List<_Section> _sections;
-
-  /// 尾端五星一覽清單（banner = 該池；overview = 跨祈願卡池合併）。
-  final List<FiveStarCollectionItem> _fiveStar;
 
   /// 格式化「佔比 · 平均間隔」副標題字串；avg 為 null 時只回傳佔比。
   static String? _rateAvg(AppLocalizations l, double rate, double? avg) {
@@ -291,17 +290,6 @@ class ShareCard extends StatelessWidget {
             brightness: options.brightness,
             tokens: tokens,
           ),
-        ],
-        if (_fiveStar.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.xl),
-          Divider(color: tokens.borderEmphasis, height: 1, thickness: 1),
-          const SizedBox(height: AppSpacing.xl),
-          Text(
-            l.fiveStarOverviewTitle,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          FiveStarOverview(items: _fiveStar, interactive: false),
         ],
       ],
     );
@@ -529,6 +517,14 @@ class _SectionView extends StatelessWidget {
             _timeline(),
           ],
         ),
+        // 五星一覽掛在該段尾端（祈願段才有；頌願段為空 → 不顯示），
+        // 確保綜合分享圖的五星落在祈願區底下、而非整張圖最末的頌願區後。
+        if (section.fiveStar.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.l),
+          Text(l.fiveStarOverviewTitle, style: theme.textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.m),
+          FiveStarOverview(items: section.fiveStar, interactive: false),
+        ],
       ],
     );
   }
