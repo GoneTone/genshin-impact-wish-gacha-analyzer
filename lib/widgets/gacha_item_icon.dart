@@ -13,13 +13,26 @@ const _odesGachaTypes = {'2000', '1000'};
 /// 顯示一筆卡池物品的 icon；cache 未到 / 缺資料時顯示 [_Placeholder]。
 class GachaItemIcon extends ConsumerWidget {
   /// 建立 [GachaItemIcon]。
-  const GachaItemIcon({super.key, required this.record, required this.size});
+  const GachaItemIcon({
+    super.key,
+    required this.record,
+    required this.size,
+    this.circular = false,
+  });
 
   /// 卡池記錄；用其 name / lang / rankType / gachaType。
   final GachaRecord record;
 
   /// icon 邊長（px，依使用情境調整：所有宿主一律 32）。
   final double size;
+
+  /// true 時以圓形裁切／圓形 placeholder 呈現（五星一覽用）。
+  final bool circular;
+
+  /// 依 [circular] 將 icon 圖片裁成圓形或 4px 圓角方塊。
+  Widget _clipIcon(Widget child) => circular
+      ? ClipOval(child: child)
+      : ClipRRect(borderRadius: BorderRadius.circular(4), child: child);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,10 +55,7 @@ class GachaItemIcon extends ConsumerWidget {
         return SizedBox(
           width: size,
           height: size,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: RawImage(image: preloadedImage, fit: BoxFit.cover),
-          ),
+          child: _clipIcon(RawImage(image: preloadedImage, fit: BoxFit.cover)),
         );
       }
 
@@ -58,15 +68,17 @@ class GachaItemIcon extends ConsumerWidget {
         return SizedBox(
           width: size,
           height: size,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Image.file(file, fit: BoxFit.cover),
-          ),
+          child: _clipIcon(Image.file(file, fit: BoxFit.cover)),
         );
       }
     }
 
-    return _Placeholder(rankType: record.rankType, size: size, tokens: tokens);
+    return _Placeholder(
+      rankType: record.rankType,
+      size: size,
+      tokens: tokens,
+      circular: circular,
+    );
   }
 }
 
@@ -77,6 +89,7 @@ class _Placeholder extends StatelessWidget {
     required this.rankType,
     required this.size,
     required this.tokens,
+    this.circular = false,
   });
 
   /// 星級（3 / 4 / 5）；決定強調色。
@@ -87,6 +100,9 @@ class _Placeholder extends StatelessWidget {
 
   /// 主題 token；提供稀有度顏色。
   final GachaTokens tokens;
+
+  /// true 時以圓形呈現。
+  final bool circular;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +117,8 @@ class _Placeholder extends StatelessWidget {
       decoration: BoxDecoration(
         color: accent.withValues(alpha: 0.18),
         border: Border.all(color: accent.withValues(alpha: 0.40)),
-        borderRadius: BorderRadius.circular(4),
+        shape: circular ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: circular ? null : BorderRadius.circular(4),
       ),
       child: Center(
         child: Icon(Icons.question_mark, size: size * 0.55, color: accent),
