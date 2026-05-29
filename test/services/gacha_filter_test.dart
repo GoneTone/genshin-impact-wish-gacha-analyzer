@@ -116,6 +116,29 @@ void main() {
       expect(out.length, rows.length);
     });
 
+    test('filterRecordRows 依 itemTypeKey 過濾', () {
+      final kindRows = [
+        RecordRow(
+          record: _r(id: 'a', rank: 4, itemType: '角色', name: '煙緋'),
+          totalIndex: 1,
+          mainPityIndex: 1,
+          itemTypeKey: 'kind:character',
+        ),
+        RecordRow(
+          record: _r(id: 'b', rank: 4, itemType: '武器', name: '匣裡龍吟'),
+          totalIndex: 2,
+          mainPityIndex: 2,
+          itemTypeKey: 'kind:weapon',
+        ),
+      ];
+      final out = filterRecordRows(
+        kindRows,
+        const RecordFilter(itemType: 'kind:character'),
+      );
+      expect(out.length, 1);
+      expect(out.first.itemTypeKey, 'kind:character');
+    });
+
     test('搜尋 query 過濾 row 集', () {
       final out = filterRecordRows(rows, const RecordFilter(query: '夜'));
       expect(out.map((r) => r.record.id), ['5']);

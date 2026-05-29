@@ -90,10 +90,8 @@ class BannerPage extends ConsumerWidget {
       );
     }
 
-    final stats = computeGachaStats(
-      records,
-      index: ref.watch(hoyowikiIndexProvider),
-    );
+    final hoyowikiIndex = ref.watch(hoyowikiIndexProvider);
+    final stats = computeGachaStats(records, index: hoyowikiIndex);
     final primary = type.primaryPity;
     final secondary = type.secondaryPity;
     final primaryPityData = computePity(
@@ -113,21 +111,21 @@ class BannerPage extends ConsumerWidget {
     final filterState = ref.watch(recordFilterProvider(gachaType));
     final allRows = buildRecordRows(
       records,
-      index: ref.watch(hoyowikiIndexProvider),
+      index: hoyowikiIndex,
       mainRank: primary.rank,
     );
     final filtered = filterRecordRows(allRows, filterState.filter);
     final sorted = sortRecordRows(filtered, filterState.sort);
     final availableItemTypes =
-        records
-            .map((r) => r.itemType)
-            .where((s) => s.isNotEmpty)
+        allRows
+            .map((row) => row.itemTypeKey)
+            .where((k) => k.isNotEmpty)
             .toSet()
             .toList()
           ..sort();
     final fiveStarItems = buildFiveStarCollection(
       records,
-      index: ref.watch(hoyowikiIndexProvider),
+      index: hoyowikiIndex,
     );
 
     return SingleChildScrollView(

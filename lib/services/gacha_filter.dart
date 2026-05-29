@@ -114,7 +114,7 @@ List<RecordRow> filterRecordRows(List<RecordRow> rows, RecordFilter f) {
         final r = row.record;
         if (f.rarity == RarityFilter.fiveStar && r.rankType != 5) return false;
         if (f.rarity == RarityFilter.fourStar && r.rankType != 4) return false;
-        if (f.itemType != null && r.itemType != f.itemType) return false;
+        if (f.itemType != null && row.itemTypeKey != f.itemType) return false;
         if (q.isNotEmpty && !r.name.toLowerCase().contains(q)) return false;
         return true;
       })
