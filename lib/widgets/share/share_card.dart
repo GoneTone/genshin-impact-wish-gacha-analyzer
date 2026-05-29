@@ -9,6 +9,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_uid_mask.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
@@ -20,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.d
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 
 /// 分享圖固定寬度（邏輯像素）。
@@ -48,6 +51,7 @@ class _Section {
     required this.timelineNowPulls,
     required this.isAcrossBanners,
     required this.statLines,
+    this.fiveStar = const [],
   });
 
   /// 段落標題文字（例如祈願段名稱或卡池名稱）。
@@ -71,6 +75,9 @@ class _Section {
   /// 左欄數字摘要列：label + value + subtitle（subtitle 可空）+ accent 語意。
   final List<(String label, String value, String? sub, _StatAccent accent)>
   statLines;
+
+  /// 此段尾端的五星一覽清單（祈願段才有；頌願段為空 → 不顯示）。
+  final List<FiveStarCollectionItem> fiveStar;
 }
 
 /// 分享圖固定寬版面（版面 B：左數字+雙圓餅，右垂直時間軸）。
@@ -99,6 +106,7 @@ class ShareCard extends StatelessWidget {
     required String title,
     required List<GachaRecord> records,
     required int targetRank,
+    required HoYoWikiIndex index,
   }) {
     final stats = computeGachaStats(records);
     // threshold: 0 — 此處只取 averageInterval，不需 pity progress/distance
@@ -135,6 +143,7 @@ class ShareCard extends StatelessWidget {
               _StatAccent.rank4,
             ),
           ],
+          fiveStar: buildFiveStarCollection(records, index: index),
         ),
       ],
     );
@@ -149,6 +158,7 @@ class ShareCard extends StatelessWidget {
     required String uid,
     required DateTime updatedAt,
     required Map<String, List<GachaRecord>> banners,
+    required HoYoWikiIndex index,
   }) {
     final s = buildOverviewSections(banners);
     final g = s.gacha;
@@ -187,6 +197,10 @@ class ShareCard extends StatelessWidget {
               _StatAccent.rank4,
             ),
           ],
+          fiveStar: buildFiveStarCollectionAcrossBanners(
+            s.gacha.banners,
+            index: index,
+          ),
         ),
         _Section(
           title: l.pageOverviewOdesSection,
@@ -503,6 +517,14 @@ class _SectionView extends StatelessWidget {
             _timeline(),
           ],
         ),
+        // 五星一覽掛在該段尾端（祈願段才有；頌願段為空 → 不顯示），
+        // 確保綜合分享圖的五星落在祈願區底下、而非整張圖最末的頌願區後。
+        if (section.fiveStar.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.l),
+          Text(l.fiveStarOverviewTitle, style: theme.textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.m),
+          FiveStarOverview(items: section.fiveStar, interactive: false),
+        ],
       ],
     );
   }

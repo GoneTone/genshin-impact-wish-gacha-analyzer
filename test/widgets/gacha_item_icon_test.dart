@@ -272,6 +272,61 @@ void main() {
       expect(icon.size, 32 * 0.55, reason: 'rank=$rank icon size');
     }
   });
+
+  testWidgets('circular=true → placeholder 用圓形 BoxShape.circle', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        GachaItemIcon(
+          record: _rec(name: '夜蘭', gachaType: '301', rankType: 5),
+          size: 48,
+          circular: true,
+        ),
+        container,
+      ),
+    );
+    await tester.pump();
+
+    final deco =
+        tester
+                .widget<Container>(
+                  find.descendant(
+                    of: find.byType(GachaItemIcon),
+                    matching: find.byType(Container),
+                  ),
+                )
+                .decoration
+            as BoxDecoration;
+    expect(deco.shape, BoxShape.circle);
+  });
+
+  testWidgets('circular=false（預設）→ placeholder 用方形 BoxShape.rectangle', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        GachaItemIcon(
+          record: _rec(name: '夜蘭', gachaType: '301', rankType: 5),
+          size: 48,
+        ),
+        container,
+      ),
+    );
+    await tester.pump();
+
+    final deco =
+        tester
+                .widget<Container>(
+                  find.descendant(
+                    of: find.byType(GachaItemIcon),
+                    matching: find.byType(Container),
+                  ),
+                )
+                .decoration
+            as BoxDecoration;
+    expect(deco.shape, BoxShape.rectangle);
+  });
 }
 
 /// 最小可解碼 1x1 透明 PNG。
