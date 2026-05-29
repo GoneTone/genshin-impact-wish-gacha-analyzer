@@ -1,11 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 /// 五星一覽聚合的 logger。
 final _log = Logger('gacha.fiveStar');
+
+/// 頌願（odes）卡池 gachaType 集合；五星一覽一律排除頌願——頌願物品沒有
+/// HoYoWiki icon（會渲染成空圈），且本功能範圍明確不含頌願。以 [gachaTypes]
+/// 靜態資料為單一來源，避免在多處硬編 `{'2000','1000'}`。
+final Set<String> _odesGachaTypes = {
+  for (final t in gachaTypes)
+    if (t.category == GachaCategory.odes) t.gachaType,
+};
 
 /// 五星一覽的單一條目：一個不重複的五星物品 + 其累計抽到次數。
 @immutable
@@ -39,7 +48,7 @@ class _Bucket {
 String _mergeKey(GachaRecord r, HoYoWikiIndex index) =>
     index.lookupId(name: r.name, lang: r.lang) ?? r.name;
 
-/// 由單一 records 來源建構五星一覽：取 5★，依合併鍵去重計數，
+/// 由單一 records 來源建構五星一覽：取 5★（排除頌願卡池），依合併鍵去重計數，
 /// 依「次數降冪 → 最近抽到時間降冪」排序。
 List<FiveStarCollectionItem> buildFiveStarCollection(
   List<GachaRecord> records, {
@@ -48,6 +57,7 @@ List<FiveStarCollectionItem> buildFiveStarCollection(
   final buckets = <String, _Bucket>{};
   for (final r in records) {
     if (r.rankType != 5) continue;
+    if (_odesGachaTypes.contains(r.gachaType)) continue;
     final b = buckets.putIfAbsent(_mergeKey(r, index), () => _Bucket(r));
     b.count++;
     if (r.time.isAfter(b.representative.time)) {

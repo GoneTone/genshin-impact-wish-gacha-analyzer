@@ -23,7 +23,7 @@ class GachaItemIcon extends ConsumerWidget {
   /// 卡池記錄；用其 name / lang / rankType / gachaType。
   final GachaRecord record;
 
-  /// icon 邊長（px，依使用情境調整：所有宿主一律 32）。
+  /// icon 邊長（px，依使用情境調整：時間軸等為 32、五星一覽為 48）。
   final double size;
 
   /// true 時以圓形裁切／圓形 placeholder 呈現（五星一覽用）。

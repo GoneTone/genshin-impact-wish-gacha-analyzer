@@ -41,6 +41,49 @@ void main() {
       expect(result.single.count, 1);
     });
 
+    test('排除頌願卡池（2000／1000）的 5★', () {
+      final records = [
+        _r(id: '1', rank: 5, name: '一般角色', time: DateTime(2025, 1, 1)),
+        _r(
+          id: '2',
+          rank: 5,
+          name: '頌願活動',
+          gachaType: '2000',
+          time: DateTime(2025, 1, 2),
+        ),
+        _r(
+          id: '3',
+          rank: 5,
+          name: '頌願常駐',
+          gachaType: '1000',
+          time: DateTime(2025, 1, 3),
+        ),
+      ];
+      final result = buildFiveStarCollection(records, index: emptyIndex);
+      expect(result, hasLength(1));
+      expect(result.single.representative.name, '一般角色');
+    });
+
+    test('全為頌願卡池 → 空清單', () {
+      final records = [
+        _r(
+          id: '1',
+          rank: 5,
+          name: '頌願活動',
+          gachaType: '2000',
+          time: DateTime(2025, 1, 1),
+        ),
+        _r(
+          id: '2',
+          rank: 5,
+          name: '頌願常駐',
+          gachaType: '1000',
+          time: DateTime(2025, 1, 2),
+        ),
+      ];
+      expect(buildFiveStarCollection(records, index: emptyIndex), isEmpty);
+    });
+
     test('同名去重計數，代表 record 取最近一次', () {
       final records = [
         _r(id: '1', rank: 5, name: 'A', time: DateTime(2025, 1, 1)),
