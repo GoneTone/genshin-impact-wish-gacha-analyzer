@@ -278,6 +278,9 @@
   "pageOverviewOdesSection": "星願総合",
   "pageBannerRecordList": "記録一覧",
   "fiveStarOverviewTitle": "星5一覧",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "設定",
   "settingsAppearance": "外観",
   "settingsThemeSystem": "システムに合わせる",
