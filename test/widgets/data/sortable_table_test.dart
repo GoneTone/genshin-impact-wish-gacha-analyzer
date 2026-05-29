@@ -202,6 +202,26 @@ void main() {
     expect(find.byIcon(Icons.unfold_more), findsNWidgets(5));
   });
 
+  testWidgets('類型欄顯示 itemTypeKeyLabel 結果（fallback 原始字串）', (tester) async {
+    // _r 產的 record.itemType = '角色'；empty index → itemTypeKey = '角色'（fallback）
+    // itemTypeKeyLabel('角色', l) 原樣回傳 '角色'
+    final records = [_r(id: '1', rank: 5, name: 'A')];
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
+    await tester.pumpWidget(
+      _wrap(
+        SortableTable(
+          rows: rows,
+          sort: null,
+          mainRank: 5,
+          onSortColumnTapped: (_) {},
+        ),
+        container: container,
+      ),
+    );
+    // 類型欄應顯示 itemTypeKeyLabel(row.itemTypeKey='角色', l) = '角色'
+    expect(find.text('角色'), findsOneWidget);
+  });
+
   testWidgets('每列名稱欄前顯示 GachaItemIcon', (tester) async {
     final records = [
       _r(id: '5', rank: 5, name: 'A'),

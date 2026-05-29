@@ -133,7 +133,7 @@ List<RecordRow> sortRecordRows(List<RecordRow> rows, TableSort? sort) {
     case SortColumn.name:
       cmp = (a, b) => a.record.name.compareTo(b.record.name);
     case SortColumn.kind:
-      cmp = (a, b) => a.record.itemType.compareTo(b.record.itemType);
+      cmp = (a, b) => a.itemTypeKey.compareTo(b.itemTypeKey);
     case SortColumn.rarity:
       cmp = (a, b) => a.record.rankType.compareTo(b.record.rankType);
     case SortColumn.totalIndex:

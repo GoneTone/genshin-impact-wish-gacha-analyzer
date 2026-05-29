@@ -217,12 +217,28 @@ void main() {
       expect(out.length, rows.length);
     });
 
-    test('kind 排序（按 itemType）', () {
-      final out = sortRecordRows(
+    test('SortColumn.kind 依 itemTypeKey 排序', () {
+      final rows = [
+        RecordRow(
+          record: _r(id: 'a', rank: 4, itemType: '武器', name: '匣裡龍吟'),
+          totalIndex: 1,
+          mainPityIndex: 1,
+          itemTypeKey: 'kind:weapon',
+        ),
+        RecordRow(
+          record: _r(id: 'b', rank: 5, itemType: '角色', name: '夜蘭'),
+          totalIndex: 2,
+          mainPityIndex: 2,
+          itemTypeKey: 'kind:character',
+        ),
+      ];
+      final sorted = sortRecordRows(
         rows,
         const TableSort(column: SortColumn.kind, direction: SortDirection.asc),
       );
-      expect(out.length, rows.length);
+      // 'kind:character' < 'kind:weapon' 字典序，asc 時 character 在前
+      expect(sorted.first.itemTypeKey, 'kind:character');
+      expect(sorted.last.itemTypeKey, 'kind:weapon');
     });
   });
 }
