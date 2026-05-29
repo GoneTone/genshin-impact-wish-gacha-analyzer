@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh_Hans",
+  "@@locale": "zh-CN",
   "localeNativeName": "简体中文",
   "localeTranslatorLabel": "翻译者：{translator}",
   "@localeNativeName": {
@@ -274,6 +274,9 @@
   "pageOverviewOdesSection": "颂愿综合",
   "pageBannerRecordList": "记录列表",
   "fiveStarOverviewTitle": "五星一览",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "设置",
   "settingsAppearance": "外观",
   "settingsThemeSystem": "跟随系统",
