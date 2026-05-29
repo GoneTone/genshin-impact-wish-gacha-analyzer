@@ -278,6 +278,9 @@
   "pageOverviewOdesSection": "Resumen de Odas",
   "pageBannerRecordList": "Lista de registros",
   "fiveStarOverviewTitle": "Resumen de 5 estrellas",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "Configuración",
   "settingsAppearance": "Apariencia",
   "settingsThemeSystem": "Seguir el sistema",

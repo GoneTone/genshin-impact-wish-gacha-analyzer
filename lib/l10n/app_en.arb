@@ -278,6 +278,9 @@
   "pageOverviewOdesSection": "Odes Overview",
   "pageBannerRecordList": "Record list",
   "fiveStarOverviewTitle": "5-Star Overview",
+  "@fiveStarOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  },
   "settingsTitle": "Settings",
   "settingsAppearance": "Appearance",
   "settingsThemeSystem": "Follow system",
