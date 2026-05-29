@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 
 GachaRecord _r({
   required String id,
@@ -91,7 +92,7 @@ void main() {
   group('filterRecordRows', () {
     late List<RecordRow> rows;
     setUp(() {
-      rows = buildRecordRows(records);
+      rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     });
 
     test('5★ + 武器 → 只剩 1 row，且 totalIndex / pity 不變', () {
@@ -124,7 +125,7 @@ void main() {
   group('sortRecordRows', () {
     late List<RecordRow> rows;
     setUp(() {
-      rows = buildRecordRows(records);
+      rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
     });
 
     test('null → 不排序，保持輸入順序', () {

@@ -111,7 +111,11 @@ class BannerPage extends ConsumerWidget {
     final isEndedPool = type.gachaType == '100';
 
     final filterState = ref.watch(recordFilterProvider(gachaType));
-    final allRows = buildRecordRows(records, mainRank: primary.rank);
+    final allRows = buildRecordRows(
+      records,
+      index: ref.watch(hoyowikiIndexProvider),
+      mainRank: primary.rank,
+    );
     final filtered = filterRecordRows(allRows, filterState.filter);
     final sorted = sortRecordRows(filtered, filterState.sort);
     final availableItemTypes =
