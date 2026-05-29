@@ -730,7 +730,11 @@
   "currentReleaseNotFound": "找不到 {version} 对应的更新内容",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "currentReleaseOpenOnGithub": "前往 GitHub 查看",
   "@currentReleaseOpenOnGithub": {

@@ -734,7 +734,11 @@
   "currentReleaseNotFound": "Không tìm thấy ghi chú phát hành cho {version}",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "currentReleaseOpenOnGithub": "Xem trên GitHub",
   "@currentReleaseOpenOnGithub": {

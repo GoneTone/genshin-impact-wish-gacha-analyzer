@@ -734,7 +734,11 @@
   "currentReleaseNotFound": "Notes de version introuvables pour {version}",
   "@currentReleaseNotFound": {
     "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "currentReleaseOpenOnGithub": "Voir sur GitHub",
   "@currentReleaseOpenOnGithub": {
