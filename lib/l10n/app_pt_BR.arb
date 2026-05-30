@@ -279,9 +279,14 @@
   "pageOverviewGachaSection": "Resumo de Orações",
   "pageOverviewOdesSection": "Resumo de Odes",
   "pageBannerRecordList": "Lista de registros",
-  "fiveStarOverviewTitle": "Visão geral de 5 estrelas",
-  "@fiveStarOverviewTitle": {
-    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  "rarityOverviewTitle": "Visão geral de {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "settingsTitle": "Configurações",
   "settingsAppearance": "Aparência",

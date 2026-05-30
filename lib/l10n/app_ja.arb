@@ -279,9 +279,14 @@
   "pageOverviewGachaSection": "祈願総合",
   "pageOverviewOdesSection": "星願総合",
   "pageBannerRecordList": "記録一覧",
-  "fiveStarOverviewTitle": "星5一覧",
-  "@fiveStarOverviewTitle": {
-    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  "rarityOverviewTitle": "{star} 一覧",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "settingsTitle": "設定",
   "settingsAppearance": "外観",

@@ -279,9 +279,14 @@
   "pageOverviewGachaSection": "Vue d'ensemble des vœux",
   "pageOverviewOdesSection": "Vue d'ensemble des odes",
   "pageBannerRecordList": "Liste des enregistrements",
-  "fiveStarOverviewTitle": "Aperçu 5 étoiles",
-  "@fiveStarOverviewTitle": {
-    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  "rarityOverviewTitle": "Aperçu {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
   },
   "settingsTitle": "Paramètres",
   "settingsAppearance": "Apparence",

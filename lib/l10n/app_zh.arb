@@ -208,9 +208,10 @@
   "pageOverviewGachaSection": "祈願綜合",
   "pageOverviewOdesSection": "頌願綜合",
   "pageBannerRecordList": "紀錄列表",
-  "fiveStarOverviewTitle": "五星一覽",
-  "@fiveStarOverviewTitle": {
-    "description": "Section title above the record list / timeline showing every unique five-star item the user pulled, each with a badge of how many copies were obtained."
+  "rarityOverviewTitle": "{star} 一覽",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": { "star": { "type": "String" } }
   },
 
   "settingsTitle": "設定",

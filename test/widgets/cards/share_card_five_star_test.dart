@@ -104,7 +104,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(FiveStarOverview), findsOneWidget);
-    expect(find.text(l.fiveStarOverviewTitle), findsOneWidget);
+    expect(find.text(l.rarityOverviewTitle(l.rarityStar(5))), findsOneWidget);
   });
 
   testWidgets('overview 分享圖的五星一覽落在祈願段、頌願段之前', (tester) async {

@@ -521,7 +521,10 @@ class _SectionView extends StatelessWidget {
         // 確保綜合分享圖的五星落在祈願區底下、而非整張圖最末的頌願區後。
         if (section.fiveStar.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.l),
-          Text(l.fiveStarOverviewTitle, style: theme.textTheme.titleLarge),
+          Text(
+            l.rarityOverviewTitle(l.rarityStar(5)),
+            style: theme.textTheme.titleLarge,
+          ),
           const SizedBox(height: AppSpacing.m),
           FiveStarOverview(items: section.fiveStar, interactive: false),
         ],

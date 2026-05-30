@@ -413,7 +413,7 @@ class _OverviewSection extends StatelessWidget {
         if (fiveStarItems.isNotEmpty) ...[
           InlineSectionTitle(
             icon: Icons.star_outline,
-            title: l.fiveStarOverviewTitle,
+            title: l.rarityOverviewTitle(l.rarityStar(5)),
           ),
           const SizedBox(height: AppSpacing.s),
           FiveStarOverview(items: fiveStarItems),
