@@ -47,6 +47,7 @@ The utility may trigger anti-virus software during installation and execution. T
 - Dual pity progress (5★ and 4★) showing remaining pulls until pity
 - Average pulls per 5★ / 4★ hit (per-banner and overall)
 - Per-gacha 5★ timeline
+- 5★ overview: every distinct 5★ you've pulled laid out in a row, each with a cumulative count badge and clickable for details — shown on each banner page, the overview page, and the share image
 - Bar chart comparing each gacha's highest-rarity counts
 - Rarity distribution pie chart
 - Item type distribution pie chart
