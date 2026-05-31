@@ -92,6 +92,25 @@ void main() {
       );
       expect(record.lang, 'zh-tw');
     });
+
+    test('API 回傳空字串 lang 時，以 fallbackLang 補上', () {
+      final json = {
+        'uid': '801057625',
+        'gacha_type': '200',
+        'time': '2025-09-23 21:27:37',
+        'name': '討龍英傑譚',
+        'lang': '',
+        'item_type': '武器',
+        'rank_type': '3',
+        'id': '1758632760000221425',
+      };
+      final record = GachaRecord.fromApiJson(
+        json,
+        gachaType: '200',
+        fallbackLang: 'en',
+      );
+      expect(record.lang, 'en');
+    });
   });
 
   group('GachaRecord JSON 持久化序列化', () {

@@ -33,7 +33,7 @@ class GachaRecord {
   /// 抽到的時間（本地時間）。
   final DateTime time;
 
-  /// 紀錄的語言 tag（頌願 API 無此欄位時為空字串）。
+  /// 紀錄的語言 tag（頌願 API 無此欄位時由 fallbackLang 補上，未知時為空字串）。
   final String lang;
 
   /// 從 hoyoverse getGachaLog / getBeyondGachaLog API 回傳的 list 元素解析。
