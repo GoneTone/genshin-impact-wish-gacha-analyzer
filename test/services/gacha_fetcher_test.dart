@@ -6,6 +6,7 @@ import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 
 const _baseUrl =
     'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getGachaLog'
@@ -71,6 +72,32 @@ void main() {
       );
     });
 
+    test('頌願回傳無 lang 時，以 URL 的 lang 補上', () async {
+      final mock = MockClient(
+        (req) async => _ok([
+          {
+            'uid': '801057625',
+            'op_gacha_type': '20021',
+            'item_id': '265044',
+            'count': '1',
+            'time': '2025-10-24 01:51:25',
+            'item_name': 'x',
+            'item_type': '裝扮套裝',
+            'rank_type': '5',
+            'id': '99',
+          },
+        ]),
+      );
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
+      final page = await fetcher.fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '2000', endId: '0', endpoint: GachaEndpoint.odes),
+        mock,
+      );
+      expect(page.records.first.lang, 'zh-tw');
+    });
+
     test('retcode=-110 退避後 throw RateLimitedException', () async {
       var hits = 0;
       final mock = MockClient((req) async {
@@ -133,6 +160,64 @@ void main() {
       );
       expect(paths, isNotEmpty);
       expect(paths.every((p) => p.endsWith('/getBeyondGachaLog')), isTrue);
+    });
+
+    test('既有空 lang 記錄回填為 URL 的 lang', () async {
+      final client = MockClient((req) async => _ok(const []));
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
+      final existing = [
+        GachaRecord(
+          id: '50',
+          uid: '801057625',
+          gachaType: '2000',
+          name: 'x',
+          itemType: '裝扮套裝',
+          rankType: 5,
+          time: DateTime(2025, 10, 24, 1, 51, 25),
+          lang: '',
+        ),
+      ];
+      final merged = await fetcher.fetchBannerWithMerge(
+        url: GachaUrl.parse(_baseUrl),
+        gachaType: '2000',
+        endpoint: GachaEndpoint.odes,
+        existing: existing,
+        primer: null,
+        onProgress: (_) {},
+        client: client,
+      );
+      expect(merged, hasLength(1));
+      expect(merged.first.lang, 'zh-tw');
+    });
+
+    test('URL 無 lang 時不動既有記錄', () async {
+      final client = MockClient((req) async => _ok(const []));
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
+      final existing = [
+        GachaRecord(
+          id: '50',
+          uid: '801057625',
+          gachaType: '2000',
+          name: 'x',
+          itemType: '裝扮套裝',
+          rankType: 5,
+          time: DateTime(2025, 10, 24, 1, 51, 25),
+          lang: '',
+        ),
+      ];
+      final merged = await fetcher.fetchBannerWithMerge(
+        url: GachaUrl.parse(
+          'https://example.com/gacha_info/api/getBeyondGachaLog'
+          '?authkey=AAA&gacha_type=2000&end_id=0',
+        ),
+        gachaType: '2000',
+        endpoint: GachaEndpoint.odes,
+        existing: existing,
+        primer: null,
+        onProgress: (_) {},
+        client: client,
+      );
+      expect(merged.first.lang, '');
     });
   });
 

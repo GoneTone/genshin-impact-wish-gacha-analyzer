@@ -94,5 +94,16 @@ void main() {
       expect(built.queryParameters['page'], '3');
       expect(built.queryParameters['size'], '5');
     });
+
+    test('lang getter 讀 query 的 lang', () {
+      expect(GachaUrl.parse(_capturedUrl).lang, 'zh-tw');
+    });
+
+    test('lang getter 缺 lang 參數時回空字串', () {
+      final url = GachaUrl.parse(
+        'https://example.com/gacha_info/api/getGachaLog?authkey=AAA&gacha_type=301&end_id=0',
+      );
+      expect(url.lang, '');
+    });
   });
 }

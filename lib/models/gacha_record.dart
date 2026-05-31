@@ -33,7 +33,7 @@ class GachaRecord {
   /// 抽到的時間（本地時間）。
   final DateTime time;
 
-  /// 紀錄的語言 tag（頌願 API 無此欄位時為空字串）。
+  /// 紀錄的語言 tag（頌願 API 無此欄位時由 fallbackLang 補上，未知時為空字串）。
   final String lang;
 
   /// 從 hoyoverse getGachaLog / getBeyondGachaLog API 回傳的 list 元素解析。
@@ -41,14 +41,17 @@ class GachaRecord {
   /// 兩個 endpoint 的 schema 不一致：
   /// - 卡池 (getGachaLog): `name` / `gacha_type` / `lang`
   /// - 頌願 (getBeyondGachaLog): `item_name` / `op_gacha_type`（值為 schedule 級
-  ///   ID 如 20021，跟我們查詢的 banner 級 gacha_type 2000/1000 不同）；無 `lang`
+  ///   ID 如 20021，跟我們查詢的 banner 級 gacha_type 2000/1000 不同）；
+  ///   無 `lang`，故由呼叫端傳入的 [fallbackLang]（擷取 URL 的 lang）補上。
   ///
   /// 為了讓存檔 schema 對齊查詢的 banner（mergedBanners key 是 query 用的
   /// gacha_type），這裡用呼叫端傳入的 [gachaType] 覆寫，不取回傳的 op_gacha_type。
   factory GachaRecord.fromApiJson(
     Map<String, dynamic> json, {
     required String gachaType,
+    String fallbackLang = '',
   }) {
+    final apiLang = json['lang'] as String?;
     return GachaRecord(
       id: json['id'] as String,
       uid: json['uid'] as String,
@@ -57,7 +60,7 @@ class GachaRecord {
       itemType: json['item_type'] as String,
       rankType: int.parse(json['rank_type'] as String),
       time: DateTime.parse((json['time'] as String).replaceFirst(' ', 'T')),
-      lang: (json['lang'] as String?) ?? '',
+      lang: (apiLang == null || apiLang.isEmpty) ? fallbackLang : apiLang,
     );
   }
 
@@ -92,4 +95,16 @@ class GachaRecord {
       'lang': lang,
     };
   }
+
+  /// 複製本 record，可覆寫 [lang]（其餘欄位沿用原值）。
+  GachaRecord copyWith({String? lang}) => GachaRecord(
+    id: id,
+    uid: uid,
+    gachaType: gachaType,
+    name: name,
+    itemType: itemType,
+    rankType: rankType,
+    time: time,
+    lang: lang ?? this.lang,
+  );
 }

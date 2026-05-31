@@ -55,6 +55,62 @@ void main() {
       expect(record.lang, '');
       expect(record.time, DateTime(2025, 10, 24, 1, 51, 25));
     });
+
+    test('頌願無 lang 時，以 fallbackLang 補上', () {
+      final json = {
+        'id': '1761240000000038925',
+        'uid': '801057625',
+        'item_type': '裝扮套裝',
+        'item_name': '女性裝扮·「燭影狂歡夜」',
+        'rank_type': '5',
+        'time': '2025-10-24 01:51:25',
+        'op_gacha_type': '20021',
+      };
+      final record = GachaRecord.fromApiJson(
+        json,
+        gachaType: '2000',
+        fallbackLang: 'ja',
+      );
+      expect(record.lang, 'ja');
+    });
+
+    test('API 已帶 lang 時，fallbackLang 被忽略', () {
+      final json = {
+        'uid': '801057625',
+        'gacha_type': '200',
+        'time': '2025-09-23 21:27:37',
+        'name': '討龍英傑譚',
+        'lang': 'zh-tw',
+        'item_type': '武器',
+        'rank_type': '3',
+        'id': '1758632760000221425',
+      };
+      final record = GachaRecord.fromApiJson(
+        json,
+        gachaType: '200',
+        fallbackLang: 'ja',
+      );
+      expect(record.lang, 'zh-tw');
+    });
+
+    test('API 回傳空字串 lang 時，以 fallbackLang 補上', () {
+      final json = {
+        'uid': '801057625',
+        'gacha_type': '200',
+        'time': '2025-09-23 21:27:37',
+        'name': '討龍英傑譚',
+        'lang': '',
+        'item_type': '武器',
+        'rank_type': '3',
+        'id': '1758632760000221425',
+      };
+      final record = GachaRecord.fromApiJson(
+        json,
+        gachaType: '200',
+        fallbackLang: 'en',
+      );
+      expect(record.lang, 'en');
+    });
   });
 
   group('GachaRecord JSON 持久化序列化', () {
@@ -80,6 +136,44 @@ void main() {
       expect(restored.id, original.id);
       expect(restored.itemType, original.itemType);
       expect(restored.time, original.time);
+    });
+  });
+
+  group('GachaRecord.copyWith', () {
+    test('只改 lang，其餘欄位不變', () {
+      final original = GachaRecord(
+        id: '1',
+        uid: '801057625',
+        gachaType: '2000',
+        name: 'x',
+        itemType: '裝扮套裝',
+        rankType: 5,
+        time: DateTime(2025, 10, 24, 1, 51, 25),
+        lang: '',
+      );
+      final updated = original.copyWith(lang: 'zh-tw');
+      expect(updated.lang, 'zh-tw');
+      expect(updated.id, original.id);
+      expect(updated.uid, original.uid);
+      expect(updated.gachaType, original.gachaType);
+      expect(updated.name, original.name);
+      expect(updated.itemType, original.itemType);
+      expect(updated.rankType, original.rankType);
+      expect(updated.time, original.time);
+    });
+
+    test('不傳 lang 則沿用原值', () {
+      final original = GachaRecord(
+        id: '1',
+        uid: '801057625',
+        gachaType: '2000',
+        name: 'x',
+        itemType: '裝扮套裝',
+        rankType: 5,
+        time: DateTime(2025, 10, 24, 1, 51, 25),
+        lang: 'en',
+      );
+      expect(original.copyWith().lang, 'en');
     });
   });
 
