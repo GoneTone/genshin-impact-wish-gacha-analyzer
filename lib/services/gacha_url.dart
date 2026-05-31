@@ -20,6 +20,9 @@ class GachaUrl {
   /// 內部包裝的原始 URI。
   final Uri _uri;
 
+  /// 擷取 URL 的 `lang` query 參數；缺漏時為空字串。
+  String get lang => _uri.queryParameters['lang'] ?? '';
+
   /// 解析使用者擷取的 URL 字串。
   static GachaUrl parse(String capturedUrl) =>
       GachaUrl._(Uri.parse(capturedUrl));
