@@ -20,9 +20,12 @@
 1. **批次抓取**：更新後與 force-refetch 都走 `_fetchHoYoWiki`。它在 `gacha_repository.dart:782/788` 用 `hoyoWikiTargetGachaTypes = {'301','302','500','200','100'}` 過濾，頌願的 gachaType（`'2000'`／`'1000'`）在 `lang.isEmpty` 判斷之前就先被 `continue` 掉。
 2. **on-demand 詳情**：`gacha_item_detail_dialog.dart:22/28` 的 `_odesGachaTypes = {'2000','1000'}` 讓頌願物品「永遠不可點」，dialog 不開、不觸發抓取。
 
-其他用到 `record.lang` 的地方（`five_star_collection.dart:49`、`item_type_kind.dart:15`）對頌願都是 `lookupId → null → fallback 到 name`。補 `lang` 後因為頌願從未進過 HoYoWiki index，結果仍是 `null → fallback`，**行為零變化**。
+其他用到 `record.lang` 的地方：
 
-故本設計**不需要任何「擋 HoYoWiki」守衛**。
+- `five_star_collection.dart:60`、`gacha_item_detail_dialog.dart:28`：兩者都在 lookup 之前以 gachaType 硬排除頌願，補 `lang` **行為零變化**。
+- `item_type_kind.dart:15` 的 `itemTypeKeyOf`：**未**排除頌願，會經 `gacha_row`／`gacha_stats` 對頌願 record 呼叫。補 `lang` 前查 `'::name'`（空 lang）結構上保證 `null → fallback`；補 `lang` 後查 `'<lang>::name'`，**不再結構保證 null**，僅當某一般祈願物品同名同語言已被 HoYoWiki 索引時才命中，此時頌願 `itemTypeKey` 會從原始字串翻成 `kind:character`／`kind:weapon`。頌願裝扮名不與角色／武器撞名，實務影響趨近於零；且此為純本地 lookup，**不觸發任何抓取**。
+
+故本設計**不需要任何「擋 HoYoWiki」守衛**（`itemTypeKeyOf` 的 nuance 僅為衍生標籤，且不涉及任何 I/O）。
 
 ## 資料來源與流向
 
