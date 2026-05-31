@@ -207,7 +207,32 @@ class GachaFetcher {
 
     // fresh + existing 都是 desc
     _log.info('banner=$gachaType done, fresh=${fresh.length} pages=$pageIndex');
-    return [...fresh, ...existing];
+
+    // 頌願 API 不回傳 lang；既有空 lang 記錄以擷取 URL 的 lang 回填（一般祈願
+    // existing 必有非空 lang，不受影響）。URL 缺 lang 則不動，避免以空蓋空。
+    final urlLang = url.lang;
+    final List<GachaRecord> normalizedExisting;
+    if (urlLang.isEmpty) {
+      normalizedExisting = existing;
+    } else {
+      var backfilled = 0;
+      normalizedExisting = existing
+          .map((r) {
+            if (r.lang.isEmpty) {
+              backfilled++;
+              return r.copyWith(lang: urlLang);
+            }
+            return r;
+          })
+          .toList(growable: false);
+      if (backfilled > 0) {
+        _log.info(
+          'banner=$gachaType backfilled lang for $backfilled records '
+          'to "$urlLang"',
+        );
+      }
+    }
+    return [...fresh, ...normalizedExisting];
   }
 
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序
