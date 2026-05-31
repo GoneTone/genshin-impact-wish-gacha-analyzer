@@ -71,6 +71,32 @@ void main() {
       );
     });
 
+    test('頌願回傳無 lang 時，以 URL 的 lang 補上', () async {
+      final mock = MockClient(
+        (req) async => _ok([
+          {
+            'uid': '801057625',
+            'op_gacha_type': '20021',
+            'item_id': '265044',
+            'count': '1',
+            'time': '2025-10-24 01:51:25',
+            'item_name': 'x',
+            'item_type': '裝扮套裝',
+            'rank_type': '5',
+            'id': '99',
+          },
+        ]),
+      );
+      final fetcher = GachaFetcher(rateLimit: Duration.zero);
+      final page = await fetcher.fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '2000', endId: '0', endpoint: GachaEndpoint.odes),
+        mock,
+      );
+      expect(page.records.first.lang, 'zh-tw');
+    });
+
     test('retcode=-110 退避後 throw RateLimitedException', () async {
       var hits = 0;
       final mock = MockClient((req) async {

@@ -104,6 +104,7 @@ class GachaFetcher {
   /// 抓單頁，retcode 處理：0=ok / -101,-100=AuthExpired / -110=自動退避 / 其他=ApiError
   Future<FetchedPage> fetchPage(Uri url, http.Client client) async {
     final queryGachaType = url.queryParameters['gacha_type'] ?? '';
+    final queryLang = url.queryParameters['lang'] ?? '';
     var attempt = 0;
     _log.fine(
       'fetchPage gachaType=$queryGachaType url=${sanitizeUrl(url.toString())}',
@@ -120,6 +121,7 @@ class GachaFetcher {
                 (e) => GachaRecord.fromApiJson(
                   e as Map<String, dynamic>,
                   gachaType: queryGachaType,
+                  fallbackLang: queryLang,
                 ),
               )
               .toList(growable: false),
