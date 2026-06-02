@@ -495,6 +495,10 @@
   "@settingsImageCacheFailed": {
     "description": "Shown when scanning cache size fails (e.g. permission denied)."
   },
+  "settingsImageCacheClearFailed": "清除详情图缓存失败",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
   "settingsImageCacheClearGallery": "清除详情图",
   "@settingsImageCacheClearGallery": {
     "description": "Button label: clear gallery cache (keeps icons)."

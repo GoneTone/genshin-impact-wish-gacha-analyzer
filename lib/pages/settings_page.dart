@@ -813,7 +813,7 @@ class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
       ref.invalidate(hoyowikiCacheUsageProvider);
       ScaffoldMessenger.of(
         ctx,
-      ).showSnackBar(SnackBar(content: Text(l.settingsImageCacheFailed)));
+      ).showSnackBar(SnackBar(content: Text(l.settingsImageCacheClearFailed)));
     }
   }
 

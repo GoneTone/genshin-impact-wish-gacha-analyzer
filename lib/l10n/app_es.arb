@@ -499,6 +499,10 @@
   "@settingsImageCacheFailed": {
     "description": "Shown when scanning cache size fails (e.g. permission denied)."
   },
+  "settingsImageCacheClearFailed": "No se pudieron borrar las imágenes detalladas",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
   "settingsImageCacheClearGallery": "Borrar imágenes detalladas",
   "@settingsImageCacheClearGallery": {
     "description": "Button label: clear gallery cache (keeps icons)."
