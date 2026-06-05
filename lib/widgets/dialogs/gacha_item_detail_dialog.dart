@@ -423,7 +423,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                               fontSize: FontSize(
                                 theme.textTheme.bodyMedium?.fontSize ?? 14,
                               ),
-                              lineHeight: LineHeight.number(1.4),
+                              lineHeight: LineHeight.number(1.2),
                               color: tokens.textSecondary,
                               margin: Margins.zero,
                               padding: HtmlPaddings.zero,
