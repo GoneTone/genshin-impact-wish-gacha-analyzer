@@ -39,6 +39,25 @@ class _CountingCapture implements GachaCapture {
   }
 }
 
+/// result 永不 complete、cancel 立即回 → 模擬「onDone 不觸發但取消正常」的情況。
+/// 唯一能解開 _runMitm 等待的途徑就是 backstop。
+class _HangingCapture implements GachaCapture {
+  @override
+  CaptureSession start() => CaptureSession(
+    result: Completer<String?>().future, // 永不 complete
+    cancel: () async {}, // 立即回
+  );
+}
+
+/// cancel 回一個永不 complete 的 Future → 模擬 Rust stopCapture 卡死（L1 失效）的最壞情況。
+class _HangingCancelCapture implements GachaCapture {
+  @override
+  CaptureSession start() => CaptureSession(
+    result: Completer<String?>().future,
+    cancel: () => Completer<void>().future, // 永不回
+  );
+}
+
 void main() {
   late Directory tempDir;
 
@@ -353,6 +372,107 @@ void main() {
 
     notifier.clearProgress();
     expect(container.read(gachaRepositoryProvider).progress, isNull);
+  });
+
+  test(
+    'cancelCapture：result 永不 complete 但 cancel 正常 → backstop 解開等待、progress 清空',
+    () async {
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+          gachaCaptureProvider.overrideWithValue(_HangingCapture()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+      await Future<void>.delayed(
+        const Duration(milliseconds: 30),
+      ); // 進入 WaitingForCapture
+
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isA<WaitingForCapture>(),
+        reason: '無快取 URL ＋ 無 active UID → 應進入 MITM 等待階段',
+      );
+
+      await notifier.cancelCapture();
+      await updateFut;
+
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isNull,
+        reason:
+            'backstop 應解開永不 complete 的 result，使 _runMitm 回 null → clearProgress',
+      );
+    },
+  );
+
+  test('cancelCapture：cancel 永不回 → 逾時分支清空 progress 並 severe-log', () async {
+    final records = <LogRecord>[];
+    Logger.root.level = Level.ALL;
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+    addTearDown(() => Logger.root.clearListeners());
+
+    final container = ProviderContainer(
+      overrides: [
+        gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        gachaCaptureProvider.overrideWithValue(_HangingCancelCapture()),
+        cancellableHttpClientFactoryProvider.overrideWithValue(
+          () => CancellableHttpClient(
+            client: MockClient((_) async => http.Response('{}', 200)),
+            cancel: () {},
+          ),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    container.read(gachaRepositoryProvider);
+    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    // 縮短逾時，避免真實掛鐘等待；只 await 完成、不做時間斷言 → 不 flaky。
+    notifier.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
+
+    final updateFut = notifier.update();
+    await Future<void>.delayed(
+      const Duration(milliseconds: 30),
+    ); // 進入 WaitingForCapture
+    expect(
+      container.read(gachaRepositoryProvider).progress,
+      isA<WaitingForCapture>(),
+    );
+
+    await notifier.cancelCapture();
+    await updateFut;
+
+    expect(
+      container.read(gachaRepositoryProvider).progress,
+      isNull,
+      reason: 'cancel 卡死時應走逾時分支、用 backstop 解卡 → progress 清空',
+    );
+    expect(
+      records.any(
+        (r) =>
+            r.loggerName == 'gacha.repo' &&
+            r.level == Level.SEVERE &&
+            r.message.contains('stopCapture exceeded'),
+      ),
+      isTrue,
+      reason: '逾時應產生 severe log',
+    );
   });
 
   test('bootstrap：lastActiveUid 命中 → 用它（不用最新）', () async {
