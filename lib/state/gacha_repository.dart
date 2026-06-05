@@ -970,7 +970,7 @@ class GachaRepository extends Notifier<GachaState> {
                 id: item.id,
                 url: item.url,
               );
-              await file.writeAsBytes(bytes, flush: true);
+              await writeHoYoWikiCacheImage(file: file, bytes: bytes);
               indexNotifier.bumpCacheRevision();
               downloaded++;
             }
