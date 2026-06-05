@@ -104,6 +104,50 @@ void main() {
     expect(_innerWidth(tester), 320);
   });
 
+  testWidgets('wide title content is clamped to dialog width, not widening', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1600, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () => showDialog<void>(
+                  context: ctx,
+                  builder: (_) => const AppDialog(
+                    size: AppDialogSize.md,
+                    // 內在寬度遠大於 md(640)：未約束時會把整個 dialog 撐寬。
+                    title: SizedBox(
+                      key: Key('wide-title'),
+                      width: 1400,
+                      height: 24,
+                    ),
+                    content: Text('Body'),
+                  ),
+                ),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    // title 應被約束到 md 的 640，而非渲染成內在的 1400。
+    expect(tester.getSize(find.byKey(const Key('wide-title'))).width, 640);
+  });
+
   testWidgets('maxHeight = min(720, mq.height - 120) — tall window', (
     tester,
   ) async {

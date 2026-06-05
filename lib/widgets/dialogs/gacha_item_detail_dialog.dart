@@ -403,26 +403,38 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (desc.trim().isNotEmpty)
+                if (desc.trim().isNotEmpty) ...[
+                  // 名稱與說明之間的固定間距，讓單行/多行說明都有一致的呼吸空間。
+                  // 用 2px 微距（小於最小 token AppSpacing.xs=4），名稱與說明貼得更近。
+                  const SizedBox(height: 2),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 120),
                     child: SingleChildScrollView(
-                      child: Html(
-                        data: desc,
-                        style: {
-                          'body': Style(
-                            fontSize: FontSize(
-                              theme.textTheme.bodyMedium?.fontSize ?? 14,
+                      // 壓低環境 DefaultTextStyle 的行高：flutter_html 以繼承的環境
+                      // 行高當作區塊最小高度，dialog title 的環境行高偏高（約 31px），
+                      // 使「單行說明」被在偏高行框內垂直置中、首行比「多行說明」下移
+                      // 約 6px。壓成 1.0 後區塊最小高度＝文字行高，單行/多行首行對齊。
+                      child: DefaultTextStyle.merge(
+                        style: const TextStyle(height: 1.0),
+                        child: Html(
+                          data: desc,
+                          style: {
+                            'body': Style(
+                              fontSize: FontSize(
+                                theme.textTheme.bodyMedium?.fontSize ?? 14,
+                              ),
+                              lineHeight: LineHeight.number(1.2),
+                              color: tokens.textSecondary,
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
                             ),
-                            color: tokens.textSecondary,
-                            margin: Margins.zero,
-                            padding: HtmlPaddings.zero,
-                          ),
-                          'p': Style(margin: Margins.zero),
-                        },
+                            'p': Style(margin: Margins.zero),
+                          },
+                        ),
                       ),
                     ),
                   ),
+                ],
                 if (tags.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Wrap(

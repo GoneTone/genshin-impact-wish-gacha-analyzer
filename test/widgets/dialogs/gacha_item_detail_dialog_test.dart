@@ -934,4 +934,116 @@ void main() {
       );
     });
   });
+
+  group('title 區 desc 間距', () {
+    /// 開 dialog 並回傳「名稱底 → 說明文字首行頂」的垂直間距。
+    /// [contains] 用來在 title 區 Html 內定位實際 desc 文字那條 RichText。
+    Future<double> openAndMeasureGap(
+      WidgetTester tester,
+      String name,
+      String contains,
+    ) async {
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            // 唯一 key：避免兩次量測重用同一 Navigator、上一個 dialog 殘留擋住按鈕。
+            key: ValueKey(name),
+            theme: buildDarkTheme(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (ctx) => ElevatedButton(
+                onPressed: () => showGachaItemDetailDialog(
+                  ctx,
+                  _rec(name: name, gachaType: '301'),
+                ),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final nameBottom = tester.getRect(find.text(name)).bottom;
+      final descLine = find.descendant(
+        of: find.byType(Html),
+        matching: find.byWidgetPredicate(
+          (w) => w is RichText && w.text.toPlainText().contains(contains),
+        ),
+      );
+      return tester.getRect(descLine.first).top - nameBottom;
+    }
+
+    testWidgets('單行說明與多行（換行）說明的首行間距一致', (tester) async {
+      tester.view.physicalSize = const Size(1280, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'short1_icon.png');
+        await _touchFile(tempDir, 'long1_icon.png');
+        await notifier.setSearch(
+          name: 'ShortName',
+          lang: 'en-us',
+          id: 'short1',
+          menuId: 2,
+        );
+        await notifier.mergeEntry(
+          id: 'short1',
+          lang: 'en-us',
+          fetched: const HoYoWikiEntryFetched(
+            iconUrl: 'https://cdn.hoyolab.com/short_icon.png',
+            page: HoYoWikiPageData(
+              gallery: null,
+              desc: '<p>Short.</p>',
+              tags: [],
+            ),
+          ),
+        );
+        await notifier.setSearch(
+          name: 'LongName',
+          lang: 'en-us',
+          id: 'long1',
+          menuId: 2,
+        );
+        await notifier.mergeEntry(
+          id: 'long1',
+          lang: 'en-us',
+          fetched: const HoYoWikiEntryFetched(
+            iconUrl: 'https://cdn.hoyolab.com/long_icon.png',
+            page: HoYoWikiPageData(
+              gallery: null,
+              desc:
+                  '<p>This is a very long description that should definitely '
+                  'wrap across multiple lines inside the constrained dialog '
+                  'width so the leading above the first line can be '
+                  'compared with the single-line case.</p>',
+              tags: [],
+            ),
+          ),
+        );
+      });
+
+      final shortGap = await openAndMeasureGap(tester, 'ShortName', 'Short.');
+      final longGap = await openAndMeasureGap(
+        tester,
+        'LongName',
+        'This is a very long',
+      );
+
+      expect(
+        (shortGap - longGap).abs(),
+        lessThan(1.0),
+        reason: 'single-line gap=$shortGap multi-line gap=$longGap',
+      );
+    });
+  });
 }
