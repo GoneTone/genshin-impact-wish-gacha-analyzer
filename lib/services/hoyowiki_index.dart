@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
@@ -353,4 +354,18 @@ String _extFromUrl(String url) {
   // 安全檢查：副檔名只能是常見 image 格式，避免 URL 怪異字串污染檔名。
   const allowed = {'png', 'jpg', 'jpeg', 'webp', 'gif'};
   return allowed.contains(ext) ? ext : 'png';
+}
+
+/// 原子寫入 HoYoWiki cache 圖檔：先寫同目錄的 `<path>.tmp`（flush）再 rename 蓋到
+/// 最終路徑。避免並發更新（多 worker 寫檔 + bumpCacheRevision 觸發全列表重繪）時，
+/// 其他 widget 的 `Image.file` 讀到寫一半的截斷檔而出現破圖。對齊
+/// [HoYoWikiIndexStorage.save] 既有的 tmp+rename 策略。
+Future<void> writeHoYoWikiCacheImage({
+  required File file,
+  required Uint8List bytes,
+}) async {
+  await file.parent.create(recursive: true);
+  final tmp = File('${file.path}.tmp');
+  await tmp.writeAsBytes(bytes, flush: true);
+  await tmp.rename(file.path);
 }

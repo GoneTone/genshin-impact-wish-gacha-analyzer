@@ -107,8 +107,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
         _log.warning('lazy fetch returned null id=$id url=${sanitizeUrl(url)}');
         return;
       }
-      await file.parent.create(recursive: true);
-      await file.writeAsBytes(bytes);
+      await writeHoYoWikiCacheImage(file: file, bytes: bytes);
       if (!mounted) return;
       setState(() {
         _loadStates[file.path] = _GalleryReady(file);

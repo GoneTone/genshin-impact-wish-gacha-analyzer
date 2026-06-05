@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
@@ -12,6 +13,9 @@ const _odesGachaTypes = {'2000', '1000'};
 
 /// 顯示一筆卡池物品的 icon；cache 未到 / 缺資料時顯示 [_Placeholder]。
 class GachaItemIcon extends ConsumerWidget {
+  /// 解碼失敗等情境的 logger（對齊 `gacha.hoyowiki.*` 樹）。
+  static final _log = Logger('gacha.hoyowiki.icon');
+
   /// 建立 [GachaItemIcon]。
   const GachaItemIcon({
     super.key,
@@ -68,7 +72,21 @@ class GachaItemIcon extends ConsumerWidget {
         return SizedBox(
           width: size,
           height: size,
-          child: _clipIcon(Image.file(file, fit: BoxFit.cover)),
+          child: _clipIcon(
+            Image.file(
+              file,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                _log.warning('icon decode failed id=$id', error, stackTrace);
+                return _Placeholder(
+                  rankType: record.rankType,
+                  size: size,
+                  tokens: tokens,
+                  circular: circular,
+                );
+              },
+            ),
+          ),
         );
       }
     }
