@@ -473,9 +473,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// best-effort 還原系統 proxy，並一律完成 [_captureBackstop] 解開 [_runMitm] 的
   /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。
   Future<void> cancelCapture() async {
+    _cancelTriggered = true;
     final cancel = _activeCancel;
     if (cancel == null) return;
-    _cancelTriggered = true;
     try {
       await cancel().timeout(_cancelTeardownTimeout);
     } on TimeoutException {
@@ -491,7 +491,7 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// best-effort 還原殘留的系統 proxy（取消逾時時呼叫），失敗只 warn-log，不拋。
+  /// Best-effort 還原殘留的系統 proxy（取消逾時時呼叫），失敗只 warn-log，不拋。
   Future<void> _bestEffortStaleProxyCleanup() async {
     try {
       final cleared = await rust_capture.cleanupStaleProxy();
