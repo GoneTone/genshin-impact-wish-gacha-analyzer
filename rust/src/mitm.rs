@@ -156,19 +156,20 @@ pub fn start(
             .build()
             .expect("build tokio rt for mitm");
 
+        // 在 task 外建好 proxy：build 失敗的 panic 會在本 thread 浮現，而非被 spawned task 靜默吞掉。
+        let proxy = Proxy::builder()
+            .with_addr(addr)
+            .with_ca(ca)
+            .with_http_connector(https_connector)
+            .with_http_handler(handler)
+            .with_graceful_shutdown(async move {
+                let _ = graceful_rx.wait_for(|stop| *stop).await;
+            })
+            .build()
+            .expect("hudsucker proxy build failed");
+
         // proxy 當背景 task 跑：收到訊號 → hudsucker graceful shutdown 停止 accept、排空 in-flight。
         rt.spawn(async move {
-            let proxy = Proxy::builder()
-                .with_addr(addr)
-                .with_ca(ca)
-                .with_http_connector(https_connector)
-                .with_http_handler(handler)
-                .with_graceful_shutdown(async move {
-                    let _ = graceful_rx.wait_for(|stop| *stop).await;
-                })
-                .build()
-                .expect("hudsucker proxy build failed");
-
             if let Err(e) = proxy.start().await {
                 tracing::error!(target: "mitm", "mitm proxy stopped: {e}");
             }
