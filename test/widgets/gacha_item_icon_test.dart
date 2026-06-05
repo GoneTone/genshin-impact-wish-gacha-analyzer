@@ -195,6 +195,58 @@ void main() {
     expect(find.byType(Image), findsOneWidget);
   });
 
+  testWidgets('cache 檔損壞 → errorBuilder 退回 placeholder（不丟解碼錯誤）', (
+    tester,
+  ) async {
+    final notifier = container.read(hoyowikiIndexProvider.notifier);
+    final iconUrl = 'https://x/icon.png';
+    await tester.runAsync(() async {
+      await notifier.setSearch(
+        name: 'Hu Tao',
+        lang: 'en-us',
+        id: '111',
+        menuId: 2,
+      );
+      await notifier.mergeEntry(
+        id: '111',
+        lang: 'en-us',
+        fetched: HoYoWikiEntryFetched(
+          iconUrl: iconUrl,
+          page: const HoYoWikiPageData(gallery: null, desc: '', tags: []),
+        ),
+      );
+      final cacheFile = hoyowikiIconCacheFile(
+        baseDir: tempDir,
+        id: '111',
+        url: iconUrl,
+      );
+      // 寫入「不是合法圖片」的 bytes，模擬截斷／損壞檔。
+      await cacheFile.writeAsBytes([1, 2, 3, 4]);
+    });
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        _wrap(
+          GachaItemIcon(
+            record: _rec(name: 'Hu Tao', gachaType: '301'),
+            size: 20,
+          ),
+          container,
+        ),
+      );
+      // 等 codec 解碼失敗、errorBuilder 觸發。
+      await tester.pump();
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await tester.pump();
+    });
+
+    expect(
+      find.byIcon(Icons.question_mark),
+      findsOneWidget,
+      reason: '損壞檔應退回 _Placeholder（question_mark），而非破圖',
+    );
+  });
+
   testWidgets('PreloadedHoYoWikiImages 命中 → 顯示 RawImage', (tester) async {
     await tester.runAsync(() async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
