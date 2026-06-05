@@ -17,6 +17,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
+    as rust_capture;
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
@@ -307,17 +309,24 @@ class GachaRepository extends Notifier<GachaState> {
   }
 
   /// 啟動 MITM 捕獲會話並等候 URL；[isFallback] 為 auth 過期後的二次捕獲。
+  ///
+  /// 等待用 `Future.any([session.result, backstop])`：正常經 onDone 由 `result`
+  /// 回；若 onDone 失靈（Rust 拆除未 drop sink），則由 [cancelCapture] 完成的
+  /// [_captureBackstop] 解開，確保等待一定有界、不會永久卡在 `WaitingForCapture`。
   Future<String?> _runMitm({required bool isFallback}) async {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
     final session = ref.read(gachaCaptureProvider).start();
     _activeCancel = session.cancel;
+    final backstop = Completer<String?>();
+    _captureBackstop = backstop;
     _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
     try {
-      final result = await session.result;
+      final result = await Future.any([session.result, backstop.future]);
       _log.info('MITM session done, hasUrl=${result != null}');
       return result;
     } finally {
       _activeCancel = null;
+      _captureBackstop = null;
     }
   }
 
@@ -446,6 +455,12 @@ class GachaRepository extends Notifier<GachaState> {
   /// 目前 HTTP 請求的可取消 client，取消後關閉所有連線。
   CancellableHttpClient? _activeCancellable;
 
+  /// 取消／逾時時用來強制解開 [_runMitm] 等待的 backstop completer。
+  Completer<String?>? _captureBackstop;
+
+  /// `cancelCapture` 等待 Rust MITM 拆除回應的上限（比 L1 的 2 秒寬鬆）。
+  Duration _cancelTeardownTimeout = const Duration(seconds: 8);
+
   /// 取消 Preparing 階段的 HTTP 請求。
   void cancelPreparing() {
     _cancelTriggered = true;
@@ -453,10 +468,36 @@ class GachaRepository extends Notifier<GachaState> {
   }
 
   /// 取消正在進行的 MITM 捕獲會話。
+  ///
+  /// 有界：最多等 [_cancelTeardownTimeout] 讓 Rust 拆除回應；逾時則 severe-log、
+  /// best-effort 還原系統 proxy，並一律完成 [_captureBackstop] 解開 [_runMitm] 的
+  /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。
   Future<void> cancelCapture() async {
     final cancel = _activeCancel;
-    if (cancel != null) {
-      await cancel();
+    if (cancel == null) return;
+    _cancelTriggered = true;
+    try {
+      await cancel().timeout(_cancelTeardownTimeout);
+    } on TimeoutException {
+      _log.severe(
+        'cancelCapture: stopCapture exceeded '
+        '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
+      );
+      unawaited(_bestEffortStaleProxyCleanup());
+    }
+    final backstop = _captureBackstop;
+    if (backstop != null && !backstop.isCompleted) {
+      backstop.complete(null);
+    }
+  }
+
+  /// best-effort 還原殘留的系統 proxy（取消逾時時呼叫），失敗只 warn-log，不拋。
+  Future<void> _bestEffortStaleProxyCleanup() async {
+    try {
+      final cleared = await rust_capture.cleanupStaleProxy();
+      _log.info('stale proxy cleanup after cancel timeout: cleared=$cleared');
+    } catch (e, st) {
+      _log.warning('stale proxy cleanup failed', e, st);
     }
   }
 
@@ -1024,6 +1065,12 @@ class GachaRepository extends Notifier<GachaState> {
   @visibleForTesting
   void debugSetProgress(UpdateProgress p) {
     state = state.copyWith(progress: p);
+  }
+
+  /// 測試用：縮短取消拆除逾時，避免真實掛鐘等待。生產勿用。
+  @visibleForTesting
+  void debugSetCancelTeardownTimeout(Duration timeout) {
+    _cancelTeardownTimeout = timeout;
   }
 }
 
