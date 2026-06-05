@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
@@ -529,6 +530,55 @@ void main() {
       final loaded = await HoYoWikiIndexStorage(tempDir).load();
       expect(loaded.entries, isEmpty);
       expect(loaded.searchMap, isEmpty);
+    });
+  });
+
+  group('writeHoYoWikiCacheImage', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('hoyowiki_write_test_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test('寫入後檔案內容與輸入 bytes 完全一致', () async {
+      final file = File('${tempDir.path}/abc_icon.png');
+      final bytes = Uint8List.fromList([1, 2, 3, 4, 5]);
+      await writeHoYoWikiCacheImage(file: file, bytes: bytes);
+      expect(await file.readAsBytes(), bytes);
+    });
+
+    test('自動建立缺失的父目錄', () async {
+      final file = File('${tempDir.path}/nested/dir/x_icon.png');
+      await writeHoYoWikiCacheImage(file: file, bytes: Uint8List.fromList([9]));
+      expect(file.existsSync(), isTrue);
+    });
+
+    test('寫入後不留 .tmp 殘檔', () async {
+      final file = File('${tempDir.path}/abc_icon.png');
+      await writeHoYoWikiCacheImage(
+        file: file,
+        bytes: Uint8List.fromList([1, 2, 3]),
+      );
+      final tmp = File('${file.path}.tmp');
+      expect(await tmp.exists(), isFalse);
+    });
+
+    test('對既有檔可正確覆寫', () async {
+      final file = File('${tempDir.path}/abc_icon.png');
+      await file.writeAsBytes([0, 0, 0]);
+      await writeHoYoWikiCacheImage(
+        file: file,
+        bytes: Uint8List.fromList([7, 8, 9]),
+      );
+      expect(await file.readAsBytes(), [7, 8, 9]);
     });
   });
 }
