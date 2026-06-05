@@ -83,7 +83,9 @@ class AppDialog extends StatelessWidget {
 
     return AlertDialog(
       constraints: BoxConstraints(maxHeight: dialogMaxHeight),
-      title: title,
+      // title 與 content 同寬：title 內容（如長描述 Html）的 intrinsic 寬度
+      // 不再能把整個 AlertDialog 撐寬，過長文字會在 dialogWidth 內換行。
+      title: SizedBox(width: dialogWidth, child: title),
       content: body,
       actions: actions.isEmpty ? null : actions,
     );
