@@ -18,7 +18,7 @@ Widget _wrap() => MaterialApp(
 );
 
 void main() {
-  testWidgets('renders title, Wuthering Waves link and future note', (
+  testWidgets('renders title, Wuthering Waves link, future note and icon', (
     tester,
   ) async {
     await tester.pumpWidget(_wrap());
@@ -29,6 +29,7 @@ void main() {
       find.text('More games may be supported in the future...'),
       findsOneWidget,
     );
+    expect(find.byIcon(Icons.open_in_new), findsOneWidget);
   });
 
   testWidgets('Wuthering Waves link points to the related project url', (
