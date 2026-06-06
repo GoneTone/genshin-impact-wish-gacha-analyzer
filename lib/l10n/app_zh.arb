@@ -228,6 +228,9 @@
   "settingsMaskUidInUiHint": "開啟後，畫面與帳號清單中的 UID 會以前 3 碼搭配 x 顯示（例如 123xxxxx），適合實況或螢幕分享時使用。分享圖、匯出檔案、刪除確認框不受影響。",
   "settingsAbout": "關於",
   "settingsAboutVersion": "版本 {version}",
+  "settingsOtherGamesTitle": "其他遊戲版本",
+  "settingsOtherGamesWutheringWaves": "鳴潮",
+  "settingsOtherGamesFuture": "未來可能新增更多遊戲...",
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
