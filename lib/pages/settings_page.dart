@@ -37,6 +37,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/other_game_versions.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
@@ -337,6 +338,7 @@ class _AboutContent extends ConsumerWidget {
             ),
           ],
         ),
+        const OtherGameVersions(),
       ],
     );
   }
