@@ -231,6 +231,9 @@
   "@settingsAboutVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
+  "settingsOtherGamesTitle": "其他遊戲版本",
+  "settingsOtherGamesWutheringWaves": "鳴潮",
+  "settingsOtherGamesFuture": "未來可能新增更多遊戲...",
   "contributorsTitle": "貢獻名單",
   "contributorsSubtitle": "感謝以下為此軟體貢獻的夥伴！",
   "contributorsProjectLeader": "專案負責人",
