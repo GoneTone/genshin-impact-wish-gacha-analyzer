@@ -309,6 +309,9 @@
       }
     }
   },
+  "settingsOtherGamesTitle": "Versions pour d'autres jeux",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "D'autres jeux pourraient être pris en charge à l'avenir...",
   "contributorsTitle": "Contributeurs",
   "contributorsSubtitle": "Remerciements particuliers aux partenaires suivants qui ont contribué au développement de ce logiciel!",
   "contributorsProjectLeader": "Chef de projet",

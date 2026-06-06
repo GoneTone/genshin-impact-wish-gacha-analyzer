@@ -309,6 +309,9 @@
       }
     }
   },
+  "settingsOtherGamesTitle": "เวอร์ชันสำหรับเกมอื่น ๆ",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "อาจมีการรองรับเกมเพิ่มเติมในอนาคต...",
   "contributorsTitle": "รายชื่อผู้ให้การสนับสนุน",
   "contributorsSubtitle": "ขอขอบคุณเป็นพิเศษสำหรับผู้ที่มีส่วนช่วยเหลือต่อไปนี้ที่มีส่วนร่วมในการพัฒนาซอฟต์แวร์นี้!",
   "contributorsProjectLeader": "หัวหน้าโปรเจค",

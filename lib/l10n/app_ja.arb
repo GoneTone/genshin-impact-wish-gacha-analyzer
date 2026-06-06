@@ -309,6 +309,9 @@
       }
     }
   },
+  "settingsOtherGamesTitle": "他のゲーム向けバージョン",
+  "settingsOtherGamesWutheringWaves": "鳴潮",
+  "settingsOtherGamesFuture": "今後、対応ゲームが増える可能性があります...",
   "contributorsTitle": "貢献者一覧",
   "contributorsSubtitle": "このソフトウェアに貢献してくださった皆様に感謝します！",
   "contributorsProjectLeader": "プロジェクトマネージャー",
