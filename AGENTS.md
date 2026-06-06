@@ -12,14 +12,15 @@
 - **方法應該有 dartdoc**：所有宣告（top-level function、class、constructor、method、field、typedef、enum；含 private `_xxx`）寫一行 `///` dartdoc 說明其作用，讓讀者不必讀實作就知道在做什麼。Flutter override（`build()`、`createState()`、`dispose()`、`initState()`、`didChangeDependencies()` 等簽名已自明的）不寫。
 - **`rust_builder/` 勿手動改**：`rust_builder/` 是 flutter_rust_bridge 自動產生的 FFI plugin glue（含 `cargokit/`），只負責把 `rust/` 編進 Flutter 原生建置流程，本身沒有業務邏輯。要改 Rust 邏輯改 `rust/`（crate `genshin_capture_core`）；要改 Dart 綁定改 `flutter_rust_bridge.yaml` 後重跑 frb codegen。Rust 編譯由 cargokit 自動掛在 `flutter build` 的 CMake 流程上，**不需另外手動 `cargo build`**，但建置機需安裝 Rust toolchain（cargo）。
 - **簡單改動免 spec**：純樣式微調（顏色、間距、icon 換掉、字串小改）、單檔 typo、單一 bug fix、純機械重構（重新命名、抽常數）、翻譯補字串等，可直接動手實作不必走 brainstorming → spec → plan 流程；若使用者下指令時已自帶設計判斷（明確的 what + why）也同樣免 spec。需要 spec 的判準：跨多檔影響架構、新增 widget／service／資料流、需要驗收條件超過「跑 analyze + test 全綠」的功能。把 spec 留給真正會影響後人維護的決策。
+- **優先用 `fvm flutter` / `fvm dart`**：本專案以 FVM 釘住 Flutter 版本（見 `.fvmrc`），所有 Flutter／Dart 指令（`fvm flutter analyze`／`fvm flutter test`／`fvm flutter gen-l10n`／`fvm dart format` 等）一律優先透過 `fvm` 執行，確保用的是專案釘住的 SDK 版本；若環境找不到 `fvm`，再退回直接使用 `flutter`／`dart`。
 
 ## 提交前品質檢查
 
-執行 `git commit` 前，依序執行以下指令並確認全部通過：
+執行 `git commit` 前，依序執行以下指令並確認全部通過（指令一律優先透過 `fvm` 執行，找不到 `fvm` 才退回直接用 `flutter`／`dart`）：
 
-1. **格式化**：`dart format lib/ test/`（不要對 `.` 跑，會動到 `rust_builder/` 內 vendored 程式碼）
-2. **靜態分析**：`flutter analyze` — 必須輸出 `No issues found!`
-3. **測試**：`flutter test` — 必須輸出 `All tests passed!`
+1. **格式化**：`fvm dart format lib/ test/`（不要對 `.` 跑，會動到 `rust_builder/` 內 vendored 程式碼）
+2. **靜態分析**：`fvm flutter analyze` — 必須輸出 `No issues found!`
+3. **測試**：`fvm flutter test` — 必須輸出 `All tests passed!`
 
 任何一項失敗就先修，不要用 `--no-verify` 跳過 hooks。
 
