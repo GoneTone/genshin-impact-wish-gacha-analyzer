@@ -29,6 +29,11 @@
 
 <https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases>
 
+### 也有支援其他遊戲的版本
+
+- 鳴潮：<https://github.com/GoneTone/wuthering-waves-convene-gacha-analyzer>
+- 未來可能新增支援更多遊戲...
+
 ## 使用方式
 
 1. 啟動原神，先別開啟卡池歷史頁面。
