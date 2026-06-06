@@ -34,24 +34,30 @@ class SectionCard extends StatelessWidget {
         border: Border.all(color: tokens.borderSubtle),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (icon == null)
-            titleText
-          else
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(icon, size: 20, color: tokens.textPrimary),
-                const SizedBox(width: AppSpacing.s),
-                Flexible(child: titleText),
-              ],
-            ),
-          const SizedBox(height: AppSpacing.m),
-          child,
-        ],
+      // ListTile 系列（RadioListTile／SwitchListTile 等）會把背景與 ink
+      // 畫在最近的 Material 上；少了這層透明 Material，它們會穿到卡片外層的
+      // Material，被本卡片背景遮住（Flutter 3.44 起會直接 assert）。
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (icon == null)
+              titleText
+            else
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 20, color: tokens.textPrimary),
+                  const SizedBox(width: AppSpacing.s),
+                  Flexible(child: titleText),
+                ],
+              ),
+            const SizedBox(height: AppSpacing.m),
+            child,
+          ],
+        ),
       ),
     );
   }

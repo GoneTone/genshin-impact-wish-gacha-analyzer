@@ -166,11 +166,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    // 用 ReorderableListView 的內部 onReorder 直接觸發 — 比 tester.drag 穩定
+    // 用 ReorderableListView 的內部 onReorderItem 直接觸發 — 比 tester.drag 穩定
     final list = tester.widget<ReorderableListView>(
       find.byType(ReorderableListView),
     );
-    list.onReorder(0, 2); // 把第 0 個 (100000001) 移到第 1 個（之後）
+    // onReorderItem 的 newIndex 已是移除 oldIndex 後的目標位置：把第 0 個
+    // (100000001) 移到第 1 個之後 → 傳 1（非舊 onReorder 的 2）。
+    list.onReorderItem!(0, 1);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
 
