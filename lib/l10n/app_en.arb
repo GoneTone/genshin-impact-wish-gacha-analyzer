@@ -302,9 +302,6 @@
   "settingsMaskUidInUiHint": "When on, UIDs in the interface and account list show the first 3 digits with the rest masked (e.g. 123xxxxx). Useful for streaming or screen sharing. Share images, exported files, and the delete confirmation dialog are not affected.",
   "settingsAbout": "About",
   "settingsAboutVersion": "Version {version}",
-  "settingsOtherGamesTitle": "Versions for Other Games",
-  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
-  "settingsOtherGamesFuture": "More games may be supported in the future...",
   "@settingsAboutVersion": {
     "placeholders": {
       "version": {
@@ -312,6 +309,9 @@
       }
     }
   },
+  "settingsOtherGamesTitle": "Versions for Other Games",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "More games may be supported in the future...",
   "contributorsTitle": "Contributors",
   "contributorsSubtitle": "Special thanks to the following partners who have contributed to the development of this software!",
   "contributorsProjectLeader": "Project moderator",
