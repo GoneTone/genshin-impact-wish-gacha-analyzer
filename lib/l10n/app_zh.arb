@@ -225,7 +225,7 @@
   "settingsAccountManagement": "帳號管理",
   "settingsPrivacySectionTitle": "隱私",
   "settingsMaskUidInUi": "遮蔽介面中的 UID",
-  "settingsMaskUidInUiHint": "開啟後，畫面與帳號清單中的 UID 會以前 3 碼搭配 x 顯示（例如 123xxxxx），適合實況或螢幕分享時使用。分享圖、匯出檔案、刪除確認框不受影響。",
+  "settingsMaskUidInUiHint": "開啟後，畫面與帳號清單中的 UID 會以前 3 碼搭配 • 顯示（例如 123•••••），適合實況或螢幕分享時使用。分享圖、匯出檔案、刪除確認框不受影響。",
   "settingsAbout": "關於",
   "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {
@@ -409,7 +409,7 @@
   "shareImageThemeDark": "深色",
   "shareImageThemeLight": "淺色",
   "shareImageShowFullUid": "在圖上顯示完整 UID",
-  "shareImageShowFullUidHint": "關閉時只顯示前 3 碼，其餘以 x 遮罩",
+  "shareImageShowFullUidHint": "關閉時只顯示前 3 碼，其餘以 • 遮罩",
   "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "資料更新 {time}",
   "@shareImageUpdatedAt": {

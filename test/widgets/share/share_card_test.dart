@@ -131,7 +131,7 @@ void main() {
     );
     await _pump(t, card, container);
     expect(t.takeException(), isNull);
-    expect(find.textContaining('800xxxxxx'), findsOneWidget);
+    expect(find.textContaining('800••••••'), findsOneWidget);
     expect(find.textContaining('800123456'), findsNothing);
   });
 

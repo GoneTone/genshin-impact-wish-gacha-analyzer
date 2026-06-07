@@ -101,7 +101,7 @@ class AppSettings {
   /// 使用者選擇跳過的 release tag（已讀過不再提示）。
   final String? skippedReleaseTag;
 
-  /// 是否在介面中遮蔽 UID（前 3 碼搭配 `x`）；資料檔與刪除確認框不受影響。
+  /// 是否在介面中遮蔽 UID（前 3 碼搭配 `•`）；資料檔與刪除確認框不受影響。
   final bool maskUidInUi;
 
   /// 預設設定值（跟隨系統主題與語言）。

@@ -183,7 +183,7 @@ void main() {
       await tester.pumpWidget(
         _wrap(const AccountTriggerLabel(activeUid: '123456789', maskUid: true)),
       );
-      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123••••••'), findsOneWidget);
       expect(find.text('123456789'), findsNothing);
     });
 
@@ -198,7 +198,7 @@ void main() {
         ),
       );
       expect(find.text('主帳'), findsOneWidget);
-      expect(find.text(' (123xxxxxx)'), findsOneWidget);
+      expect(find.text(' (123••••••)'), findsOneWidget);
       expect(find.text(' (123456789)'), findsNothing);
     });
 
@@ -227,7 +227,7 @@ void main() {
           ),
         ),
       );
-      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123••••••'), findsOneWidget);
     });
 
     testWidgets('with alias: alias primary, masked uid as subtitle', (
@@ -244,7 +244,7 @@ void main() {
         ),
       );
       expect(find.text('主帳'), findsOneWidget);
-      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123••••••'), findsOneWidget);
       expect(find.text('123456789'), findsNothing);
     });
   });

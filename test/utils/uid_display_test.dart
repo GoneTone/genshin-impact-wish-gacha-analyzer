@@ -9,7 +9,7 @@ void main() {
     });
 
     test('returns masked uid when mask=true', () {
-      expect(displayUid('123456789', mask: true), '123xxxxxx');
+      expect(displayUid('123456789', mask: true), '123••••••');
     });
 
     test('mask=true delegates to maskUidForShare', () {
@@ -18,12 +18,12 @@ void main() {
     });
 
     test('handles empty string', () {
-      expect(displayUid('', mask: true), 'xxx');
+      expect(displayUid('', mask: true), '•••');
       expect(displayUid('', mask: false), '');
     });
 
     test('handles short uid (< 3 chars)', () {
-      expect(displayUid('12', mask: true), 'xxx');
+      expect(displayUid('12', mask: true), '•••');
       expect(displayUid('12', mask: false), '12');
     });
 

@@ -299,7 +299,7 @@
   "settingsAccountManagement": "Account management",
   "settingsPrivacySectionTitle": "Privacy",
   "settingsMaskUidInUi": "Mask UID in interface",
-  "settingsMaskUidInUiHint": "When on, UIDs in the interface and account list show the first 3 digits with the rest masked (e.g. 123xxxxx). Useful for streaming or screen sharing. Share images, exported files, and the delete confirmation dialog are not affected.",
+  "settingsMaskUidInUiHint": "When on, UIDs in the interface and account list show the first 3 digits with the rest masked (e.g. 123•••••). Useful for streaming or screen sharing. Share images, exported files, and the delete confirmation dialog are not affected.",
   "settingsAbout": "About",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {
@@ -535,7 +535,7 @@
   "shareImageThemeDark": "Dark",
   "shareImageThemeLight": "Light",
   "shareImageShowFullUid": "Show full UID on image",
-  "shareImageShowFullUidHint": "When off, only the first 3 digits are shown, the rest masked with x",
+  "shareImageShowFullUidHint": "When off, only the first 3 digits are shown, the rest masked with •",
   "shareImageGenerate": "Generate",
   "shareImageUpdatedAt": "Updated {time}",
   "@shareImageUpdatedAt": {

@@ -299,12 +299,12 @@ void main() {
     testWidgets('maskUidInUi=false 顯示完整 UID', (tester) async {
       await pumpWithUid(tester, uid: '123456789', maskUidInUi: false);
       expect(find.text('123456789'), findsOneWidget);
-      expect(find.text('123xxxxxx'), findsNothing);
+      expect(find.text('123••••••'), findsNothing);
     });
 
     testWidgets('maskUidInUi=true 顯示遮蔽 UID', (tester) async {
       await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
-      expect(find.text('123xxxxxx'), findsOneWidget);
+      expect(find.text('123••••••'), findsOneWidget);
       expect(find.text('123456789'), findsNothing);
     });
 
