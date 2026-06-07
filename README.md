@@ -13,7 +13,7 @@
 請放心：本軟體不會讀取或竄改任何遊戲檔案、記憶體與遊戲傳輸的資料，只會在 WebView 開啟卡池歷史頁面時攔下那一條請求網址，所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
 
 文章：
-- 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+- 巴哈姆特：<https://forum.gamer.com.tw/Co.php?bsn=36730&sn=64234>
 - HoYoLAB：<https://www.hoyolab.com/genshin/article/552176>
 - 原神資訊站：<https://genshininfo.reh.tw/archives/97>
 

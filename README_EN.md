@@ -13,7 +13,7 @@ The first time you press *Update*, the utility loads your full gacha history, wh
 Rest assured: this utility does not read or modify any game file, game memory, or in-game network traffic. It only intercepts the wish history page request that the in-game WebView itself makes, so there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
-- 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990&tnum=4>
+- 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/Co.php?bsn=36730&sn=64234>
 - HoYoLAB: <https://www.hoyolab.com/genshin/article/552176>
 - 原神資訊站 (Genshin Impact Info): <https://genshininfo.reh.tw/archives/97>
  
