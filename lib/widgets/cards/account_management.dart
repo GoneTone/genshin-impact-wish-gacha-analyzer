@@ -142,7 +142,7 @@ class _Row extends StatefulWidget {
   /// 使用者自訂別名；空字串表示未設定。
   final String alias;
 
-  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  /// 是否套用介面隱私模式（前 3 碼搭配 `•` 遮蔽）。
   final bool maskUid;
 
   /// 點擊「切換」後呼叫。

@@ -299,7 +299,7 @@
   "settingsAccountManagement": "จัดการบัญชี",
   "settingsPrivacySectionTitle": "ความเป็นส่วนตัว",
   "settingsMaskUidInUi": "ปิดบัง UID ในอินเทอร์เฟซ",
-  "settingsMaskUidInUiHint": "เมื่อเปิดใช้งาน UID ในอินเทอร์เฟซและรายการบัญชีจะแสดง 3 หลักแรกและส่วนที่เหลือจะถูกปิดบัง (เช่น 123xxxxx) เหมาะสำหรับการสตรีมหรือการแชร์หน้าจอ ภาพแชร์ ไฟล์ส่งออก และกล่องโต้ตอบยืนยันการลบจะไม่ได้รับผลกระทบ",
+  "settingsMaskUidInUiHint": "เมื่อเปิดใช้งาน UID ในอินเทอร์เฟซและรายการบัญชีจะแสดง 3 หลักแรกและส่วนที่เหลือจะถูกปิดบัง (เช่น 123•••••) เหมาะสำหรับการสตรีมหรือการแชร์หน้าจอ ภาพแชร์ ไฟล์ส่งออก และกล่องโต้ตอบยืนยันการลบจะไม่ได้รับผลกระทบ",
   "settingsAbout": "เกี่ยวกับ",
   "settingsAboutVersion": "เวอร์ชัน {version}",
   "@settingsAboutVersion": {
@@ -535,7 +535,7 @@
   "shareImageThemeDark": "มืด",
   "shareImageThemeLight": "สว่าง",
   "shareImageShowFullUid": "แสดง UID เต็มในภาพ",
-  "shareImageShowFullUidHint": "เมื่อปิด จะแสดงเพียง 3 ตัวแรก ส่วนที่เหลือจะถูกปิดบังด้วย x",
+  "shareImageShowFullUidHint": "เมื่อปิด จะแสดงเพียง 3 ตัวแรก ส่วนที่เหลือจะถูกปิดบังด้วย •",
   "shareImageGenerate": "สร้าง",
   "shareImageUpdatedAt": "ข้อมูลอัพเดทเมื่อ {time}",
   "@shareImageUpdatedAt": {

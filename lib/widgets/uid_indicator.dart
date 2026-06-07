@@ -136,7 +136,7 @@ class AccountTriggerLabel extends StatelessWidget {
   /// 使用者自訂的帳號別名。
   final String? alias;
 
-  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  /// 是否套用介面隱私模式（前 3 碼搭配 `•` 遮蔽）。
   final bool maskUid;
 
   @override
@@ -234,7 +234,7 @@ class AccountMenuLabel extends StatelessWidget {
   /// 是否為當前使用中的帳號。
   final bool isActive;
 
-  /// 是否套用介面隱私模式（前 3 碼搭配 `x` 遮蔽）。
+  /// 是否套用介面隱私模式（前 3 碼搭配 `•` 遮蔽）。
   final bool maskUid;
 
   @override

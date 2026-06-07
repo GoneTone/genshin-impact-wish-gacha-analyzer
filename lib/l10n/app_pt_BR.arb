@@ -299,7 +299,7 @@
   "settingsAccountManagement": "Gerenciamento de contas",
   "settingsPrivacySectionTitle": "Privacidade",
   "settingsMaskUidInUi": "Mascarar UID na interface",
-  "settingsMaskUidInUiHint": "Quando ativado, os UIDs na interface e na lista de contas mostram os 3 primeiros dígitos com o restante mascarado (por exemplo, 123xxxxx). Útil para transmissões ou compartilhamento de tela. Imagens compartilháveis, arquivos exportados e a caixa de diálogo de confirmação de exclusão não são afetados.",
+  "settingsMaskUidInUiHint": "Quando ativado, os UIDs na interface e na lista de contas mostram os 3 primeiros dígitos com o restante mascarado (por exemplo, 123•••••). Útil para transmissões ou compartilhamento de tela. Imagens compartilháveis, arquivos exportados e a caixa de diálogo de confirmação de exclusão não são afetados.",
   "settingsAbout": "Cerca de",
   "settingsAboutVersion": "Versão {version}",
   "@settingsAboutVersion": {
@@ -535,7 +535,7 @@
   "shareImageThemeDark": "Escuro",
   "shareImageThemeLight": "Claro",
   "shareImageShowFullUid": "Mostrar UID completo na imagem",
-  "shareImageShowFullUidHint": "Quando desativado, exibe apenas os 3 primeiros dígitos; o restante é ocultado com x",
+  "shareImageShowFullUidHint": "Quando desativado, exibe apenas os 3 primeiros dígitos; o restante é ocultado com •",
   "shareImageGenerate": "Gerar",
   "shareImageUpdatedAt": "Dados atualizados em {time}",
   "@shareImageUpdatedAt": {

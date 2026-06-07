@@ -299,7 +299,7 @@
   "settingsAccountManagement": "Quản Lý Tài Khoản",
   "settingsPrivacySectionTitle": "Quyền riêng tư",
   "settingsMaskUidInUi": "Che giấu UID trong giao diện",
-  "settingsMaskUidInUiHint": "Khi bật, UID trong giao diện và danh sách tài khoản sẽ hiển thị 3 chữ số đầu tiên và phần còn lại được che giấu (ví dụ: 123xxxxx). Hữu ích khi phát trực tiếp hoặc chia sẻ màn hình. Hình ảnh chia sẻ, tệp xuất và hộp thoại xác nhận xóa không bị ảnh hưởng.",
+  "settingsMaskUidInUiHint": "Khi bật, UID trong giao diện và danh sách tài khoản sẽ hiển thị 3 chữ số đầu tiên và phần còn lại được che giấu (ví dụ: 123•••••). Hữu ích khi phát trực tiếp hoặc chia sẻ màn hình. Hình ảnh chia sẻ, tệp xuất và hộp thoại xác nhận xóa không bị ảnh hưởng.",
   "settingsAbout": "Giới Thiệu",
   "settingsAboutVersion": "Phiên bản {version}",
   "@settingsAboutVersion": {
@@ -535,7 +535,7 @@
   "shareImageThemeDark": "Tối",
   "shareImageThemeLight": "Sáng",
   "shareImageShowFullUid": "Hiển thị UID đầy đủ trên ảnh",
-  "shareImageShowFullUidHint": "Khi tắt, chỉ hiển thị 3 ký tự đầu, phần còn lại sẽ bị che bằng x",
+  "shareImageShowFullUidHint": "Khi tắt, chỉ hiển thị 3 ký tự đầu, phần còn lại sẽ bị che bằng •",
   "shareImageGenerate": "Tạo",
   "shareImageUpdatedAt": "Dữ liệu cập nhật {time}",
   "@shareImageUpdatedAt": {
