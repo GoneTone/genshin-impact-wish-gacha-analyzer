@@ -274,11 +274,12 @@ void main() {
     final leftHeight = _leftColumnHeight(t, l);
     expect(rightHeight, closeTo(leftHeight, 0.5));
 
-    // 標題仍在 TimelineVertical 子樹內（title 保留，至多 10 筆）。
+    // 標題仍在 TimelineVertical 子樹內；括號數量顯示實際出貨總數（12），
+    // 不受條目至多 10 筆的視覺截斷影響。
     expect(
       find.descendant(
         of: find.byType(TimelineVertical),
-        matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), 10)),
+        matching: find.text(l.timelineTopRarityTitle(l.rarityStar(5), 12)),
       ),
       findsOneWidget,
     );
