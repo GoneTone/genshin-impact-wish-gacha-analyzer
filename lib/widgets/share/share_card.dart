@@ -419,10 +419,12 @@ class _SectionView extends StatelessWidget {
   };
 
   /// 右欄時間軸：重用 App TimelineVertical（自帶 container）。標題透過 title
-  /// 進到卡片 border 內。最多取 [_kShareTimelineMaxEntries] 筆（避免出現
-  /// 「載入更多」按鈕），以**自然高度**繪製；超出右欄區域（= 左欄兩 _PieBox
-  /// 疊高）的部分由外層 Stack(Clip.hardEdge) 直接裁掉，不報 overflow、不反拉
-  /// 左欄。不再傳 footerNote / fillHeight（已移除「還有 N 筆」與撐齊邏輯）。
+  /// 進到卡片 border 內，括號數量取 `section.timeline.length`（該星級實際出貨
+  /// 總數，與 App overview／banner 一致），不受下方視覺截斷影響。條目最多取
+  /// [_kShareTimelineMaxEntries] 筆（避免出現「載入更多」），以**自然高度**繪製；
+  /// 超出右欄區域（= 左欄兩 _PieBox 疊高）的部分由外層 Stack(Clip.hardEdge) 直接
+  /// 裁掉，不報 overflow、不反拉左欄。不再傳 footerNote / fillHeight（已移除「還有
+  /// N 筆」與撐齊邏輯）。
   Widget _timeline() {
     final rank = section.timelineRank;
     final n = section.timeline.length < _kShareTimelineMaxEntries
@@ -430,7 +432,10 @@ class _SectionView extends StatelessWidget {
         : _kShareTimelineMaxEntries;
     final shown = section.timeline.take(n).toList(growable: false);
     return TimelineVertical(
-      title: l.timelineTopRarityTitle(l.rarityStar(rank), shown.length),
+      title: l.timelineTopRarityTitle(
+        l.rarityStar(rank),
+        section.timeline.length,
+      ),
       entries: shown,
       colors: colors,
       targetRank: rank,
