@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -280,5 +281,153 @@ void main() {
     });
     await tester.pump();
     expect(tester.takeException(), isNull);
+  });
+
+  group('圖片選單 + 右鍵 + 重抓', () {
+    /// 在 dialog 內定位中央 gallery 主圖（cache 檔名含 _gallery_）。
+    Finder galleryMainImage() => find.byWidgetPredicate(
+      (w) =>
+          w is Image &&
+          w.image is FileImage &&
+          (w.image as FileImage).file.path.contains('_gallery_'),
+    );
+
+    /// 預先建立某 gallery URL 的 cache 檔（4-byte PNG magic），讓對應 chip 在
+    /// build() 時即同步判定為 _GalleryReady，不依賴 lazy fetch 時序。
+    Future<void> touchGallery(String url) async {
+      final f = hoyowikiGalleryCacheFile(baseDir: tempDir, id: 'x1', url: url);
+      await f.writeAsBytes([0x89, 0x50, 0x4E, 0x47]);
+    }
+
+    /// 建立 container + 植入 entry + 預先建好 icon 與兩張 gallery cache 檔，
+    /// 讓 dialog 一開即三個 chip 全部同步 ready。
+    Future<ProviderContainer> seedAllReady(
+      WidgetTester tester,
+      _FakeFetcher fetcher,
+    ) async {
+      late ProviderContainer c;
+      await tester.runAsync(() async {
+        c = await setupContainer(fetcher, tempDir);
+        addTearDown(c.dispose);
+        await seedEntry(c);
+        await _touchIcon(tempDir, 'x1');
+        await touchGallery('https://cdn/x1_g1.gif');
+        await touchGallery('https://cdn/x1_pic.png');
+      });
+      return c;
+    }
+
+    testWidgets('ready 圖片右上角有溢出選單鈕', (tester) async {
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async =>
+            Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+      );
+      final c = await seedAllReady(tester, fetcher);
+
+      await pumpDialogAndSettle(tester, c, _rec());
+
+      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+    });
+
+    testWidgets('點選單鈕 → 顯示複製/儲存/重抓三項', (tester) async {
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async =>
+            Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+      );
+      final c = await seedAllReady(tester, fetcher);
+
+      await pumpDialogAndSettle(tester, c, _rec());
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text(l.actionCopyImage), findsOneWidget);
+      expect(find.text(l.actionSaveImage), findsOneWidget);
+      expect(find.text(l.actionRefetchImage), findsOneWidget);
+    });
+
+    testWidgets('右鍵圖片 → 叫出選單', (tester) async {
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async =>
+            Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+      );
+      final c = await seedAllReady(tester, fetcher);
+
+      await pumpDialogAndSettle(tester, c, _rec());
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+
+      await tester.tap(galleryMainImage().first, buttons: kSecondaryButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text(l.actionCopyImage), findsOneWidget);
+      expect(find.text(l.actionRefetchImage), findsOneWidget);
+    });
+
+    testWidgets('選「重抓圖片」(gallery) → 對該圖 URL 觸發 fetch', (tester) async {
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async =>
+            Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+      );
+      final c = await seedAllReady(tester, fetcher);
+
+      await pumpDialogAndSettle(tester, c, _rec());
+      // 預先建檔 → 開 dialog 不觸發 lazy fetch。
+      expect(fetcher._calls['https://cdn/x1_g1.gif'], isNull);
+
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text(l.actionRefetchImage));
+      await tester.pump();
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      });
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      expect(fetcher._calls['https://cdn/x1_g1.gif'], 1);
+    });
+
+    testWidgets('切到 Icon chip 後重抓 → 對 icon URL 觸發 fetch', (tester) async {
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async =>
+            Uint8List.fromList([0x89, 0x50, 0x4E, 0x47]),
+      );
+      final c = await seedAllReady(tester, fetcher);
+
+      await pumpDialogAndSettle(tester, c, _rec());
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+
+      await tester.tap(find.text(l.galleryIconLabel));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(fetcher._calls['https://cdn/x1_icon.png'], isNull);
+
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text(l.actionRefetchImage));
+      await tester.pump();
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      });
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      expect(fetcher._calls['https://cdn/x1_icon.png'], 1);
+    });
   });
 }
