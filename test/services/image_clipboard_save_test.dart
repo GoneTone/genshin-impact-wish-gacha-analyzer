@@ -87,7 +87,7 @@ void main() {
   group('copyImagePngToClipboard', () {
     test('seam 回 true → true（isGif=false）', () async {
       bool? capturedIsGif;
-      imageClipboardWriter = (b, {required isGif}) async {
+      imageClipboardWriter = (b, {required isGif, filePath}) async {
         capturedIsGif = isGif;
         return true;
       };
@@ -96,24 +96,26 @@ void main() {
     });
 
     test('seam 回 false → false', () async {
-      imageClipboardWriter = (b, {required isGif}) async => false;
+      imageClipboardWriter = (b, {required isGif, filePath}) async => false;
       expect(await copyImagePngToClipboard(png), isFalse);
     });
 
     test('seam 拋例外 → false', () async {
-      imageClipboardWriter = (b, {required isGif}) async =>
+      imageClipboardWriter = (b, {required isGif, filePath}) async =>
           throw Exception('x');
       expect(await copyImagePngToClipboard(png), isFalse);
     });
   });
 
   group('copyImageFileToClipboard', () {
-    test('GIF → 以 isGif=true、原始 bytes 寫剪貼簿', () async {
+    test('GIF → 以 isGif=true、原始 bytes、實體檔路徑寫剪貼簿', () async {
       bool? capturedIsGif;
       Uint8List? capturedBytes;
-      imageClipboardWriter = (b, {required isGif}) async {
+      String? capturedFilePath;
+      imageClipboardWriter = (b, {required isGif, filePath}) async {
         capturedIsGif = isGif;
         capturedBytes = b;
+        capturedFilePath = filePath;
         return true;
       };
       final dir = await Directory.systemTemp.createTemp('img_copy_');
@@ -125,13 +127,18 @@ void main() {
       expect(await copyImageFileToClipboard(f), isTrue);
       expect(capturedIsGif, isTrue);
       expect(capturedBytes, _gifBytes);
+      expect(capturedFilePath, f.path);
     });
 
-    testWidgets('非 GIF → 以 isGif=false（PNG）寫剪貼簿', (tester) async {
+    testWidgets('非 GIF → 以 isGif=false（PNG）、無實體檔路徑寫剪貼簿', (tester) async {
       await tester.runAsync(() async {
         bool? capturedIsGif;
-        imageClipboardWriter = (b, {required isGif}) async {
+        String? capturedFilePath;
+        var filePathWasSet = false;
+        imageClipboardWriter = (b, {required isGif, filePath}) async {
           capturedIsGif = isGif;
+          capturedFilePath = filePath;
+          filePathWasSet = true;
           return true;
         };
         final dir = await Directory.systemTemp.createTemp('img_copy_');
@@ -142,13 +149,15 @@ void main() {
 
         expect(await copyImageFileToClipboard(f), isTrue);
         expect(capturedIsGif, isFalse);
+        expect(filePathWasSet, isTrue);
+        expect(capturedFilePath, isNull);
       });
     });
 
     testWidgets('壞檔 → false（不呼叫 seam）', (tester) async {
       await tester.runAsync(() async {
         var called = false;
-        imageClipboardWriter = (b, {required isGif}) async {
+        imageClipboardWriter = (b, {required isGif, filePath}) async {
           called = true;
           return true;
         };

@@ -14,7 +14,7 @@ void main() {
   test('使用者選了路徑 + 剪貼簿成功 → saved', () async {
     final tmp = '${Directory.systemTemp.path}/share_test_a.png';
     imageSaveLocationPicker = (name) async => FileSaveLocation(tmp);
-    imageClipboardWriter = (bytes, {required isGif}) async => true;
+    imageClipboardWriter = (bytes, {required isGif, filePath}) async => true;
 
     final r = await exportShareImage(png, suggestedName: 'a.png');
 
@@ -26,7 +26,7 @@ void main() {
 
   test('使用者取消存檔但剪貼簿成功 → copiedOnly', () async {
     imageSaveLocationPicker = (name) async => null;
-    imageClipboardWriter = (bytes, {required isGif}) async => true;
+    imageClipboardWriter = (bytes, {required isGif, filePath}) async => true;
 
     final r = await exportShareImage(png, suggestedName: 'a.png');
 
@@ -37,7 +37,7 @@ void main() {
   test('剪貼簿不支援但存檔成功 → savedOnly', () async {
     final tmp = '${Directory.systemTemp.path}/share_test_b.png';
     imageSaveLocationPicker = (name) async => FileSaveLocation(tmp);
-    imageClipboardWriter = (bytes, {required isGif}) async => false;
+    imageClipboardWriter = (bytes, {required isGif, filePath}) async => false;
 
     final r = await exportShareImage(png, suggestedName: 'b.png');
 
@@ -47,7 +47,7 @@ void main() {
 
   test('剪貼簿不支援 + 使用者取消存檔 → copiedOnly', () async {
     imageSaveLocationPicker = (name) async => null;
-    imageClipboardWriter = (bytes, {required isGif}) async => false;
+    imageClipboardWriter = (bytes, {required isGif, filePath}) async => false;
 
     final r = await exportShareImage(png, suggestedName: 'a.png');
 
@@ -56,7 +56,7 @@ void main() {
   });
 
   test('存檔失敗 → rethrow', () async {
-    imageClipboardWriter = (bytes, {required isGif}) async => true;
+    imageClipboardWriter = (bytes, {required isGif, filePath}) async => true;
     imageSaveLocationPicker = (name) async =>
         FileSaveLocation('${Directory.systemTemp.path}/share_fail.png');
     imageFileWriter = (path, png) async =>

@@ -89,30 +89,24 @@ Future<FileSaveLocation?> _defaultSaveLocationPicker(String name) {
   );
 }
 
-/// 預設剪貼簿寫入：寫圖片 [bytes] 到系統剪貼簿，[isGif] 決定用 GIF 或 PNG 格式；
-/// 回傳是否成功（平台不支援回 false）。
+/// 預設剪貼簿寫入：寫圖片 [bytes] 到系統剪貼簿，[isGif] 決定用 GIF 或 PNG 格式。
+/// GIF 且有 [filePath] 時，額外掛上實體檔路徑（Windows 為 `CF_HDROP`），讓以
+/// 「檔案」貼上的目標（Discord、檔案總管、聊天軟體）取得真正的 `.gif` 檔以保留
+/// 動畫；放最前面提高優先序。純圖片貼上的目標（小畫家等）仍只會拿到系統合成的
+/// 靜態點陣圖 — 這是 Windows 剪貼簿圖片模型的限制，無法避免。回是否成功（平台
+/// 不支援回 false）。
 Future<bool> _defaultClipboardWriter(
   Uint8List bytes, {
   required bool isGif,
+  String? filePath,
 }) async {
   final clipboard = SystemClipboard.instance;
   if (clipboard == null) return false;
   final item = DataWriterItem(suggestedName: isGif ? 'image.gif' : 'image.png');
-  item.add(isGif ? Formats.gif(bytes) : Formats.png(bytes));
-  // GIF 額外掛一份 virtual file：讓「貼上檔案」的目標（Discord、檔案總管、聊天
-  // 軟體）拿到真正的 .gif 檔以保留動畫。純圖片貼上的目標（小畫家等）仍只會拿到
-  // 系統合成的靜態點陣圖 — 這是 Windows 剪貼簿圖片模型的限制，無法避免。
-  if (isGif && item.virtualFileSupported) {
-    item.addVirtualFile(
-      format: Formats.gif,
-      storageSuggestion: VirtualFileStorage.memory,
-      provider: (sinkProvider, progress) {
-        final sink = sinkProvider(fileSize: bytes.length);
-        sink.add(bytes);
-        sink.close();
-      },
-    );
+  if (isGif && filePath != null) {
+    item.add(Formats.fileUri(Uri.file(filePath)));
   }
+  item.add(isGif ? Formats.gif(bytes) : Formats.png(bytes));
   await clipboard.write([item]);
   return true;
 }
@@ -128,7 +122,7 @@ imageSaveLocationPicker = _defaultSaveLocationPicker;
 
 /// 剪貼簿寫入 seam，讓 flutter test 不碰真實剪貼簿（SystemClipboard.instance 為 null）。
 @visibleForTesting
-Future<bool> Function(Uint8List bytes, {required bool isGif})
+Future<bool> Function(Uint8List bytes, {required bool isGif, String? filePath})
 imageClipboardWriter = _defaultClipboardWriter;
 
 /// 檔案寫入 seam，讓 flutter test 不碰真實 FS。
@@ -144,14 +138,19 @@ void resetImageClipboardSaveSeams() {
   imageFileWriter = _defaultFileWriter;
 }
 
-/// 把圖片 [bytes] 寫入系統剪貼簿（[isGif] 選 GIF／PNG 格式）。成功回 true；
-/// 平台不支援或例外回 false。
+/// 把圖片 [bytes] 寫入系統剪貼簿（[isGif] 選 GIF／PNG 格式；[filePath] 供 GIF 掛
+/// 實體檔路徑）。成功回 true；平台不支援或例外回 false。
 Future<bool> _copyBytesToClipboard(
   Uint8List bytes, {
   required bool isGif,
+  String? filePath,
 }) async {
   try {
-    final ok = await imageClipboardWriter(bytes, isGif: isGif);
+    final ok = await imageClipboardWriter(
+      bytes,
+      isGif: isGif,
+      filePath: filePath,
+    );
     _log.info('copy image clipboard=$ok gif=$isGif bytes=${bytes.length}');
     return ok;
   } catch (e, st) {
@@ -164,12 +163,17 @@ Future<bool> _copyBytesToClipboard(
 Future<bool> copyImagePngToClipboard(Uint8List png) =>
     _copyBytesToClipboard(png, isGif: false);
 
-/// 把本地圖檔 [file] 複製到系統剪貼簿：GIF 保留原始（保留動畫），其餘轉 PNG。
-/// 讀檔／解碼失敗或平台不支援回 false。
+/// 把本地圖檔 [file] 複製到系統剪貼簿：GIF 保留原始（保留動畫，並掛實體檔路徑供
+/// 以「檔案」貼上的目標取得真正的 .gif），其餘轉 PNG。讀檔／解碼失敗或平台不支援
+/// 回 false。
 Future<bool> copyImageFileToClipboard(File file) async {
   final out = await prepareOutputImage(file);
   if (out == null) return false;
-  return _copyBytesToClipboard(out.bytes, isGif: out.isGif);
+  return _copyBytesToClipboard(
+    out.bytes,
+    isGif: out.isGif,
+    filePath: out.isGif ? file.path : null,
+  );
 }
 
 /// 讓使用者選位置存 [bytes]。成功回實際路徑、取消回 null、寫檔失敗記 severe 後 rethrow。
