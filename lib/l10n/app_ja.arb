@@ -831,5 +831,42 @@
   "actionCloseImagePreview": "画像プレビューを閉じる",
   "@actionCloseImagePreview": {
     "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "画像をコピー",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "画像を保存",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "imageCopied": "画像をクリップボードにコピーしました",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "画像のコピーに失敗しました",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "画像の保存に失敗しました",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "{path} に保存しました",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "actionZoomIn": "拡大",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "縮小",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
   }
 }
