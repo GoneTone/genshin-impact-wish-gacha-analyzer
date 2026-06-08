@@ -284,42 +284,30 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     _onImageMenuSelected(selected, current);
   }
 
-  /// 把 record 名稱與 chip 標籤組成存檔建議檔名，並去掉檔名非法字元。
-  String _suggestedFileName(_GalleryChipEntry e) {
+  /// 把 record 名稱與 chip 標籤組成存檔建議檔名（不含副檔名），並去掉非法字元。
+  /// 副檔名由 [saveImageFile] 依實際格式（gif／png）補上。
+  String _suggestedBaseName(_GalleryChipEntry e) {
     final raw = '${widget.record.name}_${e.label}';
     // Windows 檔名非法字元（< > : " / \ | ? *）一律換 _，避免存檔對話框拒絕。
-    final safe = raw.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
-    return '$safe.png';
+    return raw.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
   }
 
-  /// 複製目前圖片到剪貼簿：解碼成 PNG → 寫剪貼簿，結果以 SnackBar 回報。
+  /// 複製目前圖片到剪貼簿（GIF 保留原始、其餘轉 PNG），結果以 toast 回報。
   Future<void> _copyImage(_GalleryChipEntry e) async {
     final l = AppLocalizations.of(context)!;
-    final png = await encodeImageFileToPng(e.file);
-    if (!mounted) return;
-    if (png == null) {
-      _showSnack(l.imageCopyFailed);
-      return;
-    }
-    final ok = await copyImagePngToClipboard(png);
+    final ok = await copyImageFileToClipboard(e.file);
     if (!mounted) return;
     _showSnack(ok ? l.imageCopied : l.imageCopyFailed);
   }
 
-  /// 儲存目前圖片：解碼成 PNG → 系統存檔對話框，結果以 SnackBar 回報。
-  /// 使用者取消不提示；寫檔失敗提示失敗。
+  /// 儲存目前圖片（GIF 存成 .gif 保留動畫、其餘轉 PNG）→ 系統存檔對話框，
+  /// 結果以 toast 回報。使用者取消不提示；準備／寫檔失敗提示失敗。
   Future<void> _saveImage(_GalleryChipEntry e) async {
     final l = AppLocalizations.of(context)!;
-    final png = await encodeImageFileToPng(e.file);
-    if (!mounted) return;
-    if (png == null) {
-      _showSnack(l.imageSaveFailed);
-      return;
-    }
     try {
-      final savedPath = await saveImagePng(
-        png,
-        suggestedName: _suggestedFileName(e),
+      final savedPath = await saveImageFile(
+        e.file,
+        suggestedBaseName: _suggestedBaseName(e),
       );
       if (!mounted || savedPath == null) return;
       _showSnack(l.imageSavedTo(savedPath));
