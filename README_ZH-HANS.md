@@ -13,7 +13,7 @@
 请放心：本软件不会读取或篡改任何游戏文件、内存与游戏传输的数据，只会在 WebView 打开卡池历史页面时拦下那一条请求网址，所以不会有账号被封禁的风险。如果您被封号，请思考是否因为其他原因被封禁，不要怪我们。
 
 帖子：
-- 巴哈姆特：<https://forum.gamer.com.tw/Co.php?bsn=36730&sn=64234>
+- 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
 - HoYoLAB：<https://www.hoyolab.com/genshin/article/552176>
 - 原神资讯站：<https://genshininfo.reh.tw/archives/97>
 
