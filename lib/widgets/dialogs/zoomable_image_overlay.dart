@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/gestures.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
 
 /// 開啟全螢幕 lightbox 顯示 [imageFile]，可拖曳平移、滾輪 / 單擊縮放、ESC / 點背景 / X 關閉。
 /// [suggestedBaseName] 為 copy／save 對話框的建議檔名（不含副檔名）。
@@ -174,6 +177,80 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     ).info('zoom toggle -> ${atFit ? 'in' : 'fit'}');
   }
 
+  /// copy／save 共用選單項目（複製圖片 ／ 儲存圖片）；⋮ 按鈕與右鍵選單共用。
+  List<PopupMenuEntry<String>> _menuItems(AppLocalizations l) => [
+    PopupMenuItem(
+      value: 'copy',
+      child: ListTile(
+        dense: true,
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.copy, size: 20),
+        title: Text(l.actionCopyImage),
+      ),
+    ),
+    PopupMenuItem(
+      value: 'save',
+      child: ListTile(
+        dense: true,
+        contentPadding: EdgeInsets.zero,
+        leading: const Icon(Icons.save_alt, size: 20),
+        title: Text(l.actionSaveImage),
+      ),
+    ),
+  ];
+
+  /// 分派選單選擇：複製 ／ 儲存。
+  void _onMenuSelected(String value) {
+    switch (value) {
+      case 'copy':
+        unawaited(_copy());
+      case 'save':
+        unawaited(_save());
+    }
+  }
+
+  /// 複製目前圖片到剪貼簿（GIF 保留動畫、其餘轉 PNG），結果以 toast 回報。
+  Future<void> _copy() async {
+    final l = AppLocalizations.of(context)!;
+    Logger('gacha.hoyowiki.zoom').info('menu copy');
+    final ok = await copyImageFileToClipboard(widget.imageFile);
+    if (!mounted) return;
+    showDialogToast(context, ok ? l.imageCopied : l.imageCopyFailed);
+  }
+
+  /// 儲存目前圖片（GIF 存 .gif、其餘轉 PNG）→ 系統存檔對話框，結果以 toast 回報。
+  Future<void> _save() async {
+    final l = AppLocalizations.of(context)!;
+    Logger('gacha.hoyowiki.zoom').info('menu save');
+    try {
+      final path = await saveImageFile(
+        widget.imageFile,
+        suggestedBaseName: widget.suggestedBaseName,
+      );
+      if (!mounted || path == null) return;
+      showDialogToast(context, l.imageSavedTo(path));
+    } catch (_) {
+      if (!mounted) return;
+      showDialogToast(context, l.imageSaveFailed);
+    }
+  }
+
+  /// 右鍵在圖片上叫出與 ⋮ 相同的選單，位置跟著游標。
+  Future<void> _showContextMenu(Offset globalPosition) async {
+    final l = AppLocalizations.of(context)!;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        globalPosition & Size.zero,
+        Offset.zero & overlay.size,
+      ),
+      items: _menuItems(l),
+    );
+    if (selected == null || !mounted) return;
+    _onMenuSelected(selected);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -246,6 +323,8 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                             // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應 Discord）。
                             onTapUp: (d) =>
                                 _toggleZoom(d.localPosition + Offset(dx, dy)),
+                            onSecondaryTapDown: (d) =>
+                                unawaited(_showContextMenu(d.globalPosition)),
                             child: Image(
                               image: _imageProvider,
                               fit: BoxFit.contain,

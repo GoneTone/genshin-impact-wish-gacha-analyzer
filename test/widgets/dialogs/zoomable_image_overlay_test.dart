@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
@@ -93,6 +95,7 @@ void main() {
     // per memory project_image_cache_cross_test_race
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
+    resetImageClipboardSaveSeams();
     if (await tempDir.exists()) {
       try {
         await tempDir.delete(recursive: true);
@@ -111,10 +114,10 @@ void main() {
           builder: (ctx) => Scaffold(
             body: ElevatedButton(
               onPressed: () => showZoomableImageOverlay(
-                  ctx,
-                  imageFile: imageFile,
-                  suggestedBaseName: 'test',
-                ),
+                ctx,
+                imageFile: imageFile,
+                suggestedBaseName: 'test',
+              ),
               child: const Text('open'),
             ),
           ),
@@ -377,7 +380,9 @@ void main() {
           );
           await tester.pump();
         }
-        final iv = tester.widget<InteractiveViewer>(find.byType(InteractiveViewer));
+        final iv = tester.widget<InteractiveViewer>(
+          find.byType(InteractiveViewer),
+        );
         expect(
           iv.transformationController!.value.getMaxScaleOnAxis(),
           closeTo(1.0, 1e-6),
@@ -394,31 +399,30 @@ void main() {
     // 實際 decode 完成才能驗證 SizedBox 縮到 painted rect；testWidgets 沒有
     // 可靠的 file codec 同步路徑，因此這裡只測結構，行為由使用者 manual 驗證。
 
-    testWidgets(
-      'inner GD (image) carries onTapUp (zoom) and no double-tap',
-      (tester) async {
-        await openOverlay(tester);
-        final innerGd = tester.widget<GestureDetector>(
-          find
-              .ancestor(
-                of: find.byType(Image),
-                matching: find.byType(GestureDetector),
-              )
-              .first,
-        );
-        expect(innerGd.behavior, HitTestBehavior.opaque);
-        expect(innerGd.onTapUp, isNotNull);
-        expect(innerGd.onDoubleTapDown, isNull);
+    testWidgets('inner GD (image) carries onTapUp (zoom) and no double-tap', (
+      tester,
+    ) async {
+      await openOverlay(tester);
+      final innerGd = tester.widget<GestureDetector>(
+        find
+            .ancestor(
+              of: find.byType(Image),
+              matching: find.byType(GestureDetector),
+            )
+            .first,
+      );
+      expect(innerGd.behavior, HitTestBehavior.opaque);
+      expect(innerGd.onTapUp, isNotNull);
+      expect(innerGd.onDoubleTapDown, isNull);
 
-        expect(
-          find.ancestor(
-            of: find.byType(Image),
-            matching: find.byType(LayoutBuilder),
-          ),
-          findsOneWidget,
-        );
-      },
-    );
+      expect(
+        find.ancestor(
+          of: find.byType(Image),
+          matching: find.byType(LayoutBuilder),
+        ),
+        findsOneWidget,
+      );
+    });
 
     testWidgets(
       'outer InteractiveViewer wrapper has onTap (no onDoubleTap) for instant dim-area close',
@@ -456,12 +460,91 @@ void main() {
       return region.cursor;
     }
 
-    testWidgets('at fit shows zoomIn, after zoom shows zoomOut', (tester) async {
+    testWidgets('at fit shows zoomIn, after zoom shows zoomOut', (
+      tester,
+    ) async {
       await openOverlay(tester);
       expect(imageCursor(tester), SystemMouseCursors.zoomIn);
       await tester.tapAt(tester.getCenter(find.byType(InteractiveViewer)));
       await tester.pump(const Duration(milliseconds: 50));
       expect(imageCursor(tester), SystemMouseCursors.zoomOut);
+    });
+  });
+
+  group('ZoomableImageOverlay copy/save menu', () {
+    testWidgets('right-click on image shows copy + save menu', (tester) async {
+      await openOverlay(tester);
+      final l = AppLocalizations.of(
+        tester.element(find.byType(ZoomableImageOverlay)),
+      )!;
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      final gesture = await tester.startGesture(
+        center,
+        kind: PointerDeviceKind.mouse,
+        buttons: kSecondaryMouseButton,
+      );
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.text(l.actionCopyImage), findsOneWidget);
+      expect(find.text(l.actionSaveImage), findsOneWidget);
+    });
+
+    testWidgets('copy menu item calls clipboard writer and toasts', (
+      tester,
+    ) async {
+      var called = false;
+      prepareOutputImageOverride = (_) async =>
+          OutputImage(bytes: Uint8List(4), isGif: false);
+      imageClipboardWriter = (bytes, {required isGif, filePath}) async {
+        called = true;
+        return true;
+      };
+      await openOverlay(tester);
+      final l = AppLocalizations.of(
+        tester.element(find.byType(ZoomableImageOverlay)),
+      )!;
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      final gesture = await tester.startGesture(
+        center,
+        kind: PointerDeviceKind.mouse,
+        buttons: kSecondaryMouseButton,
+      );
+      await gesture.up();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.actionCopyImage));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(called, isTrue);
+      expect(find.text(l.imageCopied), findsOneWidget);
+    });
+
+    testWidgets('save menu item calls save picker and toasts path', (
+      tester,
+    ) async {
+      prepareOutputImageOverride = (_) async =>
+          OutputImage(bytes: Uint8List(4), isGif: false);
+      imageSaveLocationPicker = (name) async =>
+          FileSaveLocation('${tempDir.path}/out.png');
+      imageFileWriter = (path, bytes) async {};
+      await openOverlay(tester);
+      final l = AppLocalizations.of(
+        tester.element(find.byType(ZoomableImageOverlay)),
+      )!;
+      final center = tester.getCenter(find.byType(InteractiveViewer));
+      final gesture = await tester.startGesture(
+        center,
+        kind: PointerDeviceKind.mouse,
+        buttons: kSecondaryMouseButton,
+      );
+      await gesture.up();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.actionSaveImage));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(
+        find.text(l.imageSavedTo('${tempDir.path}/out.png')),
+        findsOneWidget,
+      );
     });
   });
 }
