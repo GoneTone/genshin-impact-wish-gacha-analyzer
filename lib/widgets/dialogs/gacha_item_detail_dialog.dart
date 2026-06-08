@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
@@ -328,12 +329,12 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     }
   }
 
-  /// 以 SnackBar 顯示 [message]（dialog 之上找最近的 ScaffoldMessenger）。
+  /// 以 toast 顯示 [message]。用 [showDialogToast]（疊在 dialog 之上的 overlay）
+  /// 而非 SnackBar — SnackBar 由 app 層級 Scaffold 繪製，會被 dialog 的 modal
+  /// barrier 蓋住。
   void _showSnack(String message) {
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    messenger
-      ?..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    if (!mounted) return;
+    showDialogToast(context, message);
   }
 
   /// 依當前 chip 的 [_GalleryLoadState] 顯示對應內容：
