@@ -97,8 +97,22 @@ Future<bool> _defaultClipboardWriter(
 }) async {
   final clipboard = SystemClipboard.instance;
   if (clipboard == null) return false;
-  final item = DataWriterItem();
+  final item = DataWriterItem(suggestedName: isGif ? 'image.gif' : 'image.png');
   item.add(isGif ? Formats.gif(bytes) : Formats.png(bytes));
+  // GIF 額外掛一份 virtual file：讓「貼上檔案」的目標（Discord、檔案總管、聊天
+  // 軟體）拿到真正的 .gif 檔以保留動畫。純圖片貼上的目標（小畫家等）仍只會拿到
+  // 系統合成的靜態點陣圖 — 這是 Windows 剪貼簿圖片模型的限制，無法避免。
+  if (isGif && item.virtualFileSupported) {
+    item.addVirtualFile(
+      format: Formats.gif,
+      storageSuggestion: VirtualFileStorage.memory,
+      provider: (sinkProvider, progress) {
+        final sink = sinkProvider(fileSize: bytes.length);
+        sink.add(bytes);
+        sink.close();
+      },
+    );
+  }
   await clipboard.write([item]);
   return true;
 }
