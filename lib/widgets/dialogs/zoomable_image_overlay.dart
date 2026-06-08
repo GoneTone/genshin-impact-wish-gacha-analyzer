@@ -63,7 +63,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 放大狀態的目標 scale；fit ↔ 此值切換。
   static const double _zoomedScale = 2.0;
 
-  /// 控制 InteractiveViewer 的 Matrix4；wheel / double-tap 會手動設置 scale，
+  /// 控制 InteractiveViewer 的 Matrix4；wheel / 單擊會手動設置 scale，
   /// InteractiveViewer 自動處理 pan。
   final TransformationController _ctrl = TransformationController();
 
@@ -88,16 +88,17 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     });
   });
 
-  /// image 的 intrinsic 大小；null 時為 decode 尚未完成。用來把 image 像素區的
-  /// tap absorber 精準框在 BoxFit.contain 後的 painted rect 上，讓暗區的 tap
-  /// 能傳到外層 GestureDetector 觸發關閉。
+  /// image 的 intrinsic 大小；null 時為 decode 尚未完成。用來把圖片像素區精準框在
+  /// BoxFit.contain 後的 painted rect 上：單擊該區縮放，落在 image 外的暗區則傳到
+  /// 外層 GestureDetector 觸發關閉。
   Size? _imageSize;
 
   /// 目前是否已放大（scale > fit）；驅動圖片游標與縮放鈕 icon。
   bool _zoomed = false;
 
-  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放。
-  // ignore: unused_field — 後續 Task（縮放鈕）會讀取此值。
+  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放
+  /// （後續 Task 縮放鈕會讀取，目前僅寫入）。
+  // ignore: unused_field
   Size? _viewportSize;
 
   @override
@@ -168,7 +169,9 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     final target = atFit ? _zoomedScale : _minScale;
     _zoomAt(localFocal: viewportFocal, scaleDelta: target / current);
     _syncZoomed();
-    Logger('gacha.hoyowiki.zoom').info('zoom toggle -> ${atFit ? 'in' : 'fit'}');
+    Logger(
+      'gacha.hoyowiki.zoom',
+    ).info('zoom toggle -> ${atFit ? 'in' : 'fit'}');
   }
 
   @override
