@@ -325,7 +325,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             // 單擊圖片像素區 → fit↔2x 切換（焦點＝點擊落點還原成 viewport 座標）。
-                            // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應 Discord）。
+                            // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應常見圖片檢視器的習慣）。
                             onTapUp: (d) =>
                                 _toggleZoom(d.localPosition + Offset(dx, dy)),
                             onSecondaryTapDown: (d) =>

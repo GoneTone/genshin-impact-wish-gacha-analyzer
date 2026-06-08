@@ -1,8 +1,8 @@
-# Discord 式圖片 lightbox 升級 Implementation Plan
+# 圖片 lightbox 互動升級 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 把 `ZoomableImageOverlay` 全螢幕圖片檢視器改成 Discord 式互動（單擊縮放、游標隨狀態切 zoomIn/zoomOut、右上角 `[⋮][🔍][✕]` 按鈕列、右鍵與 ⋮ 選單可複製／儲存），且 copy/save 提示不被 lightbox 黑幕蓋住。
+**Goal:** 把 `ZoomableImageOverlay` 全螢幕圖片檢視器改成單擊縮放式互動（單擊縮放、游標隨狀態切 zoomIn/zoomOut、右上角 `[⋮][🔍][✕]` 按鈕列、右鍵與 ⋮ 選單可複製／儲存），且 copy/save 提示不被 lightbox 黑幕蓋住。
 
 **Architecture:** 改寫單一 widget `lib/widgets/dialogs/zoomable_image_overlay.dart`：沿用現有雙層 GestureDetector（外層暗區關閉、內層圖片像素區）與 `_zoomAt` focal 縮放矩陣，把內層手勢由「空吸收 + 雙擊縮放」改為「單擊 fit↔2x 切換」，新增 `_zoomed` 衍生狀態驅動游標與縮放鈕 icon。copy/save 直接呼叫既有 service（`copyImageFileToClipboard` / `saveImageFile`），結果用 `showDialogToast`（插到 navigator overlay，疊在 lightbox route 之上）回報。呼叫端 `gacha_item_detail_dialog.dart` 開 lightbox 時補傳建議檔名。
 
@@ -484,7 +484,7 @@ child: LayoutBuilder(
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           // 單擊圖片像素區 → fit↔2x 切換（焦點＝點擊落點還原成 viewport 座標）。
-          // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應 Discord）。
+          // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應常見圖片檢視器的習慣）。
           onTapUp: (d) => _toggleZoom(d.localPosition + Offset(dx, dy)),
           child: Image(
             image: _imageProvider,
@@ -917,7 +917,7 @@ git commit -m "style(lightbox): apply dart format" || echo "nothing to format"
 2. 單擊圖片即 fit↔2x 切換；滾輪仍可連續縮放；拖曳可平移。
 3. 點圖片以外暗區 / ESC / X 皆可關閉；點圖片不關閉。
 4. 右上角 `[⋮][🔍][✕]` 三顆；🔍 與單擊行為一致且 icon 隨狀態切換。
-5. 右鍵圖片與 ⋮ 都叫出「複製圖片 / 儲存圖片」；複製後到 Discord 貼上、儲存可選路徑。
+5. 右鍵圖片與 ⋮ 都叫出「複製圖片 / 儲存圖片」；複製後到聊天軟體／檔案總管貼上、儲存可選路徑。
 6. 複製／儲存的 toast 顯示在 lightbox 黑幕**之上**（不被蓋住）。
 7. 切其他語系（如日文／簡中）確認 zoom tooltip 與 copy/save 字串有翻譯。
 

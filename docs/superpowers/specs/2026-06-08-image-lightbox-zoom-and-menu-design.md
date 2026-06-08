@@ -1,4 +1,4 @@
-# Discord 式圖片 lightbox 升級
+# 圖片 lightbox 互動升級
 
 ## 背景與目標
 
@@ -9,7 +9,7 @@
 - 單擊暗區／backdrop → 關閉。
 - 滾輪 → 以游標為中心縮放；拖曳 → InteractiveViewer pan；ESC／右上角 X → 關閉。
 
-要把互動體驗改成與 Discord 一致，並補上圖片操作選單：
+要把互動體驗改成像常見圖片檢視器（單擊縮放、右上角按鈕、右鍵選單）那樣，並補上圖片操作選單：
 
 1. **單擊**（非雙擊）即可在 fit ↔ 2x 之間切換縮放。
 2. 滑鼠游標停在圖片上時，依當前縮放狀態顯示 `zoomIn` 或 `zoomOut` 鼠標。
@@ -43,7 +43,7 @@
 
 - 內層 `GestureDetector` 由「`onTap: () {}` 空吸收 + `onDoubleTapDown: _onDoubleTapDown`」改為「`onTap: _toggleZoomAtCenterOrFocal`」。沿用既有 `_zoomAt(...)`、`_doubleTapScale = 2.0`、`_minScale`／`_maxScale`、回 fit 時強制 `Matrix4.identity()` 的邏輯。
 - 移除雙擊後，外層 backdrop 的 `onTap`（關閉）不再與 `DoubleTapGestureRecognizer` 在同一 arena 競技，單擊關閉維持即時。
-- 圖片像素區不再單擊關閉：點圖＝縮放、點暗區＝關閉，對應 Discord。放大且圖片填滿時，以 X／ESC／縮放鈕回 fit。
+- 圖片像素區不再單擊關閉：點圖＝縮放、點暗區＝關閉，對應常見圖片檢視器的習慣。放大且圖片填滿時，以 X／ESC／縮放鈕回 fit。
 - pan 與 tap 競技由 GestureDetector arbitration 處理：移動 > slop → pan 贏；無移動 → tap fire（單擊縮放）。
 
 ### 游標狀態
