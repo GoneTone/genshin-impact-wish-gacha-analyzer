@@ -60,8 +60,11 @@ Future<Uint8List?> _encodeBytesToPng(
 
 /// 由本地圖檔 [file] 準備輸出 bytes：GIF 保留原始 bytes（保留動畫），其餘解碼重編
 /// 成 PNG（icon／gallery 副檔名隨 URL 可能是 webp／jpg，轉 PNG 後存檔與貼上相容性
-/// 最佳）。讀檔或解碼失敗回 null。
+/// 最佳）。讀檔或解碼失敗回 null。測試可透過 [prepareOutputImageOverride] 替換實作。
 Future<OutputImage?> prepareOutputImage(File file) async {
+  if (prepareOutputImageOverride != null) {
+    return prepareOutputImageOverride!(file);
+  }
   Uint8List bytes;
   try {
     bytes = await file.readAsBytes();
@@ -130,12 +133,17 @@ imageClipboardWriter = _defaultClipboardWriter;
 Future<void> Function(String path, Uint8List bytes) imageFileWriter =
     _defaultFileWriter;
 
+/// 圖片準備 seam，讓 flutter test 跳過真實 codec 解碼。null 表示使用預設實作。
+@visibleForTesting
+Future<OutputImage?> Function(File file)? prepareOutputImageOverride;
+
 /// 將所有 seam 重設為預設實作，供 tearDown 使用。
 @visibleForTesting
 void resetImageClipboardSaveSeams() {
   imageSaveLocationPicker = _defaultSaveLocationPicker;
   imageClipboardWriter = _defaultClipboardWriter;
   imageFileWriter = _defaultFileWriter;
+  prepareOutputImageOverride = null;
 }
 
 /// 把圖片 [bytes] 寫入系統剪貼簿（[isGif] 選 GIF／PNG 格式；[filePath] 供 GIF 掛

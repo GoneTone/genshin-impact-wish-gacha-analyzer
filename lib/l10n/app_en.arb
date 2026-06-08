@@ -842,6 +842,14 @@
   "@actionSaveImage": {
     "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
   },
+  "actionZoomIn": "Zoom In",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Zoom Out",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
 
   "actionRefetchImage": "Re-fetch Image",
   "@actionRefetchImage": {
