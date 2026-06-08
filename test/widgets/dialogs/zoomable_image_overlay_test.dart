@@ -110,8 +110,11 @@ void main() {
         home: Builder(
           builder: (ctx) => Scaffold(
             body: ElevatedButton(
-              onPressed: () =>
-                  showZoomableImageOverlay(ctx, imageFile: imageFile),
+              onPressed: () => showZoomableImageOverlay(
+                  ctx,
+                  imageFile: imageFile,
+                  suggestedBaseName: 'test',
+                ),
               child: const Text('open'),
             ),
           ),

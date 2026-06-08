@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 Future<void> showZoomableImageOverlay(
   BuildContext context, {
   required File imageFile,
+  required String suggestedBaseName,
 }) {
   Logger('gacha.hoyowiki.zoom').info('overlay open file=${imageFile.path}');
   return showDialog<void>(
@@ -20,7 +21,10 @@ Future<void> showZoomableImageOverlay(
     builder: (_) => Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.zero,
-      child: ZoomableImageOverlay(imageFile: imageFile),
+      child: ZoomableImageOverlay(
+        imageFile: imageFile,
+        suggestedBaseName: suggestedBaseName,
+      ),
     ),
   );
 }
@@ -28,10 +32,17 @@ Future<void> showZoomableImageOverlay(
 /// 全螢幕 lightbox 圖片檢視器；獨立可重用，不耦合 caller。
 class ZoomableImageOverlay extends StatefulWidget {
   /// 建立 [ZoomableImageOverlay]。
-  const ZoomableImageOverlay({super.key, required this.imageFile});
+  const ZoomableImageOverlay({
+    super.key,
+    required this.imageFile,
+    required this.suggestedBaseName,
+  });
 
   /// 要顯示的本地圖檔。
   final File imageFile;
+
+  /// copy／save「另存」對話框的建議檔名（不含副檔名）。
+  final String suggestedBaseName;
 
   @override
   State<ZoomableImageOverlay> createState() => _ZoomableImageOverlayState();
