@@ -471,6 +471,45 @@ void main() {
     });
   });
 
+  group('ZoomableImageOverlay top-right button row', () {
+    testWidgets('shows more_vert, zoom, and close buttons', (tester) async {
+      await openOverlay(tester);
+      final l = AppLocalizations.of(
+        tester.element(find.byType(ZoomableImageOverlay)),
+      )!;
+      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      expect(find.byIcon(Icons.zoom_in), findsOneWidget);
+      expect(find.byTooltip(l.actionCloseImagePreview), findsOneWidget);
+    });
+
+    testWidgets('zoom button toggles icon and scale', (tester) async {
+      await openOverlay(tester);
+      expect(find.byIcon(Icons.zoom_in), findsOneWidget);
+      expect(find.byIcon(Icons.zoom_out), findsNothing);
+      await tester.tap(find.byIcon(Icons.zoom_in));
+      await tester.pump(const Duration(milliseconds: 50));
+      final iv = tester.widget<InteractiveViewer>(
+        find.byType(InteractiveViewer),
+      );
+      expect(
+        iv.transformationController!.value.getMaxScaleOnAxis(),
+        closeTo(2.0, 1e-6),
+      );
+      expect(find.byIcon(Icons.zoom_out), findsOneWidget);
+    });
+
+    testWidgets('more_vert button opens copy + save menu', (tester) async {
+      await openOverlay(tester);
+      final l = AppLocalizations.of(
+        tester.element(find.byType(ZoomableImageOverlay)),
+      )!;
+      await tester.tap(find.byIcon(Icons.more_vert));
+      await tester.pumpAndSettle();
+      expect(find.text(l.actionCopyImage), findsOneWidget);
+      expect(find.text(l.actionSaveImage), findsOneWidget);
+    });
+  });
+
   group('ZoomableImageOverlay copy/save menu', () {
     testWidgets('right-click on image shows copy + save menu', (tester) async {
       await openOverlay(tester);

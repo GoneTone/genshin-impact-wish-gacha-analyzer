@@ -99,9 +99,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 目前是否已放大（scale > fit）；驅動圖片游標與縮放鈕 icon。
   bool _zoomed = false;
 
-  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放
-  /// （後續 Task 縮放鈕會讀取，目前僅寫入）。
-  // ignore: unused_field
+  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放。
   Size? _viewportSize;
 
   @override
@@ -235,6 +233,13 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     }
   }
 
+  /// 半透明黑底圓鈕包裝；右上角三顆按鈕共用，沿用既有 lightbox 視覺。
+  Widget _circleButton(Widget child) => Material(
+    color: Colors.black.withValues(alpha: 0.4),
+    shape: const CircleBorder(),
+    child: child,
+  );
+
   /// 右鍵在圖片上叫出與 ⋮ 相同的選單，位置跟著游標。
   Future<void> _showContextMenu(Offset globalPosition) async {
     final l = AppLocalizations.of(context)!;
@@ -347,18 +352,45 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
             ),
           ),
         ),
-        // X 按鈕 — 半透明黑底圓鈕，永遠最上層。
+        // 右上角按鈕列 [⋮][🔍][✕] — 永遠最上層。
         Positioned(
           top: 16,
           right: 16,
-          child: Material(
-            color: Colors.black.withValues(alpha: 0.4),
-            shape: const CircleBorder(),
-            child: IconButton(
-              tooltip: l.actionCloseImagePreview,
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => _close('button'),
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _circleButton(
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert, color: Colors.white),
+                    tooltip: '',
+                    onSelected: _onMenuSelected,
+                    itemBuilder: (_) => _menuItems(l),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              _circleButton(
+                IconButton(
+                  tooltip: _zoomed ? l.actionZoomOut : l.actionZoomIn,
+                  icon: Icon(
+                    _zoomed ? Icons.zoom_out : Icons.zoom_in,
+                    color: Colors.white,
+                  ),
+                  onPressed: () =>
+                      _toggleZoom(_viewportSize?.center(Offset.zero) ?? Offset.zero),
+                ),
+              ),
+              const SizedBox(width: 8),
+              _circleButton(
+                IconButton(
+                  tooltip: l.actionCloseImagePreview,
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => _close('button'),
+                ),
+              ),
+            ],
           ),
         ),
       ],
