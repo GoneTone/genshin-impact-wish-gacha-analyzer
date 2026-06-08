@@ -378,8 +378,9 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                     _zoomed ? Icons.zoom_out : Icons.zoom_in,
                     color: Colors.white,
                   ),
-                  onPressed: () =>
-                      _toggleZoom(_viewportSize?.center(Offset.zero) ?? Offset.zero),
+                  onPressed: () => _toggleZoom(
+                    _viewportSize?.center(Offset.zero) ?? Offset.zero,
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
