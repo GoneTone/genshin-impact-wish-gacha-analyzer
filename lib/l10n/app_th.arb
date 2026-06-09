@@ -640,6 +640,7 @@
   "importReasonUnsupportedVersion": "ไฟล์นี้ถูกส่งออกจากแอปเวอร์ชันที่ใหม่กว่า กรุณาอัปเดตแอปก่อนนำเข้า",
   "importReasonUnreadable": "ไม่สามารถอ่านไฟล์ได้",
   "exportReasonWriteFailed": "ไม่สามารถเขียนไฟล์ได้ กรุณาตรวจสอบตำแหน่งที่บันทึกและสิทธิ์การเข้าถึง",
+  "importReasonForeignApp": "ไฟล์นี้ไม่ใช่ข้อมูลสำรองที่ส่งออกจากแอปนี้",
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
   "settingsImportMergeBadge": "ผสาน",

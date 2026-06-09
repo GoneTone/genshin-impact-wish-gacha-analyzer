@@ -640,6 +640,7 @@
   "importReasonUnsupportedVersion": "Tệp này được xuất từ phiên bản ứng dụng mới hơn, vui lòng cập nhật ứng dụng trước khi nhập",
   "importReasonUnreadable": "Không thể đọc tệp",
   "exportReasonWriteFailed": "Không thể ghi tệp, vui lòng kiểm tra vị trí lưu và quyền truy cập",
+  "importReasonForeignApp": "Tệp này không phải bản sao lưu được xuất từ ứng dụng này",
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
   "settingsImportMergeBadge": "Hợp nhất",
