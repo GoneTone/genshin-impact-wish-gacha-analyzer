@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 
 void main() {
@@ -38,6 +39,28 @@ void main() {
           (e) => e.message,
           'message',
           contains('object'),
+        ),
+      ),
+    );
+  });
+
+  test('schema_version > 1 → UnsupportedSchemaVersionException', () {
+    const text = '''
+{
+  "schema_version": 999,
+  "exported_at": "2026-05-12T08:30:00.000Z",
+  "app_version": "1.0.0",
+  "last_active_uid": null,
+  "accounts": []
+}
+''';
+    expect(
+      () => importAccounts(text),
+      throwsA(
+        isA<UnsupportedSchemaVersionException>().having(
+          (e) => e.version,
+          'version',
+          999,
         ),
       ),
     );

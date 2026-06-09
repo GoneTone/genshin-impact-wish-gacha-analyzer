@@ -7,8 +7,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 /// Logger 實例（帳號匯入/匯出）。
 final _log = Logger('accounts.io');
 
-/// 把 JSON 文字解析回 [AccountsBundle]。任何結構或型別不符都會
-/// 統一拋出 [FormatException]，給 UI 顯示用。
+/// 把 JSON 文字解析回 [AccountsBundle]。
+/// 版本號過新時拋出 [UnsupportedSchemaVersionException]；
+/// 其餘結構／型別不符時統一拋出 [FormatException]，給 UI 顯示用。
 AccountsBundle importAccounts(String text) {
   Object? raw;
   try {
@@ -23,6 +24,9 @@ AccountsBundle importAccounts(String text) {
   }
   try {
     return AccountsBundle.fromJson(raw);
+  } on UnsupportedSchemaVersionException catch (e) {
+    _log.warning('import failed: unsupported schema version ${e.version}');
+    rethrow;
   } on FormatException catch (e) {
     _log.warning('import failed: ${e.message}');
     rethrow;
