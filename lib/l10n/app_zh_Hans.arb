@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh_Hans",
+  "@@locale": "zh-CN",
   "localeNativeName": "简体中文",
   "localeTranslatorLabel": "翻译者：{translator}",
   "@localeNativeName": {
@@ -208,12 +208,15 @@
   },
   "progressDoneImportSummary": "已导入 {accounts} 个账号：新增 {added} 条、已存在 {duplicate} 条",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -578,7 +581,7 @@
     }
   },
   "settingsImportConfirmTitle": "导入确认",
-  "settingsImportConfirmIntro": "即将导入 {accounts} 个账号（共 {records} 条记录）：",
+  "settingsImportConfirmIntro": "即将合并 {accounts} 个账号（共 {records} 条记录）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
