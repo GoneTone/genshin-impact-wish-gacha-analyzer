@@ -206,7 +206,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "本次导入 {accounts} 个账号（共 {records} 条记录）",
+  "progressDoneImportSummary": "已合并 {accounts} 个账号：新增 {added} 条、已存在 {duplicate} 条",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {

@@ -608,7 +608,7 @@ class GachaRepository extends Notifier<GachaState> {
       _importLog.info(
         'import done: success=${result.successAccounts} '
         'failed=[${result.failedUids.map(sanitizeUid).join(",")}] '
-        'records=${result.totalRecords}',
+        'added=${result.addedRecords} duplicate=${result.duplicateRecords}',
       );
 
       var images = 0;
@@ -668,62 +668,68 @@ class GachaRepository extends Notifier<GachaState> {
 
     final newByUid = Map<String, BannerStorage>.from(state.byUid);
     final failed = <String>[];
-    var totalRecords = 0;
+    var addedRecords = 0;
+    var duplicateRecords = 0;
     var successCount = 0;
 
     for (final account in bundle.accounts) {
+      final incoming = account.data;
       try {
-        await storage.save(account.data);
+        final localBefore = newByUid[incoming.uid];
+        final toSave = localBefore == null
+            ? incoming
+            : localBefore.mergeWith(incoming);
+        await storage.save(toSave);
         if (!ref.mounted) {
           return ImportResult(
             successAccounts: successCount,
-            totalRecords: totalRecords,
+            addedRecords: addedRecords,
+            duplicateRecords: duplicateRecords,
             failedUids: failed,
           );
         }
-        newByUid[account.data.uid] = account.data;
+        final added =
+            toSave.allRecords.length - (localBefore?.allRecords.length ?? 0);
+        addedRecords += added;
+        duplicateRecords += incoming.allRecords.length - added;
+        newByUid[incoming.uid] = toSave;
         successCount++;
-        for (final list in account.data.banners.values) {
-          totalRecords += list.length;
-        }
       } catch (_) {
-        failed.add(account.data.uid);
+        failed.add(incoming.uid);
       }
     }
 
     final currentSettings = ref.read(settingsProvider);
     final mergedAliases = Map<String, String>.from(currentSettings.uidAliases);
     for (final account in bundle.accounts) {
-      if (failed.contains(account.data.uid)) continue;
+      final uid = account.data.uid;
+      if (failed.contains(uid)) continue;
+      if (mergedAliases.containsKey(uid)) continue; // 本機已有別名 → 保留
       final a = account.alias?.trim();
-      if (a == null || a.isEmpty) {
-        mergedAliases.remove(account.data.uid);
-      } else {
-        mergedAliases[account.data.uid] = a;
+      if (a != null && a.isNotEmpty) {
+        mergedAliases[uid] = a;
       }
     }
 
-    final exportedOrder = bundle.accounts
+    final localOrder = currentSettings.uidOrder;
+    final localSet = localOrder.toSet();
+    final appended = bundle.accounts
         .where((a) => !failed.contains(a.data.uid))
         .map((a) => a.data.uid)
-        .toList();
-    final exportedSet = exportedOrder.toSet();
-    final remaining = currentSettings.uidOrder
-        .where((u) => !exportedSet.contains(u))
-        .toList();
-    final newOrder = [...exportedOrder, ...remaining];
+        .where((uid) => !localSet.contains(uid))
+        .toList(growable: false);
+    final newOrder = [...localOrder, ...appended];
 
+    final localActive = state.activeUid;
     final desiredActive = bundle.lastActiveUid;
-    final fallback =
-        state.activeUid != null && newByUid.containsKey(state.activeUid)
-        ? state.activeUid
+    final newActive =
+        (localActive != null && newByUid.containsKey(localActive))
+        ? localActive
+        : (desiredActive != null && newByUid.containsKey(desiredActive))
+        ? desiredActive
         : (newByUid.isEmpty
               ? null
               : (newOrder.isEmpty ? newByUid.keys.first : newOrder.first));
-    final newActive =
-        (desiredActive != null && newByUid.containsKey(desiredActive))
-        ? desiredActive
-        : fallback;
 
     await settingsNotifier.applyImportedPreferences(
       aliases: mergedAliases,
@@ -733,7 +739,8 @@ class GachaRepository extends Notifier<GachaState> {
     if (!ref.mounted) {
       return ImportResult(
         successAccounts: successCount,
-        totalRecords: totalRecords,
+        addedRecords: addedRecords,
+        duplicateRecords: duplicateRecords,
         failedUids: failed,
       );
     }
@@ -746,12 +753,13 @@ class GachaRepository extends Notifier<GachaState> {
 
     _log.info(
       'import: success=$successCount '
-      'failed=[${failed.join(",")}] '
-      'records=$totalRecords',
+      'failed=[${failed.map(sanitizeUid).join(",")}] '
+      'added=$addedRecords duplicate=$duplicateRecords',
     );
     return ImportResult(
       successAccounts: successCount,
-      totalRecords: totalRecords,
+      addedRecords: addedRecords,
+      duplicateRecords: duplicateRecords,
       failedUids: failed,
     );
   }

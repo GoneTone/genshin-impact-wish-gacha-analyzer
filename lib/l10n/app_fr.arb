@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 compte importé ({records} enregistrements)} other{{accounts} comptes importés ({records} enregistrements)}}",
+  "progressDoneImportSummary": "{accounts, plural, =1{1 compte fusionné} other{{accounts} comptes fusionnés}} : {added} nouveaux, {duplicate} déjà présents",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {

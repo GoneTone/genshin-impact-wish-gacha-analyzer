@@ -234,7 +234,8 @@ class _Body extends StatelessWidget {
               Text(
                 l.progressDoneImportSummary(
                   importSummary.successAccounts,
-                  importSummary.totalRecords,
+                  importSummary.addedRecords,
+                  importSummary.duplicateRecords,
                 ),
               )
             else

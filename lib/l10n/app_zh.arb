@@ -161,12 +161,13 @@
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
   },
-  "progressDoneImportSummary": "本次匯入 {accounts} 個帳號（共 {records} 筆紀錄）",
+  "progressDoneImportSummary": "已合併 {accounts} 個帳號：新增 {added} 筆、已存在 {duplicate} 筆",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts merged, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "added": { "type": "int" },
+      "duplicate": { "type": "int" }
     }
   },
   "progressPartialImportFailed": "⚠ 部分匯入失敗：{uids}",

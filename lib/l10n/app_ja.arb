@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts} 件のアカウントをインポート（{records} 件の記録）",
+  "progressDoneImportSummary": "{accounts} 個のアカウントを結合しました：新規 {added} 件、既存 {duplicate} 件",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {

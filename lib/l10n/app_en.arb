@@ -210,14 +210,17 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account ({records} records)} other{Imported {accounts} accounts ({records} records)}}",
+  "progressDoneImportSummary": "{accounts, plural, =1{Merged 1 account} other{Merged {accounts} accounts}}: {added} new, {duplicate} already present",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts merged, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }

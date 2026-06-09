@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "นำเข้า {accounts} บัญชี ({records} รายการ)",
+  "progressDoneImportSummary": "ผสาน {accounts} บัญชีแล้ว: ใหม่ {added} รายการ, มีอยู่แล้ว {duplicate} รายการ",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {

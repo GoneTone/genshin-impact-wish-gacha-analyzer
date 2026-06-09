@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada ({records} registros)} other{{accounts} contas importadas ({records} registros)}}",
+  "progressDoneImportSummary": "{accounts, plural, =1{1 conta mesclada} other{{accounts} contas mescladas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {

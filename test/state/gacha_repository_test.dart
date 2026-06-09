@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
@@ -1045,7 +1046,7 @@ void main() {
   });
 
   test(
-    'importAccounts: per-UID overwrite preserves non-imported accounts',
+    'importAccounts: merges into existing UID, preserves non-imported',
     () async {
       final storage = GachaStorage(tempDir);
       // Existing: 100000001 (old data), 100000003 (untouched)
@@ -1065,6 +1066,8 @@ void main() {
       );
       SharedPreferences.setMockInitialValues({
         'pref.uidAliases': jsonEncode({'100000003': '另一支'}),
+        'pref.uidOrder': jsonEncode(['100000001', '100000003']),
+        'pref.lastActiveUid': '100000001',
       });
 
       final container = ProviderContainer(
@@ -1112,7 +1115,7 @@ void main() {
 
       final state = container.read(gachaRepositoryProvider);
       expect(state.byUid.keys.toSet(), {'100000001', '100000002', '100000003'});
-      // 100000001 overwritten
+      // 100000001 merged: lastUpdated takes newer
       expect(state.byUid['100000001']!.lastUpdated, DateTime.utc(2026, 5, 12));
       // 100000003 preserved
       expect(state.byUid['100000003']!.lastUpdated, DateTime.utc(2026, 1, 1));
@@ -1121,13 +1124,13 @@ void main() {
       // Settings: alias on 100000001 (from bundle), alias on 100000003 (pre-existing, preserved)
       final settings = container.read(settingsProvider);
       expect(settings.uidAliases, {'100000001': '主號', '100000003': '另一支'});
-      expect(settings.uidOrder.take(2).toList(), ['100000001', '100000002']);
+      expect(settings.uidOrder, ['100000001', '100000003', '100000002']);
       expect(settings.lastActiveUid, '100000001');
     },
   );
 
   test(
-    'importAccounts: uidOrder merges imported order first, then remaining',
+    'importAccounts: uidOrder keeps local order, appends new UIDs',
     () async {
       final storage = GachaStorage(tempDir);
       for (final uid in ['100000001', '100000003', '100000004']) {
@@ -1187,8 +1190,8 @@ void main() {
           .debugImportOnly(bundle);
 
       final order = container.read(settingsProvider).uidOrder;
-      // imported [100000002, 100000001] first, then remaining custom order minus imported = [100000004, 100000003]
-      expect(order, ['100000002', '100000001', '100000004', '100000003']);
+      // local order [100000004, 100000001, 100000003] unchanged; new 100000002 appended
+      expect(order, ['100000004', '100000001', '100000003', '100000002']);
     },
   );
 
@@ -1256,7 +1259,7 @@ void main() {
   );
 
   test(
-    'importAccounts: bundle lastActiveUid switches active to it when imported',
+    'importAccounts: keeps local active when local active is valid',
     () async {
       final storage = GachaStorage(tempDir);
       // Existing active = 200000001 (will remain after import)
@@ -1308,10 +1311,128 @@ void main() {
           .read(gachaRepositoryProvider.notifier)
           .debugImportOnly(bundle);
 
-      expect(container.read(gachaRepositoryProvider).activeUid, '200000002');
-      expect(container.read(settingsProvider).lastActiveUid, '200000002');
+      expect(container.read(gachaRepositoryProvider).activeUid, '200000001');
+      expect(container.read(settingsProvider).lastActiveUid, '200000001');
     },
   );
+
+  test(
+    'importAccounts: adopts bundle lastActiveUid when local has no active',
+    () async {
+      final storage = GachaStorage(tempDir);
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final bundle = AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: '200000002',
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: '200000002',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+          ),
+        ],
+      );
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(bundle);
+
+      expect(container.read(gachaRepositoryProvider).activeUid, '200000002');
+    },
+  );
+
+  test(
+    'importAccounts: merges records by id, never drops local, counts added/duplicate',
+    () async {
+      GachaRecord rec(String id) => GachaRecord(
+        id: id,
+        uid: '100000001',
+        gachaType: '301',
+        name: 'x',
+        itemType: '武器',
+        rankType: 3,
+        time: DateTime.utc(2025, 1, 1),
+        lang: 'zh-tw',
+      );
+
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: {
+            '301': [rec('3'), rec('1')],
+          },
+        ),
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final bundle = AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: '100000001',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: {
+                '301': [rec('2'), rec('1')],
+              },
+            ),
+          ),
+        ],
+      );
+
+      final result = await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(bundle);
+
+      expect(result.addedRecords, 1); // id 2 是新的
+      expect(result.duplicateRecords, 1); // id 1 已存在
+      final merged = container
+          .read(gachaRepositoryProvider)
+          .byUid['100000001']!
+          .banners['301']!
+          .map((r) => r.id)
+          .toList();
+      expect(merged, ['3', '2', '1']); // 本機 id 3 沒被丟、降序
+    },
+  );
+
   group('logging instrumentation', () {
     setUp(() {
       Logger.root.level = Level.ALL;

@@ -50,15 +50,19 @@ class ImportResult {
   /// 建立 [ImportResult]。
   const ImportResult({
     required this.successAccounts,
-    required this.totalRecords,
+    required this.addedRecords,
+    required this.duplicateRecords,
     required this.failedUids,
   });
 
   /// 成功匯入的帳號數。
   final int successAccounts;
 
-  /// 成功匯入的總紀錄數。
-  final int totalRecords;
+  /// 合併後新增的記錄數（備份中 id 本機原本沒有的）。
+  final int addedRecords;
+
+  /// 合併時已存在而略過的記錄數（備份中 id 本機原本就有的）。
+  final int duplicateRecords;
 
   /// 匯入失敗的 UID 列表。
   final List<String> failedUids;
