@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 
@@ -31,6 +32,7 @@ void main() {
 
     final decoded = jsonDecode(out) as Map<String, dynamic>;
     expect(decoded['schema_version'], 1);
+    expect(decoded['app'], accountsBundleAppId);
     expect(decoded['app_version'], '9.9.9');
     expect(decoded['last_active_uid'], 'A');
     expect(decoded['exported_at'], '2026-05-12T08:30:00.000Z');

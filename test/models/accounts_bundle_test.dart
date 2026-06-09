@@ -133,4 +133,14 @@ void main() {
     });
     expect(bundle.accounts.single.alias, isNull);
   });
+
+  test('toJson includes the app identifier', () {
+    final bundle = AccountsBundle(
+      exportedAt: DateTime.utc(2026, 6, 9),
+      appVersion: '1.0.0',
+      lastActiveUid: null,
+      accounts: const [],
+    );
+    expect(bundle.toJson()['app'], accountsBundleAppId);
+  });
 }
