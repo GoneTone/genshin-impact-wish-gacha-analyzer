@@ -28,6 +28,56 @@ Future<bool?> showConfirmTypeDialog({
   );
 }
 
+/// 顯示一個一般確認 dialog（無打字閘）。
+/// 回傳值：true = 確認 / false = 取消 / null = 系統 dismiss。
+/// [isDanger] 為 true 時確認鍵用 danger 紅；false 時用預設（中性）配色。
+Future<bool?> showConfirmDialog({
+  required BuildContext context,
+  required String title,
+  required String body,
+  required String cancelLabel,
+  required String confirmLabel,
+  IconData? confirmIcon,
+  bool isDanger = false,
+}) {
+  return showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) {
+      final tokens = Theme.of(ctx).gacha;
+      return AppDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(cancelLabel),
+          ),
+          FilledButton(
+            style: isDanger
+                ? FilledButton.styleFrom(
+                    backgroundColor: tokens.stateDanger,
+                    foregroundColor: Colors.white,
+                  )
+                : null,
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: confirmIcon == null
+                ? Text(confirmLabel)
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(confirmIcon, size: 18),
+                      const SizedBox(width: 8),
+                      Text(confirmLabel),
+                    ],
+                  ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 /// 打字確認 dialog 的實作 widget。
 class _ConfirmDialog extends StatefulWidget {
   const _ConfirmDialog({
