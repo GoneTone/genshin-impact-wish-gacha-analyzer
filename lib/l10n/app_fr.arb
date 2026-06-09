@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "{accounts, plural, =1{1 compte importé} other{{accounts} comptes importés}} : {added} nouveaux, {duplicate} déjà présents",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -582,7 +585,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmation d'importation",
-  "settingsImportConfirmIntro": "Sur le point d'importer {accounts} compte(s) ({records} enregistrement(s) au total) :",
+  "settingsImportConfirmIntro": "Sur le point de fusionner {accounts} comptes ({records} enregistrements au total) :",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
