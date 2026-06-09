@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "นำเข้า {accounts} บัญชีแล้ว: ใหม่ {added} รายการ, มีอยู่แล้ว {duplicate} รายการ",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -582,7 +585,7 @@
     }
   },
   "settingsImportConfirmTitle": "ยืนยันการนำเข้า",
-  "settingsImportConfirmIntro": "กำลังจะนำเข้า {accounts} บัญชี (รวม {records} รายการ):",
+  "settingsImportConfirmIntro": "กำลังจะผสาน {accounts} บัญชี (รวม {records} ระเบียน):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
