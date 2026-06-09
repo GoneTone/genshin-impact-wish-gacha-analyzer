@@ -469,6 +469,10 @@
   "@settingsImportFailed": {
     "placeholders": { "reason": { "type": "String" } }
   },
+  "importReasonInvalidFormat": "檔案格式不正確或已損毀",
+  "importReasonUnsupportedVersion": "此檔案由較新版本的 App 匯出，請先更新 App 後再匯入",
+  "importReasonUnreadable": "無法讀取檔案",
+  "exportReasonWriteFailed": "無法寫入檔案，請確認儲存位置與權限",
 
   "settingsExportSelectTitle": "選擇要匯出的帳號",
   "settingsImportSelectTitle": "選擇要匯入的帳號",

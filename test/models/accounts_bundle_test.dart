@@ -55,7 +55,8 @@ void main() {
     },
   );
 
-  test('schema_version > 1 throws with "update the app" hint', () {
+  test('schema_version > currentSchemaVersion throws '
+      'UnsupportedSchemaVersionException', () {
     final json = {
       'schema_version': 999,
       'exported_at': '2026-05-12T00:00:00.000Z',
@@ -66,10 +67,10 @@ void main() {
     expect(
       () => AccountsBundle.fromJson(json),
       throwsA(
-        isA<FormatException>().having(
-          (e) => e.message,
-          'message',
-          contains('update the app'),
+        isA<UnsupportedSchemaVersionException>().having(
+          (e) => e.version,
+          'version',
+          999,
         ),
       ),
     );

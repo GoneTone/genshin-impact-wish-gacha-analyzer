@@ -636,6 +636,10 @@
       }
     }
   },
+  "importReasonInvalidFormat": "Le format du fichier est incorrect ou le fichier est corrompu",
+  "importReasonUnsupportedVersion": "Ce fichier a été exporté par une version plus récente de l'application, veuillez la mettre à jour avant de l'importer",
+  "importReasonUnreadable": "Impossible de lire le fichier",
+  "exportReasonWriteFailed": "Impossible d'écrire le fichier, veuillez vérifier l'emplacement d'enregistrement et les autorisations",
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportMergeBadge": "Fusionner",

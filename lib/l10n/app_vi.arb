@@ -636,6 +636,10 @@
       }
     }
   },
+  "importReasonInvalidFormat": "Định dạng tệp không hợp lệ hoặc đã bị hỏng",
+  "importReasonUnsupportedVersion": "Tệp này được xuất từ phiên bản ứng dụng mới hơn, vui lòng cập nhật ứng dụng trước khi nhập",
+  "importReasonUnreadable": "Không thể đọc tệp",
+  "exportReasonWriteFailed": "Không thể ghi tệp, vui lòng kiểm tra vị trí lưu và quyền truy cập",
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
   "settingsImportMergeBadge": "Hợp nhất",

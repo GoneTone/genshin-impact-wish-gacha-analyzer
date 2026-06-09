@@ -1,5 +1,17 @@
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 
+/// 匯入檔的 schema 版本高於目前 App 支援版本時拋出，供 UI 給出「請更新 App」指引。
+class UnsupportedSchemaVersionException implements Exception {
+  /// 建立 [UnsupportedSchemaVersionException]。
+  const UnsupportedSchemaVersionException(this.version);
+
+  /// 匯入檔宣告的 schema 版本（高於 [AccountsBundle.currentSchemaVersion]）。
+  final int version;
+
+  @override
+  String toString() => 'UnsupportedSchemaVersionException(version: $version)';
+}
+
 /// 單一匯出帳號：包含祈願資料與選填別名。
 class ExportedAccount {
   /// 建立 [ExportedAccount]。
@@ -64,16 +76,16 @@ class AccountsBundle {
     'accounts': accounts.map((a) => a.toJson()).toList(growable: false),
   };
 
-  /// 從 JSON 還原 [AccountsBundle]，schema 版本不相容時丟 [FormatException]。
+  /// 從 JSON 還原 [AccountsBundle]。
+  ///
+  /// schema 版本高於支援版本時丟 [UnsupportedSchemaVersionException]；其餘格式錯誤丟 [FormatException]。
   factory AccountsBundle.fromJson(Map<String, dynamic> json) {
     final version = json['schema_version'];
     if (version is! int) {
       throw const FormatException('Missing or invalid "schema_version"');
     }
     if (version > currentSchemaVersion) {
-      throw FormatException(
-        'Unsupported schema version: $version. Please update the app.',
-      );
+      throw UnsupportedSchemaVersionException(version);
     }
 
     final rawAccounts = json['accounts'];

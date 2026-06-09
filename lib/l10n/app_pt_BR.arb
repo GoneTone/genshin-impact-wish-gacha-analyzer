@@ -636,6 +636,10 @@
       }
     }
   },
+  "importReasonInvalidFormat": "O formato do arquivo é inválido ou o arquivo está corrompido",
+  "importReasonUnsupportedVersion": "Este arquivo foi exportado por uma versão mais recente do aplicativo. Atualize o aplicativo antes de importar",
+  "importReasonUnreadable": "Não foi possível ler o arquivo",
+  "exportReasonWriteFailed": "Não foi possível gravar o arquivo. Verifique o local de salvamento e as permissões",
   "settingsExportSelectTitle": "Selecionar contas para exportar",
   "settingsImportSelectTitle": "Selecionar contas para importar",
   "settingsImportMergeBadge": "Mesclar",
