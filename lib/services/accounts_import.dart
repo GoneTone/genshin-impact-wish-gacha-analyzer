@@ -73,6 +73,7 @@ Map<String, dynamic> _screenLegacyBundle(Map<String, dynamic> raw) {
 
   var sawAnyCode = false;
   var keptAnyKnown = false;
+  // 非預期型別的 entry 原樣保留，讓 AccountsBundle.fromJson 拋出帶位置的結構錯誤。
   final filteredAccounts = <dynamic>[];
   for (final entry in accountsRaw) {
     if (entry is! Map<String, dynamic>) {
