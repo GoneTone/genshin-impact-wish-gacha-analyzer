@@ -7,6 +7,9 @@ class UnsupportedSchemaVersionException implements Exception {
 
   /// 匯入檔宣告的 schema 版本（高於 [AccountsBundle.currentSchemaVersion]）。
   final int version;
+
+  @override
+  String toString() => 'UnsupportedSchemaVersionException(version: $version)';
 }
 
 /// 單一匯出帳號：包含祈願資料與選填別名。
@@ -73,7 +76,9 @@ class AccountsBundle {
     'accounts': accounts.map((a) => a.toJson()).toList(growable: false),
   };
 
-  /// 從 JSON 還原 [AccountsBundle]，schema 版本不相容時丟 [FormatException]。
+  /// 從 JSON 還原 [AccountsBundle]。
+  ///
+  /// schema 版本高於支援版本時丟 [UnsupportedSchemaVersionException]；其餘格式錯誤丟 [FormatException]。
   factory AccountsBundle.fromJson(Map<String, dynamic> json) {
     final version = json['schema_version'];
     if (version is! int) {
