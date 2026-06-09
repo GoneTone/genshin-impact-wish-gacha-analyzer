@@ -1129,6 +1129,62 @@ void main() {
     },
   );
 
+  test(
+    'importAccounts: keeps local alias on conflict, does not adopt bundle alias',
+    () async {
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+      SharedPreferences.setMockInitialValues({
+        'pref.uidAliases': jsonEncode({'100000001': '本機暱稱'}),
+      });
+
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final bundle = AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: '100000001',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: const {'301': []},
+            ),
+            alias: '主號',
+          ),
+        ],
+      );
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(bundle);
+
+      // 本機已有別名 → 匯入的 '主號' 不得覆蓋
+      expect(container.read(settingsProvider).uidAliases['100000001'], '本機暱稱');
+    },
+  );
+
   test('importAccounts: uidOrder keeps local order, appends new UIDs', () async {
     final storage = GachaStorage(tempDir);
     for (final uid in ['100000001', '100000003', '100000004']) {
