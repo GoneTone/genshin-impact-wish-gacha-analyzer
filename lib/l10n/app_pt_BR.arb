@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmação de importação",
-  "settingsImportConfirmIntro": "Prestes a mesclar {accounts} contas ({records} registros no total):",
+  "settingsImportConfirmIntro": "Prestes a mesclar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {

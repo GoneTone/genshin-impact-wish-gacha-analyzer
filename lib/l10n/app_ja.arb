@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "インポートの確認",
-  "settingsImportConfirmIntro": "{accounts} 個のアカウントを結合します（合計 {records} 件の記録）：",
+  "settingsImportConfirmIntro": "{accounts} 個のアカウントを統合します（合計 {records} 件の記録）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmMergeHeader": "以下のアカウントはローカルデータと結合されます。既存の記録は削除されません：",
+  "settingsImportConfirmMergeHeader": "以下のアカウントはローカルデータと統合されます。既存の記録は削除されません：",
   "settingsImportConfirmNoConflict": "データの競合はありません。",
   "settingsImportConfirmPreserveFooter": "その他の既存アカウント（{uids}）は保持されます。",
   "@settingsImportConfirmPreserveFooter": {
@@ -638,7 +638,7 @@
   },
   "settingsExportSelectTitle": "エクスポートするアカウントを選択",
   "settingsImportSelectTitle": "インポートするアカウントを選択",
-  "settingsImportMergeBadge": "結合",
+  "settingsImportMergeBadge": "統合",
   "accountsPickerSelectAll": "すべて選択",
   "accountRecordCount": "{n} 件の記録",
   "@accountRecordCount": {
