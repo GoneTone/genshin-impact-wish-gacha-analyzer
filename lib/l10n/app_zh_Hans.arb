@@ -836,6 +836,14 @@
   "@actionSaveImage": {
     "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
   },
+  "actionZoomIn": "放大",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "缩小",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
   "imageCopied": "图片已复制到剪贴板",
   "@imageCopied": {
     "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
@@ -856,13 +864,5 @@
         "type": "String"
       }
     }
-  },
-  "actionZoomIn": "放大",
-  "@actionZoomIn": {
-    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
-  },
-  "actionZoomOut": "缩小",
-  "@actionZoomOut": {
-    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
   }
 }
