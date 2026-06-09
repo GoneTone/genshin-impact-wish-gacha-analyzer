@@ -212,7 +212,7 @@
   },
   "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account} other{Imported {accounts} accounts}}: {added} new, {duplicate} already present",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts merged, plus new vs already-present record counts.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
@@ -585,7 +585,7 @@
     }
   },
   "settingsImportConfirmTitle": "Import confirmation",
-  "settingsImportConfirmIntro": "About to import {accounts} accounts ({records} records total):",
+  "settingsImportConfirmIntro": "About to merge {accounts} accounts ({records} records total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
