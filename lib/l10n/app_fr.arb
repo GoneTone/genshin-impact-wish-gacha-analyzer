@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmation d'importation",
-  "settingsImportConfirmIntro": "Sur le point d'importer {accounts} compte(s) ({records} enregistrement(s) au total) :",
+  "settingsImportConfirmIntro": "Sur le point de fusionner {accounts} comptes ({records} enregistrements au total) :",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "Les UID suivants ont déjà des données et seront écrasés :",
+  "settingsImportConfirmMergeHeader": "Les comptes suivants seront fusionnés avec les données locales ; les enregistrements existants ne seront pas supprimés :",
   "settingsImportConfirmNoConflict": "Aucun conflit de données.",
   "settingsImportConfirmPreserveFooter": "Les autres comptes existants ({uids}) seront conservés.",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "Cette opération est irréversible. Saisissez IMPORT pour confirmer.",
   "settingsImportSuccess": "{accounts} compte(s) importé(s) avec succès ({records} enregistrement(s))",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
-  "settingsImportOverwriteBadge": "Écraser",
+  "settingsImportMergeBadge": "Fusionner",
   "accountsPickerSelectAll": "Tout sélectionner",
   "accountRecordCount": "{n, plural, =1{1 enregistrement} other{{n} enregistrements}}",
   "@accountRecordCount": {

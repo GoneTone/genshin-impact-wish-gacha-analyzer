@@ -553,7 +553,7 @@ class _DataManagement extends ConsumerWidget {
           lastUpdated: a.data.lastUpdated,
           recordCount: a.data.allRecords.length,
           badge: existing.contains(a.data.uid)
-              ? l.settingsImportOverwriteBadge
+              ? l.settingsImportMergeBadge
               : null,
         ),
     ];
@@ -607,7 +607,7 @@ class _DataManagement extends ConsumerWidget {
     if (conflicts.isEmpty) {
       buf.writeln(l.settingsImportConfirmNoConflict);
     } else {
-      buf.writeln(l.settingsImportConfirmOverwriteHeader);
+      buf.writeln(l.settingsImportConfirmMergeHeader);
       for (final uid in conflicts) {
         buf.writeln('  • $uid');
       }
@@ -616,14 +616,11 @@ class _DataManagement extends ConsumerWidget {
       buf.writeln();
       buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
     }
-    buf.writeln();
-    buf.write(l.settingsImportConfirmWarning);
 
-    final ok = await showConfirmTypeDialog(
+    final ok = await showConfirmDialog(
       context: ctx,
       title: l.settingsImportConfirmTitle,
       body: buf.toString(),
-      expectedText: 'IMPORT',
       cancelLabel: l.actionCancel,
       confirmLabel: l.confirmImport,
       confirmIcon: Icons.check,

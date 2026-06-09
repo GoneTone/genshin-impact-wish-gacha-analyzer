@@ -437,20 +437,19 @@
     "placeholders": { "path": { "type": "String" } }
   },
   "settingsImportConfirmTitle": "匯入確認",
-  "settingsImportConfirmIntro": "即將匯入 {accounts} 個帳號（共 {records} 筆紀錄）：",
+  "settingsImportConfirmIntro": "即將合併 {accounts} 個帳號（共 {records} 筆紀錄）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": { "type": "int" },
       "records": { "type": "int" }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "下列 UID 已有資料，將被覆蓋：",
+  "settingsImportConfirmMergeHeader": "下列帳號將與本機資料合併，不會刪除既有記錄：",
   "settingsImportConfirmNoConflict": "無資料衝突。",
   "settingsImportConfirmPreserveFooter": "其他現有帳號（{uids}）將保留。",
   "@settingsImportConfirmPreserveFooter": {
     "placeholders": { "uids": { "type": "String" } }
   },
-  "settingsImportConfirmWarning": "此操作無法復原。請輸入 IMPORT 以確認。",
   "settingsImportSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -473,7 +472,7 @@
 
   "settingsExportSelectTitle": "選擇要匯出的帳號",
   "settingsImportSelectTitle": "選擇要匯入的帳號",
-  "settingsImportOverwriteBadge": "覆蓋",
+  "settingsImportMergeBadge": "合併",
   "accountsPickerSelectAll": "全選",
   "accountRecordCount": "{n} 筆紀錄",
   "@accountRecordCount": {

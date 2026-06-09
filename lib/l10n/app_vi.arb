@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "Xác nhận nhập",
-  "settingsImportConfirmIntro": "Sắp nhập {accounts} tài khoản (tổng cộng {records} bản ghi):",
+  "settingsImportConfirmIntro": "Sắp hợp nhất {accounts} tài khoản (tổng {records} bản ghi):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "Các UID sau đã có dữ liệu và sẽ bị ghi đè:",
+  "settingsImportConfirmMergeHeader": "Các tài khoản sau sẽ được hợp nhất với dữ liệu cục bộ; các bản ghi hiện có sẽ không bị xóa:",
   "settingsImportConfirmNoConflict": "Không có xung đột dữ liệu.",
   "settingsImportConfirmPreserveFooter": "Các tài khoản hiện có khác ({uids}) sẽ được giữ lại.",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "Thao tác này không thể hoàn tác. Vui lòng nhập IMPORT để xác nhận.",
   "settingsImportSuccess": "Đã nhập thành công {accounts} tài khoản ({records} bản ghi)",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
-  "settingsImportOverwriteBadge": "Ghi đè",
+  "settingsImportMergeBadge": "Hợp nhất",
   "accountsPickerSelectAll": "Chọn tất cả",
   "accountRecordCount": "{n} bản ghi",
   "@accountRecordCount": {

@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "インポートの確認",
-  "settingsImportConfirmIntro": "{accounts} 個のアカウント（計 {records} 件の記録）をインポートします：",
+  "settingsImportConfirmIntro": "{accounts} 個のアカウントを結合します（合計 {records} 件の記録）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "次の UID には既存データがあり、上書きされます：",
+  "settingsImportConfirmMergeHeader": "以下のアカウントはローカルデータと結合されます。既存の記録は削除されません：",
   "settingsImportConfirmNoConflict": "データの競合はありません。",
   "settingsImportConfirmPreserveFooter": "その他の既存アカウント（{uids}）は保持されます。",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "この操作は元に戻せません。確認のため IMPORT と入力してください。",
   "settingsImportSuccess": "{accounts} 個のアカウント（{records} 件の記録）を正常にインポートしました",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "エクスポートするアカウントを選択",
   "settingsImportSelectTitle": "インポートするアカウントを選択",
-  "settingsImportOverwriteBadge": "上書き",
+  "settingsImportMergeBadge": "結合",
   "accountsPickerSelectAll": "すべて選択",
   "accountRecordCount": "{n} 件の記録",
   "@accountRecordCount": {
