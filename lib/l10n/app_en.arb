@@ -643,6 +643,7 @@
   "importReasonUnsupportedVersion": "This file was exported by a newer version of the app. Please update the app before importing.",
   "importReasonUnreadable": "Unable to read the file",
   "exportReasonWriteFailed": "Unable to write the file, please check the save location and permissions",
+  "importReasonForeignApp": "This file was not exported by the app",
   "settingsExportSelectTitle": "Select accounts to export",
   "settingsImportSelectTitle": "Select accounts to import",
   "settingsImportMergeBadge": "Merge",

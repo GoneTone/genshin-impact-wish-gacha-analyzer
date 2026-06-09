@@ -640,6 +640,7 @@
   "importReasonUnsupportedVersion": "Este archivo se exportó con una versión más reciente de la aplicación, actualízala antes de importar",
   "importReasonUnreadable": "No se puede leer el archivo",
   "exportReasonWriteFailed": "No se puede escribir el archivo, comprueba la ubicación de guardado y los permisos",
+  "importReasonForeignApp": "Este archivo no es una copia de seguridad exportada por la aplicación",
   "settingsExportSelectTitle": "Seleccionar cuentas a exportar",
   "settingsImportSelectTitle": "Seleccionar cuentas a importar",
   "settingsImportMergeBadge": "Combinar",

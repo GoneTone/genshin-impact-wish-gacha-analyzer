@@ -636,6 +636,7 @@
   "importReasonUnsupportedVersion": "此文件由较新版本的软件导出，请先更新软件后再导入",
   "importReasonUnreadable": "无法读取文件",
   "exportReasonWriteFailed": "无法写入文件，请确认保存位置与权限",
+  "importReasonForeignApp": "此文件不是由本软件导出的备份",
   "settingsExportSelectTitle": "选择要导出的账号",
   "settingsImportSelectTitle": "选择要导入的账号",
   "settingsImportMergeBadge": "合并",
