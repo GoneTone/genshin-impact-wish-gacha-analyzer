@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "Đã nhập {accounts} tài khoản: {added} mới, {duplicate} đã có",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -582,7 +585,7 @@
     }
   },
   "settingsImportConfirmTitle": "Xác nhận nhập",
-  "settingsImportConfirmIntro": "Sắp nhập {accounts} tài khoản (tổng cộng {records} bản ghi):",
+  "settingsImportConfirmIntro": "Sắp hợp nhất {accounts} tài khoản (tổng {records} bản ghi):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
