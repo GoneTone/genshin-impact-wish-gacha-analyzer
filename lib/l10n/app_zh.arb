@@ -161,9 +161,9 @@
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
   },
-  "progressDoneImportSummary": "已合併 {accounts} 個帳號：新增 {added} 筆、已存在 {duplicate} 筆",
+  "progressDoneImportSummary": "已匯入 {accounts} 個帳號：新增 {added} 筆、已存在 {duplicate} 筆",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts merged, plus new vs already-present record counts.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": { "type": "int" },
       "added": { "type": "int" },
@@ -437,7 +437,7 @@
     "placeholders": { "path": { "type": "String" } }
   },
   "settingsImportConfirmTitle": "匯入確認",
-  "settingsImportConfirmIntro": "即將合併 {accounts} 個帳號（共 {records} 筆紀錄）：",
+  "settingsImportConfirmIntro": "即將匯入 {accounts} 個帳號（共 {records} 筆紀錄）：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": { "type": "int" },

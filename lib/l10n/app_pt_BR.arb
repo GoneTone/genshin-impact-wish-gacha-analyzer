@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 conta mesclada} other{{accounts} contas mescladas}}: {added} novos, {duplicate} já existentes",
+  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmação de importação",
-  "settingsImportConfirmIntro": "Prestes a mesclar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
+  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {

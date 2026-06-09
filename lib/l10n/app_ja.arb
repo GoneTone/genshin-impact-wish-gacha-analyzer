@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts} 個のアカウントを結合しました：新規 {added} 件、既存 {duplicate} 件",
+  "progressDoneImportSummary": "{accounts} 個のアカウントをインポートしました：新規 {added} 件、既存 {duplicate} 件",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -582,7 +582,7 @@
     }
   },
   "settingsImportConfirmTitle": "インポートの確認",
-  "settingsImportConfirmIntro": "{accounts} 個のアカウントを統合します（合計 {records} 件の記録）：",
+  "settingsImportConfirmIntro": "{accounts} 個のアカウント（計 {records} 件の記録）をインポートします：",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
