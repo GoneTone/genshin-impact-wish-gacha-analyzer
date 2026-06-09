@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "Đã nhập {accounts} tài khoản ({records} bản ghi)",
+  "progressDoneImportSummary": "Đã nhập {accounts} tài khoản: {added} mới, {duplicate} đã có",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "Các UID sau đã có dữ liệu và sẽ bị ghi đè:",
+  "settingsImportConfirmMergeHeader": "Các tài khoản sau sẽ được hợp nhất với dữ liệu cục bộ; các bản ghi hiện có sẽ không bị xóa:",
   "settingsImportConfirmNoConflict": "Không có xung đột dữ liệu.",
   "settingsImportConfirmPreserveFooter": "Các tài khoản hiện có khác ({uids}) sẽ được giữ lại.",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "Thao tác này không thể hoàn tác. Vui lòng nhập IMPORT để xác nhận.",
   "settingsImportSuccess": "Đã nhập thành công {accounts} tài khoản ({records} bản ghi)",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
-  "settingsImportOverwriteBadge": "Ghi đè",
+  "settingsImportMergeBadge": "Hợp nhất",
   "accountsPickerSelectAll": "Chọn tất cả",
   "accountRecordCount": "{n} bản ghi",
   "@accountRecordCount": {

@@ -109,4 +109,76 @@ void main() {
     expect(find.byIcon(Icons.check), findsOneWidget);
     expect(find.byIcon(Icons.delete_outline), findsNothing);
   });
+
+  testWidgets('showConfirmDialog: confirm enabled immediately, returns true', (
+    tester,
+  ) async {
+    bool? confirmed;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  confirmed = await showConfirmDialog(
+                    context: ctx,
+                    title: 'Merge',
+                    body: 'About to merge',
+                    cancelLabel: 'Cancel',
+                    confirmLabel: 'Import',
+                    confirmIcon: Icons.check,
+                  );
+                },
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TextField), findsNothing);
+    final confirmBtn = find.widgetWithText(FilledButton, 'Import');
+    expect(tester.widget<FilledButton>(confirmBtn).onPressed, isNotNull);
+
+    await tester.tap(confirmBtn);
+    await tester.pumpAndSettle();
+    expect(confirmed, isTrue);
+  });
+
+  testWidgets('showConfirmDialog: cancel returns false', (tester) async {
+    bool? confirmed;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  confirmed = await showConfirmDialog(
+                    context: ctx,
+                    title: 'Merge',
+                    body: 'About to merge',
+                    cancelLabel: 'Cancel',
+                    confirmLabel: 'Import',
+                  );
+                },
+                child: const Text('Open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+    await tester.pumpAndSettle();
+    expect(confirmed, isFalse);
+  });
 }

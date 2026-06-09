@@ -210,14 +210,17 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account ({records} records)} other{Imported {accounts} accounts ({records} records)}}",
+  "progressDoneImportSummary": "{accounts, plural, =1{Imported 1 account} other{Imported {accounts} accounts}}: {added} new, {duplicate} already present",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts merged, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -593,7 +596,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "The following UIDs already have data and will be overwritten:",
+  "settingsImportConfirmMergeHeader": "The following accounts will be merged with local data; existing records won't be deleted:",
   "settingsImportConfirmNoConflict": "No data conflicts.",
   "settingsImportConfirmPreserveFooter": "Other existing accounts ({uids}) will be preserved.",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +606,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "This action cannot be undone. Type IMPORT to confirm.",
   "settingsImportSuccess": "Successfully imported {accounts} accounts ({records} records)",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +641,7 @@
   },
   "settingsExportSelectTitle": "Select accounts to export",
   "settingsImportSelectTitle": "Select accounts to import",
-  "settingsImportOverwriteBadge": "Overwrite",
+  "settingsImportMergeBadge": "Merge",
   "accountsPickerSelectAll": "Select all",
   "accountRecordCount": "{n} records",
   "@accountRecordCount": {

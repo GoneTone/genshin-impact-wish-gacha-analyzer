@@ -161,12 +161,13 @@
   "@progressPartialFailed": {
     "placeholders": { "names": { "type": "String" } }
   },
-  "progressDoneImportSummary": "本次匯入 {accounts} 個帳號（共 {records} 筆紀錄）",
+  "progressDoneImportSummary": "已匯入 {accounts} 個帳號：新增 {added} 筆、已存在 {duplicate} 筆",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": { "type": "int" },
-      "records":  { "type": "int" }
+      "added": { "type": "int" },
+      "duplicate": { "type": "int" }
     }
   },
   "progressPartialImportFailed": "⚠ 部分匯入失敗：{uids}",
@@ -443,13 +444,12 @@
       "records": { "type": "int" }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "下列 UID 已有資料，將被覆蓋：",
+  "settingsImportConfirmMergeHeader": "下列帳號將與本機資料合併，不會刪除既有記錄：",
   "settingsImportConfirmNoConflict": "無資料衝突。",
   "settingsImportConfirmPreserveFooter": "其他現有帳號（{uids}）將保留。",
   "@settingsImportConfirmPreserveFooter": {
     "placeholders": { "uids": { "type": "String" } }
   },
-  "settingsImportConfirmWarning": "此操作無法復原。請輸入 IMPORT 以確認。",
   "settingsImportSuccess": "已成功匯入 {accounts} 個帳號（{records} 筆紀錄）",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -472,7 +472,7 @@
 
   "settingsExportSelectTitle": "選擇要匯出的帳號",
   "settingsImportSelectTitle": "選擇要匯入的帳號",
-  "settingsImportOverwriteBadge": "覆蓋",
+  "settingsImportMergeBadge": "合併",
   "accountsPickerSelectAll": "全選",
   "accountRecordCount": "{n} 筆紀錄",
   "@accountRecordCount": {

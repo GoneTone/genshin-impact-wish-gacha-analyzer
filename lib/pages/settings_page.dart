@@ -33,7 +33,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
@@ -554,7 +553,7 @@ class _DataManagement extends ConsumerWidget {
           lastUpdated: a.data.lastUpdated,
           recordCount: a.data.allRecords.length,
           badge: existing.contains(a.data.uid)
-              ? l.settingsImportOverwriteBadge
+              ? l.settingsImportMergeBadge
               : null,
         ),
     ];
@@ -608,7 +607,7 @@ class _DataManagement extends ConsumerWidget {
     if (conflicts.isEmpty) {
       buf.writeln(l.settingsImportConfirmNoConflict);
     } else {
-      buf.writeln(l.settingsImportConfirmOverwriteHeader);
+      buf.writeln(l.settingsImportConfirmMergeHeader);
       for (final uid in conflicts) {
         buf.writeln('  • $uid');
       }
@@ -617,14 +616,11 @@ class _DataManagement extends ConsumerWidget {
       buf.writeln();
       buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
     }
-    buf.writeln();
-    buf.write(l.settingsImportConfirmWarning);
 
-    final ok = await showConfirmTypeDialog(
+    final ok = await showConfirmDialog(
       context: ctx,
       title: l.settingsImportConfirmTitle,
       body: buf.toString(),
-      expectedText: 'IMPORT',
       cancelLabel: l.actionCancel,
       confirmLabel: l.confirmImport,
       confirmIcon: Icons.check,
@@ -781,26 +777,13 @@ class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
     final l = AppLocalizations.of(ctx)!;
     final usage = ref.read(hoyowikiCacheUsageProvider).value;
     final sizeText = usage == null ? '' : formatBytes(usage.galleryBytes);
-    final ok = await showDialog<bool>(
+    final ok = await showConfirmDialog(
       context: ctx,
-      builder: (d) => AppDialog(
-        title: Text(l.confirmClearGalleryCacheTitle),
-        content: Text(l.confirmClearGalleryCacheBody(sizeText)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(d).pop(false),
-            child: Text(l.actionCancel),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(d).gacha.stateDanger,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => Navigator.of(d).pop(true),
-            child: Text(l.confirmClearGalleryCacheConfirm),
-          ),
-        ],
-      ),
+      title: l.confirmClearGalleryCacheTitle,
+      body: l.confirmClearGalleryCacheBody(sizeText),
+      cancelLabel: l.actionCancel,
+      confirmLabel: l.confirmClearGalleryCacheConfirm,
+      isDanger: true,
     );
     if (ok != true) return;
     try {
@@ -822,26 +805,13 @@ class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
   /// 顯示確認 dialog，確認後呼叫 [GachaRepository.forceRefetchAllHoYoWikiImages]。
   Future<void> _refetchAll(BuildContext ctx) async {
     final l = AppLocalizations.of(ctx)!;
-    final ok = await showDialog<bool>(
+    final ok = await showConfirmDialog(
       context: ctx,
-      builder: (d) => AppDialog(
-        title: Text(l.confirmRefetchHoyoWikiTitle),
-        content: Text(l.confirmRefetchHoyoWikiBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(d).pop(false),
-            child: Text(l.actionCancel),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(d).gacha.stateDanger,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => Navigator.of(d).pop(true),
-            child: Text(l.confirmRefetchHoyoWikiConfirm),
-          ),
-        ],
-      ),
+      title: l.confirmRefetchHoyoWikiTitle,
+      body: l.confirmRefetchHoyoWikiBody,
+      cancelLabel: l.actionCancel,
+      confirmLabel: l.confirmRefetchHoyoWikiConfirm,
+      isDanger: true,
     );
     if (ok != true) return;
     // 後端流程獨立於 dialog lifecycle；UpdateProgressDialog 由 app_shell.dart

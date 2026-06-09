@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "นำเข้า {accounts} บัญชี ({records} รายการ)",
+  "progressDoneImportSummary": "นำเข้า {accounts} บัญชีแล้ว: ใหม่ {added} รายการ, มีอยู่แล้ว {duplicate} รายการ",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "UID ต่อไปนี้มีข้อมูลอยู่แล้ว และจะถูกเขียนทับ:",
+  "settingsImportConfirmMergeHeader": "บัญชีต่อไปนี้จะถูกผสานกับข้อมูลในเครื่อง โดยจะไม่ลบระเบียนที่มีอยู่:",
   "settingsImportConfirmNoConflict": "ไม่มีข้อมูลที่ขัดแย้ง",
   "settingsImportConfirmPreserveFooter": "บัญชีอื่นที่มีอยู่ ({uids}) จะถูกเก็บไว้",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ กรุณาพิมพ์ IMPORT เพื่อยืนยัน",
   "settingsImportSuccess": "นำเข้า {accounts} บัญชี ({records} รายการ) สำเร็จ",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
-  "settingsImportOverwriteBadge": "เขียนทับ",
+  "settingsImportMergeBadge": "ผสาน",
   "accountsPickerSelectAll": "เลือกทั้งหมด",
   "accountRecordCount": "{n} รายการ",
   "@accountRecordCount": {

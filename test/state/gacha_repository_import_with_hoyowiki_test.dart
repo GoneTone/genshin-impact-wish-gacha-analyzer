@@ -181,7 +181,8 @@ void main() {
     expect(completed.importSummary, isNotNull);
     expect(completed.importSummary!.successAccounts, 2);
     expect(completed.importSummary!.failedUids, isEmpty);
-    expect(completed.importSummary!.totalRecords, 2);
+    expect(completed.importSummary!.addedRecords, 2);
+    expect(completed.importSummary!.duplicateRecords, 0);
     expect(
       completed.hoYoWikiImagesDownloaded,
       2,
@@ -227,7 +228,8 @@ void main() {
     expect(completed.hoYoWikiImagesDownloaded, 0);
     expect(completed.importSummary, isNotNull);
     expect(completed.importSummary!.successAccounts, 0);
-    expect(completed.importSummary!.totalRecords, 0);
+    expect(completed.importSummary!.addedRecords, 0);
+    expect(completed.importSummary!.duplicateRecords, 0);
     expect(completed.importSummary!.failedUids, isEmpty);
   });
 

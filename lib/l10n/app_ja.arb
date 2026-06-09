@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts} 件のアカウントをインポート（{records} 件の記録）",
+  "progressDoneImportSummary": "{accounts} 個のアカウントをインポートしました：新規 {added} 件、既存 {duplicate} 件",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "次の UID には既存データがあり、上書きされます：",
+  "settingsImportConfirmMergeHeader": "以下のアカウントはローカルデータと統合されます。既存の記録は削除されません：",
   "settingsImportConfirmNoConflict": "データの競合はありません。",
   "settingsImportConfirmPreserveFooter": "その他の既存アカウント（{uids}）は保持されます。",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "この操作は元に戻せません。確認のため IMPORT と入力してください。",
   "settingsImportSuccess": "{accounts} 個のアカウント（{records} 件の記録）を正常にインポートしました",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "エクスポートするアカウントを選択",
   "settingsImportSelectTitle": "インポートするアカウントを選択",
-  "settingsImportOverwriteBadge": "上書き",
+  "settingsImportMergeBadge": "統合",
   "accountsPickerSelectAll": "すべて選択",
   "accountRecordCount": "{n} 件の記録",
   "@accountRecordCount": {

@@ -23,7 +23,7 @@ final _entries = [
     alias: '小號',
     lastUpdated: DateTime.utc(2026, 5, 12, 9),
     recordCount: 0,
-    badge: '覆蓋',
+    badge: '合併',
   ),
 ];
 
@@ -159,11 +159,9 @@ void main() {
     expect(find.text('100000003 (小號)'), findsOneWidget);
   });
 
-  testWidgets('overwrite badge shown only when entry.badge != null', (
-    tester,
-  ) async {
+  testWidgets('badge shown only when entry.badge != null', (tester) async {
     await _open(tester);
-    expect(find.text('覆蓋'), findsOneWidget);
+    expect(find.text('合併'), findsOneWidget);
   });
 
   testWidgets('subtitle shows lastUpdated + recordCount per locale', (

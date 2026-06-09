@@ -28,7 +28,7 @@ class AccountPickerEntry {
   /// 該帳號的祈願紀錄總筆數。
   final int recordCount;
 
-  /// 可選的紅色警示徽章文字（如「有新資料」提示）。
+  /// 可選的徽章文字（如「合併」提示）。
   final String? badge;
 }
 
@@ -218,13 +218,13 @@ class _PickerRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: tokens.stateDanger.withValues(alpha: 0.18),
+                color: tokens.accentPrimary.withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(99),
               ),
               child: Text(
                 badge,
                 style: TextStyle(
-                  color: tokens.stateDanger,
+                  color: tokens.accentPrimary,
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),

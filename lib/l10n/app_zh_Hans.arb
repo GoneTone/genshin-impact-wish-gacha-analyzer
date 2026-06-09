@@ -206,7 +206,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "本次导入 {accounts} 个账号（共 {records} 条记录）",
+  "progressDoneImportSummary": "已导入 {accounts} 个账号：新增 {added} 条、已存在 {duplicate} 条",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -589,7 +589,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "下列 UID 已有数据，将被覆盖：",
+  "settingsImportConfirmMergeHeader": "以下账号将与本机数据合并，不会删除既有记录：",
   "settingsImportConfirmNoConflict": "无数据冲突。",
   "settingsImportConfirmPreserveFooter": "其他现有账号（{uids}）将保留。",
   "@settingsImportConfirmPreserveFooter": {
@@ -599,7 +599,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "此操作无法撤销。请输入 IMPORT 以确认。",
   "settingsImportSuccess": "已成功导入 {accounts} 个账号（{records} 条记录）",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -635,7 +634,7 @@
   },
   "settingsExportSelectTitle": "选择要导出的账号",
   "settingsImportSelectTitle": "选择要导入的账号",
-  "settingsImportOverwriteBadge": "覆盖",
+  "settingsImportMergeBadge": "合并",
   "accountsPickerSelectAll": "全选",
   "accountRecordCount": "{n} 条记录",
   "@accountRecordCount": {

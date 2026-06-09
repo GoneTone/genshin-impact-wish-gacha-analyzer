@@ -210,7 +210,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada ({records} registros)} other{{accounts} contas importadas ({records} registros)}}",
+  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
     "placeholders": {
@@ -593,7 +593,7 @@
       }
     }
   },
-  "settingsImportConfirmOverwriteHeader": "Os seguintes UIDs já possuem dados e serão sobrescritos:",
+  "settingsImportConfirmMergeHeader": "As seguintes contas serão mescladas com os dados locais; os registros existentes não serão excluídos:",
   "settingsImportConfirmNoConflict": "Sem conflitos de dados.",
   "settingsImportConfirmPreserveFooter": "Outras contas existentes ({uids}) serão mantidas.",
   "@settingsImportConfirmPreserveFooter": {
@@ -603,7 +603,6 @@
       }
     }
   },
-  "settingsImportConfirmWarning": "Esta operação não pode ser desfeita. Digite IMPORT para confirmar.",
   "settingsImportSuccess": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{1 registro} other{{records} registros}})",
   "@settingsImportSuccess": {
     "placeholders": {
@@ -639,7 +638,7 @@
   },
   "settingsExportSelectTitle": "Selecionar contas para exportar",
   "settingsImportSelectTitle": "Selecionar contas para importar",
-  "settingsImportOverwriteBadge": "Sobrescrever",
+  "settingsImportMergeBadge": "Mesclar",
   "accountsPickerSelectAll": "Selecionar tudo",
   "accountRecordCount": "{n, plural, =1{1 registro} other{{n} registros}}",
   "@accountRecordCount": {
