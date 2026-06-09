@@ -636,6 +636,10 @@
       }
     }
   },
+  "importReasonInvalidFormat": "รูปแบบไฟล์ไม่ถูกต้องหรือไฟล์เสียหาย",
+  "importReasonUnsupportedVersion": "ไฟล์นี้ถูกส่งออกจากแอปเวอร์ชันที่ใหม่กว่า กรุณาอัปเดตแอปก่อนนำเข้า",
+  "importReasonUnreadable": "ไม่สามารถอ่านไฟล์ได้",
+  "exportReasonWriteFailed": "ไม่สามารถเขียนไฟล์ได้ กรุณาตรวจสอบตำแหน่งที่บันทึกและสิทธิ์การเข้าถึง",
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
   "settingsImportMergeBadge": "ผสาน",

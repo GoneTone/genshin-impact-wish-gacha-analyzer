@@ -639,6 +639,10 @@
       }
     }
   },
+  "importReasonInvalidFormat": "The file format is invalid or the file is corrupted",
+  "importReasonUnsupportedVersion": "This file was exported by a newer version of the app. Please update the app before importing.",
+  "importReasonUnreadable": "Unable to read the file",
+  "exportReasonWriteFailed": "Unable to write the file, please check the save location and permissions",
   "settingsExportSelectTitle": "Select accounts to export",
   "settingsImportSelectTitle": "Select accounts to import",
   "settingsImportMergeBadge": "Merge",
