@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
