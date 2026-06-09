@@ -1,5 +1,5 @@
 {
-  "@@locale": "es",
+  "@@locale": "es-ES",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "{accounts, plural, =1{Se importó 1 cuenta} other{Se importaron {accounts} cuentas}}: {added} nuevos, {duplicate} ya existentes",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -582,7 +585,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmar importación",
-  "settingsImportConfirmIntro": "Se van a importar {accounts} cuenta(s) ({records} registro(s) en total):",
+  "settingsImportConfirmIntro": "A punto de combinar {accounts} cuentas ({records} registros en total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
