@@ -494,7 +494,7 @@ class _DataManagement extends ConsumerWidget {
       await showExportResultDialog(
         ctx,
         success: false,
-        message: l.settingsExportFailed(e.toString()),
+        message: l.settingsExportFailed(l.exportReasonWriteFailed),
       );
       return;
     }
@@ -524,10 +524,13 @@ class _DataManagement extends ConsumerWidget {
     final String text;
     try {
       text = await file.readAsString();
-    } catch (e) {
+    } catch (e, st) {
+      Logger('accounts.io').warning('import: read file failed', e, st);
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportFailed(e.toString()))),
+        SnackBar(
+          content: Text(l.settingsImportFailed(l.importReasonUnreadable)),
+        ),
       );
       return;
     }
@@ -535,10 +538,22 @@ class _DataManagement extends ConsumerWidget {
     final AccountsBundle bundle;
     try {
       bundle = importAccounts(text);
-    } on FormatException catch (e) {
+    } on UnsupportedSchemaVersionException {
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(content: Text(l.settingsImportFailed(e.message))),
+        SnackBar(
+          content: Text(
+            l.settingsImportFailed(l.importReasonUnsupportedVersion),
+          ),
+        ),
+      );
+      return;
+    } on FormatException {
+      if (!ctx.mounted) return;
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(l.settingsImportFailed(l.importReasonInvalidFormat)),
+        ),
       );
       return;
     }
