@@ -722,8 +722,7 @@ class GachaRepository extends Notifier<GachaState> {
 
     final localActive = state.activeUid;
     final desiredActive = bundle.lastActiveUid;
-    final newActive =
-        (localActive != null && newByUid.containsKey(localActive))
+    final newActive = (localActive != null && newByUid.containsKey(localActive))
         ? localActive
         : (desiredActive != null && newByUid.containsKey(desiredActive))
         ? desiredActive
