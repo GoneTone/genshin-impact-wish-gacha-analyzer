@@ -18,6 +18,7 @@
 - 匯入鳴潮備份檔（含現有舊檔與未來檔、任何 schema 版本）一律被拒，並顯示「非本軟體匯出」的在地化訊息，而非誤導的「請更新 App」。
 - 較新版**原神**檔仍正確顯示「請更新 App」（不被身分判別誤殺）。
 - 本軟體自己的既有舊備份（無識別欄位、含原神代碼）仍可正常匯入。
+- 無 `app` 欄位的舊檔若混入非原神 banner，只要含至少一個原神代碼即接受該檔，並只匯入可辨識的原神 banner、跳過未知 banner（不因未知記錄結構而整檔解析失敗）。
 - 新匯出的檔帶有明確的 app 識別欄位；加欄位不破壞舊版 App 讀取既有檔。
 - `fvm flutter analyze` 全綠、`fvm flutter test` 全綠。
 
@@ -30,7 +31,9 @@
 | schema_version | **不** bump（`app` 為純加法欄位，舊版 App 忽略未知欄位即可） |
 | 內容判據 | `accounts[*].banners` 的 key 是否屬於 `gachaTypes` 代碼集合（重用單一真實來源，不另建表） |
 | 判別時機 | 在 `importAccounts` 內、`AccountsBundle.fromJson` **之前**（在版本檢查之前，確保訊息正確） |
-| 偵測動作 | 硬性拒絕（外來遊戲資料無法有意義地匯入），顯示在地化原因 |
+| 舊檔判別嚴格度 | **lenient + 過濾**：只要有任一原神代碼即接受該檔，但濾掉非原神 banner（整條跳過、不解析其記錄）；完全沒有原神代碼才整檔拒絕 |
+| 偵測動作 | 純外來檔（顯式 `app` 不符，或舊檔無任何原神代碼）→ 硬性拒絕並顯示在地化原因；混合舊檔 → 接受並只匯入可辨識的原神 banner |
+| 信任邊界 | 顯式 `app` **相符**的檔完整信任、不過濾（避免誤刪較新版本本軟體尚未認得的代碼，那情況交由 schema_version 機制） |
 | 新例外 | `ForeignBundleException`（此備份非本軟體匯出） |
 | 新 ARB key | `importReasonForeignApp`，9 個已翻語系（譯文經 workflow 翻譯＋校驗） |
 
@@ -78,41 +81,60 @@ class ForeignBundleException implements Exception {
 }
 ```
 
-新增判別函式（top-level、可單測；附 dartdoc）：
+`importAccounts` 在確認 raw 是 `Map` 之後、呼叫 `AccountsBundle.fromJson` 之前，依 `app` 欄位走兩條路：
 
 ```dart
-/// 判斷 raw 備份 JSON 是否**不是**本軟體匯出的。
-///
-/// 先看顯式 `app` 欄位（新檔權威依據）；無 `app` 的舊檔退而檢查
-/// `accounts[*].banners` 的卡池代碼是否屬於 [gachaTypes] 已知集合。
-/// 蒐集到代碼但無一屬於原神 → 外來；其餘（含原神代碼、空檔、結構讀不出）→ 視為非外來，交後續流程。
-bool isForeignBundle(Map<String, dynamic> raw) { ... }
-```
-
-判別邏輯：
-
-1. `final app = raw['app'];` 若 `app is String` → 回傳 `app != accountsBundleAppId`。
-2. 否則蒐集卡池代碼：`raw['accounts']` 若為 `List`，逐一取 `entry['banners']`（若為 `Map`）的 keys，聯集成 `Set<String>`。
-3. 已知集合：`final known = {for (final t in gachaTypes) t.gachaType};`
-4. 若蒐集到的代碼集合非空且 `codes.intersection(known).isEmpty` → 回傳 `true`（外來）；否則 `false`。
-
-> 容錯：任何讀取 raw 巢狀結構的步驟以型別檢查保護（非預期型別就略過該層）；讀不出任何代碼時回傳 `false`，把判斷讓給既有的 `FormatException`／版本檢查流程。
-
-`importAccounts` 在確認 raw 是 `Map` 之後、呼叫 `AccountsBundle.fromJson` 之前插入：
-
-```dart
-  if (isForeignBundle(raw)) {
-    _log.warning('import failed: foreign bundle (not from this app)');
-    throw const ForeignBundleException();
+  final app = raw['app'];
+  final Map<String, dynamic> prepared;
+  if (app is String) {
+    if (app != accountsBundleAppId) {
+      _log.warning('import failed: foreign bundle (app=$app)');
+      throw const ForeignBundleException();
+    }
+    prepared = raw; // 本軟體自己的檔，完整信任、不過濾
+  } else {
+    prepared = _screenLegacyBundle(raw); // 無 app 的舊檔：判別 + 過濾未知 banner
   }
+  // 既有版本／結構檢查（沿用目前的 try/catch）
+  try {
+    return AccountsBundle.fromJson(prepared);
+  } on UnsupportedSchemaVersionException catch (e) { ... }
+    on FormatException catch (e) { ... }
+    catch (e, st) { ... }
 ```
+
+> 信任邊界：顯式 `app` **相符**的檔不過濾。若未來版本新增了本版本還不認得的代碼，過濾會誤刪資料；那情況本就由 `AccountsBundle.fromJson` 的 schema_version 檢查（→ `UnsupportedSchemaVersionException`「請更新 App」）把關。
+
+無 `app` 欄位的舊檔交由下列 helper 判別並過濾（附 dartdoc）：
+
+```dart
+/// 處理無 `app` 欄位的舊備份：依卡池代碼判別是否為本軟體（原神）檔，並濾掉非原神 banner。
+///
+/// 蒐集 `accounts[*].banners` 的 key 與 [gachaTypes] 已知集合比對：
+/// - 確有卡池資料、但無一是原神代碼 → 丟 [ForeignBundleException]（純外來，如鳴潮檔）。
+/// - 否則回傳濾除未知 banner 後的 raw：未知代碼的 banner 整條跳過（不解析其記錄），
+///   濾空的帳號一併移除，只保留可辨識的原神 banner。
+/// - 讀不出任何卡池資料（空檔／結構模糊）→ 原樣交回，由 [AccountsBundle.fromJson] 後續處理。
+Map<String, dynamic> _screenLegacyBundle(Map<String, dynamic> raw) { ... }
+```
+
+`_screenLegacyBundle` 邏輯：
+
+1. `final known = {for (final t in gachaTypes) t.gachaType};`（已知集合 `{301,302,500,200,100,2000,1000}`）。
+2. `raw['accounts']` 非 `List` → 原樣回傳（結構錯誤交 `fromJson` 報）。
+3. 逐一帳號：`entry` 或 `entry['banners']` 非 `Map` → 原樣保留該 entry（交 `fromJson` 處理）；否則逐一 banner key，只保留 `known.contains(key)` 的；同時記錄「是否見過任何代碼」`sawAnyCode` 與「是否保留了任何原神 banner」`keptAnyKnown`。
+4. 帳號濾後 banners 非空 → 以濾後 banners 重建該 entry 加入；濾空（原本就有 banner 但全非原神）→ 丟棄該帳號。
+5. `sawAnyCode && !keptAnyKnown` → 丟 `ForeignBundleException`（純外來）。
+6. 否則回傳 `{...raw, 'accounts': 濾後清單}`。
+
+> 容錯：讀取 raw 巢狀結構每層都以型別檢查保護，非預期型別就原樣保留交 `fromJson`；讀不出任何代碼（空檔）時不判外來、原樣交回。過濾在解析記錄**之前**完成，故未知 banner 內若是別款遊戲的記錄結構也不會觸發解析錯誤。
 
 最終 `importAccounts` 的檢查順序：
 
 1. `jsonDecode` 失敗 → `FormatException('Invalid JSON')`〔既有〕
 2. 非 Map → `FormatException('Top-level value must be an object')`〔既有〕
-3. **`isForeignBundle` → `ForeignBundleException`**〔新增，在版本檢查之前〕
-4. `AccountsBundle.fromJson` → `UnsupportedSchemaVersionException`（版本過新）／`FormatException`（結構）〔既有〕
+3. **身分判別**〔新增，在版本檢查之前〕：顯式 `app` 不符 → `ForeignBundleException`；無 `app` 的舊檔經 `_screenLegacyBundle` →（純外來）`ForeignBundleException`／（其餘）濾後 raw。
+4. `AccountsBundle.fromJson(prepared)` → `UnsupportedSchemaVersionException`（版本過新）／`FormatException`（結構）〔既有〕
 
 `gachaTypes` 來自 `lib/data/gacha_types.dart`（`accounts_import.dart` 需 import 之）。`gachaTypes` 為 const list，取 `.gachaType` 不會觸發 `resolveName`（不需 `AppLocalizations`），純 Dart 單測可直接使用。
 
@@ -148,13 +170,14 @@ bool isForeignBundle(Map<String, dynamic> raw) { ... }
 
 ### 5. 測試
 
-- `test/services/accounts_import_test.dart`（或新測試檔）：`isForeignBundle` 單測——
-  - `app` 符合 → false；`app` 不符（如 `wuthering_waves_convene_gacha_analyzer`）→ true。
-  - 無 `app` + banners key 全為原神代碼（如 `301`/`302`）→ false。
-  - 無 `app` + banners key 全為鳴潮代碼（如 `1`/`2`/`7`）→ true。
-  - 無 `app` + 空 `accounts`／無 banners／結構模糊 → false。
-  - `importAccounts`：外來 raw（含 `app` 不符、或鳴潮代碼）→ 丟 `ForeignBundleException`。
-  - **順序驗證**：外來檔即使 `schema_version: 999` 也應丟 `ForeignBundleException`（而非 `UnsupportedSchemaVersionException`）。
+- `test/services/accounts_import_test.dart`：以 `importAccounts` 為入口驗證可觀察行為——
+  - **顯式 `app` 不符**（如 `wuthering_waves_convene_gacha_analyzer`）→ 丟 `ForeignBundleException`。
+  - **顯式 `app` 相符** → 正常回傳，且不過濾（即使含本版本未知代碼也保留）。
+  - **無 `app` + 純原神代碼**（`301`/`302`…）→ 正常回傳，banner 全數保留。
+  - **無 `app` + 純鳴潮代碼**（`1`/`2`/`7`）→ 丟 `ForeignBundleException`。
+  - **無 `app` + 混合**（`301` + `1`）→ 正常回傳，且回傳的 bundle **只含 `301` banner、不含 `1`**（驗證未知 banner 被濾掉）；若某帳號只剩未知代碼則該帳號被移除。
+  - **無 `app` + 空 `accounts`／無 banners** → 不判外來，正常回傳（空 bundle）。
+  - **順序驗證**：純外來檔（無 `app`、純鳴潮代碼）即使 `schema_version: 999` 也應丟 `ForeignBundleException`（而非 `UnsupportedSchemaVersionException`）。
 - `test/models/accounts_bundle_test.dart`：`toJson` 輸出含 `'app': accountsBundleAppId`；既有 round-trip 測試仍綠（`fromJson` 忽略 `app`）。
 - `settings_page` 的型別→l10n 映射比照既有 reason key 不寫 widget test（純呈現映射，理由同前一支 spec）。
 
