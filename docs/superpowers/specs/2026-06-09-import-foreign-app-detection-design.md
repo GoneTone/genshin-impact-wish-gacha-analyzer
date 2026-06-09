@@ -163,7 +163,7 @@ Map<String, dynamic> _screenLegacyBundle(Map<String, dynamic> raw) { ... }
 繁中（`app_zh.arb`，來源）初稿：
 
 ```json
-  "importReasonForeignApp": "此檔案不是由本軟體匯出的備份（可能來自其他遊戲的版本）",
+  "importReasonForeignApp": "此檔案不是由本軟體匯出的備份",
 ```
 
 其餘 8 語系譯文於實作前透過翻譯＋對抗式校驗 workflow 產出，沿用各檔既有語氣與用詞。寫入後跑 `fvm flutter gen-l10n`（產物 `lib/l10n/generated/` 未進版控、不 commit）。
