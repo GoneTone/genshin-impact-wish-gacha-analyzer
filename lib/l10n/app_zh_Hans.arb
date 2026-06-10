@@ -208,12 +208,15 @@
   },
   "progressDoneImportSummary": "已导入 {accounts} 个账号：新增 {added} 条、已存在 {duplicate} 条",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
@@ -847,6 +850,10 @@
   "actionZoomOut": "缩小",
   "@actionZoomOut": {
     "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "重新抓取图片",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
   },
   "imageCopied": "图片已复制到剪贴板",
   "@imageCopied": {

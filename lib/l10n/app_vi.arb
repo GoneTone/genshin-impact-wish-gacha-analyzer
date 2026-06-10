@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "Đã nhập {accounts} tài khoản: {added} mới, {duplicate} đã có",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }

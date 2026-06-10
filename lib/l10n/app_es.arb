@@ -212,12 +212,15 @@
   },
   "progressDoneImportSummary": "{accounts, plural, =1{Se importó 1 cuenta} other{Se importaron {accounts} cuentas}}: {added} nuevos, {duplicate} ya existentes",
   "@progressDoneImportSummary": {
-    "description": "Completion dialog line shown when the import-then-fetch flow finishes: how many accounts and total records were imported in this run.",
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
       "accounts": {
         "type": "int"
       },
-      "records": {
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
         "type": "int"
       }
     }
