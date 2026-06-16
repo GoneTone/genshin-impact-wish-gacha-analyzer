@@ -9,7 +9,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/lang_catalog_storage
 class _CountingFetcher extends LangCatalogFetcher {
   int calls = 0;
   @override
-  Future<LangCatalog> fetchCatalog({required String lang, required http.Client client}) async {
+  Future<LangCatalog> fetchCatalog({
+    required String lang,
+    required http.Client client,
+  }) async {
     calls++;
     return LangCatalog.fromEntries(lang, {'1': (name: 'N$calls', kind: 2)});
   }

@@ -145,7 +145,9 @@ class AppSettings {
         ? null
         : (skippedReleaseTag ?? this.skippedReleaseTag),
     maskUidInUi: maskUidInUi ?? this.maskUidInUi,
-    dataLanguage: clearDataLanguage ? null : (dataLanguage ?? this.dataLanguage),
+    dataLanguage: clearDataLanguage
+        ? null
+        : (dataLanguage ?? this.dataLanguage),
     dataLanguageSeeded: dataLanguageSeeded ?? this.dataLanguageSeeded,
   );
 }
@@ -191,7 +193,9 @@ abstract final class SettingsStorage {
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
       maskUidInUi: prefs.getBool(_kMaskUidInUi) ?? false,
-      dataLanguage: dataLangRaw == null || dataLangRaw == 'none' ? null : dataLangRaw,
+      dataLanguage: dataLangRaw == null || dataLangRaw == 'none'
+          ? null
+          : dataLangRaw,
       dataLanguageSeeded: dataLangRaw != null,
     );
   }

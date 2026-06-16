@@ -178,8 +178,14 @@ void main() {
 
     test('copyWith overrides name and lang independently', () {
       final r = GachaRecord(
-        id: '1', uid: 'u', gachaType: '301', name: '胡桃',
-        itemType: '角色', rankType: 5, time: DateTime(2024), lang: 'zh-tw',
+        id: '1',
+        uid: 'u',
+        gachaType: '301',
+        name: '胡桃',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2024),
+        lang: 'zh-tw',
       );
       final byName = r.copyWith(name: 'Hu Tao');
       expect(byName.name, 'Hu Tao');

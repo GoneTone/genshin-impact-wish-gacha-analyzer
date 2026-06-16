@@ -61,7 +61,10 @@ class LangCatalogStorage {
       final items = json['items'] as Map<String, dynamic>;
       final byId = items.map((id, v) {
         final m = v as Map<String, dynamic>;
-        return MapEntry(id, (name: m['name'] as String, kind: m['kind'] as int));
+        return MapEntry(id, (
+          name: m['name'] as String,
+          kind: m['kind'] as int,
+        ));
       });
       return LangCatalog.fromEntries(lang, byId);
     } catch (e, st) {

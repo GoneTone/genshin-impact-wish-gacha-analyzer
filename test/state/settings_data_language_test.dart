@@ -31,15 +31,18 @@ void main() {
     expect(c.read(settingsProvider).dataLanguageSeeded, isTrue);
   });
 
-  test('seedDataLanguageIfUnset seeds only when not seeded and code supported', () async {
-    final c = makeContainer();
-    final notifier = c.read(settingsProvider.notifier);
-    await notifier.waitForLoad();
-    await notifier.seedDataLanguageIfUnset('zh-tw');
-    expect(c.read(settingsProvider).dataLanguage, 'zh-tw');
-    await notifier.seedDataLanguageIfUnset('en-us');
-    expect(c.read(settingsProvider).dataLanguage, 'zh-tw');
-  });
+  test(
+    'seedDataLanguageIfUnset seeds only when not seeded and code supported',
+    () async {
+      final c = makeContainer();
+      final notifier = c.read(settingsProvider.notifier);
+      await notifier.waitForLoad();
+      await notifier.seedDataLanguageIfUnset('zh-tw');
+      expect(c.read(settingsProvider).dataLanguage, 'zh-tw');
+      await notifier.seedDataLanguageIfUnset('en-us');
+      expect(c.read(settingsProvider).dataLanguage, 'zh-tw');
+    },
+  );
 
   test('seedDataLanguageIfUnset no-op for unsupported code', () async {
     final c = makeContainer();

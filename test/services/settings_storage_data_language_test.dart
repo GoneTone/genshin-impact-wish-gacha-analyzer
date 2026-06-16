@@ -44,14 +44,20 @@ void main() {
 
   test('save: seeded + code writes code', () async {
     await SettingsStorage.save(
-      AppSettings.defaults.copyWith(dataLanguage: 'en-us', dataLanguageSeeded: true),
+      AppSettings.defaults.copyWith(
+        dataLanguage: 'en-us',
+        dataLanguageSeeded: true,
+      ),
     );
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getString('pref.dataLanguage'), 'en-us');
   });
 
   test('copyWith clearDataLanguage resets to null', () async {
-    final s = AppSettings.defaults.copyWith(dataLanguage: 'ja-jp', dataLanguageSeeded: true);
+    final s = AppSettings.defaults.copyWith(
+      dataLanguage: 'ja-jp',
+      dataLanguageSeeded: true,
+    );
     final cleared = s.copyWith(clearDataLanguage: true);
     expect(cleared.dataLanguage, isNull);
     expect(cleared.dataLanguageSeeded, isTrue);
