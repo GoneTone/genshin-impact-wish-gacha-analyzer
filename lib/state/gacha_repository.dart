@@ -854,6 +854,17 @@ class GachaRepository extends Notifier<GachaState> {
         }
       }
       if (ref.mounted) state = state.copyWith(byUid: newByUid);
+      // best-effort：補抓目標語言的 icon／詳情（pre-warm）；失敗不影響已完成的轉換。
+      final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+      try {
+        await _fetchHoYoWiki(cancellable.client);
+      } catch (e, st) {
+        Logger(
+          'wish.langconvert',
+        ).warning('unify prewarm failed (ignored)', e, st);
+      } finally {
+        cancellable.client.close();
+      }
       return agg;
     } finally {
       _isUpdating = false;
