@@ -15,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
@@ -33,6 +34,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
@@ -79,6 +81,12 @@ class SettingsPage extends ConsumerWidget {
                   onChanged: notifier.setLocale,
                   l: l,
                 ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsDataLanguage,
+                icon: Icons.translate,
+                child: const _DataLanguageSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -1072,5 +1080,120 @@ class _LogsSection extends ConsumerWidget {
     if (!ctx.mounted) return;
     await ref.read(logServiceProvider).clearAll();
     Logger('accounts.io').info('logs cleared by user');
+  }
+}
+
+/// 設定頁「資料語言」區塊：下拉切換目標語言＋「立即轉換」按鈕。
+class _DataLanguageSection extends ConsumerStatefulWidget {
+  const _DataLanguageSection();
+
+  @override
+  ConsumerState<_DataLanguageSection> createState() =>
+      _DataLanguageSectionState();
+}
+
+/// [_DataLanguageSection] 的 state，持有轉換進行中的 [_busy] 旗標。
+class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
+  bool _busy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final current = ref.watch(settingsProvider.select((s) => s.dataLanguage));
+    final notifier = ref.read(settingsProvider.notifier);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l.settingsDataLanguageDesc,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.gacha.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        DropdownButtonFormField<String?>(
+          initialValue: current,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: [
+            DropdownMenuItem(
+              value: null,
+              child: Text(l.settingsDataLanguageUnset),
+            ),
+            for (final o in kDataLanguageOptions)
+              DropdownMenuItem(value: o.code, child: Text(o.label)),
+          ],
+          onChanged: _busy ? null : (v) => notifier.setDataLanguage(v),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        OutlinedButton.icon(
+          onPressed: (current == null || _busy) ? null : () => _unify(context),
+          icon: _busy
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.sync),
+          label: Text(
+            _busy
+                ? l.settingsDataLanguageUnifying
+                : l.settingsDataLanguageUnify,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 執行統一轉換，期間 busy、結尾彈結果 [AppDialog]。
+  Future<void> _unify(BuildContext ctx) async {
+    final l = AppLocalizations.of(ctx)!;
+    setState(() => _busy = true);
+    try {
+      final result = await ref
+          .read(gachaRepositoryProvider.notifier)
+          .unifyDataLanguage();
+      if (!ctx.mounted) return;
+      await showDialog<void>(
+        context: ctx,
+        builder: (dctx) => AppDialog(
+          title: Text(l.settingsDataLanguage),
+          content: Text(
+            l.settingsDataLanguageUnifyDone(
+              result.converted,
+              result.unresolved,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dctx).pop(),
+              child: Text(MaterialLocalizations.of(dctx).okButtonLabel),
+            ),
+          ],
+        ),
+      );
+    } catch (e, st) {
+      Logger('wish.langconvert').warning('unify ui failed', e, st);
+      if (!ctx.mounted) return;
+      await showDialog<void>(
+        context: ctx,
+        builder: (dctx) => AppDialog(
+          title: Text(l.settingsDataLanguage),
+          content: Text(l.settingsDataLanguageUnifyFailed),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dctx).pop(),
+              child: Text(MaterialLocalizations.of(dctx).okButtonLabel),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 }
