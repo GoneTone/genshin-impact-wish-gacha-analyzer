@@ -238,7 +238,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 - **頌願（2000／1000）及範圍外** → 完全不動、不計數。
 - **同語言** → 不動、不計數。
 - **`lang` 為空**（早期頌願已由 PR #86 回填；一般祈願罕見）→ 無原語言目錄可查 → `unresolved`，保留原狀。
-- **第三方匯入短碼／非選項語言**（如 `en`／`ja`）→ `ensure(srcLang)` 抓取失敗或目錄空 → `unresolved`，保留原狀。
+- **第三方匯入短碼／非選項語言**（如 `en`／`ja`）→ 兩種情形：(a) 該語言 catalog **抓取失敗**（HoYoWiki 拒絕該 lang）→ `ensure` 向上拋 → `_convertAccountToDataLanguage` 吞例外 → **整帳號轉換中止、全部保留原狀**（D11）；(b) catalog 抓得到但**名稱查無** → 該筆 `unresolved`，保留原狀。亦即「整帳號中止」與「單筆 unresolved」依失敗發生在 catalog 取得階段或逐筆解析階段而定。
 - **同名歧義**（同名對多 id）→ `idByName` 剔除 → 該名 `unresolved`，保留原狀。
 - **dedup**：轉換改 `name`／`lang` 不改 record `id`，既有以 API id 去重不受影響。
 - **3★ 武器**：HoYoWiki menu 4 含 3★，可轉；個別未收錄者 `unresolved` 保留。
