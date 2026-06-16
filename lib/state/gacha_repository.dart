@@ -826,7 +826,9 @@ class GachaRepository extends Notifier<GachaState> {
     if (_isUpdating) return const LangConvertResult();
     _isUpdating = true;
     _cancelTriggered = false;
-    state = state.copyWith(progress: const Preparing());
+    // 不 emit Preparing：轉換／catalog 取得期間以設定頁按鈕的「轉換中...」spinner
+    // 回饋即可；全螢幕進度只在 prewarm 真的在抓 HoYoWiki 圖時由 _fetchHoYoWiki
+    // emit（切回已快取語言則無工作、不彈框）。
     try {
       final storage = ref.read(gachaStorageProvider);
       final converter = ref.read(gachaLanguageConverterProvider);
