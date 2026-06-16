@@ -222,6 +222,19 @@
   "settingsThemeLight": "淺色",
   "settingsLanguage": "語言",
   "settingsLocaleSystem": "跟隨系統",
+  "settingsDataLanguage": "資料語言",
+  "settingsDataLanguageDesc": "統一卡池歷史資料的物品名稱語言，獨立於應用程式介面語言。設定後更新或匯入資料會自動轉換成此語言。",
+  "settingsDataLanguageUnset": "未設定（不轉換）",
+  "settingsDataLanguageUnify": "立即轉換資料語言",
+  "settingsDataLanguageUnifying": "轉換中...",
+  "settingsDataLanguageUnifyDone": "已轉換 {converted} 筆，{unresolved} 筆無法轉換。",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": { "type": "int" },
+      "unresolved": { "type": "int" }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "轉換失敗，資料未變更。請檢查網路後重試。",
   "settingsDataManagement": "資料管理",
   "settingsAccountManagement": "帳號管理",
   "settingsPrivacySectionTitle": "隱私",
