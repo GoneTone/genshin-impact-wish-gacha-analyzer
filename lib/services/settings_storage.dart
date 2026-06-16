@@ -81,6 +81,8 @@ class AppSettings {
     this.uidOrder = const [],
     this.skippedReleaseTag,
     this.maskUidInUi = false,
+    this.dataLanguage,
+    this.dataLanguageSeeded = false,
   });
 
   /// 外觀主題。
@@ -104,6 +106,12 @@ class AppSettings {
   /// 是否在介面中遮蔽 UID（前 3 碼搭配 `•`）；資料檔與刪除確認框不受影響。
   final bool maskUidInUi;
 
+  /// 資料語言代碼（如 `ja-jp`）；null 代表未設定（停用轉換）。獨立於 App UI 語言。
+  final String? dataLanguage;
+
+  /// 資料語言是否已初始化（自動播種或使用者明確選擇過）。false 代表可被自動播種。
+  final bool dataLanguageSeeded;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -122,6 +130,9 @@ class AppSettings {
     String? skippedReleaseTag,
     bool clearSkippedReleaseTag = false,
     bool? maskUidInUi,
+    String? dataLanguage,
+    bool clearDataLanguage = false,
+    bool? dataLanguageSeeded,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -134,6 +145,10 @@ class AppSettings {
         ? null
         : (skippedReleaseTag ?? this.skippedReleaseTag),
     maskUidInUi: maskUidInUi ?? this.maskUidInUi,
+    dataLanguage: clearDataLanguage
+        ? null
+        : (dataLanguage ?? this.dataLanguage),
+    dataLanguageSeeded: dataLanguageSeeded ?? this.dataLanguageSeeded,
   );
 }
 
@@ -163,9 +178,13 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：是否在介面中遮蔽 UID。
   static const _kMaskUidInUi = 'pref.maskUidInUi';
 
+  /// SharedPreferences key：資料語言（語言碼／`"none"`／不存在 三態）。
+  static const _kDataLanguage = 'pref.dataLanguage';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
+    final dataLangRaw = prefs.getString(_kDataLanguage);
     return AppSettings(
       themeMode: _parseThemeMode(prefs.getString(_kThemeMode)),
       locale: _parseLocale(prefs.getString(_kLocale)),
@@ -174,6 +193,10 @@ abstract final class SettingsStorage {
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
       maskUidInUi: prefs.getBool(_kMaskUidInUi) ?? false,
+      dataLanguage: dataLangRaw == null || dataLangRaw == 'none'
+          ? null
+          : dataLangRaw,
+      dataLanguageSeeded: dataLangRaw != null,
     );
   }
 
@@ -195,6 +218,11 @@ abstract final class SettingsStorage {
       await prefs.setString(_kSkippedReleaseTag, s.skippedReleaseTag!);
     }
     await prefs.setBool(_kMaskUidInUi, s.maskUidInUi);
+    if (!s.dataLanguageSeeded) {
+      await prefs.remove(_kDataLanguage);
+    } else {
+      await prefs.setString(_kDataLanguage, s.dataLanguage ?? 'none');
+    }
   }
 
   /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。

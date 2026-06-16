@@ -175,6 +175,27 @@ void main() {
       );
       expect(original.copyWith().lang, 'en');
     });
+
+    test('copyWith overrides name and lang independently', () {
+      final r = GachaRecord(
+        id: '1',
+        uid: 'u',
+        gachaType: '301',
+        name: '胡桃',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2024),
+        lang: 'zh-tw',
+      );
+      final byName = r.copyWith(name: 'Hu Tao');
+      expect(byName.name, 'Hu Tao');
+      expect(byName.lang, 'zh-tw');
+      final both = r.copyWith(name: 'Hu Tao', lang: 'en-us');
+      expect(both.name, 'Hu Tao');
+      expect(both.lang, 'en-us');
+      expect(both.id, '1');
+      expect(both.itemType, '角色');
+    });
   });
 
   group('BannerStorage roundtrip', () {

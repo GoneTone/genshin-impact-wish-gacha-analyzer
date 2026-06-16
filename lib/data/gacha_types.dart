@@ -128,3 +128,11 @@ const gachaTypes = <GachaType>[
     pities: [_pityFour70, _pityThree5],
   ),
 ];
+
+/// 可做資料語言轉換的 gacha_type 集合（非頌願；物品落在 HoYoWiki menu 2／4）。
+/// 由 [gachaTypes] 依 category 衍生（DRY），與 `_fetchHoYoWiki` 的
+/// `hoyoWikiTargetGachaTypes` 一致。
+final Set<String> convertibleGachaTypes = {
+  for (final t in gachaTypes)
+    if (t.category == GachaCategory.gacha) t.gachaType,
+};

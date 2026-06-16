@@ -2,6 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 
 void main() {
+  test('convertibleGachaTypes is all non-odes gacha types', () {
+    expect(convertibleGachaTypes, {'301', '302', '500', '200', '100'});
+    expect(convertibleGachaTypes.contains('2000'), isFalse);
+    expect(convertibleGachaTypes.contains('1000'), isFalse);
+  });
+
   group('gachaTypes registry', () {
     test('每個 type 至少有一條 pity rule', () {
       for (final t in gachaTypes) {

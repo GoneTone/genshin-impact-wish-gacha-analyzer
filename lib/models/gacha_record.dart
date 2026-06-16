@@ -96,12 +96,12 @@ class GachaRecord {
     };
   }
 
-  /// 複製本 record，可覆寫 [lang]（其餘欄位沿用原值）。
-  GachaRecord copyWith({String? lang}) => GachaRecord(
+  /// 複製本 record，可覆寫 [name] 與／或 [lang]（其餘欄位沿用原值）。
+  GachaRecord copyWith({String? name, String? lang}) => GachaRecord(
     id: id,
     uid: uid,
     gachaType: gachaType,
-    name: name,
+    name: name ?? this.name,
     itemType: itemType,
     rankType: rankType,
     time: time,

@@ -13,6 +13,12 @@ class Preparing extends UpdateProgress {
   const Preparing();
 }
 
+/// 正在統一卡池記錄的資料語言（「立即轉換資料語言」期間）。
+class ConvertingDataLanguage extends UpdateProgress {
+  /// 建立 [ConvertingDataLanguage]。
+  const ConvertingDataLanguage();
+}
+
 /// 等待 MITM 捕獲祈願 URL。
 class WaitingForCapture extends UpdateProgress {
   /// 建立 [WaitingForCapture]；[isFallback] 表示 auth 過期後的二次捕獲。

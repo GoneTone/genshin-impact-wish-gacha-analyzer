@@ -15,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
@@ -33,6 +34,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
@@ -79,6 +81,12 @@ class SettingsPage extends ConsumerWidget {
                   onChanged: notifier.setLocale,
                   l: l,
                 ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsDataLanguage,
+                icon: Icons.translate_outlined,
+                child: const _DataLanguageSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -1072,5 +1080,127 @@ class _LogsSection extends ConsumerWidget {
     if (!ctx.mounted) return;
     await ref.read(logServiceProvider).clearAll();
     Logger('accounts.io').info('logs cleared by user');
+  }
+}
+
+/// 資料語言區塊：選擇資料語言（獨立於 UI 語言）＋「統一資料語言」按鈕。
+class _DataLanguageSection extends ConsumerStatefulWidget {
+  /// 建立 [_DataLanguageSection]。
+  const _DataLanguageSection();
+
+  @override
+  ConsumerState<_DataLanguageSection> createState() =>
+      _DataLanguageSectionState();
+}
+
+/// [_DataLanguageSection] 的 state。
+class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
+  /// 統一轉換進行中（禁用下拉與按鈕、顯示進度）。
+  bool _busy = false;
+
+  /// 執行「統一資料語言」並以 [AppDialog] 顯示結果或錯誤。
+  Future<void> _unify(AppLocalizations l) async {
+    setState(() => _busy = true);
+    try {
+      final result = await ref
+          .read(gachaRepositoryProvider.notifier)
+          .unifyDataLanguage();
+      if (!mounted) return;
+      await _showResultDialog(
+        context,
+        title: l.settingsDataLanguageUnify,
+        body: l.settingsDataLanguageUnifyDone(
+          result.converted,
+          result.unresolved,
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      await _showResultDialog(
+        context,
+        title: l.settingsDataLanguageUnify,
+        body: l.settingsDataLanguageUnifyFailed,
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// 以 [AppDialog] 顯示結果／錯誤訊息（含關閉按鈕）。
+  Future<void> _showResultDialog(
+    BuildContext context, {
+    required String title,
+    required String body,
+  }) {
+    return showDialog<void>(
+      context: context,
+      builder: (ctx) => AppDialog(
+        size: AppDialogSize.sm,
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(MaterialLocalizations.of(ctx).okButtonLabel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final current = ref.watch(dataLanguageProvider);
+    final notifier = ref.read(settingsProvider.notifier);
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l.settingsDataLanguageDesc,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.gacha.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        DropdownButtonFormField<String?>(
+          initialValue: current,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: [
+            DropdownMenuItem<String?>(
+              value: null,
+              child: Text(l.settingsDataLanguageUnset),
+            ),
+            for (final o in kDataLanguageOptions)
+              DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
+          ],
+          onChanged: _busy ? null : (v) => notifier.setDataLanguage(v),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton.icon(
+            onPressed: (current == null || _busy) ? null : () => _unify(l),
+            icon: _busy
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.sync),
+            label: Text(
+              _busy
+                  ? l.settingsDataLanguageUnifying
+                  : l.settingsDataLanguageUnify,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

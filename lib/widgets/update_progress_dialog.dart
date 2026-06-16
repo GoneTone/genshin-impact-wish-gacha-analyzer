@@ -65,6 +65,7 @@ class UpdateProgressDialog extends ConsumerWidget {
       ],
       FetchingBanner() => const <Widget>[],
       FetchingHoYoWiki() => const <Widget>[],
+      ConvertingDataLanguage() => const <Widget>[],
       UpdateCompleted() || UpdateFailed() => [
         TextButton.icon(
           onPressed: r.clearProgress,
@@ -113,6 +114,11 @@ class _Title extends StatelessWidget {
         Icons.image_outlined,
         tokens.textPrimary,
         l.progressFetching,
+      ),
+      ConvertingDataLanguage() => (
+        Icons.translate_outlined,
+        tokens.textPrimary,
+        l.settingsDataLanguageUnifying,
       ),
       UpdateCompleted() => (
         Icons.check_circle,
@@ -166,6 +172,14 @@ class _Body extends StatelessWidget {
           const LinearProgressIndicator(),
           const SizedBox(height: AppSpacing.l),
           Text(l.progressPreparingHint),
+        ],
+      ),
+      ConvertingDataLanguage() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const LinearProgressIndicator(),
+          const SizedBox(height: AppSpacing.l),
+          Text(l.progressConvertingHint),
         ],
       ),
       WaitingForCapture(:final isFallback) => Column(
