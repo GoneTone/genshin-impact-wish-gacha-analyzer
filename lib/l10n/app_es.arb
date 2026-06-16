@@ -1,5 +1,5 @@
 {
-  "@@locale": "es",
+  "@@locale": "es-ES",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
@@ -305,6 +305,16 @@
   "settingsDataLanguageUnify": "Convertir el idioma de los datos ahora",
   "settingsDataLanguageUnifying": "Convirtiendo...",
   "settingsDataLanguageUnifyDone": "Se convirtieron {converted}; {unresolved} no se pudieron convertir.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
   "settingsDataLanguageUnifyFailed": "La conversión falló, los datos no se modificaron. Comprueba tu conexión e inténtalo de nuevo.",
   "settingsDataManagement": "Gestión de datos",
   "settingsAccountManagement": "Gestión de cuentas",
