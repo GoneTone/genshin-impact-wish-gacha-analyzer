@@ -837,18 +837,21 @@ class GachaRepository extends Notifier<GachaState> {
       final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
       var agg = const LangConvertResult();
       final newByUid = Map<String, BannerStorage>.from(state.byUid);
+      // 累積所有帳號的 hints，最後只套一次 setSearches（逐筆 setSearch 會各自
+      // 整份重寫 hoyowiki_index.json，數百~數千筆 record 會嚴重拖慢）。
+      final allHints = <({String name, String lang, String id, int menuId})>[];
       for (final uid in state.byUid.keys.toList()) {
         final data = state.byUid[uid]!;
         try {
           final outcome = await converter.convert(data, targetLang);
           await storage.save(outcome.data);
           for (final h in outcome.hints) {
-            await indexNotifier.setSearch(
+            allHints.add((
               name: h.name,
               lang: h.lang,
               id: h.id,
               menuId: h.menuId,
-            );
+            ));
           }
           newByUid[uid] = outcome.data;
           agg = agg + outcome.result;
@@ -858,6 +861,7 @@ class GachaRepository extends Notifier<GachaState> {
           ).warning('unify skip uid=${sanitizeUid(uid)}', e, st);
         }
       }
+      await indexNotifier.setSearches(allHints);
       if (ref.mounted) state = state.copyWith(byUid: newByUid);
       return agg;
     } finally {
@@ -912,15 +916,13 @@ class GachaRepository extends Notifier<GachaState> {
       final converter = ref.read(gachaLanguageConverterProvider);
       final outcome = await converter.convert(data, targetLang);
       if (outcome.hints.isNotEmpty) {
-        final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
-        for (final h in outcome.hints) {
-          await indexNotifier.setSearch(
-            name: h.name,
-            lang: h.lang,
-            id: h.id,
-            menuId: h.menuId,
-          );
-        }
+        await ref
+            .read(hoyowikiIndexProvider.notifier)
+            .setSearches(
+              outcome.hints.map(
+                (h) => (name: h.name, lang: h.lang, id: h.id, menuId: h.menuId),
+              ),
+            );
       }
       return outcome.data;
     } catch (e, st) {

@@ -86,6 +86,32 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     });
   }
 
+  /// 批次寫入多筆 search 對應並**只 persist／emit 一次**。
+  ///
+  /// 語言轉換後常需套用成百上千筆 hint；若逐筆走 [setSearch] 會各自整份重寫
+  /// `hoyowiki_index.json`（O(n) 磁碟寫入）並 emit n 次造成 UI 反覆重建。此法
+  /// 複製 map 一次、套完全部、只寫一次。空輸入為 no-op。
+  Future<void> setSearches(
+    Iterable<({String name, String lang, String id, int menuId})> entries,
+  ) async {
+    final list = entries.toList(growable: false);
+    if (list.isEmpty) return;
+    await _lock.synchronized(() async {
+      final newSearch = Map<String, String>.from(state.searchMap);
+      final newMenuIds = Map<String, int>.from(state.menuIds);
+      for (final e in list) {
+        newSearch['${e.lang}::${e.name}'] = e.id;
+        newMenuIds[e.id] = e.menuId;
+      }
+      final next = HoYoWikiIndex(
+        searchMap: newSearch,
+        entries: state.entries,
+        menuIds: newMenuIds,
+      );
+      await _saveAndEmit(next);
+    });
+  }
+
   /// 把單一 lang 的 fetch 結果 merge 進既有 entry（不覆蓋其他 lang）。icon
   /// 採「非空覆寫」策略，避免某 lang 抓回空 icon 把既有好值清掉。
   Future<void> mergeEntry({

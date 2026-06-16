@@ -58,6 +58,33 @@ void main() {
     expect(reloaded.lookupMenuId('5125428'), 2);
   });
 
+  test('setSearches 批次套用多筆並 persist', () async {
+    final notifier = container.read(hoyowikiIndexProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setSearches([
+      (name: 'Hu Tao', lang: 'en-us', id: '1', menuId: 2),
+      (name: '胡桃', lang: 'zh-tw', id: '1', menuId: 2),
+      (name: 'Staff of Homa', lang: 'en-us', id: '2', menuId: 4),
+    ]);
+    final idx = container.read(hoyowikiIndexProvider);
+    expect(idx.lookupId(name: 'Hu Tao', lang: 'en-us'), '1');
+    expect(idx.lookupId(name: '胡桃', lang: 'zh-tw'), '1');
+    expect(idx.lookupId(name: 'Staff of Homa', lang: 'en-us'), '2');
+    expect(idx.lookupMenuId('1'), 2);
+    expect(idx.lookupMenuId('2'), 4);
+    // persist 後可重新 load 回來
+    final reloaded = await HoYoWikiIndexStorage(tempDir).load();
+    expect(reloaded.lookupId(name: '胡桃', lang: 'zh-tw'), '1');
+    expect(reloaded.lookupMenuId('2'), 4);
+  });
+
+  test('setSearches 空輸入為 no-op', () async {
+    final notifier = container.read(hoyowikiIndexProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setSearches(const []);
+    expect(container.read(hoyowikiIndexProvider).searchMap, isEmpty);
+  });
+
   test('mergeEntry 更新 state 並 persist', () async {
     final notifier = container.read(hoyowikiIndexProvider.notifier);
     await notifier.waitForLoad();
