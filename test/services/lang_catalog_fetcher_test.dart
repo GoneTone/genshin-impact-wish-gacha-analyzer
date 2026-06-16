@@ -49,8 +49,8 @@ void main() {
     final client = MockClient((req) async => http.Response(
       jsonEncode({'retcode': -1, 'message': 'bad', 'data': null}), 200));
     final fetcher = LangCatalogFetcher();
-    expect(
-      () => fetcher.fetchCatalog(lang: 'en-us', client: client),
+    await expectLater(
+      fetcher.fetchCatalog(lang: 'en-us', client: client),
       throwsA(isA<ApiErrorException>()),
     );
   });
