@@ -21,7 +21,7 @@
 ### 非目標
 
 - **頌願（odes，gachaType `2000`／`1000`）不在轉換範圍**：現行頌願被排除於 HoYoWiki 拓圖之外，其物品保持原狀（genshin 特有，姐妹專案無此分類）。
-- 轉換範圍僅一般祈願 `301`／`302`／`200`（角色／武器／常駐，物品落在 HoYoWiki menu_id 2／4）。
+- 轉換範圍為**所有非頌願祈願**（`GachaCategory.gacha`＝`301`／`302`／`500`／`200`／`100`，即角色／武器／綜合／常駐／新手，物品皆落在 HoYoWiki menu_id 2／4），與既有 `hoyoWikiTargetGachaTypes` 一致。判準用 `convertibleGachaTypes`（由 `gachaTypes` 依 category 衍生，DRY）。
 - 不重構既有 `HoYoWikiIndex`（search／entry_page／icon／詳情）子系統；新 catalog 子系統與其**並存**，不合併。
 - 不做應用程式介面語言（App locale）的任何更動。
 
@@ -44,7 +44,7 @@
 ### genshin 資料模型強制的差異（非擅自增減）
 
 1. **無 `resourceId` 欄位**：故無 `backfilledId` 統計；結果框只顯示「轉換 N 筆／無法轉換 M 筆」兩個數字（姐妹專案顯示三個）。
-2. **頌願排除、範圍限 301／302／200**：genshin 特有。
+2. **頌願排除、範圍為非頌願祈願（`GachaCategory.gacha`＝301／302／500／200／100）**：genshin 特有。
 3. **index 橋接**：見下「轉換引擎」與「index 橋接」段——純為維持既有 D8／D9 行為的內部接線，非新使用者功能。
 4. **未命中刷新的「強訊號」不同**：姐妹專案用「正值 `resourceId` 在目標目錄查無」判定目錄過期；genshin record 無 id，改用等價判準——「候選的原語言與目標語言**都是 15 選項之一**、卻在快取目錄解析不出名稱」。「語言是選項之一」這道守衛對應姐妹的 `resourceId > 0`，避免外部短碼資料白白觸發刷新。
 
@@ -158,10 +158,10 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 
 **流程**：
 1. `ensure(targetLang)` 取目標目錄。
-2. 掃描蒐集需補的原語言集合：`gachaType` 為 301／302／200 且 `lang != target` 且 `lang` 非空者的 `lang`；逐一 `ensure(srcLang)`（失敗向上拋，交呼叫端吞）。
-3. **未命中自動刷新（有界，對應姐妹 PR #33）**：以快取目錄試解析候選（`gachaType` 為 301／302／200、`lang != target`、且 `lang` 與 `target` **都是 15 選項之一**），若存在「`srcCatalog.idByName[name]` 查無，或解出的 id 不在 `targetCatalog`」者，視為目錄過期（遊戲新版新增物品的強訊號）→ **強制重抓目標＋相關來源目錄各一次**（`ensure(..., forceRefresh: true)`）後再續。單次刷新、有界；HoYoWiki 真未收錄者，下次轉換才再試。
+2. 掃描蒐集需補的原語言集合：`convertibleGachaTypes.contains(gachaType)` 且 `lang != target` 且 `lang` 非空者的 `lang`；逐一 `ensure(srcLang)`（失敗向上拋，交呼叫端吞）。
+3. **未命中自動刷新（有界，對應姐妹 PR #33）**：以快取目錄試解析候選（`convertibleGachaTypes.contains(gachaType)`、`lang != target`、且 `lang` 與 `target` **都是 15 選項之一**），若存在「`srcCatalog.idByName[name]` 查無，或解出的 id 不在 `targetCatalog`」者，視為目錄過期（遊戲新版新增物品的強訊號）→ **強制重抓目標＋相關來源目錄各一次**（`ensure(..., forceRefresh: true)`）後再續。單次刷新、有界；HoYoWiki 真未收錄者，下次轉換才再試。
 4. **逐筆處理**，分支順序：
-   - **範圍外**（gachaType 非 301／302／200，含頌願）→ 原樣保留、不計數。
+   - **範圍外**（`!convertibleGachaTypes.contains(gachaType)`，含頌願 2000／1000）→ 原樣保留、不計數。
    - **同語言**（`lang == target`）→ 原樣保留、不計數（避免摘要灌水）。
    - 否則 `total++`，走名稱回查：`id = srcCatalog(record.lang).idByName[record.name]`；
      - `id == null` → `unresolved++`，原樣保留。
