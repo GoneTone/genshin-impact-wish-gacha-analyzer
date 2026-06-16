@@ -242,6 +242,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 - **同名歧義**（同名對多 id）→ `idByName` 剔除 → 該名 `unresolved`，保留原狀。
 - **dedup**：轉換改 `name`／`lang` 不改 record `id`，既有以 API id 去重不受影響。
 - **3★ 武器**：HoYoWiki menu 4 含 3★，可轉；個別未收錄者 `unresolved` 保留。
+- **`itemType` 刻意不轉（D8）**：轉換只改 `name`／`lang`，故轉換過的 record 在**原始 JSON** 會出現「name=目標語言、item_type=原語言」的不一致。此為**刻意取捨**：PR #86 後類型顯示一律走 `menu_id → itemTypeKeyLabel(UI 語言)`，`item_type` 原始字串已是顯示用不到的殘留欄位（僅 menu_id 查無時當 fallback，而轉換過的 record 經 index 橋接 menu_id 必命中、不會 fallback），故畫面類型欄／圓餅／篩選**不受影響**；不一致僅存在於檢視／匯出原始 JSON 時，無使用者可見 bug。跟齊姐妹 D8、符合 YAGNI。
 
 ## 測試
 
