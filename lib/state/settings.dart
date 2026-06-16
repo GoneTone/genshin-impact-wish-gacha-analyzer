@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 
 /// App 設定的 Riverpod notifier，負責從磁碟讀寫 [AppSettings]。
@@ -37,6 +38,28 @@ class SettingsNotifier extends Notifier<AppSettings> {
   Future<void> setLocale(LanguagePreference locale) async {
     state = state.copyWith(locale: locale);
     await SettingsStorage.save(state);
+  }
+
+  /// 設定資料語言並持久化；[code] 為 null 代表使用者明確選「未設定（不轉換）」。
+  /// 任何呼叫都標記 `dataLanguageSeeded=true`，停止後續自動播種。
+  Future<void> setDataLanguage(String? code) async {
+    state = state.copyWith(
+      dataLanguage: code,
+      clearDataLanguage: code == null,
+      dataLanguageSeeded: true,
+    );
+    await SettingsStorage.save(state);
+    Logger('app.settings').info('dataLanguage set=${code ?? 'none'}');
+  }
+
+  /// 僅當尚未初始化（`!dataLanguageSeeded`）且 [code] 屬可選資料語言時，
+  /// 以 [code] 自動播種並標記 seeded；否則 no-op（留待之後在有效語言下播種）。
+  Future<void> seedDataLanguageIfUnset(String code) async {
+    if (state.dataLanguageSeeded) return;
+    if (!isSupportedDataLanguage(code)) return;
+    state = state.copyWith(dataLanguage: code, dataLanguageSeeded: true);
+    await SettingsStorage.save(state);
+    Logger('app.settings').info('dataLanguage seeded=$code');
   }
 
   /// 更新最後作用中 UID 並持久化；[uid] 為 null 時清除。
@@ -129,6 +152,11 @@ final themeModeProvider = Provider<ThemeMode>((ref) {
     AppThemeMode.system => ThemeMode.system,
   };
 });
+
+/// 當前資料語言代碼（null = 未設定／停用轉換）。
+final dataLanguageProvider = Provider<String?>(
+  (ref) => ref.watch(settingsProvider.select((s) => s.dataLanguage)),
+);
 
 /// 給 MaterialApp 直接吃的 Locale?（system → null；其他 BCP-47 code 解析為 Locale）
 final localeProvider = Provider<Locale?>((ref) {
