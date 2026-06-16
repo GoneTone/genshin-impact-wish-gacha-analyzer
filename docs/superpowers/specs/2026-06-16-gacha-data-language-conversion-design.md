@@ -188,7 +188,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 1. **bootstrap 播種**：帳號載入後，取所有 UID 中最新（`lastUpdated`／最近 record `time`）語言 → `seedDataLanguageIfUnset(seedLang)`。**只播種、不轉換**（D4）。
 2. **update 後置轉換**：合併出 `newData` → `_convertAccountToDataLanguage` → `GachaStorage.save` → 更新 state → `seedDataLanguageIfUnset(url.lang)`（首次更新播種）→ 之後既有 `_fetchHoYoWiki`／icon 補抓。**先轉存、後播種、最後補圖**。
 3. **import 後置轉換**：逐帳號 `mergeWith` → `_convertAccountToDataLanguage` → `save`；全部處理完、套偏好後，以最新語言播種。
-4. **`unifyDataLanguage()`（「立即轉換」按鈕）**：讀 `dataLanguageProvider`，`null` 回零結果；立刻 emit 進度「準備中」狀態（讓進度 dialog 即時彈出）；**逐帳號** `convert → save → 套 hints`，聚合 result，單帳號失敗吞例外 warning 續跑；全部完成刷新 state；best-effort 觸發既有 icon／詳情補抓（目標語言 pre-warm）；最後主動清進度狀態。
+4. **`unifyDataLanguage()`（「立即轉換」按鈕）**：讀 `dataLanguageProvider`，`null` 回零結果；**立刻 emit `ConvertingDataLanguage` 進度狀態**（點擊當下即彈進度 dialog，文案「正在轉換資料語言」——不可重用 `Preparing`，那是 MITM 擷取 URL 用語「正在準備資料來源」）；**逐帳號** `convert → save → 套 hints`，聚合 result，單帳號失敗吞例外 warning 續跑；全部完成刷新 state；最後主動清進度狀態。**不跑逐物品 `_fetchHoYoWiki` prewarm**（genshin 特有取捨：HoYoWiki 須逐物品抓 `entry_page`，prewarm 會讓每次轉換卡數十秒；而 icon 為 lang-agnostic、平常更新時已快取，詳情本就 lazy 載入，故 prewarm 對 genshin 幾無增益卻嚴重拖慢——與姐妹用 encore bulk catalog（名稱＋icon 一次到位）的快速 prewarm 本質不同）。
 
 ### 7. 設定頁 UI（`lib/pages/settings_page.dart`，對應姐妹 F）
 
@@ -204,7 +204,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
   - icon：閒置 `Icons.sync`，忙碌 16×16 `CircularProgressIndicator`；label：閒置 `settingsDataLanguageUnify`、忙碌 `settingsDataLanguageUnifying`「轉換中...」。
   - InkWell／按鈕顯式 `mouseCursor: SystemMouseCursors.click`。
 - **進度／結果 UI 生命週期**（對應姐妹 D）：
-  - 進度：按下立刻彈進度 `AppDialog`（無關閉鈕、`barrierDismissible: false`），涵蓋「轉換＋catalog 抓取」到補圖之間空窗；因 unify 無 `UpdateCompleted` 終止狀態，結尾**主動清進度**關閉，避免卡死。
+  - 進度：按下立刻 emit `ConvertingDataLanguage` → 既有進度 dialog 即時彈出（涵蓋「轉換＋catalog 抓取」期間）；因 unify 無 `UpdateCompleted` 終止狀態，結尾**主動清進度**關閉，避免卡死。切回已快取語言時轉換為純本地 remap，dialog 一閃即逝。
   - 結果 `AppDialog size: sm`：成功 `settingsDataLanguageUnifyDone(converted, unresolved)`「已轉換 {converted} 筆，{unresolved} 筆無法轉換。」；失敗 `settingsDataLanguageUnifyFailed`「轉換失敗，資料未變更。請檢查網路後重試。」
   - 期間 `_busy=true` 禁用下拉與按鈕。
 
@@ -218,7 +218,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 ## 資料流
 
 - 下拉選語言 → `setDataLanguage` → 持久化（**不動既有資料**，D4）。
-- 「立即轉換」→ `unifyDataLanguage` → 逐帳號 `convert`（catalog 驅動）→ `save` → 套 hints → 刷新 → best-effort 補圖 → 結果框。
+- 「立即轉換」→ `unifyDataLanguage` → emit `ConvertingDataLanguage` → 逐帳號 `convert`（catalog 驅動）→ `save` → 套 hints → 刷新 → 清進度 → 結果框（無逐物品 prewarm）。
 - update／import → 合併 → `_convertAccountToDataLanguage` → `save` → `seedIfUnset` → 補圖。
 - bootstrap → `seedIfUnset`（最新語言）。
 - 切回先前抓過的語言 → `lang_catalog/<lang>.json` 已存 → 零網路（滿足「切回來不用再抓」）。

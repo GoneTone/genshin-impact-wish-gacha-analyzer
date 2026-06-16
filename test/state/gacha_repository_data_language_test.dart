@@ -169,7 +169,15 @@ void main() {
 
     await container.read(settingsProvider.notifier).setDataLanguage('en-us');
 
+    // 點擊當下即彈進度框：過程中曾 emit ConvertingDataLanguage。
+    final seenProgress = <UpdateProgress?>[];
+    final sub = container.listen(
+      gachaRepositoryProvider.select((s) => s.progress),
+      (_, next) => seenProgress.add(next),
+    );
     final result = await notifier.unifyDataLanguage();
+    sub.close();
+    expect(seenProgress.whereType<ConvertingDataLanguage>(), isNotEmpty);
 
     expect(result.total, 1);
     expect(result.converted, 1);

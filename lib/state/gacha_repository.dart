@@ -826,9 +826,11 @@ class GachaRepository extends Notifier<GachaState> {
     if (_isUpdating) return const LangConvertResult();
     _isUpdating = true;
     _cancelTriggered = false;
-    // 不 emit Preparing：轉換／catalog 取得期間以設定頁按鈕的「轉換中...」spinner
-    // 回饋即可；全螢幕進度只在 prewarm 真的在抓 HoYoWiki 圖時由 _fetchHoYoWiki
-    // emit（切回已快取語言則無工作、不彈框）。
+    // 點擊當下即彈進度框（與更新／匯入流程一致）；轉換只做本地 remap（已快取語言
+    // near-instant，新語言僅抓 catalog）。不跑逐物品 _fetchHoYoWiki prewarm：icon
+    // 為 lang-agnostic、平常更新時已快取，詳情本就 lazy 載入，逐物品 entry_page
+    // 補抓會讓每次轉換卡數十秒——這正是要避免的。
+    state = state.copyWith(progress: const ConvertingDataLanguage());
     try {
       final storage = ref.read(gachaStorageProvider);
       final converter = ref.read(gachaLanguageConverterProvider);
@@ -857,17 +859,6 @@ class GachaRepository extends Notifier<GachaState> {
         }
       }
       if (ref.mounted) state = state.copyWith(byUid: newByUid);
-      // best-effort：補抓目標語言的 icon／詳情（pre-warm）；失敗不影響已完成的轉換。
-      final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
-      try {
-        await _fetchHoYoWiki(cancellable.client);
-      } catch (e, st) {
-        Logger(
-          'wish.langconvert',
-        ).warning('unify prewarm failed (ignored)', e, st);
-      } finally {
-        cancellable.client.close();
-      }
       return agg;
     } finally {
       _isUpdating = false;
