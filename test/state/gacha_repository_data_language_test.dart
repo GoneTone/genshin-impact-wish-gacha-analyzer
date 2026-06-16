@@ -103,6 +103,12 @@ Future<ProviderContainer> _bootstrap({
 GachaLanguageConverter _fakeConverter() =>
     GachaLanguageConverter(ensureCatalog: _ensureCatalog);
 
+// update 路徑（_runUpdate）的 dataLanguage seeding 因需真實 MITM 捕獲，無法在單元
+// 測試穩定觸發；故以 import／unify 路徑作等價驗證（兩者共用 _convertAccountToDataLanguage
+// 與 _seedLangFromData，與 update 路徑同一段邏輯）。
+//
+// unify 結尾的 best-effort HoYoWiki pre-warm 會走既有 _fetchHoYoWiki，沿用 _bootstrap
+// 注入的 _noopHoYoWikiClient（所有端點回 404），故不會打真實網路。
 void main() {
   test('unifyDataLanguage：把 zh-tw 記錄轉成 en-us，聚合計數正確、結尾清進度', () async {
     final tempDir = await Directory.systemTemp.createTemp('gacha_lang_unify_');
