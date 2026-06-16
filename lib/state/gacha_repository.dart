@@ -825,6 +825,7 @@ class GachaRepository extends Notifier<GachaState> {
     if (targetLang == null) return const LangConvertResult();
     if (_isUpdating) return const LangConvertResult();
     _isUpdating = true;
+    _cancelTriggered = false;
     state = state.copyWith(progress: const Preparing());
     try {
       final storage = ref.read(gachaStorageProvider);
