@@ -31,7 +31,7 @@
 |----|---------|--------------|
 | **D1** 突變存檔 | 改寫 JSON 的 `name`／`languageCode`（／回查補 `resourceId`） | ✅ 改寫 `GachaRecord.name`／`lang`。genshin record **無 id 欄位**，故不存在「補 id」。 |
 | **D2** 設定三態 | `dataLanguage`(`String?`)＋`dataLanguageSeeded`(bool)；pref key 不存在／`"none"`／語言碼 | ✅ 完全比照（見「設定與播種」）。 |
-| **D3** 自動播種 | 僅 `!seeded` 時，bootstrap 取最新帳號語言、首次更新／匯入取該次語言；須 ∈ 選項才播種標記 | ✅ 完全比照。 |
+| **D3** 自動播種 | 僅 `!seeded` 時，bootstrap 取最新帳號語言、首次更新／匯入取該次語言；該語言須是選項之一才播種標記 | ✅ 完全比照。 |
 | **D4** 改設定不動既有 | 改下拉只記目標語言，不自動轉既有 | ✅ 完全比照。 |
 | **D5** 語言目錄快取 | `lang_catalog/<lang>.json`（`resourceId → {name, kind}`），缺才補抓；無時間過期，但**未命中自動刷新**（PR #33） | ✅ 改用 HoYoWiki：`<lang>.json`（`hoyowiki_id → {name, kind=menu_id}`）；同樣無時間過期 + 未命中自動刷新（見「未命中自動刷新」）。 |
 | **D6** 目錄來源 | 擴充 `EncoreCatalog.nameByKindId`，複用 `fetchCatalog` | ✅ 改用 HoYoWiki `get_entry_page_list`（menu_id 2／4 分頁），新 `LangCatalogFetcher`。 |
@@ -46,7 +46,7 @@
 1. **無 `resourceId` 欄位**：故無 `backfilledId` 統計；結果框只顯示「轉換 N 筆／無法轉換 M 筆」兩個數字（姐妹專案顯示三個）。
 2. **頌願排除、範圍限 301／302／200**：genshin 特有。
 3. **index 橋接**：見下「轉換引擎」與「index 橋接」段——純為維持既有 D8／D9 行為的內部接線，非新使用者功能。
-4. **未命中刷新的「強訊號」不同**：姐妹專案用「正值 `resourceId` 在目標目錄查無」判定目錄過期；genshin record 無 id，改用等價判準——「候選的原語言與目標語言**皆 ∈ 15 選項**、卻在快取目錄解析不出名稱」。`lang ∈ 選項` 這道守衛對應姐妹的 `resourceId > 0`，避免外部短碼資料白白觸發刷新。
+4. **未命中刷新的「強訊號」不同**：姐妹專案用「正值 `resourceId` 在目標目錄查無」判定目錄過期；genshin record 無 id，改用等價判準——「候選的原語言與目標語言**都是 15 選項之一**、卻在快取目錄解析不出名稱」。「語言是選項之一」這道守衛對應姐妹的 `resourceId > 0`，避免外部短碼資料白白觸發刷新。
 
 ## 架構與元件
 
@@ -114,7 +114,7 @@ bool isSupportedDataLanguage(String code) => kDataLanguageCodes.contains(code);
 - `idByName: Map<String, String>`，由 `byId` 反推；**同名對到不同 id 者剔除**（ambiguous 不放入，避免誤判）。
 
 **`LangCatalogFetcher`**（新檔 `lib/services/lang_catalog_fetcher.dart`）：
-- `fetchCatalog(lang, {client})`：對 `menu_id ∈ {2, 4}` 各自分頁 POST `get_entry_page_list`：
+- `fetchCatalog(lang, {client})`：對 `menu_id` 為 2 或 4 各自分頁 POST `get_entry_page_list`：
   - URL `https://sg-act-public-api.hoyolab.com/hoyowiki/genshin/wapi/get_entry_page_list`
   - headers：`Referer: https://wiki.hoyolab.com/`、`X-Rpc-Language: <lang>`、`X-Rpc-Wiki_app: genshin`
   - body：`{"filters":[],"menu_id":"<2|4>","page_num":N,"page_size":50,"use_es":true}`
@@ -158,8 +158,8 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 
 **流程**：
 1. `ensure(targetLang)` 取目標目錄。
-2. 掃描蒐集需補的原語言集合：`gachaType ∈ {301,302,200}` 且 `lang != target` 且 `lang` 非空者的 `lang`；逐一 `ensure(srcLang)`（失敗向上拋，交呼叫端吞）。
-3. **未命中自動刷新（有界，對應姐妹 PR #33）**：以快取目錄試解析候選（`gachaType ∈ {301,302,200}`、`lang != target`、且 `lang` 與 `target` **皆 ∈ 15 選項**），若存在「`srcCatalog.idByName[name]` 查無，或解出的 id 不在 `targetCatalog`」者，視為目錄過期（遊戲新版新增物品的強訊號）→ **強制重抓目標＋相關來源目錄各一次**（`ensure(..., forceRefresh: true)`）後再續。單次刷新、有界；HoYoWiki 真未收錄者，下次轉換才再試。
+2. 掃描蒐集需補的原語言集合：`gachaType` 為 301／302／200 且 `lang != target` 且 `lang` 非空者的 `lang`；逐一 `ensure(srcLang)`（失敗向上拋，交呼叫端吞）。
+3. **未命中自動刷新（有界，對應姐妹 PR #33）**：以快取目錄試解析候選（`gachaType` 為 301／302／200、`lang != target`、且 `lang` 與 `target` **都是 15 選項之一**），若存在「`srcCatalog.idByName[name]` 查無，或解出的 id 不在 `targetCatalog`」者，視為目錄過期（遊戲新版新增物品的強訊號）→ **強制重抓目標＋相關來源目錄各一次**（`ensure(..., forceRefresh: true)`）後再續。單次刷新、有界；HoYoWiki 真未收錄者，下次轉換才再試。
 4. **逐筆處理**，分支順序：
    - **範圍外**（gachaType 非 301／302／200，含頌願）→ 原樣保留、不計數。
    - **同語言**（`lang == target`）→ 原樣保留、不計數（避免摘要灌水）。
@@ -251,7 +251,7 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 - `lang_catalog_fetcher`：分頁累積、menu 2／4、空頁停止、retcode≠0 拋例外。
 - `lang_catalog_service`：memo → disk → remote 三層；切回重用不重抓；`forceRefresh` 略過 memo／disk 強制重抓覆寫。
 - `gacha_language_converter`：同語言略過不計；範圍外不動；名稱回查命中轉換；`idByName` 歧義剔除；目標查無→unresolved；原語言目錄抓取失敗向上拋；`hints` 正確；`LangConvertResult` 聚合。
-- `gacha_language_converter` **未命中自動刷新（對應姐妹 PR #33）**：原/目標皆 ∈ 選項且快取目錄解析不出 → 觸發目標＋來源各一次 `forceRefresh` 後轉成功（stale-catalog 回歸測試）；外部短碼／非選項語言的 miss **不**觸發刷新；刷新後仍 miss → unresolved。
+- `gacha_language_converter` **未命中自動刷新（對應姐妹 PR #33）**：原/目標都是選項之一且快取目錄解析不出 → 觸發目標＋來源各一次 `forceRefresh` 後轉成功（stale-catalog 回歸測試）；外部短碼／非選項語言的 miss **不**觸發刷新；刷新後仍 miss → unresolved。
 - `gacha_repository`：update／import 後置轉換（已設定才轉）；bootstrap／首次 update／import 播種；`unifyDataLanguage` 多帳號聚合與單帳號失敗吞例外續跑；進度即時彈出＋結尾清空；hints 寫入 index 後 `itemTypeKeyOf` 正確（D8 不回歸）。
 - `GachaRecord.copyWith`：`name` 覆寫。
 - `settings_page`：下拉含「未設定」＋15 語言、選擇呼叫 setter；按鈕觸發 unify 與結果框；`current==null` 禁用按鈕。
