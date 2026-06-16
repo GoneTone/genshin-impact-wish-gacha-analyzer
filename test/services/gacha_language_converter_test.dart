@@ -134,4 +134,56 @@ void main() {
       expect(out.result.converted, 1);
     },
   );
+
+  test(
+    'ambiguous name (multi-id in src catalog) drops from idByName -> unresolved',
+    () async {
+      final ambiguous = <String, LangCatalog>{
+        'zh-tw': LangCatalog.fromEntries('zh-tw', {
+          '1': (name: '同名', kind: 2),
+          '2': (name: '同名', kind: 4),
+        }),
+        'en-us': LangCatalog.fromEntries('en-us', {'1': (name: 'X', kind: 2)}),
+      };
+      Future<LangCatalog> ens(String lang, {bool forceRefresh = false}) async =>
+          ambiguous[lang]!;
+      final conv = GachaLanguageConverter(ensureCatalog: ens);
+      final out = await conv.convert(
+        storage({
+          '301': [rec('1', '301', '同名', 'zh-tw')],
+        }),
+        'en-us',
+      );
+      expect(out.result.unresolved, 1);
+      expect(out.result.converted, 0);
+      expect(out.data.banners['301']!.single.name, '同名');
+    },
+  );
+
+  test(
+    'unsupported src lang (short code) does NOT trigger forced refresh',
+    () async {
+      var forceRefreshCalls = 0;
+      final cats2 = <String, LangCatalog>{
+        'en-us': LangCatalog.fromEntries('en-us', {
+          '1': (name: 'Hu Tao', kind: 2),
+        }),
+        'en': LangCatalog.fromEntries('en', const {}),
+      };
+      Future<LangCatalog> ens(String lang, {bool forceRefresh = false}) async {
+        if (forceRefresh) forceRefreshCalls++;
+        return cats2[lang]!;
+      }
+
+      final conv = GachaLanguageConverter(ensureCatalog: ens);
+      final out = await conv.convert(
+        storage({
+          '301': [rec('1', '301', 'whatever', 'en')],
+        }),
+        'en-us',
+      );
+      expect(forceRefreshCalls, 0);
+      expect(out.result.unresolved, 1);
+    },
+  );
 }
