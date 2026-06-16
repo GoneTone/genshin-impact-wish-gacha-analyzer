@@ -16,9 +16,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
@@ -172,6 +174,20 @@ class GachaRepository extends Notifier<GachaState> {
       if (saved != activeUid) {
         await settingsNotifier.setLastActiveUid(activeUid);
         if (!ref.mounted) return;
+      }
+
+      BannerStorage? newest;
+      for (final d in byUid.values) {
+        if (newest == null || d.lastUpdated.isAfter(newest.lastUpdated)) {
+          newest = d;
+        }
+      }
+      if (newest != null) {
+        final seedLang = _seedLangFromData(newest);
+        if (seedLang != null) {
+          await settingsNotifier.seedDataLanguageIfUnset(seedLang);
+          if (!ref.mounted) return;
+        }
       }
     } finally {
       _bootstrapCompleter?.complete();
@@ -400,11 +416,13 @@ class GachaRepository extends Notifier<GachaState> {
     }
 
     final updatedAt = DateTime.now().toUtc();
-    final newData = BannerStorage(
+    final builtData = BannerStorage(
       uid: uid,
       lastUpdated: updatedAt,
       banners: mergedBanners,
     );
+    final newData = await _convertAccountToDataLanguage(builtData);
+    if (!ref.mounted) return;
     await storage.save(newData);
     if (!ref.mounted) return;
     await storage.saveCapturedUrl(uid, url);
@@ -420,6 +438,13 @@ class GachaRepository extends Notifier<GachaState> {
     if (!ref.mounted) return;
     await ref.read(settingsProvider.notifier).setLastActiveUid(uid);
     if (!ref.mounted) return;
+    final seedLang = _seedLangFromData(newData);
+    if (seedLang != null) {
+      await ref
+          .read(settingsProvider.notifier)
+          .seedDataLanguageIfUnset(seedLang);
+      if (!ref.mounted) return;
+    }
     // HoYoWiki 補圖階段（best-effort，不影響 UpdateCompleted）
     var hoYoWikiImagesDownloaded = 0;
     try {
@@ -676,9 +701,10 @@ class GachaRepository extends Notifier<GachaState> {
       final incoming = account.data;
       try {
         final localBefore = newByUid[incoming.uid];
-        final toSave = localBefore == null
+        final merged = localBefore == null
             ? incoming
             : localBefore.mergeWith(incoming);
+        final toSave = await _convertAccountToDataLanguage(merged);
         await storage.save(toSave);
         if (!ref.mounted) {
           return ImportResult(
@@ -750,6 +776,29 @@ class GachaRepository extends Notifier<GachaState> {
       clearActiveUid: newActive == null,
     );
 
+    BannerStorage? newest;
+    for (final account in bundle.accounts) {
+      final d = newByUid[account.data.uid];
+      if (d == null) continue;
+      if (newest == null || d.lastUpdated.isAfter(newest.lastUpdated)) {
+        newest = d;
+      }
+    }
+    if (newest != null) {
+      final seedLang = _seedLangFromData(newest);
+      if (seedLang != null) {
+        await settingsNotifier.seedDataLanguageIfUnset(seedLang);
+        if (!ref.mounted) {
+          return ImportResult(
+            successAccounts: successCount,
+            addedRecords: addedRecords,
+            duplicateRecords: duplicateRecords,
+            failedUids: failed,
+          );
+        }
+      }
+    }
+
     _log.info(
       'import: success=$successCount '
       'failed=[${failed.map(sanitizeUid).join(",")}] '
@@ -768,6 +817,49 @@ class GachaRepository extends Notifier<GachaState> {
   @visibleForTesting
   Future<ImportResult> debugImportOnly(AccountsBundle bundle) =>
       _runImport(bundle);
+
+  /// 把所有帳號的卡池資料統一成目前設定的資料語言；回傳聚合計數。
+  /// 立即彈出進度（[Preparing]），結尾主動清進度。未設定資料語言時回零結果。
+  Future<LangConvertResult> unifyDataLanguage() async {
+    final targetLang = ref.read(dataLanguageProvider);
+    if (targetLang == null) return const LangConvertResult();
+    if (_isUpdating) return const LangConvertResult();
+    _isUpdating = true;
+    state = state.copyWith(progress: const Preparing());
+    try {
+      final storage = ref.read(gachaStorageProvider);
+      final converter = ref.read(gachaLanguageConverterProvider);
+      final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
+      var agg = const LangConvertResult();
+      final newByUid = Map<String, BannerStorage>.from(state.byUid);
+      for (final uid in state.byUid.keys.toList()) {
+        final data = state.byUid[uid]!;
+        try {
+          final outcome = await converter.convert(data, targetLang);
+          await storage.save(outcome.data);
+          for (final h in outcome.hints) {
+            await indexNotifier.setSearch(
+              name: h.name,
+              lang: h.lang,
+              id: h.id,
+              menuId: h.menuId,
+            );
+          }
+          newByUid[uid] = outcome.data;
+          agg = agg + outcome.result;
+        } catch (e, st) {
+          Logger(
+            'wish.langconvert',
+          ).warning('unify skip uid=${sanitizeUid(uid)}', e, st);
+        }
+      }
+      if (ref.mounted) state = state.copyWith(byUid: newByUid);
+      return agg;
+    } finally {
+      _isUpdating = false;
+      if (ref.mounted) state = state.copyWith(clearProgress: true);
+    }
+  }
 
   /// 依 uidOrder 與最後更新時間挑選 fallback 作用中 UID。
   String? _pickFallbackActive(Map<String, BannerStorage> byUid) {
@@ -802,6 +894,51 @@ class GachaRepository extends Notifier<GachaState> {
       state = state.copyWith(byUid: newByUid);
     }
     _log.info('cleared uid=${sanitizeUid(uid)}');
+  }
+
+  /// 若已設定資料語言則轉換 [data] 並把 hints 寫回 HoYoWikiIndex；
+  /// 任何例外吞掉、回原 [data]（絕不中斷更新／匯入、絕不毀資料）。
+  Future<BannerStorage> _convertAccountToDataLanguage(
+    BannerStorage data,
+  ) async {
+    final targetLang = ref.read(dataLanguageProvider);
+    if (targetLang == null) return data;
+    try {
+      final converter = ref.read(gachaLanguageConverterProvider);
+      final outcome = await converter.convert(data, targetLang);
+      if (outcome.hints.isNotEmpty) {
+        final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
+        for (final h in outcome.hints) {
+          await indexNotifier.setSearch(
+            name: h.name,
+            lang: h.lang,
+            id: h.id,
+            menuId: h.menuId,
+          );
+        }
+      }
+      return outcome.data;
+    } catch (e, st) {
+      Logger('wish.langconvert').warning(
+        'convert account failed uid=${sanitizeUid(data.uid)} (kept original)',
+        e,
+        st,
+      );
+      return data;
+    }
+  }
+
+  /// 取 [data] 中非頌願、有語言的「最新」一筆 record 的 lang（供 seeding）；無則 null。
+  String? _seedLangFromData(BannerStorage data) {
+    GachaRecord? latest;
+    for (final e in data.banners.entries) {
+      if (!convertibleGachaTypes.contains(e.key)) continue;
+      for (final r in e.value) {
+        if (r.lang.isEmpty) continue;
+        if (latest == null || r.id.compareTo(latest.id) > 0) latest = r;
+      }
+    }
+    return latest?.lang;
   }
 
   /// 補齊所有 UID 中祈願類 record 的 HoYoWiki icon / header。
