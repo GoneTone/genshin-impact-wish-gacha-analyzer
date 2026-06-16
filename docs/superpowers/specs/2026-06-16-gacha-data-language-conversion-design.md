@@ -33,7 +33,7 @@
 | **D2** 設定三態 | `dataLanguage`(`String?`)＋`dataLanguageSeeded`(bool)；pref key 不存在／`"none"`／語言碼 | ✅ 完全比照（見「設定與播種」）。 |
 | **D3** 自動播種 | 僅 `!seeded` 時，bootstrap 取最新帳號語言、首次更新／匯入取該次語言；須 ∈ 選項才播種標記 | ✅ 完全比照。 |
 | **D4** 改設定不動既有 | 改下拉只記目標語言，不自動轉既有 | ✅ 完全比照。 |
-| **D5** 語言目錄快取 | `lang_catalog/<lang>.json`（`resourceId → {name, kind}`），缺才補抓 | ✅ 改用 HoYoWiki：`<lang>.json`（`hoyowiki_id → {name, kind=menu_id}`）。 |
+| **D5** 語言目錄快取 | `lang_catalog/<lang>.json`（`resourceId → {name, kind}`），缺才補抓；無時間過期，但**未命中自動刷新**（PR #33） | ✅ 改用 HoYoWiki：`<lang>.json`（`hoyowiki_id → {name, kind=menu_id}`）；同樣無時間過期 + 未命中自動刷新（見「未命中自動刷新」）。 |
 | **D6** 目錄來源 | 擴充 `EncoreCatalog.nameByKindId`，複用 `fetchCatalog` | ✅ 改用 HoYoWiki `get_entry_page_list`（menu_id 2／4 分頁），新 `LangCatalogFetcher`。 |
 | **D7** 名稱回查補 id | 合成負值 id／查無者用「原名＋原語言」目錄 `idByName` 回查真實 id 再轉 | ✅ **此即 genshin 的主路徑**：record 本無 id，永遠走 `srcCatalog.idByName[name] → id → targetCatalog.byId[id].name`。無「補 id 寫回」一說（record 無 id 欄位）。 |
 | **D8** 類型跟 UI 語言 | 不動 `resourceType`，顯示走 `itemTypeKeyLabel(kind, l)` | ✅ 不動 `itemType`，顯示走既有 `itemTypeKeyLabel`。**需 index 橋接**（下述）以維持轉換後類型判定正確。 |
@@ -46,6 +46,7 @@
 1. **無 `resourceId` 欄位**：故無 `backfilledId` 統計；結果框只顯示「轉換 N 筆／無法轉換 M 筆」兩個數字（姐妹專案顯示三個）。
 2. **頌願排除、範圍限 301／302／200**：genshin 特有。
 3. **index 橋接**：見下「轉換引擎」與「index 橋接」段——純為維持既有 D8／D9 行為的內部接線，非新使用者功能。
+4. **未命中刷新的「強訊號」不同**：姐妹專案用「正值 `resourceId` 在目標目錄查無」判定目錄過期；genshin record 無 id，改用等價判準——「候選的原語言與目標語言**皆 ∈ 15 選項**、卻在快取目錄解析不出名稱」。`lang ∈ 選項` 這道守衛對應姐妹的 `resourceId > 0`，避免外部短碼資料白白觸發刷新。
 
 ## 架構與元件
 
@@ -127,8 +128,11 @@ bool isSupportedDataLanguage(String code) => kDataLanguageCodes.contains(code);
 - 原子寫入（`.tmp` + rename）。`load` 解析失敗 → log warning、回 `null`（視為缺檔重抓）。
 
 **`LangCatalogService`**（新檔 `lib/services/lang_catalog_service.dart`）：
-- `_memo: Map<String, LangCatalog>`，**刻意無過期／刷新，disk 為真相**。
-- `ensure(lang, {client})` 三層：memo → `storage.load` → 缺則 `fetcher.fetchCatalog` → `storage.save` → 存 memo 回傳。**網路失敗直接 throw**，由呼叫端決定吞例外。
+- `_memo: Map<String, LangCatalog>`，**無時間過期（disk 為真相）**；但提供 `forceRefresh` 供「未命中刷新」（見轉換引擎）。
+- `ensure(lang, {client, bool forceRefresh = false})`：
+  - `forceRefresh == false` → 三層 memo → `storage.load` → 缺則 `fetcher.fetchCatalog` → `storage.save` → 存 memo 回傳。
+  - `forceRefresh == true` → **略過 memo／本地、強制重抓並覆寫**（disk + memo）。
+  - **網路失敗直接 throw**，由呼叫端決定吞例外。
 - log `wish.langconvert.catalog`（來源 disk/remote、筆數）。
 
 **Provider**（新檔 `lib/state/lang_catalog.dart`）：`langCatalogServiceProvider`。
@@ -155,14 +159,15 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 **流程**：
 1. `ensure(targetLang)` 取目標目錄。
 2. 掃描蒐集需補的原語言集合：`gachaType ∈ {301,302,200}` 且 `lang != target` 且 `lang` 非空者的 `lang`；逐一 `ensure(srcLang)`（失敗向上拋，交呼叫端吞）。
-3. **逐筆處理**，分支順序：
+3. **未命中自動刷新（有界，對應姐妹 PR #33）**：以快取目錄試解析候選（`gachaType ∈ {301,302,200}`、`lang != target`、且 `lang` 與 `target` **皆 ∈ 15 選項**），若存在「`srcCatalog.idByName[name]` 查無，或解出的 id 不在 `targetCatalog`」者，視為目錄過期（遊戲新版新增物品的強訊號）→ **強制重抓目標＋相關來源目錄各一次**（`ensure(..., forceRefresh: true)`）後再續。單次刷新、有界；HoYoWiki 真未收錄者，下次轉換才再試。
+4. **逐筆處理**，分支順序：
    - **範圍外**（gachaType 非 301／302／200，含頌願）→ 原樣保留、不計數。
    - **同語言**（`lang == target`）→ 原樣保留、不計數（避免摘要灌水）。
    - 否則 `total++`，走名稱回查：`id = srcCatalog(record.lang).idByName[record.name]`；
      - `id == null` → `unresolved++`，原樣保留。
      - `targetName = targetCatalog.byId[id]?.name`；`null` → `unresolved++`，原樣保留。
      - 皆命中 → `record.copyWith(name: targetName, lang: targetLang)`，`converted++`，並記一筆 `IndexHint(lang: target, name: targetName, id: id, kind: catalog.kind)` 供 index 橋接。
-4. 結尾 `wish.langconvert` info log（脫敏 uid、target、`total/converted/unresolved`）。回傳新 `BannerStorage` + result + hints。
+5. 結尾 `wish.langconvert` info log（脫敏 uid、target、`total/converted/unresolved`）。回傳新 `BannerStorage` + result + hints。
 
 > `GachaRecord.copyWith` 需擴充支援 `name`（既有僅 `lang`，PR #86 加入）。
 
@@ -244,8 +249,9 @@ Future<({BannerStorage data, LangConvertResult result, List<IndexHint> hints})>
 - `settings_storage`／`settings`：三態序列化（不存在／`none`／碼）；`setDataLanguage(null)` 標 seeded 停播種；`seedDataLanguageIfUnset` 僅 `!seeded` 且屬選項才播種；改設定不動 records。
 - `lang_catalog_storage`：存讀、`fetched_at`、壞檔回 null、原子寫。
 - `lang_catalog_fetcher`：分頁累積、menu 2／4、空頁停止、retcode≠0 拋例外。
-- `lang_catalog_service`：memo → disk → remote 三層；切回重用不重抓。
-- `gacha_language_converter`：同語言略過不計；範圍外不動；直查回查命中轉換；`idByName` 歧義剔除；目標查無→unresolved；原語言目錄抓取失敗向上拋；`hints` 正確；`LangConvertResult` 聚合。
+- `lang_catalog_service`：memo → disk → remote 三層；切回重用不重抓；`forceRefresh` 略過 memo／disk 強制重抓覆寫。
+- `gacha_language_converter`：同語言略過不計；範圍外不動；名稱回查命中轉換；`idByName` 歧義剔除；目標查無→unresolved；原語言目錄抓取失敗向上拋；`hints` 正確；`LangConvertResult` 聚合。
+- `gacha_language_converter` **未命中自動刷新（對應姐妹 PR #33）**：原/目標皆 ∈ 選項且快取目錄解析不出 → 觸發目標＋來源各一次 `forceRefresh` 後轉成功（stale-catalog 回歸測試）；外部短碼／非選項語言的 miss **不**觸發刷新；刷新後仍 miss → unresolved。
 - `gacha_repository`：update／import 後置轉換（已設定才轉）；bootstrap／首次 update／import 播種；`unifyDataLanguage` 多帳號聚合與單帳號失敗吞例外續跑；進度即時彈出＋結尾清空；hints 寫入 index 後 `itemTypeKeyOf` 正確（D8 不回歸）。
 - `GachaRecord.copyWith`：`name` 覆寫。
 - `settings_page`：下拉含「未設定」＋15 語言、選擇呼叫 setter；按鈕觸發 unify 與結果框；`current==null` 禁用按鈕。
