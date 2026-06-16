@@ -91,4 +91,47 @@ void main() {
     expect(out.result.unresolved, 1);
     expect(out.data.banners['301']!.single.name, '不存在的物品');
   });
+
+  test(
+    'stale cached catalog triggers one forced refresh then converts',
+    () async {
+      var refreshed = false;
+      final staleEn = LangCatalog.fromEntries('en-us', {
+        '5125428': (name: 'Hu Tao', kind: 2),
+      });
+      final freshEn = LangCatalog.fromEntries('en-us', {
+        '5125428': (name: 'Hu Tao', kind: 2),
+        '999': (name: 'NewChar', kind: 2),
+      });
+      final zh = LangCatalog.fromEntries('zh-tw', {
+        '5125428': (name: '胡桃', kind: 2),
+        '999': (name: '新角色', kind: 2),
+      });
+      Future<LangCatalog> ensureStale(
+        String lang, {
+        bool forceRefresh = false,
+      }) async {
+        if (lang == 'zh-tw') return zh;
+        if (lang == 'en-us') {
+          if (forceRefresh) {
+            refreshed = true;
+            return freshEn;
+          }
+          return refreshed ? freshEn : staleEn;
+        }
+        throw StateError('no catalog $lang');
+      }
+
+      final conv = GachaLanguageConverter(ensureCatalog: ensureStale);
+      final out = await conv.convert(
+        storage({
+          '301': [rec('1', '301', '新角色', 'zh-tw')],
+        }),
+        'en-us',
+      );
+      expect(refreshed, isTrue);
+      expect(out.data.banners['301']!.single.name, 'NewChar');
+      expect(out.result.converted, 1);
+    },
+  );
 }
