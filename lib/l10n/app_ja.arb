@@ -160,7 +160,6 @@
   "sortHintClickToSort": "クリックで並べ替え",
   "progressPreparing": "準備中…",
   "progressPreparingHint": "データソースを準備しています…",
-  "progressConverting": "変換中...",
   "progressConvertingHint": "データ言語を変換しています。しばらくお待ちください...",
   "progressWaiting": "リクエスト待機中…",
   "progressFetching": "取得中…",

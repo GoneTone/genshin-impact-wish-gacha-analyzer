@@ -160,7 +160,6 @@
   "sortHintClickToSort": "Cliquer pour trier",
   "progressPreparing": "Préparation...",
   "progressPreparingHint": "Préparation de la source de données...",
-  "progressConverting": "Conversion...",
   "progressConvertingHint": "Conversion de la langue des données, veuillez patienter...",
   "progressWaiting": "En attente d'interception...",
   "progressFetching": "Récupération...",

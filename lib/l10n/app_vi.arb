@@ -160,7 +160,6 @@
   "sortHintClickToSort": "Nhấp để sắp xếp",
   "progressPreparing": "Đang chuẩn bị…",
   "progressPreparingHint": "Đang chuẩn bị nguồn dữ liệu…",
-  "progressConverting": "Đang chuyển đổi...",
   "progressConvertingHint": "Đang chuyển đổi ngôn ngữ dữ liệu, vui lòng đợi...",
   "progressWaiting": "Đang chờ lấy URL…",
   "progressFetching": "Đang tải…",

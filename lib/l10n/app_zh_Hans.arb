@@ -156,7 +156,6 @@
   "sortHintClickToSort": "点击排序",
   "progressPreparing": "准备中…",
   "progressPreparingHint": "正在准备数据源…",
-  "progressConverting": "转换中...",
   "progressConvertingHint": "正在转换数据语言，请稍候...",
   "progressWaiting": "等待拦截…",
   "progressFetching": "抓取中…",

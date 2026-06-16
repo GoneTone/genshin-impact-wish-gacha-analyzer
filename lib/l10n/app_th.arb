@@ -160,7 +160,6 @@
   "sortHintClickToSort": "คลิกเพื่อเรียงลำดับ",
   "progressPreparing": "กำลังเตรียม…",
   "progressPreparingHint": "กำลังเตรียมแหล่งข้อมูล…",
-  "progressConverting": "กำลังแปลง...",
   "progressConvertingHint": "กำลังแปลงภาษาของข้อมูล โปรดรอสักครู่...",
   "progressWaiting": "รอการดักจับ…",
   "progressFetching": "กำลังดึงข้อมูล…",

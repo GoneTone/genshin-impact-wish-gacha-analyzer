@@ -118,7 +118,7 @@ class _Title extends StatelessWidget {
       ConvertingDataLanguage() => (
         Icons.translate_outlined,
         tokens.textPrimary,
-        l.progressConverting,
+        l.settingsDataLanguageUnifying,
       ),
       UpdateCompleted() => (
         Icons.check_circle,

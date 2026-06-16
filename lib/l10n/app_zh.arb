@@ -129,7 +129,6 @@
 
   "progressPreparing": "準備中…",
   "progressPreparingHint": "正在準備資料來源…",
-  "progressConverting": "轉換中...",
   "progressConvertingHint": "正在轉換資料語言，請稍候...",
   "progressWaiting": "等待攔截…",
   "progressFetching": "抓取中…",
