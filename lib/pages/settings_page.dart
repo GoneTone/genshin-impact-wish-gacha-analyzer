@@ -85,7 +85,7 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsDataLanguage,
-                icon: Icons.translate,
+                icon: Icons.translate_outlined,
                 child: const _DataLanguageSection(),
               ),
               const SizedBox(height: AppSpacing.xl),
@@ -1083,8 +1083,9 @@ class _LogsSection extends ConsumerWidget {
   }
 }
 
-/// 設定頁「資料語言」區塊：下拉切換目標語言＋「立即轉換」按鈕。
+/// 資料語言區塊：選擇資料語言（獨立於 UI 語言）＋「統一資料語言」按鈕。
 class _DataLanguageSection extends ConsumerStatefulWidget {
+  /// 建立 [_DataLanguageSection]。
   const _DataLanguageSection();
 
   @override
@@ -1092,16 +1093,67 @@ class _DataLanguageSection extends ConsumerStatefulWidget {
       _DataLanguageSectionState();
 }
 
-/// [_DataLanguageSection] 的 state，持有轉換進行中的 [_busy] 旗標。
+/// [_DataLanguageSection] 的 state。
 class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
+  /// 統一轉換進行中（禁用下拉與按鈕、顯示進度）。
   bool _busy = false;
+
+  /// 執行「統一資料語言」並以 [AppDialog] 顯示結果或錯誤。
+  Future<void> _unify(AppLocalizations l) async {
+    setState(() => _busy = true);
+    try {
+      final result = await ref
+          .read(gachaRepositoryProvider.notifier)
+          .unifyDataLanguage();
+      if (!mounted) return;
+      await _showResultDialog(
+        context,
+        title: l.settingsDataLanguageUnify,
+        body: l.settingsDataLanguageUnifyDone(
+          result.converted,
+          result.unresolved,
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      await _showResultDialog(
+        context,
+        title: l.settingsDataLanguageUnify,
+        body: l.settingsDataLanguageUnifyFailed,
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// 以 [AppDialog] 顯示結果／錯誤訊息（含關閉按鈕）。
+  Future<void> _showResultDialog(
+    BuildContext context, {
+    required String title,
+    required String body,
+  }) {
+    return showDialog<void>(
+      context: context,
+      builder: (ctx) => AppDialog(
+        size: AppDialogSize.sm,
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(MaterialLocalizations.of(ctx).okButtonLabel),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final current = ref.watch(settingsProvider.select((s) => s.dataLanguage));
+    final current = ref.watch(dataLanguageProvider);
     final notifier = ref.read(settingsProvider.notifier);
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1120,80 +1172,35 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
           items: [
-            DropdownMenuItem(
+            DropdownMenuItem<String?>(
               value: null,
               child: Text(l.settingsDataLanguageUnset),
             ),
             for (final o in kDataLanguageOptions)
-              DropdownMenuItem(value: o.code, child: Text(o.label)),
+              DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
           ],
           onChanged: _busy ? null : (v) => notifier.setDataLanguage(v),
         ),
-        const SizedBox(height: AppSpacing.m),
-        OutlinedButton.icon(
-          onPressed: (current == null || _busy) ? null : () => _unify(context),
-          icon: _busy
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.sync),
-          label: Text(
-            _busy
-                ? l.settingsDataLanguageUnifying
-                : l.settingsDataLanguageUnify,
+        const SizedBox(height: AppSpacing.s),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton.icon(
+            onPressed: (current == null || _busy) ? null : () => _unify(l),
+            icon: _busy
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.sync),
+            label: Text(
+              _busy
+                  ? l.settingsDataLanguageUnifying
+                  : l.settingsDataLanguageUnify,
+            ),
           ),
         ),
       ],
     );
-  }
-
-  /// 執行統一轉換，期間 busy、結尾彈結果 [AppDialog]。
-  Future<void> _unify(BuildContext ctx) async {
-    final l = AppLocalizations.of(ctx)!;
-    setState(() => _busy = true);
-    try {
-      final result = await ref
-          .read(gachaRepositoryProvider.notifier)
-          .unifyDataLanguage();
-      if (!ctx.mounted) return;
-      await showDialog<void>(
-        context: ctx,
-        builder: (dctx) => AppDialog(
-          title: Text(l.settingsDataLanguage),
-          content: Text(
-            l.settingsDataLanguageUnifyDone(
-              result.converted,
-              result.unresolved,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dctx).pop(),
-              child: Text(MaterialLocalizations.of(dctx).okButtonLabel),
-            ),
-          ],
-        ),
-      );
-    } catch (e, st) {
-      Logger('wish.langconvert').warning('unify ui failed', e, st);
-      if (!ctx.mounted) return;
-      await showDialog<void>(
-        context: ctx,
-        builder: (dctx) => AppDialog(
-          title: Text(l.settingsDataLanguage),
-          content: Text(l.settingsDataLanguageUnifyFailed),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dctx).pop(),
-              child: Text(MaterialLocalizations.of(dctx).okButtonLabel),
-            ),
-          ],
-        ),
-      );
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
   }
 }
