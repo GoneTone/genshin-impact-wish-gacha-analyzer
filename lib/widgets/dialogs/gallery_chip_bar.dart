@@ -73,8 +73,13 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
   void didUpdateWidget(covariant GalleryChipBar old) {
     super.didUpdateWidget(old);
     if (old.labels.length != widget.labels.length) {
+      // 頁籤數量變動會重建 _keys，選中頁籤可能因此跑出視野；除了更新 fade，
+      // 也一併把選中頁籤捲回可視範圍，避免停在被裁切的位置。
       _keys = _buildKeys(widget.labels.length);
-      WidgetsBinding.instance.addPostFrameCallback((_) => _updateAffordance());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _updateAffordance();
+        _ensureSelectedVisible();
+      });
     }
     if (old.selectedIndex != widget.selectedIndex) {
       WidgetsBinding.instance.addPostFrameCallback(
