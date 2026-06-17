@@ -11,6 +11,9 @@ const double _arrowSlotWidth = 32;
 /// 中間捲動區邊緣漸隱遮罩的寬度。
 const double _chipFadeWidth = 24;
 
+/// 箭頭欄與中間頁籤捲動區之間的水平間距，讓箭頭與標籤拉開一點呼吸空間。
+const double _arrowGap = 6;
+
 /// 單行可水平捲動的頁籤列：左箭頭、可捲動 ChoiceChip 列（含邊緣 fade）、右箭頭。
 ///
 /// 三欄固定排版，箭頭獨立欄位不會遮住邊緣頁籤。箭頭由「選中索引是否在頭／尾」
@@ -140,6 +143,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
             ),
           ),
         ),
+        const SizedBox(width: _arrowGap),
         Expanded(
           child: Stack(
             children: [
@@ -201,6 +205,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
             ],
           ),
         ),
+        const SizedBox(width: _arrowGap),
         SizedBox(
           width: _arrowSlotWidth,
           child: Center(
