@@ -132,7 +132,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_left,
-              tooltip: l.timelineScrollLeft,
+              tooltip: l.galleryPrevTab,
               tokens: tokens,
               onPressed: selected > 0
                   ? () => widget.onSelected(selected - 1)
@@ -206,7 +206,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_right,
-              tooltip: l.timelineScrollRight,
+              tooltip: l.galleryNextTab,
               tokens: tokens,
               onPressed: selected < lastIndex
                   ? () => widget.onSelected(selected + 1)
