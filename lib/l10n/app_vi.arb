@@ -838,10 +838,16 @@
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
   },
   "galleryIconLabel": "Biểu tượng",
-  "galleryPrevTab": "Trước đó",
-  "galleryNextTab": "Tiếp theo",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
+  },
+  "galleryPrevTab": "Trước đó",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Tiếp theo",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
   "actionViewOnHoYoWiki": "Xem trên HoYoWiki",
   "@actionViewOnHoYoWiki": {
