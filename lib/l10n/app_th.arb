@@ -305,6 +305,16 @@
   "settingsDataLanguageUnify": "แปลงภาษาของข้อมูลทันที",
   "settingsDataLanguageUnifying": "กำลังแปลง...",
   "settingsDataLanguageUnifyDone": "แปลงแล้ว {converted} รายการ, {unresolved} รายการไม่สามารถแปลงได้",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
   "settingsDataLanguageUnifyFailed": "การแปลงล้มเหลว ข้อมูลไม่มีการเปลี่ยนแปลง กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง",
   "settingsDataManagement": "จัดการข้อมูล",
   "settingsAccountManagement": "จัดการบัญชี",

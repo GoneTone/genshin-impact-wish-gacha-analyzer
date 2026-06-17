@@ -305,6 +305,16 @@
   "settingsDataLanguageUnify": "Chuyển đổi ngôn ngữ dữ liệu ngay",
   "settingsDataLanguageUnifying": "Đang chuyển đổi...",
   "settingsDataLanguageUnifyDone": "Đã chuyển đổi {converted}, {unresolved} không thể chuyển đổi.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
   "settingsDataLanguageUnifyFailed": "Chuyển đổi thất bại, dữ liệu không thay đổi. Vui lòng kiểm tra mạng và thử lại.",
   "settingsDataManagement": "Quản Lý Dữ Liệu",
   "settingsAccountManagement": "Quản Lý Tài Khoản",

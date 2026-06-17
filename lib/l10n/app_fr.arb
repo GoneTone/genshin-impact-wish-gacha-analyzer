@@ -305,6 +305,16 @@
   "settingsDataLanguageUnify": "Convertir la langue des données maintenant",
   "settingsDataLanguageUnifying": "Conversion...",
   "settingsDataLanguageUnifyDone": "{converted} converti(s), {unresolved} n'ont pas pu être converti(s).",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
   "settingsDataLanguageUnifyFailed": "Échec de la conversion, les données n'ont pas été modifiées. Veuillez vérifier votre connexion et réessayer.",
   "settingsDataManagement": "Gestion des données",
   "settingsAccountManagement": "Gestion des comptes",

@@ -301,6 +301,16 @@
   "settingsDataLanguageUnify": "立即转换数据语言",
   "settingsDataLanguageUnifying": "转换中...",
   "settingsDataLanguageUnifyDone": "已转换 {converted} 条，{unresolved} 条无法转换。",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
   "settingsDataLanguageUnifyFailed": "转换失败，数据未变更。请检查网络后重试。",
   "settingsDataManagement": "数据管理",
   "settingsAccountManagement": "账号管理",
