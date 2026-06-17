@@ -18,6 +18,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gallery_chip_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
@@ -678,21 +679,14 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
         mainAxisSize: current != null ? MainAxisSize.max : MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (chipEntries.length > 1)
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (var i = 0; i < chipEntries.length; i++)
-                  ChoiceChip(
-                    label: Text(chipEntries[i].label),
-                    selected: i == clampedIndex,
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _selectedIndex = i),
-                  ),
-              ],
+          if (chipEntries.length > 1) ...[
+            GalleryChipBar(
+              labels: [for (final e in chipEntries) e.label],
+              selectedIndex: clampedIndex,
+              onSelected: (i) => setState(() => _selectedIndex = i),
             ),
-          if (chipEntries.length > 1) const SizedBox(height: 12),
+            const SizedBox(height: 12),
+          ],
           if (current != null) ...[
             Expanded(child: _buildCurrentImageArea(context, current)),
           ],
