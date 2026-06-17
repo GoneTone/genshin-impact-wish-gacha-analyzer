@@ -718,9 +718,9 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
           onPressed: id == null
               ? null
               : () {
-                  _log.info('open wiki id=$id');
+                  _log.info('open wiki id=$id lang=${record.lang}');
                   openExternalUrl(
-                    Uri.parse('https://wiki.hoyolab.com/pc/genshin/entry/$id'),
+                    buildHoYoWikiEntryUrl(id: id, lang: record.lang),
                   );
                 },
         ),
@@ -771,6 +771,12 @@ class _GalleryChipEntry {
   /// chip 類別 — icon 永遠 ready（已由 hasHoYoWikiContent 把關），gallery 走 lazy。
   final _ChipKind kind;
 }
+
+/// 組出 HoYoWiki 詞條頁網址，帶上 [lang] 讓落地頁語言對齊 Dialog 顯示的資料語言。
+Uri buildHoYoWikiEntryUrl({required String id, required String lang}) =>
+    Uri.parse(
+      'https://wiki.hoyolab.com/pc/genshin/entry/$id',
+    ).replace(queryParameters: {'lang': lang});
 
 /// 顯示 [GachaItemDetailDialog]。
 Future<void> showGachaItemDetailDialog(
