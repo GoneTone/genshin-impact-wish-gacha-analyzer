@@ -1046,4 +1046,23 @@ void main() {
       );
     });
   });
+
+  group('buildHoYoWikiEntryUrl', () {
+    test('帶上 lang query 參數並對齊資料語言', () {
+      final uri = buildHoYoWikiEntryUrl(id: 'x1', lang: 'zh-tw');
+      expect(uri.path, '/pc/genshin/entry/x1');
+      expect(uri.queryParameters['lang'], 'zh-tw');
+      expect(
+        uri.toString(),
+        'https://wiki.hoyolab.com/pc/genshin/entry/x1?lang=zh-tw',
+      );
+    });
+
+    test('不同資料語言反映在 lang 參數', () {
+      expect(
+        buildHoYoWikiEntryUrl(id: 'a2', lang: 'ja-jp').queryParameters['lang'],
+        'ja-jp',
+      );
+    });
+  });
 }
