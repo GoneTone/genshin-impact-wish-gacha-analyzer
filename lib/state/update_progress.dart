@@ -83,6 +83,8 @@ class UpdateCompleted extends UpdateProgress {
     required this.updatedAt,
     required this.hoYoWikiImagesDownloaded,
     this.importSummary,
+    this.hoyoWikiEntriesRefreshed,
+    this.hoyoWikiStaleItemsPruned = 0,
   });
 
   /// 本次更新新增的總紀錄數（update 流程用；import 流程為 0）。
@@ -100,6 +102,14 @@ class UpdateCompleted extends UpdateProgress {
 
   /// 匯入流程的結果摘要；非 import 入口為 null。
   final ImportResult? importSummary;
+
+  /// 非 null 表示這是「更新物品資料」流程的完成；值為本次成功刷新 metadata 的
+  /// 相異物品數。UI 據此改顯示物品資料摘要（已更新 M 個物品）而非紀錄摘要。
+  final int? hoyoWikiEntriesRefreshed;
+
+  /// 「更新物品資料」流程中本次被清理掉殘留語言的相異物品數（pageByLang 有縮減者）。
+  /// 0 表示無殘留可清；UI 僅在 > 0 時顯示清理提醒行。其他流程恆為 0。
+  final int hoyoWikiStaleItemsPruned;
 }
 
 /// 更新失敗。

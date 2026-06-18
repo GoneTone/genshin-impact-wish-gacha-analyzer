@@ -203,6 +203,33 @@
       }
     }
   },
+  "progressDoneItemDataSummary": "Datos de {count} objetos actualizados",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "Descargadas {count} imágenes de objetos faltantes",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "Se limpiaron datos de idioma obsoletos de {count} objetos",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Parcialmente fallido: {names}",
   "@progressPartialFailed": {
     "placeholders": {
@@ -498,6 +525,34 @@
   "confirmRefetchHoyoWikiConfirm": "Empezar redescarga",
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Datos de objetos",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Volver a obtener los últimos detalles de todos los objetos desde HoYoWiki (descripciones, listas de imágenes, etc.), conservando las imágenes ya descargadas. Las nuevas imágenes se descargarán al abrir los detalles del objeto.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Actualizar datos de objetos",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Sin registros de gacha aún — nada que actualizar",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "¿Actualizar datos de objetos?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Esto contactará HoYoWiki para volver a obtener los detalles de todos los objetos, lo que puede tardar un tiempo según la cantidad. Las imágenes ya descargadas se conservarán y no se eliminarán.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Iniciar actualización",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
   },
   "settingsImageCache": "Caché de imágenes",
   "@settingsImageCache": {

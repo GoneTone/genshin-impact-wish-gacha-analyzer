@@ -239,23 +239,42 @@ class _Body extends StatelessWidget {
         :final failedBanners,
         :final hoYoWikiImagesDownloaded,
         :final importSummary,
+        :final hoyoWikiEntriesRefreshed,
+        :final hoyoWikiStaleItemsPruned,
       ) =>
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (importSummary != null)
+            if (importSummary != null) ...[
               Text(
                 l.progressDoneImportSummary(
                   importSummary.successAccounts,
                   importSummary.addedRecords,
                   importSummary.duplicateRecords,
                 ),
-              )
-            else
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
+            ] else if (hoyoWikiEntriesRefreshed != null) ...[
+              Text(l.progressDoneItemDataSummary(hoyoWikiEntriesRefreshed)),
+              if (hoYoWikiImagesDownloaded > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l.progressDoneItemDataImagesSummary(hoYoWikiImagesDownloaded),
+                ),
+              ],
+              if (hoyoWikiStaleItemsPruned > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l.progressDoneItemDataPrunedSummary(hoyoWikiStaleItemsPruned),
+                ),
+              ],
+            ] else ...[
               Text(l.progressDoneSummary(totalNewRecords)),
-            const SizedBox(height: AppSpacing.xs),
-            Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
+              const SizedBox(height: AppSpacing.xs),
+              Text(l.progressDoneImagesSummary(hoYoWikiImagesDownloaded)),
+            ],
             if (failedBanners.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.s),
               Text(

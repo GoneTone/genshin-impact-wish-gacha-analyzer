@@ -116,6 +116,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
   static final _importLog = Logger('gacha.import');
 
+  /// Logger 實例（非破壞性 metadata 更新流程）。
+  static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
+
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
 
@@ -448,7 +451,8 @@ class GachaRepository extends Notifier<GachaState> {
     // HoYoWiki 補圖階段（best-effort，不影響 UpdateCompleted）
     var hoYoWikiImagesDownloaded = 0;
     try {
-      hoYoWikiImagesDownloaded = await _fetchHoYoWiki(client);
+      final result = await _fetchHoYoWiki(client);
+      hoYoWikiImagesDownloaded = result.imagesDownloaded;
     } catch (e, st) {
       _log.warning('hoyowiki stage threw (ignored)', e, st);
     }
@@ -574,7 +578,8 @@ class GachaRepository extends Notifier<GachaState> {
 
       var hoYoWikiImagesDownloaded = 0;
       try {
-        hoYoWikiImagesDownloaded = await _fetchHoYoWiki(cancellable.client);
+        final result = await _fetchHoYoWiki(cancellable.client);
+        hoYoWikiImagesDownloaded = result.imagesDownloaded;
       } catch (e, st) {
         _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
@@ -593,6 +598,74 @@ class GachaRepository extends Notifier<GachaState> {
           failedBanners: const [],
           updatedAt: DateTime.now().toUtc(),
           hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
+        ),
+      );
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
+  /// 非破壞性更新所有物品的 HoYoWiki metadata（強制重抓已解析條目的 entry 階段）。
+  ///
+  /// 與 [forceRefetchAllHoYoWikiImages] 不同：**不** `resetAll()`，保留既有 index
+  /// 與快取圖。重抓後 [HoYoWikiIndexNotifier.mergeEntry] 覆蓋各 lang page，新增的
+  /// gallery 圖只更新 index、不在此下載（維持 lazy，由詳情頁開啟時補）；icon 僅在
+  /// 本地缺檔時才下載。
+  ///
+  /// 流程：互斥檢查 → emit `Preparing` → `_fetchHoYoWiki(forceEntryRefetch: true)`
+  /// → 依取消狀態 emit `UpdateCompleted` 或 `clearProgress`。
+  Future<void> refreshAllHoYoWikiMetadata() async {
+    if (state.progress != null) {
+      _refreshMetaLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _refreshMetaLog.info('start, totalUids=${state.byUid.length}');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      var result = (
+        imagesDownloaded: 0,
+        itemsRefreshed: 0,
+        staleLangItemsPruned: 0,
+      );
+      try {
+        result = await _fetchHoYoWiki(
+          cancellable.client,
+          forceEntryRefetch: true,
+          pruneStaleLangs: true,
+        );
+      } catch (e, st) {
+        _refreshMetaLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _refreshMetaLog.warning('cancelled');
+        state = state.copyWith(clearProgress: true);
+        return;
+      }
+
+      _refreshMetaLog.info(
+        'done, images=${result.imagesDownloaded} items=${result.itemsRefreshed} '
+        'stalePruned=${result.staleLangItemsPruned}',
+      );
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: result.imagesDownloaded,
+          hoyoWikiEntriesRefreshed: result.itemsRefreshed,
+          hoyoWikiStaleItemsPruned: result.staleLangItemsPruned,
         ),
       );
     } finally {
@@ -638,7 +711,8 @@ class GachaRepository extends Notifier<GachaState> {
 
       var images = 0;
       try {
-        images = await _fetchHoYoWiki(cancellable.client);
+        final fetchResult = await _fetchHoYoWiki(cancellable.client);
+        images = fetchResult.imagesDownloaded;
       } catch (e, st) {
         _importLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
@@ -975,9 +1049,21 @@ class GachaRepository extends Notifier<GachaState> {
   /// 每筆獨立 try/catch：單筆失敗不終止整段。每筆完成更新 progress。整段失敗
   /// 不影響 `UpdateCompleted`。取消（`_cancelTriggered` 或 `!ref.mounted`）早退。
   ///
-  /// 回傳本次成功寫入磁碟的圖片張數（icon + header 各算一張）。
-  Future<int> _fetchHoYoWiki(http.Client client) async {
+  /// `forceEntryRefetch` 為 true 時，entry 階段強制納入所有已解析的 (id, lang)，
+  /// 用於設定頁手動更新物品資料。
+  ///
+  /// 回傳本次成功寫入磁碟的圖片張數（`imagesDownloaded`）、成功刷新 metadata
+  /// 的相異物品數（`itemsRefreshed`），以及 `pageByLang` 被縮減的相異物品數
+  /// （`staleLangItemsPruned`）。
+  Future<({int imagesDownloaded, int itemsRefreshed, int staleLangItemsPruned})>
+  _fetchHoYoWiki(
+    http.Client client, {
+    bool forceEntryRefetch = false,
+    bool pruneStaleLangs = false,
+  }) async {
     var downloaded = 0;
+    final refreshedIds = <String>{};
+    var staleLangItemsPruned = 0;
     final fetcher = ref.read(hoyowikiFetcherProvider);
     final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
     final cacheDir = ref.read(hoyowikiCacheDirProvider);
@@ -1016,6 +1102,21 @@ class GachaRepository extends Notifier<GachaState> {
 
     // entryTodo 初始：走過所有 record lang+name，蒐集需要重抓的 (id, lang) pair
     final allLangs = uniquePairs.map((p) => p.$2).toSet();
+
+    // 針對性清理：移除已不再被任何記錄使用的語言殘留頁面（非破壞性，僅 index 內 pageByLang）。
+    // allLangs 為空（無記錄）時略過，避免誤清全部。
+    if (pruneStaleLangs && allLangs.isNotEmpty) {
+      staleLangItemsPruned = await indexNotifier.pruneLanguages(allLangs);
+      if (!ref.mounted || _cancelTriggered) {
+        return (
+          imagesDownloaded: 0,
+          itemsRefreshed: 0,
+          staleLangItemsPruned: staleLangItemsPruned,
+        );
+      }
+      index = ref.read(hoyowikiIndexProvider); // 重讀 prune 後的 index 快照
+    }
+
     final namesByLang = <String, Set<String>>{};
     for (final pair in uniquePairs) {
       namesByLang.putIfAbsent(pair.$2, () => {}).add(pair.$1);
@@ -1025,11 +1126,12 @@ class GachaRepository extends Notifier<GachaState> {
       for (final name in namesByLang[lang] ?? const <String>{}) {
         final id = index.lookupId(name: name, lang: lang);
         if (id == null) continue;
-        if (needRefetchEntry(
-          index.lookupEntry(id),
-          index.lookupMenuId(id),
-          lang,
-        )) {
+        if (forceEntryRefetch ||
+            needRefetchEntry(
+              index.lookupEntry(id),
+              index.lookupMenuId(id),
+              lang,
+            )) {
           entryTodo.add((id: id, lang: lang));
         }
       }
@@ -1065,7 +1167,13 @@ class GachaRepository extends Notifier<GachaState> {
     // 三段加起來都沒工作就直接結束。
     final totalInitial =
         searchTodo.length + entryTodo.length + downloadTodo.length;
-    if (totalInitial == 0) return downloaded;
+    if (totalInitial == 0) {
+      return (
+        imagesDownloaded: downloaded,
+        itemsRefreshed: refreshedIds.length,
+        staleLangItemsPruned: staleLangItemsPruned,
+      );
+    }
 
     bool isAborted() => !ref.mounted || _cancelTriggered;
 
@@ -1090,6 +1198,8 @@ class GachaRepository extends Notifier<GachaState> {
                 id: hit.id,
                 menuId: hit.menuId,
               );
+              // 此處不需判 forceEntryRefetch：剛 search 命中的 id 其 entry 尚為 null，
+              // needRefetchEntry(null, ...) 必為 true，force 與非 force 行為一致。
               if (!entryTodo.contains((id: hit.id, lang: pair.$2)) &&
                   needRefetchEntry(
                     ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
@@ -1113,7 +1223,13 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
+        );
+      }
     }
 
     // (2) entry 階段
@@ -1136,6 +1252,7 @@ class GachaRepository extends Notifier<GachaState> {
               lang: pair.lang,
               fetched: fetched,
             );
+            refreshedIds.add(pair.id);
             // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
             final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
@@ -1155,7 +1272,13 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
+        );
+      }
     }
 
     // (3) download 階段
@@ -1194,20 +1317,38 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
+        );
+      }
     }
-    return downloaded;
+    return (
+      imagesDownloaded: downloaded,
+      itemsRefreshed: refreshedIds.length,
+      staleLangItemsPruned: staleLangItemsPruned,
+    );
   }
 
-  /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
+  /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）；`forceEntryRefetch` 透傳給 [_fetchHoYoWiki]。
+  ///
+  /// WHY clearProgress：_fetchHoYoWiki 跑完後 state.progress 停留在最後一個
+  /// FetchingHoYoWiki phase，若不清除，後續呼叫帶互斥檢查的 public method
+  ///（例如 [refreshAllHoYoWikiMetadata]）會因 progress != null 而直接跳過。
   @visibleForTesting
-  Future<void> debugRunHoYoWikiOnly() async {
+  Future<void> debugRunHoYoWikiOnly({bool forceEntryRefetch = false}) async {
     _cancelTriggered = false;
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     try {
-      await _fetchHoYoWiki(cancellable.client);
+      await _fetchHoYoWiki(
+        cancellable.client,
+        forceEntryRefetch: forceEntryRefetch,
+      );
     } finally {
       cancellable.client.close();
+      if (ref.mounted) state = state.copyWith(clearProgress: true);
     }
   }
 

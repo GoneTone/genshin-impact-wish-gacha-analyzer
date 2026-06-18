@@ -208,6 +208,126 @@ void main() {
     });
   });
 
+  group('HoYoWikiIndexNotifier.pruneLanguages', () {
+    late Directory tempDir;
+    late ProviderContainer container;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('pruneLanguages_test_');
+      container = ProviderContainer(
+        overrides: [
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+        ],
+      );
+      addTearDown(container.dispose);
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        try {
+          await tempDir.delete(recursive: true);
+        } catch (_) {}
+      }
+    });
+
+    test('清掉殘留語言、保留當前語言', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      // 寫入同一 id 的 zh-tw 與 en-us 兩個 page
+      await notifier.mergeEntry(
+        id: '999',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '繁中說明', tags: ['tag1']),
+        ),
+      );
+      await notifier.mergeEntry(
+        id: '999',
+        lang: 'en-us',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: 'en desc', tags: []),
+        ),
+      );
+      // 確認兩 lang 均在
+      expect(
+        container
+            .read(hoyowikiIndexProvider)
+            .lookupEntry('999')!
+            .pageByLang
+            .keys
+            .toSet(),
+        {'zh-tw', 'en-us'},
+      );
+
+      // pruneLanguages 只保留 zh-tw → 回傳 1（1 個物品被清理）
+      final pruned = await notifier.pruneLanguages({'zh-tw'});
+      expect(pruned, 1);
+
+      final entry = container.read(hoyowikiIndexProvider).lookupEntry('999')!;
+      expect(entry.pageByLang.keys.toSet(), {'zh-tw'});
+      // iconUrl 與 zh-tw page 保留
+      expect(entry.iconUrl, 'https://x/icon.png');
+      expect(entry.pageByLang['zh-tw']!.desc, '繁中說明');
+    });
+
+    test('無變動為 no-op（keepLangs 為超集）', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '888',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '內容', tags: []),
+        ),
+      );
+      final before = container.read(hoyowikiIndexProvider);
+
+      // keepLangs 為超集（包含比實際存在更多的 lang）→ 回傳 0（無物品被清理）
+      final pruned = await notifier.pruneLanguages({'zh-tw', 'en-us'});
+      expect(pruned, 0);
+
+      final after = container.read(hoyowikiIndexProvider);
+      // 無實際變動 → entry 內容不變
+      expect(after.lookupEntry('888')!.pageByLang.keys.toSet(), {'zh-tw'});
+      expect(
+        after.lookupEntry('888')!.iconUrl,
+        before.lookupEntry('888')!.iconUrl,
+      );
+      // 無變動時不應重建 index state
+      expect(identical(before, after), isTrue, reason: '無變動時不應重建 index');
+    });
+
+    test('空 keepLangs 為 no-op，回傳 0', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '777',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '內容', tags: []),
+        ),
+      );
+      final before = container.read(hoyowikiIndexProvider);
+
+      // 空 keepLangs → no-op，回傳 0
+      final pruned = await notifier.pruneLanguages({});
+      expect(pruned, 0);
+
+      // state 應未變動
+      final after = container.read(hoyowikiIndexProvider);
+      expect(
+        identical(before, after),
+        isTrue,
+        reason: '空 keepLangs 不應變動 index',
+      );
+    });
+  });
+
   group('HoYoWikiIndexNotifier.mergeEntry', () {
     late Directory tempDir;
     late ProviderContainer container;

@@ -1070,4 +1070,383 @@ void main() {
     // 50 筆中只應 dispatch 少數幾筆（不可能 50 全跑）
     expect(dispatched.length, lessThan(10));
   });
+
+  test('forceEntryRefetch=true：已解析的 entry 仍重抓並更新 gallery', () async {
+    var entryCallCount = 0;
+    var galleryListLen = 1;
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': 'Hu Tao',
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        entryCallCount++;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {
+                'icon_url': 'https://x/icon.png',
+                'modules': [
+                  {
+                    'components': [
+                      {
+                        'component_id': 'gallery_character',
+                        'data': jsonEncode({
+                          'pic': '',
+                          'list': [
+                            for (var i = 0; i < galleryListLen; i++)
+                              {
+                                'id': 'g$i',
+                                'key': 'k$i',
+                                'img': 'https://x/g$i.png',
+                                'imgDesc': '',
+                              },
+                          ],
+                        }),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+
+    // 第一次增量抓取：entry 抓 1 次，gallery 1 張
+    await notifier.debugRunHoYoWikiOnly();
+    expect(entryCallCount, 1);
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang['en-us']!
+          .gallery!
+          .list
+          .length,
+      1,
+    );
+
+    // HoYoWiki 端新增一張 gallery 圖
+    galleryListLen = 2;
+
+    // 非 force：已抓過 → 不重抓，gallery 仍是舊的 1 張
+    await notifier.debugRunHoYoWikiOnly();
+    expect(entryCallCount, 1, reason: '非 force 模式不重抓已解析 entry');
+
+    // force：強制重抓 entry → gallery 更新為 2 張
+    await notifier.debugRunHoYoWikiOnly(forceEntryRefetch: true);
+    expect(entryCallCount, 2, reason: 'force 模式重抓已解析 entry');
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang['en-us']!
+          .gallery!
+          .list
+          .length,
+      2,
+      reason: 'force 重抓後 mergeEntry 覆蓋 gallery，新圖出現',
+    );
+
+    // gallery 大圖不應被 eager 下載（維持 lazy）
+    final galleryFiles = tempDir
+        .listSync()
+        .whereType<File>()
+        .where((f) => RegExp(r'111_gallery_').hasMatch(f.path))
+        .toList();
+    expect(galleryFiles, isEmpty, reason: 'gallery 維持 lazy，不在更新流程下載');
+  });
+
+  test(
+    'refreshAllHoYoWikiMetadata：非破壞性重抓，保留 icon、emit UpdateCompleted',
+    () async {
+      var entryCallCount = 0;
+      var imageDownloadCount = 0;
+      final apiClient = MockClient((req) async {
+        if (req.url.path.endsWith('/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '111',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (req.url.path.endsWith('/entry_page')) {
+          entryCallCount++;
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'page': {
+                  'icon_url': 'https://x/icon.png',
+                  'header_img_url': '',
+                },
+              },
+            }),
+            200,
+          );
+        }
+        imageDownloadCount++;
+        return http.Response.bytes([1, 2, 3], 200);
+      });
+      final container = await setupContainer(apiClient: apiClient);
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+
+      // 先增量抓一次：建立 index + icon 快取檔
+      await notifier.debugRunHoYoWikiOnly();
+      expect(entryCallCount, 1);
+      expect(imageDownloadCount, 1, reason: '第一次下 icon');
+      final iconFile = File('${tempDir.path}/111_icon.png');
+      expect(iconFile.existsSync(), isTrue);
+
+      // 非破壞性更新
+      await notifier.refreshAllHoYoWikiMetadata();
+
+      // entry 被強制重抓；icon 已在快取 → 不重下；icon 檔仍在（未被 wipe）
+      expect(entryCallCount, 2, reason: 'force 重抓 entry');
+      expect(imageDownloadCount, 1, reason: 'icon 已快取，缺才下 → 不重下');
+      expect(iconFile.existsSync(), isTrue, reason: '非破壞性：既有快取保留');
+
+      // 結束狀態為 UpdateCompleted
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isA<UpdateCompleted>(),
+      );
+
+      // hoyoWikiEntriesRefreshed 應為 1（Hu Tao，相異物品數）
+      final done =
+          container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+      expect(done.hoyoWikiEntriesRefreshed, 1);
+      expect(done.hoYoWikiImagesDownloaded, 0, reason: 'icon 已快取，不重下');
+    },
+  );
+
+  test(
+    'refreshAllHoYoWikiMetadata：同 id 兩 lang → hoyoWikiEntriesRefreshed 為 1（相異 id，非 lang 配對數）',
+    () async {
+      var entryCallCount = 0;
+      final apiClient = MockClient((req) async {
+        if (req.url.path.endsWith('/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'list': [
+                  {
+                    'name': req.url.queryParameters['keyword'],
+                    'entry_page_id': '111',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (req.url.path.endsWith('/entry_page')) {
+          entryCallCount++;
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'page': {
+                  'icon_url': 'https://x/icon.png',
+                  'header_img_url': '',
+                },
+              },
+            }),
+            200,
+          );
+        }
+        return http.Response.bytes([1, 2, 3], 200);
+      });
+
+      // 兩筆 record：同 name（Hu Tao）不同 lang
+      tempDir = await Directory.systemTemp.createTemp('gacha_hoyowiki_2lang_');
+      SharedPreferences.setMockInitialValues({});
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 6, 18),
+          banners: {
+            '301': [
+              _rec(id: '1', name: 'Hu Tao', gachaType: '301', lang: 'zh-tw'),
+              _rec(id: '2', name: 'Hu Tao', gachaType: '301', lang: 'en-us'),
+            ],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+            '2000': [],
+            '1000': [],
+          },
+        ),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+          hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(client: apiClient, cancel: () {}),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(() async {
+        if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      });
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .refreshAllHoYoWikiMetadata();
+
+      // 兩 lang 各一次 entry 請求
+      expect(entryCallCount, 2, reason: '同 id 兩 lang 各發一次 entry_page');
+
+      final done =
+          container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+      // 雖然 entry 階段處理了 2 個 (id, lang) 配對，相異 id 只有 1 個
+      expect(done.hoyoWikiEntriesRefreshed, 1, reason: '相異 id 只有 1 個');
+    },
+  );
+
+  test('refreshAllHoYoWikiMetadata 清掉殘留語言（stale zh-tw page 被移除）', () async {
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': req.url.queryParameters['keyword'],
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+
+    // setupContainer 預設記錄 lang = en-us（_rec 預設值）
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    final indexNotifier = container.read(hoyowikiIndexProvider.notifier);
+
+    // 先跑一次 hoyowiki，建立 en-us 的 search + entry
+    await notifier.debugRunHoYoWikiOnly();
+    expect(
+      container.read(hoyowikiIndexProvider).lookupEntry('111'),
+      isNotNull,
+      reason: 'en-us entry 應已建立',
+    );
+
+    // 手動注入一個不在記錄中的 zh-tw 殘留 page
+    await indexNotifier.mergeEntry(
+      id: '111',
+      lang: 'zh-tw',
+      fetched: const HoYoWikiEntryFetched(
+        iconUrl: 'https://x/icon.png',
+        page: HoYoWikiPageData(gallery: null, desc: '繁中說明', tags: []),
+      ),
+    );
+    // 確認此時兩 lang 均在
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang
+          .keys
+          .toSet(),
+      containsAll(['en-us', 'zh-tw']),
+    );
+
+    // 執行 refreshAllHoYoWikiMetadata（含 pruneStaleLangs = true）
+    await notifier.refreshAllHoYoWikiMetadata();
+
+    // 殘留的 zh-tw 應被清除；en-us 仍在
+    final entry = container.read(hoyowikiIndexProvider).lookupEntry('111')!;
+    expect(
+      entry.pageByLang.containsKey('zh-tw'),
+      isFalse,
+      reason: '殘留的 zh-tw page 應被 pruneLanguages 清除',
+    );
+    expect(
+      entry.pageByLang.containsKey('en-us'),
+      isTrue,
+      reason: 'en-us page 應仍保留',
+    );
+
+    // UpdateCompleted 應帶 hoyoWikiStaleItemsPruned = 1（id '111' 被清理了 zh-tw）
+    final done =
+        container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+    expect(done.hoyoWikiStaleItemsPruned, 1, reason: '1 個物品（id 111）有殘留語言被清理');
+  });
 }
