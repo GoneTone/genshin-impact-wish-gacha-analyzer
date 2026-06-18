@@ -5,6 +5,12 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
 void main() {
+  group('openExternalUrlString', () {
+    test('null URL 不丟例外、靜默返回', () async {
+      // onLinkTap 可能傳入 null；此分支不應觸碰 url_launcher 平台。
+      await expectLater(openExternalUrlString(null), completes);
+    });
+  });
   testWidgets('預設樣式：primary color，無底線', (tester) async {
     final theme = buildDarkTheme();
     await tester.pumpWidget(

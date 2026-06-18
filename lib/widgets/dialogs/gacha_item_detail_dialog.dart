@@ -16,6 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.da
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_html.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gallery_chip_bar.dart';
@@ -612,7 +613,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       // 約 6px。壓成 1.0 後區塊最小高度＝文字行高，單行/多行首行對齊。
                       child: DefaultTextStyle.merge(
                         style: const TextStyle(height: 1.0),
-                        child: Html(
+                        child: AppHtml(
                           data: desc,
                           style: {
                             'body': Style(
@@ -695,7 +696,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
             // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
             // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
             // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
-            Html(
+            AppHtml(
               data: current.descHtml,
               style: {
                 'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
