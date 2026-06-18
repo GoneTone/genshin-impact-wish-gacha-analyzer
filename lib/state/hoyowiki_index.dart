@@ -112,6 +112,43 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     });
   }
 
+  /// 移除所有 entry 中 lang ∉ [keepLangs] 的 `pageByLang` 條目，清理已不再被任何
+  /// 記錄使用的語言殘留資料。只動 `pageByLang`；icon／searchMap／menuIds 皆不變。
+  /// 有實際變動才 persist／emit；無變動為 no-op（避免無謂寫檔與 UI 重建）。
+  Future<void> pruneLanguages(Set<String> keepLangs) async {
+    await _lock.synchronized(() async {
+      var changed = false;
+      final newEntries = <String, HoYoWikiEntry>{};
+      for (final e in state.entries.entries) {
+        final entry = e.value;
+        final keptPages = <String, HoYoWikiPageData>{
+          for (final p in entry.pageByLang.entries)
+            if (keepLangs.contains(p.key)) p.key: p.value,
+        };
+        if (keptPages.length != entry.pageByLang.length) {
+          changed = true;
+          newEntries[e.key] = HoYoWikiEntry(
+            iconUrl: entry.iconUrl,
+            pageByLang: keptPages,
+            fetchedAt: entry.fetchedAt,
+          );
+        } else {
+          newEntries[e.key] = entry;
+        }
+      }
+      if (!changed) return;
+      final next = HoYoWikiIndex(
+        searchMap: state.searchMap,
+        entries: newEntries,
+        menuIds: state.menuIds,
+      );
+      await _saveAndEmit(next);
+      _log.info(
+        'pruneLanguages: keep=${keepLangs.length} langs, pruned stale pages',
+      );
+    });
+  }
+
   /// 把單一 lang 的 fetch 結果 merge 進既有 entry（不覆蓋其他 lang）。icon
   /// 採「非空覆寫」策略，避免某 lang 抓回空 icon 把既有好值清掉。
   Future<void> mergeEntry({

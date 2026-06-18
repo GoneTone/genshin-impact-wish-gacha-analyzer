@@ -1357,4 +1357,91 @@ void main() {
       expect(done.hoyoWikiEntriesRefreshed, 1, reason: '相異 id 只有 1 個');
     },
   );
+
+  test('refreshAllHoYoWikiMetadata 清掉殘留語言（stale zh-tw page 被移除）', () async {
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': req.url.queryParameters['keyword'],
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {'icon_url': 'https://x/icon.png', 'header_img_url': ''},
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+
+    // setupContainer 預設記錄 lang = en-us（_rec 預設值）
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    final indexNotifier = container.read(hoyowikiIndexProvider.notifier);
+
+    // 先跑一次 hoyowiki，建立 en-us 的 search + entry
+    await notifier.debugRunHoYoWikiOnly();
+    expect(
+      container.read(hoyowikiIndexProvider).lookupEntry('111'),
+      isNotNull,
+      reason: 'en-us entry 應已建立',
+    );
+
+    // 手動注入一個不在記錄中的 zh-tw 殘留 page
+    await indexNotifier.mergeEntry(
+      id: '111',
+      lang: 'zh-tw',
+      fetched: const HoYoWikiEntryFetched(
+        iconUrl: 'https://x/icon.png',
+        page: HoYoWikiPageData(gallery: null, desc: '繁中說明', tags: []),
+      ),
+    );
+    // 確認此時兩 lang 均在
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang
+          .keys
+          .toSet(),
+      containsAll(['en-us', 'zh-tw']),
+    );
+
+    // 執行 refreshAllHoYoWikiMetadata（含 pruneStaleLangs = true）
+    await notifier.refreshAllHoYoWikiMetadata();
+
+    // 殘留的 zh-tw 應被清除；en-us 仍在
+    final entry = container.read(hoyowikiIndexProvider).lookupEntry('111')!;
+    expect(
+      entry.pageByLang.containsKey('zh-tw'),
+      isFalse,
+      reason: '殘留的 zh-tw page 應被 pruneLanguages 清除',
+    );
+    expect(
+      entry.pageByLang.containsKey('en-us'),
+      isTrue,
+      reason: 'en-us page 應仍保留',
+    );
+  });
 }

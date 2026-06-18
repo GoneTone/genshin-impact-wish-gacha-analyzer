@@ -637,6 +637,7 @@ class GachaRepository extends Notifier<GachaState> {
         result = await _fetchHoYoWiki(
           cancellable.client,
           forceEntryRefetch: true,
+          pruneStaleLangs: true,
         );
       } catch (e, st) {
         _refreshMetaLog.warning('hoyowiki stage threw (ignored)', e, st);
@@ -1050,6 +1051,7 @@ class GachaRepository extends Notifier<GachaState> {
   Future<({int imagesDownloaded, int itemsRefreshed})> _fetchHoYoWiki(
     http.Client client, {
     bool forceEntryRefetch = false,
+    bool pruneStaleLangs = false,
   }) async {
     var downloaded = 0;
     final refreshedIds = <String>{};
@@ -1091,6 +1093,17 @@ class GachaRepository extends Notifier<GachaState> {
 
     // entryTodo 初始：走過所有 record lang+name，蒐集需要重抓的 (id, lang) pair
     final allLangs = uniquePairs.map((p) => p.$2).toSet();
+
+    // 針對性清理：移除已不再被任何記錄使用的語言殘留頁面（非破壞性，僅 index 內 pageByLang）。
+    // allLangs 為空（無記錄）時略過，避免誤清全部。
+    if (pruneStaleLangs && allLangs.isNotEmpty) {
+      await indexNotifier.pruneLanguages(allLangs);
+      if (!ref.mounted || _cancelTriggered) {
+        return (imagesDownloaded: 0, itemsRefreshed: 0);
+      }
+      index = ref.read(hoyowikiIndexProvider); // 重讀 prune 後的 index 快照
+    }
+
     final namesByLang = <String, Set<String>>{};
     for (final pair in uniquePairs) {
       namesByLang.putIfAbsent(pair.$2, () => {}).add(pair.$1);
