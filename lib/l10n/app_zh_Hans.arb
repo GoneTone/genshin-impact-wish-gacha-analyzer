@@ -507,7 +507,7 @@
   "@settingsRefreshItemDataTitle": {
     "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
   },
-  "settingsRefreshItemDataEmpty": "暂无祈愿记录，无法更新物品资料",
+  "settingsRefreshItemDataEmpty": "暂无卡池记录，无法更新物品资料",
   "@settingsRefreshItemDataEmpty": {
     "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
   },
