@@ -1158,6 +1158,8 @@ class GachaRepository extends Notifier<GachaState> {
                 id: hit.id,
                 menuId: hit.menuId,
               );
+              // 此處不需判 forceEntryRefetch：剛 search 命中的 id 其 entry 尚為 null，
+              // needRefetchEntry(null, ...) 必為 true，force 與非 force 行為一致。
               if (!entryTodo.contains((id: hit.id, lang: pair.$2)) &&
                   needRefetchEntry(
                     ref.read(hoyowikiIndexProvider).lookupEntry(hit.id),
@@ -1267,7 +1269,7 @@ class GachaRepository extends Notifier<GachaState> {
     return downloaded;
   }
 
-  /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
+  /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）；`forceEntryRefetch` 透傳給 [_fetchHoYoWiki]。
   ///
   /// WHY clearProgress：_fetchHoYoWiki 跑完後 state.progress 停留在最後一個
   /// FetchingHoYoWiki phase，若不清除，後續呼叫帶互斥檢查的 public method
