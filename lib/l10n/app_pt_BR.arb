@@ -499,6 +499,34 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+  "settingsItemData": "Dados de itens",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Reobter os detalhes mais recentes de todos os itens do HoYoWiki (descrições, listas de imagens, etc.), mantendo as imagens já baixadas. Novas imagens serão baixadas ao abrir os detalhes do item.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Atualizar dados de itens",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Sem registros de gacha ainda — nada para atualizar",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Atualizar dados de itens?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Isso irá conectar ao HoYoWiki para reobter os detalhes de todos os itens, o que pode demorar dependendo da quantidade. As imagens já baixadas serão mantidas e não serão apagadas.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Iniciar atualização",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
   "settingsImageCache": "Cache de imagens",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."

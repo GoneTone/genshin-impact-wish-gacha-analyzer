@@ -499,6 +499,34 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+  "settingsItemData": "ข้อมูลไอเทม",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "ดึงข้อมูลรายละเอียดล่าสุดของไอเทมทั้งหมดจาก HoYoWiki ใหม่อีกครั้ง (คำอธิบาย รายการรูปภาพ ฯลฯ) โดยคงรูปภาพที่ดาวน์โหลดไว้แล้ว รูปภาพใหม่จะถูกดาวน์โหลดเมื่อเปิดรายละเอียดไอเทม",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "อัปเดตข้อมูลไอเทม",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "ยังไม่มีประวัติการอธิษฐาน ไม่สามารถอัปเดตข้อมูลไอเทมได้",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "อัปเดตข้อมูลไอเทม?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "จะเชื่อมต่อ HoYoWiki เพื่อดึงข้อมูลรายละเอียดของไอเทมทั้งหมดใหม่อีกครั้ง อาจใช้เวลาสักครู่ขึ้นอยู่กับจำนวนไอเทม รูปภาพที่ดาวน์โหลดไว้แล้วจะถูกเก็บไว้และไม่ถูกลบ",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "เริ่มอัปเดต",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
   "settingsImageCache": "แคชรูปภาพ",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."

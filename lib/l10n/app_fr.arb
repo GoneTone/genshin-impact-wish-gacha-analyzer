@@ -499,6 +499,34 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+  "settingsItemData": "Données des objets",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Re-télécharger les dernières informations de tous les objets depuis HoYoWiki (descriptions, listes d'images, etc.), en conservant les images déjà téléchargées. Les nouvelles images seront téléchargées à l'ouverture des détails de l'objet.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Mettre à jour les données des objets",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Aucun historique de vœux — rien à mettre à jour",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Mettre à jour les données des objets ?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Ceci contactera HoYoWiki pour re-télécharger les détails de tous les objets, ce qui peut prendre un certain temps selon le nombre d'objets. Les images déjà téléchargées seront conservées et ne seront pas supprimées.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Lancer la mise à jour",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
   "settingsImageCache": "Cache d'images",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."

@@ -368,6 +368,35 @@
     "description": "Confirm button label in the refetch AlertDialog."
   },
 
+  "settingsItemData": "物品資料",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "從 HoYoWiki 重新抓取所有物品的最新詳細資料（描述、圖片清單等），保留已下載的圖片；新增的圖片會在你開啟該物品詳情時才下載。",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "更新物品資料",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "尚無卡池記錄，無法更新物品資料",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "更新物品資料？",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "將連線 HoYoWiki 重新抓取所有物品的詳細資料，依物品數量可能需要一段時間。已下載的圖片會保留，不會被清除。",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "開始更新",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+
   "settingsImageCache": "圖片快取",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."

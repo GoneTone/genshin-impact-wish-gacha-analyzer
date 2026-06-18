@@ -499,6 +499,34 @@
   "@confirmRefetchHoyoWikiConfirm": {
     "description": "Confirm button label in the refetch AlertDialog."
   },
+  "settingsItemData": "Dữ liệu vật phẩm",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Tải lại thông tin chi tiết mới nhất của tất cả vật phẩm từ HoYoWiki (mô tả, danh sách ảnh, v.v.), giữ nguyên ảnh đã tải. Ảnh mới sẽ được tải khi bạn mở chi tiết vật phẩm.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Cập nhật dữ liệu vật phẩm",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Chưa có lịch sử cầu nguyện, không thể cập nhật dữ liệu vật phẩm",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Cập nhật dữ liệu vật phẩm?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Thao tác này sẽ kết nối HoYoWiki để tải lại thông tin chi tiết của tất cả vật phẩm, có thể mất một lúc tuỳ vào số lượng. Ảnh đã tải sẽ được giữ nguyên, không bị xoá.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Bắt đầu cập nhật",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
   "settingsImageCache": "Bộ nhớ đệm hình ảnh",
   "@settingsImageCache": {
     "description": "Settings page section title for image cache controls."
