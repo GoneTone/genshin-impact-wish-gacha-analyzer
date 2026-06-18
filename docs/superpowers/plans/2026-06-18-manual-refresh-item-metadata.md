@@ -675,3 +675,28 @@ git commit -m "chore: finalize manual item metadata refresh"
 **Placeholder scan：** 無 TBD／TODO；每個 code step 含完整程式碼與 ARB JSON。
 
 **Type consistency：** `_fetchHoYoWiki(client, {bool forceEntryRefetch})`、`debugRunHoYoWikiOnly({bool forceEntryRefetch})`、`refreshAllHoYoWikiMetadata()`、`_ItemDataSection`、`l.settingsItemData` 等命名跨 Task 一致。`UpdateCompleted` 具名參數（`totalNewRecords`/`failedBanners`/`updatedAt`/`hoYoWikiImagesDownloaded`）沿用 `forceRefetchAllHoYoWikiImages` 既有用法。
+
+---
+
+## 實作後演進（驗收階段追加）
+
+> 本計畫的 Task 1-5 是原始範圍。實機驗收時依使用者回饋追加了下列任務；**最終出貨的完整設計以更新後的設計文件為準**（`docs/superpowers/specs/2026-06-18-manual-refresh-item-metadata-design.md`，已涵蓋以下全部）。此處僅記錄演進脈絡，方便對照 commit 歷史。
+
+- **完成訊息語意化**：原計畫直接沿用 `UpdateCompleted`，但其內容是祈願記錄語意（「新增 N 筆紀錄」），對 metadata 刷新不適當。改為：`_fetchHoYoWiki` 回傳型別由 `Future<int>` 改為 record `({int imagesDownloaded, int itemsRefreshed, int staleLangItemsPruned})`；`UpdateCompleted` 新增 `hoyoWikiEntriesRefreshed`（int?，metadata 流程判別）與 `hoyoWikiStaleItemsPruned`（int）；`UpdateProgressDialog._Body` 的 `UpdateCompleted` 分支改三路，metadata 分支顯示「已更新 M 個物品的資料」+ 條件式「補下載 N 張」+ 條件式「已清理 K 個物品的殘留語言資料」。
+- **殘留語言清理**：`_fetchHoYoWiki` 新增 `pruneStaleLangs` 旗標（`refreshAllHoYoWikiMetadata` 傳 true）；新增 `HoYoWikiIndexNotifier.pruneLanguages(Set<String> keepLangs) → Future<int>`，移除 index 中 `lang ∉ keepLangs` 的 `pageByLang`（保留 icon／searchMap／menuIds），空 keepLangs 與呼叫端 `allLangs.isNotEmpty` 雙重防呆，回傳清理到的相異物品數。
+- **新增 i18n key**：`progressDoneItemDataSummary`、`progressDoneItemDataImagesSummary`、`progressDoneItemDataPrunedSummary`（皆帶 `{count}` int placeholder），補進 zh template + 9 個已翻譯語系。
+
+**最終關鍵簽名（覆蓋上方原始 Task 描述）：**
+
+```dart
+// lib/state/gacha_repository.dart
+Future<({int imagesDownloaded, int itemsRefreshed, int staleLangItemsPruned})>
+    _fetchHoYoWiki(http.Client client, {bool forceEntryRefetch = false, bool pruneStaleLangs = false});
+
+// lib/state/hoyowiki_index.dart
+Future<int> pruneLanguages(Set<String> keepLangs); // 空集合回 0；回傳清理物品數
+
+// lib/state/update_progress.dart — UpdateCompleted 新增
+final int? hoyoWikiEntriesRefreshed; // 非 null = 更新物品資料流程；值為刷新物品數
+final int hoyoWikiStaleItemsPruned;  // 預設 0；清理殘留語言的物品數
+```
