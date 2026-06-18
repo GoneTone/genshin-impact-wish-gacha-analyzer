@@ -17,4 +17,30 @@ void main() {
       findsWidgets,
     );
   });
+
+  testWidgets('onLinkTap 已接上（callback 非 null）', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: AppHtml(data: 'see https://example.com')),
+      ),
+    );
+    final html = tester.widget<Html>(find.byType(Html));
+    expect(html.onLinkTap, isNotNull);
+  });
+
+  testWidgets('呼叫端 style 覆蓋預設 a 樣式', (tester) async {
+    final overrideAnchor = Style(color: Colors.red);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppHtml(
+            data: 'see https://example.com',
+            style: {'a': overrideAnchor},
+          ),
+        ),
+      ),
+    );
+    final html = tester.widget<Html>(find.byType(Html));
+    expect(identical(html.style['a'], overrideAnchor), isTrue);
+  });
 }
