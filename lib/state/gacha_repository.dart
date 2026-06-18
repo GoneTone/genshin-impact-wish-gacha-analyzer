@@ -975,8 +975,14 @@ class GachaRepository extends Notifier<GachaState> {
   /// 每筆獨立 try/catch：單筆失敗不終止整段。每筆完成更新 progress。整段失敗
   /// 不影響 `UpdateCompleted`。取消（`_cancelTriggered` 或 `!ref.mounted`）早退。
   ///
+  /// `forceEntryRefetch` 為 true 時，entry 階段強制納入所有已解析的 (id, lang)，
+  /// 用於設定頁手動更新物品資料。
+  ///
   /// 回傳本次成功寫入磁碟的圖片張數（icon + header 各算一張）。
-  Future<int> _fetchHoYoWiki(http.Client client) async {
+  Future<int> _fetchHoYoWiki(
+    http.Client client, {
+    bool forceEntryRefetch = false,
+  }) async {
     var downloaded = 0;
     final fetcher = ref.read(hoyowikiFetcherProvider);
     final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
@@ -1025,11 +1031,12 @@ class GachaRepository extends Notifier<GachaState> {
       for (final name in namesByLang[lang] ?? const <String>{}) {
         final id = index.lookupId(name: name, lang: lang);
         if (id == null) continue;
-        if (needRefetchEntry(
-          index.lookupEntry(id),
-          index.lookupMenuId(id),
-          lang,
-        )) {
+        if (forceEntryRefetch ||
+            needRefetchEntry(
+              index.lookupEntry(id),
+              index.lookupMenuId(id),
+              lang,
+            )) {
           entryTodo.add((id: id, lang: lang));
         }
       }
@@ -1201,11 +1208,14 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
   @visibleForTesting
-  Future<void> debugRunHoYoWikiOnly() async {
+  Future<void> debugRunHoYoWikiOnly({bool forceEntryRefetch = false}) async {
     _cancelTriggered = false;
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     try {
-      await _fetchHoYoWiki(cancellable.client);
+      await _fetchHoYoWiki(
+        cancellable.client,
+        forceEntryRefetch: forceEntryRefetch,
+      );
     } finally {
       cancellable.client.close();
     }

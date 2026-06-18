@@ -1070,4 +1070,114 @@ void main() {
     // 50 筆中只應 dispatch 少數幾筆（不可能 50 全跑）
     expect(dispatched.length, lessThan(10));
   });
+
+  test('forceEntryRefetch=true：已解析的 entry 仍重抓並更新 gallery', () async {
+    var entryCallCount = 0;
+    var galleryListLen = 1;
+    final apiClient = MockClient((req) async {
+      if (req.url.path.endsWith('/search')) {
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'list': [
+                {
+                  'name': 'Hu Tao',
+                  'entry_page_id': '111',
+                  'menu': {
+                    'sub_menus': [
+                      {'id': 2},
+                    ],
+                  },
+                },
+              ],
+            },
+          }),
+          200,
+        );
+      }
+      if (req.url.path.endsWith('/entry_page')) {
+        entryCallCount++;
+        return http.Response(
+          jsonEncode({
+            'retcode': 0,
+            'data': {
+              'page': {
+                'icon_url': 'https://x/icon.png',
+                'modules': [
+                  {
+                    'components': [
+                      {
+                        'component_id': 'gallery_character',
+                        'data': jsonEncode({
+                          'pic': '',
+                          'list': [
+                            for (var i = 0; i < galleryListLen; i++)
+                              {
+                                'id': 'g$i',
+                                'key': 'k$i',
+                                'img': 'https://x/g$i.png',
+                                'imgDesc': '',
+                              },
+                          ],
+                        }),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          }),
+          200,
+        );
+      }
+      return http.Response.bytes([1, 2, 3], 200);
+    });
+    final container = await setupContainer(apiClient: apiClient);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+
+    // 第一次增量抓取：entry 抓 1 次，gallery 1 張
+    await notifier.debugRunHoYoWikiOnly();
+    expect(entryCallCount, 1);
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang['en-us']!
+          .gallery!
+          .list
+          .length,
+      1,
+    );
+
+    // HoYoWiki 端新增一張 gallery 圖
+    galleryListLen = 2;
+
+    // 非 force：已抓過 → 不重抓，gallery 仍是舊的 1 張
+    await notifier.debugRunHoYoWikiOnly();
+    expect(entryCallCount, 1, reason: '非 force 模式不重抓已解析 entry');
+
+    // force：強制重抓 entry → gallery 更新為 2 張
+    await notifier.debugRunHoYoWikiOnly(forceEntryRefetch: true);
+    expect(entryCallCount, 2, reason: 'force 模式重抓已解析 entry');
+    expect(
+      container
+          .read(hoyowikiIndexProvider)
+          .lookupEntry('111')!
+          .pageByLang['en-us']!
+          .gallery!
+          .list
+          .length,
+      2,
+      reason: 'force 重抓後 mergeEntry 覆蓋 gallery，新圖出現',
+    );
+
+    // gallery 大圖不應被 eager 下載（維持 lazy）
+    final galleryFiles = tempDir
+        .listSync()
+        .whereType<File>()
+        .where((f) => RegExp(r'111_gallery_').hasMatch(f.path))
+        .toList();
+    expect(galleryFiles, isEmpty, reason: 'gallery 維持 lazy，不在更新流程下載');
+  });
 }
