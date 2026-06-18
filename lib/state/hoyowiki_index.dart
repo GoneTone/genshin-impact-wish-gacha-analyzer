@@ -116,6 +116,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   /// 記錄使用的語言殘留資料。只動 `pageByLang`；icon／searchMap／menuIds 皆不變。
   /// 有實際變動才 persist／emit；無變動為 no-op（避免無謂寫檔與 UI 重建）。
   Future<void> pruneLanguages(Set<String> keepLangs) async {
+    if (keepLangs.isEmpty) return; // 防呆：空 keepLangs 會清掉全部頁面，直接 no-op
     await _lock.synchronized(() async {
       var changed = false;
       final newEntries = <String, HoYoWikiEntry>{};

@@ -296,6 +296,8 @@ void main() {
         after.lookupEntry('888')!.iconUrl,
         before.lookupEntry('888')!.iconUrl,
       );
+      // 無變動時不應重建 index state
+      expect(identical(before, after), isTrue, reason: '無變動時不應重建 index');
     });
   });
 
