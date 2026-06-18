@@ -1180,4 +1180,75 @@ void main() {
         .toList();
     expect(galleryFiles, isEmpty, reason: 'gallery 維持 lazy，不在更新流程下載');
   });
+
+  test(
+    'refreshAllHoYoWikiMetadata：非破壞性重抓，保留 icon、emit UpdateCompleted',
+    () async {
+      var entryCallCount = 0;
+      var imageDownloadCount = 0;
+      final apiClient = MockClient((req) async {
+        if (req.url.path.endsWith('/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'list': [
+                  {
+                    'name': 'Hu Tao',
+                    'entry_page_id': '111',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (req.url.path.endsWith('/entry_page')) {
+          entryCallCount++;
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'page': {
+                  'icon_url': 'https://x/icon.png',
+                  'header_img_url': '',
+                },
+              },
+            }),
+            200,
+          );
+        }
+        imageDownloadCount++;
+        return http.Response.bytes([1, 2, 3], 200);
+      });
+      final container = await setupContainer(apiClient: apiClient);
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+
+      // 先增量抓一次：建立 index + icon 快取檔
+      await notifier.debugRunHoYoWikiOnly();
+      expect(entryCallCount, 1);
+      expect(imageDownloadCount, 1, reason: '第一次下 icon');
+      final iconFile = File('${tempDir.path}/111_icon.png');
+      expect(iconFile.existsSync(), isTrue);
+
+      // 非破壞性更新
+      await notifier.refreshAllHoYoWikiMetadata();
+
+      // entry 被強制重抓；icon 已在快取 → 不重下；icon 檔仍在（未被 wipe）
+      expect(entryCallCount, 2, reason: 'force 重抓 entry');
+      expect(imageDownloadCount, 1, reason: 'icon 已快取，缺才下 → 不重下');
+      expect(iconFile.existsSync(), isTrue, reason: '非破壞性：既有快取保留');
+
+      // 結束狀態為 UpdateCompleted
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isA<UpdateCompleted>(),
+      );
+    },
+  );
 }

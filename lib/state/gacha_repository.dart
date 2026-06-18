@@ -116,6 +116,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// Logger 實例（匯入流程，獨立子樹以利日誌過濾）。
   static final _importLog = Logger('gacha.import');
 
+  /// Logger 實例（非破壞性 metadata 更新流程）。
+  static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
+
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
 
@@ -593,6 +596,64 @@ class GachaRepository extends Notifier<GachaState> {
           failedBanners: const [],
           updatedAt: DateTime.now().toUtc(),
           hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
+        ),
+      );
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
+  /// 非破壞性更新所有物品的 HoYoWiki metadata（強制重抓已解析條目的 entry 階段）。
+  ///
+  /// 與 [forceRefetchAllHoYoWikiImages] 不同：**不** `resetAll()`，保留既有 index
+  /// 與快取圖。重抓後 [HoYoWikiIndexNotifier.mergeEntry] 覆蓋各 lang page，新增的
+  /// gallery 圖只更新 index、不在此下載（維持 lazy，由詳情頁開啟時補）；icon 僅在
+  /// 本地缺檔時才下載。
+  ///
+  /// 流程：互斥檢查 → emit `Preparing` → `_fetchHoYoWiki(forceEntryRefetch: true)`
+  /// → 依取消狀態 emit `UpdateCompleted` 或 `clearProgress`。
+  Future<void> refreshAllHoYoWikiMetadata() async {
+    if (state.progress != null) {
+      _refreshMetaLog.info('skip: another progress in-flight');
+      return;
+    }
+    if (_isUpdating) return;
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _refreshMetaLog.info('start, totalUids=${state.byUid.length}');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      var images = 0;
+      try {
+        images = await _fetchHoYoWiki(
+          cancellable.client,
+          forceEntryRefetch: true,
+        );
+      } catch (e, st) {
+        _refreshMetaLog.warning('hoyowiki stage threw (ignored)', e, st);
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _refreshMetaLog.warning('cancelled');
+        state = state.copyWith(clearProgress: true);
+        return;
+      }
+
+      _refreshMetaLog.info('done, images=$images');
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: images,
         ),
       );
     } finally {
@@ -1207,6 +1268,10 @@ class GachaRepository extends Notifier<GachaState> {
   }
 
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）。
+  ///
+  /// WHY clearProgress：_fetchHoYoWiki 跑完後 state.progress 停留在最後一個
+  /// FetchingHoYoWiki phase，若不清除，後續呼叫帶互斥檢查的 public method
+  ///（例如 [refreshAllHoYoWikiMetadata]）會因 progress != null 而直接跳過。
   @visibleForTesting
   Future<void> debugRunHoYoWikiOnly({bool forceEntryRefetch = false}) async {
     _cancelTriggered = false;
@@ -1218,6 +1283,7 @@ class GachaRepository extends Notifier<GachaState> {
       );
     } finally {
       cancellable.client.close();
+      if (ref.mounted) state = state.copyWith(clearProgress: true);
     }
   }
 
