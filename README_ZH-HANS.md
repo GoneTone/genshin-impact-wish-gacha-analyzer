@@ -1,6 +1,6 @@
 # 原神祈愿卡池分析 Genshin Impact Wish Gacha Analyzer
 
-[繁體中文](README.md) | 简体中文 | [English](README_EN.md)
+[繁體中文](README.md) | 简体中文 | [English](README_EN.md) | [日本語](README_JA-JP.md)
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
