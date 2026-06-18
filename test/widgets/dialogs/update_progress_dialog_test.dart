@@ -98,7 +98,7 @@ void main() {
     );
 
     expect(find.textContaining('已清理'), findsOneWidget);
-    expect(find.textContaining('2'), findsWidgets);
+    expect(find.textContaining('已清理 2'), findsOneWidget);
   });
 
   testWidgets('hoyoWikiStaleItemsPruned=0：不顯示已清理字樣', (tester) async {
