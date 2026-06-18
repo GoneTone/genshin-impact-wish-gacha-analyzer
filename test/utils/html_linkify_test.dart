@@ -38,6 +38,12 @@ void main() {
       expect(out, contains('</a>。'));
     });
 
+    test('連續尾端標點全部剝除', () {
+      final out = linkifyHtml('see https://foo.com).');
+      expect(out, contains('<a href="https://foo.com">https://foo.com</a>'));
+      expect(out, contains('</a>).'));
+    });
+
     test('既有 <a href> 不被改、不雙重包覆', () {
       final out = linkifyHtml('<a href="https://x.com">link</a>');
       expect(out, contains('<a href="https://x.com">link</a>'));

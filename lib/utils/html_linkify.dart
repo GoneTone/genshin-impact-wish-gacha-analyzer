@@ -60,7 +60,10 @@ List<Node>? _linkifyText(String text) {
       url = url.substring(0, url.length - 1);
       end--;
     }
-    if (url.isEmpty) continue;
+    if (url.isEmpty) {
+      last = m.end;
+      continue;
+    }
     if (m.start > last) nodes.add(Text(text.substring(last, m.start)));
     nodes.add(
       Element.tag('a')
