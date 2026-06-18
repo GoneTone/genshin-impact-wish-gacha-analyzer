@@ -451,7 +451,8 @@ class GachaRepository extends Notifier<GachaState> {
     // HoYoWiki 補圖階段（best-effort，不影響 UpdateCompleted）
     var hoYoWikiImagesDownloaded = 0;
     try {
-      hoYoWikiImagesDownloaded = await _fetchHoYoWiki(client);
+      final result = await _fetchHoYoWiki(client);
+      hoYoWikiImagesDownloaded = result.imagesDownloaded;
     } catch (e, st) {
       _log.warning('hoyowiki stage threw (ignored)', e, st);
     }
@@ -577,7 +578,8 @@ class GachaRepository extends Notifier<GachaState> {
 
       var hoYoWikiImagesDownloaded = 0;
       try {
-        hoYoWikiImagesDownloaded = await _fetchHoYoWiki(cancellable.client);
+        final result = await _fetchHoYoWiki(cancellable.client);
+        hoYoWikiImagesDownloaded = result.imagesDownloaded;
       } catch (e, st) {
         _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
@@ -630,9 +632,9 @@ class GachaRepository extends Notifier<GachaState> {
     state = state.copyWith(progress: const Preparing());
 
     try {
-      var images = 0;
+      var result = (imagesDownloaded: 0, itemsRefreshed: 0);
       try {
-        images = await _fetchHoYoWiki(
+        result = await _fetchHoYoWiki(
           cancellable.client,
           forceEntryRefetch: true,
         );
@@ -647,13 +649,16 @@ class GachaRepository extends Notifier<GachaState> {
         return;
       }
 
-      _refreshMetaLog.info('done, images=$images');
+      _refreshMetaLog.info(
+        'done, images=${result.imagesDownloaded} items=${result.itemsRefreshed}',
+      );
       state = state.copyWith(
         progress: UpdateCompleted(
           totalNewRecords: 0,
           failedBanners: const [],
           updatedAt: DateTime.now().toUtc(),
-          hoYoWikiImagesDownloaded: images,
+          hoYoWikiImagesDownloaded: result.imagesDownloaded,
+          hoyoWikiEntriesRefreshed: result.itemsRefreshed,
         ),
       );
     } finally {
@@ -699,7 +704,8 @@ class GachaRepository extends Notifier<GachaState> {
 
       var images = 0;
       try {
-        images = await _fetchHoYoWiki(cancellable.client);
+        final fetchResult = await _fetchHoYoWiki(cancellable.client);
+        images = fetchResult.imagesDownloaded;
       } catch (e, st) {
         _importLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
@@ -1039,12 +1045,14 @@ class GachaRepository extends Notifier<GachaState> {
   /// `forceEntryRefetch` 為 true 時，entry 階段強制納入所有已解析的 (id, lang)，
   /// 用於設定頁手動更新物品資料。
   ///
-  /// 回傳本次成功寫入磁碟的圖片張數（icon + header 各算一張）。
-  Future<int> _fetchHoYoWiki(
+  /// 回傳本次成功寫入磁碟的圖片張數（`imagesDownloaded`）及成功刷新 metadata
+  /// 的相異物品數（`itemsRefreshed`）。
+  Future<({int imagesDownloaded, int itemsRefreshed})> _fetchHoYoWiki(
     http.Client client, {
     bool forceEntryRefetch = false,
   }) async {
     var downloaded = 0;
+    final refreshedIds = <String>{};
     final fetcher = ref.read(hoyowikiFetcherProvider);
     final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
     final cacheDir = ref.read(hoyowikiCacheDirProvider);
@@ -1133,7 +1141,12 @@ class GachaRepository extends Notifier<GachaState> {
     // 三段加起來都沒工作就直接結束。
     final totalInitial =
         searchTodo.length + entryTodo.length + downloadTodo.length;
-    if (totalInitial == 0) return downloaded;
+    if (totalInitial == 0) {
+      return (
+        imagesDownloaded: downloaded,
+        itemsRefreshed: refreshedIds.length,
+      );
+    }
 
     bool isAborted() => !ref.mounted || _cancelTriggered;
 
@@ -1183,7 +1196,12 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+        );
+      }
     }
 
     // (2) entry 階段
@@ -1206,6 +1224,7 @@ class GachaRepository extends Notifier<GachaState> {
               lang: pair.lang,
               fetched: fetched,
             );
+            refreshedIds.add(pair.id);
             // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
             final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
@@ -1225,7 +1244,12 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+        );
+      }
     }
 
     // (3) download 階段
@@ -1264,9 +1288,14 @@ class GachaRepository extends Notifier<GachaState> {
           );
         },
       );
-      if (isAborted()) return downloaded;
+      if (isAborted()) {
+        return (
+          imagesDownloaded: downloaded,
+          itemsRefreshed: refreshedIds.length,
+        );
+      }
     }
-    return downloaded;
+    return (imagesDownloaded: downloaded, itemsRefreshed: refreshedIds.length);
   }
 
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）；`forceEntryRefetch` 透傳給 [_fetchHoYoWiki]。

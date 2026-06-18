@@ -1249,6 +1249,112 @@ void main() {
         container.read(gachaRepositoryProvider).progress,
         isA<UpdateCompleted>(),
       );
+
+      // hoyoWikiEntriesRefreshed 應為 1（Hu Tao，相異物品數）
+      final done =
+          container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+      expect(done.hoyoWikiEntriesRefreshed, 1);
+      expect(done.hoYoWikiImagesDownloaded, 0, reason: 'icon 已快取，不重下');
+    },
+  );
+
+  test(
+    'refreshAllHoYoWikiMetadata：同 id 兩 lang → hoyoWikiEntriesRefreshed 為 1（相異 id，非 lang 配對數）',
+    () async {
+      var entryCallCount = 0;
+      final apiClient = MockClient((req) async {
+        if (req.url.path.endsWith('/search')) {
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'list': [
+                  {
+                    'name': req.url.queryParameters['keyword'],
+                    'entry_page_id': '111',
+                    'menu': {
+                      'sub_menus': [
+                        {'id': 2},
+                      ],
+                    },
+                  },
+                ],
+              },
+            }),
+            200,
+          );
+        }
+        if (req.url.path.endsWith('/entry_page')) {
+          entryCallCount++;
+          return http.Response(
+            jsonEncode({
+              'retcode': 0,
+              'data': {
+                'page': {
+                  'icon_url': 'https://x/icon.png',
+                  'header_img_url': '',
+                },
+              },
+            }),
+            200,
+          );
+        }
+        return http.Response.bytes([1, 2, 3], 200);
+      });
+
+      // 兩筆 record：同 name（Hu Tao）不同 lang
+      tempDir = await Directory.systemTemp.createTemp('gacha_hoyowiki_2lang_');
+      SharedPreferences.setMockInitialValues({});
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 6, 18),
+          banners: {
+            '301': [
+              _rec(id: '1', name: 'Hu Tao', gachaType: '301', lang: 'zh-tw'),
+              _rec(id: '2', name: 'Hu Tao', gachaType: '301', lang: 'en-us'),
+            ],
+            '302': [],
+            '500': [],
+            '200': [],
+            '100': [],
+            '2000': [],
+            '1000': [],
+          },
+        ),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          hoyowikiIndexStorageProvider.overrideWithValue(
+            HoYoWikiIndexStorage(tempDir),
+          ),
+          hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+          hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(client: apiClient, cancel: () {}),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(() async {
+        if (await tempDir.exists()) await tempDir.delete(recursive: true);
+      });
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container.read(hoyowikiIndexProvider.notifier).waitForLoad();
+
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .refreshAllHoYoWikiMetadata();
+
+      // 兩 lang 各一次 entry 請求
+      expect(entryCallCount, 2, reason: '同 id 兩 lang 各發一次 entry_page');
+
+      final done =
+          container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+      // 雖然 entry 階段處理了 2 個 (id, lang) 配對，相異 id 只有 1 個
+      expect(done.hoyoWikiEntriesRefreshed, 1, reason: '相異 id 只有 1 個');
     },
   );
 }
