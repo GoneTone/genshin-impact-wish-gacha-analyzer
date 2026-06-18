@@ -37,14 +37,7 @@ class _AppLinkState extends State<AppLink> {
   bool _hovering = false;
 
   /// 解析並開啟 [widget.url]；URL 無效時記錄 warning。
-  Future<void> _handleTap() async {
-    final uri = Uri.tryParse(widget.url);
-    if (uri == null) {
-      Logger('ui.link').warning('AppLink: invalid url "${widget.url}"');
-      return;
-    }
-    await openExternalUrl(uri);
-  }
+  Future<void> _handleTap() => openExternalUrlString(widget.url);
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +58,19 @@ class _AppLinkState extends State<AppLink> {
       ),
     );
   }
+}
+
+/// 解析 [url] 並以系統瀏覽器開啟；[url] 為 null 或無法解析時記 warning 並靜默返回。
+///
+/// 供 [AppLink] 與 flutter_html 的 `onLinkTap`（其回傳可能為 null）共用，統一
+/// 「字串 → Uri → 開啟」的解析與防呆。
+Future<void> openExternalUrlString(String? url) async {
+  final uri = url == null ? null : Uri.tryParse(url);
+  if (uri == null) {
+    Logger('ui.link').warning('openExternalUrlString: invalid url "$url"');
+    return;
+  }
+  await openExternalUrl(uri);
 }
 
 /// 以系統瀏覽器開啟 [uri]；無法啟動時記錄 warning 並靜默返回。
