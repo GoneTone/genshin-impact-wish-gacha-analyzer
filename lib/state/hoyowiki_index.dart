@@ -115,10 +115,12 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   /// 移除所有 entry 中 lang ∉ [keepLangs] 的 `pageByLang` 條目，清理已不再被任何
   /// 記錄使用的語言殘留資料。只動 `pageByLang`；icon／searchMap／menuIds 皆不變。
   /// 有實際變動才 persist／emit；無變動為 no-op（避免無謂寫檔與 UI 重建）。
-  Future<void> pruneLanguages(Set<String> keepLangs) async {
-    if (keepLangs.isEmpty) return; // 防呆：空 keepLangs 會清掉全部頁面，直接 no-op
-    await _lock.synchronized(() async {
-      var changed = false;
+  /// 回傳 `pageByLang` 被縮減（至少移除一個 lang）的相異物品數；無變動或 empty
+  /// guard 觸發時回傳 `0`。
+  Future<int> pruneLanguages(Set<String> keepLangs) async {
+    if (keepLangs.isEmpty) return 0; // 防呆：空 keepLangs 會清掉全部頁面，直接 no-op
+    return _lock.synchronized(() async {
+      var prunedCount = 0;
       final newEntries = <String, HoYoWikiEntry>{};
       for (final e in state.entries.entries) {
         final entry = e.value;
@@ -127,7 +129,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
             if (keepLangs.contains(p.key)) p.key: p.value,
         };
         if (keptPages.length != entry.pageByLang.length) {
-          changed = true;
+          prunedCount++;
           newEntries[e.key] = HoYoWikiEntry(
             iconUrl: entry.iconUrl,
             pageByLang: keptPages,
@@ -137,7 +139,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
           newEntries[e.key] = entry;
         }
       }
-      if (!changed) return;
+      if (prunedCount == 0) return 0;
       final next = HoYoWikiIndex(
         searchMap: state.searchMap,
         entries: newEntries,
@@ -145,8 +147,9 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
       );
       await _saveAndEmit(next);
       _log.info(
-        'pruneLanguages: keep=${keepLangs.length} langs, pruned stale pages',
+        'pruneLanguages: keep=${keepLangs.length} langs, pruned=$prunedCount items',
       );
+      return prunedCount;
     });
   }
 

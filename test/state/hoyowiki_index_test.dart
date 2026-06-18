@@ -264,8 +264,9 @@ void main() {
         {'zh-tw', 'en-us'},
       );
 
-      // pruneLanguages 只保留 zh-tw
-      await notifier.pruneLanguages({'zh-tw'});
+      // pruneLanguages 只保留 zh-tw → 回傳 1（1 個物品被清理）
+      final pruned = await notifier.pruneLanguages({'zh-tw'});
+      expect(pruned, 1);
 
       final entry = container.read(hoyowikiIndexProvider).lookupEntry('999')!;
       expect(entry.pageByLang.keys.toSet(), {'zh-tw'});
@@ -286,8 +287,9 @@ void main() {
       );
       final before = container.read(hoyowikiIndexProvider);
 
-      // keepLangs 為超集（包含比實際存在更多的 lang）
-      await notifier.pruneLanguages({'zh-tw', 'en-us'});
+      // keepLangs 為超集（包含比實際存在更多的 lang）→ 回傳 0（無物品被清理）
+      final pruned = await notifier.pruneLanguages({'zh-tw', 'en-us'});
+      expect(pruned, 0);
 
       final after = container.read(hoyowikiIndexProvider);
       // 無實際變動 → entry 內容不變
@@ -298,6 +300,31 @@ void main() {
       );
       // 無變動時不應重建 index state
       expect(identical(before, after), isTrue, reason: '無變動時不應重建 index');
+    });
+
+    test('空 keepLangs 為 no-op，回傳 0', () async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await notifier.mergeEntry(
+        id: '777',
+        lang: 'zh-tw',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://x/icon.png',
+          page: HoYoWikiPageData(gallery: null, desc: '內容', tags: []),
+        ),
+      );
+      final before = container.read(hoyowikiIndexProvider);
+
+      // 空 keepLangs → no-op，回傳 0
+      final pruned = await notifier.pruneLanguages({});
+      expect(pruned, 0);
+
+      // state 應未變動
+      final after = container.read(hoyowikiIndexProvider);
+      expect(
+        identical(before, after),
+        isTrue,
+        reason: '空 keepLangs 不應變動 index',
+      );
     });
   });
 

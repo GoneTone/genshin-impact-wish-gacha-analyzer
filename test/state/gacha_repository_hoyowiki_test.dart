@@ -1443,5 +1443,10 @@ void main() {
       isTrue,
       reason: 'en-us page 應仍保留',
     );
+
+    // UpdateCompleted 應帶 hoyoWikiStaleItemsPruned = 1（id '111' 被清理了 zh-tw）
+    final done =
+        container.read(gachaRepositoryProvider).progress as UpdateCompleted;
+    expect(done.hoyoWikiStaleItemsPruned, 1, reason: '1 個物品（id 111）有殘留語言被清理');
   });
 }

@@ -632,7 +632,11 @@ class GachaRepository extends Notifier<GachaState> {
     state = state.copyWith(progress: const Preparing());
 
     try {
-      var result = (imagesDownloaded: 0, itemsRefreshed: 0);
+      var result = (
+        imagesDownloaded: 0,
+        itemsRefreshed: 0,
+        staleLangItemsPruned: 0,
+      );
       try {
         result = await _fetchHoYoWiki(
           cancellable.client,
@@ -651,7 +655,8 @@ class GachaRepository extends Notifier<GachaState> {
       }
 
       _refreshMetaLog.info(
-        'done, images=${result.imagesDownloaded} items=${result.itemsRefreshed}',
+        'done, images=${result.imagesDownloaded} items=${result.itemsRefreshed} '
+        'stalePruned=${result.staleLangItemsPruned}',
       );
       state = state.copyWith(
         progress: UpdateCompleted(
@@ -660,6 +665,7 @@ class GachaRepository extends Notifier<GachaState> {
           updatedAt: DateTime.now().toUtc(),
           hoYoWikiImagesDownloaded: result.imagesDownloaded,
           hoyoWikiEntriesRefreshed: result.itemsRefreshed,
+          hoyoWikiStaleItemsPruned: result.staleLangItemsPruned,
         ),
       );
     } finally {
@@ -1046,15 +1052,18 @@ class GachaRepository extends Notifier<GachaState> {
   /// `forceEntryRefetch` 為 true 時，entry 階段強制納入所有已解析的 (id, lang)，
   /// 用於設定頁手動更新物品資料。
   ///
-  /// 回傳本次成功寫入磁碟的圖片張數（`imagesDownloaded`）及成功刷新 metadata
-  /// 的相異物品數（`itemsRefreshed`）。
-  Future<({int imagesDownloaded, int itemsRefreshed})> _fetchHoYoWiki(
+  /// 回傳本次成功寫入磁碟的圖片張數（`imagesDownloaded`）、成功刷新 metadata
+  /// 的相異物品數（`itemsRefreshed`），以及 `pageByLang` 被縮減的相異物品數
+  /// （`staleLangItemsPruned`）。
+  Future<({int imagesDownloaded, int itemsRefreshed, int staleLangItemsPruned})>
+  _fetchHoYoWiki(
     http.Client client, {
     bool forceEntryRefetch = false,
     bool pruneStaleLangs = false,
   }) async {
     var downloaded = 0;
     final refreshedIds = <String>{};
+    var staleLangItemsPruned = 0;
     final fetcher = ref.read(hoyowikiFetcherProvider);
     final indexNotifier = ref.read(hoyowikiIndexProvider.notifier);
     final cacheDir = ref.read(hoyowikiCacheDirProvider);
@@ -1097,9 +1106,13 @@ class GachaRepository extends Notifier<GachaState> {
     // 針對性清理：移除已不再被任何記錄使用的語言殘留頁面（非破壞性，僅 index 內 pageByLang）。
     // allLangs 為空（無記錄）時略過，避免誤清全部。
     if (pruneStaleLangs && allLangs.isNotEmpty) {
-      await indexNotifier.pruneLanguages(allLangs);
+      staleLangItemsPruned = await indexNotifier.pruneLanguages(allLangs);
       if (!ref.mounted || _cancelTriggered) {
-        return (imagesDownloaded: 0, itemsRefreshed: 0);
+        return (
+          imagesDownloaded: 0,
+          itemsRefreshed: 0,
+          staleLangItemsPruned: staleLangItemsPruned,
+        );
       }
       index = ref.read(hoyowikiIndexProvider); // 重讀 prune 後的 index 快照
     }
@@ -1158,6 +1171,7 @@ class GachaRepository extends Notifier<GachaState> {
       return (
         imagesDownloaded: downloaded,
         itemsRefreshed: refreshedIds.length,
+        staleLangItemsPruned: staleLangItemsPruned,
       );
     }
 
@@ -1213,6 +1227,7 @@ class GachaRepository extends Notifier<GachaState> {
         return (
           imagesDownloaded: downloaded,
           itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
         );
       }
     }
@@ -1261,6 +1276,7 @@ class GachaRepository extends Notifier<GachaState> {
         return (
           imagesDownloaded: downloaded,
           itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
         );
       }
     }
@@ -1305,10 +1321,15 @@ class GachaRepository extends Notifier<GachaState> {
         return (
           imagesDownloaded: downloaded,
           itemsRefreshed: refreshedIds.length,
+          staleLangItemsPruned: staleLangItemsPruned,
         );
       }
     }
-    return (imagesDownloaded: downloaded, itemsRefreshed: refreshedIds.length);
+    return (
+      imagesDownloaded: downloaded,
+      itemsRefreshed: refreshedIds.length,
+      staleLangItemsPruned: staleLangItemsPruned,
+    );
   }
 
   /// 測試用：略過 banner fetch 直接跑 hoyowiki 階段（用既有 state.byUid）；`forceEntryRefetch` 透傳給 [_fetchHoYoWiki]。

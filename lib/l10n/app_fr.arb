@@ -221,6 +221,15 @@
       }
     }
   },
+  "progressDoneItemDataPrunedSummary": "Données de langue obsolètes nettoyées pour {count} objets",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ Échec partiel : {names}",
   "@progressPartialFailed": {
     "placeholders": {

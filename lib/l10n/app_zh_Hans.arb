@@ -217,6 +217,15 @@
       }
     }
   },
+  "progressDoneItemDataPrunedSummary": "已清理 {count} 个物品的残留语言数据",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressPartialFailed": "⚠ 部分失败：{names}",
   "@progressPartialFailed": {
     "placeholders": {

@@ -83,4 +83,37 @@ void main() {
       expect(find.textContaining('新增'), findsNothing);
     },
   );
+
+  testWidgets('hoyoWikiStaleItemsPruned=2：顯示已清理殘留語言提醒行', (tester) async {
+    await pumpDialog(
+      tester,
+      completed: UpdateCompleted(
+        totalNewRecords: 0,
+        failedBanners: const [],
+        updatedAt: fixedDate,
+        hoYoWikiImagesDownloaded: 0,
+        hoyoWikiEntriesRefreshed: 5,
+        hoyoWikiStaleItemsPruned: 2,
+      ),
+    );
+
+    expect(find.textContaining('已清理'), findsOneWidget);
+    expect(find.textContaining('2'), findsWidgets);
+  });
+
+  testWidgets('hoyoWikiStaleItemsPruned=0：不顯示已清理字樣', (tester) async {
+    await pumpDialog(
+      tester,
+      completed: UpdateCompleted(
+        totalNewRecords: 0,
+        failedBanners: const [],
+        updatedAt: fixedDate,
+        hoYoWikiImagesDownloaded: 0,
+        hoyoWikiEntriesRefreshed: 5,
+        hoyoWikiStaleItemsPruned: 0,
+      ),
+    );
+
+    expect(find.textContaining('已清理'), findsNothing);
+  });
 }

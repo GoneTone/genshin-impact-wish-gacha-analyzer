@@ -240,6 +240,7 @@ class _Body extends StatelessWidget {
         :final hoYoWikiImagesDownloaded,
         :final importSummary,
         :final hoyoWikiEntriesRefreshed,
+        :final hoyoWikiStaleItemsPruned,
       ) =>
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -261,6 +262,12 @@ class _Body extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   l.progressDoneItemDataImagesSummary(hoYoWikiImagesDownloaded),
+                ),
+              ],
+              if (hoyoWikiStaleItemsPruned > 0) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l.progressDoneItemDataPrunedSummary(hoyoWikiStaleItemsPruned),
                 ),
               ],
             ] else ...[
