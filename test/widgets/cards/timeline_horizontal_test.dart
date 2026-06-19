@@ -325,7 +325,7 @@ void main() {
     },
   );
 
-  testWidgets('橫向節點 tooltip 顯示 名稱 · 分級 · N 抽', (tester) async {
+  testWidgets('橫向節點 tooltip 僅顯示物品名稱（不含分級／抽數）', (tester) async {
     final entry = TimelineEntry(
       name: '魈',
       gachaType: '301',
@@ -336,8 +336,11 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineHorizontal)),
     )!;
-    final expected = '魈 · ${l.luckTierUnlucky} · ${l.timelineSinceLast(85)}';
-    expect(find.byTooltip(expected), findsOneWidget);
+    expect(find.byTooltip('魈'), findsOneWidget);
+    expect(
+      find.byTooltip('魈 · ${l.luckTierUnlucky} · ${l.timelineSinceLast(85)}'),
+      findsNothing,
+    );
   });
 
   testWidgets('跨月顯示年/月標籤', (tester) async {

@@ -768,7 +768,7 @@ void main() {
     },
   );
 
-  testWidgets('節點 tooltip 顯示 名稱 · 分級 · N 抽', (tester) async {
+  testWidgets('節點 tooltip 僅顯示物品名稱（不含分級／抽數）', (tester) async {
     final entry = TimelineEntry(
       name: '刻晴',
       gachaType: '301', // 90 池
@@ -779,8 +779,11 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
-    final expected = '刻晴 · ${l.luckTierLucky} · ${l.timelineSinceLast(40)}';
-    expect(find.byTooltip(expected), findsWidgets);
+    expect(find.byTooltip('刻晴'), findsWidgets);
+    expect(
+      find.byTooltip('刻晴 · ${l.luckTierLucky} · ${l.timelineSinceLast(40)}'),
+      findsNothing,
+    );
   });
 
   testWidgets('showLuckLegend 時顯示圖例', (tester) async {

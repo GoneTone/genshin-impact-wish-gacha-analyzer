@@ -434,11 +434,9 @@ class _EntryRow extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
           ),
-          // 節點圓 (tooltip 顯示名稱 · 分級 · N 抽)
+          // 節點圓 (tooltip 僅顯示物品名稱)
           Tooltip(
-            message:
-                '${entry.name} · ${luckTierLabel(tier, l)} · '
-                '${l.timelineSinceLast(entry.pullsSincePrev)}',
+            message: entry.name,
             preferBelow: false,
             waitDuration: const Duration(milliseconds: 100),
             child: SizedBox(
