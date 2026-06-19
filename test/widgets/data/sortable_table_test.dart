@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
@@ -52,6 +53,48 @@ ProviderContainer _makeContainer(Directory tempDir) => ProviderContainer(
     hoyowikiCacheDirProvider.overrideWithValue(tempDir),
   ],
 );
+
+/// 建立指定欄位的 [RecordRow]（直接構造，略過 [buildRecordRows] 累計邏輯）。
+RecordRow makeRow({
+  required String gachaType,
+  required int rankType,
+  required int mainPityIndex,
+  int totalIndex = 1,
+}) => RecordRow(
+  record: GachaRecord(
+    id: '1',
+    uid: '1',
+    gachaType: gachaType,
+    name: 'TestItem',
+    itemType: '角色',
+    rankType: rankType,
+    time: DateTime(2025, 1, 1),
+    lang: 'zh-tw',
+  ),
+  totalIndex: totalIndex,
+  mainPityIndex: mainPityIndex,
+  itemTypeKey: 'kind:character',
+);
+
+/// 將 [SortableTable] 搭配給定的 [rows] 和 [mainRank] pump 進測試環境。
+Future<void> pumpSortableTable(
+  WidgetTester tester, {
+  required List<RecordRow> rows,
+  required int mainRank,
+  required ProviderContainer container,
+}) async {
+  await tester.pumpWidget(
+    _wrap(
+      SortableTable(
+        rows: rows,
+        sort: null,
+        mainRank: mainRank,
+        onSortColumnTapped: (_) {},
+      ),
+      container: container,
+    ),
+  );
+}
 
 void main() {
   late Directory tempDir;
@@ -243,5 +286,18 @@ void main() {
 
     // 三筆 record → 三個 GachaItemIcon
     expect(find.byType(GachaItemIcon), findsNWidgets(3));
+  });
+
+  testWidgets('保底內欄依抽數呈歐非色', (tester) async {
+    // 角色池（301）5★：85 抽 → 85/90 ≈ 0.944 > 0.8 → 非（stateDanger）
+    await pumpSortableTable(
+      tester,
+      rows: [makeRow(gachaType: '301', rankType: 5, mainPityIndex: 85)],
+      mainRank: 5,
+      container: container,
+    );
+    final tokens = buildDarkTheme().gacha;
+    final text = tester.widget<Text>(find.text('85'));
+    expect(text.style?.color, tokens.stateDanger);
   });
 }

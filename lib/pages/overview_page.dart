@@ -433,6 +433,7 @@ class _OverviewSection extends StatelessWidget {
           targetRank: timelineRank,
           nowPulls: timelineNowPulls,
           isAcrossBanners: true,
+          showLuckLegend: true,
         ),
       ],
     );

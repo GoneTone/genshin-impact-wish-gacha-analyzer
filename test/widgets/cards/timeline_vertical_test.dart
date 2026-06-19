@@ -36,6 +36,28 @@ Widget _wrap(Widget Function(BuildContext, BannerColors) build) => MaterialApp(
   ),
 );
 
+/// pump helper：封裝 [TimelineVertical] 所有常用參數，方便新測試用單行建立。
+Future<void> pumpTimelineVertical(
+  WidgetTester tester, {
+  required List<TimelineEntry> entries,
+  required int targetRank,
+  int? nowPulls,
+  bool showLuckLegend = false,
+}) async {
+  await tester.pumpWidget(
+    _wrap(
+      (ctx, colors) => TimelineVertical(
+        entries: entries,
+        colors: colors,
+        targetRank: targetRank,
+        nowPulls: nowPulls,
+        showLuckLegend: showLuckLegend,
+      ),
+    ),
+  );
+  await tester.pump();
+}
+
 void main() {
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await tester.pumpWidget(
@@ -745,4 +767,36 @@ void main() {
       expect(find.text('夜蘭'), findsNWidgets(2));
     },
   );
+
+  testWidgets('節點 tooltip 僅顯示物品名稱（不含分級／抽數）', (tester) async {
+    final entry = TimelineEntry(
+      name: '刻晴',
+      gachaType: '301', // 90 池
+      time: DateTime(2026, 6, 1),
+      pullsSincePrev: 40, // 40/90 ≈ 0.44 → 歐
+    );
+    await pumpTimelineVertical(tester, entries: [entry], targetRank: 5);
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineVertical)),
+    )!;
+    expect(find.byTooltip('刻晴'), findsWidgets);
+    expect(
+      find.byTooltip('刻晴 · ${l.luckTierLucky} · ${l.timelineSinceLast(40)}'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('showLuckLegend 時顯示圖例', (tester) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: const [],
+      targetRank: 5,
+      nowPulls: 10,
+      showLuckLegend: true,
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineVertical)),
+    )!;
+    expect(find.text(l.luckTierLucky), findsOneWidget);
+  });
 }

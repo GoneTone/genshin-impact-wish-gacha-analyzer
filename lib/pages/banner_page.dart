@@ -16,7 +16,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
@@ -32,6 +31,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
@@ -285,12 +285,12 @@ class BannerPage extends ConsumerWidget {
                         _countAtRank(stats, primary.rank),
                       ),
                       icon: Icons.timeline,
+                      legend: const LuckLegend(),
                       chart: TimelineHorizontal(
                         entries: buildTimelineEntries(
                           records,
                           targetRank: primary.rank,
                         ),
-                        colors: BannerColors.of(Theme.of(context).brightness),
                         targetRank: primary.rank,
                         nowPulls: pullsSinceLastRanked(
                           records,

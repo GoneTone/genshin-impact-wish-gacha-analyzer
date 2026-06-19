@@ -960,5 +960,9 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "luckTierLucky": "May mắn",
+  "luckTierAverage": "Bình thường",
+  "luckTierUnlucky": "Kém may"
 }

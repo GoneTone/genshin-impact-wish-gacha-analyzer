@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
@@ -9,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_palette.dart';
 
 /// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
@@ -109,6 +111,7 @@ class _SortableTableState extends State<SortableTable> {
                   theme: theme,
                   tokens: tokens,
                   l: l,
+                  mainRank: widget.mainRank,
                 ),
             ],
           ),
@@ -335,6 +338,7 @@ class _Row extends StatelessWidget {
     required this.theme,
     required this.tokens,
     required this.l,
+    required this.mainRank,
   });
 
   /// 祈願記錄資料。
@@ -352,9 +356,19 @@ class _Row extends StatelessWidget {
   /// 國際化字串。
   final AppLocalizations l;
 
+  /// 該卡池主稀有度 rank，用於換算「保底內」欄歐非色。
+  final int mainRank;
+
   @override
   Widget build(BuildContext context) {
     final record = row.record;
+    final pityLuck = luckColorFor(
+      luckTierFor(
+        row.mainPityIndex,
+        pityThresholdFor(record.gachaType, mainRank),
+      ),
+      tokens,
+    );
     final accent = switch (record.rankType) {
       5 => tokens.fiveStar,
       4 => tokens.fourStar,
@@ -431,7 +445,10 @@ class _Row extends StatelessWidget {
             child: Text(
               '${row.mainPityIndex}',
               textAlign: TextAlign.end,
-              style: mutedNum,
+              style: TextStyle(
+                color: pityLuck,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],

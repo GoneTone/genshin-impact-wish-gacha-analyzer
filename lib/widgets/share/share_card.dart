@@ -442,6 +442,7 @@ class _SectionView extends StatelessWidget {
       nowPulls: section.timelineNowPulls,
       isAcrossBanners: section.isAcrossBanners,
       fillHeight: true,
+      showLuckLegend: true,
     );
   }
 

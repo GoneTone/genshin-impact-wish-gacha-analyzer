@@ -749,5 +749,9 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "luckTierLucky": "歐",
+  "luckTierAverage": "普通",
+  "luckTierUnlucky": "非"
 }

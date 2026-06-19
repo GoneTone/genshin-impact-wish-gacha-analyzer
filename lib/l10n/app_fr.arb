@@ -960,5 +960,9 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "luckTierLucky": "Chanceux",
+  "luckTierAverage": "Normal",
+  "luckTierUnlucky": "Malchanceux"
 }
