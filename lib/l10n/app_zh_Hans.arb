@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh_Hans",
+  "@@locale": "zh-CN",
   "localeNativeName": "简体中文",
   "localeTranslatorLabel": "翻译者：{translator}",
   "@localeNativeName": {
@@ -957,7 +957,6 @@
       }
     }
   },
-
   "luckTierLucky": "欧",
   "luckTierAverage": "普通",
   "luckTierUnlucky": "非"
