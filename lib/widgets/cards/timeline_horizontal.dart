@@ -22,6 +22,10 @@ const double _nodeSize = 14;
 /// 節點外圍 halo（觸控熱區）直徑。
 const double _haloSize = 22;
 
+/// 月份標籤帶高度。每欄頂部保留此高（組首填年/月、其餘留白），底部以等高
+/// spacer 對稱補回，使節點 y 不因標籤帶位移、仍對齊背景軸線。
+const double _monthBandHeight = 26;
+
 /// 邊緣漸隱遮罩的寬度。
 const double _edgeFadeWidth = 32;
 
@@ -151,6 +155,15 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
       );
     }
 
+    // 每欄是否為其月份分組首欄（左→右 = 新→舊，某月最新一筆即該組起點）。
+    final monthStart = <bool>[];
+    int? prevYearMonth;
+    for (final entry in widget.entries) {
+      final ym = entry.time.year * 12 + entry.time.month;
+      monthStart.add(prevYearMonth != ym);
+      prevYearMonth = ym;
+    }
+
     return Stack(
       children: [
         // 背景軸線
@@ -192,6 +205,8 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
                         entry: widget.entries[i],
                         targetRank: widget.targetRank,
                         tokens: tokens,
+                        isMonthStart: monthStart[i],
+                        showMonthDivider: monthStart[i] && i > 0,
                       ),
                   ],
                 ),
@@ -260,6 +275,8 @@ class _EntryColumn extends StatelessWidget {
     required this.entry,
     required this.targetRank,
     required this.tokens,
+    required this.isMonthStart,
+    required this.showMonthDivider,
   });
 
   /// 該欄對應的時間軸條目。
@@ -270,6 +287,12 @@ class _EntryColumn extends StatelessWidget {
 
   /// 主題 token。
   final GachaTokens tokens;
+
+  /// 是否為其月份分組首欄；true 時頂部標籤帶顯示年/月。
+  final bool isMonthStart;
+
+  /// 是否在左側畫月份分隔線（月份交界、且非最左欄時為 true）。
+  final bool showMonthDivider;
 
   /// 將 [DateTime] 格式化為 `MM/dd` 字串。
   static String _formatShortDate(DateTime t) {
@@ -284,76 +307,111 @@ class _EntryColumn extends StatelessWidget {
     final tier = luckTierFor(entry.pullsSincePrev, pity);
     final luck = luckColorFor(tier, tokens);
     final l = AppLocalizations.of(context)!;
+    final monthLabel = isMonthStart
+        ? l.timelineMonthLabel(
+            entry.time.year.toString(),
+            entry.time.month.toString().padLeft(2, '0'),
+          )
+        : null;
     return Tooltip(
       message:
           '${entry.name} · ${luckTierLabel(tier, l)} · '
           '${l.timelineSinceLast(entry.pullsSincePrev)}',
       preferBelow: false,
       waitDuration: const Duration(milliseconds: 100),
-      child: SizedBox(
-        width: _colWidth,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (entry.sourceRecord != null)
-              GachaItemTapTarget(
-                record: entry.sourceRecord!,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GachaItemIcon(record: entry.sourceRecord!, size: 32),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      entry.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: luck,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+      child: Container(
+        decoration: showMonthDivider
+            ? BoxDecoration(
+                border: Border(left: BorderSide(color: tokens.borderEmphasis)),
+              )
+            : null,
+        child: SizedBox(
+          width: _colWidth,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 月份標籤帶（組首填年/月，其餘留白佔位）。
+              SizedBox(
+                height: _monthBandHeight,
+                child: monthLabel == null
+                    ? null
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          monthLabel,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: tokens.textSecondary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.4,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
                       ),
+              ),
+              if (entry.sourceRecord != null)
+                GachaItemTapTarget(
+                  record: entry.sourceRecord!,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GachaItemIcon(record: entry.sourceRecord!, size: 32),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        entry.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: luck,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Text(
+                  entry.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: luck,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              const SizedBox(height: AppSpacing.xs),
+              _Node(color: luck, tokens: tokens),
+              const SizedBox(height: AppSpacing.xs),
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(
+                    color: tokens.textMuted,
+                    fontSize: 10,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                  children: [
+                    TextSpan(text: '${_formatShortDate(entry.time)} · '),
+                    TextSpan(
+                      text: l.timelineSinceLast(entry.pullsSincePrev),
+                      style: TextStyle(color: luck),
                     ),
                   ],
                 ),
-              )
-            else
-              Text(
-                entry.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: luck,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
               ),
-            const SizedBox(height: AppSpacing.xs),
-            _Node(color: luck, tokens: tokens),
-            const SizedBox(height: AppSpacing.xs),
-            Text.rich(
-              TextSpan(
-                style: TextStyle(
-                  color: tokens.textMuted,
-                  fontSize: 10,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-                children: [
-                  TextSpan(text: '${_formatShortDate(entry.time)} · '),
-                  TextSpan(
-                    text: l.timelineSinceLast(entry.pullsSincePrev),
-                    style: TextStyle(color: luck),
-                  ),
-                ],
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ],
+              // 對稱補回標籤帶高度，使節點維持原垂直中心、對齊軸線。
+              const SizedBox(height: _monthBandHeight),
+            ],
+          ),
         ),
       ),
     );

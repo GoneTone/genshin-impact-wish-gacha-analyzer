@@ -340,6 +340,29 @@ void main() {
     expect(find.byTooltip(expected), findsOneWidget);
   });
 
+  testWidgets('跨月顯示年/月標籤', (tester) async {
+    final entries = [
+      TimelineEntry(
+        name: 'A',
+        gachaType: '301',
+        time: DateTime(2026, 6, 2),
+        pullsSincePrev: 10,
+      ),
+      TimelineEntry(
+        name: 'B',
+        gachaType: '301',
+        time: DateTime(2026, 5, 20),
+        pullsSincePrev: 10,
+      ),
+    ];
+    await pumpTimelineHorizontal(tester, entries: entries, targetRank: 5);
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineHorizontal)),
+    )!;
+    expect(find.text(l.timelineMonthLabel('2026', '06')), findsOneWidget);
+    expect(find.text(l.timelineMonthLabel('2026', '05')), findsOneWidget);
+  });
+
   testWidgets('每欄名稱上方顯示 GachaItemIcon', (tester) async {
     late Directory tempDir;
     await tester.runAsync(() async {
