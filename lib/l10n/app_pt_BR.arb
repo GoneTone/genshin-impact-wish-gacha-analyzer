@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -961,7 +961,6 @@
       }
     }
   },
-
   "luckTierLucky": "Sortudo",
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Azarado"
