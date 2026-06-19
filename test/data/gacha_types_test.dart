@@ -91,4 +91,33 @@ void main() {
       );
     });
   });
+
+  group('gachaTypeFor', () {
+    test('已知 gachaType 回傳對應 GachaType', () {
+      expect(gachaTypeFor('301').nameKey, 'gachaTypeCharacter');
+      expect(gachaTypeFor('1000').nameKey, 'gachaTypeOdesStandard');
+    });
+
+    test('未知 gachaType 回傳 fallback（5★90 / 4★10 / gacha）', () {
+      final t = gachaTypeFor('999');
+      expect(t.gachaType, '999');
+      expect(t.primaryPity.threshold, 90);
+      expect(t.secondaryPity!.threshold, 10);
+      expect(t.category, GachaCategory.gacha);
+    });
+  });
+
+  group('pityThresholdFor', () {
+    test('角色池 5★ → 90', () => expect(pityThresholdFor('301', 5), 90));
+    test('武器池 5★ → 80', () => expect(pityThresholdFor('302', 5), 80));
+    test('新手池 5★ → 20', () => expect(pityThresholdFor('100', 5), 20));
+    test('頌願活動 5★ → 70', () => expect(pityThresholdFor('2000', 5), 70));
+    test('頌願常駐 4★ → 70', () => expect(pityThresholdFor('1000', 4), 70));
+    test('一般祈願 4★ → 10', () => expect(pityThresholdFor('301', 4), 10));
+    test('未知池 5★ → fallback 90', () => expect(pityThresholdFor('999', 5), 90));
+    test('rank 無對應回傳主保底門檻', () {
+      expect(pityThresholdFor('301', 3), 90); // 角色池主保底 5★90
+      expect(pityThresholdFor('1000', 5), 70); // 頌願常駐主保底 4★70
+    });
+  });
 }

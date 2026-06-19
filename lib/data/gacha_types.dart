@@ -136,3 +136,28 @@ final Set<String> convertibleGachaTypes = {
   for (final t in gachaTypes)
     if (t.category == GachaCategory.gacha) t.gachaType,
 };
+
+/// 依 [gachaType] 字串查 [GachaType]；查無時回傳帶預設保底（5★90／4★10、
+/// 一般祈願分類）的 fallback。沿用 timeline 既有的未知卡池保底假設。
+GachaType gachaTypeFor(String gachaType) => gachaTypes.firstWhere(
+  (t) => t.gachaType == gachaType,
+  orElse: () => GachaType(
+    gachaType: gachaType,
+    nameKey: gachaType,
+    category: GachaCategory.gacha,
+    pities: const [
+      PityRule(rank: 5, threshold: 90),
+      PityRule(rank: 4, threshold: 10),
+    ],
+  ),
+);
+
+/// 查 [gachaType] 池中 [rank] 的保底門檻；該池無對應 [rank] 規則時，回傳主保底
+/// 門檻當保守值。
+int pityThresholdFor(String gachaType, int rank) {
+  final type = gachaTypeFor(gachaType);
+  for (final p in type.pities) {
+    if (p.rank == rank) return p.threshold;
+  }
+  return type.primaryPity.threshold;
+}
