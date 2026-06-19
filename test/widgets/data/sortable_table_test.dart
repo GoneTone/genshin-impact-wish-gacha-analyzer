@@ -76,7 +76,7 @@ RecordRow makeRow({
   itemTypeKey: 'kind:character',
 );
 
-/// pump [SortableTable] with given [rows] and [mainRank] inside the test harness.
+/// 將 [SortableTable] 搭配給定的 [rows] 和 [mainRank] pump 進測試環境。
 Future<void> pumpSortableTable(
   WidgetTester tester, {
   required List<RecordRow> rows,
