@@ -9,6 +9,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_affordance.dart';
 
 /// 每個時間軸欄的固定寬度。
@@ -59,7 +61,6 @@ class TimelineHorizontal extends StatefulWidget {
   const TimelineHorizontal({
     super.key,
     required this.entries,
-    required this.colors,
     required this.targetRank,
     this.nowPulls,
   });
@@ -67,10 +68,7 @@ class TimelineHorizontal extends StatefulWidget {
   /// 要顯示的時間軸條目（由新到舊排序）。
   final List<TimelineEntry> entries;
 
-  /// 各卡池節點的顏色映射。
-  final BannerColors colors;
-
-  /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案。
+  /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案及歐非色計算。
   final int targetRank;
 
   /// 傳入時在時間軸最左端加入「現在」欄，值為距上次目標稀有度的抽數。
@@ -189,10 +187,10 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
                   children: [
                     if (widget.nowPulls != null)
                       _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens),
-                    for (final entry in widget.entries)
+                    for (var i = 0; i < widget.entries.length; i++)
                       _EntryColumn(
-                        entry: entry,
-                        colors: widget.colors,
+                        entry: widget.entries[i],
+                        targetRank: widget.targetRank,
                         tokens: tokens,
                       ),
                   ],
@@ -260,15 +258,15 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
 class _EntryColumn extends StatelessWidget {
   const _EntryColumn({
     required this.entry,
-    required this.colors,
+    required this.targetRank,
     required this.tokens,
   });
 
   /// 該欄對應的時間軸條目。
   final TimelineEntry entry;
 
-  /// 各卡池節點的顏色映射。
-  final BannerColors colors;
+  /// 該卡池萃取的稀有度（5 或 4），用於查保底門檻。
+  final int targetRank;
 
   /// 主題 token。
   final GachaTokens tokens;
@@ -281,10 +279,15 @@ class _EntryColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = colors.colorFor(entry.gachaType);
+    final rank = entry.sourceRecord?.rankType ?? targetRank;
+    final pity = pityThresholdFor(entry.gachaType, rank);
+    final tier = luckTierFor(entry.pullsSincePrev, pity);
+    final luck = luckColorFor(tier, tokens);
     final l = AppLocalizations.of(context)!;
     return Tooltip(
-      message: entry.name,
+      message:
+          '${entry.name} · ${luckTierLabel(tier, l)} · '
+          '${l.timelineSinceLast(entry.pullsSincePrev)}',
       preferBelow: false,
       waitDuration: const Duration(milliseconds: 100),
       child: SizedBox(
@@ -308,7 +311,7 @@ class _EntryColumn extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: accent,
+                        color: luck,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -323,24 +326,32 @@ class _EntryColumn extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: accent,
+                  color: luck,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
               ),
             const SizedBox(height: AppSpacing.xs),
-            _Node(color: accent, tokens: tokens),
+            _Node(color: luck, tokens: tokens),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              '${_formatShortDate(entry.time)} · ${l.timelineSinceLast(entry.pullsSincePrev)}',
+            Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  color: tokens.textMuted,
+                  fontSize: 10,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+                children: [
+                  TextSpan(text: '${_formatShortDate(entry.time)} · '),
+                  TextSpan(
+                    text: l.timelineSinceLast(entry.pullsSincePrev),
+                    style: TextStyle(color: luck),
+                  ),
+                ],
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: tokens.textMuted,
-                fontSize: 10,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
             ),
           ],
         ),
