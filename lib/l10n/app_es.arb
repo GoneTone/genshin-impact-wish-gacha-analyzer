@@ -1,5 +1,5 @@
 {
-  "@@locale": "es",
+  "@@locale": "es-ES",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
@@ -961,7 +961,6 @@
       }
     }
   },
-
   "luckTierLucky": "Con suerte",
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Sin suerte"
