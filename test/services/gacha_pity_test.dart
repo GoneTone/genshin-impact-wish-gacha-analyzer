@@ -86,8 +86,10 @@ void main() {
       expect(p.distance, 0);
     });
 
-    test('rank=4 → counts to last 4★ ignoring 5★', () {
-      // records: 4★, 3★, 5★, 4★, 3★ (newest first)
+    test('rank=4 → 5★ 會重置 4★ 保底計數', () {
+      // records (新→舊): 3★, 5★, 3★, 4★, 3★
+      // 4★ 保底保證「4★ 或以上」，故中途的 5★ 也是重置點：
+      // current 只數到最近的 5★（id '4'），而非更舊的 4★（id '2'）。
       final records = [
         GachaRecord(
           id: '5',
@@ -141,9 +143,32 @@ void main() {
         ),
       ];
       final p = computePity(records, threshold: 10, rank: 4);
-      // 上次 4★ 是 id '2'；之後是 3★ + 5★ + 3★ = 3 抽
-      expect(p.current, 3);
-      expect(p.lastRecordAt, DateTime(2025, 1, 2));
+      // 保底計數被 5★ 重置：最近的 3★ 之後遇到 5★ → current=1、lastRecordAt=1/4。
+      expect(p.current, 1);
+      expect(p.lastRecordAt, DateTime(2025, 1, 4));
+      // 平均維持純 4★：只有 id '2' 是恰好 4★，5★ 不算 4★ 命中。
+      // 距上次精確 4★ 命中 = 3 抽（3★,5★,3★）→ completed=5-3=2 → avg=2.0。
+      expect(p.hitCount, 1);
+      expect(p.averageInterval, 2.0);
+    });
+
+    test('rank=4 → averageInterval 只計入恰好 4★（5★ 不算命中）', () {
+      // records (新→舊): 4★, 3★, 5★, 3★, 4★, 3★
+      final records = [
+        _r(id: '6', rank: 4, time: DateTime(2025, 1, 6)),
+        _r(id: '5', rank: 3, time: DateTime(2025, 1, 5)),
+        _r(id: '4', rank: 5, time: DateTime(2025, 1, 4)),
+        _r(id: '3', rank: 3, time: DateTime(2025, 1, 3)),
+        _r(id: '2', rank: 4, time: DateTime(2025, 1, 2)),
+        _r(id: '1', rank: 3, time: DateTime(2025, 1, 1)),
+      ];
+      final p = computePity(records, threshold: 10, rank: 4);
+      // 計數：最新即 4★ → current=0。
+      expect(p.current, 0);
+      // 命中只算 2 個 4★（非 3 個含 5★）；completed=6 → avg=3.0。
+      // 若誤把 5★ 也當 4★ 命中，hitCount 會是 3、avg 會是 2.0。
+      expect(p.hitCount, 2);
+      expect(p.averageInterval, 3.0);
     });
 
     test('空 list → hitCount=0、averageInterval=null', () {
@@ -302,6 +327,26 @@ void main() {
         '302': r302,
       }, rankFor: (_) => 5);
       expect(result, 1.0);
+    });
+
+    test('rankFor=4 → 跨卡池平均只計入恰好 4★（5★ 不算命中）', () {
+      // '301' (新→舊): 4★, 5★, 4★ → 純4★命中=2、completed=3
+      // '302' (新→舊): 3★, 4★      → 純4★命中=1、completed=1
+      // 合併 = (3+1)/(2+1) = 4/3
+      final r301 = [
+        _r(id: '301-3', rank: 4, time: DateTime(2025, 1, 3)),
+        _r(id: '301-2', rank: 5, time: DateTime(2025, 1, 2)),
+        _r(id: '301-1', rank: 4, time: DateTime(2025, 1, 1)),
+      ];
+      final r302 = [
+        _r(id: '302-2', rank: 3, time: DateTime(2025, 2, 2)),
+        _r(id: '302-1', rank: 4, time: DateTime(2025, 2, 1)),
+      ];
+      final result = averageIntervalAcrossBanners({
+        '301': r301,
+        '302': r302,
+      }, rankFor: (_) => 4);
+      expect(result, closeTo(4 / 3, 1e-9));
     });
 
     test('rankFor 切換 rank → 無命中時回傳 null', () {
