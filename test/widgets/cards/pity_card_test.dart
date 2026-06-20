@@ -22,6 +22,7 @@ void main() {
       lastRecordAt: null,
       averageInterval: null,
       hitCount: 0,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
@@ -44,6 +45,7 @@ void main() {
       lastRecordAt: null,
       averageInterval: null,
       hitCount: 0,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
@@ -67,6 +69,7 @@ void main() {
       lastRecordAt: null,
       averageInterval: null,
       hitCount: 0,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
@@ -90,6 +93,7 @@ void main() {
         lastRecordAt: null,
         averageInterval: null,
         hitCount: 0,
+        completedPulls: 0,
       ), // 67%
       const Pity(
         current: 75,
@@ -97,6 +101,7 @@ void main() {
         lastRecordAt: null,
         averageInterval: null,
         hitCount: 0,
+        completedPulls: 0,
       ), // 83%
       const Pity(
         current: 90,
@@ -104,6 +109,7 @@ void main() {
         lastRecordAt: null,
         averageInterval: null,
         hitCount: 0,
+        completedPulls: 0,
       ), // 100%
     ]) {
       await tester.pumpWidget(
@@ -128,6 +134,7 @@ void main() {
       lastRecordAt: null,
       averageInterval: null,
       hitCount: 0,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
@@ -152,6 +159,7 @@ void main() {
       lastRecordAt: DateTime(2025, 1, 1),
       averageInterval: 70.5,
       hitCount: 3,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
@@ -174,6 +182,7 @@ void main() {
       lastRecordAt: DateTime(2025, 1, 1),
       averageInterval: 70.5,
       hitCount: 3,
+      completedPulls: 0,
     );
     await tester.pumpWidget(
       wrap(
