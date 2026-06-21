@@ -608,27 +608,10 @@
   "shareImageThemeLight": "浅色",
   "shareImageShowFullUid": "在图上显示完整 UID",
   "shareImageShowFullUidHint": "关闭时只显示前 3 位，其余以 • 遮盖",
-  "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "数据更新 {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
       "time": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedAndCopied": "已保存并复制到剪贴板：{path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "已保存：{path}（剪贴板不支持）",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
         "type": "String"
       }
     }

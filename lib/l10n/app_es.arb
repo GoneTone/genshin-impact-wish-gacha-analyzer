@@ -612,27 +612,10 @@
   "shareImageThemeLight": "Claro",
   "shareImageShowFullUid": "Mostrar UID completo en la imagen",
   "shareImageShowFullUidHint": "Al desactivar, solo se muestran los primeros 3 dígitos; el resto se oculta con •",
-  "shareImageGenerate": "Generar",
   "shareImageUpdatedAt": "Datos actualizados {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
       "time": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedAndCopied": "Guardado y copiado al portapapeles: {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "Guardado: {path} (portapapeles no compatible)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
         "type": "String"
       }
     }

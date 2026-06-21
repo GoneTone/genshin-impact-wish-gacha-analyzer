@@ -612,27 +612,10 @@
   "shareImageThemeLight": "สว่าง",
   "shareImageShowFullUid": "แสดง UID เต็มในภาพ",
   "shareImageShowFullUidHint": "เมื่อปิด จะแสดงเพียง 3 ตัวแรก ส่วนที่เหลือจะถูกปิดบังด้วย •",
-  "shareImageGenerate": "สร้าง",
   "shareImageUpdatedAt": "ข้อมูลอัพเดทเมื่อ {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
       "time": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedAndCopied": "บันทึกและคัดลอกไปยังคลิปบอร์ดแล้ว: {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "บันทึกแล้ว: {path} (ไม่รองรับคลิปบอร์ด)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
         "type": "String"
       }
     }

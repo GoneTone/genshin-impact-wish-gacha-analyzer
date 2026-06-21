@@ -612,27 +612,10 @@
   "shareImageThemeLight": "Clair",
   "shareImageShowFullUid": "Afficher l'UID complet sur l'image",
   "shareImageShowFullUidHint": "Désactivé : seuls les 3 premiers chiffres sont affichés, le reste est masqué par des •",
-  "shareImageGenerate": "Générer",
   "shareImageUpdatedAt": "Données mises à jour le {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
       "time": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedAndCopied": "Enregistré et copié dans le presse-papiers : {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "Enregistré : {path} (presse-papiers non supporté)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
         "type": "String"
       }
     }
