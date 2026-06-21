@@ -484,6 +484,14 @@
   },
   "shareImageCopiedOnly": "已複製到剪貼簿",
   "shareImageFailed": "分享圖生成失敗",
+  "shareImageActionCopy": "複製圖片",
+  "shareImageActionSave": "儲存圖片",
+  "shareImageCopyFailed": "複製到剪貼簿失敗",
+  "shareImageGenerating": "正在生成分享圖...",
+  "shareImageSaved": "已儲存：{path}",
+  "@shareImageSaved": {
+    "placeholders": { "path": { "type": "String" } }
+  },
   "exportDialogSuccessTitle": "匯出成功",
   "exportDialogFailedTitle": "匯出失敗",
   "settingsExportFailed": "匯出失敗：{error}",

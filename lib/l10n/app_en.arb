@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "Copied to clipboard",
   "shareImageFailed": "Failed to generate share image",
+  "shareImageActionCopy": "Copy image",
+  "shareImageActionSave": "Save image",
+  "shareImageCopyFailed": "Failed to copy to clipboard",
+  "shareImageGenerating": "Generating share image...",
+  "shareImageSaved": "Saved: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Export Successful",
   "exportDialogFailedTitle": "Export Failed",
   "settingsExportFailed": "Export failed: {error}",

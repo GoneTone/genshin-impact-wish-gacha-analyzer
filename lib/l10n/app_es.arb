@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "Copiado al portapapeles",
   "shareImageFailed": "Error al generar la imagen para compartir",
+  "shareImageActionCopy": "Copiar imagen",
+  "shareImageActionSave": "Guardar imagen",
+  "shareImageCopyFailed": "Error al copiar al portapapeles",
+  "shareImageGenerating": "Generando imagen para compartir...",
+  "shareImageSaved": "Guardado: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Exportación exitosa",
   "exportDialogFailedTitle": "Exportación fallida",
   "settingsExportFailed": "Error al exportar: {error}",

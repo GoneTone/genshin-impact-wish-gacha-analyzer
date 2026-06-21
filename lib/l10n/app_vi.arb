@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "Đã sao chép vào clipboard",
   "shareImageFailed": "Tạo ảnh chia sẻ thất bại",
+  "shareImageActionCopy": "Sao chép ảnh",
+  "shareImageActionSave": "Lưu ảnh",
+  "shareImageCopyFailed": "Sao chép vào clipboard thất bại",
+  "shareImageGenerating": "Đang tạo ảnh chia sẻ...",
+  "shareImageSaved": "Đã lưu: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Xuất thành công",
   "exportDialogFailedTitle": "Xuất thất bại",
   "settingsExportFailed": "Xuất thất bại: {error}",

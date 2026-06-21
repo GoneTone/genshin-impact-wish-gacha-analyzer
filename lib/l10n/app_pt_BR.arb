@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "Copiado para a área de transferência",
   "shareImageFailed": "Falha ao gerar imagem",
+  "shareImageActionCopy": "Copiar imagem",
+  "shareImageActionSave": "Salvar imagem",
+  "shareImageCopyFailed": "Falha ao copiar para a área de transferência",
+  "shareImageGenerating": "Gerando imagem para compartilhar...",
+  "shareImageSaved": "Salvo: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Exportação concluída",
   "exportDialogFailedTitle": "Exportação falhou",
   "settingsExportFailed": "Exportação falhou: {error}",

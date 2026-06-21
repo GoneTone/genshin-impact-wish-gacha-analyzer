@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "คัดลอกไปยังคลิปบอร์ดแล้ว",
   "shareImageFailed": "สร้างภาพแชร์ล้มเหลว",
+  "shareImageActionCopy": "คัดลอกภาพ",
+  "shareImageActionSave": "บันทึกภาพ",
+  "shareImageCopyFailed": "คัดลอกไปยังคลิปบอร์ดล้มเหลว",
+  "shareImageGenerating": "กำลังสร้างภาพแชร์...",
+  "shareImageSaved": "บันทึกแล้ว: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "ส่งออกสำเร็จ",
   "exportDialogFailedTitle": "ส่งออกล้มเหลว",
   "settingsExportFailed": "ส่งออกล้มเหลว: {error}",

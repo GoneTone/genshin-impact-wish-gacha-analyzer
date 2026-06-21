@@ -639,6 +639,18 @@
   },
   "shareImageCopiedOnly": "Copié dans le presse-papiers",
   "shareImageFailed": "Échec de la génération de l'image de partage",
+  "shareImageActionCopy": "Copier l'image",
+  "shareImageActionSave": "Enregistrer l'image",
+  "shareImageCopyFailed": "Échec de la copie dans le presse-papiers",
+  "shareImageGenerating": "Génération de l'image de partage...",
+  "shareImageSaved": "Enregistré : {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Exportation réussie",
   "exportDialogFailedTitle": "Échec de l'exportation",
   "settingsExportFailed": "Échec de l'exportation : {error}",
