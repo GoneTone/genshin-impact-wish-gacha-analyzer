@@ -14,3 +14,12 @@ class ShareImageOptions {
   /// true = 圖上顯示完整 UID；false = 經 maskUidForShare 遮罩。
   final bool showFullUid;
 }
+
+/// 分享圖輸出動作：複製到剪貼簿或存檔。
+enum ShareImageAction {
+  /// 複製分享圖到系統剪貼簿。
+  copy,
+
+  /// 將分享圖存檔到使用者選擇的位置。
+  save,
+}

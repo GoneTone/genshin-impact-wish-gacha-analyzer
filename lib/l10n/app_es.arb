@@ -612,7 +612,6 @@
   "shareImageThemeLight": "Claro",
   "shareImageShowFullUid": "Mostrar UID completo en la imagen",
   "shareImageShowFullUidHint": "Al desactivar, solo se muestran los primeros 3 dígitos; el resto se oculta con •",
-  "shareImageGenerate": "Generar",
   "shareImageUpdatedAt": "Datos actualizados {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -621,24 +620,20 @@
       }
     }
   },
-  "shareImageSavedAndCopied": "Guardado y copiado al portapapeles: {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "Guardado: {path} (portapapeles no compatible)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
   "shareImageCopiedOnly": "Copiado al portapapeles",
   "shareImageFailed": "Error al generar la imagen para compartir",
+  "shareImageActionCopy": "Copiar imagen",
+  "shareImageActionSave": "Guardar imagen",
+  "shareImageCopyFailed": "Error al copiar al portapapeles",
+  "shareImageGenerating": "Generando imagen para compartir...",
+  "shareImageSaved": "Guardado: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Exportación exitosa",
   "exportDialogFailedTitle": "Exportación fallida",
   "settingsExportFailed": "Error al exportar: {error}",

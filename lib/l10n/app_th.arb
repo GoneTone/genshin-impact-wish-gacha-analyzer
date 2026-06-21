@@ -612,7 +612,6 @@
   "shareImageThemeLight": "สว่าง",
   "shareImageShowFullUid": "แสดง UID เต็มในภาพ",
   "shareImageShowFullUidHint": "เมื่อปิด จะแสดงเพียง 3 ตัวแรก ส่วนที่เหลือจะถูกปิดบังด้วย •",
-  "shareImageGenerate": "สร้าง",
   "shareImageUpdatedAt": "ข้อมูลอัพเดทเมื่อ {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -621,24 +620,20 @@
       }
     }
   },
-  "shareImageSavedAndCopied": "บันทึกและคัดลอกไปยังคลิปบอร์ดแล้ว: {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "บันทึกแล้ว: {path} (ไม่รองรับคลิปบอร์ด)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
   "shareImageCopiedOnly": "คัดลอกไปยังคลิปบอร์ดแล้ว",
   "shareImageFailed": "สร้างภาพแชร์ล้มเหลว",
+  "shareImageActionCopy": "คัดลอกภาพ",
+  "shareImageActionSave": "บันทึกภาพ",
+  "shareImageCopyFailed": "คัดลอกไปยังคลิปบอร์ดล้มเหลว",
+  "shareImageGenerating": "กำลังสร้างภาพแชร์...",
+  "shareImageSaved": "บันทึกแล้ว: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "ส่งออกสำเร็จ",
   "exportDialogFailedTitle": "ส่งออกล้มเหลว",
   "settingsExportFailed": "ส่งออกล้มเหลว: {error}",

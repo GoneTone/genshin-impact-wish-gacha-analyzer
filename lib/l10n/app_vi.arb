@@ -612,7 +612,6 @@
   "shareImageThemeLight": "Sáng",
   "shareImageShowFullUid": "Hiển thị UID đầy đủ trên ảnh",
   "shareImageShowFullUidHint": "Khi tắt, chỉ hiển thị 3 ký tự đầu, phần còn lại sẽ bị che bằng •",
-  "shareImageGenerate": "Tạo",
   "shareImageUpdatedAt": "Dữ liệu cập nhật {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -621,24 +620,20 @@
       }
     }
   },
-  "shareImageSavedAndCopied": "Đã lưu và sao chép vào clipboard: {path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "Đã lưu: {path} (không hỗ trợ clipboard)",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
   "shareImageCopiedOnly": "Đã sao chép vào clipboard",
   "shareImageFailed": "Tạo ảnh chia sẻ thất bại",
+  "shareImageActionCopy": "Sao chép ảnh",
+  "shareImageActionSave": "Lưu ảnh",
+  "shareImageCopyFailed": "Sao chép vào clipboard thất bại",
+  "shareImageGenerating": "Đang tạo ảnh chia sẻ...",
+  "shareImageSaved": "Đã lưu: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "Xuất thành công",
   "exportDialogFailedTitle": "Xuất thất bại",
   "settingsExportFailed": "Xuất thất bại: {error}",

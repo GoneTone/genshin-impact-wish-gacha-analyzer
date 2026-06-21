@@ -608,7 +608,6 @@
   "shareImageThemeLight": "浅色",
   "shareImageShowFullUid": "在图上显示完整 UID",
   "shareImageShowFullUidHint": "关闭时只显示前 3 位，其余以 • 遮盖",
-  "shareImageGenerate": "生成",
   "shareImageUpdatedAt": "数据更新 {time}",
   "@shareImageUpdatedAt": {
     "placeholders": {
@@ -617,24 +616,20 @@
       }
     }
   },
-  "shareImageSavedAndCopied": "已保存并复制到剪贴板：{path}",
-  "@shareImageSavedAndCopied": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
-  "shareImageSavedOnly": "已保存：{path}（剪贴板不支持）",
-  "@shareImageSavedOnly": {
-    "placeholders": {
-      "path": {
-        "type": "String"
-      }
-    }
-  },
   "shareImageCopiedOnly": "已复制到剪贴板",
   "shareImageFailed": "分享图生成失败",
+  "shareImageActionCopy": "复制图片",
+  "shareImageActionSave": "保存图片",
+  "shareImageCopyFailed": "复制到剪贴板失败",
+  "shareImageGenerating": "正在生成分享图...",
+  "shareImageSaved": "已保存：{path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "exportDialogSuccessTitle": "导出成功",
   "exportDialogFailedTitle": "导出失败",
   "settingsExportFailed": "导出失败：{error}",
