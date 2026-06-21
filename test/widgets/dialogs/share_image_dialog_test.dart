@@ -6,68 +6,60 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_dialog.dart';
 
 void main() {
-  testWidgets('生成回傳預設選項；預設深色 + 不顯示完整 UID', (t) async {
-    ShareImageOptions? result;
-    await t.pumpWidget(
-      MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('zh'),
-        home: Builder(
-          builder: (ctx) => Scaffold(
-            body: Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  result = await showShareImageDialog(
-                    ctx,
-                    initialBrightness: Brightness.dark,
-                  );
-                },
-                child: const Text('open'),
-              ),
+  Future<({ShareImageOptions options, ShareImageAction action})?>? captured;
+
+  Widget host() => MaterialApp(
+    theme: buildDarkTheme(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: const Locale('zh'),
+    home: Builder(
+      builder: (ctx) => Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () => captured = showShareImageDialog(
+              ctx,
+              initialBrightness: Brightness.dark,
             ),
+            child: const Text('open'),
           ),
         ),
       ),
-    );
+    ),
+  );
+
+  testWidgets('複製圖片回傳 copy + 預設選項', (t) async {
+    await t.pumpWidget(host());
     await t.tap(find.text('open'));
     await t.pumpAndSettle();
 
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
-    await t.tap(find.text(l.shareImageGenerate));
+    await t.tap(find.text(l.shareImageActionCopy));
     await t.pumpAndSettle();
 
-    expect(result, isNotNull);
-    expect(result!.brightness, Brightness.dark);
-    expect(result!.showFullUid, isFalse);
+    final r = await captured!;
+    expect(r, isNotNull);
+    expect(r!.action, ShareImageAction.copy);
+    expect(r.options.brightness, Brightness.dark);
+    expect(r.options.showFullUid, isFalse);
+  });
+
+  testWidgets('儲存圖片回傳 save', (t) async {
+    await t.pumpWidget(host());
+    await t.tap(find.text('open'));
+    await t.pumpAndSettle();
+
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    await t.tap(find.text(l.shareImageActionSave));
+    await t.pumpAndSettle();
+
+    final r = await captured!;
+    expect(r, isNotNull);
+    expect(r!.action, ShareImageAction.save);
   });
 
   testWidgets('取消回傳 null', (t) async {
-    ShareImageOptions? result = const ShareImageOptions();
-    await t.pumpWidget(
-      MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('zh'),
-        home: Builder(
-          builder: (ctx) => Scaffold(
-            body: Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  result = await showShareImageDialog(
-                    ctx,
-                    initialBrightness: Brightness.dark,
-                  );
-                },
-                child: const Text('open'),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    await t.pumpWidget(host());
     await t.tap(find.text('open'));
     await t.pumpAndSettle();
 
@@ -75,6 +67,6 @@ void main() {
     await t.tap(find.text(l.actionCancel));
     await t.pumpAndSettle();
 
-    expect(result, isNull);
+    expect(await captured!, isNull);
   });
 }
