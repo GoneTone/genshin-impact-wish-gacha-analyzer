@@ -31,7 +31,7 @@ jobs:
     steps:
       # === A. Checkout target branch ================================
       - name: Checkout target branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: master
           fetch-depth: 0
