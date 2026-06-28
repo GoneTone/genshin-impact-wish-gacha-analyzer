@@ -36,7 +36,6 @@ updates:
       time: "09:00"
       timezone: "Asia/Taipei"
     open-pull-requests-limit: 30
-    versioning-strategy: increase
     commit-message:
       prefix: "chore"
       prefix-development: "chore"
