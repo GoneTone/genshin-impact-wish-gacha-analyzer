@@ -12,11 +12,18 @@ updates:
       prefix: "chore"
       prefix-development: "chore"
       include: "scope"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
     groups:
-      dependencies:
-        update-types:
-          - "minor"
-          - "patch"
+      flutter-html:
+        patterns:
+          - "flutter_html"
+          - "html"
+      window-management:
+        patterns:
+          - "window_manager"
+          - "screen_retriever"
     ignore:
       - dependency-name: "flutter_rust_bridge"
 
@@ -32,11 +39,19 @@ updates:
       prefix: "chore"
       prefix-development: "chore"
       include: "scope"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
     groups:
-      dependencies:
-        update-types:
-          - "minor"
-          - "patch"
+      tracing:
+        patterns:
+          - "tracing"
+          - "tracing-subscriber"
+      tls-proxy:
+        patterns:
+          - "hudsucker"
+          - "hyper-rustls"
+          - "rcgen"
     ignore:
       - dependency-name: "flutter_rust_bridge"
 
@@ -52,8 +67,6 @@ updates:
       prefix: "chore"
       prefix-development: "chore"
       include: "scope"
-    groups:
-      dependencies:
-        update-types:
-          - "minor"
-          - "patch"
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
