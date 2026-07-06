@@ -33,6 +33,15 @@ class _NoRecordsException implements Exception {
   const _NoRecordsException();
 }
 
+/// 雲端同步請求匯入時，已有更新或匯入進行中而無法執行時拋出；呼叫端應稍後重試。
+class CloudSyncBusyException implements Exception {
+  /// 建立 [CloudSyncBusyException]。
+  const CloudSyncBusyException();
+
+  @override
+  String toString() => 'CloudSyncBusyException';
+}
+
 /// 祈願資料整體狀態，包含帳號資料、更新進度與 bootstrap 旗標。
 @immutable
 class GachaState {
@@ -118,6 +127,9 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// Logger 實例（非破壞性 metadata 更新流程）。
   static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
+
+  /// Logger 實例（雲端同步觸發的匯入與補抓）。
+  static final _cloudSyncLog = Logger('cloudsync.sync');
 
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
@@ -731,6 +743,85 @@ class GachaRepository extends Notifier<GachaState> {
         ),
       );
       _importLog.info('done, images=$images');
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
+  /// 雲端同步專用的靜默匯入：純資料合併（寫入 storage＋整併偏好），
+  /// 不啟動 progress UI、不抓物品圖片。
+  ///
+  /// 已有更新或匯入進行中時拋 [CloudSyncBusyException]，由雲端同步層重排。
+  Future<ImportResult> importBundleForCloudSync(AccountsBundle bundle) async {
+    if (state.progress != null || _isUpdating) {
+      _cloudSyncLog.info('cloud import rejected: busy');
+      throw const CloudSyncBusyException();
+    }
+    _isUpdating = true;
+    try {
+      _cloudSyncLog.info(
+        'cloud import start, accounts=${bundle.accounts.length}',
+      );
+      return await _runImport(bundle);
+    } finally {
+      _isUpdating = false;
+    }
+  }
+
+  /// 雲端同步合併出新記錄後的補抓：走與「更新物品資料」相同的
+  /// [_fetchHoYoWiki] 進度管線，結束 emit [UpdateCompleted]（不帶
+  /// importSummary，避免顯示成手動匯入的結果文案）。
+  ///
+  /// best-effort：更新／匯入進行中或 bootstrap 未完成時直接略過，缺圖留待
+  /// 下次手動「更新」補齊；單筆失敗僅記 log、照常收尾；進度框可取消。
+  Future<void> fetchItemImagesForCloudSync() async {
+    if (state.progress != null) {
+      _cloudSyncLog.info('post-sync item fetch skipped: progress in-flight');
+      return;
+    }
+    if (_isUpdating || state.isBootstrapping) {
+      _cloudSyncLog.info('post-sync item fetch skipped: busy or bootstrapping');
+      return;
+    }
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _cloudSyncLog.info('post-sync item fetch start');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    state = state.copyWith(progress: const Preparing());
+
+    try {
+      var images = 0;
+      try {
+        final result = await _fetchHoYoWiki(cancellable.client);
+        images = result.imagesDownloaded;
+      } catch (e, st) {
+        _cloudSyncLog.warning(
+          'post-sync hoyowiki stage threw (ignored)',
+          e,
+          st,
+        );
+      }
+      if (!ref.mounted) return;
+
+      if (_cancelTriggered) {
+        _cloudSyncLog.info('post-sync item fetch cancelled');
+        state = state.copyWith(clearProgress: true);
+        return;
+      }
+      _cloudSyncLog.info('post-sync item fetch done, images=$images');
+      state = state.copyWith(
+        progress: UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.now().toUtc(),
+          hoYoWikiImagesDownloaded: images,
+        ),
+      );
     } finally {
       _activeCancellable?.client.close();
       _activeCancellable = null;
