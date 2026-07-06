@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -217,5 +218,130 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 200));
 
     expect(container.read(gachaRepositoryProvider).progress, isNull);
+  });
+
+  test('cancelLink：等待授權中途取消 → 回到 idle，遲到的 signIn 結果被丟棄並 revoke', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    final gate = Completer<void>();
+    authService.signInGate = gate.future;
+
+    final linkFuture = notifier.link();
+    // link() 在第一個 await（auth.signIn）前已同步把 state 設成 awaitingConsent。
+    expect(
+      container.read(cloudSyncProvider).phase,
+      CloudSyncPhase.awaitingConsent,
+    );
+
+    notifier.cancelLink();
+    expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.idle);
+
+    gate.complete();
+    await linkFuture;
+
+    expect(tokenStore.token, isNull);
+    expect(container.read(settingsProvider).cloudAccountEmail, isNull);
+    expect(authService.revokedTokens, contains('refresh-1'));
+    expect(remote.uploads, 0);
+  });
+
+  test('setAutoSync(false→true)：關閉不同步，開啟立即補跑一輪', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    await notifier.setAutoSync(false);
+    expect(remote.uploads, 1);
+    expect(container.read(settingsProvider).cloudAutoSyncEnabled, isFalse);
+
+    await notifier.setAutoSync(true);
+    expect(remote.uploads, 2);
+    expect(container.read(settingsProvider).cloudAutoSyncEnabled, isTrue);
+  });
+
+  // 依 review finding 指引：資料變動走 _scheduleDebounced 排的是寫死 5 秒的
+  // 真實 Timer，要驗證「到點時 fingerprint 沒變就跳過」需要真的等 5 秒以上
+  // 掛鐘時間，會拖慢且不穩定；在不改動 production code（注入時鐘）的前提下，
+  // 此分支標記為 untestable-without-refactor。改測可驗證的替代行為：
+  // syncNow 手動呼叫本身不做 fingerprint 比對，內容不變仍每次真的上傳。
+  test('syncNow 手動呼叫不做 fingerprint 比對，內容不變仍每次上傳', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    await notifier.syncNow(manual: true, trigger: 'manual2');
+    expect(remote.uploads, 2);
+
+    await notifier.syncNow(manual: true, trigger: 'manual3');
+    expect(remote.uploads, 3);
+  });
+
+  test('syncNow 進行中再呼叫 → 標記 pendingRerun，結束後補跑一輪', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    final gate = Completer<void>();
+    remote.downloadGate = gate;
+
+    final first = notifier.syncNow(manual: true, trigger: 'inFlight');
+    // syncNow 在第一個 await 前已同步把 state 設成 syncing、鎖上單飛旗標。
+    expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.syncing);
+
+    // 進行中再呼叫：立即返回（不等待輪完），只標記 pendingRerun，不觸發下載/上傳。
+    await notifier.syncNow(manual: true, trigger: 'duringFlight');
+    expect(remote.uploads, 1);
+
+    gate.complete();
+    remote.downloadGate = null;
+    await first;
+    // finally 區塊 unawaited 補跑的一輪；等它跑完。
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    // link 時的第一輪（1）+ 被卡住後放行完成的 in-flight 輪（+1）
+    // + pendingRerun 觸發的補跑輪（+1）＝ 3。
+    expect(remote.uploads, 3);
+    expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.idle);
+  });
+
+  test('repository 忙碌時合併中途失敗 → error(busy)，且排入重試（debounce）', () async {
+    remote.content = _cloudBundleJson('800000001');
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    // 換一份新帳號的雲端內容，確保這輪合併真的會呼叫 applyRemote。
+    remote.content = _cloudBundleJson('800000002');
+    container
+        .read(gachaRepositoryProvider.notifier)
+        .debugSetProgress(const Preparing());
+
+    await notifier.syncNow(manual: true, trigger: 'busyTest');
+
+    final s = container.read(cloudSyncProvider);
+    expect(s.phase, CloudSyncPhase.error);
+    expect(s.errorToken, 'busy');
+    // 合併階段就失敗，沒有走到上傳。
+    expect(remote.uploads, 1);
+  });
+
+  test('同步中途缺 Drive scope（既存 token）→ reauthRequired(scopeMissing)', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    remote.downloadError = Exception('ACCESS_TOKEN_SCOPE_INSUFFICIENT');
+
+    await notifier.syncNow(manual: true, trigger: 'scopeTest');
+
+    final s = container.read(cloudSyncProvider);
+    expect(s.phase, CloudSyncPhase.reauthRequired);
+    expect(s.errorToken, 'scopeMissing');
   });
 }
