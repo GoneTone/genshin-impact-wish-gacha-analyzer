@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -74,13 +75,18 @@ void main() {
   });
 
   /// 建立完成載入的 container（HoYoWiki API 一律回 500，補抓 best-effort 空跑）。
-  Future<ProviderContainer> makeContainer() async {
+  ///
+  /// [storage] 預設用真實檔案系統版 [GachaStorage]；驅動 fakeAsync 虛擬時鐘的
+  /// 測試需改傳 [InMemoryGachaStorage]，避免真實檔案 I/O 卡住虛擬時間推進。
+  Future<ProviderContainer> makeContainer({GachaStorage? storage}) async {
     final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
     await hoyowikiDir.create();
     final container = ProviderContainer(
       overrides: [
         appVersionProvider.overrideWithValue('1.6.0'),
-        gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        gachaStorageProvider.overrideWithValue(
+          storage ?? GachaStorage(tempDir),
+        ),
         gachaCaptureProvider.overrideWithValue(FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(hoyowikiDir),
@@ -364,32 +370,49 @@ void main() {
     expect(remote.uploads, 1);
   });
 
-  test('busy 輪後手動再同步能收斂雲端資料（指紋清除間接驗證）', () async {
+  test('busy 輪後 debounce timer 到點 → 真的補跑同步（迴歸：busy 分支須清空指紋）', () async {
+    // 用 InMemoryGachaStorage：待會要在 fakeAsync 的同步 callback 內用
+    // async.elapse 推進真實 5 秒 debounce Timer，若補救輪內 _runImport
+    // 呼叫的是真實檔案版 GachaStorage.save，其寫入完成通知來自背景執行緒，
+    // 不受 FakeAsync 虛擬時鐘控制，在同步 callback 內永遠等不到；換成純
+    // 記憶體實作後，整條路徑都只靠 microtask 完成，flushMicrotasks 才能
+    // 確實把補救輪推進到底。
     remote.content = _cloudBundleJson('800000001');
-    final container = await makeContainer();
+    final container = await makeContainer(storage: InMemoryGachaStorage());
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
     expect(remote.uploads, 1);
 
-    // 換一份新帳號的雲端內容，確保 busy 那輪真的有下載到未合併的資料。
+    // 換一份新帳號的雲端內容，確保 busy 那輪真的有下載到未合併的資料；
+    // 本機資料在整個 busy → 補救輪之前都不會變動（重現「指紋沒變」場景）。
     remote.content = _cloudBundleJson('800000002');
     container
         .read(gachaRepositoryProvider.notifier)
         .debugSetProgress(const Preparing());
 
-    await notifier.syncNow(manual: true, trigger: 'busyTest');
+    fakeAsync((async) {
+      // busy 那輪的 syncNow 呼叫必須發生在 fakeAsync zone 內，
+      // _scheduleDebounced 建立的 Timer 才會是虛擬時鐘可控制的假 Timer；
+      // 若在 zone 外呼叫，之後的 async.elapse 完全不會觸發到它。
+      unawaited(notifier.syncNow(manual: true, trigger: 'busyTest'));
+      async.flushMicrotasks();
 
-    final busyState = container.read(cloudSyncProvider);
-    expect(busyState.phase, CloudSyncPhase.error);
-    expect(busyState.errorToken, 'busy');
-    expect(remote.uploads, 1);
+      final busyState = container.read(cloudSyncProvider);
+      expect(busyState.phase, CloudSyncPhase.error);
+      expect(busyState.errorToken, 'busy');
+      // 合併階段就失敗，沒有走到上傳。
+      expect(remote.uploads, 1);
 
-    // 清除 busy 狀態，模擬 debounce 到點後補跑一輪（此處直接呼叫 syncNow，
-    // 不等真實 5 秒 Timer）。busy 分支已把 _lastFingerprint 清空，
-    // 所以就算之後真的走 _scheduleDebounced 的指紋比對也不會被跳過；
-    // 這裡以「補救輪確實跑完、雲端帳號收斂進本機」的可觀察結果間接驗證。
-    container.read(gachaRepositoryProvider.notifier).clearProgress();
-    await notifier.syncNow(manual: false, trigger: 'dataChange');
+      // 清除 busy 狀態但不動本機資料：本機匯出指紋維持不變，正是舊版
+      // bug 會被指紋比對誤判「內容沒變」而跳過補救輪的場景。
+      container.read(gachaRepositoryProvider.notifier).clearProgress();
+
+      // 推進虛擬時鐘到 debounce 到點：_scheduleDebounced 排的 5 秒
+      // Timer 觸發，內部先比對指紋，busy 分支已清空 _lastFingerprint，
+      // 指紋比對必為假，才會真的跑 syncNow('dataChange') 補救輪。
+      async.elapse(const Duration(seconds: 5));
+      async.flushMicrotasks();
+    });
 
     expect(remote.uploads, 2);
     expect(

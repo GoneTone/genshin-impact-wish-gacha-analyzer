@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_remote.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_auth_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/token_store.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 
 /// 測試用 in-memory token store。
@@ -128,4 +131,60 @@ class FakeCapture implements GachaCapture {
   @override
   CaptureSession start() =>
       CaptureSession(result: Future.value(null), cancel: () async {});
+}
+
+/// 純記憶體版 [GachaStorage]：所有讀寫皆走記憶體 Map，不碰真實檔案系統。
+///
+/// 用於需要在 `fakeAsync` 虛擬時鐘下驅動真實 [Timer] 的測試——真實檔案
+/// I/O 由背景執行緒完成，其完成通知不受 `FakeAsync.elapse` 控制，在
+/// 同步的 fakeAsync callback 內永遠等不到；換成純記憶體實作後，所有
+/// Future 都只透過 microtask 完成，`flushMicrotasks` 才能確實推進到底。
+class InMemoryGachaStorage extends GachaStorage {
+  /// 建立 [InMemoryGachaStorage]（[baseDir] 僅為滿足父類建構子，不會被使用）。
+  InMemoryGachaStorage() : super(Directory.systemTemp);
+
+  /// 記憶體內的帳號資料，key 為 uid。
+  final Map<String, BannerStorage> _data = {};
+
+  /// 記憶體內的已擷取 URL，key 為 uid。
+  final Map<String, String> _capturedUrls = {};
+
+  /// 讀取 [uid] 的祈願資料；不存在時回傳 null。
+  @override
+  Future<BannerStorage?> load(String uid) async => _data[uid];
+
+  /// 寫入 [data]（覆蓋同 uid 的既有資料）。
+  @override
+  Future<void> save(BannerStorage data) async => _data[data.uid] = data;
+
+  /// 回傳目前已知的所有 UID。
+  @override
+  Future<List<String>> listKnownUids() async => _data.keys.toList();
+
+  /// 讀取 [uid] 的已擷取 URL；不存在時回傳 null。
+  @override
+  Future<String?> loadCapturedUrl(String uid) async => _capturedUrls[uid];
+
+  /// 寫入 [uid] 的已擷取 URL。
+  @override
+  Future<void> saveCapturedUrl(String uid, String url) async =>
+      _capturedUrls[uid] = url;
+
+  /// 刪除 [uid] 的已擷取 URL。
+  @override
+  Future<void> deleteCapturedUrl(String uid) async => _capturedUrls.remove(uid);
+
+  /// 刪除 [uid] 的所有資料（帳號資料＋已擷取 URL）。
+  @override
+  Future<void> delete(String uid) async {
+    _data.remove(uid);
+    _capturedUrls.remove(uid);
+  }
+
+  /// 清除所有帳號資料與已擷取 URL。
+  @override
+  Future<void> clearAll() async {
+    _data.clear();
+    _capturedUrls.clear();
+  }
 }
