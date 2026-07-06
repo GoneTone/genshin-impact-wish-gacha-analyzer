@@ -344,4 +344,57 @@ void main() {
     expect(s.phase, CloudSyncPhase.reauthRequired);
     expect(s.errorToken, 'scopeMissing');
   });
+
+  test('同步中途 invalid_grant（client 已建立）→ reauthRequired，且不再重試', () async {
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    // link 成功後 _client 已建立，之後的呼叫不會再經過 GoogleAuthService.restore()。
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    remote.downloadError = Exception('Refresh failed: invalid_grant');
+
+    await notifier.syncNow(manual: true);
+
+    final s = container.read(cloudSyncProvider);
+    expect(s.phase, CloudSyncPhase.reauthRequired);
+
+    // reauthRequired 短路：再呼叫一次不應該又跑一輪（不重試）。
+    await notifier.syncNow(manual: true);
+    expect(remote.uploads, 1);
+  });
+
+  test('busy 輪後手動再同步能收斂雲端資料（指紋清除間接驗證）', () async {
+    remote.content = _cloudBundleJson('800000001');
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+
+    // 換一份新帳號的雲端內容，確保 busy 那輪真的有下載到未合併的資料。
+    remote.content = _cloudBundleJson('800000002');
+    container
+        .read(gachaRepositoryProvider.notifier)
+        .debugSetProgress(const Preparing());
+
+    await notifier.syncNow(manual: true, trigger: 'busyTest');
+
+    final busyState = container.read(cloudSyncProvider);
+    expect(busyState.phase, CloudSyncPhase.error);
+    expect(busyState.errorToken, 'busy');
+    expect(remote.uploads, 1);
+
+    // 清除 busy 狀態，模擬 debounce 到點後補跑一輪（此處直接呼叫 syncNow，
+    // 不等真實 5 秒 Timer）。busy 分支已把 _lastFingerprint 清空，
+    // 所以就算之後真的走 _scheduleDebounced 的指紋比對也不會被跳過；
+    // 這裡以「補救輪確實跑完、雲端帳號收斂進本機」的可觀察結果間接驗證。
+    container.read(gachaRepositoryProvider.notifier).clearProgress();
+    await notifier.syncNow(manual: false, trigger: 'dataChange');
+
+    expect(remote.uploads, 2);
+    expect(
+      container.read(gachaRepositoryProvider).byUid.keys,
+      contains('800000002'),
+    );
+  });
 }

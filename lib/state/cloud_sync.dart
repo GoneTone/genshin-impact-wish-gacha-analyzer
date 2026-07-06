@@ -318,6 +318,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         phase: CloudSyncPhase.error,
         errorToken: 'busy',
       );
+      // busy 那輪未完成合併（可能已下載但沒套用的雲端內容），指紋防空轉
+      // 機制不該吃掉這輪補救重試，故清空指紋讓 debounce 到點時一定真的跑。
+      _lastFingerprint = null;
       _scheduleDebounced();
     } catch (e, st) {
       if (!ref.mounted) return;
@@ -329,6 +332,18 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           phase: CloudSyncPhase.reauthRequired,
           errorToken: 'scopeMissing',
         );
+        return;
+      }
+      if (isInvalidGrant(e)) {
+        // client 已建立時（_ensureClient 短路）續期失敗不會經過
+        // GoogleAuthService.restore()，該處的攔截接不到，需在此另外攔截，
+        // 否則會落入下方 network 分支並無限重試、狀態列訊息也會誤導使用者。
+        _log.warning(
+          'sync round failed: invalid_grant mid-session, relink required',
+        );
+        _client?.close();
+        _client = null;
+        state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
         return;
       }
       _log.warning('sync round failed', e, st);
