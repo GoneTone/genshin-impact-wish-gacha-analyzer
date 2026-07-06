@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
@@ -95,10 +96,28 @@ class AccountManagement extends ConsumerWidget {
     );
   }
 
-  /// 彈出打字確認 dialog，確認後呼叫 [GachaRepositoryNotifier.removeUid]。
+  /// 彈出打字確認 dialog（已連結雲端時附「同時從雲端移除」勾選），
+  /// 確認後刪除本機帳號，勾選時再把 UID 排入雲端移除佇列。
   Future<void> _remove(BuildContext ctx, WidgetRef ref, String uid) async {
     final l = AppLocalizations.of(ctx)!;
-    final ok = await showConfirmTypeDialog(
+    final linked = ref.read(settingsProvider).cloudAccountEmail != null;
+
+    if (!linked) {
+      final ok = await showConfirmTypeDialog(
+        context: ctx,
+        title: l.confirmTitle,
+        body: l.confirmClearActiveBody(uid),
+        expectedText: uid,
+        cancelLabel: l.actionCancel,
+        confirmLabel: l.confirmDelete,
+        confirmIcon: Icons.delete_outline,
+      );
+      if (ok != true) return;
+      await ref.read(gachaRepositoryProvider.notifier).removeUid(uid);
+      return;
+    }
+
+    final result = await showConfirmTypeDialogWithCheckbox(
       context: ctx,
       title: l.confirmTitle,
       body: l.confirmClearActiveBody(uid),
@@ -106,9 +125,13 @@ class AccountManagement extends ConsumerWidget {
       cancelLabel: l.actionCancel,
       confirmLabel: l.confirmDelete,
       confirmIcon: Icons.delete_outline,
+      checkboxLabel: l.cloudSyncRemoveFromCloud,
     );
-    if (ok != true) return;
+    if (result == null || !result.confirmed) return;
     await ref.read(gachaRepositoryProvider.notifier).removeUid(uid);
+    if (result.checkboxChecked) {
+      await ref.read(cloudSyncProvider.notifier).queueCloudRemoval(uid);
+    }
   }
 }
 
