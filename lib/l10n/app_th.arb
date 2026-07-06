@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "การแปลงล้มเหลว ข้อมูลไม่มีการเปลี่ยนแปลง กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง",
   "settingsDataManagement": "จัดการข้อมูล",
+
+  "settingsCloudSync": "การซิงค์ผ่านคลาวด์",
+  "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างคอมพิวเตอร์หลายเครื่อง",
+  "cloudSyncUnconfigured": "บิลด์นี้ไม่ได้ตั้งค่าข้อมูลรับรอง Google OAuth จึงใช้การซิงค์ผ่านคลาวด์ไม่ได้",
+  "cloudSyncLink": "เชื่อมโยงบัญชี Google",
+  "cloudSyncAwaitingConsent": "เปิดเบราว์เซอร์แล้ว โปรดทำการอนุญาตให้เสร็จในเบราว์เซอร์...",
+  "cloudSyncLinkedAs": "เชื่อมโยงแล้ว: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "ซิงค์อัตโนมัติ",
+  "cloudSyncAutoToggleHint": "ซิงค์อัตโนมัติเมื่อเปิดแอปและหลังข้อมูลมีการเปลี่ยนแปลง หากปิดไว้ยังซิงค์ด้วยตนเองได้",
+  "cloudSyncNow": "ซิงค์ตอนนี้",
+  "cloudSyncUnlink": "ยกเลิกการเชื่อมโยง",
+  "cloudSyncUnlinkConfirmTitle": "ยกเลิกการเชื่อมโยง",
+  "cloudSyncUnlinkConfirmBody": "การซิงค์จะหยุดลง ข้อมูลในเครื่องและข้อมูลสำรองบนคลาวด์จะยังคงอยู่",
+  "cloudSyncLastSynced": "ซิงค์ล่าสุด: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "ยังไม่เคยซิงค์",
+  "cloudSyncErrorNetwork": "ซิงค์ไม่สำเร็จ: ปัญหาเครือข่าย จะลองใหม่โดยอัตโนมัติ",
+  "cloudSyncErrorBusy": "เลื่อนการซิงค์: มีการอัปเดตหรือการนำเข้ากำลังดำเนินอยู่ จะลองใหม่โดยอัตโนมัติ",
+  "cloudSyncErrorSchemaTooNew": "ข้ามการซิงค์: ข้อมูลบนคลาวด์ถูกสร้างโดยแอปเวอร์ชันใหม่กว่า โปรดอัปเดตแอปก่อน",
+  "cloudSyncErrorAuthFailed": "การอนุญาตล้มเหลว โปรดลองอีกครั้ง",
+  "cloudSyncErrorScopeMissing": "ไม่ได้รับสิทธิ์ Google ไดรฟ์ โปรดเชื่อมโยงใหม่และเลือกสิทธิ์การเข้าถึง Google ไดรฟ์ในหน้าอนุญาต",
+  "cloudSyncReauthRequired": "การอนุญาตหมดอายุแล้ว โปรดเชื่อมโยงบัญชี Google อีกครั้ง",
+  "cloudSyncRemoveFromCloud": "ลบบัญชีนี้ออกจากข้อมูลซิงค์บนคลาวด์ด้วย",
+  "cloudSyncPostAuthTitle": "การอนุญาตเสร็จสมบูรณ์",
+  "cloudSyncPostAuthBody": "คุณสามารถปิดหน้านี้แล้วกลับไปที่แอปได้",
+  "cloudSyncPostAuthScopeMissingTitle": "ขาดสิทธิ์ Google ไดรฟ์",
+  "cloudSyncPostAuthScopeMissingBody": "การอนุญาตครั้งนี้ไม่ได้รวมสิทธิ์การเข้าถึง Google ไดรฟ์ โปรดกลับไปที่แอป เชื่อมโยงใหม่ และเลือกสิทธิ์ไดรฟ์ในหน้าอนุญาต",
+
   "settingsAccountManagement": "จัดการบัญชี",
   "settingsPrivacySectionTitle": "ความเป็นส่วนตัว",
   "settingsMaskUidInUi": "ปิดบัง UID ในอินเทอร์เฟซ",
