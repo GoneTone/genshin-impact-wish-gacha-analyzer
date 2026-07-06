@@ -64,7 +64,8 @@
 - 多国语言（[协助翻译](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 可在设置开启界面 UID 遮罩（只显示前三码），保护隐私
 - 启动时自动检查新版本，也可在设置页手动触发
-- 所有数据留在本机，不上传
+- 云端同步（可选）：关联自己的 Google 账号后，卡池记录会自动备份到您自己的 Google 云端硬盘，并在多台电脑间双向同步；删除账号时可勾选一并从云端移除
+- 所有数据默认留在本机；云端同步为可选功能，启用后也只会备份到您自己的 Google 云端硬盘
 
 ## 截图
 
@@ -132,3 +133,22 @@ flutter build windows --release
 flutter test
 cargo test --manifest-path rust/Cargo.toml
 ```
+
+### 云端同步凭据（开发者）
+
+云端同步的 Google OAuth 凭据不随 repo 发布，fork 后需自备才能启用此功能：
+
+1. 到 [Google Cloud Console](https://console.cloud.google.com/) 创建项目并启用 **Google Drive API**。
+2. 配置 OAuth 同意屏幕（scopes：`.../auth/drive.appdata` 与 `email`），并创建「桌面应用（Desktop app）」类型的 OAuth 客户端 ID。
+3. 在项目根目录创建 git-ignored 的 `secrets/cloud_sync_defines.json`：
+
+    ```json
+    {
+      "CLOUD_SYNC_CLIENT_ID": "<your-client-id>",
+      "CLOUD_SYNC_CLIENT_SECRET": "<your-client-secret>"
+    }
+    ```
+
+4. 构建脚本（`scripts/build_installer/build_release.ps1`）会自动带入；直接运行 `flutter run` 时加上 `--dart-define-from-file=secrets/cloud_sync_defines.json`。未设置时 App 照常运行，仅云端同步区块显示未设置提示。
+
+发布 CI 由 repo Actions secrets `CLOUD_SYNC_CLIENT_ID`／`CLOUD_SYNC_CLIENT_SECRET` 生成同一文件。

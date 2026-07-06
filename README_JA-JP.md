@@ -64,7 +64,8 @@
 - 多言語対応（[翻訳にご協力ください](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 設定で画面上の UID マスク（先頭 3 桁のみ表示）を有効にでき、プライバシーを保護
 - 起動時に自動で新バージョンを確認。設定ページから手動で実行することもできます
-- すべてのデータはお使いのパソコン内に残り、アップロードされません
+- クラウド同期（任意）：自分の Google アカウントを連携すると、祈願履歴が自分の Google ドライブへ自動バックアップされ、複数の PC 間で双方向に同期されます。アカウント削除時にはクラウドからの削除も選択できます
+- すべてのデータは既定でローカルに保存されます。クラウド同期はオプトインで、有効にしても自分の Google ドライブにのみバックアップされます
 
 ## スクリーンショット
 
@@ -132,3 +133,22 @@ flutter build windows --release
 flutter test
 cargo test --manifest-path rust/Cargo.toml
 ```
+
+### クラウド同期の認証情報（開発者向け）
+
+クラウド同期用の Google OAuth 認証情報は本リポジトリには含まれていません。フォークしてこの機能を有効にするには、各自で用意する必要があります。
+
+1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成し、**Google Drive API** を有効にします。
+2. OAuth 同意画面を設定し（スコープ：`.../auth/drive.appdata` と `email`）、種類が「デスクトップアプリ（Desktop app）」の OAuth クライアント ID を作成します。
+3. プロジェクトのルートに、git 管理対象外の `secrets/cloud_sync_defines.json` を作成します。
+
+    ```json
+    {
+      "CLOUD_SYNC_CLIENT_ID": "<your-client-id>",
+      "CLOUD_SYNC_CLIENT_SECRET": "<your-client-secret>"
+    }
+    ```
+
+4. ビルドスクリプト（`scripts/build_installer/build_release.ps1`）は自動的にこのファイルを読み込みます。`flutter run` で直接実行する場合は `--dart-define-from-file=secrets/cloud_sync_defines.json` を追加してください。設定していなくてもアプリは通常どおり動作し、クラウド同期のセクションに未設定である旨の通知が表示されるだけです。
+
+リリース CI では、repo の Actions secrets `CLOUD_SYNC_CLIENT_ID`／`CLOUD_SYNC_CLIENT_SECRET` から同じファイルを生成します。

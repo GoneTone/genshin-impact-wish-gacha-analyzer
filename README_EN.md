@@ -64,7 +64,8 @@ The utility may trigger anti-virus software during installation and execution. T
 - Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
 - Optional UID masking in the UI (first 3 digits only) for added privacy
 - Automatic update check on launch, with a manual trigger in Settings
-- All data stays on your machine — nothing is uploaded
+- Cloud sync (optional): link your own Google account to automatically back up gacha records to your own Google Drive and keep multiple computers in sync; account deletion can optionally remove the account from the cloud as well
+- All data stays local by default; cloud sync is opt-in and only backs up to your own Google Drive
 
 ## Screenshot
 
@@ -132,3 +133,22 @@ Output: `build\windows\x64\runner\Release\`
 flutter test
 cargo test --manifest-path rust/Cargo.toml
 ```
+
+### Cloud sync credentials (for developers)
+
+The Google OAuth credentials for cloud sync are not shipped in the repo. Forks need their own to enable the feature:
+
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com/) and enable the **Google Drive API**.
+2. Configure the OAuth consent screen (scopes: `.../auth/drive.appdata` and `email`) and create a **Desktop app** OAuth client ID.
+3. Create a git-ignored `secrets/cloud_sync_defines.json` in the project root:
+
+    ```json
+    {
+      "CLOUD_SYNC_CLIENT_ID": "<your-client-id>",
+      "CLOUD_SYNC_CLIENT_SECRET": "<your-client-secret>"
+    }
+    ```
+
+4. The build script (`scripts/build_installer/build_release.ps1`) picks it up automatically; for `flutter run`, add `--dart-define-from-file=secrets/cloud_sync_defines.json`. Without it the app still works, only the cloud sync section shows an unconfigured notice.
+
+Release CI writes the same file from the repo Actions secrets `CLOUD_SYNC_CLIENT_ID` / `CLOUD_SYNC_CLIENT_SECRET`.
