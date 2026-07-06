@@ -95,7 +95,20 @@ if ($LASTEXITCODE -ne 0) { throw "flutter pub get failed" }
 
 Write-Host ""
 Write-Host "==> flutter build windows --release" -ForegroundColor Green
-flutter build windows --release
+
+# 雲端同步 OAuth 憑證不進 repo（會被 GitHub push protection 攔），改由建置時
+# dart-define 注入：本機放 git-ignored 的 secrets/cloud_sync_defines.json，
+# CI 於建置前由 repo secrets 產生同一路徑檔案。檔案不存在時照常建置，
+# 僅雲端同步功能停用（isCloudSyncConfigured = false）。
+$BuildArgs = @('build', 'windows', '--release')
+$CloudSyncDefines = Join-Path $ProjectRoot 'secrets/cloud_sync_defines.json'
+if (Test-Path $CloudSyncDefines) {
+    Write-Host "cloud sync defines: $CloudSyncDefines" -ForegroundColor DarkGray
+    $BuildArgs += "--dart-define-from-file=$CloudSyncDefines"
+} else {
+    Write-Host "cloud sync defines not found; cloud sync will be disabled in this build" -ForegroundColor Yellow
+}
+flutter @BuildArgs
 if ($LASTEXITCODE -ne 0) { throw "flutter build failed" }
 
 # --- 3a. (Optional) Sign app exe before packaging --------------------------

@@ -67,3 +67,6 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Local build-time secrets (dart-define-from-file inputs; CI writes its own from repo secrets)
+/secrets/
