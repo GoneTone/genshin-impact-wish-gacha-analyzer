@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "Échec de la conversion, les données n'ont pas été modifiées. Veuillez vérifier votre connexion et réessayer.",
   "settingsDataManagement": "Gestion des données",
-
   "settingsCloudSync": "Synchronisation cloud",
   "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs ordinateurs.",
   "cloudSyncUnconfigured": "Cette version ne contient pas d'identifiants Google OAuth ; la synchronisation cloud est indisponible.",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "Vous pouvez fermer cet onglet et revenir à l'application.",
   "cloudSyncPostAuthScopeMissingTitle": "Autorisation Google Drive manquante",
   "cloudSyncPostAuthScopeMissingBody": "La case des données Google Drive n'a pas été cochée. Revenez à l'application, associez à nouveau votre compte et cochez cette autorisation.",
-
   "settingsAccountManagement": "Gestion des comptes",
   "settingsPrivacySectionTitle": "Confidentialité",
   "settingsMaskUidInUi": "Masquer l'UID dans l'interface",
