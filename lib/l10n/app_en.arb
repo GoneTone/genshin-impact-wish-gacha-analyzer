@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "Conversion failed, data unchanged. Please check your network and try again.",
   "settingsDataManagement": "Data management",
-
   "settingsCloudSync": "Cloud sync",
   "cloudSyncIntro": "Link your Google account to automatically back up gacha records to your Google Drive and keep multiple computers in sync.",
   "cloudSyncUnconfigured": "This build has no Google OAuth credentials configured; cloud sync is unavailable.",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "You can close this tab and return to the app.",
   "cloudSyncPostAuthScopeMissingTitle": "Missing Google Drive permission",
   "cloudSyncPostAuthScopeMissingBody": "The Google Drive data checkbox was not ticked. Please return to the app, relink, and tick that permission.",
-
   "settingsAccountManagement": "Account management",
   "settingsPrivacySectionTitle": "Privacy",
   "settingsMaskUidInUi": "Mask UID in interface",
