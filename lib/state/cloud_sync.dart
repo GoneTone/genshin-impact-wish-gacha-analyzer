@@ -118,6 +118,10 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// 授權流程世代號；cancelLink／unlink 時遞增以拋棄過期的授權結果。
   int _authGeneration = 0;
 
+  /// debounce 與 busy 重排的延遲；測試可縮短以免等真實計時。
+  @visibleForTesting
+  Duration debounceDelay = const Duration(seconds: 5);
+
   @override
   CloudSyncState build() {
     ref.onDispose(() {
@@ -318,12 +322,19 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         phase: CloudSyncPhase.error,
         errorToken: 'busy',
       );
-      // busy 那輪未完成合併（可能已下載但沒套用的雲端內容），指紋防空轉
-      // 機制不該吃掉這輪補救重試，故清空指紋讓 debounce 到點時一定真的跑。
-      _lastFingerprint = null;
-      _scheduleDebounced();
+      _scheduleBusyRetry();
     } catch (e, st) {
       if (!ref.mounted) return;
+      if (isInvalidGrant(e)) {
+        // 連結後 client 常駐，token 被撤銷只會在自動續期時自 API 呼叫
+        // 途中爆出 invalid_grant——重試必敗，比照 restore 失敗進
+        // reauthRequired 停止自動同步；stale client 一併汰換。
+        _log.warning('sync round failed: invalid_grant, relink required');
+        _client?.close();
+        _client = null;
+        state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
+        return;
+      }
       if (isInsufficientScope(e)) {
         // 既存 token 缺 Drive 權限（早期授權漏勾）：重試必敗，比照授權失效
         // 進 reauthRequired 停止自動同步，狀態列指引使用者重新連結並勾選。
@@ -332,18 +343,6 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           phase: CloudSyncPhase.reauthRequired,
           errorToken: 'scopeMissing',
         );
-        return;
-      }
-      if (isInvalidGrant(e)) {
-        // client 已建立時（_ensureClient 短路）續期失敗不會經過
-        // GoogleAuthService.restore()，該處的攔截接不到，需在此另外攔截，
-        // 否則會落入下方 network 分支並無限重試、狀態列訊息也會誤導使用者。
-        _log.warning(
-          'sync round failed: invalid_grant mid-session, relink required',
-        );
-        _client?.close();
-        _client = null;
-        state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
         return;
       }
       _log.warning('sync round failed', e, st);
@@ -379,13 +378,24 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     _scheduleDebounced();
   }
 
-  /// 5 秒後跑一輪；到點時指紋沒變就跳過（避免同步自身的合併寫入造成空轉輪）。
+  /// [debounceDelay] 後跑一輪；到點時指紋沒變就跳過
+  /// （避免同步自身的合併寫入造成空轉輪）。
   void _scheduleDebounced() {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(seconds: 5), () {
+    _debounce = Timer(debounceDelay, () {
       if (!ref.mounted || !_linked) return;
       if (syncFingerprint(_exportLocal()) == _lastFingerprint) return;
       unawaited(syncNow(manual: false, trigger: 'dataChange'));
+    });
+  }
+
+  /// busy 重排：與 [_scheduleDebounced] 不同，**不做**指紋跳過——被擋下的
+  /// 那輪可能是要合併雲端側的新資料，本機指紋沒變不代表這輪沒事做。
+  void _scheduleBusyRetry() {
+    _debounce?.cancel();
+    _debounce = Timer(debounceDelay, () {
+      if (!ref.mounted || !_linked) return;
+      unawaited(syncNow(manual: false, trigger: 'busyRetry'));
     });
   }
 

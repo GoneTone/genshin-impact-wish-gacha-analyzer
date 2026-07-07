@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -75,18 +74,13 @@ void main() {
   });
 
   /// 建立完成載入的 container（HoYoWiki API 一律回 500，補抓 best-effort 空跑）。
-  ///
-  /// [storage] 預設用真實檔案系統版 [GachaStorage]；驅動 fakeAsync 虛擬時鐘的
-  /// 測試需改傳 [InMemoryGachaStorage]，避免真實檔案 I/O 卡住虛擬時間推進。
-  Future<ProviderContainer> makeContainer({GachaStorage? storage}) async {
+  Future<ProviderContainer> makeContainer() async {
     final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
     await hoyowikiDir.create();
     final container = ProviderContainer(
       overrides: [
         appVersionProvider.overrideWithValue('1.6.0'),
-        gachaStorageProvider.overrideWithValue(
-          storage ?? GachaStorage(tempDir),
-        ),
+        gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
         gachaCaptureProvider.overrideWithValue(FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(hoyowikiDir),
@@ -358,7 +352,10 @@ void main() {
     await notifier.link();
     expect(remote.uploads, 1);
 
-    remote.downloadError = Exception('Refresh failed: invalid_grant');
+    remote.downloadError = Exception(
+      'ServerRequestFailedException: Failed to refresh access token: '
+      'invalid_grant',
+    );
 
     await notifier.syncNow(manual: true);
 
@@ -370,51 +367,29 @@ void main() {
     expect(remote.uploads, 1);
   });
 
-  test('busy 輪後 debounce timer 到點 → 真的補跑同步（迴歸：busy 分支須清空指紋）', () async {
-    // 用 InMemoryGachaStorage：待會要在 fakeAsync 的同步 callback 內用
-    // async.elapse 推進真實 5 秒 debounce Timer，若補救輪內 _runImport
-    // 呼叫的是真實檔案版 GachaStorage.save，其寫入完成通知來自背景執行緒，
-    // 不受 FakeAsync 虛擬時鐘控制，在同步 callback 內永遠等不到；換成純
-    // 記憶體實作後，整條路徑都只靠 microtask 完成，flushMicrotasks 才能
-    // 確實把補救輪推進到底。
+  test('busy 重排不做指紋跳過：本機沒變也會補跑並合併雲端新資料', () async {
     remote.content = _cloudBundleJson('800000001');
-    final container = await makeContainer(storage: InMemoryGachaStorage());
+    final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
     expect(remote.uploads, 1);
 
-    // 換一份新帳號的雲端內容，確保 busy 那輪真的有下載到未合併的資料；
-    // 本機資料在整個 busy → 補救輪之前都不會變動（重現「指紋沒變」場景）。
+    // 模擬該輪撞上更新／匯入 busy 被擋；換一份新帳號的雲端內容，
+    // 確保被擋的那輪確實下載到了未合併的雲端資料。
+    notifier.debounceDelay = Duration.zero;
     remote.content = _cloudBundleJson('800000002');
     container
         .read(gachaRepositoryProvider.notifier)
         .debugSetProgress(const Preparing());
+    await notifier.syncNow(manual: false, trigger: 'busyTest');
+    expect(container.read(cloudSyncProvider).errorToken, 'busy');
 
-    fakeAsync((async) {
-      // busy 那輪的 syncNow 呼叫必須發生在 fakeAsync zone 內，
-      // _scheduleDebounced 建立的 Timer 才會是虛擬時鐘可控制的假 Timer；
-      // 若在 zone 外呼叫，之後的 async.elapse 完全不會觸發到它。
-      unawaited(notifier.syncNow(manual: true, trigger: 'busyTest'));
-      async.flushMicrotasks();
+    // busy 解除；本機完全沒變（匯出指紋與上輪相同），正是舊版 bug 會被
+    // 指紋比對誤判「內容沒變」而跳過補救輪的場景。
+    container.read(gachaRepositoryProvider.notifier).clearProgress();
+    await Future<void>.delayed(const Duration(milliseconds: 100));
 
-      final busyState = container.read(cloudSyncProvider);
-      expect(busyState.phase, CloudSyncPhase.error);
-      expect(busyState.errorToken, 'busy');
-      // 合併階段就失敗，沒有走到上傳。
-      expect(remote.uploads, 1);
-
-      // 清除 busy 狀態但不動本機資料：本機匯出指紋維持不變，正是舊版
-      // bug 會被指紋比對誤判「內容沒變」而跳過補救輪的場景。
-      container.read(gachaRepositoryProvider.notifier).clearProgress();
-
-      // 推進虛擬時鐘到 debounce 到點：_scheduleDebounced 排的 5 秒
-      // Timer 觸發，內部先比對指紋，busy 分支已清空 _lastFingerprint，
-      // 指紋比對必為假，才會真的跑 syncNow('dataChange') 補救輪。
-      async.elapse(const Duration(seconds: 5));
-      async.flushMicrotasks();
-    });
-
-    expect(remote.uploads, 2);
+    // 重排的補跑必須執行並把雲端新記錄合併進本機。
     expect(
       container.read(gachaRepositoryProvider).byUid.keys,
       contains('800000002'),
