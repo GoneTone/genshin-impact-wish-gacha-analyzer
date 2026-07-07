@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "Falha na conversão, os dados não foram alterados. Verifique sua conexão e tente novamente.",
   "settingsDataManagement": "Gerenciamento de dados",
-
   "settingsCloudSync": "Sincronização na nuvem",
   "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários computadores.",
   "cloudSyncUnconfigured": "Esta compilação não tem credenciais do Google OAuth configuradas; a sincronização na nuvem está indisponível.",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "Você pode fechar esta guia e voltar ao app.",
   "cloudSyncPostAuthScopeMissingTitle": "Permissão do Google Drive ausente",
   "cloudSyncPostAuthScopeMissingBody": "A caixa de dados do Google Drive não foi marcada. Volte ao app, vincule novamente e marque essa permissão.",
-
   "settingsAccountManagement": "Gerenciamento de contas",
   "settingsPrivacySectionTitle": "Privacidade",
   "settingsMaskUidInUi": "Mascarar UID na interface",
