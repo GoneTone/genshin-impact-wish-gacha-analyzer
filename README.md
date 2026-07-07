@@ -60,11 +60,12 @@
 - 自動補上角色 / 武器的圖示與資料（來源：[HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)）：表格與時間軸都附圖示；點擊物品可查看官方插圖、描述與標籤，並一鍵跳轉 HoYoWiki
 - 一鍵生成分享圖（可選深色 / 淺色主題、UID 全顯或只留前三碼遮罩），自動存檔並複製到剪貼簿
 - 帳號資料匯出 / 匯入 JSON
+- 雲端同步：連結您自己的 Google 帳號後，卡池記錄自動備份到您的 Google 雲端硬碟，並在多台電腦間雙向同步；刪除帳號時可勾選一併從雲端移除
 - 深色 / 淺色主題切換
 - 多國語言（[協助翻譯](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 可在設定開啟介面 UID 遮罩（只顯示前三碼），保護隱私
 - 啟動時自動檢查新版本，也可在設定頁手動觸發
-- 所有資料留在本機，不上傳
+- 所有資料預設留在本機、不上傳；雲端同步為選擇性功能，啟用後也只會備份到您自己的 Google 雲端硬碟
 
 ## 截圖
 
@@ -101,6 +102,28 @@ Rust 會在 `flutter run` / `flutter build` 時由 `rust_builder/` 的 cargokit 
 ```bash
 flutter run -d windows
 ```
+
+### 雲端同步憑證（選用）
+
+雲端同步（Google 雲端硬碟備份）需要 Google OAuth 憑證。未設定時其他功能完全不受影響，僅設定頁的雲端同步區塊顯示未設定提示。
+
+要在自己的建置啟用：
+
+1. 到 [Google Cloud Console](https://console.cloud.google.com/) 建立專案，啟用 **Google Drive API**，設定 OAuth 同意畫面（scopes：`.../auth/drive.appdata` 與 `email`），建立「**電腦版應用程式**」類型的 OAuth 用戶端。
+2. 在專案根目錄建立 `secrets/cloud_sync_defines.json`（已被 git 忽略）：
+
+   ```json
+   {
+     "CLOUD_SYNC_CLIENT_ID": "你的 client id",
+     "CLOUD_SYNC_CLIENT_SECRET": "你的 client secret"
+   }
+   ```
+
+3. 執行時帶入該檔（JetBrains IDE 可直接選內建的「main.dart (cloud sync)」執行設定；`build_release.ps1` 打包時會自動偵測）：
+
+   ```bash
+   flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
 
 ### Rust ↔ Dart 橋接程式碼產生
 

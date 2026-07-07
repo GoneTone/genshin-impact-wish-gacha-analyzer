@@ -33,6 +33,15 @@ class _NoRecordsException implements Exception {
   const _NoRecordsException();
 }
 
+/// 雲端同步請求匯入時，已有更新或匯入進行中而無法執行時拋出；呼叫端應稍後重試。
+class CloudSyncBusyException implements Exception {
+  /// 建立 [CloudSyncBusyException]。
+  const CloudSyncBusyException();
+
+  @override
+  String toString() => 'CloudSyncBusyException';
+}
+
 /// 祈願資料整體狀態，包含帳號資料、更新進度與 bootstrap 旗標。
 @immutable
 class GachaState {
@@ -118,6 +127,9 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// Logger 實例（非破壞性 metadata 更新流程）。
   static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
+
+  /// Logger 實例（雲端同步觸發的匯入與補抓）。
+  static final _cloudSyncLog = Logger('cloudsync.sync');
 
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
@@ -739,6 +751,101 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
+  /// 雲端同步專用的靜默匯入：純資料合併（寫入 storage＋整併偏好），
+  /// 不啟動 progress UI、不抓物品圖片。
+  ///
+  /// 已有更新或匯入進行中時拋 [CloudSyncBusyException]，由雲端同步層重排。
+  Future<ImportResult> importBundleForCloudSync(AccountsBundle bundle) async {
+    if (state.progress != null || _isUpdating) {
+      _cloudSyncLog.info('cloud import rejected: busy');
+      throw const CloudSyncBusyException();
+    }
+    _isUpdating = true;
+    try {
+      _cloudSyncLog.info(
+        'cloud import start, accounts=${bundle.accounts.length}',
+      );
+      return await _runImport(bundle);
+    } finally {
+      _isUpdating = false;
+    }
+  }
+
+  /// 雲端同步合併出新記錄後的補抓：補抓缺漏的物品圖示與詳情，走與
+  /// 「更新物品資料」相同的 progress 呈現，結束顯示物品資料／補圖張數
+  /// 摘要（不帶 importSummary，避免顯示成手動匯入的結果文案）。
+  ///
+  /// 刻意**不**先 emit `Preparing`：合併進來的物品若本機圖示／詳情皆已
+  /// 齊全，整段沒有工作可做，不該彈任何視窗——有工作時 [_fetchHoYoWiki]
+  /// 會自行 emit 進度（對話框屆時才彈出）；結束時三個計數全零就靜默清掉
+  /// progress，不顯示「更新完成」。
+  ///
+  /// best-effort：補抓失敗僅記 log，仍照常收尾；更新／匯入進行中或
+  /// bootstrap 未完成時直接略過，缺圖留待下次「更新」自然補齊。
+  Future<void> fetchItemImagesForCloudSync() async {
+    if (state.progress != null) {
+      _cloudSyncLog.info('post-sync item fetch skipped: progress in-flight');
+      return;
+    }
+    if (_isUpdating || state.isBootstrapping) {
+      _cloudSyncLog.info('post-sync item fetch skipped: busy or bootstrapping');
+      return;
+    }
+    _isUpdating = true;
+    _cancelTriggered = false;
+    _cloudSyncLog.info('post-sync item fetch start');
+
+    final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
+    _activeCancellable = cancellable;
+    var result = (
+      imagesDownloaded: 0,
+      itemsRefreshed: 0,
+      staleLangItemsPruned: 0,
+    );
+    try {
+      try {
+        result = await _fetchHoYoWiki(cancellable.client);
+      } catch (e, st) {
+        _cloudSyncLog.warning(
+          'post-sync hoyowiki stage threw (ignored)',
+          e,
+          st,
+        );
+      }
+      if (!ref.mounted) return;
+
+      final didWork =
+          result.imagesDownloaded > 0 ||
+          result.itemsRefreshed > 0 ||
+          result.staleLangItemsPruned > 0;
+      if (didWork) {
+        state = state.copyWith(
+          progress: UpdateCompleted(
+            totalNewRecords: 0,
+            failedBanners: const [],
+            updatedAt: DateTime.now().toUtc(),
+            hoYoWikiImagesDownloaded: result.imagesDownloaded,
+            hoyoWikiEntriesRefreshed: result.itemsRefreshed,
+            hoyoWikiStaleItemsPruned: result.staleLangItemsPruned,
+          ),
+        );
+      } else {
+        // 沒有實際成果：清掉過程中可能已 emit 的進度，讓對話框自動關閉。
+        state = state.copyWith(clearProgress: true);
+      }
+      _cloudSyncLog.info(
+        'post-sync item fetch done, items=${result.itemsRefreshed} '
+        'images=${result.imagesDownloaded} '
+        'dialog=${didWork ? 'shown' : 'suppressed'}',
+      );
+    } finally {
+      _activeCancellable?.client.close();
+      _activeCancellable = null;
+      _cancelTriggered = false;
+      _isUpdating = false;
+    }
+  }
+
   /// 刪除目前作用中帳號的所有資料。
   Future<void> clearActive() async {
     final uid = state.activeUid;
@@ -1323,6 +1430,16 @@ class GachaRepository extends Notifier<GachaState> {
           itemsRefreshed: refreshedIds.length,
           staleLangItemsPruned: staleLangItemsPruned,
         );
+      }
+    }
+    // 有圖檔被重新下載＝磁碟快取曾與記憶體索引分歧（快取目錄可能在執行中
+    // 被外部清掉，index 檔也一併遺失）。此時若這輪沒有任何 search／entry
+    // 寫入，index 檔不會被重建，重啟後所有圖示將失效——主動重新落盤一次。
+    if (downloaded > 0) {
+      try {
+        await indexNotifier.persistNow();
+      } catch (e, st) {
+        _log.warning('index re-persist failed (ignored)', e, st);
       }
     }
     return (

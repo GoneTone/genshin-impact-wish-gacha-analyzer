@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "Échec de la conversion, les données n'ont pas été modifiées. Veuillez vérifier votre connexion et réessayer.",
   "settingsDataManagement": "Gestion des données",
+
+  "settingsCloudSync": "Synchronisation cloud",
+  "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs ordinateurs.",
+  "cloudSyncUnconfigured": "Cette version ne contient pas d'identifiants Google OAuth ; la synchronisation cloud est indisponible.",
+  "cloudSyncLink": "Associer un compte Google",
+  "cloudSyncAwaitingConsent": "Navigateur ouvert. Terminez l'autorisation dans le navigateur...",
+  "cloudSyncLinkedAs": "Associé : {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Synchronisation automatique",
+  "cloudSyncAutoToggleHint": "Synchronise automatiquement au démarrage de l'app et après chaque modification des données ; la synchronisation manuelle reste possible si désactivée.",
+  "cloudSyncNow": "Synchroniser maintenant",
+  "cloudSyncUnlink": "Dissocier",
+  "cloudSyncUnlinkConfirmTitle": "Dissocier",
+  "cloudSyncUnlinkConfirmBody": "La synchronisation s'arrêtera. Les données locales et la sauvegarde cloud seront conservées.",
+  "cloudSyncLastSynced": "Dernière synchronisation : {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Pas encore synchronisé",
+  "cloudSyncErrorNetwork": "Échec de la synchronisation : problème réseau. Nouvel essai automatique.",
+  "cloudSyncErrorBusy": "Synchronisation reportée : une mise à jour ou une importation est en cours. Nouvel essai automatique.",
+  "cloudSyncErrorSchemaTooNew": "Synchronisation ignorée : les données cloud ont été créées par une version plus récente de l'app. Mettez d'abord l'app à jour.",
+  "cloudSyncErrorAuthFailed": "Échec de l'autorisation. Veuillez réessayer.",
+  "cloudSyncErrorScopeMissing": "L'autorisation n'inclut pas l'accès à Google Drive. Associez à nouveau votre compte et cochez la case des données Drive sur la page de consentement Google.",
+  "cloudSyncReauthRequired": "L'autorisation a expiré. Veuillez associer à nouveau votre compte Google.",
+  "cloudSyncRemoveFromCloud": "Supprimer aussi ce compte des données de synchronisation cloud",
+  "cloudSyncPostAuthTitle": "Autorisation terminée",
+  "cloudSyncPostAuthBody": "Vous pouvez fermer cet onglet et revenir à l'application.",
+  "cloudSyncPostAuthScopeMissingTitle": "Autorisation Google Drive manquante",
+  "cloudSyncPostAuthScopeMissingBody": "La case des données Google Drive n'a pas été cochée. Revenez à l'application, associez à nouveau votre compte et cochez cette autorisation.",
+
   "settingsAccountManagement": "Gestion des comptes",
   "settingsPrivacySectionTitle": "Confidentialité",
   "settingsMaskUidInUi": "Masquer l'UID dans l'interface",

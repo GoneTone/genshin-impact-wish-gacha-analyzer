@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "Conversion failed, data unchanged. Please check your network and try again.",
   "settingsDataManagement": "Data management",
+
+  "settingsCloudSync": "Cloud sync",
+  "cloudSyncIntro": "Link your Google account to automatically back up gacha records to your Google Drive and keep multiple computers in sync.",
+  "cloudSyncUnconfigured": "This build has no Google OAuth credentials configured; cloud sync is unavailable.",
+  "cloudSyncLink": "Link Google account",
+  "cloudSyncAwaitingConsent": "Browser opened. Please finish authorization in your browser...",
+  "cloudSyncLinkedAs": "Linked: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Auto sync",
+  "cloudSyncAutoToggleHint": "Syncs automatically on app start and after data changes; manual sync stays available when off.",
+  "cloudSyncNow": "Sync now",
+  "cloudSyncUnlink": "Unlink",
+  "cloudSyncUnlinkConfirmTitle": "Unlink",
+  "cloudSyncUnlinkConfirmBody": "Syncing will stop. Both local data and the cloud backup are kept.",
+  "cloudSyncLastSynced": "Last synced: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Not synced yet",
+  "cloudSyncErrorNetwork": "Sync failed: network problem. Will retry automatically.",
+  "cloudSyncErrorBusy": "Sync deferred: an update or import is in progress. Will retry automatically.",
+  "cloudSyncErrorSchemaTooNew": "Sync skipped: the cloud data was created by a newer app version. Please update the app first.",
+  "cloudSyncErrorAuthFailed": "Authorization failed. Please try again.",
+  "cloudSyncErrorScopeMissing": "The authorization did not include Google Drive access. Please relink and tick the Drive data checkbox on the Google consent page.",
+  "cloudSyncReauthRequired": "Authorization expired. Please relink your Google account.",
+  "cloudSyncRemoveFromCloud": "Also remove this account from cloud sync data",
+  "cloudSyncPostAuthTitle": "Authorization complete",
+  "cloudSyncPostAuthBody": "You can close this tab and return to the app.",
+  "cloudSyncPostAuthScopeMissingTitle": "Missing Google Drive permission",
+  "cloudSyncPostAuthScopeMissingBody": "The Google Drive data checkbox was not ticked. Please return to the app, relink, and tick that permission.",
+
   "settingsAccountManagement": "Account management",
   "settingsPrivacySectionTitle": "Privacy",
   "settingsMaskUidInUi": "Mask UID in interface",

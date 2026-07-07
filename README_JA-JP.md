@@ -60,11 +60,12 @@
 - キャラクター / 武器のアイコンとデータを自動で補完（出典：[HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)）。テーブルとタイムラインのどちらにもアイコンを表示。アイテムをクリックすると公式イラスト・説明・タグを閲覧でき、HoYoWiki へワンクリックで移動できます
 - シェア画像をワンクリックで生成（ダーク / ライトテーマ、UID 全表示または先頭 3 桁のみのマスクを選択可能）。自動で保存され、クリップボードにもコピーされます
 - アカウントデータを JSON でエクスポート / インポート
+- クラウド同期：ご自身の Google アカウントを連携すると、祈願履歴が自動的に Google ドライブへバックアップされ、複数の PC 間で同期されます。アカウント削除時にクラウドからも削除するよう選択できます
 - ダーク / ライトテーマの切り替え
 - 多言語対応（[翻訳にご協力ください](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 設定で画面上の UID マスク（先頭 3 桁のみ表示）を有効にでき、プライバシーを保護
 - 起動時に自動で新バージョンを確認。設定ページから手動で実行することもできます
-- すべてのデータはお使いのパソコン内に残り、アップロードされません
+- すべてのデータは既定でローカルに留まり、アップロードされません。クラウド同期は任意機能で、有効にした場合もご自身の Google ドライブにのみバックアップされます
 
 ## スクリーンショット
 
@@ -101,6 +102,28 @@ Rust は `flutter run` / `flutter build` の際に `rust_builder/` の cargokit 
 ```bash
 flutter run -d windows
 ```
+
+### クラウド同期の認証情報（任意）
+
+クラウド同期（Google ドライブへのバックアップ）には Google OAuth 認証情報が必要です。未設定でも他の機能には一切影響せず、設定ページのクラウド同期欄に未設定の案内が表示されるだけです。
+
+自分のビルドで有効にするには：
+
+1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成し、**Google Drive API** を有効化、OAuth 同意画面を設定（スコープ：`.../auth/drive.appdata` と `email`）し、「**デスクトップ アプリ**」タイプの OAuth クライアントを作成します。
+2. プロジェクトルートに `secrets/cloud_sync_defines.json` を作成します（git 管理外）：
+
+   ```json
+   {
+     "CLOUD_SYNC_CLIENT_ID": "あなたの client id",
+     "CLOUD_SYNC_CLIENT_SECRET": "あなたの client secret"
+   }
+   ```
+
+3. 実行時にこのファイルを渡します（JetBrains IDE では同梱の「main.dart (cloud sync)」実行構成が使えます。`build_release.ps1` はパッケージ時に自動検出します）：
+
+   ```bash
+   flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
 
 ### Rust ↔ Dart のブリッジコード生成
 

@@ -136,6 +136,66 @@ class SettingsNotifier extends Notifier<AppSettings> {
     );
     await SettingsStorage.save(state);
   }
+
+  /// 記錄已連結的雲端帳號 email，並把自動同步重設為預設開啟。
+  Future<void> setCloudAccount(String email) async {
+    state = state.copyWith(
+      cloudAccountEmail: email,
+      cloudAutoSyncEnabled: true,
+    );
+    await SettingsStorage.save(state);
+    Logger('cloudsync.auth').info('cloud account linked');
+  }
+
+  /// 清除雲端帳號連結（email、上次同步時間），autoSync 重設為 true。
+  ///
+  /// 待移除清單刻意**保留**：刪帳號的意圖在重新連結後仍應補刪。
+  Future<void> clearCloudAccount() async {
+    state = state.copyWith(
+      clearCloudAccountEmail: true,
+      clearCloudLastSyncedAt: true,
+      cloudAutoSyncEnabled: true,
+    );
+    await SettingsStorage.save(state);
+    Logger('cloudsync.auth').info('cloud account unlinked');
+  }
+
+  /// 切換自動雲端同步開關並持久化。
+  Future<void> setCloudAutoSyncEnabled(bool value) async {
+    state = state.copyWith(cloudAutoSyncEnabled: value);
+    await SettingsStorage.save(state);
+    Logger('cloudsync.sync').info('autoSync toggled=$value');
+  }
+
+  /// 記錄上次雲端同步成功時間並持久化。
+  Future<void> setCloudLastSyncedAt(DateTime at) async {
+    state = state.copyWith(cloudLastSyncedAt: at.toUtc());
+    await SettingsStorage.save(state);
+  }
+
+  /// 把 [uid] 排入待雲端移除清單（去重）並持久化。
+  Future<void> addCloudPendingRemoval(String uid) async {
+    if (state.cloudPendingRemovals.contains(uid)) return;
+    state = state.copyWith(
+      cloudPendingRemovals: List.unmodifiable([
+        ...state.cloudPendingRemovals,
+        uid,
+      ]),
+    );
+    await SettingsStorage.save(state);
+  }
+
+  /// 從待雲端移除清單移除 [uids]（同步成功後呼叫）並持久化。
+  Future<void> removeCloudPendingRemovals(List<String> uids) async {
+    if (uids.isEmpty) return;
+    final remove = uids.toSet();
+    state = state.copyWith(
+      cloudPendingRemovals: List.unmodifiable(
+        state.cloudPendingRemovals.where((u) => !remove.contains(u)),
+      ),
+    );
+    await SettingsStorage.save(state);
+  }
 }
 
 /// [SettingsNotifier] 的 Riverpod provider。

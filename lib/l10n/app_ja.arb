@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "変換に失敗しました。データは変更されていません。ネットワークを確認してから再試行してください。",
   "settingsDataManagement": "データ管理",
+
+  "settingsCloudSync": "クラウド同期",
+  "cloudSyncIntro": "Google アカウントを連携すると、祈願履歴が自動的に Google ドライブへバックアップされ、複数の PC 間で同期されます。",
+  "cloudSyncUnconfigured": "このビルドには Google OAuth 認証情報が設定されていないため、クラウド同期は利用できません。",
+  "cloudSyncLink": "Google アカウントを連携",
+  "cloudSyncAwaitingConsent": "ブラウザを開きました。ブラウザで認可を完了してください...",
+  "cloudSyncLinkedAs": "連携中：{email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "自動同期",
+  "cloudSyncAutoToggleHint": "アプリ起動時とデータ変更後に自動同期します。オフでも手動同期は可能です。",
+  "cloudSyncNow": "今すぐ同期",
+  "cloudSyncUnlink": "連携を解除",
+  "cloudSyncUnlinkConfirmTitle": "連携を解除",
+  "cloudSyncUnlinkConfirmBody": "解除すると同期は停止します。ローカルとクラウドのデータはどちらも保持されます。",
+  "cloudSyncLastSynced": "前回の同期：{time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "まだ同期していません",
+  "cloudSyncErrorNetwork": "同期に失敗しました：ネットワークの問題です。後で自動的に再試行します。",
+  "cloudSyncErrorBusy": "同期を保留しました：更新またはインポートが進行中です。後で自動的に再試行します。",
+  "cloudSyncErrorSchemaTooNew": "同期をスキップしました：クラウドのデータは新しいバージョンのアプリで作成されています。先にアプリを更新してください。",
+  "cloudSyncErrorAuthFailed": "認可に失敗しました。もう一度お試しください。",
+  "cloudSyncErrorScopeMissing": "認可に Google ドライブへのアクセス権が含まれていません。再連携し、Google の同意画面でドライブデータのチェックボックスをオンにしてください。",
+  "cloudSyncReauthRequired": "認可が失効しました。Google アカウントを再連携してください。",
+  "cloudSyncRemoveFromCloud": "クラウド同期データからもこのアカウントを削除する",
+  "cloudSyncPostAuthTitle": "認可が完了しました",
+  "cloudSyncPostAuthBody": "このタブを閉じて、アプリに戻って続行できます。",
+  "cloudSyncPostAuthScopeMissingTitle": "Google ドライブの権限が不足しています",
+  "cloudSyncPostAuthScopeMissingBody": "Google ドライブのデータのチェックボックスがオンになっていませんでした。アプリに戻って再連携し、その権限をオンにしてください。",
+
   "settingsAccountManagement": "アカウント管理",
   "settingsPrivacySectionTitle": "プライバシー",
   "settingsMaskUidInUi": "画面上の UID をマスク",

@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "Falha na conversão, os dados não foram alterados. Verifique sua conexão e tente novamente.",
   "settingsDataManagement": "Gerenciamento de dados",
+
+  "settingsCloudSync": "Sincronização na nuvem",
+  "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários computadores.",
+  "cloudSyncUnconfigured": "Esta compilação não tem credenciais do Google OAuth configuradas; a sincronização na nuvem está indisponível.",
+  "cloudSyncLink": "Vincular conta do Google",
+  "cloudSyncAwaitingConsent": "Navegador aberto. Conclua a autorização no navegador...",
+  "cloudSyncLinkedAs": "Vinculada: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Sincronização automática",
+  "cloudSyncAutoToggleHint": "Sincroniza automaticamente ao iniciar o app e após alterações nos dados; com a opção desligada, a sincronização manual continua disponível.",
+  "cloudSyncNow": "Sincronizar agora",
+  "cloudSyncUnlink": "Desvincular",
+  "cloudSyncUnlinkConfirmTitle": "Desvincular",
+  "cloudSyncUnlinkConfirmBody": "A sincronização será interrompida. Os dados locais e o backup na nuvem serão mantidos.",
+  "cloudSyncLastSynced": "Última sincronização: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Ainda não sincronizado",
+  "cloudSyncErrorNetwork": "Falha na sincronização: problema de rede. Nova tentativa automática.",
+  "cloudSyncErrorBusy": "Sincronização adiada: há uma atualização ou importação em andamento. Nova tentativa automática.",
+  "cloudSyncErrorSchemaTooNew": "Sincronização ignorada: os dados na nuvem foram criados por uma versão mais recente do app. Atualize o app primeiro.",
+  "cloudSyncErrorAuthFailed": "Falha na autorização. Tente novamente.",
+  "cloudSyncErrorScopeMissing": "A autorização não incluiu o acesso ao Google Drive. Vincule novamente e marque a caixa de dados do Drive na página de consentimento do Google.",
+  "cloudSyncReauthRequired": "A autorização expirou. Vincule novamente sua conta do Google.",
+  "cloudSyncRemoveFromCloud": "Remover também esta conta dos dados de sincronização na nuvem",
+  "cloudSyncPostAuthTitle": "Autorização concluída",
+  "cloudSyncPostAuthBody": "Você pode fechar esta guia e voltar ao app.",
+  "cloudSyncPostAuthScopeMissingTitle": "Permissão do Google Drive ausente",
+  "cloudSyncPostAuthScopeMissingBody": "A caixa de dados do Google Drive não foi marcada. Volte ao app, vincule novamente e marque essa permissão.",
+
   "settingsAccountManagement": "Gerenciamento de contas",
   "settingsPrivacySectionTitle": "Privacidade",
   "settingsMaskUidInUi": "Mascarar UID na interface",

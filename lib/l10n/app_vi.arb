@@ -344,6 +344,47 @@
   },
   "settingsDataLanguageUnifyFailed": "Chuyển đổi thất bại, dữ liệu không thay đổi. Vui lòng kiểm tra mạng và thử lại.",
   "settingsDataManagement": "Quản Lý Dữ Liệu",
+
+  "settingsCloudSync": "Đồng bộ đám mây",
+  "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều máy tính.",
+  "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
+  "cloudSyncLink": "Liên kết tài khoản Google",
+  "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất uỷ quyền trong trình duyệt...",
+  "cloudSyncLinkedAs": "Đã liên kết: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Tự động đồng bộ",
+  "cloudSyncAutoToggleHint": "Tự động đồng bộ khi mở ứng dụng và sau khi dữ liệu thay đổi; tắt đi vẫn có thể đồng bộ thủ công.",
+  "cloudSyncNow": "Đồng bộ ngay",
+  "cloudSyncUnlink": "Huỷ liên kết",
+  "cloudSyncUnlinkConfirmTitle": "Huỷ liên kết",
+  "cloudSyncUnlinkConfirmBody": "Đồng bộ sẽ dừng lại. Dữ liệu trên máy và bản sao lưu trên đám mây đều được giữ nguyên.",
+  "cloudSyncLastSynced": "Đồng bộ lần cuối: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Chưa đồng bộ",
+  "cloudSyncErrorNetwork": "Đồng bộ thất bại: sự cố mạng. Sẽ tự động thử lại.",
+  "cloudSyncErrorBusy": "Hoãn đồng bộ: đang có cập nhật hoặc nhập dữ liệu. Sẽ tự động thử lại.",
+  "cloudSyncErrorSchemaTooNew": "Đã bỏ qua đồng bộ: dữ liệu trên đám mây được tạo bởi phiên bản ứng dụng mới hơn. Vui lòng cập nhật ứng dụng trước.",
+  "cloudSyncErrorAuthFailed": "Uỷ quyền thất bại. Vui lòng thử lại.",
+  "cloudSyncErrorScopeMissing": "Lần uỷ quyền không bao gồm quyền truy cập Google Drive. Vui lòng liên kết lại và đánh dấu ô dữ liệu Drive trên trang đồng ý của Google.",
+  "cloudSyncReauthRequired": "Uỷ quyền đã hết hạn. Vui lòng liên kết lại tài khoản Google.",
+  "cloudSyncRemoveFromCloud": "Đồng thời xoá tài khoản này khỏi dữ liệu đồng bộ trên đám mây",
+  "cloudSyncPostAuthTitle": "Uỷ quyền hoàn tất",
+  "cloudSyncPostAuthBody": "Bạn có thể đóng thẻ này và quay lại ứng dụng.",
+  "cloudSyncPostAuthScopeMissingTitle": "Thiếu quyền Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "Ô dữ liệu Google Drive chưa được đánh dấu. Vui lòng quay lại ứng dụng, liên kết lại và đánh dấu quyền đó.",
+
   "settingsAccountManagement": "Quản Lý Tài Khoản",
   "settingsPrivacySectionTitle": "Quyền riêng tư",
   "settingsMaskUidInUi": "Che giấu UID trong giao diện",

@@ -3,6 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
+/// [showConfirmTypeDialogWithCheckbox] 的結果。
+class ConfirmTypeResult {
+  /// 建立 [ConfirmTypeResult]。
+  const ConfirmTypeResult({
+    required this.confirmed,
+    required this.checkboxChecked,
+  });
+
+  /// 使用者是否按下確認（打字閘通過）。
+  final bool confirmed;
+
+  /// 附加 checkbox 是否勾選。
+  final bool checkboxChecked;
+}
+
 /// 顯示一個要求使用者打字確認的 dialog。
 /// 回傳值：true = 確認 / false = 取消 / null = 系統 dismiss。
 Future<bool?> showConfirmTypeDialog({
@@ -13,8 +28,8 @@ Future<bool?> showConfirmTypeDialog({
   required String cancelLabel,
   required String confirmLabel,
   required IconData confirmIcon,
-}) {
-  return showDialog<bool>(
+}) async {
+  final result = await showDialog<ConfirmTypeResult>(
     context: context,
     barrierDismissible: false,
     builder: (ctx) => _ConfirmDialog(
@@ -24,6 +39,35 @@ Future<bool?> showConfirmTypeDialog({
       cancelLabel: cancelLabel,
       confirmLabel: confirmLabel,
       confirmIcon: confirmIcon,
+      checkboxLabel: null,
+    ),
+  );
+  return result?.confirmed;
+}
+
+/// 顯示帶附加 checkbox 的打字確認 dialog。
+/// 回傳 null = 系統 dismiss；否則見 [ConfirmTypeResult]。
+Future<ConfirmTypeResult?> showConfirmTypeDialogWithCheckbox({
+  required BuildContext context,
+  required String title,
+  required String body,
+  required String expectedText,
+  required String cancelLabel,
+  required String confirmLabel,
+  required IconData confirmIcon,
+  required String checkboxLabel,
+}) {
+  return showDialog<ConfirmTypeResult>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => _ConfirmDialog(
+      title: title,
+      body: body,
+      expectedText: expectedText,
+      cancelLabel: cancelLabel,
+      confirmLabel: confirmLabel,
+      confirmIcon: confirmIcon,
+      checkboxLabel: checkboxLabel,
     ),
   );
 }
@@ -87,6 +131,7 @@ class _ConfirmDialog extends StatefulWidget {
     required this.cancelLabel,
     required this.confirmLabel,
     required this.confirmIcon,
+    required this.checkboxLabel,
   });
 
   /// dialog 標題文字。
@@ -107,6 +152,9 @@ class _ConfirmDialog extends StatefulWidget {
   /// 確認按鈕前置圖示。
   final IconData confirmIcon;
 
+  /// 附加 checkbox 的標籤；null 代表不顯示 checkbox。
+  final String? checkboxLabel;
+
   @override
   State<_ConfirmDialog> createState() => _ConfirmDialogState();
 }
@@ -115,6 +163,9 @@ class _ConfirmDialog extends StatefulWidget {
 class _ConfirmDialogState extends State<_ConfirmDialog> {
   /// 確認字串輸入欄的 controller；內容與 [_ConfirmDialog.expectedText] 比對。
   final _ctrl = TextEditingController();
+
+  /// 附加 checkbox 目前是否勾選。
+  bool _checked = false;
 
   @override
   void dispose() {
@@ -141,11 +192,29 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
             decoration: const InputDecoration(border: OutlineInputBorder()),
             onChanged: (_) => setState(() {}),
           ),
+          if (widget.checkboxLabel != null) ...[
+            const SizedBox(height: AppSpacing.m),
+            // CheckboxListTile 不開放 horizontalTitleGap，預設 16dp 加上
+            // Checkbox 自身留白會讓勾選框與文字離太開，用 ListTileTheme 歸零。
+            ListTileTheme(
+              data: const ListTileThemeData(horizontalTitleGap: 0),
+              child: CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                title: Text(widget.checkboxLabel!),
+                value: _checked,
+                onChanged: (v) => setState(() => _checked = v ?? false),
+              ),
+            ),
+          ],
         ],
       ),
       actions: [
         TextButton.icon(
-          onPressed: () => Navigator.of(context).pop(false),
+          onPressed: () => Navigator.of(context).pop(
+            const ConfirmTypeResult(confirmed: false, checkboxChecked: false),
+          ),
           icon: const Icon(Icons.close, size: 18),
           label: Text(widget.cancelLabel),
         ),
@@ -154,7 +223,11 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
             backgroundColor: tokens.stateDanger,
             foregroundColor: Colors.white,
           ),
-          onPressed: matches ? () => Navigator.of(context).pop(true) : null,
+          onPressed: matches
+              ? () => Navigator.of(context).pop(
+                  ConfirmTypeResult(confirmed: true, checkboxChecked: _checked),
+                )
+              : null,
           icon: Icon(widget.confirmIcon, size: 18),
           label: Text(widget.confirmLabel),
         ),
