@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+
+/// load 被閘門扣住的 storage，用於決定性重現「載入完成前就有寫入」的時序。
+class _GatedLoadStorage extends HoYoWikiIndexStorage {
+  /// 建立 [_GatedLoadStorage]。
+  _GatedLoadStorage(super.baseDir);
+
+  /// load 開始前等待的閘門；complete 後才真正讀檔。
+  final loadGate = Completer<void>();
+
+  /// 等 [loadGate] 開啟後才讀檔。
+  @override
+  Future<HoYoWikiIndex> load() async {
+    await loadGate.future;
+    return super.load();
+  }
+}
 
 void main() {
   late Directory tempDir;
@@ -83,6 +100,46 @@ void main() {
     await notifier.waitForLoad();
     await notifier.setSearches(const []);
     expect(container.read(hoyowikiIndexProvider).searchMap, isEmpty);
+  });
+
+  test('初始載入完成前的寫入不得覆寫磁碟上的既有 index（迴歸：雲端同步啟動合併）', () async {
+    // 磁碟上已有完整 index（模擬長期累積的物品資料）。
+    await HoYoWikiIndexStorage(tempDir).save(
+      const HoYoWikiIndex(
+        searchMap: {'en-us::Hu Tao': '5125428'},
+        entries: {},
+        menuIds: {'5125428': 2},
+      ),
+    );
+
+    // 用可閘控 load 的 storage 讓「載入未完成」的時序決定性重現：
+    // 啟動時雲端同步的合併（setSearches）可能比 index 檔載入先跑到。
+    final gated = _GatedLoadStorage(tempDir);
+    final raceContainer = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(gated),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    addTearDown(raceContainer.dispose);
+    final notifier = raceContainer.read(hoyowikiIndexProvider.notifier);
+
+    // 載入尚未完成就寫入一筆新 hint。
+    final mutation = notifier.setSearches([
+      (name: 'Zhongli', lang: 'en-us', id: '999', menuId: 2),
+    ]);
+    gated.loadGate.complete();
+    await mutation;
+    await notifier.waitForLoad();
+
+    // 磁碟上既有資料必須還在，且新 hint 也已套用。
+    final reloaded = await HoYoWikiIndexStorage(tempDir).load();
+    expect(
+      reloaded.lookupId(name: 'Hu Tao', lang: 'en-us'),
+      '5125428',
+      reason: '載入前的寫入不得以空 index 覆寫磁碟',
+    );
+    expect(reloaded.lookupId(name: 'Zhongli', lang: 'en-us'), '999');
   });
 
   test('mergeEntry 更新 state 並 persist', () async {

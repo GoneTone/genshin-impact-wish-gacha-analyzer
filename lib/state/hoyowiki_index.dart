@@ -34,6 +34,11 @@ final hoyowikiIndexProvider =
     );
 
 /// 包裝 [HoYoWikiIndexStorage] 的 Riverpod Notifier；mutation 後同步 persist。
+///
+/// 所有 read-modify-write 寫入（setSearch／setSearches／mergeEntry／
+/// pruneLanguages）都先 `await waitForLoad()`：初始載入完成前 state 還是空
+/// index，直接改寫會以空基底 persist、把磁碟上的完整 index 整檔覆寫掉
+/// （啟動時雲端同步的合併就可能比載入先跑到）。
 class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   static final _log = Logger('gacha.hoyowiki.notifier');
 
@@ -73,6 +78,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     required String id,
     required int menuId,
   }) async {
+    await waitForLoad();
     await _lock.synchronized(() async {
       final newSearch = Map<String, String>.from(state.searchMap)
         ..['$lang::$name'] = id;
@@ -96,6 +102,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   ) async {
     final list = entries.toList(growable: false);
     if (list.isEmpty) return;
+    await waitForLoad();
     await _lock.synchronized(() async {
       final newSearch = Map<String, String>.from(state.searchMap);
       final newMenuIds = Map<String, int>.from(state.menuIds);
@@ -119,6 +126,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
   /// guard 觸發時回傳 `0`。
   Future<int> pruneLanguages(Set<String> keepLangs) async {
     if (keepLangs.isEmpty) return 0; // 防呆：空 keepLangs 會清掉全部頁面，直接 no-op
+    await waitForLoad();
     return _lock.synchronized(() async {
       var prunedCount = 0;
       final newEntries = <String, HoYoWikiEntry>{};
@@ -160,6 +168,7 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     required String lang,
     required HoYoWikiEntryFetched fetched,
   }) async {
+    await waitForLoad();
     await _lock.synchronized(() async {
       final existing = state.entries[id];
       final mergedPage = <String, HoYoWikiPageData>{
