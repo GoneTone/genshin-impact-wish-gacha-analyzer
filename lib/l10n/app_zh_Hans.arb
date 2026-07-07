@@ -343,9 +343,9 @@
 
   "settingsCloudSync": "云端同步",
   "cloudSyncIntro": "关联 Google 账号后，卡池记录会自动备份到你的 Google 云端硬盘，并在多台电脑间同步。",
-  "cloudSyncUnconfigured": "此构建未配置 Google OAuth 凭据，云端同步无法使用。",
+  "cloudSyncUnconfigured": "此构建未设置 Google OAuth 凭据，云端同步无法使用。",
   "cloudSyncLink": "关联 Google 账号",
-  "cloudSyncAwaitingConsent": "已打开浏览器，请在浏览器中完成授权...",
+  "cloudSyncAwaitingConsent": "已打开浏览器，请在浏览器完成授权...",
   "cloudSyncLinkedAs": "已关联：{email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -373,13 +373,13 @@
   "cloudSyncErrorBusy": "同步暂缓：当前有更新或导入进行中，稍后会自动重试。",
   "cloudSyncErrorSchemaTooNew": "同步已跳过：云端数据由较新版本的 App 创建，请先更新 App。",
   "cloudSyncErrorAuthFailed": "授权失败，请再试一次。",
-  "cloudSyncErrorScopeMissing": "未获得 Google 云端硬盘权限，请重新关联并在授权页勾选云端硬盘的访问权限。",
+  "cloudSyncErrorScopeMissing": "授权未包含云端硬盘权限。请重新关联，并在 Google 授权页勾选云端硬盘数据的访问权限。",
   "cloudSyncReauthRequired": "授权已失效，请重新关联 Google 账号。",
   "cloudSyncRemoveFromCloud": "同时从云端同步数据中移除此账号",
   "cloudSyncPostAuthTitle": "授权完成",
-  "cloudSyncPostAuthBody": "你可以关闭此页面，回到 App 继续操作。",
+  "cloudSyncPostAuthBody": "您可以关闭此标签页，回到应用程序继续。",
   "cloudSyncPostAuthScopeMissingTitle": "缺少云端硬盘权限",
-  "cloudSyncPostAuthScopeMissingBody": "本次授权未包含 Google 云端硬盘的访问权限。请回到 App 重新关联，并在授权页勾选云端硬盘权限。",
+  "cloudSyncPostAuthScopeMissingBody": "未勾选云端硬盘数据的访问权限。请回到应用程序重新关联，并勾选该权限。",
 
   "settingsAccountManagement": "账号管理",
   "settingsPrivacySectionTitle": "隐私",
