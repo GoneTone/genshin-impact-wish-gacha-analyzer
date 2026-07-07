@@ -60,12 +60,12 @@ The utility may trigger anti-virus software during installation and execution. T
 - Auto-fetched character / weapon icons and details (from [HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)): shown in the history table and timelines; click an item to view official artwork, description, and tags — with a one-click jump to HoYoWiki
 - Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
 - Export / Import accounts as JSON
+- Cloud sync: link your own Google account to automatically back up gacha records to your Google Drive and keep multiple computers in sync; deleting an account can optionally remove it from the cloud data too
 - Dark / Light theme toggle
 - Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
 - Optional UID masking in the UI (first 3 digits only) for added privacy
 - Automatic update check on launch, with a manual trigger in Settings
-- Cloud sync (optional): link your own Google account to automatically back up gacha records to your own Google Drive and keep multiple computers in sync; account deletion can optionally remove the account from the cloud as well
-- All data stays local by default; cloud sync is opt-in and only backs up to your own Google Drive
+- All data stays on your machine by default — nothing is uploaded; cloud sync is opt-in and backs up only to your own Google Drive
 
 ## Screenshot
 
@@ -103,6 +103,28 @@ Rust is compiled automatically by `rust_builder/`'s cargokit during `flutter run
 flutter run -d windows
 ```
 
+### Cloud sync credentials (optional)
+
+Cloud sync (Google Drive backup) requires Google OAuth credentials. Without them everything else works normally; the cloud sync section in Settings simply shows an "unconfigured" notice.
+
+To enable it in your own build:
+
+1. In the [Google Cloud Console](https://console.cloud.google.com/), create a project, enable the **Google Drive API**, configure the OAuth consent screen (scopes: `.../auth/drive.appdata` and `email`), and create a **Desktop app** OAuth client.
+2. Create `secrets/cloud_sync_defines.json` at the project root (git-ignored):
+
+   ```json
+   {
+     "CLOUD_SYNC_CLIENT_ID": "your client id",
+     "CLOUD_SYNC_CLIENT_SECRET": "your client secret"
+   }
+   ```
+
+3. Pass the file when running (JetBrains IDEs can use the bundled "main.dart (cloud sync)" run configuration; `build_release.ps1` picks the file up automatically when packaging):
+
+   ```bash
+   flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
+
 ### Rust ↔ Dart bridge code generation
 
 After changing Rust functions in `rust/src/api/`, regenerate the bridge code. Install the codegen tool on first use:
@@ -133,22 +155,3 @@ Output: `build\windows\x64\runner\Release\`
 flutter test
 cargo test --manifest-path rust/Cargo.toml
 ```
-
-### Cloud sync credentials (for developers)
-
-The Google OAuth credentials for cloud sync are not shipped in the repo. Forks need their own to enable the feature:
-
-1. Create a project in [Google Cloud Console](https://console.cloud.google.com/) and enable the **Google Drive API**.
-2. Configure the OAuth consent screen (scopes: `.../auth/drive.appdata` and `email`) and create a **Desktop app** OAuth client ID.
-3. Create a git-ignored `secrets/cloud_sync_defines.json` in the project root:
-
-    ```json
-    {
-      "CLOUD_SYNC_CLIENT_ID": "<your-client-id>",
-      "CLOUD_SYNC_CLIENT_SECRET": "<your-client-secret>"
-    }
-    ```
-
-4. The build script (`scripts/build_installer/build_release.ps1`) picks it up automatically; for `flutter run`, add `--dart-define-from-file=secrets/cloud_sync_defines.json`. Without it the app still works, only the cloud sync section shows an unconfigured notice.
-
-Release CI writes the same file from the repo Actions secrets `CLOUD_SYNC_CLIENT_ID` / `CLOUD_SYNC_CLIENT_SECRET`.

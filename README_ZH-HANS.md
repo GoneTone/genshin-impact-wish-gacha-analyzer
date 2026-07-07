@@ -60,12 +60,12 @@
 - 自动补上角色 / 武器的图标与资料（来源：[HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)）：表格与时间轴都附图标；点击物品可查看官方插画、描述与标签，并一键跳转 HoYoWiki
 - 一键生成分享图（可选深色 / 浅色主题、UID 全显或只留前三码遮罩），自动存档并复制到剪贴板
 - 账号数据导出 / 导入 JSON
+- 云端同步：关联您自己的 Google 账号后，卡池记录自动备份到您的 Google 云端硬盘，并在多台电脑间双向同步；删除账号时可勾选一并从云端移除
 - 深色 / 浅色主题切换
 - 多国语言（[协助翻译](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 可在设置开启界面 UID 遮罩（只显示前三码），保护隐私
 - 启动时自动检查新版本，也可在设置页手动触发
-- 云端同步（可选）：关联自己的 Google 账号后，卡池记录会自动备份到您自己的 Google 云端硬盘，并在多台电脑间双向同步；删除账号时可勾选一并从云端移除
-- 所有数据默认留在本机；云端同步为可选功能，启用后也只会备份到您自己的 Google 云端硬盘
+- 所有数据默认留在本机、不上传；云端同步为可选功能，启用后也只会备份到您自己的 Google 云端硬盘
 
 ## 截图
 
@@ -103,6 +103,28 @@ Rust 会在 `flutter run` / `flutter build` 时由 `rust_builder/` 的 cargokit 
 flutter run -d windows
 ```
 
+### 云端同步凭据（可选）
+
+云端同步（Google 云端硬盘备份）需要 Google OAuth 凭据。未设置时其他功能完全不受影响，仅设置页的云端同步区块显示未设置提示。
+
+要在自己的构建中启用：
+
+1. 到 [Google Cloud Console](https://console.cloud.google.com/) 创建项目，启用 **Google Drive API**，配置 OAuth 同意屏幕（scopes：`.../auth/drive.appdata` 与 `email`），创建「**桌面应用**」类型的 OAuth 客户端。
+2. 在项目根目录创建 `secrets/cloud_sync_defines.json`（已被 git 忽略）：
+
+   ```json
+   {
+     "CLOUD_SYNC_CLIENT_ID": "你的 client id",
+     "CLOUD_SYNC_CLIENT_SECRET": "你的 client secret"
+   }
+   ```
+
+3. 运行时带入该文件（JetBrains IDE 可直接选内置的「main.dart (cloud sync)」运行配置；`build_release.ps1` 打包时会自动检测）：
+
+   ```bash
+   flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
+
 ### Rust ↔ Dart 桥接代码生成
 
 修改 `rust/src/api/` 内的 Rust 函数后，重新生成桥接代码。第一次使用前先安装 codegen 工具：
@@ -133,22 +155,3 @@ flutter build windows --release
 flutter test
 cargo test --manifest-path rust/Cargo.toml
 ```
-
-### 云端同步凭据（开发者）
-
-云端同步的 Google OAuth 凭据不随 repo 发布，fork 后需自备才能启用此功能：
-
-1. 到 [Google Cloud Console](https://console.cloud.google.com/) 创建项目并启用 **Google Drive API**。
-2. 配置 OAuth 同意屏幕（scopes：`.../auth/drive.appdata` 与 `email`），并创建「桌面应用（Desktop app）」类型的 OAuth 客户端 ID。
-3. 在项目根目录创建 git-ignored 的 `secrets/cloud_sync_defines.json`：
-
-    ```json
-    {
-      "CLOUD_SYNC_CLIENT_ID": "<your-client-id>",
-      "CLOUD_SYNC_CLIENT_SECRET": "<your-client-secret>"
-    }
-    ```
-
-4. 构建脚本（`scripts/build_installer/build_release.ps1`）会自动带入；直接运行 `flutter run` 时加上 `--dart-define-from-file=secrets/cloud_sync_defines.json`。未设置时 App 照常运行，仅云端同步区块显示未设置提示。
-
-发布 CI 由 repo Actions secrets `CLOUD_SYNC_CLIENT_ID`／`CLOUD_SYNC_CLIENT_SECRET` 生成同一文件。
