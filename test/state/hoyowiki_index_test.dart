@@ -102,6 +102,25 @@ void main() {
     expect(container.read(hoyowikiIndexProvider).searchMap, isEmpty);
   });
 
+  test('persistNow 把記憶體索引重新落盤（index 檔被外部刪除後）', () async {
+    final notifier = container.read(hoyowikiIndexProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setSearch(
+      name: 'Hu Tao',
+      lang: 'en-us',
+      id: '5125428',
+      menuId: 2,
+    );
+    final f = File('${tempDir.path}/hoyowiki_index.json');
+    f.deleteSync();
+
+    await notifier.persistNow();
+
+    expect(f.existsSync(), isTrue);
+    final reloaded = await HoYoWikiIndexStorage(tempDir).load();
+    expect(reloaded.lookupId(name: 'Hu Tao', lang: 'en-us'), '5125428');
+  });
+
   test('初始載入完成前的寫入不得覆寫磁碟上的既有 index（迴歸：雲端同步啟動合併）', () async {
     // 磁碟上已有完整 index（模擬長期累積的物品資料）。
     await HoYoWikiIndexStorage(tempDir).save(

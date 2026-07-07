@@ -1432,6 +1432,16 @@ class GachaRepository extends Notifier<GachaState> {
         );
       }
     }
+    // 有圖檔被重新下載＝磁碟快取曾與記憶體索引分歧（快取目錄可能在執行中
+    // 被外部清掉，index 檔也一併遺失）。此時若這輪沒有任何 search／entry
+    // 寫入，index 檔不會被重建，重啟後所有圖示將失效——主動重新落盤一次。
+    if (downloaded > 0) {
+      try {
+        await indexNotifier.persistNow();
+      } catch (e, st) {
+        _log.warning('index re-persist failed (ignored)', e, st);
+      }
+    }
     return (
       imagesDownloaded: downloaded,
       itemsRefreshed: refreshedIds.length,

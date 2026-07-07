@@ -198,6 +198,20 @@ class HoYoWikiIndexNotifier extends Notifier<HoYoWikiIndex> {
     });
   }
 
+  /// 把當前 state 重新落盤（冪等）。
+  ///
+  /// 補圖管線發現磁碟圖檔缺失而重新下載時呼叫：快取目錄（含 index 檔）
+  /// 可能在執行中被外部清掉，此時記憶體索引完好但沒有任何 search／entry
+  /// 寫入會發生，若不主動重寫，index 檔將永久缺失、重啟後全部圖示失效。
+  Future<void> persistNow() async {
+    await waitForLoad();
+    await _lock.synchronized(() async {
+      final storage = ref.read(hoyowikiIndexStorageProvider);
+      await storage.save(state);
+    });
+    _log.info('persistNow: index re-persisted');
+  }
+
   /// 在 cache 檔案下載完成後呼叫；state 內容不變但 identity 換新，
   /// 觸發 watch hoyowikiIndexProvider 的 widget 重新 build 以挑到新檔。
   void bumpCacheRevision() {
