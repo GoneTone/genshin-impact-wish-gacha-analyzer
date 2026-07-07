@@ -18,33 +18,6 @@ class ConfirmTypeResult {
   final bool checkboxChecked;
 }
 
-/// 顯示帶附加 checkbox 的打字確認 dialog。
-/// 回傳 null = 系統 dismiss；否則見 [ConfirmTypeResult]。
-Future<ConfirmTypeResult?> showConfirmTypeDialogWithCheckbox({
-  required BuildContext context,
-  required String title,
-  required String body,
-  required String expectedText,
-  required String cancelLabel,
-  required String confirmLabel,
-  required IconData confirmIcon,
-  required String checkboxLabel,
-}) {
-  return showDialog<ConfirmTypeResult>(
-    context: context,
-    barrierDismissible: false,
-    builder: (ctx) => _ConfirmDialog(
-      title: title,
-      body: body,
-      expectedText: expectedText,
-      cancelLabel: cancelLabel,
-      confirmLabel: confirmLabel,
-      confirmIcon: confirmIcon,
-      checkboxLabel: checkboxLabel,
-    ),
-  );
-}
-
 /// 顯示一個要求使用者打字確認的 dialog。
 /// 回傳值：true = 確認 / false = 取消 / null = 系統 dismiss。
 Future<bool?> showConfirmTypeDialog({
@@ -70,6 +43,33 @@ Future<bool?> showConfirmTypeDialog({
     ),
   );
   return result?.confirmed;
+}
+
+/// 顯示帶附加 checkbox 的打字確認 dialog。
+/// 回傳 null = 系統 dismiss；否則見 [ConfirmTypeResult]。
+Future<ConfirmTypeResult?> showConfirmTypeDialogWithCheckbox({
+  required BuildContext context,
+  required String title,
+  required String body,
+  required String expectedText,
+  required String cancelLabel,
+  required String confirmLabel,
+  required IconData confirmIcon,
+  required String checkboxLabel,
+}) {
+  return showDialog<ConfirmTypeResult>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => _ConfirmDialog(
+      title: title,
+      body: body,
+      expectedText: expectedText,
+      cancelLabel: cancelLabel,
+      confirmLabel: confirmLabel,
+      confirmIcon: confirmIcon,
+      checkboxLabel: checkboxLabel,
+    ),
+  );
 }
 
 /// 顯示一個一般確認 dialog（無打字閘）。
@@ -194,13 +194,18 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
           ),
           if (widget.checkboxLabel != null) ...[
             const SizedBox(height: AppSpacing.m),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              title: Text(widget.checkboxLabel!),
-              value: _checked,
-              onChanged: (v) => setState(() => _checked = v ?? false),
+            // CheckboxListTile 不開放 horizontalTitleGap，預設 16dp 加上
+            // Checkbox 自身留白會讓勾選框與文字離太開，用 ListTileTheme 歸零。
+            ListTileTheme(
+              data: const ListTileThemeData(horizontalTitleGap: 0),
+              child: CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                dense: true,
+                title: Text(widget.checkboxLabel!),
+                value: _checked,
+                onChanged: (v) => setState(() => _checked = v ?? false),
+              ),
             ),
           ],
         ],
