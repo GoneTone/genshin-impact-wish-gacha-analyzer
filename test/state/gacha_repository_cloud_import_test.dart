@@ -193,6 +193,12 @@ void main() {
       expect(completed.importSummary, isNull);
       expect(completed.totalNewRecords, 0);
       expect(completed.hoYoWikiImagesDownloaded, greaterThan(0));
+
+      // 再跑一次：圖示與詳情都已齊全、沒有工作可做 → 全程靜默，
+      // 不彈進度框也不留「更新完成」訊息。
+      repo.clearProgress();
+      await repo.fetchItemImagesForCloudSync();
+      expect(container.read(gachaRepositoryProvider).progress, isNull);
     },
   );
 

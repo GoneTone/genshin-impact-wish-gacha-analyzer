@@ -771,12 +771,17 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// 雲端同步合併出新記錄後的補抓：走與「更新物品資料」相同的
-  /// [_fetchHoYoWiki] 進度管線，結束 emit [UpdateCompleted]（不帶
-  /// importSummary，避免顯示成手動匯入的結果文案）。
+  /// 雲端同步合併出新記錄後的補抓：補抓缺漏的物品圖示與詳情，走與
+  /// 「更新物品資料」相同的 progress 呈現，結束顯示物品資料／補圖張數
+  /// 摘要（不帶 importSummary，避免顯示成手動匯入的結果文案）。
   ///
-  /// best-effort：更新／匯入進行中或 bootstrap 未完成時直接略過，缺圖留待
-  /// 下次手動「更新」補齊；單筆失敗僅記 log、照常收尾；進度框可取消。
+  /// 刻意**不**先 emit `Preparing`：合併進來的物品若本機圖示／詳情皆已
+  /// 齊全，整段沒有工作可做，不該彈任何視窗——有工作時 [_fetchHoYoWiki]
+  /// 會自行 emit 進度（對話框屆時才彈出）；結束時三個計數全零就靜默清掉
+  /// progress，不顯示「更新完成」。
+  ///
+  /// best-effort：補抓失敗僅記 log，仍照常收尾；更新／匯入進行中或
+  /// bootstrap 未完成時直接略過，缺圖留待下次「更新」自然補齊。
   Future<void> fetchItemImagesForCloudSync() async {
     if (state.progress != null) {
       _cloudSyncLog.info('post-sync item fetch skipped: progress in-flight');
@@ -792,13 +797,14 @@ class GachaRepository extends Notifier<GachaState> {
 
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
     _activeCancellable = cancellable;
-    state = state.copyWith(progress: const Preparing());
-
+    var result = (
+      imagesDownloaded: 0,
+      itemsRefreshed: 0,
+      staleLangItemsPruned: 0,
+    );
     try {
-      var images = 0;
       try {
-        final result = await _fetchHoYoWiki(cancellable.client);
-        images = result.imagesDownloaded;
+        result = await _fetchHoYoWiki(cancellable.client);
       } catch (e, st) {
         _cloudSyncLog.warning(
           'post-sync hoyowiki stage threw (ignored)',
@@ -808,19 +814,29 @@ class GachaRepository extends Notifier<GachaState> {
       }
       if (!ref.mounted) return;
 
-      if (_cancelTriggered) {
-        _cloudSyncLog.info('post-sync item fetch cancelled');
+      final didWork =
+          result.imagesDownloaded > 0 ||
+          result.itemsRefreshed > 0 ||
+          result.staleLangItemsPruned > 0;
+      if (didWork) {
+        state = state.copyWith(
+          progress: UpdateCompleted(
+            totalNewRecords: 0,
+            failedBanners: const [],
+            updatedAt: DateTime.now().toUtc(),
+            hoYoWikiImagesDownloaded: result.imagesDownloaded,
+            hoyoWikiEntriesRefreshed: result.itemsRefreshed,
+            hoyoWikiStaleItemsPruned: result.staleLangItemsPruned,
+          ),
+        );
+      } else {
+        // 沒有實際成果：清掉過程中可能已 emit 的進度，讓對話框自動關閉。
         state = state.copyWith(clearProgress: true);
-        return;
       }
-      _cloudSyncLog.info('post-sync item fetch done, images=$images');
-      state = state.copyWith(
-        progress: UpdateCompleted(
-          totalNewRecords: 0,
-          failedBanners: const [],
-          updatedAt: DateTime.now().toUtc(),
-          hoYoWikiImagesDownloaded: images,
-        ),
+      _cloudSyncLog.info(
+        'post-sync item fetch done, items=${result.itemsRefreshed} '
+        'images=${result.imagesDownloaded} '
+        'dialog=${didWork ? 'shown' : 'suppressed'}',
       );
     } finally {
       _activeCancellable?.client.close();

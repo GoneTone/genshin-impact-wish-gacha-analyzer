@@ -59,12 +59,17 @@ void main() {
   late FakeAuthService authService;
   late FakeRemote remote;
 
+  /// 補抓管線建立 cancellable HTTP client 的次數；同步輪本身不經過此
+  /// factory，計數 >0 即證明補抓確實啟動過（結果被靜默壓掉時仍可斷言）。
+  var httpFactoryCalls = 0;
+
   setUp(() async {
     tempDir = await Directory.systemTemp.createTemp('cloud_sync_test_');
     SharedPreferences.setMockInitialValues({});
     tokenStore = InMemoryTokenStore();
     authService = FakeAuthService(tokenStore);
     remote = FakeRemote();
+    httpFactoryCalls = 0;
     debugCloudSyncConfiguredOverride = true;
   });
 
@@ -87,12 +92,13 @@ void main() {
         ),
         hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
         hoyowikiFetcherProvider.overrideWithValue(HoYoWikiFetcher()),
-        cancellableHttpClientFactoryProvider.overrideWithValue(
-          () => CancellableHttpClient(
+        cancellableHttpClientFactoryProvider.overrideWithValue(() {
+          httpFactoryCalls++;
+          return CancellableHttpClient(
             client: MockClient((_) async => http.Response('', 500)),
             cancel: () {},
-          ),
-        ),
+          );
+        }),
         tokenStoreProvider.overrideWithValue(tokenStore),
         googleAuthServiceProvider.overrideWithValue(authService),
         cloudSyncRemoteFactoryProvider.overrideWithValue((_) => remote),
@@ -198,7 +204,7 @@ void main() {
     expect(container.read(settingsProvider).cloudPendingRemovals, isEmpty);
   });
 
-  test('合併出新記錄 → 觸發補抓並 emit UpdateCompleted 不帶 importSummary', () async {
+  test('合併出新記錄 → 觸發補抓；無實際成果時不留完成訊息', () async {
     remote.content = _cloudBundleJson('800000001', withRecord: true);
     final container = await makeContainer();
 
@@ -206,9 +212,11 @@ void main() {
     // fetchItemImagesForCloudSync 為 fire-and-forget，等它跑完
     await Future<void>.delayed(const Duration(milliseconds: 200));
 
-    final progress = container.read(gachaRepositoryProvider).progress;
-    expect(progress, isA<UpdateCompleted>());
-    expect((progress as UpdateCompleted).importSummary, isNull);
+    expect(httpFactoryCalls, greaterThan(0));
+    // 測試環境抓不到任何圖（HTTP 全 500）→ 三個計數全零 → 不該留下
+    // 完成訊息（progress 保持 null，對話框不彈或自動關閉）。
+    expect(container.read(gachaRepositoryProvider).progress, isNull);
+    expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.idle);
   });
 
   test('無新增記錄的同步輪 → 不觸發補抓', () async {
@@ -217,6 +225,7 @@ void main() {
     await container.read(cloudSyncProvider.notifier).link();
     await Future<void>.delayed(const Duration(milliseconds: 200));
 
+    expect(httpFactoryCalls, 0);
     expect(container.read(gachaRepositoryProvider).progress, isNull);
   });
 
