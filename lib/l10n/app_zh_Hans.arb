@@ -340,7 +340,6 @@
   },
   "settingsDataLanguageUnifyFailed": "转换失败，数据未变更。请检查网络后重试。",
   "settingsDataManagement": "数据管理",
-
   "settingsCloudSync": "云端同步",
   "cloudSyncIntro": "关联 Google 账号后，卡池记录会自动备份到你的 Google 云端硬盘，并在多台电脑间同步。",
   "cloudSyncUnconfigured": "此构建未设置 Google OAuth 凭据，云端同步无法使用。",
@@ -380,7 +379,6 @@
   "cloudSyncPostAuthBody": "您可以关闭此标签页，回到应用程序继续。",
   "cloudSyncPostAuthScopeMissingTitle": "缺少云端硬盘权限",
   "cloudSyncPostAuthScopeMissingBody": "未勾选云端硬盘数据的访问权限。请回到应用程序重新关联，并勾选该权限。",
-
   "settingsAccountManagement": "账号管理",
   "settingsPrivacySectionTitle": "隐私",
   "settingsMaskUidInUi": "遮蔽界面中的 UID",

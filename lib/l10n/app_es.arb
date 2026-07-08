@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "La conversión falló, los datos no se modificaron. Comprueba tu conexión e inténtalo de nuevo.",
   "settingsDataManagement": "Gestión de datos",
-
   "settingsCloudSync": "Sincronización en la nube",
   "cloudSyncIntro": "Vincula tu cuenta de Google para respaldar automáticamente los registros de deseos en tu Google Drive y mantenerlos sincronizados entre varios equipos.",
   "cloudSyncUnconfigured": "Esta compilación no tiene credenciales de Google OAuth configuradas; la sincronización en la nube no está disponible.",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "Puedes cerrar esta pestaña y volver a la app.",
   "cloudSyncPostAuthScopeMissingTitle": "Falta el permiso de Google Drive",
   "cloudSyncPostAuthScopeMissingBody": "No se marcó la casilla de datos de Google Drive. Vuelve a la app, vincula de nuevo y marca ese permiso.",
-
   "settingsAccountManagement": "Gestión de cuentas",
   "settingsPrivacySectionTitle": "Privacidad",
   "settingsMaskUidInUi": "Ocultar UID en la interfaz",

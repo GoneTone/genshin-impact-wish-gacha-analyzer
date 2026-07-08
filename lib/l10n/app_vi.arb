@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "Chuyển đổi thất bại, dữ liệu không thay đổi. Vui lòng kiểm tra mạng và thử lại.",
   "settingsDataManagement": "Quản Lý Dữ Liệu",
-
   "settingsCloudSync": "Đồng bộ đám mây",
   "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều máy tính.",
   "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "Bạn có thể đóng thẻ này và quay lại ứng dụng.",
   "cloudSyncPostAuthScopeMissingTitle": "Thiếu quyền Google Drive",
   "cloudSyncPostAuthScopeMissingBody": "Ô dữ liệu Google Drive chưa được đánh dấu. Vui lòng quay lại ứng dụng, liên kết lại và đánh dấu quyền đó.",
-
   "settingsAccountManagement": "Quản Lý Tài Khoản",
   "settingsPrivacySectionTitle": "Quyền riêng tư",
   "settingsMaskUidInUi": "Che giấu UID trong giao diện",

@@ -344,7 +344,6 @@
   },
   "settingsDataLanguageUnifyFailed": "การแปลงล้มเหลว ข้อมูลไม่มีการเปลี่ยนแปลง กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง",
   "settingsDataManagement": "จัดการข้อมูล",
-
   "settingsCloudSync": "การซิงค์ผ่านคลาวด์",
   "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างคอมพิวเตอร์หลายเครื่อง",
   "cloudSyncUnconfigured": "บิลด์นี้ไม่ได้ตั้งค่าข้อมูลรับรอง Google OAuth จึงใช้การซิงค์ผ่านคลาวด์ไม่ได้",
@@ -384,7 +383,6 @@
   "cloudSyncPostAuthBody": "คุณสามารถปิดแท็บนี้แล้วกลับไปที่แอปได้",
   "cloudSyncPostAuthScopeMissingTitle": "ขาดสิทธิ์ Google ไดรฟ์",
   "cloudSyncPostAuthScopeMissingBody": "ยังไม่ได้ติ๊กช่องข้อมูล Google ไดรฟ์ โปรดกลับไปที่แอป เชื่อมโยงใหม่ และติ๊กสิทธิ์ดังกล่าว",
-
   "settingsAccountManagement": "จัดการบัญชี",
   "settingsPrivacySectionTitle": "ความเป็นส่วนตัว",
   "settingsMaskUidInUi": "ปิดบัง UID ในอินเทอร์เฟซ",
