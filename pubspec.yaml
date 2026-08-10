@@ -23,7 +23,7 @@ dependencies:
   fl_chart: ^1.2.0
   intl: ^0.20.2
   logging: ^1.3.0
-  package_info_plus: ^9.0.1
+  package_info_plus: ^10.2.1
   window_manager: ^0.5.2
   screen_retriever: ^0.2.2
   url_launcher: ^6.3.2
@@ -32,7 +32,7 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   pub_semver: ^2.2.0
   markdown_widget: ^2.3.2+8
-  super_clipboard: ^0.9.1
+  super_clipboard: ^0.10.0-dev.2
   synchronized: ^3.4.1
   googleapis: ^16.0.0
   googleapis_auth: ^2.3.3
