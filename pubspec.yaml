@@ -30,7 +30,7 @@ dependencies:
   flutter_html: ^3.0.0
   html: ^0.15.5
   font_awesome_flutter: ^11.0.0
-  pub_semver: ^2.2.0
+  pub_semver: ^2.2.1
   markdown_widget: ^2.3.2+8
   super_clipboard: ^0.9.1
   synchronized: ^3.4.1
