@@ -28,7 +28,7 @@ dependencies:
   screen_retriever: ^0.2.2
   url_launcher: ^6.3.2
   flutter_html: ^3.0.0
-  html: ^0.15.5
+  html: ^0.15.7
   font_awesome_flutter: ^11.0.0
   pub_semver: ^2.2.0
   markdown_widget: ^2.3.2+8
