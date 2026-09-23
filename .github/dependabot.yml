@@ -27,6 +27,9 @@ updates:
           - "screen_retriever"
     ignore:
       - dependency-name: "flutter_rust_bridge"
+      # html 0.15.7 與 flutter_html 3.0.0 不相容（見 pubspec.yaml）。
+      - dependency-name: "html"
+        versions: [">=0.15.7"]
 
   - package-ecosystem: "cargo"
     directory: "/rust"

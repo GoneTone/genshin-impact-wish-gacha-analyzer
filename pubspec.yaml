@@ -28,7 +28,8 @@ dependencies:
   screen_retriever: ^0.2.2
   url_launcher: ^6.3.2
   flutter_html: ^3.0.0
-  html: ^0.15.5
+  # html 0.15.7 移除了 flutter_html 3.0.0 依賴的 `matches`，上游修好前先卡在 0.15.7 以下。
+  html: '>=0.15.5 <0.15.7'
   font_awesome_flutter: ^11.0.0
   pub_semver: ^2.2.1
   markdown_widget: ^2.3.2+8
