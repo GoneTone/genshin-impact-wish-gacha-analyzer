@@ -16,6 +16,10 @@ dependencies:
   ffi: ^2.2.0
   flutter_riverpod: ^3.4.3
   go_router: ^18.0.1
+  # go_router 的遞移相依；較新版用到 meta 1.19 的 `awaitNotRequired`，但釘住的 Flutter SDK 鎖在 meta 1.18，
+  # 上游又沒宣告 meta 下限，pub 擋不住，release build 會編譯失敗。升 Flutter 後再放寬。
+  cupertino_ui: '>=1.0.2 <1.1.0'
+  material_ui: '>=1.2.0 <1.3.0'
   http: ^1.6.0
   path_provider: ^2.1.6
   shared_preferences: ^2.5.5
