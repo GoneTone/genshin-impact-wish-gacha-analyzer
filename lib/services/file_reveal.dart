@@ -81,7 +81,7 @@ Future<bool> revealInFileManager(String filePath) async {
         );
         return r.exitCode == 0;
       case RevealPlatform.other:
-        return openFolder(f.parent.path);
+        return await openFolder(f.parent.path);
     }
   } catch (e, st) {
     _log.warning('reveal: failed ${sanitizeFsPath(filePath)}', e, st);

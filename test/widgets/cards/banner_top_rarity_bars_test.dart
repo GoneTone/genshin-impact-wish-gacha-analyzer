@@ -167,11 +167,15 @@ void main() {
   testWidgets('bar widthFactor = topCount / max(topCount across banners)', (
     tester,
   ) async {
-    expect(
-      gachaTypes.map((t) => t.gachaType).toList(),
-      const ['301', '302', '500', '200', '100', '2000', '1000'],
-      reason: 'test assumes gachaTypes order — update if order changes',
-    );
+    expect(gachaTypes.map((t) => t.gachaType).toList(), const [
+      '301',
+      '302',
+      '500',
+      '200',
+      '100',
+      '2000',
+      '1000',
+    ], reason: 'test assumes gachaTypes order — update if order changes');
     final t0 = DateTime(2025, 1, 1);
     // 301: 4×5★; 302: 1×5★; others: 0
     final banners = <String, List<GachaRecord>>{
