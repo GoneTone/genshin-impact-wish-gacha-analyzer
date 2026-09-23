@@ -30,11 +30,6 @@ updates:
       # html 0.15.7 與 flutter_html 3.0.0 不相容（見 pubspec.yaml）。
       - dependency-name: "html"
         versions: [">=0.15.7"]
-      # 較新版需要 meta 1.19，超出釘住的 Flutter SDK（見 pubspec.yaml）。
-      - dependency-name: "cupertino_ui"
-        versions: [">=1.1.0"]
-      - dependency-name: "material_ui"
-        versions: [">=1.3.0"]
 
   - package-ecosystem: "cargo"
     directory: "/rust"
