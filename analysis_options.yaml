@@ -9,6 +9,8 @@ analyzer:
     - lib/generated/**
     - lib/src/rust/**
     - lib/l10n/generated/**
+    - build/**
+    - windows/**
 
 linter:
   rules:
