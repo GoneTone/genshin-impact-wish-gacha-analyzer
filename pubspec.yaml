@@ -36,7 +36,7 @@ dependencies:
   super_clipboard: ^0.9.1
   synchronized: ^3.4.2
   googleapis: ^17.0.0
-  googleapis_auth: ^2.3.3
+  googleapis_auth: ^2.3.5
   flutter_secure_storage: ^10.3.1
 
 dev_dependencies:
