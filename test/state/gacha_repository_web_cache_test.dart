@@ -32,10 +32,13 @@ const _loc = GameDirLocation(_gameDir, GameDirSource.setting);
 /// 結果與取消都由測試以 [Completer] 控制的攔截 fake。
 class _FakeCapture implements GachaCapture {
   /// 建立 fake；[completeOnCancel] 為 true 時 `cancel()` 會以 null 完成結果。
-  _FakeCapture({this.completeOnCancel = false});
+  _FakeCapture({this.completeOnCancel = false, this.hangCancel = false});
 
   /// 為 true 時 `cancel()` 會以 null 完成 [result]。
   final bool completeOnCancel;
+
+  /// 為 true 時 `cancel()` 永不返回（模擬根憑證確認視窗開著時 stop 卡住）。
+  final bool hangCancel;
 
   /// 攔截結果，由測試決定何時完成。
   final result = Completer<String?>();
@@ -48,6 +51,7 @@ class _FakeCapture implements GachaCapture {
     result: result.future,
     cancel: () async {
       cancelCalls++;
+      if (hangCancel) return Completer<void>().future;
       if (completeOnCancel && !result.isCompleted) result.complete(null);
     },
   );
@@ -228,7 +232,7 @@ void main() {
     expect(t.hits, isEmpty, reason: 'no fetch before capture teardown');
 
     capture.result.complete(null);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(t.hits, isNotEmpty);
     expect(t.captureDoneAtHit, everyElement(isTrue));
@@ -249,7 +253,7 @@ void main() {
     watch.hits[0].complete(_url);
     await _until(() => capture.cancelCalls > 0);
     capture.result.completeError(Exception('proxy restore failed'));
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(progressOf(t), isA<UpdateCompleted>());
   });
@@ -266,7 +270,7 @@ void main() {
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
     capture.result.complete(_url);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(watch.cancelled, [0]);
     expect(capture.cancelCalls, 0);
@@ -303,7 +307,7 @@ void main() {
     );
 
     watch.hits[0].complete(_url);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(t.hits, isNotEmpty);
     expect(progressOf(t), isA<UpdateCompleted>());
@@ -327,7 +331,7 @@ void main() {
       expect(waitingOf(t)!.gameDirMissing, isFalse);
 
       watch.hits[0].complete(_url);
-      await done;
+      await done.timeout(const Duration(seconds: 5));
 
       expect(progressOf(t), isA<UpdateCompleted>());
     },
@@ -346,7 +350,7 @@ void main() {
     expect(waitingOf(t)!.captureUnavailable, isTrue);
 
     await t.repo.cancelCapture();
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(watch.hits, isEmpty);
     expect(t.hits, isEmpty);
@@ -365,7 +369,7 @@ void main() {
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
     await t.repo.cancelCapture();
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(capture.cancelCalls, greaterThan(0));
     expect(watch.cancelled, contains(0));
@@ -387,8 +391,29 @@ void main() {
     watch.hits[0].complete(_url);
     await _until(() => capture.cancelCalls > 0);
     await t.repo.cancelCapture();
-    await done;
+    await done.timeout(const Duration(seconds: 5));
     capture.result.complete(null);
+
+    expect(t.hits, isEmpty);
+    expect(progressOf(t), isNull);
+  });
+
+  test('user cancel works while cache-won cancel() hangs', () async {
+    final capture = _FakeCapture(hangCancel: true);
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+    t.repo.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
+
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    watch.hits[0].complete(_url);
+    await _until(() => capture.cancelCalls > 0);
+    await t.repo.cancelCapture();
+    await done.timeout(const Duration(seconds: 5));
 
     expect(t.hits, isEmpty);
     expect(progressOf(t), isNull);
@@ -403,7 +428,7 @@ void main() {
     final done = t.repo.update();
     await _until(() => locator.calls > 0);
     capture.result.complete(_url);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(watch.hits, isEmpty);
     expect(t.hits, isNotEmpty);
@@ -437,7 +462,7 @@ void main() {
     expect(watch.cancelled, [0]);
 
     watch.hits[1].complete(_url);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(progressOf(t), isA<UpdateCompleted>());
   });
@@ -477,7 +502,7 @@ void main() {
     watch.hits[0].complete(_url);
     await _until(() => capture.cancelCalls > 0);
     capture.result.complete(null);
-    await done;
+    await done.timeout(const Duration(seconds: 5));
 
     expect(progressOf(t), isA<UpdateCompleted>());
   });
