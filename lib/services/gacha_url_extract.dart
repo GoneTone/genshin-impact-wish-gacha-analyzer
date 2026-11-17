@@ -52,6 +52,8 @@ List<GachaUrlMatch> findGachaUrls(String text) {
     final String key;
     try {
       key = Uri.decodeComponent(raw);
+    } on FormatException {
+      continue;
     } on ArgumentError {
       continue;
     }

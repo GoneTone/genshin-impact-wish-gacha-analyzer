@@ -67,6 +67,13 @@ void main() {
     expect(findGachaUrls(_withKey('%E0%A4%A')), isEmpty);
   });
 
+  test('skips non-utf8 authkeys but keeps other entries', () {
+    for (final bad in ['%FF', '%C3%28']) {
+      final r = findGachaUrls('${_withKey(bad)}\x00$_wish');
+      expect(r.single.url, _wish);
+    }
+  });
+
   test('toApiUrl rewrites host/path, keeps query, drops fragment', () {
     const want =
         'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getGachaLog?';
