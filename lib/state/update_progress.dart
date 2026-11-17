@@ -19,13 +19,23 @@ class ConvertingDataLanguage extends UpdateProgress {
   const ConvertingDataLanguage();
 }
 
-/// 等待 MITM 捕獲祈願 URL。
+/// 等待 MITM 捕獲或遊戲網頁快取取得祈願 URL。
 class WaitingForCapture extends UpdateProgress {
   /// 建立 [WaitingForCapture]；[isFallback] 表示 auth 過期後的二次捕獲。
-  const WaitingForCapture({this.isFallback = false});
+  const WaitingForCapture({
+    this.isFallback = false,
+    this.captureUnavailable = false,
+    this.gameDirMissing = false,
+  });
 
   /// 是否為 auth 過期後的二次捕獲。
   final bool isFallback;
+
+  /// true 表示攔截程式沒能運作（例如根憑證被拒絕、連接埠被佔用），目前只靠遊戲網頁快取偵測。
+  final bool captureUnavailable;
+
+  /// [captureUnavailable] 時是否也找不到遊戲資料夾（沒有快取可讀，需請使用者選資料夾）。
+  final bool gameDirMissing;
 }
 
 /// 正在拉取指定 banner 的紀錄。

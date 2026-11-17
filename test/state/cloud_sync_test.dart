@@ -21,6 +21,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 import '../helpers/cloud_sync_fakes.dart';
+import '../helpers/no_game_dir.dart';
 
 /// 產生雲端側 bundle JSON；[withRecord] 為 true 時帶一筆 301 五星記錄。
 String _cloudBundleJson(String uid, {bool withRecord = false}) => jsonEncode({
@@ -86,6 +87,7 @@ void main() {
       overrides: [
         appVersionProvider.overrideWithValue('1.6.0'),
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(hoyowikiDir),

@@ -18,6 +18,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
@@ -25,6 +26,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_url_watch.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
@@ -130,6 +132,9 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// Logger 實例（雲端同步觸發的匯入與補抓）。
   static final _cloudSyncLog = Logger('cloudsync.sync');
+
+  /// 網頁快取 URL 來源 logger（與監看器、locator 同一棵樹）。
+  static final _webCacheLog = Logger('gacha.webCache');
 
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
@@ -339,26 +344,193 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// 啟動 MITM 捕獲會話並等候 URL；[isFallback] 為 auth 過期後的二次捕獲。
+  /// 啟動 MITM 捕獲並同時監看遊戲網頁快取，回傳先拿到的 URL；null 代表使用者取消。
   ///
-  /// 等待用 `Future.any([session.result, backstop])`：正常經 onDone 由 `result`
-  /// 回；若 onDone 失靈（Rust 拆除未 drop sink），則由 [cancelCapture] 完成的
-  /// [_captureBackstop] 解開，確保等待一定有界、不會永久卡在 `WaitingForCapture`。
+  /// [isFallback] 為 auth 過期後的二次捕獲。快取先拿到時先停掉攔截並等它收尾
+  /// （MITM proxy 已停、系統代理已還原）才回傳，收尾錯誤只記 warning。快取勝出前
+  /// 攔截就失效（丟錯，或非使用者取消卻沒攔到）時改為只等快取並在畫面提示；找不到
+  /// 遊戲資料夾時提示改成請使用者選資料夾，選好即接上監看。只有使用者取消會結束等待。
+  ///
+  /// 每段等待都和 [_captureBackstop] 比快：onDone 失靈（Rust 拆除未 drop sink）或
+  /// `cancel()` 卡在根憑證確認視窗時，由 [cancelCapture] 完成它解開等待，確保一定有界。
   Future<String?> _runMitm({required bool isFallback}) async {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
     final session = ref.read(gachaCaptureProvider).start();
     _activeCancel = session.cancel;
+    _captureCancelRequested = false;
+    final cacheHit = Completer<String>();
+    _cacheHit = cacheHit;
     final backstop = Completer<String?>();
     _captureBackstop = backstop;
     _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
+    final watchStart = _startWebCacheWatch();
+    String? url;
     try {
-      final result = await Future.any([session.result, backstop.future]);
-      _log.info('MITM session done, hasUrl=${result != null}');
-      return result;
+      // 攔截已自行結束（出錯、沒攔到或被 backstop 解開）時為 true；此時快取勝出不需再收尾攔截。
+      var captureFinished = false;
+      var fromCache = false;
+      try {
+        (url, fromCache) = await Future.any([
+          session.result.then((u) => (u, false)),
+          cacheHit.future.then((u) => (u, true)),
+          backstop.future.then((u) => (u, false)),
+        ]);
+        captureFinished = !fromCache;
+      } catch (e) {
+        // 攔截出錯（例如根憑證被拒絕、18080 埠被佔用）不判定失敗，改為只等快取。
+        _webCacheLog.warning('capture failed error=${e.runtimeType}');
+        captureFinished = true;
+        if (await _canWaitCacheOnly(watchStart, backstop)) {
+          (url, fromCache) = await _waitCacheOnly(
+            isFallback,
+            cacheHit,
+            backstop,
+          );
+        }
+      }
+      if (!fromCache &&
+          url == null &&
+          !_captureCancelRequested &&
+          await _canWaitCacheOnly(watchStart, backstop)) {
+        _webCacheLog.warning('capture ended without url');
+        (url, fromCache) = await _waitCacheOnly(isFallback, cacheHit, backstop);
+      }
+      if (fromCache && !captureFinished) {
+        // cancel() 丟錯也要等 result：它完成才代表系統代理已還原，之後拉取才不會誤走代理。
+        for (final step in <Future<Object?> Function()>[
+          session.cancel,
+          () => session.result,
+        ]) {
+          try {
+            await Future.any([step(), backstop.future]);
+          } catch (e) {
+            _webCacheLog.warning(
+              'capture teardown error after cache win error=${e.runtimeType}',
+            );
+          }
+        }
+      }
+      if (!fromCache) _log.info('MITM session done, hasUrl=${url != null}');
+      if (url != null) {
+        _webCacheLog.info('url source=${fromCache ? "cache" : "capture"}');
+      }
     } finally {
+      _cacheHit = null;
+      _watchGeneration++;
       _activeCancel = null;
       _captureBackstop = null;
+      await _stopWebCacheWatch();
     }
+    // 收尾（攔截 teardown、停監看）可能跨越事件迴圈，期間按下的取消仍要生效。
+    if (url != null && _captureCancelRequested) {
+      _webCacheLog.info('user cancelled before fetch, discarding url');
+      return null;
+    }
+    return url;
+  }
+
+  /// 等 [watchStart]（監看啟動流程）跑完後，判斷攔截失效時能否改為只等快取。
+  ///
+  /// 沒有監看 session（找不到遊戲資料夾）也照樣等：畫面會提示使用者選資料夾，選好就能接上。
+  Future<bool> _canWaitCacheOnly(
+    Future<void> watchStart,
+    Completer<String?> backstop,
+  ) async {
+    await Future.any([watchStart, backstop.future]);
+    return ref.mounted && !_captureCancelRequested;
+  }
+
+  /// 攔截失效後只等快取：把等待畫面切到提示狀態，回傳快取命中的 URL，使用者取消時為 null。
+  Future<(String?, bool)> _waitCacheOnly(
+    bool isFallback,
+    Completer<String> cacheHit,
+    Completer<String?> backstop,
+  ) async {
+    _webCacheLog.info(
+      'waiting on web cache only, gameDirMissing=${_webCacheSession == null}',
+    );
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: isFallback,
+        captureUnavailable: true,
+        gameDirMissing: _webCacheSession == null,
+      ),
+    );
+    // 攔截已結束，取消只需由 cancelCapture 完成 backstop 結束這段等待。
+    _activeCancel = null;
+    final url = await Future.any<String?>([cacheHit.future, backstop.future]);
+    return (url, true);
+  }
+
+  /// 定位遊戲資料夾並啟動網頁快取監看，命中時完成目前等待中的 [_cacheHit]。
+  ///
+  /// 只有最新一次呼叫的定位結果會生效；找不到資料夾時不監看。任何失敗只記 log，不影響更新。
+  Future<void> _startWebCacheWatch() async {
+    final hit = _cacheHit;
+    if (hit == null) return;
+    final generation = ++_watchGeneration;
+    try {
+      final location = await ref
+          .read(gameDirLocatorProvider)
+          .locate(settingDir: ref.read(settingsProvider).gameDir);
+      if (!ref.mounted || generation != _watchGeneration || hit.isCompleted) {
+        return;
+      }
+      if (location == null) {
+        _webCacheLog.warning('web cache watch disabled: game dir not found');
+        _syncCacheOnlyNotice();
+        return;
+      }
+      final watch = ref.read(gachaUrlWatchProvider).start(location.path);
+      _webCacheSession = watch;
+      unawaited(
+        watch.result.then((u) {
+          if (u != null && !hit.isCompleted) hit.complete(u);
+        }),
+      );
+      _syncCacheOnlyNotice();
+    } catch (e) {
+      // FileSystemException 的字串會帶原始路徑，只記型別。
+      _webCacheLog.warning(
+        'web cache watch start failed error=${e.runtimeType}',
+      );
+    }
+  }
+
+  /// 只靠快取等待時，依目前有沒有監看 session 切換「找不到遊戲資料夾」提示。
+  void _syncCacheOnlyNotice() {
+    final p = state.progress;
+    if (p is! WaitingForCapture || !p.captureUnavailable) return;
+    final missing = _webCacheSession == null;
+    if (p.gameDirMissing == missing) return;
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: p.isFallback,
+        captureUnavailable: true,
+        gameDirMissing: missing,
+      ),
+    );
+  }
+
+  /// 停掉目前的網頁快取監看 session（若有）；失敗只記 log。
+  Future<void> _stopWebCacheWatch() async {
+    final watch = _webCacheSession;
+    _webCacheSession = null;
+    try {
+      await watch?.cancel();
+    } catch (e) {
+      _webCacheLog.warning(
+        'web cache watch stop failed error=${e.runtimeType}',
+      );
+    }
+  }
+
+  /// 等待攔截期間停掉目前的網頁快取監看，重新定位後再啟動（baseline 從此刻重算）；其他時候為 no-op。
+  Future<void> restartWebCacheWatch() async {
+    if (state.progress is! WaitingForCapture) return;
+    _webCacheLog.info('web cache watch restart requested');
+    unawaited(_stopWebCacheWatch());
+    await _startWebCacheWatch();
   }
 
   /// 依序拉取所有 banner 的新紀錄並合併存檔。
@@ -493,10 +665,22 @@ class GachaRepository extends Notifier<GachaState> {
   /// 目前 MITM 會話的取消函式。
   Future<void> Function()? _activeCancel;
 
+  /// 本次等待攔截期間的快取命中；不在等待時為 null。
+  Completer<String>? _cacheHit;
+
+  /// 目前的網頁快取監看 session。
+  CaptureSession? _webCacheSession;
+
+  /// 本次等待期間使用者按過取消（含快取勝出後的攔截收尾、停監看期間）。
+  bool _captureCancelRequested = false;
+
+  /// 網頁快取監看的啟動世代；只有最新世代的定位結果會啟動 session。
+  int _watchGeneration = 0;
+
   /// 目前 HTTP 請求的可取消 client，取消後關閉所有連線。
   CancellableHttpClient? _activeCancellable;
 
-  /// 取消／逾時時用來強制解開 [_runMitm] 等待的 backstop completer。
+  /// 取消／逾時時用來強制解開 [_runMitm] 各段等待（含只等快取、快取勝出後收尾）的 backstop completer。
   Completer<String?>? _captureBackstop;
 
   /// `cancelCapture` 等待 Rust MITM 拆除回應的上限（比 L1 的 2 秒寬鬆）。
@@ -508,23 +692,26 @@ class GachaRepository extends Notifier<GachaState> {
     _activeCancellable?.cancel();
   }
 
-  /// 取消正在進行的 MITM 捕獲會話。
+  /// 取消正在進行的 MITM 捕獲會話與網頁快取監看（含只等快取、快取勝出後的攔截收尾期間）。
   ///
   /// 有界：最多等 [_cancelTeardownTimeout] 讓 Rust 拆除回應；逾時則 severe-log、
   /// best-effort 還原系統 proxy，並一律完成 [_captureBackstop] 解開 [_runMitm] 的
   /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。
   Future<void> cancelCapture() async {
     _cancelTriggered = true;
+    _captureCancelRequested = true;
+    unawaited(_stopWebCacheWatch());
     final cancel = _activeCancel;
-    if (cancel == null) return;
-    try {
-      await cancel().timeout(_cancelTeardownTimeout);
-    } on TimeoutException {
-      _log.severe(
-        'cancelCapture: stopCapture exceeded '
-        '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
-      );
-      unawaited(_bestEffortStaleProxyCleanup());
+    if (cancel != null) {
+      try {
+        await cancel().timeout(_cancelTeardownTimeout);
+      } on TimeoutException {
+        _log.severe(
+          'cancelCapture: stopCapture exceeded '
+          '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
+        );
+        unawaited(_bestEffortStaleProxyCleanup());
+      }
     }
     final backstop = _captureBackstop;
     if (backstop != null && !backstop.isCompleted) {

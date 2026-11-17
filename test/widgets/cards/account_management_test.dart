@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
+import '../../helpers/no_game_dir.dart';
 
 class _NullCapture implements GachaCapture {
   @override
@@ -36,6 +37,7 @@ Future<ProviderContainer> _setupContainer({
   final container = ProviderContainer(
     overrides: [
       gachaStorageProvider.overrideWithValue(storage),
+      noGameDirOverride,
       gachaCaptureProvider.overrideWithValue(_NullCapture()),
       cancellableHttpClientFactoryProvider.overrideWithValue(
         () => CancellableHttpClient(

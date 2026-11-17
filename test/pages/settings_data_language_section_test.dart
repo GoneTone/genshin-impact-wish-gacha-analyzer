@@ -18,6 +18,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import '../helpers/no_game_dir.dart';
 
 /// 不攔截任何封包的測試替身，避免 [SettingsPage] bootstrap 觸發真實 capture。
 class _NullCapture implements GachaCapture {
@@ -33,6 +34,7 @@ Future<ProviderContainer> _setupContainer(Directory tempDir) async {
   final container = ProviderContainer(
     overrides: [
       gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+      noGameDirOverride,
       gachaCaptureProvider.overrideWithValue(_NullCapture()),
       cancellableHttpClientFactoryProvider.overrideWithValue(
         () => CancellableHttpClient(

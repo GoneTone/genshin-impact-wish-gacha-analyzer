@@ -22,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/cloud_sync_section.dart';
 
 import '../helpers/cloud_sync_fakes.dart';
+import '../helpers/no_game_dir.dart';
 
 void main() {
   late Directory tempDir;
@@ -43,6 +44,7 @@ void main() {
       overrides: [
         appVersionProvider.overrideWithValue('1.6.0'),
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(hoyowikiDir),

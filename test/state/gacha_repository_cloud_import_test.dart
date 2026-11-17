@@ -15,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import '../helpers/no_game_dir.dart';
 
 /// 不會被觸發的 fake capture。
 class _FakeCapture implements GachaCapture {
@@ -120,6 +121,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(hoyowikiDir),
