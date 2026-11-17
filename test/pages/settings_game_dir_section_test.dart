@@ -19,6 +19,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import '../helpers/no_game_dir.dart';
 
 /// 空 [GachaCapture] 替身，避免測試啟動真實 MITM session。
@@ -208,10 +209,9 @@ void main() {
   testWidgets('does not overflow at 360 px width and 1.3x text scale', (
     tester,
   ) async {
-    // 設定頁其他區塊在窄寬度另有既存 overflow，這裡只收集並檢查遊戲資料夾區塊。
-    final errors = <String>[];
+    // 設定頁其他區塊在窄寬度另有既存 overflow；這裡吞掉錯誤，只驗證遊戲資料夾區塊的幾何。
     final prev = FlutterError.onError;
-    FlutterError.onError = (d) => errors.add(d.toString());
+    FlutterError.onError = (_) {};
     await pump(
       tester,
       settingDir: r'D:\' + 'VeryLongFolderName' * 12 + r'\Genshin',
@@ -220,13 +220,25 @@ void main() {
     );
     await waitForText(tester, find.textContaining('Set manually'));
     FlutterError.onError = prev;
-    expect(errors.where((e) => e.contains('settings.gameDir')), isEmpty);
-    for (final f in [
-      find.textContaining('Set manually'),
+    final choose = tester.getRect(
       find.byKey(const ValueKey('settings.gameDirChoose')),
+    );
+    final clear = tester.getRect(
       find.byKey(const ValueKey('settings.gameDirClear')),
-    ]) {
-      expect(tester.getRect(f).right, lessThanOrEqualTo(360));
+    );
+    final text = tester.getRect(find.textContaining('Set manually'));
+    final card = tester.getRect(
+      find.ancestor(
+        of: find.byKey(const ValueKey('settings.gameDirChoose')),
+        matching: find.byType(SectionCard),
+      ),
+    );
+    for (final r in [choose, clear, text]) {
+      expect(r.left, greaterThanOrEqualTo(0));
+      expect(r.right, lessThanOrEqualTo(360));
     }
+    expect(choose.overlaps(clear), isFalse);
+    expect(text.left, greaterThanOrEqualTo(card.left));
+    expect(text.right, lessThanOrEqualTo(card.right));
   });
 }
