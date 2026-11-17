@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
@@ -39,14 +40,18 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/game_dir_picker.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/other_game_versions.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 /// 設定頁，包含外觀、語言、資料管理、帳號管理、日誌、關於等 section。
 class SettingsPage extends ConsumerWidget {
-  /// 建立 [SettingsPage]。
-  const SettingsPage({super.key});
+  /// 建立 [SettingsPage]；[pickGameDir] 為 null 時使用系統選資料夾視窗。
+  const SettingsPage({super.key, this.pickGameDir});
+
+  /// 選遊戲資料夾的函式，供測試注入。
+  final Future<String?> Function()? pickGameDir;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,6 +111,12 @@ class SettingsPage extends ConsumerWidget {
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              SectionCard(
+                title: l.settingsGameDir,
+                icon: Icons.sports_esports_outlined,
+                child: _GameDirSection(pickDirectory: pickGameDir),
               ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
@@ -377,6 +388,76 @@ class _AboutContent extends ConsumerWidget {
       return l.updateErrorServer(status);
     }
     return token;
+  }
+}
+
+/// 以手動設定 [manual] 為起點解析實際使用的遊戲資料夾（設定失效時退回自動偵測）。
+final _gameDirLocationProvider = FutureProvider.autoDispose
+    .family<GameDirLocation?, String?>(
+      (ref, manual) =>
+          ref.read(gameDirLocatorProvider).locate(settingDir: manual),
+    );
+
+/// 遊戲資料夾區塊：顯示目前使用的資料夾來源與路徑，並可手動選擇或清除。
+class _GameDirSection extends ConsumerWidget {
+  /// 建立 [_GameDirSection]；[pickDirectory] 為 null 時使用系統選資料夾視窗。
+  const _GameDirSection({this.pickDirectory});
+
+  /// 選資料夾的函式，供測試注入。
+  final Future<String?> Function()? pickDirectory;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final manual = ref.watch(settingsProvider.select((s) => s.gameDir));
+    final location = ref.watch(_gameDirLocationProvider(manual));
+    final text = location.isLoading
+        ? ''
+        : switch (location.value) {
+            null => l.settingsGameDirNone,
+            final loc when loc.source == GameDirSource.setting =>
+              l.settingsGameDirManual(loc.path),
+            final loc => l.settingsGameDirAuto(loc.path),
+          };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(text, maxLines: 3, overflow: TextOverflow.ellipsis),
+        const SizedBox(height: AppSpacing.s),
+        Wrap(
+          spacing: AppSpacing.s,
+          runSpacing: AppSpacing.s,
+          children: [
+            OutlinedButton.icon(
+              key: const ValueKey('settings.gameDirChoose'),
+              onPressed: () => _choose(context, ref),
+              icon: const Icon(Icons.folder_open_outlined, size: 18),
+              label: Text(l.actionChooseGameDir),
+            ),
+            if (manual != null)
+              OutlinedButton.icon(
+                key: const ValueKey('settings.gameDirClear'),
+                onPressed: () =>
+                    ref.read(settingsProvider.notifier).setGameDir(null),
+                icon: const Icon(Icons.clear, size: 18),
+                label: Text(l.actionClearGameDir),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 開啟選資料夾流程，選到無效資料夾時以 SnackBar 提示。
+  Future<void> _choose(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final outcome = await pickAndSaveGameDir(ref, pickDirectory: pickDirectory);
+    if (outcome == GameDirPickOutcome.invalid && ctx.mounted) {
+      ScaffoldMessenger.of(
+        ctx,
+      ).showSnackBar(SnackBar(content: Text(l.gameDirInvalid)));
+    }
   }
 }
 
