@@ -114,7 +114,7 @@ void main() {
         ],
       );
       await container.read(settingsProvider.notifier).waitForLoad();
-      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     });
     addTearDown(container.dispose);
     tester.view.physicalSize = size;
