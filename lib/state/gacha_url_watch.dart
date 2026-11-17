@@ -66,6 +66,7 @@ Future<_ScanResult> _scan(
     latest = names.last;
     for (final name in allVersions ? names : [latest]) {
       final file = '${versions[name]}${sep}Cache${sep}Cache_Data${sep}data_2';
+      if (!File(file).existsSync()) continue;
       try {
         matches.addAll(findGachaUrls(latin1.decode(read(file))));
       } on FileSystemException catch (e) {
@@ -99,6 +100,7 @@ class WebCacheUrlWatch implements GachaUrlWatch {
   /// 讀檔函式，在背景 isolate 內呼叫。
   final CacheFileReader read;
 
+  /// 本類別的 logger。
   static final _log = Logger('gacha.webCache');
 
   @override
@@ -113,33 +115,40 @@ class WebCacheUrlWatch implements GachaUrlWatch {
     );
   }
 
-  /// 建立 baseline 後輪詢，直到 [completer] 完成；任何失敗只記 log。
+  /// 先成功建立 baseline 再輪詢，直到 [completer] 完成；任何失敗只記 log。
   Future<void> _run(String gameDir, Completer<String?> completer) async {
     try {
-      final baselineScan = await _scanInBackground(gameDir, read, true);
-      final baseline = {for (final m in baselineScan.matches) m.authkey};
-      _log.info('web cache watch started baseline=${baseline.length}');
+      Set<String>? baseline;
       String? lastVersion;
       String? lastError;
       while (!completer.isCompleted) {
-        await Future<void>.delayed(interval);
+        final scan = await _scanInBackground(gameDir, read, baseline == null);
         if (completer.isCompleted) return;
-        final scan = await _scanInBackground(gameDir, read, false);
-        if (scan.version != lastVersion) {
-          lastVersion = scan.version;
-          _log.info('web cache version dir=${scan.version}');
-        }
         if (scan.error != lastError) {
           lastError = scan.error;
           if (lastError != null) _log.warning('web cache ${scan.error}');
         }
-        final hit = _pickNew(scan.matches, baseline);
-        if (hit != null && !completer.isCompleted) {
-          _log.info(
-            'web cache hit api=${hit.isApi} url=${sanitizeUrl(hit.url)}',
-          );
-          completer.complete(toApiUrl(hit.url));
+        if (baseline == null) {
+          // 讀檔失敗時 baseline 不完整，不能拿來判定新舊，下一輪重建
+          if (scan.error == null) {
+            baseline = {for (final m in scan.matches) m.authkey};
+            _log.info('web cache watch started baseline=${baseline.length}');
+          }
+        } else {
+          if (scan.version != lastVersion) {
+            lastVersion = scan.version;
+            _log.info('web cache version dir=${scan.version}');
+          }
+          final hit = _pickNew(scan.matches, baseline);
+          if (hit != null) {
+            _log.info(
+              'web cache hit api=${hit.isApi} url=${sanitizeUrl(hit.url)}',
+            );
+            completer.complete(toApiUrl(hit.url));
+            return;
+          }
         }
+        await Future<void>.delayed(interval);
       }
     } catch (e, st) {
       _log.severe('web cache watch crashed', e, st);
