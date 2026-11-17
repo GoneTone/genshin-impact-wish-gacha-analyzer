@@ -167,6 +167,17 @@
   "progressFailed": "Thất bại",
   "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
   "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
+  "progressNotDetectedLink": "Đã mở Lịch Sử Cầu Nguyện nhưng không có phản hồi?",
+  "progressCaptureUnavailableHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), nên chỉ phát hiện từ bộ nhớ đệm web của game. Vui lòng mở Lịch Sử Cầu Nguyện.",
+  "progressCaptureUnavailableNoGameDirHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), và cũng không tìm thấy thư mục game. Hãy nhấn \"Chọn thư mục game\" bên dưới để chỉ định thủ công.",
+  "gameDirHelpTitle": "Không phát hiện Lịch Sử Cầu Nguyện",
+  "gameDirHelpNotFound": "Không tìm thấy thư mục game Genshin Impact. Sau khi chọn thư mục game, công cụ này cũng có thể đọc Lịch Sử Cầu Nguyện từ bộ nhớ đệm web của game.",
+  "gameDirHelpFound": "Thư mục game đang dùng: {path}. Nếu đây không phải bản game bạn đang chơi, vui lòng chọn lại.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Đã đặt thư mục game. Hãy quay lại game và mở Lịch Sử Cầu Nguyện thêm một lần nữa.",
+  "gameDirInvalid": "Không tìm thấy Genshin Impact trong thư mục này. Vui lòng chọn thư mục \"Genshin Impact game\".",
+  "actionChooseGameDir": "Chọn thư mục game",
+  "actionRechooseGameDir": "Chọn lại",
   "progressFetchingBanner": "Đang tải: {name}",
   "@progressFetchingBanner": {
     "placeholders": {

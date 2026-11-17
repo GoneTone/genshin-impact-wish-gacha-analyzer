@@ -167,6 +167,17 @@
   "progressFailed": "ล้มเหลว",
   "progressOpenGameHint": "กรุณาเปิด Genshin Impact → กาชา → ประวัติการอธิษฐาน",
   "progressFallbackHint": "(การยืนยันตัวตนก่อนหน้าหมดอายุ จำเป็นต้องดักจับใหม่)",
+  "progressNotDetectedLink": "เปิดประวัติการอธิษฐานแล้วแต่ไม่มีปฏิกิริยาใด ๆ?",
+  "progressCaptureUnavailableHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) จึงตรวจจับจากแคชเว็บของเกมเท่านั้น กรุณาเปิดประวัติการอธิษฐาน",
+  "progressCaptureUnavailableNoGameDirHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) และไม่พบโฟลเดอร์เกม กรุณากด \"เลือกโฟลเดอร์เกม\" ด้านล่างเพื่อระบุด้วยตนเอง",
+  "gameDirHelpTitle": "ตรวจไม่พบประวัติการอธิษฐาน",
+  "gameDirHelpNotFound": "ไม่พบโฟลเดอร์เกม Genshin Impact เมื่อเลือกโฟลเดอร์เกมแล้ว เครื่องมือนี้จะอ่านประวัติการอธิษฐานจากแคชเว็บของเกมได้ด้วย",
+  "gameDirHelpFound": "โฟลเดอร์เกมที่ใช้อยู่ตอนนี้: {path} หากไม่ใช่เกมที่คุณกำลังเล่น กรุณาเลือกใหม่",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "ตั้งค่าโฟลเดอร์เกมแล้ว กรุณากลับไปที่เกมและเปิดประวัติการอธิษฐานอีกครั้ง",
+  "gameDirInvalid": "ไม่พบ Genshin Impact ในโฟลเดอร์นี้ กรุณาเลือกโฟลเดอร์ \"Genshin Impact game\"",
+  "actionChooseGameDir": "เลือกโฟลเดอร์เกม",
+  "actionRechooseGameDir": "เลือกใหม่",
   "progressFetchingBanner": "กำลังดึงข้อมูล: {name}",
   "@progressFetchingBanner": {
     "placeholders": {

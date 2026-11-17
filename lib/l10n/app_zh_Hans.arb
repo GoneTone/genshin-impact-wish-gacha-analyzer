@@ -163,6 +163,17 @@
   "progressFailed": "失败",
   "progressOpenGameHint": "请打开原神 → 卡池 → 历史记录",
   "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
+  "progressNotDetectedLink": "已经打开祈愿历史记录，却一直没有反应？",
+  "progressCaptureUnavailableHint": "无法启动拦截程序（可能是证书被拒绝或端口被占用），改为只从游戏网页缓存检测。请打开祈愿历史记录。",
+  "progressCaptureUnavailableNoGameDirHint": "无法启动拦截程序（可能是证书被拒绝或端口被占用），也找不到游戏文件夹。请点击下方“选择游戏文件夹”手动指定。",
+  "gameDirHelpTitle": "检测不到祈愿历史记录",
+  "gameDirHelpNotFound": "找不到原神的游戏文件夹。选择游戏文件夹后，本工具也能改从游戏网页缓存读取祈愿历史记录。",
+  "gameDirHelpFound": "当前读取的游戏文件夹：{path}。如果不是你正在玩的那份游戏，请重新选择。",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "已设置游戏文件夹。请回到游戏，再打开一次祈愿历史记录。",
+  "gameDirInvalid": "这个文件夹里找不到原神，请选择“Genshin Impact game”文件夹。",
+  "actionChooseGameDir": "选择游戏文件夹",
+  "actionRechooseGameDir": "重新选择",
   "progressFetchingBanner": "正在抓取：{name}",
   "@progressFetchingBanner": {
     "placeholders": {

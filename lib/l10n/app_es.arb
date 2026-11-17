@@ -167,6 +167,17 @@
   "progressFailed": "Fallido",
   "progressOpenGameHint": "Abre Genshin Impact → Deseos → Historial",
   "progressFallbackHint": "(La autenticación anterior ha expirado, se necesita re-interceptar)",
+  "progressNotDetectedLink": "¿Has abierto el Historial de Deseos pero no pasa nada?",
+  "progressCaptureUnavailableHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado), así que solo se detecta desde la caché web del juego. Abre el Historial de Deseos.",
+  "progressCaptureUnavailableNoGameDirHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado) y tampoco se encontró la carpeta del juego. Pulsa «Elegir carpeta del juego» abajo para indicarla manualmente.",
+  "gameDirHelpTitle": "No se detecta el Historial de Deseos",
+  "gameDirHelpNotFound": "No se encontró la carpeta de Genshin Impact. Una vez elegida la carpeta del juego, esta herramienta también podrá leer el Historial de Deseos desde la caché web del juego.",
+  "gameDirHelpFound": "Carpeta del juego en uso: {path}. Si no es la copia del juego que estás usando, elige otra.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Carpeta del juego configurada. Vuelve al juego y abre de nuevo el Historial de Deseos.",
+  "gameDirInvalid": "No se encontró Genshin Impact en esta carpeta. Elige la carpeta «Genshin Impact game».",
+  "actionChooseGameDir": "Elegir carpeta del juego",
+  "actionRechooseGameDir": "Elegir de nuevo",
   "progressFetchingBanner": "Obteniendo: {name}",
   "@progressFetchingBanner": {
     "placeholders": {

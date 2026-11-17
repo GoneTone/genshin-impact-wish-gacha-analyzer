@@ -167,6 +167,17 @@
   "progressFailed": "Falhou",
   "progressOpenGameHint": "Abra Genshin Impact → Orações → Histórico",
   "progressFallbackHint": "(A autenticação anterior expirou, é necessário interceptar novamente)",
+  "progressNotDetectedLink": "Abriu o Histórico de Orações, mas nada acontece?",
+  "progressCaptureUnavailableHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso); a detecção usará apenas o cache web do jogo. Abra o Histórico de Orações.",
+  "progressCaptureUnavailableNoGameDirHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso) e a pasta do jogo também não foi encontrada. Clique em \"Escolher pasta do jogo\" abaixo para definir manualmente.",
+  "gameDirHelpTitle": "Histórico de Orações não detectado",
+  "gameDirHelpNotFound": "A pasta do Genshin Impact não foi encontrada. Depois de escolher a pasta do jogo, esta ferramenta também poderá ler o Histórico de Orações a partir do cache web do jogo.",
+  "gameDirHelpFound": "Pasta do jogo em uso: {path}. Se não for a cópia do jogo que você está usando, escolha novamente.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Pasta do jogo definida. Volte ao jogo e abra o Histórico de Orações mais uma vez.",
+  "gameDirInvalid": "O Genshin Impact não foi encontrado nesta pasta. Escolha a pasta \"Genshin Impact game\".",
+  "actionChooseGameDir": "Escolher pasta do jogo",
+  "actionRechooseGameDir": "Escolher novamente",
   "progressFetchingBanner": "Buscando: {name}",
   "@progressFetchingBanner": {
     "placeholders": {

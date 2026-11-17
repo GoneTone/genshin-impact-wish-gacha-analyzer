@@ -167,6 +167,17 @@
   "progressFailed": "失敗",
   "progressOpenGameHint": "原神 → 祈願 → 履歴 を開いてください",
   "progressFallbackHint": "（以前の認証が失効したため、再取得が必要です）",
+  "progressNotDetectedLink": "祈願履歴を開いたのに、まったく反応しませんか？",
+  "progressCaptureUnavailableHint": "傍受プログラムを起動できませんでした（証明書が拒否されたか、ポートが使用中の可能性があります）。ゲームのウェブキャッシュからのみ検出します。祈願履歴を開いてください。",
+  "progressCaptureUnavailableNoGameDirHint": "傍受プログラムを起動できず、ゲームフォルダも見つかりませんでした。下の「ゲームフォルダを選択」を押して手動で指定してください。",
+  "gameDirHelpTitle": "祈願履歴を検出できません",
+  "gameDirHelpNotFound": "原神のゲームフォルダが見つかりません。ゲームフォルダを選択すると、本ツールはゲームのウェブキャッシュからも祈願履歴を読み取れるようになります。",
+  "gameDirHelpFound": "現在使用しているゲームフォルダ：{path}。プレイ中のゲームと異なる場合は、選び直してください。",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "ゲームフォルダを設定しました。ゲームに戻って、もう一度祈願履歴を開いてください。",
+  "gameDirInvalid": "このフォルダに原神が見つかりません。「Genshin Impact game」フォルダを選択してください。",
+  "actionChooseGameDir": "ゲームフォルダを選択",
+  "actionRechooseGameDir": "選び直す",
   "progressFetchingBanner": "取得中：{name}",
   "@progressFetchingBanner": {
     "placeholders": {

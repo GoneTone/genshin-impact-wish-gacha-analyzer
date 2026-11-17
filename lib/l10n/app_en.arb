@@ -167,6 +167,17 @@
   "progressFailed": "Failed",
   "progressOpenGameHint": "Open Genshin → Wishes → History",
   "progressFallbackHint": "(Previous auth expired, re-capture needed)",
+  "progressNotDetectedLink": "Opened the Wish History but nothing is happening?",
+  "progressCaptureUnavailableHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), so detection falls back to the game's web cache only. Please open the Wish History.",
+  "progressCaptureUnavailableNoGameDirHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), and the game folder was not found either. Press \"Choose game folder\" below to set it manually.",
+  "gameDirHelpTitle": "Wish History not detected",
+  "gameDirHelpNotFound": "Could not find the Genshin Impact game folder. Once you choose the game folder, this tool can also read your Wish History from the game's web cache.",
+  "gameDirHelpFound": "Game folder currently in use: {path}. If this is not the copy of the game you are playing, please choose again.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Game folder set. Please go back to the game and open the Wish History once more.",
+  "gameDirInvalid": "Genshin Impact was not found in this folder. Please choose the \"Genshin Impact game\" folder.",
+  "actionChooseGameDir": "Choose game folder",
+  "actionRechooseGameDir": "Choose again",
   "progressFetchingBanner": "Fetching: {name}",
   "@progressFetchingBanner": {
     "placeholders": {

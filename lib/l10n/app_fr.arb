@@ -167,6 +167,17 @@
   "progressFailed": "Échec",
   "progressOpenGameHint": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
   "progressFallbackHint": "(L'authentification précédente a expiré, une nouvelle interception est nécessaire)",
+  "progressNotDetectedLink": "Vous avez ouvert l'historique des vœux mais rien ne se passe ?",
+  "progressCaptureUnavailableHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé) ; la détection se fait donc uniquement via le cache web du jeu. Veuillez ouvrir l'historique des vœux.",
+  "progressCaptureUnavailableNoGameDirHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé), et le dossier du jeu est introuvable. Appuyez sur « Choisir le dossier du jeu » ci-dessous pour le définir manuellement.",
+  "gameDirHelpTitle": "Historique des vœux non détecté",
+  "gameDirHelpNotFound": "Le dossier de Genshin Impact est introuvable. Une fois le dossier du jeu choisi, cet outil pourra aussi lire l'historique des vœux depuis le cache web du jeu.",
+  "gameDirHelpFound": "Dossier du jeu actuellement utilisé : {path}. S'il ne correspond pas à la copie du jeu que vous utilisez, veuillez en choisir un autre.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Dossier du jeu défini. Retournez dans le jeu et ouvrez à nouveau l'historique des vœux.",
+  "gameDirInvalid": "Genshin Impact est introuvable dans ce dossier. Veuillez choisir le dossier « Genshin Impact game ».",
+  "actionChooseGameDir": "Choisir le dossier du jeu",
+  "actionRechooseGameDir": "Choisir à nouveau",
   "progressFetchingBanner": "Récupération : {name}",
   "@progressFetchingBanner": {
     "placeholders": {
