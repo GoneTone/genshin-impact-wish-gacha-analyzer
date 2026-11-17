@@ -141,6 +141,9 @@ class LogService {
     final now = DateTime.now().toUtc();
     _todayDate = DateTime.utc(now.year, now.month, now.day);
     final file = _fileFor(_todayDate!);
+    // openWrite 開檔是非同步、不會等檔案建立完成；先 create 讓呼叫端
+    // （例如 clearAll 之後立刻列目錄）一定看得到今天的檔案。
+    await file.create(recursive: true);
     _todaySink = file.openWrite(mode: FileMode.append, encoding: utf8);
   }
 
