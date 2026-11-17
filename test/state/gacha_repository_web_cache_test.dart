@@ -204,6 +204,19 @@ void main() {
     );
   }
 
+  /// 收集測試期間所有 log 紀錄，測試結束時自動取消訂閱。
+  List<LogRecord> recordLogs() {
+    final records = <LogRecord>[];
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+    return records;
+  }
+
+  /// 是否為快取勝出後開始等攔截自行結束的 log。
+  bool isGraceStart(LogRecord r) =>
+      r.loggerName == 'gacha.webCache' &&
+      r.message.startsWith('cache won, waiting');
+
   /// 目前的更新進度。
   UpdateProgress? progressOf(_Race t) =>
       t.container.read(gachaRepositoryProvider).progress;
@@ -214,7 +227,68 @@ void main() {
     _ => null,
   };
 
-  test('cache wins: waits capture teardown before fetching', () async {
+  test(
+    'cache wins: capture stops by itself within grace, not cancelled',
+    () async {
+      final records = recordLogs();
+      final capture = _FakeCapture();
+      final watch = _FakeWatch();
+      final t = await race(
+        capture: capture,
+        watch: watch,
+        locator: _FakeLocator(_loc),
+      );
+
+      final done = t.repo.update();
+      await _until(() => watch.hits.isNotEmpty);
+      expect(watch.dirs.single, _gameDir);
+      watch.hits[0].complete(_url);
+
+      await _until(() => records.any(isGraceStart));
+      expect(t.hits, isEmpty, reason: 'no fetch before capture stops');
+      expect(capture.cancelCalls, 0);
+
+      capture.result.complete(null);
+      await done.timeout(const Duration(seconds: 5));
+
+      expect(capture.cancelCalls, 0);
+      expect(t.hits, isNotEmpty);
+      expect(t.captureDoneAtHit, everyElement(isTrue));
+      expect(progressOf(t), isA<UpdateCompleted>());
+    },
+  );
+
+  test('cache wins: capture still running after grace is cancelled', () async {
+    const grace = Duration(milliseconds: 100);
+    final capture = _FakeCapture();
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+    t.repo.debugSetCacheWinCaptureGrace(grace);
+
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    final sinceHit = Stopwatch()..start();
+    watch.hits[0].complete(_url);
+
+    await _until(() => capture.cancelCalls > 0);
+    expect(sinceHit.elapsed, greaterThanOrEqualTo(grace));
+    expect(t.hits, isEmpty, reason: 'no fetch before capture teardown');
+
+    capture.result.complete(null);
+    await done.timeout(const Duration(seconds: 5));
+
+    expect(capture.cancelCalls, 1);
+    expect(t.hits, isNotEmpty);
+    expect(t.captureDoneAtHit, everyElement(isTrue));
+    expect(progressOf(t), isA<UpdateCompleted>());
+  });
+
+  test('user cancel during cache-won grace aborts promptly', () async {
+    final records = recordLogs();
     final capture = _FakeCapture();
     final watch = _FakeWatch();
     final t = await race(
@@ -225,18 +299,14 @@ void main() {
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
-    expect(watch.dirs.single, _gameDir);
     watch.hits[0].complete(_url);
+    await _until(() => records.any(isGraceStart));
+    await t.repo.cancelCapture();
+    // 預設寬限 3 秒；1 秒內結束代表取消沒等寬限跑完。
+    await done.timeout(const Duration(seconds: 1));
 
-    await _until(() => capture.cancelCalls > 0);
-    expect(t.hits, isEmpty, reason: 'no fetch before capture teardown');
-
-    capture.result.complete(null);
-    await done.timeout(const Duration(seconds: 5));
-
-    expect(t.hits, isNotEmpty);
-    expect(t.captureDoneAtHit, everyElement(isTrue));
-    expect(progressOf(t), isA<UpdateCompleted>());
+    expect(t.hits, isEmpty);
+    expect(progressOf(t), isNull);
   });
 
   test('cache wins: capture teardown error is ignored', () async {
@@ -247,6 +317,7 @@ void main() {
       watch: watch,
       locator: _FakeLocator(_loc),
     );
+    t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
@@ -385,6 +456,7 @@ void main() {
       watch: watch,
       locator: _FakeLocator(_loc),
     );
+    t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
@@ -407,6 +479,7 @@ void main() {
       locator: _FakeLocator(_loc),
     );
     t.repo.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
+    t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
@@ -495,6 +568,7 @@ void main() {
         _ => _ok(const []),
       },
     );
+    t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);

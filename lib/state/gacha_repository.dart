@@ -346,8 +346,8 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 啟動 MITM 捕獲並同時監看遊戲網頁快取，回傳先拿到的 URL；null 代表使用者取消。
   ///
-  /// [isFallback] 為 auth 過期後的二次捕獲。快取先拿到時先停掉攔截並等它收尾
-  /// （MITM proxy 已停、系統代理已還原）才回傳，收尾錯誤只記 warning。快取勝出前
+  /// [isFallback] 為 auth 過期後的二次捕獲。快取先拿到時先給攔截寬限自行結束、逾時才停掉，
+  /// 並等它收尾（MITM proxy 已停、系統代理已還原）才回傳，收尾錯誤只記 warning。快取勝出前
   /// 攔截就失效（丟錯，或非使用者取消卻沒攔到）時改為只等快取並在畫面提示；找不到
   /// 遊戲資料夾時提示改成請使用者選資料夾，選好即接上監看。只有使用者取消會結束等待。
   ///
@@ -396,19 +396,7 @@ class GachaRepository extends Notifier<GachaState> {
         (url, fromCache) = await _waitCacheOnly(isFallback, cacheHit, backstop);
       }
       if (fromCache && !captureFinished) {
-        // cancel() 丟錯也要等 result：它完成才代表系統代理已還原，之後拉取才不會誤走代理。
-        for (final step in <Future<Object?> Function()>[
-          session.cancel,
-          () => session.result,
-        ]) {
-          try {
-            await Future.any([step(), backstop.future]);
-          } catch (e) {
-            _webCacheLog.warning(
-              'capture teardown error after cache win error=${e.runtimeType}',
-            );
-          }
-        }
+        await _stopCaptureAfterCacheWin(session, backstop);
       }
       if (!fromCache) _log.info('MITM session done, hasUrl=${url != null}');
       if (url != null) {
@@ -427,6 +415,51 @@ class GachaRepository extends Notifier<GachaState> {
       return null;
     }
     return url;
+  }
+
+  /// 快取勝出後收尾攔截：先給 [_cacheWinCaptureGrace] 寬限讓它自行結束，逾時才 `cancel()`；一律等 `result` 完成才返回。
+  ///
+  /// 快取通常只比 MITM 晚幾十毫秒看到網址，此時遊戲的祈願 API 請求可能還在經代理轉送，
+  /// 立刻 `cancel()` 會切斷它，遊戲紀錄頁顯示無法取得數據；Rust 端收到上游回應後會自行停止。
+  /// 每段等待都和 [backstop] 比快（使用者取消立即生效）；收尾錯誤只記 warning。
+  Future<void> _stopCaptureAfterCacheWin(
+    CaptureSession session,
+    Completer<String?> backstop,
+  ) async {
+    _webCacheLog.info(
+      'cache won, waiting up to ${_cacheWinCaptureGrace.inMilliseconds}ms '
+      'for capture to stop',
+    );
+    try {
+      await Future.any([
+        session.result,
+        backstop.future,
+      ]).timeout(_cacheWinCaptureGrace);
+      if (!backstop.isCompleted) {
+        _webCacheLog.info('capture stopped within grace after cache win');
+      }
+      return;
+    } on TimeoutException {
+      _webCacheLog.info('capture still running after grace, cancelling');
+    } catch (e) {
+      _webCacheLog.warning(
+        'capture teardown error after cache win error=${e.runtimeType}',
+      );
+      return;
+    }
+    // cancel() 丟錯也要等 result：它完成才代表系統代理已還原，之後拉取才不會誤走代理。
+    for (final step in <Future<Object?> Function()>[
+      session.cancel,
+      () => session.result,
+    ]) {
+      try {
+        await Future.any([step(), backstop.future]);
+      } catch (e) {
+        _webCacheLog.warning(
+          'capture teardown error after cache win error=${e.runtimeType}',
+        );
+      }
+    }
   }
 
   /// 等 [watchStart]（監看啟動流程）跑完後，判斷攔截失效時能否改為只等快取。
@@ -685,6 +718,9 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// `cancelCapture` 等待 Rust MITM 拆除回應的上限（比 L1 的 2 秒寬鬆）。
   Duration _cancelTeardownTimeout = const Duration(seconds: 8);
+
+  /// 快取勝出後等攔截自行結束的寬限；逾時才 `cancel()`。
+  Duration _cacheWinCaptureGrace = const Duration(seconds: 3);
 
   /// 取消 Preparing 階段的 HTTP 請求。
   void cancelPreparing() {
@@ -1679,6 +1715,12 @@ class GachaRepository extends Notifier<GachaState> {
   @visibleForTesting
   void debugSetCancelTeardownTimeout(Duration timeout) {
     _cancelTeardownTimeout = timeout;
+  }
+
+  /// 測試用：縮短快取勝出後等攔截自行結束的寬限，避免真實掛鐘等待。生產勿用。
+  @visibleForTesting
+  void debugSetCacheWinCaptureGrace(Duration grace) {
+    _cacheWinCaptureGrace = grace;
   }
 }
 
