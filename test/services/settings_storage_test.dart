@@ -194,6 +194,28 @@ void main() {
     });
   });
 
+  group('gameDir', () {
+    test('round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: SystemLanguage(),
+          gameDir: r'D:\Genshin Impact game',
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.gameDir, r'D:\Genshin Impact game');
+    });
+
+    test('null 表清除並移除 key', () async {
+      SharedPreferences.setMockInitialValues({'pref.gameDir': r'D:\x'});
+      await SettingsStorage.save(AppSettings.defaults);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.containsKey('pref.gameDir'), isFalse);
+      expect((await SettingsStorage.load()).gameDir, isNull);
+    });
+  });
+
   group('maskUidInUi', () {
     test('defaults to false when key absent', () async {
       final s = await SettingsStorage.load();

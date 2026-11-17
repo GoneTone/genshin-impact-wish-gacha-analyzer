@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 
 /// App 設定的 Riverpod notifier，負責從磁碟讀寫 [AppSettings]。
@@ -94,6 +95,17 @@ class SettingsNotifier extends Notifier<AppSettings> {
       clearSkippedReleaseTag: tag == null,
     );
     await SettingsStorage.save(state);
+  }
+
+  /// 設定遊戲資料夾；[dir] 為 null 時清除。
+  Future<void> setGameDir(String? dir) async {
+    state = state.copyWith(gameDir: dir, clearGameDir: dir == null);
+    await SettingsStorage.save(state);
+    Logger('app.settings').info(
+      dir == null
+          ? 'gameDir cleared'
+          : 'gameDir set source=manual path=${sanitizeFsPath(dir)}',
+    );
   }
 
   /// 切換「遮蔽介面 UID」設定並持久化；變更值同步寫入 log。

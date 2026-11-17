@@ -87,6 +87,7 @@ class AppSettings {
     this.cloudAutoSyncEnabled = true,
     this.cloudLastSyncedAt,
     this.cloudPendingRemovals = const [],
+    this.gameDir,
   });
 
   /// 外觀主題。
@@ -128,6 +129,9 @@ class AppSettings {
   /// 待從雲端移除的 UID 清單（刪帳號勾「連雲端一起刪」時排入，同步成功後清除）。
   final List<String> cloudPendingRemovals;
 
+  /// 使用者指定的遊戲資料夾（僅存本機，不參與雲端同步）；null 代表未設定。
+  final String? gameDir;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -155,6 +159,8 @@ class AppSettings {
     DateTime? cloudLastSyncedAt,
     bool clearCloudLastSyncedAt = false,
     List<String>? cloudPendingRemovals,
+    String? gameDir,
+    bool clearGameDir = false,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -179,6 +185,7 @@ class AppSettings {
         ? null
         : (cloudLastSyncedAt ?? this.cloudLastSyncedAt),
     cloudPendingRemovals: cloudPendingRemovals ?? this.cloudPendingRemovals,
+    gameDir: clearGameDir ? null : (gameDir ?? this.gameDir),
   );
 }
 
@@ -223,6 +230,9 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：待雲端移除 UID 清單 JSON。
   static const _kCloudPendingRemovals = 'pref.cloudPendingRemovals';
 
+  /// SharedPreferences key：遊戲資料夾路徑（僅本機）。
+  static const _kGameDir = 'pref.gameDir';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -245,6 +255,7 @@ abstract final class SettingsStorage {
       cloudPendingRemovals: _parseOrder(
         prefs.getString(_kCloudPendingRemovals),
       ),
+      gameDir: prefs.getString(_kGameDir),
     );
   }
 
@@ -289,6 +300,11 @@ abstract final class SettingsStorage {
       _kCloudPendingRemovals,
       jsonEncode(s.cloudPendingRemovals),
     );
+    if (s.gameDir == null) {
+      await prefs.remove(_kGameDir);
+    } else {
+      await prefs.setString(_kGameDir, s.gameDir!);
+    }
   }
 
   /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。

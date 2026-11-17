@@ -219,6 +219,24 @@ void main() {
     expect(reloaded.skippedReleaseTag, isNull);
   });
 
+  test('setGameDir 寫入 state 與 prefs，null 清除並移除 key', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    const dir = r'D:\Program Files\Genshin Impact\games\Genshin Impact game';
+
+    await notifier.setGameDir(dir);
+    expect(container.read(settingsProvider).gameDir, dir);
+    expect((await SettingsStorage.load()).gameDir, dir);
+
+    await notifier.setGameDir(null);
+    expect(container.read(settingsProvider).gameDir, isNull);
+    expect((await SettingsStorage.load()).gameDir, isNull);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey('pref.gameDir'), isFalse);
+  });
+
   group('setMaskUidInUi', () {
     setUp(() async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
