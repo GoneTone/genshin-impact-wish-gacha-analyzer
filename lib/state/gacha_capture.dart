@@ -58,7 +58,7 @@ class RustGachaCapture implements GachaCapture {
     return CaptureSession(
       result: completer.future,
       cancel: () async {
-        _log.info('capture cancelled by user');
+        _log.info('capture stop requested');
         await rust_capture.stopCapture();
       },
     );

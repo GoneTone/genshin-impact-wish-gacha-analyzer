@@ -325,6 +325,7 @@ void main() {
     // 預設寬限 3 秒；1 秒內結束代表取消沒等寬限跑完。
     await done.timeout(const Duration(seconds: 1));
 
+    expect(capture.cancelCalls, 1);
     expect(t.hits, isEmpty);
     expect(progressOf(t), isNull);
   });
@@ -349,6 +350,38 @@ void main() {
     expect(progressOf(t), isA<UpdateCompleted>());
   });
 
+  test('cache wins: capture result error within grace is ignored', () async {
+    final records = recordLogs();
+    final capture = _FakeCapture();
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    watch.hits[0].complete(_url);
+    await _until(() => records.any(isGraceStart));
+    capture.result.completeError(Exception('proxy restore failed'));
+    await done.timeout(const Duration(seconds: 5));
+
+    expect(capture.cancelCalls, 0);
+    expect(
+      records.any(
+        (r) =>
+            r.loggerName == 'gacha.webCache' &&
+            r.level == Level.WARNING &&
+            r.message ==
+                'capture teardown error after cache win error=_Exception',
+      ),
+      isTrue,
+    );
+    expect(t.hits, isNotEmpty);
+    expect(progressOf(t), isA<UpdateCompleted>());
+  });
+
   test('capture wins: cache watch cancelled', () async {
     final capture = _FakeCapture();
     final watch = _FakeWatch();
@@ -369,9 +402,7 @@ void main() {
   });
 
   test('capture error: stops capture, then waits on cache only', () async {
-    final records = <LogRecord>[];
-    final sub = Logger.root.onRecord.listen(records.add);
-    addTearDown(sub.cancel);
+    final records = recordLogs();
     final capture = _FakeCapture();
     final watch = _FakeWatch();
     final t = await race(
@@ -453,6 +484,38 @@ void main() {
             r.loggerName == 'gacha.webCache' &&
             r.level == Level.WARNING &&
             r.message == 'failed capture stop error=_Exception',
+      ),
+      isTrue,
+    );
+
+    watch.hits[0].complete(_url);
+    await done.timeout(const Duration(seconds: 5));
+
+    expect(progressOf(t), isA<UpdateCompleted>());
+  });
+
+  test('failed capture stop hangs: times out, still waits on cache', () async {
+    final records = recordLogs();
+    final capture = _FakeCapture(hangCancel: true);
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+    t.repo.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
+
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    capture.result.complete(null);
+    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    expect(capture.cancelCalls, 1);
+    expect(
+      records.any(
+        (r) =>
+            r.loggerName == 'gacha.webCache' &&
+            r.level == Level.WARNING &&
+            r.message == 'failed capture stop error=TimeoutException',
       ),
       isTrue,
     );

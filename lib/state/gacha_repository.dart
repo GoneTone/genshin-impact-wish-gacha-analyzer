@@ -494,6 +494,7 @@ class GachaRepository extends Notifier<GachaState> {
       ]).timeout(_cancelTeardownTimeout);
     } catch (e) {
       _webCacheLog.warning('failed capture stop error=${e.runtimeType}');
+      if (e is TimeoutException) unawaited(_bestEffortStaleProxyCleanup());
     }
     _webCacheLog.info(
       'waiting on web cache only, gameDirMissing=${_webCacheSession == null}',
