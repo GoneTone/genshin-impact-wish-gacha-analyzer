@@ -99,7 +99,7 @@ void main() {
       ).locate(settingDir: '${tmp.path}\\nope');
       expect(r?.path, game);
       expect(r?.source, GameDirSource.outputLog);
-    });
+    }, skip: !Platform.isWindows ? 'needs a drive-letter temp path' : false);
 
     test('registry install root falls back after output log', () async {
       final root = '${tmp.path}\\Root';
