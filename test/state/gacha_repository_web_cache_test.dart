@@ -32,13 +32,20 @@ const _loc = GameDirLocation(_gameDir, GameDirSource.setting);
 /// 結果與取消都由測試以 [Completer] 控制的攔截 fake。
 class _FakeCapture implements GachaCapture {
   /// 建立 fake；[completeOnCancel] 為 true 時 `cancel()` 會以 null 完成結果。
-  _FakeCapture({this.completeOnCancel = false, this.hangCancel = false});
+  _FakeCapture({
+    this.completeOnCancel = false,
+    this.hangCancel = false,
+    this.failCancel = false,
+  });
 
   /// 為 true 時 `cancel()` 會以 null 完成 [result]。
   final bool completeOnCancel;
 
   /// 為 true 時 `cancel()` 永不返回（模擬根憑證確認視窗開著時 stop 卡住）。
   final bool hangCancel;
+
+  /// 為 true 時 `cancel()` 丟錯（模擬 Rust `stop_capture` 失敗）。
+  final bool failCancel;
 
   /// 攔截結果，由測試決定何時完成。
   final result = Completer<String?>();
@@ -52,6 +59,7 @@ class _FakeCapture implements GachaCapture {
     cancel: () async {
       cancelCalls++;
       if (hangCancel) return Completer<void>().future;
+      if (failCancel) throw Exception('stop failed');
       if (completeOnCancel && !result.isCompleted) result.complete(null);
     },
   );
@@ -227,6 +235,18 @@ void main() {
     _ => null,
   };
 
+  /// 回傳一個 list，在等待畫面首次切到「攔截失效」時記下 [capture] 當下的 `cancel()` 次數。
+  List<int> cancelsAtUnavailable(_Race t, _FakeCapture capture) {
+    final seen = <int>[];
+    t.container.listen(gachaRepositoryProvider, (_, s) {
+      final p = s.progress;
+      if (seen.isEmpty && p is WaitingForCapture && p.captureUnavailable) {
+        seen.add(capture.cancelCalls);
+      }
+    });
+    return seen;
+  }
+
   test(
     'cache wins: capture stops by itself within grace, not cancelled',
     () async {
@@ -348,7 +368,7 @@ void main() {
     expect(progressOf(t), isA<UpdateCompleted>());
   });
 
-  test('capture error: waits on cache only', () async {
+  test('capture error: stops capture, then waits on cache only', () async {
     final records = <LogRecord>[];
     final sub = Logger.root.onRecord.listen(records.add);
     addTearDown(sub.cancel);
@@ -359,12 +379,14 @@ void main() {
       watch: watch,
       locator: _FakeLocator(_loc),
     );
+    final cancels = cancelsAtUnavailable(t, capture);
 
     final done = t.repo.update();
     await _until(() => watch.hits.isNotEmpty);
     capture.result.completeError(Exception('certificate rejected'));
     await _until(() => waitingOf(t)?.captureUnavailable ?? false);
 
+    expect(cancels, [1], reason: 'capture stopped before cache-only wait');
     expect(waitingOf(t)!.gameDirMissing, isFalse);
     expect(watch.cancelled, isEmpty);
     expect(
@@ -380,33 +402,66 @@ void main() {
     watch.hits[0].complete(_url);
     await done.timeout(const Duration(seconds: 5));
 
+    expect(capture.cancelCalls, 1);
     expect(t.hits, isNotEmpty);
     expect(progressOf(t), isA<UpdateCompleted>());
   });
 
-  test(
-    'capture ended without url (not user cancel): waits on cache only',
-    () async {
-      final capture = _FakeCapture();
-      final watch = _FakeWatch();
-      final t = await race(
-        capture: capture,
-        watch: watch,
-        locator: _FakeLocator(_loc),
-      );
+  test('capture ended without url (not user cancel): stops capture, '
+      'then waits on cache only', () async {
+    final capture = _FakeCapture();
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+    final cancels = cancelsAtUnavailable(t, capture);
 
-      final done = t.repo.update();
-      await _until(() => watch.hits.isNotEmpty);
-      capture.result.complete(null);
-      await _until(() => waitingOf(t)?.captureUnavailable ?? false);
-      expect(waitingOf(t)!.gameDirMissing, isFalse);
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    capture.result.complete(null);
+    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    expect(cancels, [1], reason: 'capture stopped before cache-only wait');
+    expect(waitingOf(t)!.gameDirMissing, isFalse);
 
-      watch.hits[0].complete(_url);
-      await done.timeout(const Duration(seconds: 5));
+    watch.hits[0].complete(_url);
+    await done.timeout(const Duration(seconds: 5));
 
-      expect(progressOf(t), isA<UpdateCompleted>());
-    },
-  );
+    expect(capture.cancelCalls, 1);
+    expect(progressOf(t), isA<UpdateCompleted>());
+  });
+
+  test('failed capture stop error is ignored, still waits on cache', () async {
+    final records = recordLogs();
+    final capture = _FakeCapture(failCancel: true);
+    final watch = _FakeWatch();
+    final t = await race(
+      capture: capture,
+      watch: watch,
+      locator: _FakeLocator(_loc),
+    );
+
+    final done = t.repo.update();
+    await _until(() => watch.hits.isNotEmpty);
+    capture.result.complete(null);
+    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    expect(capture.cancelCalls, 1);
+    expect(
+      records.any(
+        (r) =>
+            r.loggerName == 'gacha.webCache' &&
+            r.level == Level.WARNING &&
+            r.message == 'failed capture stop error=_Exception',
+      ),
+      isTrue,
+    );
+
+    watch.hits[0].complete(_url);
+    await done.timeout(const Duration(seconds: 5));
+
+    expect(progressOf(t), isA<UpdateCompleted>());
+  });
 
   test('capture error and no game dir: shows picker, cancel works', () async {
     final capture = _FakeCapture();

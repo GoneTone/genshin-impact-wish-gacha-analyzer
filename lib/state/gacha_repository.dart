@@ -348,7 +348,7 @@ class GachaRepository extends Notifier<GachaState> {
   ///
   /// [isFallback] 為 auth 過期後的二次捕獲。快取先拿到時先給攔截寬限自行結束、逾時才停掉，
   /// 並等它收尾（MITM proxy 已停、系統代理已還原）才回傳，收尾錯誤只記 warning。快取勝出前
-  /// 攔截就失效（丟錯，或非使用者取消卻沒攔到）時改為只等快取並在畫面提示；找不到
+  /// 攔截就失效（丟錯，或非使用者取消卻沒攔到）時先停掉攔截（還原系統代理），再改為只等快取並在畫面提示；找不到
   /// 遊戲資料夾時提示改成請使用者選資料夾，選好即接上監看。只有使用者取消會結束等待。
   ///
   /// 每段等待都和 [_captureBackstop] 比快：onDone 失靈（Rust 拆除未 drop sink）或
@@ -383,6 +383,7 @@ class GachaRepository extends Notifier<GachaState> {
         if (await _canWaitCacheOnly(watchStart, backstop)) {
           (url, fromCache) = await _waitCacheOnly(
             isFallback,
+            session,
             cacheHit,
             backstop,
           );
@@ -393,7 +394,12 @@ class GachaRepository extends Notifier<GachaState> {
           !_captureCancelRequested &&
           await _canWaitCacheOnly(watchStart, backstop)) {
         _webCacheLog.warning('capture ended without url');
-        (url, fromCache) = await _waitCacheOnly(isFallback, cacheHit, backstop);
+        (url, fromCache) = await _waitCacheOnly(
+          isFallback,
+          session,
+          cacheHit,
+          backstop,
+        );
       }
       if (fromCache && !captureFinished) {
         await _stopCaptureAfterCacheWin(session, backstop);
@@ -473,12 +479,22 @@ class GachaRepository extends Notifier<GachaState> {
     return ref.mounted && !_captureCancelRequested;
   }
 
-  /// 攔截失效後只等快取：把等待畫面切到提示狀態，回傳快取命中的 URL，使用者取消時為 null。
+  /// 攔截失效後只等快取：先停掉攔截 session，再把等待畫面切到提示狀態，回傳快取命中的 URL，使用者取消時為 null。
   Future<(String?, bool)> _waitCacheOnly(
     bool isFallback,
+    CaptureSession session,
     Completer<String> cacheHit,
     Completer<String?> backstop,
   ) async {
+    // MITM 在背景 task 才 bind 埠，bind 失敗時系統代理已設好；只有 cancel()（Rust stop_capture）會還原它。
+    try {
+      await Future.any([
+        session.cancel(),
+        backstop.future,
+      ]).timeout(_cancelTeardownTimeout);
+    } catch (e) {
+      _webCacheLog.warning('failed capture stop error=${e.runtimeType}');
+    }
     _webCacheLog.info(
       'waiting on web cache only, gameDirMissing=${_webCacheSession == null}',
     );
