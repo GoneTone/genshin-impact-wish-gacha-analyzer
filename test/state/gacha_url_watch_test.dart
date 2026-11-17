@@ -104,6 +104,7 @@ void main() {
   test('ignores authkeys present at start', () async {
     _writeCache(ver('2.57.0.0'), [_page('K1'), _api('K1')]);
     final s = startWatch();
+    await waitStarted();
     var done = false;
     final result = s.result.whenComplete(() => done = true);
     await Future<void>.delayed(const Duration(milliseconds: 200));

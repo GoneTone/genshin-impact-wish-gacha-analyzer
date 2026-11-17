@@ -12,6 +12,7 @@ const _api =
 const _beyond =
     'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getBeyondGachaLog?auth_appid=webview_gacha&authkey=K2&gacha_type=1000';
 
+/// 產生含指定 authkey 的祈願網址文字。
 String _withKey(String key) =>
     'https://gs.hoyoverse.com/a/index.html?auth_appid=webview_gacha&authkey=$key&game_biz=x';
 

@@ -48,8 +48,9 @@ class _FixedLocator extends GameDirLocator {
 
 /// 在 [root] 下建立含 `GenshinImpact_Data` 的有效遊戲資料夾。
 Directory _makeGameDir(Directory root) {
-  final dir = Directory('${root.path}\\Game')..createSync();
-  Directory('${dir.path}\\GenshinImpact_Data').createSync();
+  final sep = Platform.pathSeparator;
+  final dir = Directory('${root.path}${sep}Game')..createSync();
+  Directory('${dir.path}${sep}GenshinImpact_Data').createSync();
   return dir;
 }
 

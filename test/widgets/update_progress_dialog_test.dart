@@ -13,6 +13,7 @@ class _FakeGachaRepository extends GachaRepository {
   /// 建立固定進度為 [_progress] 的替身。
   _FakeGachaRepository(this._progress);
 
+  /// 替身回報的固定進度。
   final UpdateProgress? _progress;
 
   @override

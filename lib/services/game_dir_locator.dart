@@ -50,6 +50,7 @@ class GameDirLocator {
        _readOutputLog = readOutputLog ?? _readDefaultOutputLog,
        _commonDirs = commonDirs ?? _defaultCommonDirs;
 
+  /// 網頁快取定位流程的 logger。
   static final Logger _log = Logger('gacha.webCache');
 
   /// 遊戲資料夾內的資料目錄名稱，同時是「有效遊戲資料夾」的判準。
