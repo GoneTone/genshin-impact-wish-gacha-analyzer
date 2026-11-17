@@ -84,7 +84,7 @@
 在維護者電腦上初步確認（2026-11-17）：
 
 - 登錄檔 `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\HYP_standalone_1_6_hk4e_global_<id>` 的 `InstallPath` 是 `D:\Program Files\Genshin Impact`，遊戲本體在 `<InstallPath>\games\Genshin Impact game`。另外有 `hk4e_global_1_0_<id>_production`，它的 `InstallLocation` 指向 HoYoPlay 啟動器資料夾。
-- `%USERPROFILE%\AppData\LocalLow\miHoYo\Genshin Impact\output_log.txt` 裡**沒有**遊戲路徑。社群腳本常用「從 output_log 找路徑」，這個做法在本機不成立。
+- `%USERPROFILE%\AppData\LocalLow\miHoYo\Genshin Impact\output_log.txt` 裡**有**遊戲路徑（例如 `D:/Program Files/Genshin Impact/games/Genshin Impact game/GenshinImpact_Data/...`），社群腳本（paimon.moe 的 `getlink.ps1`）就是用 `.:/.+(GenshinImpact_Data|YuanShen_Data)` 從這裡找路徑。（更正：初稿誤寫成沒有路徑，原因是當時用的搜尋規則排除了空白，對不到 `Program Files`。）
 - 網頁快取在 `<遊戲>\GenshinImpact_Data\webCaches\<版本>\Cache\Cache_Data\data_2`，每個遊戲版本一個資料夾（本機有 2.51～2.57）。`2.55.0.0` 的 `data_2` 找得到 4 筆祈願網址，最新的 `2.57.0.0` 還沒有。
 - `data_2` 是 Chromium 的快取區塊檔，不是一直往檔尾追加，鳴潮版「起點之後新寫入的網址」的判斷方式要改。
 
@@ -180,10 +180,10 @@ PR #101 合併後到 `795c59c` 的 commit，除了版本號 bump 與 Crowdin 自
 
 ## 八、留給各子專案設計時決定的事
 
-- 子專案 0：`data_2` 的讀取與「新網址」判斷、遊戲資料夾的偵測順序（見 2.2 的待驗證項）。
+- 子專案 0：`data_2` 的讀取與「新網址」判斷、遊戲資料夾的偵測順序（見 2.2 的待驗證項）。設計見 `2026-11-17-web-cache-credential-fallback-design.md`。
 - 子專案 1：原神版沒有鳴潮版的 `tool/generate_app_icons.dart`（筆記 #10、#38 都說「沿用既有工具」），要一起移植，並確認目前 Windows 圖示是怎麼產生的。
 - 子專案 2：
-  - logcat 的網址規則與起始時間的格式；
+  - logcat 的網址規則與起始時間的格式。網址的判斷要用子專案 0 的 `findGachaUrls`（`auth_appid=webview_gacha`），不要寫死 `e20190909gacha`：頌願頁的網址是 `e20250716gacha`。也要實機確認打開頌願頁時 logcat 寫的是什麼；
   - 監看程序的生命週期：用什麼辨識並結束它（例如記下 PID）、App 被系統殺掉或手機重開機後留下的程序與暫存檔怎麼清，以及無線偵錯被關掉時監看程序會不會一起被終止。若會，回到 App 時要用 `logcat -d` 補查一次；
   - 頁面網址轉 API 網址放在哪一層；
   - 手動輸入的說明文字；
