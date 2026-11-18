@@ -520,6 +520,8 @@ class GachaRepository extends Notifier<GachaState> {
     LogAccessReady? ready;
     Future<CaptureSession>? starting;
     var gotUrl = false;
+    // 最後一次判斷沒有讀取方式、又沒權限關掉無線偵錯；之後拿到讀取方式就交給 release 決定。
+    var blockedLeftOn = false;
     StreamSubscription<bool>? healthSub;
     try {
       final previous = _androidTeardown;
@@ -552,6 +554,7 @@ class GachaRepository extends Notifier<GachaState> {
           return null;
         }
         final outcome = first;
+        blockedLeftOn = outcome is LogAccessBlocked && outcome.wirelessLeftOn;
         if (outcome is LogAccessReady) {
           ready = outcome;
           if (_captureCancelRequested || !ref.mounted) return null;
@@ -651,6 +654,7 @@ class GachaRepository extends Notifier<GachaState> {
       _captureBackstop = null;
       _logAccessRetry = null;
       await healthSub?.cancel();
+      if (blockedLeftOn) _wirelessLeftOn = true;
       final r = ready;
       if (r != null) {
         final teardown = _stopWatchThenRelease(starting, r);
@@ -672,6 +676,11 @@ class GachaRepository extends Notifier<GachaState> {
       }
     }
   }
+
+  /// 等背景還在做的 Android 收尾（停監看、release）做完；沒有時立刻返回。
+  ///
+  /// 設定頁的設定與解除配對要先等它，否則晚到的 release 可能關掉剛為了配對打開的無線偵錯。
+  Future<void> waitAndroidTeardown() async => _androidTeardown;
 
   /// 把背景收尾接到 [_androidTeardown] 後面（不取代還沒做完的前一段）；錯誤只記 warning，不讓下一次更新失敗。
   void _queueAndroidTeardown(Future<void> teardown, String what) {

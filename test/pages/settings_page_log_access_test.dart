@@ -35,6 +35,15 @@ class _NullCapture implements GachaCapture {
       CaptureSession(result: Future.value(null), cancel: () async {});
 }
 
+/// 背景收尾由測試決定何時做完的 [GachaRepository] 替身。
+class _TeardownRepo extends GachaRepository {
+  /// 非 null 時 [waitAndroidTeardown] 等它完成。
+  static Completer<void>? gate;
+
+  @override
+  Future<void> waitAndroidTeardown() async => gate?.future;
+}
+
 /// 記錄「前往無線偵錯」被呼叫次數的 [LogAccessPlatform] 替身。
 class _FakePlatform extends LogAccessPlatform {
   /// [openWirelessDebugging] 被呼叫的次數。
@@ -57,6 +66,7 @@ void main() {
     unpairs = 0;
     unpairReachable = true;
     unpairGate = null;
+    _TeardownRepo.gate = null;
     platform = _FakePlatform();
   });
 
@@ -76,6 +86,7 @@ void main() {
       container = ProviderContainer(
         overrides: [
           noGameDirOverride,
+          gachaRepositoryProvider.overrideWith(_TeardownRepo.new),
           isAndroidProvider.overrideWithValue(android),
           logAccessPlatformProvider.overrideWithValue(platform),
           wirelessPairingStatusProvider.overrideWith(
@@ -263,6 +274,45 @@ void main() {
     await tester.pumpAndSettle();
     expect(platform.opens, 0);
     expect(find.text(l.settingsUnpairUnreachableTitle), findsNothing);
+  });
+
+  testWidgets('unpair waits for a pending android teardown', (tester) async {
+    // 取消後背景的 release 還沒做完時解除配對，release 可能關掉解除配對要用的無線偵錯。
+    final gate = _TeardownRepo.gate = Completer<void>();
+    final (_, l) = await pump(
+      tester,
+      method: LogAccessMethod.wirelessDebugging,
+    );
+    await tester.tap(find.text(l.settingsUnpair));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, l.settingsUnpair));
+    await tester.pump();
+    await tester.pump();
+    expect(unpairs, 0);
+    expect(
+      find.descendant(
+        of: find.byType(LogAccessSection),
+        matching: find.byType(CircularProgressIndicator),
+      ),
+      findsOneWidget,
+    );
+    gate.complete();
+    await tester.pumpAndSettle();
+    expect(unpairs, 1);
+  });
+
+  testWidgets('setup waits for a pending android teardown', (tester) async {
+    final gate = _TeardownRepo.gate = Completer<void>();
+    final (_, l) = await pump(tester, paired: false);
+    await tester.tap(
+      find.widgetWithText(OutlinedButton, l.settingsSetupLogAccess),
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(LogAccessSetupPage), findsNothing);
+    gate.complete();
+    await tester.pumpAndSettle();
+    expect(find.byType(LogAccessSetupPage), findsOneWidget);
   });
 
   testWidgets('unpair shows progress and cannot be started twice', (

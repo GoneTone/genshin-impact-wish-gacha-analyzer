@@ -7,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/android/flutter_adb_
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/adb_pairing.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
@@ -109,6 +110,8 @@ class _LogAccessSectionState extends ConsumerState<LogAccessSection> {
     BuildContext context, {
     bool retryGrant = false,
   }) async {
+    await ref.read(gachaRepositoryProvider.notifier).waitAndroidTeardown();
+    if (!context.mounted) return;
     await openLogAccessSetup(context, retryGrant: retryGrant);
     if (mounted) ref.invalidate(wirelessPairingStatusProvider);
   }
@@ -137,6 +140,7 @@ class _LogAccessSectionState extends ConsumerState<LogAccessSection> {
     setState(() => _unpairing = true);
     final bool revoked;
     try {
+      await ref.read(gachaRepositoryProvider.notifier).waitAndroidTeardown();
       revoked = await ref.read(unpairWirelessDebuggingProvider)();
     } finally {
       if (mounted) setState(() => _unpairing = false);

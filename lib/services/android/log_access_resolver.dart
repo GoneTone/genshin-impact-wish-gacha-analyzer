@@ -79,6 +79,7 @@ final class LogAccessBlocked extends LogAccessOutcome {
     this.reason, {
     this.rootDenied = false,
     this.enabledWireless = false,
+    this.wirelessLeftOn = false,
   });
 
   /// 原因。
@@ -87,9 +88,12 @@ final class LogAccessBlocked extends LogAccessOutcome {
   /// 裝置有 `su` 但沒拿到 root 授權（被拒或沒按允許）；root 工具可能已記成永久拒絕而不再詢問。
   final bool rootDenied;
 
-  /// 這次判斷曾由 App 打開無線偵錯（原本是關的）。之後若由系統打開（例如玩家在詢問視窗按允許），
-  /// 重試時不能當成玩家原本就開著而在用完後留著。
+  /// 這次判斷曾由 App 打開無線偵錯（原本是關的），或照規則用完要關（剛配對完、玩家照引導打開）。
+  /// 之後若由系統打開（例如玩家在詢問視窗按允許），重試時不能當成玩家原本就開著而在用完後留著。
   final bool enabledWireless;
+
+  /// 照規則該關掉無線偵錯，但沒有權限關而留著開；更新完成時要提示玩家自行關閉。
+  final bool wirelessLeftOn;
 }
 
 /// 本 App 的套件名稱（授權 `WRITE_SECURE_SETTINGS` 用）。
@@ -226,6 +230,7 @@ class LogAccessResolver {
       blocked?.reason ?? LogAccessUnavailable.unsupported,
       rootDenied: rootDenied,
       enabledWireless: blocked?.enabledWireless ?? false,
+      wirelessLeftOn: blocked?.wirelessLeftOn ?? false,
     );
     _log.info(
       'log access blocked reason=${result.reason.name} rootDenied=$rootDenied '
@@ -303,10 +308,18 @@ class LogAccessResolver {
     );
     if (!await client.connectAny(await discoverConnectPorts())) {
       await client.close();
-      if (!wasOn) await platform.setAdbWifiEnabled(false);
+      final turnOff = !wasOn || forceDisableAfterUse;
+      final leftOn = turnOff && !await platform.setAdbWifiEnabled(false);
+      if (leftOn) {
+        _log.info(
+          'wireless debugging left on after connect failure: '
+          'no permission to turn it off',
+        );
+      }
       return LogAccessBlocked(
         LogAccessUnavailable.adbConnectFailed,
-        enabledWireless: !wasOn,
+        enabledWireless: turnOff,
+        wirelessLeftOn: leftOn,
       );
     }
     if (!await platform.hasWriteSecureSettings()) {

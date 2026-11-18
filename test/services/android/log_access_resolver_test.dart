@@ -186,6 +186,33 @@ void main() {
     expect(r.enabledWireless, isFalse);
   });
 
+  test(
+    'connect failure turns wireless off when it must be off after use',
+    () async {
+      // 玩家照引導打開（或剛配對完）時開著，連不上也要關回去，之後的重試仍要關。
+      connectable = false;
+      platform.adbWifiOn = true;
+      final r =
+          await resolver().resolve(forceDisableAfterUse: true)
+              as LogAccessBlocked;
+      expect(platform.adbWifiWrites, [false]);
+      expect(r.enabledWireless, isTrue);
+      expect(r.wirelessLeftOn, isFalse);
+    },
+  );
+
+  test('connect failure without permission reports it left on', () async {
+    connectable = false;
+    platform
+      ..adbWifiOn = true
+      ..canWriteSettings = false;
+    final r =
+        await resolver().resolve(forceDisableAfterUse: true)
+            as LogAccessBlocked;
+    expect(r.enabledWireless, isTrue);
+    expect(r.wirelessLeftOn, isTrue);
+  });
+
   test('root wins when su present and verified', () async {
     root
       ..present = true
