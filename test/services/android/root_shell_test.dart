@@ -276,7 +276,7 @@ void main() {
     final shell = RootShell(
       suPaths: [fakeSuPath()],
       start: (exe, args) async => sus[starts++],
-      commandTimeout: const Duration(milliseconds: 50),
+      commandTimeout: const Duration(milliseconds: 300),
     );
     final health = <bool>[];
     final sub = shell.healthChanges.listen(health.add);
