@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -129,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.3"
+  edwards25519:
+    dependency: transitive
+    description:
+      name: edwards25519
+      sha256: "63e05986664ca4a7b203390a76af94b0cc43608bc2916828d7728d6b5b4c8598"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   equatable:
     dependency: transitive
     description:
@@ -246,6 +262,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_adb:
+    dependency: "direct main"
+    description:
+      name: flutter_adb
+      sha256: ddd028f80e3350c0773a104a380ac8bb5ae0c46fab7b32c0f7ab719a0ab72745
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_highlight:
     dependency: transitive
     description:
@@ -597,6 +621,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.0"
+  multicast_dns:
+    dependency: transitive
+    description:
+      name: multicast_dns
+      sha256: "134668a9605c747322d8c3eb0e89a4c0cbdedb29f8d2d5ae29d14daef724987b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+1"
   objective_c:
     dependency: transitive
     description:
@@ -709,6 +741,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "92aa3841d083cc4b0f4709b5c74fd6409a3e6ba833ffc7dc6a8fee096366acf5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   posix:
     dependency: transitive
     description:
