@@ -154,6 +154,11 @@ void main() {
 
   test('cleanup matches the rule as a fixed string, never with pkill -f', () {
     expect(logcatCleanupCommand, contains("grep -qF 'webview_gach[a]'"));
+    // 舊版 toybox grep 直接讀 /proc/<pid>/cmdline（大小回報 0）會讀不到內容
+    expect(
+      logcatCleanupCommand,
+      contains("tr '\\0' ' ' < /proc/\$p/cmdline 2>/dev/null | grep -qF"),
+    );
     expect(logcatCleanupCommand, contains('pidof logcat'));
     expect(
       logcatCleanupCommand,

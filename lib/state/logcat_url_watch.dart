@@ -32,9 +32,11 @@ final RegExp _sincePattern = RegExp(r'^\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}$');
 const String deviceTimeCommand = 'date "+%m-%d %H:%M:%S.000"';
 
 /// 結束命令列含比對規則的 logcat 程序並刪掉暫存檔；`-F` 以固定字串比對規則原文。
+///
+/// 命令列先經 `tr` 再交給 grep：舊版 toybox（Android 13 的 0.8.6）grep 直接讀 `/proc/<pid>/cmdline` 會讀不到內容。
 const String logcatCleanupCommand =
     'for p in \$(pidof logcat); do '
-    "grep -qF 'webview_gach[a]' /proc/\$p/cmdline 2>/dev/null && kill \$p 2>/dev/null; "
+    "tr '\\0' ' ' < /proc/\$p/cmdline 2>/dev/null | grep -qF 'webview_gach[a]' && kill \$p 2>/dev/null; "
     "done; rm -f '$_tempFile'";
 
 /// 從 [since] 起啟動監看程序並印出其 PID；[since] 不符合起點格式時丟 [ArgumentError]。
