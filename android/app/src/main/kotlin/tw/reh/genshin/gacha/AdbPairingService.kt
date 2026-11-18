@@ -67,6 +67,9 @@ class AdbPairingService : Service() {
     private var port = -1
     private val timeout = Runnable { onSelfTimeout() }
 
+    /** 本實例是否已結束；自我計時與系統的兩種逾時回呼可能都會走到結束流程，只處理第一次。 */
+    private var finished = false
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -101,6 +104,8 @@ class AdbPairingService : Service() {
     }
 
     private fun goForeground(n: Notification) {
+        // 結束後又收到開始或回覆時服務會重新進入前景，之後的逾時與結束都要照常處理。
+        finished = false
         try {
             if (Build.VERSION.SDK_INT >= 34) {
                 startForeground(NOTIFICATION_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE)
@@ -188,6 +193,7 @@ class AdbPairingService : Service() {
     }
 
     private fun onSelfTimeout() {
+        if (finished) return
         Log.i(TAG, "pairing service timed out")
         finishWith(getString(R.string.pairing_timeout_title), getString(R.string.pairing_timeout_text))
     }
@@ -199,7 +205,7 @@ class AdbPairingService : Service() {
      * 點擊不會自動收起；先發再 `stopForeground(DETACH)` 也不可靠，兩者在系統裡是非同步處理的。
      */
     private fun finishWith(title: String, text: String?) {
-        finish()
+        if (!finish()) return
         val n = Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
@@ -208,6 +214,11 @@ class AdbPairingService : Service() {
             .setAutoCancel(true)
             .build()
         getSystemService(NotificationManager::class.java).notify(RESULT_NOTIFICATION_ID, n)
+    }
+
+    /** Android 14 的 `shortService` 逾時只會呼叫這個；15 起兩個都會呼叫。 */
+    override fun onTimeout(startId: Int) {
+        onSelfTimeout()
     }
 
     override fun onTimeout(startId: Int, fgsType: Int) {
@@ -277,13 +288,16 @@ class AdbPairingService : Service() {
         listener = null
     }
 
-    /** 停止服務並移除前景服務的通知；要留結果給玩家看時用 [finishWith]。 */
-    private fun finish() {
+    /** 停止服務並移除前景服務的通知；要留結果給玩家看時用 [finishWith]。已結束過時不再處理並回傳 false。 */
+    private fun finish(): Boolean {
+        if (finished) return false
+        finished = true
         main.removeCallbacks(timeout)
         stopDiscovery()
         running = false
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+        return true
     }
 
     override fun onDestroy() {
