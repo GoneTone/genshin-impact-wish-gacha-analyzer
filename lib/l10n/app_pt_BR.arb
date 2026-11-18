@@ -1017,7 +1017,7 @@
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Azarado",
   "manualUrlEntry": "Inserir o URL do Histórico de Orações manualmente",
-  "manualUrlTitle": "Inserir URL do Histórico de Orações manualmente",
+  "manualUrlTitle": "Inserir o URL do Histórico de Orações manualmente",
   "manualUrlHint": "Se você já obteve o URL do Histórico de Orações de outra forma (por exemplo, com uma ferramenta no computador), cole-o aqui. Colar o texto inteiro também funciona; o app encontra o URL automaticamente.",
   "manualUrlFieldHint": "Colar URL...",
   "manualUrlPaste": "Colar da área de transferência",
