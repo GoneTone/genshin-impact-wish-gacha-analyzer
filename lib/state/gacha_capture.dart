@@ -45,7 +45,7 @@ class RustGachaCapture implements GachaCapture {
         },
         onError: (Object e, StackTrace st) {
           _log.severe('capture error', e, st);
-          if (!completer.isCompleted) completer.completeError(e);
+          if (!completer.isCompleted) completer.completeError(e, st);
         },
         onDone: () {
           if (capturedUrl == null) {

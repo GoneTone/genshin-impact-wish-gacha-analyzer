@@ -566,6 +566,27 @@ void main() {
     expect(progressOf(t), isNull);
   });
 
+  test(
+    'user cancel with failing capture stop still releases the wait',
+    () async {
+      final capture = _FakeCapture(failCancel: true);
+      final watch = _FakeWatch();
+      final t = await race(
+        capture: capture,
+        watch: watch,
+        locator: _FakeLocator(_loc),
+      );
+
+      final done = t.repo.update();
+      await _until(() => watch.hits.isNotEmpty);
+      await t.repo.cancelCapture();
+      await done.timeout(const Duration(seconds: 5));
+
+      expect(capture.cancelCalls, greaterThan(0));
+      expect(progressOf(t), isNull);
+    },
+  );
+
   test('user cancel during cache-won teardown aborts', () async {
     final capture = _FakeCapture();
     final watch = _FakeWatch();

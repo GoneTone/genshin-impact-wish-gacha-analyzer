@@ -766,6 +766,8 @@ class GachaRepository extends Notifier<GachaState> {
           '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
         );
         unawaited(_bestEffortStaleProxyCleanup());
+      } catch (e, st) {
+        _log.warning('cancelCapture: stopCapture failed', e, st);
       }
     }
     final backstop = _captureBackstop;
