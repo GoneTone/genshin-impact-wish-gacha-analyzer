@@ -91,7 +91,7 @@
 ## 四、驗收條件
 
 1. `fvm flutter build apk --debug` 成功。
-2. 在測試機上安裝並啟動，能看到總覽頁，log 裡有 `app start ... on android`。log 檔放在 App 的私有目錄，debug 版可以用 `adb shell run-as tw.reh.genshin.gacha ls files/...` 讀取。
+2. 在測試裝置（Android 16 模擬器）上安裝並啟動，能看到總覽頁，log 裡有 `app start ... on android`。log 檔放在 App 的私有目錄，debug 版可以用 `adb shell run-as tw.reh.genshin.gacha ls files/...` 讀取。
 3. 在 Android 上用第三方匯入功能匯入一份紀錄（含中文帳號別名）後，總覽和卡池頁都能正確顯示，中文不是亂碼。
 4. 切換主題和語言正常；系統語言是繁中時 App 顯示繁中；App 名稱依系統語言顯示各 ARB 的 `appName`；圖示正確。
 5. 在 Android 上按「更新」不會崩潰，可以取消或看到錯誤。

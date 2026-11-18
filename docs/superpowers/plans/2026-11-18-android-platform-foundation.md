@@ -23,7 +23,7 @@
 - Commit message 用英文 conventional commits，結尾加 `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`。不要 push。
 - 註解和 dartdoc 用中文全形標點，log 訊息用英文；所有新宣告都要有一行 `///` dartdoc（Flutter override 除外）。
 - 依賴有變動後，建 APK 前先 `fvm flutter clean`（筆記 #8：只改 `pubspec.lock` 時 Dart 不會重新編譯）。
-- 測試機：ASUS AI2501C（ROG Phone 9，Android 16），用 USB adb。執行前 `adb devices -l` 確認有連上；同時看到無線偵錯的裝置時一律用 `adb -d`。手機沒連上就停下來請使用者接上。
+- 測試裝置：Android 模擬器 `Medium_Phone_API_36.0`（Android 16，x86_64，使用者 2026-11-18 指定，不占用實機）。啟動：`"$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe" -avd Medium_Phone_API_36.0`（背景執行），等 `adb -e wait-for-device` 且 `getprop sys.boot_completed` 為 1。adb 一律用 `adb -e`。使用者的實機若同時接上也不要動它。
 
 ## Review Focus
 
@@ -96,11 +96,11 @@ Expected: `✓ Built build\app\outputs\flutter-apk\app-debug.apk`。失敗時對
 
 - [ ] **Step 6: 在實機上安裝並啟動（Review Focus 4）**
 
-Run: `adb -d install -r build/app/outputs/flutter-apk/app-debug.apk`，再 `adb -d shell am start -n tw.reh.genshin.gacha/.MainActivity`，等 5 秒。
+Run: `adb -e install -r build/app/outputs/flutter-apk/app-debug.apk`，再 `adb -e shell am start -n tw.reh.genshin.gacha/.MainActivity`，等 5 秒。
 Expected:
-- 畫面顯示總覽頁而不是空白（`adb -d exec-out screencap -p > <scratchpad>/android_start.png` 截圖確認）。
-- `adb -d shell run-as tw.reh.genshin.gacha sh -c 'cat files/logs/*.log' | grep "app start"` 有一行包含 `on android`（log 在 `<applicationSupport>/logs/`；路徑不對時用 `run-as ... find . -name '*.log'` 找）。
-- `adb -d logcat -d | grep -E "FATAL|flutter.*(Unhandled|Exception)"` 沒有本 App 的致命錯誤。
+- 畫面顯示總覽頁而不是空白（`adb -e exec-out screencap -p > <scratchpad>/android_start.png` 截圖確認）。
+- `adb -e shell run-as tw.reh.genshin.gacha sh -c 'cat files/logs/*.log' | grep "app start"` 有一行包含 `on android`（log 在 `<applicationSupport>/logs/`；路徑不對時用 `run-as ... find . -name '*.log'` 找）。
+- `adb -e logcat -d | grep -E "FATAL|flutter.*(Unhandled|Exception)"` 沒有本 App 的致命錯誤。
 
 - [ ] **Step 7: 品質檢查並 commit**
 
@@ -143,7 +143,7 @@ Expected: 印出 3 行 `assets/icons`、1 行 `.ico`、5 行 `android/...`，每
 
 - [ ] **Step 4: 實機確認**
 
-重新建置並安裝 APK（Task 1 Step 5～6），用截圖確認手機桌面上的圖示是本 App 的圖示，不是 Flutter 預設的藍色圖示。
+重新建置並安裝 APK（Task 1 Step 5～6），用截圖確認模擬器桌面上的圖示是本 App 的圖示，不是 Flutter 預設的藍色圖示。
 
 - [ ] **Step 5: 品質檢查並 commit**
 
@@ -221,7 +221,7 @@ git commit -m "fix(deps): bump cross_file to 0.3.5+5 to fix garbled text in Andr
 
 - [ ] **Step 1: Android 建置**
 
-Run: `fvm flutter clean`，再 `fvm flutter build apk --debug`，Expected: 成功；安裝到手機並啟動，看到總覽頁。
+Run: `fvm flutter clean`，再 `fvm flutter build apk --debug`，Expected: 成功；安裝到模擬器並啟動，看到總覽頁。
 
 - [ ] **Step 2: Windows 建置**
 
@@ -229,7 +229,7 @@ Run: `fvm flutter build windows`，Expected: 成功。
 
 - [ ] **Step 3: 在 Android 上匯入（Review Focus 2）**
 
-在 Windows 版匯出一份含中文帳號別名的備份 `.json`，`adb -d push <檔案> /sdcard/Download/`，在手機設定頁用匯入功能選它。
+在 Windows 版匯出一份含中文帳號別名的備份 `.json`（沒有的話請使用者提供），`adb -e push <檔案> /sdcard/Download/`，在模擬器的 App 設定頁用匯入功能選它。
 Expected: 選擇器裡可以選到 `.json`；匯入後總覽和各卡池頁的筆數正確，別名不是亂碼。如果檔案選不到，記錄下來回報使用者，決定這次修還是留給子專案 4。
 
 - [ ] **Step 4: 在 Android 上按「更新」（Review Focus 1）**
@@ -238,7 +238,7 @@ Expected: 出現錯誤提示，或停在等待畫面但按取消能結束；App 
 
 - [ ] **Step 5: 主題、語言、App 名稱、圖示（Review Focus 3）**
 
-在 App 內切換深淺主題、切換語言，畫面正常。請使用者把系統語言依序切到繁中、簡中、日文、英文：App（語言設定為跟隨系統時）顯示對應語言，繁中時 Material 內建文字也是繁中；桌面上的 App 名稱顯示 Task 1 Step 3 表格裡的值。測完還原系統語言。
+在 App 內切換深淺主題、切換語言，畫面正常。在模擬器的系統設定把語言依序切到繁中、簡中、日文、英文（可自行操作模擬器，不需使用者）：App（語言設定為跟隨系統時）顯示對應語言，繁中時 Material 內建文字也是繁中；桌面上的 App 名稱顯示 Task 1 Step 3 表格裡的值。測完把模擬器語言還原。
 
 - [ ] **Step 6: Windows 不受影響（Review Focus 5）**
 
