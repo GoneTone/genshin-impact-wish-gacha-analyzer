@@ -78,15 +78,17 @@ Future<void> main() async {
         'locale=${Platform.localeName}',
       );
 
-      try {
-        final cleaned = await rust_capture.cleanupStaleProxy();
-        if (cleaned) {
-          Logger(
-            'app.startup',
-          ).info('cleanup_stale_proxy: stale proxy detected and reset');
+      if (Platform.isWindows) {
+        try {
+          final cleaned = await rust_capture.cleanupStaleProxy();
+          if (cleaned) {
+            Logger(
+              'app.startup',
+            ).info('cleanup_stale_proxy: stale proxy detected and reset');
+          }
+        } catch (e, st) {
+          Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
         }
-      } catch (e, st) {
-        Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
       }
 
       final gachaDir = Directory('${supportDir.path}/gacha_data');
