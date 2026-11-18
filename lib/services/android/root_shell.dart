@@ -38,10 +38,16 @@ class RootShellException implements Exception {
 /// 等待祈願紀錄時每秒要讀兩次檔，若每次都重新執行 `su -c`，root 工具每次都會跳授權提示、
 /// 寫授權記錄；所以整個 session 只開一次 `su`，指令都從它的 stdin 送進去，
 /// 每條指令後印一個隨機結束標記來切出輸出。
+///
+/// [verify] 成功後 `su` 意外結束（逾時、被結束）時，下一條指令會重開一次（root 工具記得授權，通常不會再詢問）；
+/// [close] 之後則不再重開。
 class RootShell {
-  /// 建立 root shell；[start] 與 [suPaths] 僅供測試替換。
-  RootShell({ProcessStarter? start, this.suPaths = defaultSuPaths})
-    : _start = start ?? Process.start;
+  /// 建立 root shell；[start]、[suPaths] 與 [commandTimeout] 僅供測試替換。
+  RootShell({
+    ProcessStarter? start,
+    this.suPaths = defaultSuPaths,
+    this.commandTimeout = const Duration(seconds: 20),
+  }) : _start = start ?? Process.start;
 
   /// 檢查 `su` 是否存在的路徑。
   final List<String> suPaths;
@@ -59,6 +65,15 @@ class RootShell {
   /// 常駐的 `su` 程序；尚未啟動或已結束時為 null。
   Process? _process;
 
+  /// [verify] 成功後到 [close] 前為 true：這段期間 `su` 意外結束要由下一條指令重開。
+  bool _keepAlive = false;
+
+  /// 目前的連線是否正常；只在變化時送進 [healthChanges]。
+  bool _healthy = true;
+
+  /// 連線健康狀態變化的來源。
+  final _health = StreamController<bool>.broadcast();
+
   /// 尚未切出的 stdout 位元組。
   final _buffer = BytesBuilder(copy: false);
 
@@ -72,7 +87,10 @@ class RootShell {
   static const _grantTimeout = Duration(seconds: 60);
 
   /// 之後每條指令的等待上限。
-  static const _commandTimeout = Duration(seconds: 20);
+  final Duration commandTimeout;
+
+  /// 連線健康狀態變化（false＝`su` 意外結束、true＝重開成功）。
+  Stream<bool> get healthChanges => _health.stream;
 
   /// 裝置上是否有 `su` 執行檔；沒有時不呼叫 `su`，避免沒有 root 的裝置多等一次逾時。
   Future<bool> isSuPresent() async {
@@ -84,6 +102,18 @@ class RootShell {
 
   /// 啟動常駐 `su` 並執行 `id` 確認拿得到 root（會跳出 root 工具的授權詢問）。
   Future<bool> verify() async {
+    final ok = await _open();
+    if (ok) {
+      _keepAlive = true;
+      _healthy = true;
+    } else {
+      await close();
+    }
+    return ok;
+  }
+
+  /// 開 `su` 並執行 `id` 確認拿得到 root；失敗時結束程序，但不改變 [_keepAlive]。
+  Future<bool> _open() async {
     try {
       final out = utf8.decode(
         await _execInternal('id', _grantTimeout, spawn: true),
@@ -91,22 +121,30 @@ class RootShell {
       );
       final ok = out.contains('uid=0');
       _log.info('root verify ok=$ok');
-      if (!ok) await close();
+      if (!ok) _detach()?.kill();
       return ok;
     } catch (e) {
       _log.info('root verify failed error=${e.runtimeType}');
-      await close();
+      _detach()?.kill();
       return false;
     }
   }
 
   /// 以 root 執行 [command]，回傳 stdout 原始位元組；`su` 已結束或逾時時丟 [RootShellException]。
-  Future<Uint8List> exec(String command) =>
-      _execInternal(command, _commandTimeout);
-
-  /// 送出 [command] 並等它的結束標記；[spawn] 為 true 時（只有 [verify]）才可以開新的 `su`。
   ///
-  /// 一般指令不自己重開：session 被 [close] 後還在跑的輪詢若重開 `su`，會再跳一次 root 授權。
+  /// session 意外結束時先重開一次；重開失敗就丟例外，留給下一條指令再試。
+  Future<Uint8List> exec(String command) async {
+    if (_process == null && _keepAlive) {
+      _log.info('root su session lost, reopening');
+      if (!await _open()) throw RootShellException('su reopen failed');
+      _setHealthy(true);
+    }
+    return _execInternal(command, commandTimeout);
+  }
+
+  /// 送出 [command] 並等它的結束標記；[spawn] 為 true 時（只有 [_open]）才可以開新的 `su`。
+  ///
+  /// 被 [close] 後還在跑的輪詢不能重開 `su`，否則會再跳一次 root 授權；重開只由 [exec] 在 session 意外結束時做。
   Future<Uint8List> _execInternal(
     String command,
     Duration timeout, {
@@ -126,7 +164,8 @@ class RootShell {
     try {
       return await pending.future.timeout(timeout);
     } on TimeoutException {
-      await close();
+      _detach()?.kill();
+      if (_keepAlive) _setHealthy(false);
       throw RootShellException('su command timed out');
     } finally {
       _pending = null;
@@ -140,7 +179,10 @@ class RootShell {
     _buffer.clear();
     _tail = Uint8List(0);
     process.stdout.listen(
-      _onStdout,
+      // 逾時被結束的舊 `su` 還可能送來輸出，結束標記相同，不能算進新 session 的指令。
+      (data) {
+        if (identical(_process, process)) _onStdout(data);
+      },
       onDone: () => _onExit(process),
       cancelOnError: true,
     );
@@ -195,12 +237,23 @@ class RootShell {
     if (pending != null && !pending.isCompleted) {
       pending.completeError(RootShellException('su exited'));
     }
+    if (_keepAlive) {
+      _log.info('root su session exited unexpectedly');
+      _setHealthy(false);
+    }
   }
 
-  /// 結束常駐的 `su`。
+  /// 健康狀態有變化時送出。
+  void _setHealthy(bool healthy) {
+    if (_healthy == healthy) return;
+    _healthy = healthy;
+    _health.add(healthy);
+  }
+
+  /// 結束常駐的 `su`，之後的指令不再重開；等授權中的 [verify] 會立刻失敗。
   Future<void> close() async {
-    final process = _process;
-    _process = null;
+    _keepAlive = false;
+    final process = _detach();
     if (process == null) return;
     try {
       process.stdin.writeln('exit');
@@ -208,6 +261,17 @@ class RootShell {
     } catch (_) {}
     process.kill();
     _log.info('root su session closed');
+  }
+
+  /// 放開目前的 `su`（之後的結束不再當成意外）並讓等待中的指令失敗；回傳原本的程序。
+  Process? _detach() {
+    final process = _process;
+    _process = null;
+    final pending = _pending;
+    if (pending != null && !pending.isCompleted) {
+      pending.completeError(RootShellException('su session closed'));
+    }
+    return process;
   }
 
   /// 在 [haystack] 中找 [needle] 第一次出現的位置。

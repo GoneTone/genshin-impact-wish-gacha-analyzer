@@ -10,7 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/android/root_shell.d
 
 /// 模擬常駐 `su` 的程序：讀 stdin 的每一行指令，依 [reply] 產生輸出後印出結束標記。
 class _FakeSu implements Process {
-  _FakeSu(this.reply, {this.chunkSize}) {
+  _FakeSu(this.reply, {this.chunkSize, this.hangOn}) {
     _stdinCtl.stream
         .transform(utf8.decoder)
         .transform(const LineSplitter())
@@ -22,6 +22,9 @@ class _FakeSu implements Process {
 
   /// 每批 stdout 的位元組數；null 時整段一次送出。
   final int? chunkSize;
+
+  /// 收到這條指令時不回應（模擬卡住、等授權）。
+  final String? hangOn;
 
   final _stdinCtl = StreamController<List<int>>();
   final _stdoutCtl = StreamController<List<int>>();
@@ -38,6 +41,7 @@ class _FakeSu implements Process {
   void _onLine(String line) {
     if (line.startsWith('echo') || line.startsWith('printf')) {
       final marker = RegExp(r'__genshin_end_\w+__').firstMatch(line)!.group(0)!;
+      if (_pending == hangOn) return;
       final out = reply(_pending!);
       if (out == null) {
         _stdoutCtl.close();
@@ -238,5 +242,86 @@ void main() {
     await shell.verify();
     await shell.close();
     expect(su.killed, isTrue);
+  });
+
+  test('a lost session is reopened by the next exec', () async {
+    // 一次逾時或 su 被結束就永遠讀不到，等待畫面也不會顯示連線中斷。
+    final sus = <_FakeSu>[
+      _FakeSu((c) => c == 'x' ? null : utf8.encode('uid=0')),
+      _FakeSu((c) => utf8.encode(c == 'id' ? 'uid=0' : 'ok')),
+    ];
+    var starts = 0;
+    final shell = RootShell(
+      suPaths: [fakeSuPath()],
+      start: (exe, args) async => sus[starts++],
+    );
+    final health = <bool>[];
+    final sub = shell.healthChanges.listen(health.add);
+    expect(await shell.verify(), isTrue);
+    await expectLater(shell.exec('x'), throwsA(isA<RootShellException>()));
+    expect(utf8.decode(await shell.exec('y')), 'ok');
+    expect(starts, 2);
+    expect(sus[1].commands, ['id', 'y']);
+    await Future<void>.delayed(Duration.zero);
+    expect(health, [false, true]);
+    await sub.cancel();
+  });
+
+  test('a timed out command kills su and the next exec reopens it', () async {
+    final sus = <_FakeSu>[
+      _FakeSu((_) => utf8.encode('uid=0'), hangOn: 'slow'),
+      _FakeSu((c) => utf8.encode(c == 'id' ? 'uid=0' : 'ok')),
+    ];
+    var starts = 0;
+    final shell = RootShell(
+      suPaths: [fakeSuPath()],
+      start: (exe, args) async => sus[starts++],
+      commandTimeout: const Duration(milliseconds: 50),
+    );
+    final health = <bool>[];
+    final sub = shell.healthChanges.listen(health.add);
+    await shell.verify();
+    await expectLater(shell.exec('slow'), throwsA(isA<RootShellException>()));
+    expect(sus[0].killed, isTrue);
+    expect(utf8.decode(await shell.exec('y')), 'ok');
+    await Future<void>.delayed(Duration.zero);
+    expect(health, [false, true]);
+    await sub.cancel();
+  });
+
+  test('a failed reopen throws and the next exec tries once more', () async {
+    final sus = <_FakeSu>[
+      _FakeSu((c) => c == 'x' ? null : utf8.encode('uid=0')),
+      _FakeSu((_) => null),
+      _FakeSu((c) => utf8.encode(c == 'id' ? 'uid=0' : 'ok')),
+    ];
+    var starts = 0;
+    final shell = RootShell(
+      suPaths: [fakeSuPath()],
+      start: (exe, args) async => sus[starts++],
+    );
+    final health = <bool>[];
+    final sub = shell.healthChanges.listen(health.add);
+    await shell.verify();
+    await expectLater(shell.exec('x'), throwsA(isA<RootShellException>()));
+    await expectLater(shell.exec('y'), throwsA(isA<RootShellException>()));
+    expect(starts, 2, reason: 'one reopen attempt per exec');
+    expect(utf8.decode(await shell.exec('z')), 'ok');
+    expect(starts, 3);
+    await Future<void>.delayed(Duration.zero);
+    expect(health, [false, true]);
+    await sub.cancel();
+  });
+
+  test('close while verify waits for the grant fails it at once', () async {
+    // 玩家在 root 授權視窗期間取消：等授權的 verify 要立刻結束，不能等滿 60 秒。
+    final shell = RootShell(
+      suPaths: [fakeSuPath()],
+      start: (exe, args) async => _FakeSu((_) => [], hangOn: 'id'),
+    );
+    final verifying = shell.verify();
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    await shell.close();
+    expect(await verifying.timeout(const Duration(seconds: 2)), isFalse);
   });
 }
