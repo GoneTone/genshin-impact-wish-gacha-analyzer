@@ -68,7 +68,7 @@ final class LogAccessReady extends LogAccessOutcome {
   /// 回傳 true 代表照規則應該關掉無線偵錯，但沒有權限關（手動開關模式），需要提示玩家自行關閉。
   final Future<bool> Function() release;
 
-  /// 連線健康狀態變化（false＝中斷、true＝恢復）；root 為空 stream。
+  /// 連線健康狀態變化（false＝中斷、true＝恢復）。
   final Stream<bool> healthChanges;
 }
 
@@ -145,13 +145,11 @@ class LogAccessResolver {
 
   /// 決定讀取方式；[preferred] 先試，[forceDisableAfterUse] 為 true 時用完一律關閉無線偵錯（剛配對完時）。
   ///
-  /// [requestPermissions] 為 false 時（自動重試）只檢查權限、不跳系統詢問。
   /// [abort] 完成時（玩家取消或手動送出）結束 root 授權等待，之後的方式都不再嘗試。
   /// 讀取方式之前先找原神：沒裝就不跳 root 授權或打開無線偵錯；查詢失敗不能當成沒裝，照常判斷。
   Future<LogAccessOutcome> resolve({
     LogAccessMethod? preferred,
     bool forceDisableAfterUse = false,
-    bool requestPermissions = true,
     Future<void>? abort,
   }) async {
     final sw = Stopwatch()..start();
@@ -250,6 +248,7 @@ class LogAccessResolver {
       exec: root.exec,
       method: LogAccessMethod.root,
       game: game,
+      healthChanges: root.healthChanges,
       release: () async {
         await root.close();
         return false;

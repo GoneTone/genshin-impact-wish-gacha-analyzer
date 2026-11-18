@@ -70,6 +70,12 @@ class _FakeRoot extends RootShell {
   @override
   Future<Uint8List> exec(String command) async => Uint8List(0);
 
+  /// 健康狀態事件來源。
+  final healthController = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get healthChanges => healthController.stream;
+
   /// close 被呼叫的次數。
   int closes = 0;
 
@@ -188,6 +194,20 @@ void main() {
     expect(r.method, LogAccessMethod.root);
     expect(await r.exec('x'), isEmpty, reason: 'root.exec is exposed');
     expect(platform.adbWifiWrites, isEmpty);
+  });
+
+  test('root ready reports the su session health', () async {
+    // su 意外結束時等待畫面要顯示連線中斷。
+    root
+      ..present = true
+      ..granted = true;
+    final r = await resolver().resolve() as LogAccessReady;
+    final health = <bool>[];
+    final sub = r.healthChanges.listen(health.add);
+    root.healthController.add(false);
+    await Future<void>.delayed(Duration.zero);
+    expect(health, [false]);
+    await sub.cancel();
   });
 
   test(

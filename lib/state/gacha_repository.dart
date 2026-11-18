@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/concurrent_pool.dart';
@@ -273,6 +274,7 @@ class GachaRepository extends Notifier<GachaState> {
     _isUpdating = true;
     _cancelTriggered = false;
     _afterPairing = afterPairing;
+    _androidWaitRan = false;
     _wirelessLeftOn = false;
     _log.info('update start, forceRecapture=$forceRecapture');
 
@@ -380,6 +382,7 @@ class GachaRepository extends Notifier<GachaState> {
       _log.severe('update failed while acquiring url', e, st);
       state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
     } finally {
+      await _disableWirelessIfPairingUnused();
       _activeCancellable?.client.close();
       _activeCancellable = null;
       _cancelTriggered = false;
@@ -496,8 +499,11 @@ class GachaRepository extends Notifier<GachaState> {
   /// Android 的等待流程：決定讀取方式、監看系統記錄，等命中、手動輸入或取消。null 代表使用者取消。
   ///
   /// 沒有自動讀取方式時改顯示原因並只等手動輸入，[retryLogAccess] 可以重新判斷。手動輸入走 [_cacheHit]，
-  /// 取消走 [_captureBackstop]，與電腦版相同。結束時一律先停監看再 release（中斷連線、依規則關閉無線偵錯）。
+  /// 取消走 [_captureBackstop]，與電腦版相同。結束時一律先停監看再 release（中斷連線、依規則關閉無線偵錯）；
+  /// 沒拿到網址（取消）時這段收尾改在背景做、接到 [_androidTeardown]，取消才不會卡在重連中的輪詢。
   Future<String?> _runAndroidWait({required bool isFallback}) async {
+    _androidWaitRan = true;
+    _manualHit = false;
     state = state.copyWith(
       progress: WaitingForCapture(
         isFallback: isFallback,
@@ -513,11 +519,16 @@ class GachaRepository extends Notifier<GachaState> {
     final stop = Future.any<String?>([hit.future, cancelled.future]);
     LogAccessReady? ready;
     Future<CaptureSession>? starting;
-    var watchStarted = false;
+    var gotUrl = false;
     StreamSubscription<bool>? healthSub;
     try {
-      // 只有第一次判斷可以跳權限詢問；回到前景的自動重試只檢查，否則永久拒絕時會一直跳去設定頁。
-      var requestPermissions = true;
+      final previous = _androidTeardown;
+      if (previous != null) {
+        _androidLog.info('waiting for the previous android teardown');
+        await Future.any<Object?>([previous, stop]);
+        if (_captureCancelRequested || !ref.mounted) return null;
+        if (hit.isCompleted) return await hit.future;
+      }
       var forceDisableAfterUse = _afterPairing;
       while (true) {
         final resolving = ref
@@ -525,27 +536,22 @@ class GachaRepository extends Notifier<GachaState> {
             .resolve(
               preferred: ref.read(settingsProvider).logAccessMethod,
               forceDisableAfterUse: forceDisableAfterUse,
-              requestPermissions: requestPermissions,
               abort: stop,
             );
         final first = await Future.any<Object?>([resolving, stop]);
         if (first is! LogAccessOutcome) {
           _androidLog.info('log access resolve abandoned');
           // 晚到的結果也要 release，否則連線或打開的無線偵錯會留著。
-          unawaited(
+          _queueAndroidTeardown(
             resolving.then((late) async {
               if (late is LogAccessReady) await late.release();
             }),
+            'late log access release',
           );
           if (first is String && !_captureCancelRequested) return first;
           return null;
         }
         final outcome = first;
-        // 找遊戲時還沒試過讀取方式，權限詢問要留給真正試的那一次。
-        if (outcome is! LogAccessBlocked ||
-            outcome.reason != LogAccessUnavailable.gameNotInstalled) {
-          requestPermissions = false;
-        }
         if (outcome is LogAccessReady) {
           ready = outcome;
           if (_captureCancelRequested || !ref.mounted) return null;
@@ -560,8 +566,11 @@ class GachaRepository extends Notifier<GachaState> {
         if (_captureCancelRequested || !ref.mounted) return null;
         if (hit.isCompleted) return await hit.future;
         final blocked = outcome as LogAccessBlocked;
-        // 這次是 App 打開過無線偵錯；之後重試看到它開著，多半是系統（玩家按了允許）開的，用完要關回去。
-        if (blocked.enabledWireless) forceDisableAfterUse = true;
+        // App 這次打開過無線偵錯，或請玩家自己打開；之後重試看到它開著，是系統（玩家按了允許）或玩家照引導開的，用完要關回去。
+        if (blocked.enabledWireless ||
+            blocked.reason == LogAccessUnavailable.wirelessDebuggingOff) {
+          forceDisableAfterUse = true;
+        }
         state = state.copyWith(
           progress: WaitingForCapture(
             isFallback: isFallback,
@@ -610,7 +619,6 @@ class GachaRepository extends Notifier<GachaState> {
         if (session is String && !_captureCancelRequested) return session;
         return null;
       }
-      watchStarted = true;
       if (_captureCancelRequested || !ref.mounted) return null;
       unawaited(
         session.result.then((u) {
@@ -619,7 +627,7 @@ class GachaRepository extends Notifier<GachaState> {
       );
       final url = await stop;
       if (url == null || _captureCancelRequested) return null;
-      _androidLog.info('url source=logcat or manual');
+      _androidLog.info('url source=${_manualHit ? "manual" : "logcat"}');
       final foreground = ref.read(appForegroundProvider);
       if (!foreground.isForeground) {
         _androidLog.info('url ready, waiting for the app to return');
@@ -636,6 +644,7 @@ class GachaRepository extends Notifier<GachaState> {
         ]);
         if (!resumed || _captureCancelRequested || !ref.mounted) return null;
       }
+      gotUrl = true;
       return url;
     } finally {
       _cacheHit = null;
@@ -645,21 +654,55 @@ class GachaRepository extends Notifier<GachaState> {
       final r = ready;
       if (r != null) {
         final teardown = _stopWatchThenRelease(starting, r);
-        if (starting != null && !watchStarted) {
-          // 監看還在跑第一輪：不讓取消卡在這裡，等它回來後照樣先停監看再 release。
-          unawaited(
-            teardown.then(
-              (_) {},
-              onError: (Object e) => _androidLog.warning(
-                'late logcat watch teardown failed error=${e.runtimeType}',
-              ),
-            ),
+        if (gotUrl) {
+          if (await teardown) _wirelessLeftOn = true;
+        } else {
+          // 監看可能還在跑第一輪或卡在重連中的輪詢：不讓取消卡在這裡，照樣先停監看再 release。
+          _queueAndroidTeardown(
+            teardown.then((leftOn) {
+              if (leftOn) {
+                _androidLog.info(
+                  'wireless debugging left on after a cancelled wait',
+                );
+              }
+            }),
+            'android teardown',
           );
-        } else if (await teardown) {
-          _wirelessLeftOn = true;
         }
       }
     }
+  }
+
+  /// 把背景收尾接到 [_androidTeardown] 後面（不取代還沒做完的前一段）；錯誤只記 warning，不讓下一次更新失敗。
+  void _queueAndroidTeardown(Future<void> teardown, String what) {
+    final chained = Future.wait<void>([
+      ?_androidTeardown,
+      teardown.catchError(
+        (Object e) =>
+            _androidLog.warning('$what failed error=${e.runtimeType}'),
+      ),
+    ]);
+    _androidTeardown = chained;
+    unawaited(
+      chained.then((_) {
+        if (identical(_androidTeardown, chained)) _androidTeardown = null;
+      }),
+    );
+  }
+
+  /// 剛配對完、這次卻沒跑 Android 等待（快取或手動網址直接可用）時，關掉為了配對打開的無線偵錯；沒有權限關時讓完成畫面提示。
+  ///
+  /// 只做一次；有跑等待時已由它依 [_afterPairing] 處理，這裡不重複。
+  Future<void> _disableWirelessIfPairingUnused() async {
+    if (!_afterPairing || _androidWaitRan || !ref.mounted) return;
+    _afterPairing = false;
+    final off = await ref
+        .read(logAccessPlatformProvider)
+        .setAdbWifiEnabled(false);
+    _androidLog.info(
+      'wireless debugging off after pairing without a wait ok=$off',
+    );
+    if (!off) _wirelessLeftOn = true;
   }
 
   /// 停掉 [starting] 的監看（還在啟動時等它回來）再 release [ready]；回傳無線偵錯是否因沒有權限關而留著開。
@@ -962,6 +1005,8 @@ class GachaRepository extends Notifier<GachaState> {
       state = state.copyWith(clearProgress: true);
       return;
     }
+    await _disableWirelessIfPairingUnused();
+    if (!ref.mounted) return;
     state = state.copyWith(
       progress: UpdateCompleted(
         totalNewRecords: totalNew,
@@ -978,6 +1023,14 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 本次更新讀完後無線偵錯是否因沒有權限而留著開（完成畫面要提示）。
   bool _wirelessLeftOn = false;
+
+  /// 本次更新是否跑過 Android 等待（[_afterPairing] 已交給它處理）。
+  bool _androidWaitRan = false;
+
+  /// 沒拿到網址的 Android 等待還在背景做的收尾（停監看、release）；下一次等待開始前先等它做完。
+  ///
+  /// root shell 與無線偵錯是共用的：下一次等待若搶先開始，晚到的 release 會關掉它剛拿到的 `su` 或剛打開的無線偵錯。
+  Future<void>? _androidTeardown;
 
   /// Android 沒有自動讀取方式而等待時，[retryLogAccess] 會完成它以重新判斷。
   Completer<void>? _logAccessRetry;

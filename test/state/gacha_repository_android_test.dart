@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/flutter_adb_session.dart';
@@ -47,7 +48,7 @@ class _FakeResolver extends LogAccessResolver {
   final results = <FutureOr<LogAccessOutcome> Function()>[];
 
   /// 每次 resolve 收到的參數。
-  final calls = <({LogAccessMethod? preferred, bool force, bool request})>[];
+  final calls = <({LogAccessMethod? preferred, bool force})>[];
 
   /// 每次 resolve 收到的 abort。
   final aborts = <Future<void>?>[];
@@ -56,15 +57,10 @@ class _FakeResolver extends LogAccessResolver {
   Future<LogAccessOutcome> resolve({
     LogAccessMethod? preferred,
     bool forceDisableAfterUse = false,
-    bool requestPermissions = true,
     Future<void>? abort,
   }) async {
     aborts.add(abort);
-    calls.add((
-      preferred: preferred,
-      force: forceDisableAfterUse,
-      request: requestPermissions,
-    ));
+    calls.add((preferred: preferred, force: forceDisableAfterUse));
     final f = results[(calls.length - 1).clamp(0, results.length - 1)];
     return f();
   }
@@ -141,6 +137,21 @@ class _FakeWatch implements LogcatUrlWatch {
         if (!c.isCompleted) c.complete(null);
       },
     );
+  }
+}
+
+/// 記錄無線偵錯開關寫入的系統功能替身。
+class _FakePlatform extends LogAccessPlatform {
+  /// 每次 setAdbWifiEnabled 收到的值。
+  final writes = <bool>[];
+
+  /// 是否有權限開關無線偵錯。
+  bool canWrite = true;
+
+  @override
+  Future<bool> setAdbWifiEnabled(bool enabled) async {
+    writes.add(enabled);
+    return canWrite;
   }
 }
 
@@ -221,6 +232,8 @@ void main() {
   late List<Uri> fetches;
   late ProviderContainer container;
   late bool expireFirst;
+  late bool expireNext;
+  late _FakePlatform platform;
   late _Foreground foreground;
   late List<String> events;
   late ProviderContainer Function({bool android}) makeContainer;
@@ -234,10 +247,14 @@ void main() {
     capture = _NoCapture();
     fetches = [];
     expireFirst = false;
+    expireNext = false;
+    platform = _FakePlatform();
     foreground = _Foreground();
     final mock = MockClient((req) async {
       fetches.add(req.url);
-      return _respond(req.url, expired: expireFirst && fetches.length == 1);
+      final expired = expireNext || (expireFirst && fetches.length == 1);
+      expireNext = false;
+      return _respond(req.url, expired: expired);
     });
     makeContainer = ({bool android = true}) => ProviderContainer(
       overrides: [
@@ -245,6 +262,7 @@ void main() {
         isAndroidProvider.overrideWithValue(android),
         appForegroundProvider.overrideWithValue(foreground),
         logAccessResolverProvider.overrideWithValue(resolver),
+        logAccessPlatformProvider.overrideWithValue(platform),
         logcatUrlWatchProvider.overrideWithValue(watch),
         gachaCaptureProvider.overrideWithValue(capture),
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
@@ -430,7 +448,7 @@ void main() {
     expect(ready.released, 0);
     watch.cancelGate!.complete();
     await done;
-    expect(ready.released, 1);
+    await waitUntil(() => ready.released == 1);
     expect(events, ['cancel', 'release']);
     expect(capture.starts, 0);
     expect(progress(), isNull);
@@ -559,8 +577,6 @@ void main() {
     watch.hits[0].complete(_url);
     await done;
     expect(progress(), isA<UpdateCompleted>());
-    // 只有第一次可以跳權限詢問；回到前景的自動重試不行，否則永久拒絕時會一直跳去設定頁。
-    expect(resolver.calls.map((c) => c.request), [true, false]);
   });
 
   test(
@@ -727,6 +743,210 @@ void main() {
     final r = await repo();
     await r.update().timeout(const Duration(seconds: 5));
     expect(progress(), isA<UpdateFailed>());
+  });
+
+  test(
+    'retry after asking the player to turn wireless on turns it off after use',
+    () async {
+      // 手動開關模式：開始時是關的，玩家照引導打開；用完要關回去，沒權限關時完成畫面提示。
+      final ready = _Ready(leftOn: true);
+      resolver.results
+        ..add(
+          () =>
+              const LogAccessBlocked(LogAccessUnavailable.wirelessDebuggingOff),
+        )
+        ..add(ready.outcome);
+      final r = await repo();
+      final done = r.update();
+      await waitUntil(
+        () => (progress() as WaitingForCapture?)?.logAccessUnavailable != null,
+      );
+      await r.retryLogAccess();
+      await waitUntil(() => watch.hits.isNotEmpty);
+      expect(resolver.calls.map((c) => c.force), [false, true]);
+      watch.hits[0].complete(_url);
+      await done;
+      expect((progress()! as UpdateCompleted).wirelessDebuggingLeftOn, isTrue);
+    },
+  );
+
+  test('url source is logged as logcat or manual', () async {
+    final sources = <String>[];
+    final sub = Logger('capture.android').onRecord.listen((r) {
+      if (r.loggerName == 'capture.android' &&
+          r.message.startsWith('url source=')) {
+        sources.add(r.message);
+      }
+    });
+    addTearDown(sub.cancel);
+    resolver.results.add(_Ready().outcome);
+    final r = await repo();
+    var done = r.update();
+    await waitUntil(() => watch.hits.isNotEmpty);
+    await r.submitManualUrl(_url);
+    await done;
+    done = r.forceRecaptureAndUpdate();
+    await waitUntil(() => watch.hits.length == 2);
+    watch.hits[1].complete(_url);
+    await done;
+    expect(sources, ['url source=manual', 'url source=logcat']);
+  });
+
+  group('after pairing without an android wait', () {
+    /// 先跑一次更新，讓作用中帳號有可用的快取網址。
+    Future<GachaRepository> withCachedUrl() async {
+      resolver.results.add(_Ready().outcome);
+      final r = await repo();
+      final done = r.update();
+      await waitUntil(() => watch.hits.isNotEmpty);
+      watch.hits[0].complete(_url);
+      await done;
+      return r;
+    }
+
+    test('a valid cached url turns wireless debugging off', () async {
+      // 設定前沒開、為了配對才打開的無線偵錯，沒跑等待也要關回去。
+      final r = await withCachedUrl();
+      await r.update(afterPairing: true);
+      expect(resolver.calls, hasLength(1), reason: 'the cached url is used');
+      expect(platform.writes, [false]);
+      expect((progress()! as UpdateCompleted).wirelessDebuggingLeftOn, isFalse);
+    });
+
+    test('no permission to turn it off shows the completion hint', () async {
+      final r = await withCachedUrl();
+      platform.canWrite = false;
+      await r.update(afterPairing: true);
+      expect(platform.writes, [false]);
+      expect((progress()! as UpdateCompleted).wirelessDebuggingLeftOn, isTrue);
+    });
+
+    test('an expired cached url leaves it to the android wait', () async {
+      // 快取失效時改跑等待，由它依 forceDisableAfterUse 處理，這裡不能重複開關。
+      final r = await withCachedUrl();
+      expireNext = true;
+      final done = r.update(afterPairing: true);
+      await waitUntil(() => watch.hits.length == 2);
+      watch.hits[1].complete(_url);
+      await done;
+      expect(resolver.calls.last.force, isTrue);
+      expect(platform.writes, isEmpty);
+      expect(progress(), isA<UpdateCompleted>());
+    });
+  });
+
+  group('a cancelled wait finishes its teardown before the next one', () {
+    // root shell 與無線偵錯是共用的；上一次晚到的 release 不能關掉下一次剛拿到的連線。
+    test('late release of an abandoned resolve', () async {
+      final gate = Completer<LogAccessOutcome>();
+      final first = _Ready(events: events);
+      final second = _Ready();
+      resolver.results
+        ..add(() => gate.future)
+        ..add(second.outcome);
+      final r = await repo();
+      var done = r.update();
+      await waitUntil(() => resolver.calls.isNotEmpty);
+      await r.cancelCapture();
+      await done;
+
+      done = r.update();
+      await waitUntil(
+        () => (progress() as WaitingForCapture?)?.checkingLogAccess ?? false,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(resolver.calls, hasLength(1));
+      gate.complete(first.outcome());
+      await waitUntil(() => watch.hits.isNotEmpty);
+      expect(first.released, 1);
+      expect(resolver.calls, hasLength(2));
+      watch.hits[0].complete(_url);
+      await done;
+      expect(progress(), isA<UpdateCompleted>());
+    });
+
+    test('late teardown of a watch that was still starting', () async {
+      final first = _Ready(events: events);
+      final second = _Ready();
+      resolver.results
+        ..add(first.outcome)
+        ..add(second.outcome);
+      final gate = watch.startGate = Completer<void>();
+      final r = await repo();
+      var done = r.update();
+      await waitUntil(() => watch.hits.isNotEmpty);
+      await r.cancelCapture();
+      await done;
+
+      done = r.update();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(resolver.calls, hasLength(1));
+      gate.complete();
+      await waitUntil(() => watch.hits.length == 2);
+      expect(events, ['cancel', 'release']);
+      expect(resolver.calls, hasLength(2));
+      watch.hits[1].complete(_url);
+      await done;
+      expect(progress(), isA<UpdateCompleted>());
+    });
+
+    test('a second cancel keeps the earlier pending teardown', () async {
+      final gate = Completer<LogAccessOutcome>();
+      final first = _Ready();
+      resolver.results
+        ..add(() => gate.future)
+        ..add(_Ready().outcome);
+      final r = await repo();
+      var done = r.update();
+      await waitUntil(() => resolver.calls.isNotEmpty);
+      await r.cancelCapture();
+      await done;
+
+      done = r.update();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await r.cancelCapture();
+      await done;
+      expect(progress(), isNull);
+
+      done = r.update();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(resolver.calls, hasLength(1));
+      gate.complete(first.outcome());
+      await waitUntil(() => watch.hits.isNotEmpty);
+      expect(first.released, 1);
+      watch.hits[0].complete(_url);
+      await done;
+      expect(progress(), isA<UpdateCompleted>());
+    });
+
+    test(
+      'cancel during a stuck poll ends at once, then tears down in order',
+      () async {
+        // 輪詢卡在重連時（最多 20 秒逾時加重新找連接埠），取消不能跟著卡住。
+        final first = _Ready(events: events);
+        resolver.results
+          ..add(first.outcome)
+          ..add(_Ready().outcome);
+        watch.cancelGate = Completer<void>();
+        final r = await repo();
+        var done = r.update();
+        await waitUntil(() => watch.hits.isNotEmpty);
+        await r.cancelCapture();
+        await done.timeout(const Duration(seconds: 1));
+        expect(progress(), isNull);
+        expect(first.released, 0, reason: 'the poll has not stopped yet');
+
+        done = r.update();
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(resolver.calls, hasLength(1));
+        watch.cancelGate!.complete();
+        await waitUntil(() => watch.hits.length == 2);
+        expect(events.take(2), ['cancel', 'release']);
+        watch.hits[1].complete(_url);
+        await done;
+        expect(progress(), isA<UpdateCompleted>());
+      },
+    );
   });
 
   test('desktop path still uses capture and web cache', () async {
