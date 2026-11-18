@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "กำลังกลับไปเริ่มอัปเดต...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "การเข้าถึงบันทึกของเกม",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "การแก้ไขข้อบกพร่องแบบไร้สาย",
+  "logAccessMethodNone": "ยังไม่ได้ตั้งค่า",
+  "settingsPairingStatus": "การจับคู่",
+  "settingsPaired": "จับคู่แล้ว",
+  "settingsPairedManual": "จับคู่แล้ว (เปิดการแก้ไขข้อบกพร่องแบบไร้สายเอง)",
+  "settingsRetryGrant": "ลองขอสิทธิ์อีกครั้ง",
+  "settingsSetupLogAccess": "ตั้งค่า",
+  "settingsUnpair": "ยกเลิกการจับคู่",
+  "settingsUnpairConfirmTitle": "ยกเลิกการจับคู่?",
+  "settingsUnpairConfirmBody": "การดำเนินการนี้จะลบคีย์การจับคู่ของแอปนี้ และเพิกถอนสิทธิ์ของแอปนี้ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย หากต้องการใช้การแก้ไขข้อบกพร่องแบบไร้สายในภายหลัง จะต้องจับคู่ใหม่",
+  "settingsUnpairDone": "ยกเลิกการจับคู่แล้ว",
+  "settingsUnpairDoneBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว และเพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สายแล้ว",
+  "settingsUnpairUnreachableTitle": "ลบคีย์การจับคู่แล้ว",
+  "settingsUnpairUnreachableBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว แต่ครั้งนี้เชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายไม่ได้ จึงยังไม่ได้เพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย",
+  "settingsUnpairUnreachableRevokeHint": "แอปนี้จะไม่ใช้สิทธิ์นี้ขณะที่ยังไม่ได้จับคู่ หากต้องการเพิกถอนทั้งหมด ให้เชื่อมต่อ Wi‑Fi แล้วจับคู่ใหม่ จากนั้นยกเลิกการจับคู่อีกครั้ง",
+  "settingsUnpairLeftover": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบจะยังแสดง \"{name}\" อยู่ อุปกรณ์นี้เชื่อมต่อไม่ได้แล้ว จึงปล่อยไว้ได้ หากต้องการนำออก ให้แตะแล้วลบ",
+  "settingsUnpairLeftoverAlso": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบยังแสดง \"{name}\" อยู่ด้วย แตะเพื่อลบได้",
+  "settingsLogAccessMethod": "วิธีการ"
 }

@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "Retour et lancement de la mise à jour...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "Accès au journal du jeu",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Débogage sans fil",
+  "logAccessMethodNone": "Non configuré",
+  "settingsPairingStatus": "Association",
+  "settingsPaired": "Associé",
+  "settingsPairedManual": "Associé (activer le débogage sans fil manuellement)",
+  "settingsRetryGrant": "Réessayer l'autorisation",
+  "settingsSetupLogAccess": "Configurer",
+  "settingsUnpair": "Supprimer l'association",
+  "settingsUnpairConfirmTitle": "Supprimer l'association ?",
+  "settingsUnpairConfirmBody": "La clé d'association de cette application sera supprimée et cette application perdra l'autorisation d'activer ou de désactiver le débogage sans fil. Vous devrez associer à nouveau pour utiliser le débogage sans fil plus tard.",
+  "settingsUnpairDone": "Association supprimée",
+  "settingsUnpairDoneBody": "La clé d'association de cette application a été supprimée et son autorisation d'activer ou de désactiver le débogage sans fil a été retirée.",
+  "settingsUnpairUnreachableTitle": "Clé d'association supprimée",
+  "settingsUnpairUnreachableBody": "La clé d'association de cette application a été supprimée, mais la connexion au débogage sans fil a échoué cette fois ; l'autorisation de l'activer ou de le désactiver n'a donc pas été retirée.",
+  "settingsUnpairUnreachableRevokeHint": "Cette application n'utilise pas cette autorisation tant qu'elle n'est pas associée. Pour la retirer complètement, connectez-vous à un réseau Wi‑Fi, associez à nouveau, puis dissociez une nouvelle fois.",
+  "settingsUnpairLeftover": "La liste Débogage sans fil → Appareils associés du système affichera toujours « {name} ». Il ne peut plus se connecter, vous pouvez donc le laisser ; pour le retirer, appuyez dessus puis supprimez-le.",
+  "settingsUnpairLeftoverAlso": "La liste Débogage sans fil → Appareils associés du système affiche aussi toujours « {name} » ; appuyez dessus pour le supprimer.",
+  "settingsLogAccessMethod": "Méthode"
 }

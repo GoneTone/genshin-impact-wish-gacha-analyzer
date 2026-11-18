@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "Voltando e iniciando a atualização...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "Acesso ao registro do jogo",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Depuração por Wi‑Fi",
+  "logAccessMethodNone": "Não configurado",
+  "settingsPairingStatus": "Pareamento",
+  "settingsPaired": "Pareado",
+  "settingsPairedManual": "Pareado (ativar a depuração por Wi‑Fi manualmente)",
+  "settingsRetryGrant": "Tentar permissão de novo",
+  "settingsSetupLogAccess": "Configurar",
+  "settingsUnpair": "Remover pareamento",
+  "settingsUnpairConfirmTitle": "Remover pareamento?",
+  "settingsUnpairConfirmBody": "A chave de pareamento deste app será excluída e a permissão deste app para ativar e desativar a depuração por Wi‑Fi será removida. Você vai precisar parear de novo para usar a depuração por Wi‑Fi depois.",
+  "settingsUnpairDone": "Pareamento removido",
+  "settingsUnpairDoneBody": "A chave de pareamento deste app foi excluída e a permissão para ativar e desativar a depuração por Wi‑Fi foi removida.",
+  "settingsUnpairUnreachableTitle": "Chave de pareamento excluída",
+  "settingsUnpairUnreachableBody": "A chave de pareamento deste app foi excluída, mas desta vez não foi possível conectar à depuração por Wi‑Fi, então a permissão para ativá-la e desativá-la não foi removida.",
+  "settingsUnpairUnreachableRevokeHint": "Este app não usa essa permissão enquanto não estiver pareado. Para removê-la por completo, conecte-se a uma rede Wi‑Fi, pareie de novo e depois remova o pareamento outra vez.",
+  "settingsUnpairLeftover": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema vai continuar mostrando \"{name}\". Ele não consegue mais se conectar, então você pode deixá-lo; para removê-lo, toque nele e exclua.",
+  "settingsUnpairLeftoverAlso": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema também ainda mostra \"{name}\"; toque nele para excluir.",
+  "settingsLogAccessMethod": "Método"
 }

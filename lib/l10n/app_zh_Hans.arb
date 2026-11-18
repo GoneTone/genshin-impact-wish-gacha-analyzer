@@ -1186,5 +1186,25 @@
   "setupDoneReturning": "即将返回并开始更新...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "读取游戏记录",
+  "logAccessMethodRoot": "root",
+  "logAccessMethodWireless": "无线调试",
+  "logAccessMethodNone": "尚未设置",
+  "settingsPairingStatus": "配对状态",
+  "settingsPaired": "已配对",
+  "settingsPairedManual": "已配对（需手动开启无线调试）",
+  "settingsRetryGrant": "重试授权",
+  "settingsSetupLogAccess": "设置",
+  "settingsUnpair": "解除配对",
+  "settingsUnpairConfirmTitle": "解除配对？",
+  "settingsUnpairConfirmBody": "解除配对会删除本 App 的配对密钥，并收回本 App 开关无线调试的权限。之后要再使用无线调试，需要重新配对。",
+  "settingsUnpairDone": "已解除配对",
+  "settingsUnpairDoneBody": "已删除本 App 的配对密钥，并收回「开关无线调试」的权限。",
+  "settingsUnpairUnreachableTitle": "已删除配对密钥",
+  "settingsUnpairUnreachableBody": "已删除本 App 的配对密钥，但这次连不上无线调试，「开关无线调试」的权限还没收回。",
+  "settingsUnpairUnreachableRevokeHint": "未配对时本 App 不会使用这个权限；想完全收回，可以连上 Wi‑Fi 后重新配对，再解除一次。",
+  "settingsUnpairLeftover": "系统「无线调试」的配对列表里还会留着「{name}」。这条配对已经无法再连接，可以不用理会；想移除的话，点击它即可删除。",
+  "settingsUnpairLeftoverAlso": "系统「无线调试」的配对列表里也还留着「{name}」，点击它即可删除。",
+  "settingsLogAccessMethod": "读取方式"
 }

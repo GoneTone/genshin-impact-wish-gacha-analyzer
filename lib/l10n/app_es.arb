@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "Volviendo e iniciando la actualización...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "Acceso al registro del juego",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Depuración inalámbrica",
+  "logAccessMethodNone": "Sin configurar",
+  "settingsPairingStatus": "Vinculación",
+  "settingsPaired": "Vinculado",
+  "settingsPairedManual": "Vinculado (activa la depuración inalámbrica manualmente)",
+  "settingsRetryGrant": "Reintentar permiso",
+  "settingsSetupLogAccess": "Configurar",
+  "settingsUnpair": "Quitar vinculación",
+  "settingsUnpairConfirmTitle": "¿Quitar vinculación?",
+  "settingsUnpairConfirmBody": "Se eliminará la clave de vinculación de esta app y se retirará el permiso de esta app para activar y desactivar la depuración inalámbrica. Tendrás que volver a vincular para usarla más adelante.",
+  "settingsUnpairDone": "Vinculación quitada",
+  "settingsUnpairDoneBody": "Se eliminó la clave de vinculación de esta app y se retiró su permiso para activar y desactivar la depuración inalámbrica.",
+  "settingsUnpairUnreachableTitle": "Clave de vinculación eliminada",
+  "settingsUnpairUnreachableBody": "Se eliminó la clave de vinculación de esta app, pero esta vez no se pudo conectar con la depuración inalámbrica, así que no se retiró el permiso para activarla y desactivarla.",
+  "settingsUnpairUnreachableRevokeHint": "Esta app no usa ese permiso mientras no está vinculada. Para retirarlo por completo, conéctate a una red Wi‑Fi, vuelve a vincular y luego desvincula otra vez.",
+  "settingsUnpairLeftover": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema seguirá mostrando «{name}». Ya no puede conectarse, así que puedes dejarlo; para quitarlo, tócalo y elimínalo.",
+  "settingsUnpairLeftoverAlso": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema también sigue mostrando «{name}»; tócalo para eliminarlo.",
+  "settingsLogAccessMethod": "Método"
 }

@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "Returning and starting the update...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "Game Log Access",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Wireless debugging",
+  "logAccessMethodNone": "Not set up",
+  "settingsPairingStatus": "Pairing",
+  "settingsPaired": "Paired",
+  "settingsPairedManual": "Paired (turn on wireless debugging manually)",
+  "settingsRetryGrant": "Retry permission",
+  "settingsSetupLogAccess": "Set up",
+  "settingsUnpair": "Remove pairing",
+  "settingsUnpairConfirmTitle": "Remove pairing?",
+  "settingsUnpairConfirmBody": "This deletes this app's pairing key and removes this app's permission to toggle wireless debugging. You'll need to pair again to use wireless debugging later.",
+  "settingsUnpairDone": "Pairing removed",
+  "settingsUnpairDoneBody": "Deleted this app's pairing key and removed its permission to turn wireless debugging on and off.",
+  "settingsUnpairUnreachableTitle": "Pairing key deleted",
+  "settingsUnpairUnreachableBody": "Deleted this app's pairing key, but couldn't connect to wireless debugging this time, so the permission to turn wireless debugging on and off hasn't been removed.",
+  "settingsUnpairUnreachableRevokeHint": "This app doesn't use that permission while unpaired. To remove it completely, connect to Wi‑Fi, pair again, then unpair once more.",
+  "settingsUnpairLeftover": "The system's Wireless debugging → Paired devices list will still show \"{name}\". It can no longer connect, so you can leave it; to remove it, tap it and delete it.",
+  "settingsUnpairLeftoverAlso": "The system's Wireless debugging → Paired devices list also still shows \"{name}\"; tap it to delete it.",
+  "settingsLogAccessMethod": "Method"
 }

@@ -1190,5 +1190,25 @@
   "setupDoneReturning": "Đang quay lại và bắt đầu cập nhật...",
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
-  }
+  },
+  "settingsLogAccess": "Truy cập nhật ký game",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Gỡ lỗi không dây",
+  "logAccessMethodNone": "Chưa thiết lập",
+  "settingsPairingStatus": "Ghép nối",
+  "settingsPaired": "Đã ghép nối",
+  "settingsPairedManual": "Đã ghép nối (tự bật gỡ lỗi không dây)",
+  "settingsRetryGrant": "Thử cấp quyền lại",
+  "settingsSetupLogAccess": "Thiết lập",
+  "settingsUnpair": "Gỡ ghép nối",
+  "settingsUnpairConfirmTitle": "Gỡ ghép nối?",
+  "settingsUnpairConfirmBody": "Thao tác này sẽ xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây của ứng dụng. Sau này muốn dùng gỡ lỗi không dây, bạn sẽ cần ghép nối lại.",
+  "settingsUnpairDone": "Đã gỡ ghép nối",
+  "settingsUnpairDoneBody": "Đã xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây.",
+  "settingsUnpairUnreachableTitle": "Đã xóa khóa ghép nối",
+  "settingsUnpairUnreachableBody": "Đã xóa khóa ghép nối của ứng dụng này, nhưng lần này không kết nối được gỡ lỗi không dây nên chưa thu hồi được quyền bật/tắt gỡ lỗi không dây.",
+  "settingsUnpairUnreachableRevokeHint": "Khi chưa ghép nối, ứng dụng này không dùng quyền đó. Muốn thu hồi hoàn toàn, hãy kết nối Wi‑Fi, ghép nối lại rồi gỡ ghép nối thêm một lần nữa.",
+  "settingsUnpairLeftover": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống vẫn sẽ hiển thị \"{name}\". Mục này không thể kết nối được nữa nên bạn có thể để nguyên; muốn xóa thì nhấn vào và xóa.",
+  "settingsUnpairLeftoverAlso": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống cũng vẫn hiển thị \"{name}\"; nhấn vào để xóa.",
+  "settingsLogAccessMethod": "Phương thức"
 }

@@ -22,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
@@ -34,6 +35,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/cloud_sync_section.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/log_access_section.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
@@ -113,11 +115,19 @@ class SettingsPage extends ConsumerWidget {
                 child: const _DataManagement(),
               ),
               const SizedBox(height: AppSpacing.xl),
-              SectionCard(
-                title: l.settingsGameDir,
-                icon: Icons.sports_esports_outlined,
-                child: _GameDirSection(pickDirectory: pickGameDir),
-              ),
+              // 手機上的遊戲資料夾是固定的，改為顯示讀取遊戲記錄的方式。
+              if (ref.watch(isAndroidProvider))
+                SectionCard(
+                  title: l.settingsLogAccess,
+                  icon: Icons.sports_esports_outlined,
+                  child: const LogAccessSection(),
+                )
+              else
+                SectionCard(
+                  title: l.settingsGameDir,
+                  icon: Icons.sports_esports_outlined,
+                  child: _GameDirSection(pickDirectory: pickGameDir),
+                ),
               const SizedBox(height: AppSpacing.xl),
               SectionCard(
                 title: l.settingsCloudSync,
