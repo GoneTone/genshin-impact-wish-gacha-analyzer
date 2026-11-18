@@ -246,7 +246,7 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 使用者手動貼上的祈願 API 網址：正在等待取得網址時直接完成這次等待，沒有進行中的更新時用它跑一次更新，正在抓資料時忽略。
   ///
-  /// 完成等待走和網頁快取命中相同的路（電腦版照常收尾攔截）。
+  /// 完成等待走和網頁快取命中相同的路，但電腦版會立即收尾攔截，不給寬限。
   Future<void> submitManualUrl(String apiUrl) async {
     final hit = _cacheHit;
     if (hit != null && !hit.isCompleted) {
