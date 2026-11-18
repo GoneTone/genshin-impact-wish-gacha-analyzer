@@ -158,6 +158,27 @@ void main() {
     },
   );
 
+  test(
+    'manual url during the desktop wait cancels capture without grace',
+    () async {
+      final (repo, container, capture, hits) = await setup();
+      repo.debugSetCacheWinCaptureGrace(const Duration(seconds: 30));
+
+      final done = repo.update();
+      await _until(
+        () =>
+            container.read(gachaRepositoryProvider).progress
+                is WaitingForCapture &&
+            capture.starts == 1,
+      );
+      await repo.submitManualUrl(_url);
+      await done.timeout(const Duration(seconds: 5));
+
+      expect(capture.cancelCalls, 1);
+      expect(hits, isNotEmpty);
+    },
+  );
+
   test('manual url while fetching is ignored', () async {
     final gate = Completer<void>();
     final (repo, _, capture, hits) = await setup(gate: gate.future);

@@ -251,6 +251,7 @@ class GachaRepository extends Notifier<GachaState> {
     final hit = _cacheHit;
     if (hit != null && !hit.isCompleted) {
       _manualLog.info('url source=manual (completing wait)');
+      _manualHit = true;
       hit.complete(apiUrl);
       return;
     }
@@ -402,6 +403,7 @@ class GachaRepository extends Notifier<GachaState> {
     _captureCancelRequested = false;
     final cacheHit = Completer<String>();
     _cacheHit = cacheHit;
+    _manualHit = false;
     final backstop = Completer<String?>();
     _captureBackstop = backstop;
     _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
@@ -444,11 +446,17 @@ class GachaRepository extends Notifier<GachaState> {
         );
       }
       if (fromCache && !captureFinished) {
-        await _stopCaptureAfterCacheWin(session, backstop);
+        await _stopCaptureAfterCacheWin(
+          session,
+          backstop,
+          skipGrace: _manualHit,
+        );
       }
       if (!fromCache) _log.info('MITM session done, hasUrl=${url != null}');
       if (url != null) {
-        _webCacheLog.info('url source=${fromCache ? "cache" : "capture"}');
+        _webCacheLog.info(
+          'url source=${fromCache ? (_manualHit ? "manual" : "cache") : "capture"}',
+        );
       }
     } finally {
       _cacheHit = null;
@@ -677,30 +685,37 @@ class GachaRepository extends Notifier<GachaState> {
   /// 快取通常只比 MITM 晚幾十毫秒看到網址，此時遊戲的祈願 API 請求可能還在經代理轉送，
   /// 立刻 `cancel()` 會切斷它，遊戲紀錄頁顯示無法取得數據；Rust 端收到上游回應後會自行停止。
   /// 每段等待都和 [backstop] 比快（使用者取消立即生效）；收尾錯誤只記 warning。
+  ///
+  /// [skipGrace] 為 true（手動輸入網址）時沒有遊戲請求要等，直接 `cancel()`。
   Future<void> _stopCaptureAfterCacheWin(
     CaptureSession session,
-    Completer<String?> backstop,
-  ) async {
-    _webCacheLog.info(
-      'cache won, waiting up to ${_cacheWinCaptureGrace.inMilliseconds}ms '
-      'for capture to stop',
-    );
-    try {
-      await Future.any([
-        session.result,
-        backstop.future,
-      ]).timeout(_cacheWinCaptureGrace);
-      if (!backstop.isCompleted) {
-        _webCacheLog.info('capture stopped within grace after cache win');
-      }
-      return;
-    } on TimeoutException {
-      _webCacheLog.info('capture still running after grace, cancelling');
-    } catch (e) {
-      _webCacheLog.warning(
-        'capture teardown error after cache win error=${e.runtimeType}',
+    Completer<String?> backstop, {
+    bool skipGrace = false,
+  }) async {
+    if (skipGrace) {
+      _webCacheLog.info('manual url, cancelling capture without grace');
+    } else {
+      _webCacheLog.info(
+        'cache won, waiting up to ${_cacheWinCaptureGrace.inMilliseconds}ms '
+        'for capture to stop',
       );
-      return;
+      try {
+        await Future.any([
+          session.result,
+          backstop.future,
+        ]).timeout(_cacheWinCaptureGrace);
+        if (!backstop.isCompleted) {
+          _webCacheLog.info('capture stopped within grace after cache win');
+        }
+        return;
+      } on TimeoutException {
+        _webCacheLog.info('capture still running after grace, cancelling');
+      } catch (e) {
+        _webCacheLog.warning(
+          'capture teardown error after cache win error=${e.runtimeType}',
+        );
+        return;
+      }
     }
     // cancel() 丟錯也要等 result：它完成才代表系統代理已還原，之後拉取才不會誤走代理。
     for (final step in <Future<Object?> Function()>[
@@ -978,6 +993,9 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 本次等待期間由其他來源先拿到的網址（網頁快取、手動輸入；Android 為系統記錄）；不在等待時為 null。
   Completer<String>? _cacheHit;
+
+  /// 本次等待是否由 [submitManualUrl] 完成；為 true 時收尾攔截不給寬限。
+  bool _manualHit = false;
 
   /// 目前的網頁快取監看 session。
   CaptureSession? _webCacheSession;

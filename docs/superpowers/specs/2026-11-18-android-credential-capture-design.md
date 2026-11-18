@@ -125,7 +125,7 @@ Android 無法攔截網路（遊戲的 WebView 不信任使用者安裝的 CA）
 - 對話框（`AppDialog`）一個多行輸入框，接受任何文字（`keyboardType: TextInputType.url`、`autocorrect: false`、`enableSuggestions: false`，筆記 #20）。用 `findGachaUrls` 找出網址，由新到舊試，第一個轉得出 API 網址的就用。找不到時在輸入框下方提示，不關閉對話框。
 - 說明文字照 3.2 第 6 點。
 - **送出後**：
-  - 正在等待時（等待畫面點進來）：直接完成這次等待。電腦版當作「快取先到」處理：照子專案 0 的寬限規則等攔截收尾（`_stopCaptureAfterCacheWin`）。
+  - 正在等待時（等待畫面點進來）：直接完成這次等待。電腦版立即停止攔截（`_stopCaptureAfterCacheWin` 的 `skipGrace`），不等寬限，因為沒有遊戲請求要等；此行為於 2026-11-18 使用者實測後修改。
   - 不在等待時（說明頁、無法自動讀取的畫面點進來）：用這個網址啟動一次更新。
 - 手動輸入的網址跟其他來源一樣存成帳號的快取網址。
 
