@@ -130,6 +130,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// Logger 實例（非破壞性 metadata 更新流程）。
   static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
 
+  /// 手動輸入網址流程的 logger（與對話框同一棵樹）。
+  static final _manualLog = Logger('capture.manual');
+
   /// Logger 實例（雲端同步觸發的匯入與補抓）。
   static final _cloudSyncLog = Logger('cloudsync.sync');
 
@@ -231,8 +234,29 @@ class GachaRepository extends Notifier<GachaState> {
     await _runUpdate(forceRecapture: false);
   }
 
-  /// 實際執行更新流程；[forceRecapture] 為 true 時強制重新 MITM 捕獲。
-  Future<void> _runUpdate({required bool forceRecapture}) async {
+  /// 使用者手動貼上的祈願 API 網址：正在等待取得網址時直接完成這次等待，沒有進行中的更新時用它跑一次更新，正在抓資料時忽略。
+  ///
+  /// 完成等待走和網頁快取命中相同的路（電腦版照常收尾攔截）。
+  Future<void> submitManualUrl(String apiUrl) async {
+    final hit = _cacheHit;
+    if (hit != null && !hit.isCompleted) {
+      _manualLog.info('url source=manual (completing wait)');
+      hit.complete(apiUrl);
+      return;
+    }
+    if (_isUpdating) {
+      _manualLog.info('manual url ignored: update in progress');
+      return;
+    }
+    _manualLog.info('url source=manual (new update)');
+    await _runUpdate(forceRecapture: false, manualUrl: apiUrl);
+  }
+
+  /// 實際執行更新流程；[forceRecapture] 為 true 時強制重新 MITM 捕獲，[manualUrl] 非 null 時直接用它。
+  Future<void> _runUpdate({
+    required bool forceRecapture,
+    String? manualUrl,
+  }) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
     _cancelTriggered = false;
@@ -254,9 +278,9 @@ class GachaRepository extends Notifier<GachaState> {
         if (!ref.mounted) return;
       }
 
-      String? capturedUrl;
+      String? capturedUrl = manualUrl;
 
-      if (!forceRecapture && initialActiveUid != null) {
+      if (manualUrl == null && !forceRecapture && initialActiveUid != null) {
         capturedUrl = await storage.loadCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
         if (capturedUrl != null) {

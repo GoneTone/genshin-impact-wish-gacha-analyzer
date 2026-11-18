@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "Chanceux",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Malchanceux"
+  "luckTierUnlucky": "Malchanceux",
+  "manualUrlEntry": "Saisir l'URL de l'historique des vœux manuellement",
+  "manualUrlTitle": "Saisir l'URL de l'historique des vœux manuellement",
+  "manualUrlHint": "Si vous avez déjà obtenu l'URL de l'historique des vœux autrement (par exemple avec un outil sur votre ordinateur), vous pouvez la coller ici. Coller tout le texte fonctionne aussi : l'application trouve l'URL automatiquement.",
+  "manualUrlFieldHint": "Coller l'URL...",
+  "manualUrlPaste": "Coller depuis le presse-papiers",
+  "manualUrlNotFound": "Aucune URL de l'historique des vœux trouvée. Vérifiez le contenu collé.",
+  "manualUrlWarning": "L'URL contient les identifiants de votre compte. Ne la partagez pas publiquement. Elle expire au bout d'un certain temps.",
+  "manualUrlSubmit": "OK"
 }

@@ -811,5 +811,21 @@
 
   "luckTierLucky": "歐",
   "luckTierAverage": "普通",
-  "luckTierUnlucky": "非"
+  "luckTierUnlucky": "非",
+  "manualUrlEntry": "手動輸入祈願紀錄網址",
+  "@manualUrlEntry": {"description": "Link on the waiting dialog that opens the manual wish history URL input dialog"},
+  "manualUrlTitle": "手動輸入祈願紀錄網址",
+  "@manualUrlTitle": {"description": "Title of the manual wish history URL input dialog"},
+  "manualUrlHint": "如果已經用其他方式（例如電腦上的工具）取得祈願紀錄網址，可以貼在這裡；整段文字也可以，App 會自動找出網址。",
+  "@manualUrlHint": {"description": "Explanation above the text field of the manual URL input dialog"},
+  "manualUrlFieldHint": "貼上網址...",
+  "@manualUrlFieldHint": {"description": "Placeholder of the text field in the manual URL input dialog"},
+  "manualUrlPaste": "從剪貼簿貼上",
+  "@manualUrlPaste": {"description": "Button that pastes the clipboard into the manual URL input field"},
+  "manualUrlNotFound": "找不到祈願紀錄網址，請確認貼上的內容。",
+  "@manualUrlNotFound": {"description": "Error shown when the pasted text contains no valid wish history URL"},
+  "manualUrlWarning": "網址含有帳號憑證，請勿公開分享。網址過一段時間會失效。",
+  "@manualUrlWarning": {"description": "Security warning at the bottom of the manual URL input dialog"},
+  "manualUrlSubmit": "確定",
+  "@manualUrlSubmit": {"description": "Confirm button of the manual wish history URL input dialog"}
 }

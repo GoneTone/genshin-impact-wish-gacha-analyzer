@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "Lucky",
   "luckTierAverage": "Average",
-  "luckTierUnlucky": "Unlucky"
+  "luckTierUnlucky": "Unlucky",
+  "manualUrlEntry": "Enter Wish History URL manually",
+  "manualUrlTitle": "Enter Wish History URL Manually",
+  "manualUrlHint": "If you already got the Wish History URL another way (for example with a tool on your computer), you can paste it here. Pasting the whole text works too; the app finds the URL automatically.",
+  "manualUrlFieldHint": "Paste URL...",
+  "manualUrlPaste": "Paste from clipboard",
+  "manualUrlNotFound": "No Wish History URL found. Please check what you pasted.",
+  "manualUrlWarning": "The URL contains your account credentials. Don't share it publicly. It expires after a while.",
+  "manualUrlSubmit": "OK"
 }

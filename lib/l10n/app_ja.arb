@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "強運",
   "luckTierAverage": "普通",
-  "luckTierUnlucky": "不運"
+  "luckTierUnlucky": "不運",
+  "manualUrlEntry": "祈願履歴の URL を手動で入力",
+  "manualUrlTitle": "祈願履歴の URL を手動で入力",
+  "manualUrlHint": "他の方法（パソコン上のツールなど）で祈願履歴の URL を取得済みの場合は、ここに貼り付けてください。テキスト全体でも、アプリが URL を自動で見つけます。",
+  "manualUrlFieldHint": "URL を貼り付け...",
+  "manualUrlPaste": "クリップボードから貼り付け",
+  "manualUrlNotFound": "祈願履歴の URL が見つかりません。貼り付けた内容を確認してください。",
+  "manualUrlWarning": "URL にはアカウントの認証情報が含まれます。公開しないでください。URL はしばらくすると無効になります。",
+  "manualUrlSubmit": "OK"
 }

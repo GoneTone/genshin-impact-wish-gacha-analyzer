@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "May mắn",
   "luckTierAverage": "Bình thường",
-  "luckTierUnlucky": "Kém may"
+  "luckTierUnlucky": "Kém may",
+  "manualUrlEntry": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "manualUrlTitle": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "manualUrlHint": "Nếu bạn đã lấy URL Lịch Sử Cầu Nguyện bằng cách khác (ví dụ công cụ trên máy tính), hãy dán vào đây. Dán cả đoạn văn bản cũng được, ứng dụng sẽ tự tìm URL.",
+  "manualUrlFieldHint": "Dán URL...",
+  "manualUrlPaste": "Dán từ bộ nhớ tạm",
+  "manualUrlNotFound": "Không tìm thấy URL Lịch Sử Cầu Nguyện. Vui lòng kiểm tra nội dung đã dán.",
+  "manualUrlWarning": "URL chứa thông tin xác thực tài khoản của bạn. Đừng chia sẻ công khai. URL sẽ hết hạn sau một thời gian.",
+  "manualUrlSubmit": "OK"
 }

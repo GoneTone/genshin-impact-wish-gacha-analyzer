@@ -1011,5 +1011,13 @@
   },
   "luckTierLucky": "欧",
   "luckTierAverage": "普通",
-  "luckTierUnlucky": "非"
+  "luckTierUnlucky": "非",
+  "manualUrlEntry": "手动输入祈愿记录网址",
+  "manualUrlTitle": "手动输入祈愿记录网址",
+  "manualUrlHint": "如果已经用其他方式（例如电脑上的工具）取得祈愿记录网址，可以粘贴在这里；整段文字也可以，App 会自动找出网址。",
+  "manualUrlFieldHint": "粘贴网址...",
+  "manualUrlPaste": "从剪贴板粘贴",
+  "manualUrlNotFound": "找不到祈愿记录网址，请确认粘贴的内容。",
+  "manualUrlWarning": "网址含有账号凭证，请勿公开分享。网址过一段时间会失效。",
+  "manualUrlSubmit": "确定"
 }

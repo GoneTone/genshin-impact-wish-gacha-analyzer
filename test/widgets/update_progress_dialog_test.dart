@@ -60,6 +60,17 @@ void main() {
       '無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），也找不到遊戲資料夾。請按下方「選擇遊戲資料夾」手動指定。';
   const chooseGameDir = '選擇遊戲資料夾';
 
+  testWidgets('waiting dialog shows the manual input link on desktop', (
+    tester,
+  ) async {
+    await _pumpDialog(tester, progress: const WaitingForCapture());
+    expect(find.text('手動輸入祈願紀錄網址'), findsOneWidget);
+    await tester.tap(find.text('手動輸入祈願紀錄網址'));
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
   testWidgets(
     'waiting shows the not-detected link that opens the help dialog',
     (tester) async {

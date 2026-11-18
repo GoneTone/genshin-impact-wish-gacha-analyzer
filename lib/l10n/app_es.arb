@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "Con suerte",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Sin suerte"
+  "luckTierUnlucky": "Sin suerte",
+  "manualUrlEntry": "Introducir manualmente la URL del Historial de Deseos",
+  "manualUrlTitle": "Introducir manualmente la URL del Historial de Deseos",
+  "manualUrlHint": "Si ya obtuviste la URL del Historial de Deseos de otra forma (por ejemplo, con una herramienta en tu ordenador), pégala aquí. También puedes pegar todo el texto; la app encuentra la URL automáticamente.",
+  "manualUrlFieldHint": "Pegar URL...",
+  "manualUrlPaste": "Pegar del portapapeles",
+  "manualUrlNotFound": "No se encontró la URL del Historial de Deseos. Comprueba lo que has pegado.",
+  "manualUrlWarning": "La URL contiene las credenciales de tu cuenta. No la compartas públicamente. Caduca al cabo de un tiempo.",
+  "manualUrlSubmit": "Aceptar"
 }

@@ -73,3 +73,9 @@ List<GachaUrlMatch> findGachaUrls(String text) {
 String toApiUrl(String url) => Uri.parse(
   url,
 ).replace(host: _apiHost, path: _apiPathValue).removeFragment().toString();
+
+/// 在 [text] 中取最後出現的祈願網址並轉成 API 網址；找不到時為 null。
+String? latestApiUrlIn(String text) {
+  final matches = findGachaUrls(text);
+  return matches.isEmpty ? null : toApiUrl(matches.last.url);
+}

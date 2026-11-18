@@ -1015,5 +1015,13 @@
   },
   "luckTierLucky": "Sortudo",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Azarado"
+  "luckTierUnlucky": "Azarado",
+  "manualUrlEntry": "Inserir o URL do Histórico de Orações manualmente",
+  "manualUrlTitle": "Inserir URL do Histórico de Orações manualmente",
+  "manualUrlHint": "Se você já obteve o URL do Histórico de Orações de outra forma (por exemplo, com uma ferramenta no computador), cole-o aqui. Colar o texto inteiro também funciona; o app encontra o URL automaticamente.",
+  "manualUrlFieldHint": "Colar URL...",
+  "manualUrlPaste": "Colar da área de transferência",
+  "manualUrlNotFound": "Nenhum URL do Histórico de Orações encontrado. Verifique o conteúdo colado.",
+  "manualUrlWarning": "O URL contém as credenciais da sua conta. Não compartilhe publicamente. Ele expira depois de um tempo.",
+  "manualUrlSubmit": "OK"
 }

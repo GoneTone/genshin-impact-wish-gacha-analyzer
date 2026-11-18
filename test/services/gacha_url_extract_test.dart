@@ -83,4 +83,22 @@ void main() {
     expect(toApiUrl(_beyond), '$want${_beyond.split('?')[1]}');
     expect(toApiUrl('$_wish#frag'), '$want$_q');
   });
+
+  test('latestApiUrlIn picks the newest valid url from surrounding text', () {
+    final text = '「$_wish」中間文字$_odes」結尾';
+    expect(
+      latestApiUrlIn(text),
+      'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getGachaLog?'
+      '${_odes.split('?')[1]}',
+    );
+  });
+
+  test('latestApiUrlIn accepts an api url as is', () {
+    expect(latestApiUrlIn(_api), toApiUrl(_api));
+  });
+
+  test('latestApiUrlIn returns null without a webview_gacha url', () {
+    expect(latestApiUrlIn('https://example.com/x?authkey=K'), isNull);
+    expect(latestApiUrlIn(''), isNull);
+  });
 }

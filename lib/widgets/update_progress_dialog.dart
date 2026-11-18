@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/game_dir_help_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/game_dir_picker.dart';
 
 /// 顯示祈願資料更新進度的 dialog，包含 [LinearProgressIndicator] 與各狀態文字。
@@ -227,6 +228,10 @@ class _Body extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
+            TextButton(
+              onPressed: () => showManualUrlDialog(context),
+              child: Text(l.manualUrlEntry, textAlign: TextAlign.center),
+            ),
           ],
         ),
       FetchingBanner(
