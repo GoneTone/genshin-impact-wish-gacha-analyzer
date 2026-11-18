@@ -166,7 +166,7 @@
   "progressDone": "Mise à jour terminée",
   "progressFailed": "Échec",
   "progressOpenGameHint": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
-  "progressFallbackHint": "(L'authentification précédente a expiré, une nouvelle interception est nécessaire)",
+  "progressFallbackHint": "(L'authentification précédente a expiré, elle doit être obtenue à nouveau)",
   "progressNotDetectedLink": "Vous avez ouvert l'historique des vœux mais rien ne se passe ?",
   "progressCaptureUnavailableHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé) ; la détection se fait donc uniquement via le cache web du jeu. Veuillez ouvrir l'historique des vœux.",
   "progressCaptureUnavailableNoGameDirHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé), et le dossier du jeu est introuvable. Appuyez sur « Choisir le dossier du jeu » ci-dessous pour le définir manuellement.",

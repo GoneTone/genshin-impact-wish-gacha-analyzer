@@ -162,7 +162,7 @@
   "progressDone": "更新完成",
   "progressFailed": "失败",
   "progressOpenGameHint": "请打开原神 → 卡池 → 历史记录",
-  "progressFallbackHint": "（先前的认证已失效，需重新拦截）",
+  "progressFallbackHint": "（先前的认证已失效，需重新获取）",
   "progressNotDetectedLink": "已经打开祈愿历史记录，却一直没有反应？",
   "progressCaptureUnavailableHint": "无法启动拦截程序（可能是证书被拒绝或端口被占用），改为只从游戏网页缓存检测。请打开祈愿历史记录。",
   "progressCaptureUnavailableNoGameDirHint": "无法启动拦截程序（可能是证书被拒绝或端口被占用），也找不到游戏文件夹。请点击下方“选择游戏文件夹”手动指定。",
