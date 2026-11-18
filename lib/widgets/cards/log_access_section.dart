@@ -26,6 +26,9 @@ class _LogAccessSectionState extends ConsumerState<LogAccessSection> {
   /// 是否正在解除配對（要連上無線偵錯收回權限，可能要好幾秒）。
   bool _unpairing = false;
 
+  /// 是否正在開啟設定頁（等背景收尾時重複點擊只開一次）。
+  bool _openingSetup = false;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -110,9 +113,15 @@ class _LogAccessSectionState extends ConsumerState<LogAccessSection> {
     BuildContext context, {
     bool retryGrant = false,
   }) async {
-    await ref.read(gachaRepositoryProvider.notifier).waitAndroidTeardown();
-    if (!context.mounted) return;
-    await openLogAccessSetup(context, retryGrant: retryGrant);
+    if (_openingSetup) return;
+    _openingSetup = true;
+    try {
+      await ref.read(gachaRepositoryProvider.notifier).waitAndroidTeardown();
+      if (!context.mounted) return;
+      await openLogAccessSetup(context, retryGrant: retryGrant);
+    } finally {
+      _openingSetup = false;
+    }
     if (mounted) ref.invalidate(wirelessPairingStatusProvider);
   }
 

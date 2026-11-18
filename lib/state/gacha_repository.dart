@@ -701,7 +701,7 @@ class GachaRepository extends Notifier<GachaState> {
 
   /// 剛配對完、這次卻沒跑 Android 等待（快取或手動網址直接可用）時，關掉為了配對打開的無線偵錯；沒有權限關時讓完成畫面提示。
   ///
-  /// 只做一次；有跑等待時已由它依 [_afterPairing] 處理，這裡不重複。
+  /// 只做一次；有跑等待時改由無線偵錯的 release 依 [_afterPairing] 關閉，這裡不重複（等待改用 root 或手動輸入結束時不會關）。
   Future<void> _disableWirelessIfPairingUnused() async {
     if (!_afterPairing || _androidWaitRan || !ref.mounted) return;
     _afterPairing = false;

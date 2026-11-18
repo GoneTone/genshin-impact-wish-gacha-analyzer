@@ -304,15 +304,19 @@ void main() {
   testWidgets('setup waits for a pending android teardown', (tester) async {
     final gate = _TeardownRepo.gate = Completer<void>();
     final (_, l) = await pump(tester, paired: false);
-    await tester.tap(
-      find.widgetWithText(OutlinedButton, l.settingsSetupLogAccess),
-    );
+    final setup = find.widgetWithText(OutlinedButton, l.settingsSetupLogAccess);
+    await tester.tap(setup);
     await tester.pump();
+    // 等待期間重複點擊不能疊開好幾個設定頁。
+    await tester.tap(setup);
     await tester.pump();
     expect(find.byType(LogAccessSetupPage), findsNothing);
     gate.complete();
     await tester.pumpAndSettle();
-    expect(find.byType(LogAccessSetupPage), findsOneWidget);
+    expect(
+      find.byType(LogAccessSetupPage, skipOffstage: false),
+      findsOneWidget,
+    );
   });
 
   testWidgets('unpair shows progress and cannot be started twice', (
