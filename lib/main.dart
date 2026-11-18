@@ -191,7 +191,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       darkTheme: buildDarkTheme(),
       themeMode: themeMode,
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: ref.watch(releasedLocalesProvider),
       localeListResolutionCallback: localeListResolution,
       routerConfig: _router,

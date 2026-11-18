@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -287,6 +288,33 @@ void main() {
       },
     );
 
+    test('zh-Hant-HK → 裸 zh（繁體中文）', () {
+      expect(
+        localeListResolution([
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'HK',
+          ),
+        ], supported),
+        const Locale('zh'),
+      );
+    });
+
+    test('使用者偏好順序：[en-US, zh-Hant-TW] → null（en 先匹配到，尊重順序）', () {
+      expect(
+        localeListResolution([
+          const Locale('en', 'US'),
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'TW',
+          ),
+        ], supported),
+        isNull,
+      );
+    });
+
     test('en-US (其他語言) → null', () {
       expect(
         localeListResolution([const Locale('en', 'US')], supported),
@@ -363,6 +391,53 @@ void main() {
 
     test('空 Map → 空 List', () {
       expect(sortedLocaleMetadata(const {}), isEmpty);
+    });
+  });
+
+  group('appLocalizationsDelegates', () {
+    /// 以 [locale] 建 MaterialApp，回傳解析出的 Material／Cupertino 內建文字。
+    Future<(MaterialLocalizations, CupertinoLocalizations)> pumpWith(
+      WidgetTester tester,
+      Locale locale,
+    ) async {
+      late MaterialLocalizations material;
+      late CupertinoLocalizations cupertino;
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: appLocalizationsDelegates,
+          home: Builder(
+            builder: (ctx) {
+              material = MaterialLocalizations.of(ctx);
+              cupertino = CupertinoLocalizations.of(ctx);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return (material, cupertino);
+    }
+
+    testWidgets('裸 zh（本 app 的繁中）→ Material／Cupertino 內建文字也是繁中', (tester) async {
+      final (material, cupertino) = await pumpWith(tester, const Locale('zh'));
+      expect(material.closeButtonTooltip, '關閉');
+      expect(cupertino.cutButtonLabel, '剪下');
+    });
+
+    testWidgets('zh-Hans → 內建文字維持簡中', (tester) async {
+      final (material, cupertino) = await pumpWith(
+        tester,
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+      expect(material.closeButtonTooltip, '关闭');
+      expect(cupertino.cutButtonLabel, '剪切');
+    });
+
+    testWidgets('其他語言不受影響（ja）', (tester) async {
+      final (material, _) = await pumpWith(tester, const Locale('ja'));
+      expect(material.closeButtonTooltip, '閉じる');
     });
   });
 }
