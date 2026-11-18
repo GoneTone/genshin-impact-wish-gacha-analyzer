@@ -51,7 +51,7 @@
    - 新增 `android/cargokit_gradle9_shim.gradle`，在 `android/build.gradle.kts` 第一行 `apply(from = ...)`。內容照搬鳴潮版最後的版本（`6c97924` 之後）：用 `ext.exec` 補回 Gradle 9 移除的 `Project.exec()`，轉接到 `@Inject` 注入的 `ExecOperations`（不吞 cargo 輸出），並用 `afterEvaluate` 把兩個外掛寫死的 `compileSdkVersion 31` 改成 `:app` 的 compileSdk。上游修正發布後刪除。
 3. **`lib/main.dart`**：`RustLib.init()` 和 `_connectRustLogStream()` 只在 `Platform.isWindows` 時執行。dartdoc 跟著更新，註明 Rust 只提供 Windows 的攔截功能。
 4. **App 圖示**（筆記 #10）：原神版沒有圖示產生工具，現有圖示最大只有 256px（`assets/icons/3.0x/app_icon.png` 與 `.ico`），是從舊 master 的 `build/icons/` 複製來的。
-   - 從 git 歷史（`128f035` 的 `build/icons/1024x1024.png`）取出 1024×1024 原圖，放到 `tool/app_icon_source.png` 當主檔。已比對：它縮到 256 後和現有圖示的平均像素差約 2.5/255，是同一張圖。
+   - 從 git 歷史（`16eab50` 的 `build/icons/1024x1024.png`，`128f035` 刪除前的最後版本）取出 1024×1024 原圖，放到 `tool/app_icon_source.png` 當主檔。已比對：它縮到 256 後和現有圖示的平均像素差約 2.5/255，是同一張圖。
    - 移植鳴潮版 `tool/generate_app_icons.dart` 在子專案 1 時的版本（`89704b5`）：輸出 `assets/icons/` 的 1×／2×／3× 圖、Windows 多解析度 `.ico`，以及 Android `mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.png`（48／72／96／144／192）。`pubspec.yaml` 的 dev_dependencies 加 `image`（和鳴潮版相同）。
    - 執行工具會一併重新產生 Windows `.ico` 與 `assets/icons/`，肉眼看不出差別。
    - **這張主檔只是暫時的**。它是胡桃的二創圖，有繪師與 HoYoverse 兩層權利；Google Play 的智慧財產權政策把與原作無法區分的「fan art」列為違規範例，冒用政策也把「在圖示中照抄知名作品的角色」列為誤導使用者的範例。使用者決定（2026-11-18）在子專案 7 換成不含角色的原創圖示，時間點和鳴潮版（`884323c`，在 Play CI 之後換圖）一致，自適應圖示與 512px 商店圖示也在那時一起做。debug 版不公開，這段期間沒有風險。
