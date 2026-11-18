@@ -258,14 +258,79 @@ void main() {
   });
 
   test('exec failures keep waiting and recover', () async {
+    final warnings = <String>[];
+    final sub = Logger('gacha.logcat').onRecord.listen((r) {
+      if (r.level >= Level.WARNING) warnings.add(r.message);
+    });
     var failures = 3;
     shell.failWhen = (c) => c.startsWith('cat ') && failures-- > 0;
     shell.polls = [_hitLine];
     final s = await begin();
     expect(await _await(s.result), _apiUrl);
     expect(shell.starts, hasLength(1));
+    expect(
+      warnings.first,
+      'logcat poll failed phase=check pid=1234 since=11-18 10:00:00.000 '
+      'error=StateError',
+    );
+    await s.cancel();
+    await sub.cancel();
+  });
+
+  test(
+    'partial line with the marker glued on neither completes nor restarts',
+    () async {
+      final line = _hitLine.substring(_divider.length);
+      final inAuthkey = line.substring(0, line.indexOf('authkey=K1') + 9);
+      final beforeAppId = line.substring(0, line.indexOf('auth_appid'));
+      shell.polls = [
+        '$_divider$inAuthkey$_alive',
+        '$_divider$beforeAppId$_alive',
+        _hitLine,
+      ];
+      final s = await begin();
+      expect(await _await(s.result), _apiUrl);
+      expect(shell.starts, hasLength(1));
+      await s.cancel();
+    },
+  );
+
+  test('poll output with CRLF line endings is understood', () async {
+    String crlf(String s) => s.replaceAll('\n', '\r\n');
+    shell.polls = [crlf(_alive), crlf('$_divider$_alive'), crlf(_hitLine)];
+    final s = await begin();
+    expect(await _await(s.result), _apiUrl);
+    expect(shell.starts, hasLength(1));
     await s.cancel();
   });
+
+  test('a non-positive pid is rejected and the launch retried', () async {
+    shell.pids = [0, -1, 1234];
+    shell.polls = [_hitLine];
+    final s = await begin();
+    expect(await _await(s.result), _apiUrl);
+    expect(shell.starts, hasLength(3));
+    expect(shell.commands, isNot(contains(logcatPollCommand(0))));
+    expect(shell.commands, isNot(contains(logcatPollCommand(-1))));
+    await s.cancel();
+  });
+
+  test(
+    'cancel during a poll that finds the monitor gone does not relaunch',
+    () async {
+      final gate = Completer<void>();
+      shell.pollGate = gate;
+      shell.polls = [''];
+      final s = await begin();
+      await _until(() => shell.commands.last.startsWith('cat '));
+      final at = shell.commands.length;
+      final cancel = s.cancel();
+      gate.complete();
+      await cancel.timeout(const Duration(seconds: 5));
+      expect(shell.commands.sublist(at), [logcatCleanupCommand]);
+      expect(await _await(s.result), isNull);
+    },
+  );
 
   test('device time failure retries on the next poll', () async {
     var failures = 1;

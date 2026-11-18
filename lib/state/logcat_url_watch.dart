@@ -83,6 +83,7 @@ class PollingLogcatUrlWatch implements LogcatUrlWatch {
 
     /// 沒有起點就先取手機時間，再清掉殘留並啟動監看程序；失敗留給下一輪。
     Future<void> launch() async {
+      if (completer.isCompleted) return;
       if (since == null) {
         final now = (await run(deviceTimeCommand)).trim();
         if (!_sincePattern.hasMatch(now)) {
@@ -91,24 +92,31 @@ class PollingLogcatUrlWatch implements LogcatUrlWatch {
         }
         since = now;
       }
+      if (completer.isCompleted) return;
       await run(logcatCleanupCommand);
+      if (completer.isCompleted) return;
       final out = (await run(logcatStartCommand(since!))).trim();
-      pid = int.tryParse(out);
-      if (pid == null) {
+      final parsed = int.tryParse(out);
+      if (parsed == null || parsed <= 0) {
         _log.warning('logcat start returned no pid output=$out');
         return;
       }
+      pid = parsed;
       cleaned = false;
       _log.info('logcat watch started since=$since pid=$pid');
     }
 
     /// 讀暫存檔：命中就完成，內容不合法或監看程序不在就重啟。
     Future<void> check(int p) async {
-      final lines = const LineSplitter().convert(
-        await run(logcatPollCommand(p)),
-      );
-      final alive = lines.remove(_aliveMarker);
-      final content = lines.join('\n');
+      final out = (await run(logcatPollCommand(p))).trimRight();
+      if (completer.isCompleted) return;
+      // 檔案沒以換行結尾時標記會黏在最後一行，所以比對結尾而不是整行
+      final alive = out.endsWith(_aliveMarker);
+      final content = alive
+          ? out.substring(0, out.length - _aliveMarker.length)
+          : out;
+      // 程序還在且最後一行沒寫完：網址可能被切斷，等下一輪
+      if (alive && content.isNotEmpty && !content.endsWith('\n')) return;
       if (content.trim().isEmpty) {
         if (alive) return;
         restarts++;
@@ -134,11 +142,14 @@ class PollingLogcatUrlWatch implements LogcatUrlWatch {
     Future<void> step() async {
       if (polling || completer.isCompleted) return;
       polling = true;
+      final p = pid;
       try {
-        final p = pid;
         await (p == null ? launch() : check(p));
       } on Object catch (e) {
-        _log.warning('logcat poll failed error=${e.runtimeType}');
+        _log.warning(
+          'logcat poll failed phase=${p == null ? 'launch' : 'check'} '
+          'pid=$p since=$since error=${e.runtimeType}',
+        );
       } finally {
         polling = false;
       }
