@@ -98,6 +98,40 @@ class LogAccessPlatform {
   /// 開啟 [package] 版本的原神；沒有安裝時回 false。
   Future<bool> launchGame(String package) =>
       _call('launchGame', false, {'package': package});
+
+  /// 啟動配對前景服務（找配對連接埠、顯示可輸入配對碼的通知）。
+  Future<void> startPairingService() =>
+      _call<Object?>('startPairingService', null);
+
+  /// 停止配對前景服務。
+  Future<void> stopPairingService() =>
+      _call<Object?>('stopPairingService', null);
+
+  /// 配對前景服務是否在執行（逾時或被停止後為 false）。
+  Future<bool> isPairingServiceRunning() =>
+      _call('isPairingServiceRunning', false);
+
+  /// 設定收到配對碼時的處理函式（由配對服務呼叫）；回傳是否配對成功與給通知顯示的訊息。
+  ///
+  /// 傳 null 取消。配對碼不可寫進 log。
+  void setPairingCodeHandler(
+    Future<({bool ok, String message})> Function(int port, String code)?
+    handler,
+  ) {
+    _channel.setMethodCallHandler(
+      handler == null
+          ? null
+          : (call) async {
+              if (call.method != 'pairCode') return null;
+              final args = (call.arguments as Map).cast<String, Object?>();
+              final r = await handler(
+                args['port'] as int,
+                args['code'] as String,
+              );
+              return {'ok': r.ok, 'message': r.message};
+            },
+    );
+  }
 }
 
 /// 提供 [LogAccessPlatform]，測試可 override。

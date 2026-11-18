@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/pages/log_access_setup_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/genshin_game_package.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
@@ -231,6 +232,26 @@ void main() {
         expect(find.text(l.manualUrlEntry), findsOneWidget);
       },
     );
+  }
+
+  for (final (reason, label) in [
+    (LogAccessUnavailable.notPaired, 'setup'),
+    (LogAccessUnavailable.adbConnectFailed, 'repair'),
+  ]) {
+    testWidgets('${reason.name} ends the update and opens the setup page', (
+      tester,
+    ) async {
+      final l = await pump(
+        tester,
+        WaitingForCapture(logAccessUnavailable: reason),
+      );
+      await tester.tap(
+        find.text(label == 'setup' ? l.actionSetupLogAccess : l.actionRepair),
+      );
+      await tester.pumpAndSettle();
+      expect(repo.cancels, 1);
+      expect(find.byType(LogAccessSetupPage), findsOneWidget);
+    });
   }
 
   testWidgets('wireless debugging off offers to open it', (tester) async {

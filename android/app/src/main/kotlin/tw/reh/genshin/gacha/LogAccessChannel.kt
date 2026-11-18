@@ -41,7 +41,10 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
         private const val NSD_COLLECT_MS = 2000L
     }
 
-    val channel = MethodChannel(messenger, CHANNEL).also { it.setMethodCallHandler(this) }
+    val channel = MethodChannel(messenger, CHANNEL).also {
+        it.setMethodCallHandler(this)
+        AdbPairingService.channel = it
+    }
     private val main = Handler(Looper.getMainLooper())
     private val pendingPermissions = mutableMapOf<Int, MethodChannel.Result>()
 
@@ -109,8 +112,16 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
                     result.success(true)
                 }
             }
+            "startPairingService" -> { AdbPairingService.start(activity); result.success(null) }
+            "stopPairingService" -> { AdbPairingService.stop(activity); result.success(null) }
+            "isPairingServiceRunning" -> result.success(AdbPairingService.running)
             else -> result.notImplemented()
         }
+    }
+
+    /** engine 被回收時切斷配對服務和 Dart 的連結，服務改為提示「請回到 App」。 */
+    fun detach() {
+        if (AdbPairingService.channel === channel) AdbPairingService.channel = null
     }
 
     /** 由 MainActivity 轉送權限請求結果。 */

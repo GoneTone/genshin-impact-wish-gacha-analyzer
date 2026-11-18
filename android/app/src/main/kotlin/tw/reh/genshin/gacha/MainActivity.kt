@@ -12,6 +12,7 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        logAccess?.detach()
         logAccess = null
         super.cleanUpFlutterEngine(flutterEngine)
     }

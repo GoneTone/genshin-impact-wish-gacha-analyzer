@@ -22,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
+import 'package:genshin_impact_wish_gacha_analyzer/state/adb_pairing.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_foreground.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
@@ -665,7 +666,10 @@ class GachaRepository extends Notifier<GachaState> {
     } catch (e) {
       _androidLog.warning('logcat watch stop failed error=${e.runtimeType}');
     }
-    return ready.release();
+    final leftOn = await ready.release();
+    // 連上時可能順便補回授權，設定頁的配對狀態要重讀。
+    if (ref.mounted) ref.invalidate(wirelessPairingStatusProvider);
+    return leftOn;
   }
 
   /// 快取勝出後收尾攔截：先給 [_cacheWinCaptureGrace] 寬限讓它自行結束，逾時才 `cancel()`；一律等 `result` 完成才返回。

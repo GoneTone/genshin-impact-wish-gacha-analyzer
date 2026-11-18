@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "การแก้ไขข้อบกพร่องแบบไร้สายยังเปิดอยู่ คุณปิดได้ในการตั้งค่าระบบ",
   "progressCredentialReady": "ได้ URL ประวัติการอธิษฐานแล้ว จะเริ่มดึงประวัติการอธิษฐานเมื่อคุณกลับมาที่แอปนี้",
   "actionRedetectGame": "ตรวจหาอีกครั้ง",
-  "updateOpenPlayStore": "เปิด Google Play"
+  "updateOpenPlayStore": "เปิด Google Play",
+  "actionSetupLogAccess": "ตั้งค่า",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "จับคู่ใหม่",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "อ่านบันทึกระบบ",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "ทำไมต้องตั้งค่านี้?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android ไม่อนุญาตให้แอปอ่านบันทึกระบบของแอปอื่นโดยตรง แอปนี้จึงใช้ฟีเจอร์การแก้ไขข้อบกพร่องแบบไร้สายที่มีในระบบเพื่ออ่าน URL ประวัติการอธิษฐานของ Genshin Impact",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "สิ่งที่แอปนี้ทำ",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• อ่านเฉพาะ URL ประวัติการอธิษฐานของ Genshin Impact\n• ตัดการเชื่อมต่อทันทีหลังอ่านเสร็จ และปิดการแก้ไขข้อบกพร่องแบบไร้สายหากแอปนี้เป็นผู้เปิดไว้\n• ให้สิทธิ์ตัวเองในการเปิดและปิดการแก้ไขข้อบกพร่องแบบไร้สาย เพื่อที่คุณจะไม่ต้องตั้งค่าใหม่\n• ยกเลิกได้ทุกเมื่อในการตั้งค่า",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "สิ่งที่ต้องมี",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ขึ้นไป, Wi‑Fi, อนุญาตการแจ้งเตือน",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "เริ่มตั้งค่า",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "ป้อน URL ด้วยตนเองแทน",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "จับคู่การแก้ไขข้อบกพร่องแบบไร้สาย",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอป",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. เปิดหน้าเกี่ยวกับในการตั้งค่าระบบ (เช่น “เกี่ยวกับโทรศัพท์” หรือ “เกี่ยวกับแท็บเล็ต”)\n2. หา “หมายเลขบิลด์” แล้วแตะ 7 ครั้ง\n3. เมื่อเห็นข้อความ “ตอนนี้คุณเป็นนักพัฒนาซอฟต์แวร์แล้ว” ให้กลับมาที่แอปนี้",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "เปิดหน้าเกี่ยวกับ",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอปแล้ว",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. อนุญาตการแจ้งเตือน",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "คุณจะต้องป้อนรหัสจับคู่ในการแจ้งเตือน จึงต้องอนุญาตให้แอปนี้แสดงการแจ้งเตือน",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "อนุญาตการแจ้งเตือน",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "เปิดการตั้งค่าการแจ้งเตือน",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. อนุญาตการแจ้งเตือนแล้ว",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. จับคู่",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. แตะปุ่มด้านล่างเพื่อเปิดการแก้ไขข้อบกพร่องแบบไร้สาย\n2. เปิด “ใช้การแก้ไขข้อบกพร่องแบบไร้สาย” แล้วแตะ “จับคู่อุปกรณ์ด้วยรหัสการจับคู่”\n3. ปัดลงจากด้านบนของหน้าจอ แล้วป้อนรหัสการจับคู่ 6 หลักที่แสดงบนหน้าจอจับคู่ของการแก้ไขข้อบกพร่องแบบไร้สายในการแจ้งเตือนของแอปนี้",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "กำลังรอให้คุณป้อนรหัสจับคู่ในการแจ้งเตือน...\nป้อนรหัสขณะที่หน้าจับคู่ในการแก้ไขข้อบกพร่องแบบไร้สายยังเปิดอยู่",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "เปิดการแก้ไขข้อบกพร่องแบบไร้สายอีกครั้ง",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "กำลังจับคู่...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "จับคู่แล้ว เหลืออีกหนึ่งขั้นตอน",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "อุปกรณ์ของคุณมีข้อจำกัดด้านความปลอดภัยเพิ่มเติม โปรดเปิดอีกหนึ่งตัวเลือกเพื่อให้แอปนี้เปิดและปิดการแก้ไขข้อบกพร่องแบบไร้สายได้โดยอัตโนมัติ",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "วิธีเปิด",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอป\n2. หาสวิตช์ที่เกี่ยวกับความปลอดภัยของการแก้ไขข้อบกพร่อง USB หรือการตรวจสอบสิทธิ์ แล้วเปิด เช่น:\n• Xiaomi: “การแก้ไขข้อบกพร่อง USB (การตั้งค่าความปลอดภัย)”\n• OPPO / realme: “ปิดใช้งานการตรวจสอบสิทธิ์”\n3. ตรวจสอบว่าการแก้ไขข้อบกพร่องแบบไร้สายเปิดอยู่ แล้วกลับมาแตะลองอีกครั้ง",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "เปิดตัวเลือกสำหรับนักพัฒนาแอป",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "ลองอีกครั้ง",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "ข้าม (เปิดการแก้ไขข้อบกพร่องแบบไร้สายเองทุกครั้งที่อัปเดต)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "เรียบร้อยแล้ว",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "จากนี้ไป การอัปเดตจะอ่านล็อกให้อัตโนมัติ ไม่ต้องตั้งค่าอีก",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "เมื่อแตะอัปเดต ให้เปิดการแก้ไขข้อบกพร่องแบบไร้สายเมื่อระบบขอ",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "กำลังกลับไปเริ่มอัปเดต...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

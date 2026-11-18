@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "Wireless debugging is still on. You can turn it off in system settings.",
   "progressCredentialReady": "Got the Wish History URL. Fetching your Wish History starts when you return to this app.",
   "actionRedetectGame": "Check again",
-  "updateOpenPlayStore": "Open Google Play"
+  "updateOpenPlayStore": "Open Google Play",
+  "actionSetupLogAccess": "Set up",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Pair again",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Read System Log",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Why is this needed?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android doesn't let apps read other apps' system logs. This app uses the built-in Wireless debugging feature to read the Wish History URL from Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "What this app does",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Reads only the Wish History URL from Genshin Impact\n• Disconnects right after reading, and turns wireless debugging off if this app turned it on\n• Grants itself permission to turn wireless debugging on and off, so you don't need to set it up again\n• You can remove this at any time in Settings",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requirements",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 or later, Wi‑Fi, notifications allowed",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Start setup",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Enter the URL manually instead",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Pair Wireless Debugging",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Turn on Developer options",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Open the About page in system Settings (for example \"About phone\" or \"About tablet\")\n2. Find \"Build number\" and tap it 7 times\n3. When you see \"You are now a developer\", come back to this app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "Open About page",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Developer options are on",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Allow notifications",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "You'll enter the pairing code in a notification, so allow this app to show notifications.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Allow notifications",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Open notification settings",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notifications allowed",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Pair",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Tap the button below to open Wireless debugging\n2. Turn on \"Use wireless debugging\" and tap \"Pair device with pairing code\"\n3. Swipe down from the top of the screen and, in this app's notification, enter the 6-digit pairing code shown on the Wireless debugging pairing screen",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Waiting for you to enter the pairing code in the notification...\nEnter it while the pairing screen in Wireless debugging is still open.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Open Wireless debugging again",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Pairing...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Paired, one more step",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Your device has an extra security restriction. Turn on one more option so this app can turn wireless debugging on and off automatically.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "How to turn it on",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Open Developer options\n2. Find the switch related to USB debugging security or permission monitoring and turn it on, for example:\n• Xiaomi: \"USB debugging (Security settings)\"\n• OPPO / realme: \"Disable permission monitoring\"\n3. Make sure wireless debugging is on, then come back and tap Retry",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Open Developer options",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Retry",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Skip (turn on wireless debugging yourself each update)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "All set",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "From now on, Update reads the log automatically. No more setup needed.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "When you tap Update, turn on wireless debugging when asked.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Returning and starting the update...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Analizador de Gacha de Genshin Impact</string>
+    <string name="pairing_channel">Vinculación de depuración inalámbrica</string>
+    <string name="pairing_searching_title">Buscando el servicio de vinculación</string>
+    <string name="pairing_searching_text">En Depuración inalámbrica, toca \"Vincular dispositivo con código de vinculación\"</string>
+    <string name="pairing_found_title">Introduce el código de vinculación</string>
+    <string name="pairing_found_text">Escribe el código de 6 dígitos que aparece en la pantalla de vinculación</string>
+    <string name="pairing_input_label">Código de vinculación</string>
+    <string name="pairing_action_pair">Vincular</string>
+    <string name="pairing_action_stop">Detener</string>
+    <string name="pairing_in_progress">Vinculando...</string>
+    <string name="pairing_success_title">Vinculación correcta</string>
+    <string name="pairing_success_text">Toca aquí para volver a la app</string>
+    <string name="pairing_failed_text">No se pudo vincular. Comprueba el código e introdúcelo de nuevo</string>
+    <string name="pairing_no_app_text">No se pudo vincular. Vuelve a la app e inténtalo de nuevo</string>
+    <string name="pairing_timeout_title">Se agotó el tiempo de vinculación</string>
+    <string name="pairing_timeout_text">Toca aquí para empezar de nuevo</string>
 </resources>

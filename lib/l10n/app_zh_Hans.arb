@@ -1038,5 +1038,153 @@
   "progressWirelessLeftOnHint": "无线调试仍是开启的，可以到系统设置自行关闭。",
   "progressCredentialReady": "已获取祈愿记录网址，回到本 App 后就会开始抓取祈愿记录。",
   "actionRedetectGame": "重新检测",
-  "updateOpenPlayStore": "前往 Google Play"
+  "updateOpenPlayStore": "前往 Google Play",
+  "actionSetupLogAccess": "设置读取方式",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "重新配对",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "读取系统记录",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "为什么需要这个设置？",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android 不允许 App 直接读取其他 App 的系统记录。本 App 会通过系统内置的「无线调试」，读取原神的祈愿记录网址。",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "本 App 会做什么",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "・只读取原神的祈愿记录网址\n・读完立刻断开连接；无线调试如果是本 App 打开的，会一并关闭\n・授权自己开关无线调试，之后不用再设置\n・可以随时在设置页解除",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "使用条件",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 以上、连上 Wi‑Fi、允许通知",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "开始设置",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "改用手动输入网址",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "配对无线调试",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. 开启开发者选项",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. 打开系统「设置」的「关于」页面（例如「关于手机」或「关于平板电脑」）\n2. 找到「版本号」，连点 7 次\n3. 看到「您已处于开发者模式」后回到本 App",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "打开「关于」页面",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. 开发者选项已开启",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. 允许通知",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "配对码要从通知输入，请允许本 App 显示通知。",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "允许通知",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "前往通知设置",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. 已允许通知",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. 配对",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. 点下方按钮，会跳到「无线调试」\n2. 打开「使用无线调试」，点「使用配对码配对设备」\n3. 从屏幕顶端往下拉，在本 App 的通知中，输入「无线调试」配对画面上显示的 6 位数配对码",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "等待你在通知输入配对码...\n配对码要在「无线调试」的配对画面开着时输入。",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "再次前往无线调试",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "配对中...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "配对成功，但还差一步",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "你的设备有额外的安全性限制，需要再开启一个选项，本 App 才能自动开关无线调试。",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "开启方式",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. 到「开发者选项」\n2. 找到与 USB 调试安全性或权限监控有关的开关并打开，例如：\n・小米：「USB 调试（安全设置）」\n・OPPO／realme：「禁止权限监控」\n3. 确认无线调试是开着的，再回到本 App 点「重试」",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "前往开发者选项",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "重试",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "跳过（每次更新时手动开启无线调试）",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "设置完成",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "之后点「更新数据」都会自动读取，不用再设置。",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "之后点「更新数据」时，请依提示开启无线调试。",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "即将返回并开始更新...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

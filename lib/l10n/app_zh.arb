@@ -865,5 +865,153 @@
   "actionRedetectGame": "重新偵測",
   "@actionRedetectGame": {"description": "Button that checks again whether Genshin Impact is installed"},
   "updateOpenPlayStore": "前往 Google Play",
-  "@updateOpenPlayStore": {"description": "Button that opens the Genshin Impact page on Google Play"}
+  "@updateOpenPlayStore": {"description": "Button that opens the Genshin Impact page on Google Play"},
+  "actionSetupLogAccess": "設定讀取方式",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "重新配對",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "讀取系統記錄",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "為什麼需要這個設定？",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android 不允許 App 直接讀取其他 App 的系統記錄。本 App 會透過系統內建的「無線偵錯」，讀取原神的祈願紀錄網址。",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "本 App 會做什麼",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "・只讀取原神的祈願紀錄網址\n・讀完立刻中斷連線；無線偵錯若是本 App 打開的，會一併關閉\n・授權自己開關無線偵錯，之後不用再設定\n・可以隨時在設定頁解除",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "使用條件",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 以上、連上 Wi‑Fi、允許通知",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "開始設定",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "改用手動輸入網址",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "配對無線偵錯",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. 開啟開發人員選項",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. 開啟系統「設定」的「關於」頁面（例如「關於手機」或「關於平板電腦」）\n2. 找到「版本號碼」，連點 7 次\n3. 看到「你已成為開發人員」後回到本 App",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "開啟「關於」頁面",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. 開發人員選項已開啟",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. 允許通知",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "配對碼要從通知輸入，請允許本 App 顯示通知。",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "允許通知",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "前往通知設定",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. 已允許通知",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. 配對",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. 按下方按鈕，會跳到「無線偵錯」\n2. 打開「使用無線偵錯功能」，點「使用配對碼配對裝置」\n3. 從螢幕頂端往下拉，在本 App 的通知中，輸入「無線偵錯」配對畫面上顯示的 6 位數配對碼",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "等待你在通知輸入配對碼...\n配對碼要在「無線偵錯」的配對畫面開著時輸入。",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "再次前往無線偵錯",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "配對中...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "配對成功，但還差一步",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "你的裝置有額外的安全性限制，需要再開啟一個選項，本 App 才能自動開關無線偵錯。",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "開啟方式",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. 到「開發人員選項」\n2. 找到與 USB 偵錯安全性或權限監控有關的開關並打開，例如：\n・小米：「USB 偵錯（安全性設定）」\n・OPPO／realme：「停用權限監控」\n3. 確認無線偵錯是開著的，再回到本 App 按「重試」",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "前往開發人員選項",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "重試",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "略過（每次更新時手動開啟無線偵錯）",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "設定完成",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "之後按「更新資料」都會自動讀取，不用再設定。",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "之後按「更新資料」時，請依提示開啟無線偵錯。",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "即將返回並開始更新...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

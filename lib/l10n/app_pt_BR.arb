@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "A depuração por Wi‑Fi continua ativada. Você pode desativá-la nas configurações do sistema.",
   "progressCredentialReady": "URL do Histórico de Orações obtido. A busca do seu Histórico de Orações começa quando você voltar para este app.",
   "actionRedetectGame": "Verificar de novo",
-  "updateOpenPlayStore": "Abrir Google Play"
+  "updateOpenPlayStore": "Abrir Google Play",
+  "actionSetupLogAccess": "Configurar",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Parear de novo",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Ler o registro do sistema",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Por que isso é necessário?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "O Android não permite que apps leiam diretamente o registro do sistema de outros apps. Este app usa o recurso nativo de depuração por Wi‑Fi para ler o URL do Histórico de Orações do Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "O que este app faz",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Lê apenas o URL do Histórico de Orações do Genshin Impact\n• Desconecta logo após a leitura e desativa a depuração por Wi‑Fi se foi este app que a ativou\n• Concede a si mesmo permissão para ativar e desativar a depuração por Wi‑Fi, para você não precisar configurar de novo\n• Você pode remover isso a qualquer momento nas Configurações",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requisitos",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ou mais recente, Wi‑Fi e notificações permitidas",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Iniciar configuração",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Inserir o URL manualmente",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Parear depuração por Wi‑Fi",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Ative as Opções do desenvolvedor",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Abra a página Sobre nas Configurações do sistema (por exemplo, \"Sobre o telefone\" ou \"Sobre o tablet\")\n2. Encontre \"Número da versão\" e toque nele 7 vezes\n3. Quando aparecer \"Você agora é um desenvolvedor\", volte para este app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "Abrir página Sobre",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Opções do desenvolvedor ativadas",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Permita as notificações",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Você vai digitar o código de pareamento em uma notificação, então permita que este app mostre notificações.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Permitir notificações",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Abrir configurações de notificação",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notificações permitidas",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Pareie",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Toque no botão abaixo para abrir a Depuração por Wi‑Fi\n2. Ative \"Usar a depuração por Wi‑Fi\" e toque em \"Parear o dispositivo com um código de pareamento\"\n3. Deslize para baixo a partir do topo da tela e, na notificação deste app, digite o código de pareamento de 6 dígitos mostrado na tela de pareamento da Depuração por Wi‑Fi",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Aguardando você digitar o código de pareamento na notificação...\nDigite enquanto a tela de pareamento da Depuração por Wi‑Fi ainda estiver aberta.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Abrir a Depuração por Wi‑Fi de novo",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Pareando...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Pareado, falta só mais um passo",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Seu dispositivo tem uma restrição de segurança extra. Ative mais uma opção para que este app possa ativar e desativar a depuração por Wi‑Fi automaticamente.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Como ativar",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Abra as Opções do desenvolvedor\n2. Encontre a chave relacionada à segurança da depuração USB ou ao monitoramento de permissões e ative-a, por exemplo:\n• Xiaomi: \"Depuração USB (configurações de segurança)\"\n• OPPO / realme: \"Desativar monitoramento de permissões\"\n3. Confira se a depuração por Wi‑Fi está ativada, volte e toque em Tentar de novo",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Abrir Opções do desenvolvedor",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Tentar de novo",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Pular (ativar a depuração por Wi‑Fi manualmente a cada atualização)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Tudo pronto",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "A partir de agora, Atualizar lê o log automaticamente. Nenhuma configuração extra é necessária.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Quando tocar em Atualizar, ative a depuração por Wi‑Fi quando for solicitado.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Voltando e iniciando a atualização...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

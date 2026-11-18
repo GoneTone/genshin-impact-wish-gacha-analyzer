@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">การจับคู่สำหรับการแก้ไขข้อบกพร่องแบบไร้สาย</string>
+    <string name="pairing_searching_title">กำลังค้นหาบริการจับคู่</string>
+    <string name="pairing_searching_text">ในการแก้ไขข้อบกพร่องแบบไร้สาย ให้แตะ “จับคู่อุปกรณ์ด้วยรหัสการจับคู่”</string>
+    <string name="pairing_found_title">ป้อนรหัสการจับคู่</string>
+    <string name="pairing_found_text">พิมพ์รหัส 6 หลักที่แสดงบนหน้าจอการจับคู่</string>
+    <string name="pairing_input_label">รหัสการจับคู่</string>
+    <string name="pairing_action_pair">จับคู่</string>
+    <string name="pairing_action_stop">หยุด</string>
+    <string name="pairing_in_progress">กำลังจับคู่...</string>
+    <string name="pairing_success_title">จับคู่สำเร็จ</string>
+    <string name="pairing_success_text">แตะที่นี่เพื่อกลับไปยังแอป</string>
+    <string name="pairing_failed_text">จับคู่ไม่สำเร็จ ตรวจสอบรหัสแล้วป้อนอีกครั้ง</string>
+    <string name="pairing_no_app_text">จับคู่ไม่สำเร็จ กลับไปที่แอปแล้วลองอีกครั้ง</string>
+    <string name="pairing_timeout_title">หมดเวลาการจับคู่</string>
+    <string name="pairing_timeout_text">แตะที่นี่เพื่อเริ่มใหม่</string>
 </resources>

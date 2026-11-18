@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "Gỡ lỗi không dây vẫn đang bật. Bạn có thể tắt trong cài đặt hệ thống.",
   "progressCredentialReady": "Đã lấy được URL Lịch Sử Cầu Nguyện. Việc tải Lịch Sử Cầu Nguyện sẽ bắt đầu khi bạn quay lại ứng dụng này.",
   "actionRedetectGame": "Kiểm tra lại",
-  "updateOpenPlayStore": "Mở Google Play"
+  "updateOpenPlayStore": "Mở Google Play",
+  "actionSetupLogAccess": "Thiết lập",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Ghép nối lại",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Đọc nhật ký hệ thống",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Vì sao cần bước này?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android không cho ứng dụng đọc trực tiếp nhật ký hệ thống của ứng dụng khác. Ứng dụng này dùng tính năng Gỡ lỗi không dây có sẵn để đọc URL Lịch Sử Cầu Nguyện của Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Ứng dụng này sẽ làm gì",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Chỉ đọc URL Lịch Sử Cầu Nguyện của Genshin Impact\n• Ngắt kết nối ngay sau khi đọc, và tắt gỡ lỗi không dây nếu chính ứng dụng này đã bật\n• Tự cấp quyền bật/tắt gỡ lỗi không dây để bạn không phải thiết lập lại\n• Bạn có thể gỡ bỏ bất cứ lúc nào trong Cài đặt",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Yêu cầu",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 trở lên, Wi‑Fi, cho phép thông báo",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Bắt đầu thiết lập",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Nhập URL thủ công thay thế",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Ghép nối gỡ lỗi không dây",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Bật Tùy chọn cho nhà phát triển",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Mở trang Giới thiệu trong Cài đặt hệ thống (ví dụ “Giới thiệu về điện thoại” hoặc “Giới thiệu về máy tính bảng”)\n2. Tìm “Số bản dựng” và nhấn 7 lần\n3. Khi thấy thông báo “Bạn đã là nhà phát triển”, hãy quay lại ứng dụng này",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "Mở trang Giới thiệu",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Tùy chọn cho nhà phát triển đã bật",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Cho phép thông báo",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Bạn sẽ nhập mã ghép nối trong thông báo, vì vậy hãy cho phép ứng dụng này hiển thị thông báo.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Cho phép thông báo",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Mở cài đặt thông báo",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Đã cho phép thông báo",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Ghép nối",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Nhấn nút bên dưới để mở Gỡ lỗi không dây\n2. Bật “Sử dụng tính năng gỡ lỗi không dây” và nhấn “Ghép nối thiết bị bằng mã ghép nối”\n3. Vuốt xuống từ đầu màn hình và nhập mã ghép nối 6 chữ số hiển thị trên màn hình ghép nối của Gỡ lỗi không dây vào thông báo của ứng dụng này",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Đang chờ bạn nhập mã ghép nối trong thông báo...\nHãy nhập khi màn hình ghép nối trong Gỡ lỗi không dây vẫn đang mở.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Mở lại Gỡ lỗi không dây",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Đang ghép nối...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Đã ghép nối, còn một bước nữa",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Thiết bị của bạn có thêm một hạn chế bảo mật. Hãy bật thêm một tùy chọn để ứng dụng này có thể tự động bật/tắt gỡ lỗi không dây.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Cách bật",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Mở Tùy chọn cho nhà phát triển\n2. Tìm công tắc liên quan đến bảo mật gỡ lỗi USB hoặc giám sát quyền và bật lên, ví dụ:\n• Xiaomi: “Gỡ lỗi USB (Cài đặt bảo mật)”\n• OPPO / realme: “Tắt giám sát quyền”\n3. Đảm bảo gỡ lỗi không dây đang bật, rồi quay lại và nhấn Thử lại",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Mở Tùy chọn cho nhà phát triển",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Thử lại",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Bỏ qua (tự bật gỡ lỗi không dây mỗi lần cập nhật)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Hoàn tất",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Từ giờ, Cập nhật sẽ tự động đọc log. Không cần thiết lập thêm.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Khi nhấn Cập nhật, hãy bật gỡ lỗi không dây khi được nhắc.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Đang quay lại và bắt đầu cập nhật...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

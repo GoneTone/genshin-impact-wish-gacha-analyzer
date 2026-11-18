@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "Le débogage sans fil est toujours activé. Vous pouvez le désactiver dans les paramètres du système.",
   "progressCredentialReady": "URL de l'historique des vœux obtenue. La récupération de votre historique des vœux commencera à votre retour dans cette application.",
   "actionRedetectGame": "Vérifier à nouveau",
-  "updateOpenPlayStore": "Ouvrir Google Play"
+  "updateOpenPlayStore": "Ouvrir Google Play",
+  "actionSetupLogAccess": "Configurer",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Associer à nouveau",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Lire le journal système",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Pourquoi est-ce nécessaire ?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android ne permet pas aux applications de lire directement le journal système d'autres applications. Cette application utilise la fonction intégrée de débogage sans fil pour lire l'URL de l'historique des vœux de Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Ce que fait cette application",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Lit uniquement l'URL de l'historique des vœux de Genshin Impact\n• Se déconnecte juste après la lecture, et désactive le débogage sans fil si c'est cette application qui l'a activé\n• S'accorde l'autorisation d'activer et de désactiver le débogage sans fil, pour que vous n'ayez pas à refaire la configuration\n• Vous pouvez retirer cette autorisation à tout moment dans les Paramètres",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Prérequis",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ou version ultérieure, Wi‑Fi, notifications autorisées",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Commencer la configuration",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Saisir l'URL manuellement à la place",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Associer le débogage sans fil",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Activer les Options pour les développeurs",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Ouvrez la page À propos dans les Paramètres du système (par exemple « À propos du téléphone » ou « À propos de la tablette »)\n2. Trouvez « Numéro de build » et appuyez dessus 7 fois\n3. Lorsque « Vous êtes maintenant développeur ! » s'affiche, revenez à cette application",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "Ouvrir la page À propos",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Options pour les développeurs activées",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Autoriser les notifications",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Vous saisirez le code d'association dans une notification ; autorisez donc cette application à afficher des notifications.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Autoriser les notifications",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Ouvrir les paramètres de notification",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notifications autorisées",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Associer",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Appuyez sur le bouton ci-dessous pour ouvrir Débogage sans fil\n2. Activez « Utiliser le débogage sans fil » et appuyez sur « Associer l'appareil avec un code d'association »\n3. Balayez l'écran vers le bas depuis le haut et, dans la notification de cette application, saisissez le code d'association à 6 chiffres affiché sur l'écran d'association de Débogage sans fil",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "En attente de la saisie du code d'association dans la notification...\nSaisissez-le pendant que l'écran d'association du débogage sans fil est encore ouvert.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Rouvrir Débogage sans fil",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Association...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Associé, encore une étape",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Votre appareil applique une restriction de sécurité supplémentaire. Activez une option de plus pour que cette application puisse activer et désactiver automatiquement le débogage sans fil.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Comment l'activer",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Ouvrez les Options pour les développeurs\n2. Trouvez l'option liée à la sécurité du débogage USB ou à la surveillance des autorisations et activez-la, par exemple :\n• Xiaomi : « Débogage USB (paramètres de sécurité) »\n• OPPO / realme : « Désactiver la surveillance des autorisations »\n3. Vérifiez que le débogage sans fil est activé, puis revenez et appuyez sur Réessayer",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Ouvrir les Options pour les développeurs",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Réessayer",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Ignorer (activer vous-même le débogage sans fil à chaque mise à jour)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Tout est prêt",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Désormais, Mettre à jour lit le journal automatiquement. Aucune autre configuration n'est nécessaire.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Lorsque vous appuyez sur Mettre à jour, activez le débogage sans fil quand cela vous est demandé.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Retour et lancement de la mise à jour...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

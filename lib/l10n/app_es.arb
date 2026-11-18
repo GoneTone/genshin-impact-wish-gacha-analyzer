@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "La depuración inalámbrica sigue activada. Puedes desactivarla en los ajustes del sistema.",
   "progressCredentialReady": "URL del historial de Gachapón obtenida. La descarga del historial de Gachapón empezará cuando vuelvas a esta app.",
   "actionRedetectGame": "Volver a comprobar",
-  "updateOpenPlayStore": "Abrir Google Play"
+  "updateOpenPlayStore": "Abrir Google Play",
+  "actionSetupLogAccess": "Configurar",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Volver a vincular",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Leer el registro del sistema",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "¿Por qué es necesario?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android no permite que las apps lean directamente el registro del sistema de otras apps. Esta app usa la función integrada de depuración inalámbrica para leer la URL del historial de Gachapón de Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Qué hace esta app",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Solo lee la URL del historial de Gachapón de Genshin Impact\n• Se desconecta justo después de leerlo y desactiva la depuración inalámbrica si fue esta app quien la activó\n• Se concede a sí misma permiso para activar y desactivar la depuración inalámbrica, para que no tengas que volver a configurarla\n• Puedes quitarlo en cualquier momento en Ajustes",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requisitos",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 o posterior, Wi‑Fi y notificaciones permitidas",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Empezar configuración",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Introducir la URL manualmente",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Vincular depuración inalámbrica",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Activa las Opciones para desarrolladores",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Abre la página de información en los Ajustes del sistema (por ejemplo, \"Información del teléfono\" o \"Información del tablet\")\n2. Busca \"Número de compilación\" y tócalo 7 veces\n3. Cuando veas \"Ahora eres desarrollador\", vuelve a esta app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "Abrir información del dispositivo",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Opciones para desarrolladores activadas",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Permite las notificaciones",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Introducirás el código de vinculación en una notificación, así que permite que esta app muestre notificaciones.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Permitir notificaciones",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Abrir ajustes de notificaciones",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notificaciones permitidas",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Vincula",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Toca el botón de abajo para abrir Depuración inalámbrica\n2. Activa \"Usar depuración inalámbrica\" y toca \"Vincular dispositivo con código de vinculación\"\n3. Desliza hacia abajo desde la parte superior de la pantalla y, en la notificación de esta app, introduce el código de vinculación de 6 dígitos que aparece en la pantalla de vinculación de Depuración inalámbrica",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Esperando a que introduzcas el código de vinculación en la notificación...\nIntrodúcelo mientras la pantalla de vinculación de Depuración inalámbrica siga abierta.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Volver a abrir Depuración inalámbrica",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Vinculando...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Vinculado, falta un paso",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Tu dispositivo tiene una restricción de seguridad adicional. Activa una opción más para que esta app pueda activar y desactivar la depuración inalámbrica automáticamente.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Cómo activarla",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Abre las Opciones para desarrolladores\n2. Busca el interruptor relacionado con la seguridad de la depuración USB o la supervisión de permisos y actívalo, por ejemplo:\n• Xiaomi: \"Depuración USB (ajustes de seguridad)\"\n• OPPO / realme: \"Desactivar supervisión de permisos\"\n3. Asegúrate de que la depuración inalámbrica esté activada, vuelve y toca Reintentar",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Abrir Opciones para desarrolladores",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Reintentar",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Omitir (activa tú la depuración inalámbrica en cada actualización)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Todo listo",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "A partir de ahora, Actualizar leerá el registro automáticamente. No hace falta configurar nada más.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Cuando toques Actualizar, activa la depuración inalámbrica cuando se te pida.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Volviendo e iniciando la actualización...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

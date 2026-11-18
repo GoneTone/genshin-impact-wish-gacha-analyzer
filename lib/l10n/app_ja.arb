@@ -1042,5 +1042,153 @@
   "progressWirelessLeftOnHint": "ワイヤレスデバッグはオンのままです。システム設定でオフにできます。",
   "progressCredentialReady": "祈願履歴の URL を取得しました。アプリに戻ると祈願履歴の取得を開始します。",
   "actionRedetectGame": "再検出",
-  "updateOpenPlayStore": "Google Play を開く"
+  "updateOpenPlayStore": "Google Play を開く",
+  "actionSetupLogAccess": "読み取り方法を設定",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "もう一度ペア設定",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "システムログの読み取り",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "この設定が必要な理由",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android では、アプリが他のアプリのシステムログを直接読むことはできません。このアプリはシステム標準の「ワイヤレスデバッグ」を使って、原神の祈願履歴の URL を読み取ります。",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "このアプリが行うこと",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "・原神の祈願履歴の URL だけを読み取ります\n・読み取り後すぐに切断します（ワイヤレスデバッグをこのアプリがオンにした場合はオフに戻します）\n・ワイヤレスデバッグのオン／オフを自分で行う権限を付与し、次回からは設定不要です\n・設定画面からいつでも解除できます",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "利用条件",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 以上、Wi‑Fi 接続、通知の許可",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "設定を開始",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "URL を手動で入力する",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "ワイヤレスデバッグのペア設定",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. 開発者向けオプションをオンにする",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. システムの「設定」で「デバイス情報」などのページを開く\n2. 「ビルド番号」を 7 回タップ\n3. 「これでデベロッパーになりました」と表示されたらアプリに戻る",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupOpenAbout": "「デバイス情報」を開く",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. 開発者向けオプションはオンです",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. 通知を許可",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "ペア設定コードは通知から入力するため、このアプリの通知を許可してください。",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "通知を許可",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "通知設定を開く",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. 通知は許可されています",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. ペア設定",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. 下のボタンで「ワイヤレスデバッグ」を開く\n2. 「ワイヤレスデバッグを使用」をオンにして「ペア設定コードによるデバイスのペア設定」をタップ\n3. 画面上部から下にスワイプし、このアプリの通知に、「ワイヤレスデバッグ」のペア設定画面に表示された 6 桁のペア設定コードを入力",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "通知からペア設定コードを入力してください...\nワイヤレスデバッグのペア設定画面を開いたまま入力してください。",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "もう一度ワイヤレスデバッグを開く",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "ペア設定中...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "ペア設定は成功、あと 1 ステップ",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "このデバイスには追加のセキュリティ制限があります。アプリがワイヤレスデバッグを自動でオン／オフできるよう、もう 1 つオプションをオンにしてください。",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "オンにする方法",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. 「開発者向けオプション」を開く\n2. USB デバッグのセキュリティや権限の監視に関するスイッチをオンにする。例：\n・Xiaomi：「USB デバッグ（セキュリティ設定）」\n・OPPO／realme：「権限の監視を無効にする」\n3. ワイヤレスデバッグがオンであることを確認し、アプリに戻って「再試行」をタップ",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "開発者向けオプションを開く",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "再試行",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "スキップ（更新のたびに手動でワイヤレスデバッグをオン）",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "設定完了",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "今後は「データ更新」を押すだけで自動的に読み取ります。再設定は不要です。",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "「データ更新」を押したら、案内に従ってワイヤレスデバッグをオンにしてください。",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "戻って更新を開始します...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  }
 }

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Analyse des vœux Genshin Impact</string>
+    <string name="pairing_channel">Association du débogage sans fil</string>
+    <string name="pairing_searching_title">Recherche du service d\'association</string>
+    <string name="pairing_searching_text">Dans Débogage sans fil, appuyez sur « Associer l\'appareil avec un code d\'association »</string>
+    <string name="pairing_found_title">Saisissez le code d\'association</string>
+    <string name="pairing_found_text">Saisissez le code à 6 chiffres affiché sur l\'écran d\'association</string>
+    <string name="pairing_input_label">Code d\'association</string>
+    <string name="pairing_action_pair">Associer</string>
+    <string name="pairing_action_stop">Arrêter</string>
+    <string name="pairing_in_progress">Association...</string>
+    <string name="pairing_success_title">Association réussie</string>
+    <string name="pairing_success_text">Appuyez ici pour revenir à l\'application</string>
+    <string name="pairing_failed_text">Échec de l\'association. Vérifiez le code et saisissez-le à nouveau</string>
+    <string name="pairing_no_app_text">Échec de l\'association. Revenez à l\'application et réessayez</string>
+    <string name="pairing_timeout_title">Délai d\'association dépassé</string>
+    <string name="pairing_timeout_text">Appuyez ici pour recommencer</string>
 </resources>

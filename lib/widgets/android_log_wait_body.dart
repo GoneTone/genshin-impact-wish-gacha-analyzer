@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/pages/log_access_setup_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/genshin_game_package.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
@@ -42,6 +43,35 @@ class _AndroidLogWaitBodyState extends ConsumerState<AndroidLogWaitBody> {
   void dispose() {
     _lifecycle.dispose();
     super.dispose();
+  }
+
+  /// 結束這次更新（等待對話框關閉）後開啟「讀取祈願紀錄網址」設定頁；配對完成後設定頁會重新開始更新。
+  Future<void> _openSetup() async {
+    final nav = Navigator.of(context, rootNavigator: true);
+    final container = ProviderScope.containerOf(context);
+    await ref.read(gachaRepositoryProvider.notifier).cancelCapture();
+    await _untilIdle(container);
+    // 等待對話框是在 progress 變成 null 時由它自己的 listener 關閉，晚一個事件迴圈再推頁面，
+    // 以免被它的 popUntil 一起關掉。
+    await Future<void>.delayed(Duration.zero);
+    if (nav.mounted) unawaited(openLogAccessSetup(nav.context));
+  }
+
+  /// 等到沒有進行中的更新（最多 5 秒）。
+  static Future<void> _untilIdle(ProviderContainer container) async {
+    if (container.read(gachaRepositoryProvider).progress == null) return;
+    final idle = Completer<void>();
+    final sub = container.listen(
+      gachaRepositoryProvider.select((s) => s.progress),
+      (_, next) {
+        if (next == null && !idle.isCompleted) idle.complete();
+      },
+    );
+    try {
+      await idle.future.timeout(const Duration(seconds: 5), onTimeout: () {});
+    } finally {
+      sub.close();
+    }
   }
 
   /// 沒有自動讀取方式時請 repository 重新判斷。
@@ -100,6 +130,14 @@ class _AndroidLogWaitBodyState extends ConsumerState<AndroidLogWaitBody> {
           ],
           const SizedBox(height: AppSpacing.s),
           ?switch (reason) {
+            LogAccessUnavailable.notPaired => FilledButton(
+              onPressed: _openSetup,
+              child: Text(l.actionSetupLogAccess),
+            ),
+            LogAccessUnavailable.adbConnectFailed => FilledButton(
+              onPressed: _openSetup,
+              child: Text(l.actionRepair),
+            ),
             LogAccessUnavailable.wirelessDebuggingOff => FilledButton(
               onPressed: platform.openWirelessDebugging,
               child: Text(l.actionOpenWirelessDebugging),
