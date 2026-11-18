@@ -30,14 +30,15 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 
-/// 應用程式入口：初始化 Flutter、Rust bridge、視窗管理、log 服務，然後啟動 app。
+/// 應用程式入口：初始化 Flutter、Rust bridge（僅 Windows）、視窗管理、log 服務，然後啟動 app。
+///
+/// Rust 只提供 Windows 的攔截功能，其他平台不編譯也不載入 Rust 函式庫。
 Future<void> main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await RustLib.init();
-
       if (Platform.isWindows) {
+        await RustLib.init();
         await windowManager.ensureInitialized();
         await WindowStateKeeper.bootstrap();
       }
@@ -65,7 +66,9 @@ Future<void> main() async {
         return true;
       };
 
-      unawaited(_connectRustLogStream());
+      if (Platform.isWindows) {
+        unawaited(_connectRustLogStream());
+      }
 
       final pkgInfo = await PackageInfo.fromPlatform();
 
@@ -121,7 +124,7 @@ Future<void> main() async {
   );
 }
 
-/// 訂閱 Rust 端的 log stream，將每條 log 轉發到 Dart logging。
+/// 訂閱 Rust 端的 log stream，將每條 log 轉發到 Dart logging；只在 Windows 呼叫。
 Future<void> _connectRustLogStream() async {
   try {
     rust_logging.startLogStream().listen(
