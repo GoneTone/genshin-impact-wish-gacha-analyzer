@@ -257,7 +257,7 @@ void main() {
       }
     });
 
-    test('zh-Hant-TW (帶 scriptCode) → null，交給 Flutter 預設邏輯', () {
+    test('zh-Hant-TW (帶 scriptCode) → 裸 zh（繁體中文）', () {
       final result = localeListResolution([
         const Locale.fromSubtags(
           languageCode: 'zh',
@@ -265,8 +265,27 @@ void main() {
           countryCode: 'TW',
         ),
       ], supported);
-      expect(result, isNull);
+      expect(result, const Locale('zh'));
     });
+
+    test(
+      '[zh-Hant-TW, zh-Hans-CN]（Android 帶 scriptCode）→ 裸 zh，不被第二順位的簡中搶走',
+      () {
+        final result = localeListResolution([
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'TW',
+          ),
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hans',
+            countryCode: 'CN',
+          ),
+        ], supported);
+        expect(result, const Locale('zh'));
+      },
+    );
 
     test('en-US (其他語言) → null', () {
       expect(

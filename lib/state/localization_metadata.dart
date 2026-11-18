@@ -88,8 +88,9 @@ final localeMetadataProvider = Provider<Map<String, LocaleMetadata>>((ref) {
 /// `basicLocaleListResolution` 在中文 region-only locale（例如 OS 只回
 /// `zh-CN` / `zh-TW` 而沒帶 scriptCode）時無法區分繁簡的問題。
 ///
-/// 映射：CN / SG / MY → `zh-Hans`；TW / HK / MO → 裸 `zh`（繁體中文）。
-/// 對其他語言、或 Chinese 已帶 scriptCode 的情況一律回傳 null，
+/// 映射：CN / SG / MY → `zh-Hans`；TW / HK / MO → 裸 `zh`（繁體中文）；
+/// 帶 scriptCode 的 `zh-Hant-*`（Android 的格式）→ 裸 `zh`。
+/// 對其他語言、或 `zh-Hans-*` 一律回傳 null，
 /// 落到 Flutter 預設邏輯處理（會正確尊重使用者偏好順序）。
 ///
 /// 演算法概念：對每個偏好 locale，若 Flutter 預設能精確匹配
@@ -127,6 +128,13 @@ Locale? localeListResolution(
   for (final user in systemLocales) {
     if (hasExact(user) || hasLangScript(user) || hasLangCountry(user)) {
       return null;
+    }
+    // 繁中以裸 zh 提供（沒有 zh_Hant），Flutter 預設邏輯對 zh-Hant-* 只會記為「僅語言相符」
+    // 並繼續往下找，遇到後面的 zh-Hans-* 就會選成簡中（Android 會回帶 scriptCode 的 locale）。
+    if (user.languageCode == 'zh' && user.scriptCode == 'Hant') {
+      if (supportedLocales.contains(const Locale('zh'))) {
+        return const Locale('zh');
+      }
     }
     if (user.languageCode == 'zh' &&
         user.scriptCode == null &&
