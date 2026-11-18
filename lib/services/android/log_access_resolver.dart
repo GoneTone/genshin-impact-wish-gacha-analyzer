@@ -321,9 +321,13 @@ class LogAccessResolver {
     final tried = {...await discoverConnectPorts()};
     var connected = await client.connectAny(tried.toList());
     // 剛關又開時 adbd 換了連接埠但 NSD 還回報舊的；再切一次開關只會讓 NSD 一直落後一輪，所以保持開著等它跟上。
+    // 完全找不到連接埠不是這種情況，重試只會讓「連不上」更晚出現。
     for (
       var attempt = 1;
-      !connected && !isAborted() && attempt <= connectRetryAttempts;
+      !connected &&
+          tried.isNotEmpty &&
+          !isAborted() &&
+          attempt <= connectRetryAttempts;
       attempt++
     ) {
       await Future<void>.delayed(connectRetryDelay);

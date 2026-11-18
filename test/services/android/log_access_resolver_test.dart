@@ -177,6 +177,15 @@ void main() {
       expect(platform.adbWifiWrites, [true, false]);
     });
 
+    test('no port found at all fails without retrying', () async {
+      platform.ports = [];
+      final res = resolver();
+      final r = await res.resolve() as LogAccessBlocked;
+      expect(r.reason, LogAccessUnavailable.adbConnectFailed);
+      expect(platform.discoverCalls, res.discoverAttempts);
+      expect(platform.adbWifiWrites, [true, false]);
+    });
+
     test('abort during the retry wait stops further attempts', () {
       fakeAsync((async) {
         connectable = false;
