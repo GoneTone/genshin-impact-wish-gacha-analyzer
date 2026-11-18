@@ -166,7 +166,7 @@
   "progressDone": "更新完了",
   "progressFailed": "失敗",
   "progressOpenGameHint": "原神 → 祈願 → 履歴 を開いてください",
-  "progressFallbackHint": "（以前の認証が失効したため、再取得が必要です）",
+  "progressFallbackHint": "（以前の祈願履歴の URL が失効したため、再取得が必要です）",
   "progressNotDetectedLink": "祈願履歴を開いたのに、まったく反応しませんか？",
   "progressCaptureUnavailableHint": "傍受プログラムを起動できませんでした（証明書が拒否されたか、ポートが使用中の可能性があります）。ゲームのウェブキャッシュからのみ検出します。祈願履歴を開いてください。",
   "progressCaptureUnavailableNoGameDirHint": "傍受プログラムを起動できず（証明書が拒否されたか、ポートが使用中の可能性があります）、ゲームフォルダも見つかりませんでした。下の「ゲームフォルダを選択」を押して手動で指定してください。",

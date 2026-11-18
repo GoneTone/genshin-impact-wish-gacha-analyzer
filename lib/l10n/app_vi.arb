@@ -166,7 +166,7 @@
   "progressDone": "Cập nhật hoàn tất",
   "progressFailed": "Thất bại",
   "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
-  "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
+  "progressFallbackHint": "(URL Lịch Sử Cầu Nguyện trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
   "progressNotDetectedLink": "Đã mở Lịch Sử Cầu Nguyện nhưng không có phản hồi?",
   "progressCaptureUnavailableHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), nên chỉ phát hiện từ bộ nhớ đệm web của game. Vui lòng mở Lịch Sử Cầu Nguyện.",
   "progressCaptureUnavailableNoGameDirHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), và cũng không tìm thấy thư mục game. Hãy nhấn \"Chọn thư mục game\" bên dưới để chỉ định thủ công.",

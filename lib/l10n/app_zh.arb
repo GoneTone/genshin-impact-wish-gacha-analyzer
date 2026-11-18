@@ -135,7 +135,7 @@
   "progressDone": "更新完成",
   "progressFailed": "失敗",
   "progressOpenGameHint": "請開啟原神 → 卡池 → 歷史紀錄",
-  "progressFallbackHint": "（先前的認證已失效，需重新取得）",
+  "progressFallbackHint": "（先前的祈願紀錄網址已失效，需重新取得）",
   "progressNotDetectedLink": "已經開啟祈願歷史紀錄，卻一直沒有反應？",
   "@progressNotDetectedLink": {"description": "Link on the waiting dialog for users whose opened wish history is not being detected."},
   "progressCaptureUnavailableHint": "無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請開啟祈願歷史紀錄。",

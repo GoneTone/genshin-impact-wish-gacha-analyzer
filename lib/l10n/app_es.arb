@@ -166,7 +166,7 @@
   "progressDone": "Actualización completada",
   "progressFailed": "Fallido",
   "progressOpenGameHint": "Abre Genshin Impact → Deseos → Historial",
-  "progressFallbackHint": "(La autenticación anterior ha expirado, es necesario obtenerla de nuevo)",
+  "progressFallbackHint": "(La URL anterior del historial de Gachapón ha caducado, es necesario obtenerla de nuevo)",
   "progressNotDetectedLink": "¿Has abierto el Historial de Deseos pero no pasa nada?",
   "progressCaptureUnavailableHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado), así que solo se detecta desde la caché web del juego. Abre el Historial de Deseos.",
   "progressCaptureUnavailableNoGameDirHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado) y tampoco se encontró la carpeta del juego. Pulsa «Elegir carpeta del juego» abajo para indicarla manualmente.",

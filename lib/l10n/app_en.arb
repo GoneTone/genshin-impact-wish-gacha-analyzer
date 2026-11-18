@@ -166,7 +166,7 @@
   "progressDone": "Update complete",
   "progressFailed": "Failed",
   "progressOpenGameHint": "Open Genshin → Wishes → History",
-  "progressFallbackHint": "(Previous auth expired, it needs to be obtained again)",
+  "progressFallbackHint": "(The previous Wish History URL expired and needs to be obtained again)",
   "progressNotDetectedLink": "Opened the Wish History but nothing is happening?",
   "progressCaptureUnavailableHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), so detection falls back to the game's web cache only. Please open the Wish History.",
   "progressCaptureUnavailableNoGameDirHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), and the game folder was not found either. Press \"Choose game folder\" below to set it manually.",

@@ -166,7 +166,7 @@
   "progressDone": "Atualização concluída",
   "progressFailed": "Falhou",
   "progressOpenGameHint": "Abra Genshin Impact → Orações → Histórico",
-  "progressFallbackHint": "(A autenticação anterior expirou, é necessário obtê-la novamente)",
+  "progressFallbackHint": "(O URL anterior do Histórico de Orações expirou, é necessário obtê-lo novamente)",
   "progressNotDetectedLink": "Abriu o Histórico de Orações, mas nada acontece?",
   "progressCaptureUnavailableHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso); a detecção usará apenas o cache web do jogo. Abra o Histórico de Orações.",
   "progressCaptureUnavailableNoGameDirHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso) e a pasta do jogo também não foi encontrada. Clique em \"Escolher pasta do jogo\" abaixo para definir manualmente.",
