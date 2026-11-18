@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -235,6 +236,35 @@ void main() {
     expect((await SettingsStorage.load()).gameDir, isNull);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.containsKey('pref.gameDir'), isFalse);
+  });
+
+  test('setLogAccessMethod 寫入、清除 state 與 prefs', () async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    expect(container.read(settingsProvider).logAccessMethod, isNull);
+
+    await notifier.setLogAccessMethod(LogAccessMethod.wirelessDebugging);
+    expect(
+      container.read(settingsProvider).logAccessMethod,
+      LogAccessMethod.wirelessDebugging,
+    );
+    expect(
+      (await SettingsStorage.load()).logAccessMethod,
+      LogAccessMethod.wirelessDebugging,
+    );
+
+    await notifier.setLogAccessMethod(null);
+    expect((await SettingsStorage.load()).logAccessMethod, isNull);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey('pref.logAccessMethod'), isFalse);
+  });
+
+  test('unknown stored logAccessMethod loads as null', () async {
+    SharedPreferences.setMockInitialValues({'pref.logAccessMethod': 'shizuku'});
+    expect((await SettingsStorage.load()).logAccessMethod, isNull);
   });
 
   group('setMaskUidInUi', () {

@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
+
 /// 應用程式的外觀主題設定。
 enum AppThemeMode {
   /// 跟隨系統明暗模式。
@@ -88,6 +90,7 @@ class AppSettings {
     this.cloudLastSyncedAt,
     this.cloudPendingRemovals = const [],
     this.gameDir,
+    this.logAccessMethod,
   });
 
   /// 外觀主題。
@@ -132,6 +135,9 @@ class AppSettings {
   /// 使用者指定的遊戲資料夾（僅存本機，不參與雲端同步）；null 代表未設定。
   final String? gameDir;
 
+  /// Android 上次成功取得系統記錄的方式（僅存本機，不參與雲端同步）；null 代表尚無。
+  final LogAccessMethod? logAccessMethod;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -161,6 +167,8 @@ class AppSettings {
     List<String>? cloudPendingRemovals,
     String? gameDir,
     bool clearGameDir = false,
+    LogAccessMethod? logAccessMethod,
+    bool clearLogAccessMethod = false,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -186,6 +194,9 @@ class AppSettings {
         : (cloudLastSyncedAt ?? this.cloudLastSyncedAt),
     cloudPendingRemovals: cloudPendingRemovals ?? this.cloudPendingRemovals,
     gameDir: clearGameDir ? null : (gameDir ?? this.gameDir),
+    logAccessMethod: clearLogAccessMethod
+        ? null
+        : (logAccessMethod ?? this.logAccessMethod),
   );
 }
 
@@ -233,6 +244,9 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：遊戲資料夾路徑（僅本機）。
   static const _kGameDir = 'pref.gameDir';
 
+  /// SharedPreferences key：Android 讀取系統記錄的方式（僅本機）。
+  static const _kLogAccessMethod = 'pref.logAccessMethod';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -256,6 +270,9 @@ abstract final class SettingsStorage {
         prefs.getString(_kCloudPendingRemovals),
       ),
       gameDir: prefs.getString(_kGameDir),
+      logAccessMethod: LogAccessMethod.fromName(
+        prefs.getString(_kLogAccessMethod),
+      ),
     );
   }
 
@@ -304,6 +321,11 @@ abstract final class SettingsStorage {
       await prefs.remove(_kGameDir);
     } else {
       await prefs.setString(_kGameDir, s.gameDir!);
+    }
+    if (s.logAccessMethod == null) {
+      await prefs.remove(_kLogAccessMethod);
+    } else {
+      await prefs.setString(_kLogAccessMethod, s.logAccessMethod!.name);
     }
   }
 
