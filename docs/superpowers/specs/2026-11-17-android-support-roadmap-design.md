@@ -177,11 +177,12 @@ PR #101 合併後到 `795c59c` 的 commit，除了版本號 bump 與 Crowdin 自
 - **`app-ads.txt`**：商店頁「開發人員網站」要填有 `app-ads.txt` 的網域，不能填 GitHub（#50）。
 - **GitHub secrets**：上傳金鑰、服務帳戶、`ADMOB_APP_ID`、`ADMOB_NATIVE_UNIT_ID`（#35、#50）。
 - **Crowdin**：加入 `strings.xml` 這組設定，合併後補匯入既有翻譯（#49）。
+- **新的 App 圖示**（子專案 7）：目前的胡桃二創圖不能上架（繪師與 HoYoverse 兩層權利，Google Play 智慧財產權與冒用政策），要換成不含角色的原創圖示主檔（1024×1024）。由誰提供（使用者自備或請 Claude 產生草稿挑選）到子專案 7 再決定（使用者 2026-11-18）。
 
 ## 八、留給各子專案設計時決定的事
 
 - 子專案 0：`data_2` 的讀取與「新網址」判斷、遊戲資料夾的偵測順序（見 2.2 的待驗證項）。設計見 `2026-11-17-web-cache-credential-fallback-design.md`。
-- 子專案 1：原神版沒有鳴潮版的 `tool/generate_app_icons.dart`（筆記 #10、#38 都說「沿用既有工具」），要一起移植，並確認目前 Windows 圖示是怎麼產生的。
+- 子專案 1：設計見 `2026-11-18-android-platform-foundation-design.md`。圖示工具一起移植，暫時主檔取自 git 歷史的 1024 原圖，子專案 7 換成原創圖示。
 - 子專案 2：
   - logcat 的網址規則與起始時間的格式。網址的判斷要用子專案 0 的 `findGachaUrls`（`auth_appid=webview_gacha`），不要寫死 `e20190909gacha`：頌願頁的網址是 `e20250716gacha`。也要實機確認打開頌願頁時 logcat 寫的是什麼；
   - 監看程序的生命週期：用什麼辨識並結束它（例如記下 PID）、App 被系統殺掉或手機重開機後留下的程序與暫存檔怎麼清，以及無線偵錯被關掉時監看程序會不會一起被終止。若會，回到 App 時要用 `logcat -d` 補查一次；
