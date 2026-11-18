@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/concurrent_pool.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
@@ -21,8 +22,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
+import 'package:genshin_impact_wish_gacha_analyzer/state/app_foreground.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/logcat_url_watch.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
@@ -139,6 +143,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// 網頁快取 URL 來源 logger（與監看器、locator 同一棵樹）。
   static final _webCacheLog = Logger('gacha.webCache');
 
+  /// Android 讀取系統記錄流程的 logger。
+  static final _androidLog = Logger('capture.android');
+
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
 
@@ -229,9 +236,11 @@ class GachaRepository extends Notifier<GachaState> {
     state = state.copyWith(clearProgress: true);
   }
 
-  /// 啟動祈願資料更新，優先使用快取 URL，無快取則觸發 MITM 捕獲。
-  Future<void> update() async {
-    await _runUpdate(forceRecapture: false);
+  /// 啟動祈願資料更新，優先使用快取 URL，無快取則等待取得網址（電腦版攔截＋網頁快取，Android 讀系統記錄）。
+  ///
+  /// [afterPairing] 為 true 表示剛完成無線偵錯配對、且開始設定前無線偵錯沒開：這次用完一律關閉（玩家照引導打開的也算 App 開的）。
+  Future<void> update({bool afterPairing = false}) async {
+    await _runUpdate(forceRecapture: false, afterPairing: afterPairing);
   }
 
   /// 使用者手動貼上的祈願 API 網址：正在等待取得網址時直接完成這次等待，沒有進行中的更新時用它跑一次更新，正在抓資料時忽略。
@@ -256,10 +265,13 @@ class GachaRepository extends Notifier<GachaState> {
   Future<void> _runUpdate({
     required bool forceRecapture,
     String? manualUrl,
+    bool afterPairing = false,
   }) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
     _cancelTriggered = false;
+    _afterPairing = afterPairing;
+    _wirelessLeftOn = false;
     _log.info('update start, forceRecapture=$forceRecapture');
 
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
@@ -291,7 +303,7 @@ class GachaRepository extends Notifier<GachaState> {
       }
 
       if (capturedUrl == null) {
-        capturedUrl = await _runMitm(isFallback: false);
+        capturedUrl = await _acquireUrl(isFallback: false);
         if (!ref.mounted) return;
         if (capturedUrl == null) {
           _log.info('update aborted (user cancelled capture)');
@@ -309,12 +321,12 @@ class GachaRepository extends Notifier<GachaState> {
         );
       } on AuthExpiredException {
         if (!ref.mounted) return;
-        _log.warning('auth expired, falling back to MITM recapture');
+        _log.warning('auth expired, falling back to recapture');
         if (initialActiveUid != null) {
           await storage.deleteCapturedUrl(initialActiveUid);
           if (!ref.mounted) return;
         }
-        final newUrl = await _runMitm(isFallback: true);
+        final newUrl = await _acquireUrl(isFallback: true);
         if (!ref.mounted) return;
         if (newUrl == null) {
           state = state.copyWith(clearProgress: true);
@@ -360,6 +372,11 @@ class GachaRepository extends Notifier<GachaState> {
         _log.severe('update unexpected error', e, st);
         state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
+    } catch (e, st) {
+      // 取得網址時的錯誤（例如 Android 讀不到配對金鑰）原本會逃出 update()、讓等待畫面卡住，在此轉成更新失敗。
+      if (!ref.mounted) return;
+      _log.severe('update failed while acquiring url', e, st);
+      state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
     } finally {
       _activeCancellable?.client.close();
       _activeCancellable = null;
@@ -445,6 +462,210 @@ class GachaRepository extends Notifier<GachaState> {
       return null;
     }
     return url;
+  }
+
+  /// 依平台取得祈願 API 網址：Android 讀系統記錄，其他平台走攔截與網頁快取競速。null 代表使用者取消。
+  Future<String?> _acquireUrl({required bool isFallback}) async {
+    if (!ref.read(isAndroidProvider)) return _runMitm(isFallback: isFallback);
+    final url = await _runAndroidWait(isFallback: isFallback);
+    // 收尾（停監看、release）可能跨越事件迴圈，期間按下的取消仍要生效（同 _runMitm）。
+    if (url != null && _captureCancelRequested) {
+      _androidLog.info('user cancelled before fetch, discarding url');
+      return null;
+    }
+    return url;
+  }
+
+  /// Android 沒有自動讀取方式而等待時重新判斷（玩家打開了無線偵錯、授權了權限、切回 App 時呼叫）；其他時候為 no-op。
+  Future<void> retryLogAccess() async {
+    final retry = _logAccessRetry;
+    if (retry == null || retry.isCompleted) return;
+    _androidLog.info('log access retry requested');
+    retry.complete();
+  }
+
+  /// Android 的等待流程：決定讀取方式、監看系統記錄，等命中、手動輸入或取消。null 代表使用者取消。
+  ///
+  /// 沒有自動讀取方式時改顯示原因並只等手動輸入，[retryLogAccess] 可以重新判斷。手動輸入走 [_cacheHit]，
+  /// 取消走 [_captureBackstop]，與電腦版相同。結束時一律先停監看再 release（中斷連線、依規則關閉無線偵錯）。
+  Future<String?> _runAndroidWait({required bool isFallback}) async {
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: isFallback,
+        checkingLogAccess: true,
+      ),
+    );
+    final hit = Completer<String>();
+    _cacheHit = hit;
+    final cancelled = Completer<String?>();
+    _captureBackstop = cancelled;
+    _captureCancelRequested = false;
+    // 判斷途中玩家取消或手動送出就不等了（root 授權視窗最多等 60 秒）。
+    final stop = Future.any<String?>([hit.future, cancelled.future]);
+    LogAccessReady? ready;
+    Future<CaptureSession>? starting;
+    var watchStarted = false;
+    StreamSubscription<bool>? healthSub;
+    try {
+      // 只有第一次判斷可以跳權限詢問；回到前景的自動重試只檢查，否則永久拒絕時會一直跳去設定頁。
+      var requestPermissions = true;
+      var forceDisableAfterUse = _afterPairing;
+      while (true) {
+        final resolving = ref
+            .read(logAccessResolverProvider)
+            .resolve(
+              preferred: ref.read(settingsProvider).logAccessMethod,
+              forceDisableAfterUse: forceDisableAfterUse,
+              requestPermissions: requestPermissions,
+              abort: stop,
+            );
+        final first = await Future.any<Object?>([resolving, stop]);
+        if (first is! LogAccessOutcome) {
+          _androidLog.info('log access resolve abandoned');
+          // 晚到的結果也要 release，否則連線或打開的無線偵錯會留著。
+          unawaited(
+            resolving.then((late) async {
+              if (late is LogAccessReady) await late.release();
+            }),
+          );
+          if (first is String && !_captureCancelRequested) return first;
+          return null;
+        }
+        final outcome = first;
+        // 找遊戲時還沒試過讀取方式，權限詢問要留給真正試的那一次。
+        if (outcome is! LogAccessBlocked ||
+            outcome.reason != LogAccessUnavailable.gameNotInstalled) {
+          requestPermissions = false;
+        }
+        if (outcome is LogAccessReady) {
+          ready = outcome;
+          if (_captureCancelRequested || !ref.mounted) return null;
+          state = state.copyWith(
+            progress: WaitingForCapture(
+              isFallback: isFallback,
+              gamePackage: outcome.game,
+            ),
+          );
+          break;
+        }
+        if (_captureCancelRequested || !ref.mounted) return null;
+        if (hit.isCompleted) return await hit.future;
+        final blocked = outcome as LogAccessBlocked;
+        // 這次是 App 打開過無線偵錯；之後重試看到它開著，多半是系統（玩家按了允許）開的，用完要關回去。
+        if (blocked.enabledWireless) forceDisableAfterUse = true;
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            logAccessUnavailable: blocked.reason,
+            rootDenied: blocked.rootDenied,
+          ),
+        );
+        final retry = Completer<void>();
+        _logAccessRetry = retry;
+        final next = await Future.any<Object?>([
+          stop,
+          retry.future.then((_) => retry),
+        ]);
+        _logAccessRetry = null;
+        if (next is String) return next;
+        if (next == null || !ref.mounted) return null;
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            checkingLogAccess: true,
+          ),
+        );
+      }
+      await ref
+          .read(settingsProvider.notifier)
+          .setLogAccessMethod(ready.method);
+      final game = ready.game;
+      healthSub = ready.healthChanges.listen((healthy) {
+        final p = state.progress;
+        if (p is! WaitingForCapture || p.logConnectionLost == !healthy) return;
+        _androidLog.info('log connection healthy=$healthy');
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: p.isFallback,
+            logConnectionLost: !healthy,
+            gamePackage: game,
+          ),
+        );
+      });
+      final start = ref.read(logcatUrlWatchProvider).start(ready.exec);
+      starting = start;
+      // start 要跑完第一輪（取時間、清殘留、啟動監看程序）才回傳；這段期間的取消與手動輸入要立刻生效。
+      final session = await Future.any<Object?>([start, stop]);
+      if (session is! CaptureSession) {
+        _androidLog.info('logcat watch start abandoned');
+        if (session is String && !_captureCancelRequested) return session;
+        return null;
+      }
+      watchStarted = true;
+      if (_captureCancelRequested || !ref.mounted) return null;
+      unawaited(
+        session.result.then((u) {
+          if (u != null && !hit.isCompleted) hit.complete(u);
+        }),
+      );
+      final url = await stop;
+      if (url == null || _captureCancelRequested) return null;
+      _androidLog.info('url source=logcat or manual');
+      final foreground = ref.read(appForegroundProvider);
+      if (!foreground.isForeground) {
+        _androidLog.info('url ready, waiting for the app to return');
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            credentialReady: true,
+            gamePackage: game,
+          ),
+        );
+        final resumed = await Future.any([
+          foreground.untilForeground().then((_) => true),
+          cancelled.future.then((_) => false),
+        ]);
+        if (!resumed || _captureCancelRequested || !ref.mounted) return null;
+      }
+      return url;
+    } finally {
+      _cacheHit = null;
+      _captureBackstop = null;
+      _logAccessRetry = null;
+      await healthSub?.cancel();
+      final r = ready;
+      if (r != null) {
+        final teardown = _stopWatchThenRelease(starting, r);
+        if (starting != null && !watchStarted) {
+          // 監看還在跑第一輪：不讓取消卡在這裡，等它回來後照樣先停監看再 release。
+          unawaited(
+            teardown.then(
+              (_) {},
+              onError: (Object e) => _androidLog.warning(
+                'late logcat watch teardown failed error=${e.runtimeType}',
+              ),
+            ),
+          );
+        } else if (await teardown) {
+          _wirelessLeftOn = true;
+        }
+      }
+    }
+  }
+
+  /// 停掉 [starting] 的監看（還在啟動時等它回來）再 release [ready]；回傳無線偵錯是否因沒有權限關而留著開。
+  ///
+  /// 進行中的輪詢停下前就 release，讀取失敗會觸發重連、把剛關掉的無線偵錯又打開。
+  Future<bool> _stopWatchThenRelease(
+    Future<CaptureSession>? starting,
+    LogAccessReady ready,
+  ) async {
+    try {
+      await (await starting)?.cancel();
+    } catch (e) {
+      _androidLog.warning('logcat watch stop failed error=${e.runtimeType}');
+    }
+    return ready.release();
   }
 
   /// 快取勝出後收尾攔截：先給 [_cacheWinCaptureGrace] 寬限讓它自行結束，逾時才 `cancel()`；一律等 `result` 完成才返回。
@@ -728,9 +949,19 @@ class GachaRepository extends Notifier<GachaState> {
         failedBanners: failed,
         updatedAt: updatedAt,
         hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
+        wirelessDebuggingLeftOn: _wirelessLeftOn,
       ),
     );
   }
+
+  /// 本次更新是否剛完成配對、且設定前無線偵錯沒開（用完一律關閉無線偵錯）。
+  bool _afterPairing = false;
+
+  /// 本次更新讀完後無線偵錯是否因沒有權限而留著開（完成畫面要提示）。
+  bool _wirelessLeftOn = false;
+
+  /// Android 沒有自動讀取方式而等待時，[retryLogAccess] 會完成它以重新判斷。
+  Completer<void>? _logAccessRetry;
 
   /// 防 re-entrancy 旗標，update 進行中為 true。
   bool _isUpdating = false;
@@ -741,7 +972,7 @@ class GachaRepository extends Notifier<GachaState> {
   /// 目前 MITM 會話的取消函式。
   Future<void> Function()? _activeCancel;
 
-  /// 本次等待攔截期間的快取命中；不在等待時為 null。
+  /// 本次等待期間由其他來源先拿到的網址（網頁快取、手動輸入；Android 為系統記錄）；不在等待時為 null。
   Completer<String>? _cacheHit;
 
   /// 目前的網頁快取監看 session。
@@ -756,7 +987,7 @@ class GachaRepository extends Notifier<GachaState> {
   /// 目前 HTTP 請求的可取消 client，取消後關閉所有連線。
   CancellableHttpClient? _activeCancellable;
 
-  /// 取消／逾時時用來強制解開 [_runMitm] 各段等待（含只等快取、快取勝出後收尾）的 backstop completer。
+  /// 取消／逾時時用來強制解開 [_runMitm] 各段等待（含只等快取、快取勝出後收尾）與 [_runAndroidWait] 的 backstop completer。
   Completer<String?>? _captureBackstop;
 
   /// `cancelCapture` 等待 Rust MITM 拆除回應的上限（比 L1 的 2 秒寬鬆）。
@@ -775,7 +1006,8 @@ class GachaRepository extends Notifier<GachaState> {
   ///
   /// 有界：最多等 [_cancelTeardownTimeout] 讓 Rust 拆除回應；逾時則 severe-log、
   /// best-effort 還原系統 proxy，並一律完成 [_captureBackstop] 解開 [_runMitm] 的
-  /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。
+  /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。Android 沒有攔截，只完成 backstop，
+  /// 由 [_runAndroidWait] 收尾停監看與 release。
   Future<void> cancelCapture() async {
     _cancelTriggered = true;
     _captureCancelRequested = true;
