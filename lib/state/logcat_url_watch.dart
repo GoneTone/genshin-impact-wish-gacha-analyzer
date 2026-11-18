@@ -42,8 +42,12 @@ String logcatStartCommand(String since) {
   if (!_sincePattern.hasMatch(since)) {
     throw ArgumentError.value(since, 'since', 'not MM-DD hh:mm:ss.mmm');
   }
+  // 啟動的 shell 若在子程序 setsid() 完成前結束，串流關閉會連同原 process group 一起結束它；等到它自成 session（/proc/<pid>/stat 第 6 欄）才印 PID
   return "umask 077; setsid logcat -T '$since' -m 1 -e '$_rule' "
-      "> '$_tempFile' 2>/dev/null < /dev/null & echo \$!";
+      "> '$_tempFile' 2>/dev/null < /dev/null & "
+      "p=\$!; i=0; while [ \$i -lt 20 ] && "
+      "[ \"\$(cut -d' ' -f6 /proc/\$p/stat 2>/dev/null)\" != \"\$p\" ]; "
+      r'do sleep 0.05; i=$((i+1)); done; echo $p';
 }
 
 /// 讀暫存檔，監看程序 [pid] 還在時多印一行 [_aliveMarker]。

@@ -129,7 +129,10 @@ void main() {
         c,
         "umask 077; setsid logcat -T '11-18 10:00:00.000' -m 1 "
         "-e 'OnGetWebViewPageFinis[h],message:https://[^ ]*auth_appid=webview_gach[a]' "
-        "> '/data/local/tmp/tw.reh.genshin.gacha.url' 2>/dev/null < /dev/null & echo \$!",
+        "> '/data/local/tmp/tw.reh.genshin.gacha.url' 2>/dev/null < /dev/null & "
+        "p=\$!; i=0; while [ \$i -lt 20 ] && "
+        "[ \"\$(cut -d' ' -f6 /proc/\$p/stat 2>/dev/null)\" != \"\$p\" ]; "
+        r'do sleep 0.05; i=$((i+1)); done; echo $p',
       );
       expect(c, isNot(contains('OnGetWebViewPageFinish,')));
       expect(c, isNot(contains('webview_gacha')));
