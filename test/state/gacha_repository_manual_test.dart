@@ -14,6 +14,7 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 /// 手動輸入的祈願 API 網址。
 const _url =
@@ -42,17 +43,6 @@ class _FakeCapture implements GachaCapture {
         if (!result.isCompleted) result.complete(null);
       },
     );
-  }
-}
-
-/// 反覆讓出事件迴圈直到 [cond] 成立，最多等 5 秒。
-Future<void> _until(bool Function() cond) async {
-  final deadline = DateTime.now().add(const Duration(seconds: 5));
-  while (!cond()) {
-    if (DateTime.now().isAfter(deadline)) {
-      fail('condition never became true within 5s');
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 1));
   }
 }
 
@@ -139,7 +129,7 @@ void main() {
       repo.debugSetCacheWinCaptureGrace(const Duration(milliseconds: 50));
 
       final done = repo.update();
-      await _until(
+      await waitUntil(
         () =>
             container.read(gachaRepositoryProvider).progress
                 is WaitingForCapture &&
@@ -165,7 +155,7 @@ void main() {
       repo.debugSetCacheWinCaptureGrace(const Duration(seconds: 30));
 
       final done = repo.update();
-      await _until(
+      await waitUntil(
         () =>
             container.read(gachaRepositoryProvider).progress
                 is WaitingForCapture &&
@@ -184,7 +174,7 @@ void main() {
     final (repo, _, capture, hits) = await setup(gate: gate.future);
 
     final first = repo.submitManualUrl(_url);
-    await _until(() => hits.length == 1);
+    await waitUntil(() => hits.length == 1);
     await repo.submitManualUrl('$_url&x=1');
 
     expect(hits, hasLength(1), reason: 'second submit did not start a fetch');

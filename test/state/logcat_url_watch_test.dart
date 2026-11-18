@@ -8,6 +8,8 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/logcat_url_watch.dart';
 
+import '../helpers/wait_until.dart';
+
 /// 祈願頁網址（logcat 裡出現的形式）。
 const _pageUrl =
     'https://gs.hoyoverse.com/genshin/event/e20190909gacha-v3/index.html?'
@@ -89,15 +91,6 @@ class _FakeShell {
 Future<String?> _await(Future<String?> future) =>
     future.timeout(const Duration(seconds: 5));
 
-/// 等到 [condition] 成立，逾時視為測試失敗。
-Future<void> _until(bool Function() condition) async {
-  final sw = Stopwatch()..start();
-  while (!condition()) {
-    if (sw.elapsed > const Duration(seconds: 5)) fail('condition not met');
-    await Future<void>.delayed(const Duration(milliseconds: 5));
-  }
-}
-
 void main() {
   late _FakeShell shell;
 
@@ -173,7 +166,7 @@ void main() {
     shell.polls = [_alive, _hitLine];
     final s = await begin();
     expect(await _await(s.result), _apiUrl);
-    await _until(() => shell.commands.last == logcatCleanupCommand);
+    await waitUntil(() => shell.commands.last == logcatCleanupCommand);
     final hit = shell.commands.lastIndexOf(logcatPollCommand(1234));
     expect(shell.commands.sublist(hit + 1), [logcatCleanupCommand]);
     await s.cancel();
@@ -325,7 +318,7 @@ void main() {
       shell.pollGate = gate;
       shell.polls = [''];
       final s = await begin();
-      await _until(() => shell.commands.last.startsWith('cat '));
+      await waitUntil(() => shell.commands.last.startsWith('cat '));
       final at = shell.commands.length;
       final cancel = s.cancel();
       gate.complete();
@@ -353,7 +346,7 @@ void main() {
       final gate = Completer<void>();
       shell.pollGate = gate;
       final s = await begin();
-      await _until(() => shell.commands.last.startsWith('cat '));
+      await waitUntil(() => shell.commands.last.startsWith('cat '));
       var cancelled = false;
       final cancel = s.cancel().then((_) => cancelled = true);
       await Future<void>.delayed(const Duration(milliseconds: 50));
