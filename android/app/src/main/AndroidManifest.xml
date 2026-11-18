@@ -1,5 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 讀取系統記錄：由無線偵錯的 shell 授權給自己，用來自動開關無線偵錯。 -->
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions"/>
+    <!-- 判斷是否連著 Wi‑Fi（無線偵錯只能在 Wi‑Fi 下使用）。 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
@@ -38,6 +47,13 @@
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
+        <!-- 「開啟原神」按鈕與是否安裝的判斷：已知版本直接宣告；沒見過的版本靠有桌面圖示的 App
+             比對套件名稱開頭（genshin_game_package.dart），不需要 QUERY_ALL_PACKAGES。 -->
+        <package android:name="com.miHoYo.GenshinImpact"/>
+        <intent>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
