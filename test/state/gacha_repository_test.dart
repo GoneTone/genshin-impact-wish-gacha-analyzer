@@ -312,6 +312,68 @@ void main() {
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
+  group('捕獲到 URL 後 probe UID 期間', () {
+    /// 建立走捕獲路徑（無快取 URL）、HTTP 請求卡在 [block] 的 container。
+    ProviderContainer captureThenBlockedProbe(Completer<http.Response> block) {
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(
+            _FakeCapture('https://example.com/getGachaLog?authkey=x'),
+          ),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) => block.future),
+              cancel: () {
+                if (!block.isCompleted) {
+                  block.completeError(http.ClientException('cancelled'));
+                }
+              },
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      return container;
+    }
+
+    test('progress 為 Preparing 而非 WaitingForCapture', () async {
+      final block = Completer<http.Response>();
+      final container = captureThenBlockedProbe(block);
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isA<Preparing>(),
+      );
+
+      notifier.cancelPreparing();
+      await updateFut;
+    });
+
+    test('cancelPreparing 結束更新、progress 清空', () async {
+      final block = Completer<http.Response>();
+      final container = captureThenBlockedProbe(block);
+      container.read(gachaRepositoryProvider);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      notifier.cancelPreparing();
+      await updateFut;
+
+      expect(container.read(gachaRepositoryProvider).progress, isNull);
+    });
+  });
+
   test('probe 階段真實 ClientException（非取消） → UpdateFailed', () async {
     final storage = GachaStorage(tempDir);
     await storage.save(

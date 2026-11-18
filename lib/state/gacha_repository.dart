@@ -592,6 +592,8 @@ class GachaRepository extends Notifier<GachaState> {
   }) async {
     final gachaUrl = GachaUrl.parse(url);
 
+    // 捕獲／快取取得 URL 後 probe 要數秒，期間不能還顯示「等待攔截」
+    state = state.copyWith(progress: const Preparing());
     final probe = await fetcher.probeUid(url: gachaUrl, client: client);
     if (!ref.mounted) return;
     if (probe.uid == null) {
