@@ -219,9 +219,9 @@
 - **採用**：手機橫向時，點輸入框改開一個全螢幕的輸入頁，跟遊戲裡的輸入方式一樣。
 
 **做法**
-- 新增共用元件 `LandscapeInputField`（`lib/widgets/landscape_input_field.dart`），用法跟 `TextField` 一樣，只開放目前呼叫端用到的參數：`controller`、`decoration`、`keyboardType`、`autocorrect`、`enableSuggestions`、`minLines`、`maxLines`、`autofocus`、`onChanged`。
+- 新增共用元件 `LandscapeInputField`（`lib/widgets/landscape_input_field.dart`），用法跟 `TextField` 一樣，只開放目前呼叫端用到的參數：`controller`、`decoration`、`keyboardType`、`textInputAction`、`inputFormatters`、`autocorrect`、`enableSuggestions`、`minLines`、`maxLines`、`autofocus`、`onChanged`、`onSubmitted`（後三個是鳴潮版的跳頁、帳號別名對話框要用的，兩邊元件保持一致）。
 - 手機橫向（`isCompactLayout` 且 `MediaQuery.orientationOf` 為橫向）時，欄位改成唯讀、不顯示游標，點下去開全螢幕輸入頁；其他情況（直向、桌面）就是原本的 `TextField`，行為不變。
-- 全螢幕輸入頁：不放標題列，整塊是輸入框（`expands: true`，提示文字沿用欄位的 `hintText`），旁邊一顆確定按鈕，自動取得焦點叫出鍵盤。和對話框共用同一個 `controller`，打字時呼叫同一個 `onChanged`（例如打字確認的按鈕可否按、網址錯誤訊息清除都照舊）。按確定、鍵盤的完成鍵或返回鍵都回到對話框。
+- 全螢幕輸入頁：不放標題列，整塊是輸入框（`expands: true`，提示文字沿用欄位的 `hintText`，沒有時用 `labelText`；`inputFormatters` 也套用），旁邊一顆確定按鈕，自動取得焦點叫出鍵盤。和對話框共用同一個 `controller`，打字時呼叫同一個 `onChanged`（例如打字確認的按鈕可否按、網址錯誤訊息清除都照舊）。按鈕行為照系統原生的全螢幕輸入模式（Android `InputMethodService` 的動作按鈕呼叫 `performEditorAction`，等同按鍵盤動作鍵；返回鍵只收起）：確定與鍵盤的完成鍵都回到對話框並呼叫 `onSubmitted`（例如跳頁直接跳、別名直接儲存；手動輸入網址與打字確認沒有設定，只回到對話框），返回鍵只回到對話框、不送出。使用者 2026-11-19 確認。
 - 確定按鈕文字用 Flutter 內建的 `MaterialLocalizations.okButtonLabel`（各語系都已翻好，中文為「確定」），不新增字串。
 - 手機橫向時 `autofocus` 不自動開輸入頁，等玩家點欄位。直向輸入到一半轉成橫向時，欄位先收起焦點，避免鍵盤留在對話框裡又溢出。
 - 平板（最短邊 ≥ 600dp，不是手機排版）橫向維持在對話框裡輸入：以 widget 測試估算，960×600 鍵盤 300dp、1024×600 鍵盤 340dp、1280×800 鍵盤 380dp 時，「手動輸入網址」對話框都不溢出，輸入框（141～221dp）在鍵盤上方；鍵盤高度是假設值，最小的例子離鍵盤只剩約 40dp。

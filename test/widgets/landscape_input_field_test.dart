@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -33,6 +34,37 @@ Future<(TextEditingController, List<String>)> _pump(
   );
   await tester.pumpAndSettle();
   return (controller, changes);
+}
+
+/// 放一個有送出動作、只收數字、只有 labelText 的欄位（像跳頁對話框），回傳 onSubmitted 收到的文字。
+Future<List<String>> _pumpSubmitting(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(800, 411);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  final controller = TextEditingController();
+  addTearDown(controller.dispose);
+  final submits = <String>[];
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: buildDarkTheme(),
+      home: Scaffold(
+        body: Center(
+          child: LandscapeInputField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(labelText: 'Page'),
+            onSubmitted: submits.add,
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(_visibleField);
+  await tester.pumpAndSettle();
+  return submits;
 }
 
 /// 畫面上看得到的文字欄位（不含被全螢幕輸入頁蓋住的那個）。
@@ -127,5 +159,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.testTextInput.isVisible, isFalse);
     expect(find.text('OK'), findsNothing);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('OK and the done key submit like the native extract mode', (
+    tester,
+  ) async {
+    final submits = await _pumpSubmitting(tester);
+    expect(find.text('Page'), findsOneWidget, reason: 'label used as hint');
+    await tester.enterText(_visibleField, '1a2');
+    expect(find.text('12'), findsOneWidget, reason: 'formatters apply');
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(submits, ['12']);
+
+    await tester.tap(_visibleField);
+    await tester.pumpAndSettle();
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(submits, ['12', '12']);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('back returns without submitting', (tester) async {
+    final submits = await _pumpSubmitting(tester);
+    await tester.enterText(_visibleField, '3');
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('OK'), findsNothing);
+    expect(submits, isEmpty);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }
