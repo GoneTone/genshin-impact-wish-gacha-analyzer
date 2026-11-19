@@ -121,10 +121,17 @@ class _AppShellState extends ConsumerState<AppShell> {
         ref.read(gachaRepositoryProvider.notifier).update();
 
     // 抽屜不是一個頁面：不先宣告由 App 處理返回，Android 的預測返回會直接關掉 App。
+    // 側欄／抽屜切換的頁面是同一層：其他頁按返回先回綜合，在綜合才交給系統離開 App。
+    final drawerOpen = compact && _drawerOpen;
     return PopScope(
-      canPop: !(compact && _drawerOpen),
+      canPop: !drawerOpen && location == '/',
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _scaffoldKey.currentState?.closeDrawer();
+        if (didPop) return;
+        if (drawerOpen) {
+          _scaffoldKey.currentState?.closeDrawer();
+        } else {
+          context.go('/');
+        }
       },
       child: Scaffold(
         key: _scaffoldKey,

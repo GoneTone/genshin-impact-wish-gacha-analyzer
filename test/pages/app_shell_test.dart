@@ -386,6 +386,50 @@ void main() {
     expect(find.byType(AppShell), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  for (final (name, size) in [
+    ('phone', const Size(360, 800)),
+    ('tablet', const Size(1280, 800)),
+  ]) {
+    testWidgets('system back on another page returns to the overview ($name)', (
+      tester,
+    ) async {
+      var systemPops = 0;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'SystemNavigator.pop') systemPops++;
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      await pump(tester, size);
+      final router = GoRouter.of(tester.element(find.byType(AppShell)));
+      for (final path in [
+        '/banner/${gachaTypes.first.gachaType}',
+        '/settings',
+        '/contributors',
+      ]) {
+        router.go(path);
+        await tester.pumpAndSettle();
+        expect(find.text('page:$path'), findsOneWidget);
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+        expect(find.text('page:/'), findsOneWidget, reason: path);
+        expect(systemPops, 0, reason: path);
+      }
+
+      // 在綜合頁才交給系統離開 App。
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(systemPops, 1);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
   testWidgets('rotating with the drawer open does not throw', (tester) async {
     await pump(tester, const Size(360, 800));
     await tester.tap(drawerButton(tester));
