@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
+
 /// Dialog 寬度語意尺寸。
 ///
 /// 三檔對應的最大內容寬：sm = 480、md = 640、lg = 720。
@@ -30,6 +32,9 @@ enum AppDialogSize {
 /// - 寬：`min(size.maxWidth, mq.size.width - 80)`
 /// - 高：`min(maxHeight ?? 720, mq.size.height - 120)`（透過
 ///   `AlertDialog.constraints` 設定）
+/// - 手機排版（[isCompactLayout]）時四周只留 [_compactInset]：寬
+///   `min(size.maxWidth, mq.size.width - 24)`、高
+///   `min(maxHeight ?? 720, mq.size.height - 24)`
 ///
 /// 整體需要捲動時設 `scrollable: true`；內容已自帶捲動元件（`ListView` 等）
 /// 維持預設 `false` 避免雙層捲動衝突。
@@ -42,7 +47,7 @@ class AppDialog extends StatelessWidget {
   /// 建立 [AppDialog]。
   const AppDialog({
     super.key,
-    required this.title,
+    this.title,
     required this.content,
     this.actions = const <Widget>[],
     this.size = AppDialogSize.sm,
@@ -50,8 +55,8 @@ class AppDialog extends StatelessWidget {
     this.maxHeight,
   });
 
-  /// dialog 標題 widget，傳給 [AlertDialog.title]。
-  final Widget title;
+  /// dialog 標題 widget，傳給 [AlertDialog.title]；null 時不顯示標題區。
+  final Widget? title;
 
   /// dialog 內容 widget；[scrollable] 為 true 時會被包在 [SingleChildScrollView] 內。
   final Widget content;
@@ -69,12 +74,22 @@ class AppDialog extends StatelessWidget {
   /// `mq.size.height - 120` 限制，小視窗下會自動 fit。
   final double? maxHeight;
 
+  /// 手機排版時 dialog 四周的留白（dp）。
+  static const double _compactInset = 12;
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final dialogWidth = math.min(size.maxWidth, mq.size.width - 80);
+    final compact = isCompactLayout(context);
+    final dialogWidth = math.min(
+      size.maxWidth,
+      mq.size.width - (compact ? _compactInset * 2 : 80),
+    );
     final ceiling = maxHeight ?? 720.0;
-    final dialogMaxHeight = math.min(ceiling, mq.size.height - 120);
+    final dialogMaxHeight = math.min(
+      ceiling,
+      mq.size.height - (compact ? _compactInset * 2 : 120),
+    );
 
     Widget body = SizedBox(width: dialogWidth, child: content);
     if (scrollable) {
@@ -82,10 +97,11 @@ class AppDialog extends StatelessWidget {
     }
 
     return AlertDialog(
+      insetPadding: compact ? const EdgeInsets.all(_compactInset) : null,
       constraints: BoxConstraints(maxHeight: dialogMaxHeight),
       // title 與 content 同寬：title 內容（如長描述 Html）的 intrinsic 寬度
       // 不再能把整個 AlertDialog 撐寬，過長文字會在 dialogWidth 內換行。
-      title: SizedBox(width: dialogWidth, child: title),
+      title: title == null ? null : SizedBox(width: dialogWidth, child: title),
       content: body,
       actions: actions.isEmpty ? null : actions,
     );

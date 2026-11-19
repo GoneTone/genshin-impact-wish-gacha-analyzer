@@ -66,6 +66,13 @@ double _innerWidth(WidgetTester tester) {
   return widths.first;
 }
 
+/// 量 dialog 面板（[Dialog] 內的 [Material]）的實際大小；[Dialog] 本身含四周留白。
+Size _panelSize(WidgetTester tester) => tester.getSize(
+  find
+      .descendant(of: find.byType(Dialog), matching: find.byType(Material))
+      .first,
+);
+
 void main() {
   testWidgets('sm size uses 480 width in wide window', (tester) async {
     await _pumpDialog(
@@ -95,13 +102,85 @@ void main() {
   });
 
   testWidgets('narrow window falls back to mq.width - 80', (tester) async {
-    // 視窗寬 400 → 所有 size 都應變成 320
+    // 視窗寬 700（還不是手機排版）→ lg 應變成 620
     await _pumpDialog(
       tester,
-      surfaceSize: const Size(400, 800),
+      surfaceSize: const Size(700, 800),
       size: AppDialogSize.lg,
     );
-    expect(_innerWidth(tester), 320);
+    expect(_innerWidth(tester), 620);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  testWidgets('compact dialog leaves 12dp around it', (tester) async {
+    await _pumpDialog(
+      tester,
+      surfaceSize: const Size(360, 800),
+      size: AppDialogSize.md,
+    );
+    expect(_innerWidth(tester), 336);
+    expect(_panelSize(tester).width, 336);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('compact dialog uses almost all the height', (tester) async {
+    await _pumpDialog(
+      tester,
+      surfaceSize: const Size(800, 360),
+      size: AppDialogSize.md,
+      scrollable: true,
+      content: const SizedBox(height: 2000),
+    );
+    expect(_panelSize(tester).height, 336);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('compact dialog wraps long action buttons', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () => showDialog<void>(
+                  context: ctx,
+                  builder: (_) => AppDialog(
+                    title: const Text('Title'),
+                    content: const Text('Body'),
+                    actions: [
+                      for (final t in [
+                        'Open in the encyclopedia',
+                        'Save image to device',
+                        'Close this dialog',
+                      ])
+                        TextButton(onPressed: () {}, child: Text(t)),
+                    ],
+                  ),
+                ),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('null title renders no title area', (tester) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: const Scaffold(body: AppDialog(content: Text('Body'))),
+      ),
+    );
+    expect(tester.widget<AlertDialog>(find.byType(AlertDialog)).title, isNull);
   });
 
   testWidgets('wide title content is clamped to dialog width, not widening', (
