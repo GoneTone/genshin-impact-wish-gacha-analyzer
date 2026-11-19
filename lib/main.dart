@@ -30,6 +30,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/landscape_input_host.dart';
 
 /// 應用程式入口：初始化 Flutter、Rust bridge（僅 Windows）、視窗管理、log 服務，然後啟動 app。
 ///
@@ -197,6 +198,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       localeListResolutionCallback: localeListResolution,
       routerConfig: _router,
       actions: appActions,
+      builder: (context, child) => LandscapeInputHost(child: child!),
     );
   }
 }
