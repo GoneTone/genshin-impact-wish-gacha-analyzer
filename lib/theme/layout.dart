@@ -28,10 +28,13 @@ final Map<Type, Action<Intent>> appActions = {
   ...WidgetsApp.defaultActions,
   // Flutter 在手機上點文字欄位外部不收焦點：按返回收起鍵盤後欄位仍有焦點，
   // 關掉對話框時焦點回到欄位、鍵盤又跳出；別名這類「失焦才提交」的欄位也存不進去。
-  EditableTextTapOutsideIntent: CallbackAction<EditableTextTapOutsideIntent>(
-    onInvoke: (intent) {
-      intent.focusNode.unfocus();
-      return null;
-    },
-  ),
+  // 要等手指放開才收：從側邊滑動返回時系統會先把按下交給 App，之後送來取消而不是放開，
+  // 按下就收的話手勢還沒放開鍵盤就收起，滑回去取消也回不來。
+  EditableTextTapUpOutsideIntent:
+      CallbackAction<EditableTextTapUpOutsideIntent>(
+        onInvoke: (intent) {
+          intent.focusNode.unfocus();
+          return null;
+        },
+      ),
 };

@@ -256,3 +256,10 @@
 - 原因：原神版只要抽屜沒開，每頁的返回都交給系統（`canPop: !(compact && _drawerOpen)`），Android 16 預設的預測返回就直接離開 App。鳴潮版在綜合以外的頁面由 App 處理返回（先回綜合），系統會先把返回交給鍵盤。
 - 處理：照鳴潮版 b2da785 改 `PopScope`（`canPop: !drawerOpen && location == '/'`，沒 pop 時抽屜開著就關抽屜，否則回綜合）並帶上它的測試。原本第二節定為留到子專案 9，改為現在提前移植；子專案 9 移植時這個 commit 已完成。綜合頁沒有輸入框，不受影響。
 - 實機（ROG Phone 9 直向）：卡池頁開著鍵盤滑動返回，第一次只收起鍵盤，第二次回綜合，第三次在綜合才離開 App。
+
+### B.3 點外部收焦點改在手指放開時（2026-11-19）
+
+- 使用者實機發現：直向開著鍵盤從側邊滑動返回，手勢還沒放開鍵盤就收起；滑回去取消也回不來。鳴潮版（Play 版 1.9.1-rc.3）同樣如此，是兩邊共有的問題。
+- 原因：系統 log 顯示是 App 自己要求收起鍵盤（`ImeTracker: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT`），而且在系統開始處理返回（`startBackNavigation`）之前。側邊滑動一開始，系統會先把「按下」交給 App，之後才接手並送來取消；`appActions` 覆寫的 `EditableTextTapOutsideIntent` 在按下時就收焦點，所以鍵盤立刻收起。
+- 處理：`appActions` 改覆寫 `EditableTextTapUpOutsideIntent`，在欄位外放開才收焦點（Flutter 文件也建議這樣避免捲動時收焦點）。被系統接手的手勢只有取消、沒有放開，不會收焦點；收起鍵盤交給系統的返回處理，放開才收。
+- 實機（ROG Phone 9 直向）：按住滑到一半鍵盤還在，滑回去取消鍵盤還在，完整滑動放開後鍵盤收起、App 留在前景；點外面一樣收起鍵盤。

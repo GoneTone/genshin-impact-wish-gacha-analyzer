@@ -63,4 +63,46 @@ void main() {
     await tester.pump();
     expect(focus.hasFocus, isFalse);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('a touch outside drops focus only when the finger lifts', (
+    tester,
+  ) async {
+    // 從側邊滑動返回時，系統會先把按下交給 App，接手手勢後送來取消而不是放開；
+    // 按下就收焦點的話，手勢還沒放開鍵盤就收起，滑回去取消也回不來。
+    final focus = FocusNode();
+    addTearDown(focus.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        actions: appActions,
+        home: Scaffold(
+          body: Column(
+            children: [
+              TextField(focusNode: focus),
+              const SizedBox(height: 300, child: Text('outside')),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+
+    final edge = await tester.startGesture(
+      tester.getCenter(find.text('outside')),
+    );
+    await tester.pump();
+    expect(focus.hasFocus, isTrue, reason: 'still pressed');
+    await edge.cancel();
+    await tester.pump();
+    expect(focus.hasFocus, isTrue, reason: 'the system took the gesture');
+
+    final tap = await tester.startGesture(
+      tester.getCenter(find.text('outside')),
+    );
+    await tester.pump();
+    expect(focus.hasFocus, isTrue);
+    await tap.up();
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }
