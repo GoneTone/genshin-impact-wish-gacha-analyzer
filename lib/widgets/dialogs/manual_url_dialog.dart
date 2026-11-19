@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url_extract.da
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/landscape_input_field.dart';
 
 /// 本對話框的 logger。
 final _log = Logger('capture.manual');
@@ -81,7 +82,7 @@ class _ManualUrlDialogState extends ConsumerState<_ManualUrlDialog> {
         children: [
           Text(l.manualUrlHint),
           const SizedBox(height: AppSpacing.s),
-          TextField(
+          LandscapeInputField(
             controller: _controller,
             minLines: 2,
             maxLines: 4,
