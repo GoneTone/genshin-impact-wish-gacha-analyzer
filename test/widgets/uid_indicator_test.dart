@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -166,6 +167,34 @@ void main() {
       final aliasText = tester.widget<Text>(find.text('VeryLongAliasName'));
       expect(aliasText.overflow, TextOverflow.ellipsis);
       expect(aliasText.maxLines, 1);
+    });
+  });
+
+  group('AccountTriggerLabel: limited width', () {
+    testWidgets('label shrinks the alias first when width is limited', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          // 測試字型每字 14dp：UID 約 168dp，剩約 50dp 給別名。
+          const SizedBox(
+            width: 260,
+            child: AccountTriggerLabel(
+              activeUid: '701000000',
+              alias: 'AVeryLongAccountAliasName',
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final uid = find.text(' (701000000)');
+      expect(uid, findsOneWidget);
+      final uidText = tester.renderObject<RenderParagraph>(uid);
+      expect(uidText.didExceedMaxLines, isFalse);
+      final aliasText = tester.renderObject<RenderParagraph>(
+        find.text('AVeryLongAccountAliasName'),
+      );
+      expect(aliasText.didExceedMaxLines, isTrue);
     });
   });
 

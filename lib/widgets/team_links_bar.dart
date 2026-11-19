@@ -10,8 +10,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 /// AppShell 底部 footer 右側的團隊資訊列：
 /// 4 個社群 icon（Facebook / Discord / Line / GitHub）+ 分隔線 + 團隊名稱連結。
 class TeamLinksBar extends StatelessWidget {
-  /// 建立 [TeamLinksBar]。
-  const TeamLinksBar({super.key});
+  /// 建立 [TeamLinksBar]；[compact] 為手機排版。
+  const TeamLinksBar({super.key, this.compact = false});
+
+  /// 手機排版：只留四個圖示，觸控區放大到 48dp。
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -23,32 +26,38 @@ class TeamLinksBar extends StatelessWidget {
           icon: FontAwesomeIcons.facebookF,
           tooltip: 'Facebook',
           url: TeamInfo.facebookUrl,
+          compact: compact,
         ),
         _IconLink(
           icon: FontAwesomeIcons.discord,
           tooltip: 'Discord',
           url: TeamInfo.discordUrl,
+          compact: compact,
         ),
         _IconLink(
           icon: FontAwesomeIcons.line,
           tooltip: 'Line',
           url: TeamInfo.lineUrl,
+          compact: compact,
         ),
         _IconLink(
           icon: FontAwesomeIcons.github,
           tooltip: 'GitHub',
           url: AppRepo.githubUrl,
+          compact: compact,
         ),
-        const SizedBox(width: AppSpacing.xs),
-        Container(width: 1, height: 16, color: tokens.textMuted),
-        const SizedBox(width: AppSpacing.s),
-        AppLink(
-          url: TeamInfo.websiteUrl,
-          child: Text(
-            TeamInfo.name,
-            style: Theme.of(context).textTheme.bodySmall,
+        if (!compact) ...[
+          const SizedBox(width: AppSpacing.xs),
+          Container(width: 1, height: 16, color: tokens.textMuted),
+          const SizedBox(width: AppSpacing.s),
+          AppLink(
+            url: TeamInfo.websiteUrl,
+            child: Text(
+              TeamInfo.name,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -61,6 +70,7 @@ class _IconLink extends StatelessWidget {
     required this.icon,
     required this.tooltip,
     required this.url,
+    required this.compact,
   });
 
   /// FontAwesome 圖示。
@@ -72,15 +82,21 @@ class _IconLink extends StatelessWidget {
   /// 點擊後開啟的目標 URL。
   final String url;
 
+  /// 手機排版：觸控區 48dp。
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).gacha;
     return IconButton(
       tooltip: tooltip,
       iconSize: 16,
-      visualDensity: VisualDensity.compact,
+      // compact 密度會把 48dp 觸控區縮成 40，手機排版改回標準密度。
+      visualDensity: compact ? VisualDensity.standard : VisualDensity.compact,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-      constraints: const BoxConstraints(minWidth: 40, minHeight: 32),
+      constraints: compact
+          ? const BoxConstraints(minWidth: 48, minHeight: 48)
+          : const BoxConstraints(minWidth: 40, minHeight: 32),
       mouseCursor: SystemMouseCursors.click,
       icon: FaIcon(icon, color: tokens.textSecondary),
       onPressed: () {
