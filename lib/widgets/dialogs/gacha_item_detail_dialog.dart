@@ -14,6 +14,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_html.dart';
@@ -60,6 +61,9 @@ class GachaItemDetailDialog extends ConsumerStatefulWidget {
 
 /// [GachaItemDetailDialog] 的 state：維護 chip 列當前選中索引與 lazy 下載狀態。
 class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
+  /// 兩欄（手機橫向）時左欄的寬度。
+  static const double _twoColumnDetailsWidth = 240;
+
   /// 當前選中 chip 的 index；點 chip 時 setState 更新；超出範圍由 `clampedIndex` 收斂。
   int _selectedIndex = 0;
 
@@ -563,167 +567,220 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
       _ => tokens.textPrimary,
     };
 
+    final header = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (iconFile != null) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            child: Image.file(
+              iconFile,
+              width: 64,
+              height: 64,
+              fit: BoxFit.cover,
+              errorBuilder: (_, e, st) {
+                _log.warning('icon errorBuilder id=$id', e, st);
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
+        ],
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                record.name,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: nameColor,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (desc.trim().isNotEmpty) ...[
+                // 名稱與說明之間的固定間距，讓單行/多行說明都有一致的呼吸空間。
+                // 用 2px 微距（小於最小 token AppSpacing.xs=4），名稱與說明貼得更近。
+                const SizedBox(height: 2),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 120),
+                  child: SingleChildScrollView(
+                    // 壓低環境 DefaultTextStyle 的行高：flutter_html 以繼承的環境
+                    // 行高當作區塊最小高度，dialog title 的環境行高偏高（約 31px），
+                    // 使「單行說明」被在偏高行框內垂直置中、首行比「多行說明」下移
+                    // 約 6px。壓成 1.0 後區塊最小高度＝文字行高，單行/多行首行對齊。
+                    child: DefaultTextStyle.merge(
+                      style: const TextStyle(height: 1.0),
+                      child: AppHtml(
+                        data: desc,
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize(
+                              theme.textTheme.bodyMedium?.fontSize ?? 14,
+                            ),
+                            lineHeight: LineHeight.number(1.2),
+                            color: tokens.textSecondary,
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
+                          ),
+                          'p': Style(margin: Margins.zero),
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              if (tags.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for (final t in tags)
+                      Chip(
+                        label: Text(t),
+                        // 用 textPrimary 加 alpha 做半透明色塊：dark 主題
+                        // 疊出比表面亮一階的灰、light 主題疊出比表面暗一
+                        // 階的灰，兩個情境下都自動跟 dialog 背景拉開層次。
+                        // 0.15 alpha 經對比測試在兩主題下都有明確色塊感。
+                        backgroundColor: tokens.textPrimary.withValues(
+                          alpha: 0.15,
+                        ),
+                        side: BorderSide.none,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(AppRadius.sm),
+                          ),
+                        ),
+                        labelStyle: theme.textTheme.bodySmall?.copyWith(
+                          color: tokens.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.s,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+    final imageDesc = current == null || current.descHtml.trim().isEmpty
+        ? null
+        // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
+        // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
+        // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
+        : AppHtml(
+            data: current.descHtml,
+            style: {
+              'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+              'p': Style(margin: Margins.symmetric(vertical: 4)),
+            },
+          );
+    // 兩欄（手機橫向）時圖片說明放左欄，否則會把右欄的圖片擠扁。
+    final size = MediaQuery.sizeOf(context);
+    final twoColumn = isCompactLayout(context) && size.width > size.height;
+    // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
+    // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
+    // 變動，dialog 整體高度仍固定（只有 image 區大小被重新分配）。
+    final galleryArea = Column(
+      mainAxisSize: current != null ? MainAxisSize.max : MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (chipEntries.length > 1) ...[
+          GalleryChipBar(
+            labels: [for (final e in chipEntries) e.label],
+            selectedIndex: clampedIndex,
+            onSelected: (i) => setState(() => _selectedIndex = i),
+          ),
+          const SizedBox(height: 12),
+        ],
+        if (current != null) ...[
+          Expanded(child: _buildCurrentImageArea(context, current)),
+        ],
+        if (imageDesc != null && !twoColumn) ...[
+          const SizedBox(height: 12),
+          imageDesc,
+        ],
+      ],
+    );
+    final actions = <Widget>[
+      TextButton.icon(
+        icon: const Icon(Icons.open_in_new, size: 18),
+        label: Text(l.actionViewOnHoYoWiki),
+        onPressed: id == null
+            ? null
+            : () {
+                _log.info('open wiki id=$id lang=${record.lang}');
+                openExternalUrl(
+                  buildHoYoWikiEntryUrl(id: id, lang: record.lang),
+                );
+              },
+      ),
+      FilledButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(l.actionClose),
+      ),
+    ];
+
+    // 手機橫向時高度不夠，改成左右兩欄，避免圖片被標題區擠扁。
+    if (twoColumn) {
+      return AppDialog(
+        size: AppDialogSize.lg,
+        maxHeight: 880,
+        content: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: _twoColumnDetailsWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          header,
+                          if (imageDesc != null) ...[
+                            const SizedBox(height: 12),
+                            imageDesc,
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: AppSpacing.s,
+                    runSpacing: AppSpacing.xs,
+                    children: actions,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.l),
+            Expanded(child: galleryArea),
+          ],
+        ),
+      );
+    }
+
     return AppDialog(
       size: AppDialogSize.md,
       // 物品 dialog 含大圖預覽，需要更高空間；AppDialog 仍會 fit 小視窗。
       maxHeight: 880,
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (iconFile != null) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              child: Image.file(
-                iconFile,
-                width: 64,
-                height: 64,
-                fit: BoxFit.cover,
-                errorBuilder: (_, e, st) {
-                  _log.warning('icon errorBuilder id=$id', e, st);
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  record.name,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: nameColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (desc.trim().isNotEmpty) ...[
-                  // 名稱與說明之間的固定間距，讓單行/多行說明都有一致的呼吸空間。
-                  // 用 2px 微距（小於最小 token AppSpacing.xs=4），名稱與說明貼得更近。
-                  const SizedBox(height: 2),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 120),
-                    child: SingleChildScrollView(
-                      // 壓低環境 DefaultTextStyle 的行高：flutter_html 以繼承的環境
-                      // 行高當作區塊最小高度，dialog title 的環境行高偏高（約 31px），
-                      // 使「單行說明」被在偏高行框內垂直置中、首行比「多行說明」下移
-                      // 約 6px。壓成 1.0 後區塊最小高度＝文字行高，單行/多行首行對齊。
-                      child: DefaultTextStyle.merge(
-                        style: const TextStyle(height: 1.0),
-                        child: AppHtml(
-                          data: desc,
-                          style: {
-                            'body': Style(
-                              fontSize: FontSize(
-                                theme.textTheme.bodyMedium?.fontSize ?? 14,
-                              ),
-                              lineHeight: LineHeight.number(1.2),
-                              color: tokens.textSecondary,
-                              margin: Margins.zero,
-                              padding: HtmlPaddings.zero,
-                            ),
-                            'p': Style(margin: Margins.zero),
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-                if (tags.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      for (final t in tags)
-                        Chip(
-                          label: Text(t),
-                          // 用 textPrimary 加 alpha 做半透明色塊：dark 主題
-                          // 疊出比表面亮一階的灰、light 主題疊出比表面暗一
-                          // 階的灰，兩個情境下都自動跟 dialog 背景拉開層次。
-                          // 0.15 alpha 經對比測試在兩主題下都有明確色塊感。
-                          backgroundColor: tokens.textPrimary.withValues(
-                            alpha: 0.15,
-                          ),
-                          side: BorderSide.none,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(AppRadius.sm),
-                            ),
-                          ),
-                          labelStyle: theme.textTheme.bodySmall?.copyWith(
-                            color: tokens.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.s,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                        ),
-                    ],
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-      // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
-      // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
-      // 變動，dialog 整體高度仍固定（只有 image 區大小被重新分配）。
-      content: Column(
-        mainAxisSize: current != null ? MainAxisSize.max : MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (chipEntries.length > 1) ...[
-            GalleryChipBar(
-              labels: [for (final e in chipEntries) e.label],
-              selectedIndex: clampedIndex,
-              onSelected: (i) => setState(() => _selectedIndex = i),
-            ),
-            const SizedBox(height: 12),
-          ],
-          if (current != null) ...[
-            Expanded(child: _buildCurrentImageArea(context, current)),
-          ],
-          if (current != null && current.descHtml.trim().isNotEmpty) ...[
-            const SizedBox(height: 12),
-            // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
-            // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
-            // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
-            AppHtml(
-              data: current.descHtml,
-              style: {
-                'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
-                'p': Style(margin: Margins.symmetric(vertical: 4)),
-              },
-            ),
-          ],
-        ],
-      ),
-      actions: [
-        TextButton.icon(
-          icon: const Icon(Icons.open_in_new, size: 18),
-          label: Text(l.actionViewOnHoYoWiki),
-          onPressed: id == null
-              ? null
-              : () {
-                  _log.info('open wiki id=$id lang=${record.lang}');
-                  openExternalUrl(
-                    buildHoYoWikiEntryUrl(id: id, lang: record.lang),
-                  );
-                },
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l.actionClose),
-        ),
-      ],
+      title: header,
+      content: galleryArea,
+      actions: actions,
     );
   }
 }

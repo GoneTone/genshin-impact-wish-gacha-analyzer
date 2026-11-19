@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
@@ -29,6 +31,18 @@ GachaRecord _rec({
   time: DateTime(2026, 5, 24),
   lang: lang,
 );
+
+/// 圖片下載一律回傳 [download] 的 fetcher，讓圖庫停在載入中或失敗。
+class _FakeFetcher extends HoYoWikiFetcher {
+  /// 建立 [_FakeFetcher]。
+  _FakeFetcher(this.download);
+
+  /// 每次 [downloadImage] 回傳的結果。
+  final Future<Uint8List?> download;
+
+  @override
+  Future<Uint8List?> downloadImage(String url, http.Client client) => download;
+}
 
 /// 在 [dir] 內建立一個指定路徑的假圖檔（內容隨意，僅供 existsSync 命中）。
 Future<File> _touchFile(Directory dir, String relative) async {
@@ -933,6 +947,118 @@ void main() {
         isTrue,
       );
     });
+
+    /// 種一筆含原圖（附三行說明）與 icon 的角色，回傳原圖的快取檔。
+    Future<File> seedWithGallery(WidgetTester tester) async {
+      final origFile = hoyowikiGalleryCacheFile(
+        baseDir: tempDir,
+        id: '12345',
+        url: 'https://x/orig.png',
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, '12345_icon.png');
+        await _touchFile(tempDir, origFile.uri.pathSegments.last);
+        await seedEntry(
+          '12345',
+          'Hu Tao',
+          'en-us',
+          _entryWith(
+            iconUrl: 'https://x/icon.png',
+            picUrl: '',
+            list: [
+              HoYoWikiGalleryItem(
+                id: 'a',
+                key: 'Original',
+                imgUrl: 'https://x/orig.png',
+                imgDescHtml: '<p>Outfit</p><p>Line two</p><p>Line three</p>',
+              ),
+            ],
+          ),
+        );
+      });
+      return origFile;
+    }
+
+    /// 把測試畫面設成 [size]（dpr 1），測試結束後還原。
+    void setPhoneView(WidgetTester tester, Size size) {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+    }
+
+    /// 以 [size] 的手機畫面開啟詳情，回傳名稱與圖片的位置。
+    Future<(Rect, Rect)> pumpPhone(WidgetTester tester, Size size) async {
+      setPhoneView(tester, size);
+      final origFile = await seedWithGallery(tester);
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      expect(tester.takeException(), isNull);
+      return (
+        tester.getRect(find.text('Hu Tao')),
+        tester.getRect(find.byKey(ValueKey(origFile.path))),
+      );
+    }
+
+    testWidgets('phone landscape puts details and image side by side', (
+      tester,
+    ) async {
+      final (name, image) = await pumpPhone(tester, const Size(800, 360));
+      expect(name.right, lessThan(image.left));
+      expect((name.top - image.top).abs(), lessThan(100));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('phone landscape keeps the image tall with its description '
+        'in the left column', (tester) async {
+      final (_, image) = await pumpPhone(tester, const Size(800, 360));
+      expect(image.height, greaterThanOrEqualTo(200));
+      final desc = tester.getRect(find.textContaining('Outfit'));
+      expect(desc.right, lessThan(image.left));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('phone portrait stacks details above the image', (
+      tester,
+    ) async {
+      final (name, image) = await pumpPhone(tester, const Size(360, 800));
+      expect(name.bottom, lessThan(image.top));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    for (final (label, fails, marker) in [
+      ('loads', false, find.byType(CircularProgressIndicator)),
+      ('fails', true, find.byIcon(Icons.broken_image_outlined)),
+    ]) {
+      testWidgets('landscape two columns while the gallery $label', (
+        tester,
+      ) async {
+        // 下載結果要在測試的 zone 內建立，完成後的回呼才會被 pump 推進。
+        final download = fails
+            ? Future<Uint8List?>.value()
+            : Completer<Uint8List?>().future;
+        container = ProviderContainer(
+          overrides: [
+            hoyowikiIndexStorageProvider.overrideWithValue(
+              HoYoWikiIndexStorage(tempDir),
+            ),
+            hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+            hoyowikiFetcherProvider.overrideWithValue(_FakeFetcher(download)),
+          ],
+        );
+        addTearDown(container.dispose);
+        await tester.runAsync(
+          () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+        );
+        setPhoneView(tester, const Size(800, 360));
+        final origFile = await seedWithGallery(tester);
+        await tester.runAsync(() => origFile.delete());
+
+        await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+        expect(
+          tester.getRect(find.text('Hu Tao')).right,
+          lessThan(tester.getRect(marker).left),
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
   });
 
   group('title 區 desc 間距', () {
