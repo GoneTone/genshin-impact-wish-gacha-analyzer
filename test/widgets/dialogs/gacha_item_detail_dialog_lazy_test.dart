@@ -283,6 +283,41 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  for (final (label, fails, marker) in [
+    ('loads', false, find.byType(CircularProgressIndicator)),
+    ('fails', true, find.byIcon(Icons.broken_image_outlined)),
+  ]) {
+    testWidgets('landscape two columns while the gallery $label', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(800, 360);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final pending = Completer<Uint8List?>();
+      final fetcher = _FakeFetcher(
+        behaviorFor: (url, n) async => fails ? null : pending.future,
+      );
+      late ProviderContainer c;
+      await tester.runAsync(() async {
+        c = await setupContainer(fetcher, tempDir);
+        addTearDown(c.dispose);
+        await seedEntry(c);
+        await _touchIcon(tempDir, 'x1');
+      });
+
+      await pumpDialogAndSettle(tester, c, _rec());
+
+      expect(tester.takeException(), isNull);
+      final markerLeft = tester.getRect(marker).left;
+      expect(tester.getRect(find.text('X')).right, lessThan(markerLeft));
+      // 單欄時關閉鈕在右下角、會在置中的指示右邊；兩欄時它跟名稱一起在左欄。
+      expect(
+        tester.getRect(find.byType(FilledButton)).right,
+        lessThan(markerLeft),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
   group('圖片選單 + 右鍵 + 重抓', () {
     /// 在 dialog 內定位中央 gallery 主圖（cache 檔名含 _gallery_）。
     Finder galleryMainImage() => find.byWidgetPredicate(

@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
@@ -31,18 +29,6 @@ GachaRecord _rec({
   time: DateTime(2026, 5, 24),
   lang: lang,
 );
-
-/// 圖片下載一律回傳 [download] 的 fetcher，讓圖庫停在載入中或失敗。
-class _FakeFetcher extends HoYoWikiFetcher {
-  /// 建立 [_FakeFetcher]。
-  _FakeFetcher(this.download);
-
-  /// 每次 [downloadImage] 回傳的結果。
-  final Future<Uint8List?> download;
-
-  @override
-  Future<Uint8List?> downloadImage(String url, http.Client client) => download;
-}
 
 /// 在 [dir] 內建立一個指定路徑的假圖檔（內容隨意，僅供 existsSync 命中）。
 Future<File> _touchFile(Directory dir, String relative) async {
@@ -320,7 +306,7 @@ void main() {
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
 
       expect(tester.takeException(), isNull);
-    });
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
     testWidgets('desc 為空字串 → title 區不渲染 desc Html', (tester) async {
       final notifier = container.read(hoyowikiIndexProvider.notifier);
@@ -1020,45 +1006,6 @@ void main() {
       final (name, image) = await pumpPhone(tester, const Size(360, 800));
       expect(name.bottom, lessThan(image.top));
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
-
-    for (final (label, fails, marker) in [
-      ('loads', false, find.byType(CircularProgressIndicator)),
-      ('fails', true, find.byIcon(Icons.broken_image_outlined)),
-    ]) {
-      testWidgets('landscape two columns while the gallery $label', (
-        tester,
-      ) async {
-        // 下載結果要在測試的 zone 內建立，完成後的回呼才會被 pump 推進。
-        final download = fails
-            ? Future<Uint8List?>.value()
-            : Completer<Uint8List?>().future;
-        container = ProviderContainer(
-          overrides: [
-            hoyowikiIndexStorageProvider.overrideWithValue(
-              HoYoWikiIndexStorage(tempDir),
-            ),
-            hoyowikiCacheDirProvider.overrideWithValue(tempDir),
-            hoyowikiFetcherProvider.overrideWithValue(_FakeFetcher(download)),
-          ],
-        );
-        addTearDown(container.dispose);
-        await tester.runAsync(
-          () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
-        );
-        setPhoneView(tester, const Size(800, 360));
-        final origFile = await seedWithGallery(tester);
-        await tester.runAsync(() => origFile.delete());
-
-        await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
-        await tester.pump();
-
-        expect(tester.takeException(), isNull);
-        expect(
-          tester.getRect(find.text('Hu Tao')).right,
-          lessThan(tester.getRect(marker).left),
-        );
-      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
-    }
   });
 
   group('title 區 desc 間距', () {
