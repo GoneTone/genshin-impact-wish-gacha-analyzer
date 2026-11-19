@@ -218,6 +218,13 @@ void main() {
           const SettingsPage(),
           method: LogAccessMethod.wirelessDebugging,
         );
+        final l = AppLocalizations.of(
+          tester.element(find.byType(SettingsPage)),
+        )!;
+        expect(
+          find.text(l.settingsPairedManual, skipOffstage: false),
+          findsOneWidget,
+        );
         await scrollToEnd(tester);
       },
       variant: TargetPlatformVariant.only(TargetPlatform.android),
