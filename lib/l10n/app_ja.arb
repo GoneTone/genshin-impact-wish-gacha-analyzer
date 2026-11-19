@@ -147,6 +147,23 @@
   },
   "tableTotalIndex": "累計回数",
   "tableMainPity": "天井カウント",
+  "tableSortButton": "並べ替え：{column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "並べ替え：既定",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "並べ替え",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "前回の {star} からの回数",
   "@tableMainPityTooltip": {
     "placeholders": {

@@ -128,4 +128,31 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('服裝'), findsWidgets);
   });
+
+  for (final (width, want) in [(344.0, 344.0), (900.0, 240.0)]) {
+    testWidgets('search field spans the row on narrow widths ($width)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: width,
+              child: SearchFilterBar(
+                state: const RecordFilterState(
+                  filter: RecordFilter(),
+                  sort: null,
+                ),
+                availableItemTypes: const [kItemKindCharacter],
+                onFilterChanged: (_) {},
+                onClear: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(TextField)).width, want);
+    });
+  }
 }

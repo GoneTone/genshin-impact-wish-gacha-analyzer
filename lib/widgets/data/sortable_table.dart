@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
@@ -84,45 +85,297 @@ class _SortableTableState extends State<SortableTable> {
     final end = (start + _pageSize).clamp(0, widget.rows.length);
     final slice = widget.rows.sublist(start, end);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: tokens.surfaceCard,
-            border: Border.all(color: tokens.borderSubtle),
-            borderRadius: BorderRadius.circular(AppRadius.md),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              _Header(
-                theme: theme,
-                tokens: tokens,
-                l: l,
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (constraints.maxWidth < _narrowWidth) ...[
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: _SortButton(
                 sort: widget.sort,
                 mainRank: widget.mainRank,
                 onTap: widget.onSortColumnTapped,
               ),
-              for (var i = 0; i < slice.length; i++)
-                _Row(
-                  row: slice[i],
-                  isStripe: i.isOdd,
-                  theme: theme,
-                  tokens: tokens,
-                  l: l,
-                  mainRank: widget.mainRank,
-                ),
-            ],
+            ),
+            const SizedBox(height: AppSpacing.s),
+            Container(
+              decoration: BoxDecoration(
+                color: tokens.surfaceCard,
+                border: Border.all(color: tokens.borderSubtle),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  for (var i = 0; i < slice.length; i++)
+                    _RecordCard(
+                      row: slice[i],
+                      isStripe: i.isOdd,
+                      mainRank: widget.mainRank,
+                    ),
+                ],
+              ),
+            ),
+          ] else
+            Container(
+              decoration: BoxDecoration(
+                color: tokens.surfaceCard,
+                border: Border.all(color: tokens.borderSubtle),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  _Header(
+                    theme: theme,
+                    tokens: tokens,
+                    l: l,
+                    sort: widget.sort,
+                    mainRank: widget.mainRank,
+                    onTap: widget.onSortColumnTapped,
+                  ),
+                  for (var i = 0; i < slice.length; i++)
+                    _Row(
+                      row: slice[i],
+                      isStripe: i.isOdd,
+                      theme: theme,
+                      tokens: tokens,
+                      l: l,
+                      mainRank: widget.mainRank,
+                    ),
+                ],
+              ),
+            ),
+          const SizedBox(height: AppSpacing.m),
+          Pager(
+            page: _page,
+            totalPages: _totalPages,
+            onChanged: (p) => setState(() => _page = p),
           ),
+        ],
+      ),
+    );
+  }
+
+  /// 可用寬度小於此值時改用卡片列（手機直向、拉窄的視窗）。
+  static const double _narrowWidth = 600;
+}
+
+/// 欄位的顯示名稱（和表格標題相同）。
+String _columnLabel(SortColumn column, AppLocalizations l) => switch (column) {
+  SortColumn.time => l.tableTime,
+  SortColumn.name => l.tableName,
+  SortColumn.kind => l.tableKind,
+  SortColumn.rarity => l.tableRarity,
+  SortColumn.totalIndex => l.tableTotalIndex,
+  SortColumn.mainPity => l.tableMainPity,
+};
+
+/// 排序方向的箭頭。
+String _arrow(SortDirection direction) =>
+    direction == SortDirection.desc ? '↓' : '↑';
+
+/// 5★／4★ 的強調色；其他稀有度為 null。
+Color? _accentFor(GachaRecord record, GachaTokens tokens) =>
+    switch (record.rankType) {
+      5 => tokens.fiveStar,
+      4 => tokens.fourStar,
+      _ => null,
+    };
+
+/// 「保底內」抽數的歐非色：依距上次主稀有度的抽數相對該卡池保底門檻的比例分綠／黃／紅。
+Color _pityColor(RecordRow row, int mainRank, GachaTokens tokens) =>
+    luckColorFor(
+      luckTierFor(
+        row.mainPityIndex,
+        pityThresholdFor(row.record.gachaType, mainRank),
+      ),
+      tokens,
+    );
+
+/// 卡片列上方的排序按鈕：顯示目前排序，點擊從底部滑出欄位選單（效果同點表格標題）。
+class _SortButton extends StatelessWidget {
+  /// 建立 [_SortButton]。
+  const _SortButton({
+    required this.sort,
+    required this.mainRank,
+    required this.onTap,
+  });
+
+  /// 目前排序；null 為預設順序。
+  final TableSort? sort;
+
+  /// 該卡池的主稀有度 rank。
+  final int mainRank;
+
+  /// 選了某一欄時的回呼（同點表格標題）。
+  final ValueChanged<SortColumn> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final current = sort;
+    return OutlinedButton.icon(
+      icon: const Icon(Icons.sort, size: 18),
+      label: Text(
+        current == null
+            ? l.tableSortDefault
+            : l.tableSortButton(
+                '${_columnLabel(current.column, l)} ${_arrow(current.direction)}',
+              ),
+      ),
+      onPressed: () => _showSheet(context, l),
+    );
+  }
+
+  /// 底部選單：列出 6 個欄位，目前排序那欄標示方向並打勾。
+  Future<void> _showSheet(BuildContext context, AppLocalizations l) async {
+    final picked = await showModalBottomSheet<SortColumn>(
+      context: context,
+      // 頁面在外殼的內層導覽器裡；開在最上層才會蓋過標題列與底部狀態列。
+      useRootNavigator: true,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              child: Text(
+                l.tableSortSheetTitle,
+                style: Theme.of(sheetContext).textTheme.titleMedium,
+              ),
+            ),
+            for (final column in SortColumn.values)
+              ListTile(
+                title: Text(_columnLabel(column, l)),
+                trailing: sort?.column == column
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(_arrow(sort!.direction)),
+                          const SizedBox(width: AppSpacing.xs),
+                          const Icon(Icons.check),
+                        ],
+                      )
+                    : null,
+                onTap: () => Navigator.of(sheetContext).pop(column),
+              ),
+          ],
         ),
-        const SizedBox(height: AppSpacing.m),
-        Pager(
-          page: _page,
-          totalPages: _totalPages,
-          onChanged: (p) => setState(() => _page = p),
+      ),
+    );
+    if (picked != null) onTap(picked);
+  }
+}
+
+/// 窄寬度時的一筆記錄：第一行圖示、名稱、星級；第二行時間、總抽序、保底內。整張可點開物品詳情。
+class _RecordCard extends StatelessWidget {
+  /// 建立 [_RecordCard]。
+  const _RecordCard({
+    required this.row,
+    required this.isStripe,
+    required this.mainRank,
+  });
+
+  /// 祈願記錄資料。
+  final RecordRow row;
+
+  /// 是否為斑馬紋的深色列。
+  final bool isStripe;
+
+  /// 該卡池主稀有度 rank。
+  final int mainRank;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final tokens = theme.gacha;
+    final record = row.record;
+    final accent = _accentFor(record, tokens);
+    final meta = theme.textTheme.bodySmall?.copyWith(
+      color: tokens.textMuted,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    return GachaItemTapTarget(
+      record: record,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 48),
+        color: isStripe ? tokens.surfaceCardHigh : null,
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.s,
+          horizontal: AppSpacing.m,
         ),
-      ],
+        child: Row(
+          children: [
+            GachaItemIcon(record: record, size: 36),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          record.name,
+                          style: accent == null
+                              ? null
+                              : TextStyle(
+                                  color: accent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.s),
+                      if (row.itemTypeKey.isNotEmpty) ...[
+                        Text(itemTypeKeyLabel(row.itemTypeKey, l), style: meta),
+                        const SizedBox(width: AppSpacing.s),
+                      ],
+                      if (accent != null)
+                        _Pill(rank: record.rankType, color: accent, l: l)
+                      else
+                        Text(l.rarityStar(record.rankType)),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  // 單一段文字：放不下時整行以省略號結尾，不會因為字級放大而溢出。
+                  // 卡片沒有表頭，保底說明掛在這一行（卡片點了會開詳情，所以用預設的長按觸發）。
+                  Tooltip(
+                    message: l.tableMainPityTooltip(l.rarityStar(mainRank)),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                '${formatAbsoluteDateTime(record.time)}'
+                                ' (${relativeTime(record.time, l)})'
+                                ' · #${row.totalIndex}'
+                                ' · ${l.tableMainPity} ',
+                          ),
+                          TextSpan(
+                            text: '${row.mainPityIndex}',
+                            style: TextStyle(
+                              color: _pityColor(row, mainRank, tokens),
+                            ),
+                          ),
+                        ],
+                      ),
+                      style: meta,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

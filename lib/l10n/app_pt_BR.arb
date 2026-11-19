@@ -147,6 +147,23 @@
   },
   "tableTotalIndex": "Total de orações",
   "tableMainPity": "Pity atual",
+  "tableSortButton": "Ordenar: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Ordenar: padrão",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Ordenar por",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Orações desde o último {star}",
   "@tableMainPityTooltip": {
     "placeholders": {

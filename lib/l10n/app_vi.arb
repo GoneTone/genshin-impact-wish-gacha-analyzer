@@ -147,6 +147,23 @@
   },
   "tableTotalIndex": "Tổng số lần",
   "tableMainPity": "Bảo hiểm hiện tại",
+  "tableSortButton": "Sắp xếp: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sắp xếp: mặc định",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sắp xếp theo",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Số lần kể từ {star} gần nhất",
   "@tableMainPityTooltip": {
     "placeholders": {

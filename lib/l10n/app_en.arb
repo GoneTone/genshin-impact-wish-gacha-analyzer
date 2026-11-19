@@ -147,6 +147,23 @@
   },
   "tableTotalIndex": "Total",
   "tableMainPity": "Pity",
+  "tableSortButton": "Sort: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sort: default",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sort by",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Pulls since the last {star}",
   "@tableMainPityTooltip": {
     "placeholders": {

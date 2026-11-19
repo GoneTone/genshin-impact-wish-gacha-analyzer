@@ -75,74 +75,82 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return Wrap(
-      spacing: AppSpacing.s,
-      runSpacing: AppSpacing.s,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        SizedBox(
-          width: 240,
-          child: TextField(
-            controller: _ctrl,
-            decoration: InputDecoration(
-              hintText: l.filterSearchHint,
-              prefixIcon: const Icon(Icons.search, size: 18),
-              border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.m,
-                vertical: AppSpacing.s,
+    return LayoutBuilder(
+      builder: (context, constraints) => Wrap(
+        spacing: AppSpacing.s,
+        runSpacing: AppSpacing.s,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          SizedBox(
+            // 窄寬度（手機）搜尋欄獨佔一行，其餘篩選換到下一行。
+            width: constraints.maxWidth < _narrowWidth
+                ? constraints.maxWidth
+                : 240,
+            child: TextField(
+              controller: _ctrl,
+              decoration: InputDecoration(
+                hintText: l.filterSearchHint,
+                prefixIcon: const Icon(Icons.search, size: 18),
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.m,
+                  vertical: AppSpacing.s,
+                ),
+                isDense: true,
               ),
-              isDense: true,
+              onChanged: _onQueryChanged,
             ),
-            onChanged: _onQueryChanged,
           ),
-        ),
-        DropdownButton<RarityFilter>(
-          value: widget.state.filter.rarity,
-          onChanged: (v) {
-            if (v != null) {
-              widget.onFilterChanged(widget.state.filter.copyWith(rarity: v));
-            }
-          },
-          items: [
-            DropdownMenuItem(
-              value: RarityFilter.all,
-              child: Text(l.filterRarityAll),
-            ),
-            DropdownMenuItem(
-              value: RarityFilter.fiveStar,
-              child: Text(l.filterRarityRankOnly(l.rarityStar(5))),
-            ),
-            DropdownMenuItem(
-              value: RarityFilter.fourStar,
-              child: Text(l.filterRarityRankOnly(l.rarityStar(4))),
-            ),
-          ],
-        ),
-        DropdownButton<String?>(
-          value: widget.state.filter.itemType,
-          onChanged: (v) {
-            widget.onFilterChanged(widget.state.filter.copyWith(itemType: v));
-          },
-          items: [
-            DropdownMenuItem<String?>(
-              value: null,
-              child: Text(l.filterKindAll),
-            ),
-            for (final t in widget.availableItemTypes)
+          DropdownButton<RarityFilter>(
+            value: widget.state.filter.rarity,
+            onChanged: (v) {
+              if (v != null) {
+                widget.onFilterChanged(widget.state.filter.copyWith(rarity: v));
+              }
+            },
+            items: [
+              DropdownMenuItem(
+                value: RarityFilter.all,
+                child: Text(l.filterRarityAll),
+              ),
+              DropdownMenuItem(
+                value: RarityFilter.fiveStar,
+                child: Text(l.filterRarityRankOnly(l.rarityStar(5))),
+              ),
+              DropdownMenuItem(
+                value: RarityFilter.fourStar,
+                child: Text(l.filterRarityRankOnly(l.rarityStar(4))),
+              ),
+            ],
+          ),
+          DropdownButton<String?>(
+            value: widget.state.filter.itemType,
+            onChanged: (v) {
+              widget.onFilterChanged(widget.state.filter.copyWith(itemType: v));
+            },
+            items: [
               DropdownMenuItem<String?>(
-                value: t,
-                child: Text(itemTypeKeyLabel(t, l)),
+                value: null,
+                child: Text(l.filterKindAll),
               ),
-          ],
-        ),
-        if (widget.state.filter.hasAny)
-          TextButton.icon(
-            onPressed: widget.onClear,
-            icon: const Icon(Icons.clear, size: 16),
-            label: Text(l.filterClear),
+              for (final t in widget.availableItemTypes)
+                DropdownMenuItem<String?>(
+                  value: t,
+                  child: Text(itemTypeKeyLabel(t, l)),
+                ),
+            ],
           ),
-      ],
+          if (widget.state.filter.hasAny)
+            TextButton.icon(
+              onPressed: widget.onClear,
+              icon: const Icon(Icons.clear, size: 16),
+              label: Text(l.filterClear),
+            ),
+        ],
+      ),
     );
   }
+
+  /// 小於此可用寬度時搜尋欄佔滿整行（和記錄卡片列同一個門檻）。
+  static const double _narrowWidth = 600;
 }
