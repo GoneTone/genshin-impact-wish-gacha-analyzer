@@ -310,4 +310,5 @@ Android 無法攔截網路（遊戲的 WebView 不信任使用者安裝的 CA）
 - 鳴潮版有玩家回報（vivo X200 FE、OriginOS 7、Android 17）：開發人員選項最上方的總開關被關掉、入口卻還留在設定選單，連點版本號碼只會提示入口已顯示，引導一直停在步驟 1。系統讀到的值是對的，這時開發人員選項確實沒開。
 - 照搬鳴潮版最終程式：偵測改讀 `development_settings_enabled` 原始字串，跟 AOSP 設定 App 一樣「不是 0 就算開啟」，沒開時把原始值記進 log；玩家回到 App 仍偵測不到時，步驟 1 多一段總開關的提示與「前往開發人員選項」按鈕；「前往無線偵錯」兩種開法都找不到頁面時記 warning。新字串 `setupDevOptionsUndetected` 加在 9 份已翻譯的 ARB，譯文沿用鳴潮版。
 - 開發人員選項沒開時，系統照樣接受「無線偵錯」的 intent，由設定 App 自己跳提示並關掉頁面，App 無法事先得知，交給系統的提示（鳴潮版在 Android 14 模擬器與 ROG Phone 9 實測）。測試「偵測不到」的流程用 `settings put global development_settings_enabled 0` 即可。
+- 模擬器驗收（Pixel 9 Pro、Android 15，開發人員選項從未開啟，值為 `null`）：第一次按「開始設定」不顯示提示；開「關於」頁面再返回後出現總開關提示與「前往開發人員選項」按鈕，log 記 `development settings not enabled raw=null`；這時按「前往開發人員選項」，系統打開 `Settings$DevelopmentSettingsActivity` 後立刻關掉回到 App；連點版本號碼 7 次再返回，自動進到步驟 2。
 - 和鳴潮版不同：鳴潮版在這次改動中誤刪了狀態層的「拒絕通知權限會被記住」測試，原神版保留。
