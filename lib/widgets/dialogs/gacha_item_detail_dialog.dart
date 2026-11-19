@@ -619,9 +619,10 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   constraints: const BoxConstraints(maxHeight: 120),
                   child: SingleChildScrollView(
                     // 壓低環境 DefaultTextStyle 的行高：flutter_html 以繼承的環境
-                    // 行高當作區塊最小高度，dialog title 的環境行高偏高（約 31px），
-                    // 使「單行說明」被在偏高行框內垂直置中、首行比「多行說明」下移
-                    // 約 6px。壓成 1.0 後區塊最小高度＝文字行高，單行/多行首行對齊。
+                    // 行高當作區塊最小高度。單欄時標題區放在 dialog title，環境行高
+                    // 偏高（約 31px），「單行說明」會在偏高行框內垂直置中、首行比
+                    // 「多行說明」下移約 6px；壓成 1.0 後區塊最小高度＝文字行高，
+                    // 單行/多行首行對齊。手機橫向兩欄時標題區改放在內容區，同樣適用。
                     child: DefaultTextStyle.merge(
                       style: const TextStyle(height: 1.0),
                       child: AppHtml(

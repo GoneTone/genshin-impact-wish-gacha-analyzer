@@ -29,7 +29,8 @@ enum AppDialogSize {
 
 /// 專案統一使用的 dialog 容器。包裝 `AlertDialog` 並自動套寬高上限：
 ///
-/// - 寬：`min(size.maxWidth, mq.size.width - 80)`
+/// - 寬：title 與 content 同鎖 `min(size.maxWidth, mq.size.width - 80)`
+///   （標題內的長文字會在此寬度內換行，不會把 dialog 撐寬）
 /// - 高：`min(maxHeight ?? 720, mq.size.height - 120)`（透過
 ///   `AlertDialog.constraints` 設定）
 /// - 手機排版（[isCompactLayout]）時四周只留 [_compactInset]：寬
