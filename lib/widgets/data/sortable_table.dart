@@ -615,18 +615,7 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final record = row.record;
-    final pityLuck = luckColorFor(
-      luckTierFor(
-        row.mainPityIndex,
-        pityThresholdFor(record.gachaType, mainRank),
-      ),
-      tokens,
-    );
-    final accent = switch (record.rankType) {
-      5 => tokens.fiveStar,
-      4 => tokens.fourStar,
-      _ => null,
-    };
+    final accent = _accentFor(record, tokens);
     final highlight = accent == null
         ? null
         : TextStyle(color: accent, fontWeight: FontWeight.bold);
@@ -699,7 +688,7 @@ class _Row extends StatelessWidget {
               '${row.mainPityIndex}',
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: pityLuck,
+                color: _pityColor(row, mainRank, tokens),
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
