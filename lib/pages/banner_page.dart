@@ -87,7 +87,8 @@ class BannerPage extends ConsumerWidget {
               title: type.resolveName(l),
               icon: _iconForGachaType(type),
             ),
-            SizedBox(height: 320, child: EmptyState.noRecords(context)),
+            // 填滿標題下方的高度再置中，直向、橫向與電腦視窗都落在中間（固定高度只會在那一段裡置中）。
+            Expanded(child: EmptyState.noRecords(context)),
           ],
         ),
       );

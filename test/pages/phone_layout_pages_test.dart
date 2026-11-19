@@ -27,8 +27,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 
 import '../helpers/no_game_dir.dart';
 
@@ -282,6 +285,35 @@ void main() {
     },
     variant: TargetPlatformVariant.only(TargetPlatform.android),
   );
+
+  for (final (name, size) in [
+    ('phone portrait', const Size(360, 800)),
+    ('phone landscape', const Size(800, 256)),
+    ('desktop', const Size(1280, 800)),
+  ]) {
+    testWidgets('empty pool message is centered below the header ($name)', (
+      tester,
+    ) async {
+      // 原本放在固定 320 高的框裡，只在那一段置中，橫向（殼內約 256 高）還會溢出。
+      await pump(tester, size, const BannerPage(gachaType: '302'));
+      expectNoException(tester);
+      final header = tester.getRect(find.byType(PageHeader));
+      final content = tester.getRect(
+        find
+            .descendant(
+              of: find.byType(EmptyState),
+              matching: find.byType(Column),
+            )
+            .first,
+      );
+      final padding = size.shortestSide < 600 ? AppSpacing.m : AppSpacing.l;
+      expect(content.center.dx, closeTo(size.width / 2, 1));
+      expect(
+        content.center.dy,
+        closeTo((header.bottom + size.height - padding) / 2, 1),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
 
   testWidgets('banner page padding is 12 on phones', (tester) async {
     await pump(
