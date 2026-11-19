@@ -29,6 +29,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 
 /// 應用程式入口：初始化 Flutter、Rust bridge（僅 Windows）、視窗管理、log 服務，然後啟動 app。
 ///
@@ -195,6 +196,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       supportedLocales: ref.watch(releasedLocalesProvider),
       localeListResolutionCallback: localeListResolution,
       routerConfig: _router,
+      actions: appActions,
     );
   }
 }

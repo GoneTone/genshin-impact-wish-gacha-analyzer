@@ -4,6 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 
 void main() {
+  test('minimum drag size allows a phone-width window', () {
+    // 拉窄到 600 以下會切成手機排版；預設與保底尺寸仍是 800×450。
+    expect(kMinWindowSize, const Size(360, 450));
+  });
+
   group('computeDefaultWindowSize', () {
     test('橫向 1920×1080 → 1742×980 (16:9)', () {
       final size = computeDefaultWindowSize(const Size(1920, 1080));
