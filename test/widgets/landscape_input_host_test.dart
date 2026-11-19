@@ -157,28 +157,6 @@ void main() {
       expect(find.text('800020450'), findsOneWidget);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-    testWidgets('the keyboard comes back if a hide lands mid-transition', (
-      tester,
-    ) async {
-      tester.view.physicalSize = _landscape;
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: buildDarkTheme(),
-          builder: (context, child) => LandscapeInputHost(child: child!),
-          home: const Scaffold(body: TextField(autofocus: true)),
-        ),
-      );
-      await tester.pump();
-      // 實機上原欄位關閉連線的隱藏會晚於輸入頁的顯示送達。
-      await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
-      expect(tester.testTextInput.isVisible, isFalse);
-      await tester.pumpAndSettle();
-      expect(_pageOpen(), isTrue);
-      expect(tester.testTextInput.isVisible, isTrue);
-    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
-
     testWidgets('hiding the keyboard closes the page like back', (
       tester,
     ) async {
@@ -208,33 +186,15 @@ void main() {
       await tester.enterText(_field, 'new');
       expect(_pageOpen(), isTrue);
 
-      tester.view.resetViewInsets();
+      // 鍵盤收起的動畫一開始就關，不等它收完。
+      tester.view.viewInsets = const FakeViewPadding(bottom: 150);
       await tester.pump();
-      expect(_pageOpen(), isTrue, reason: 'waits in case the keyboard returns');
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pumpAndSettle();
+      await tester.pump();
       expect(_pageOpen(), isFalse);
+      await tester.pumpAndSettle();
       expect(submits, isEmpty);
       expect(controller.text, 'new');
       expect(saved.last, 'new');
-    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
-
-    testWidgets('a hide during the transition does not close the page', (
-      tester,
-    ) async {
-      await _pump(tester, _landscape, const TextField());
-      addTearDown(tester.view.resetViewInsets);
-      // 實機順序：點原欄位鍵盤先出來，輸入頁打開途中原欄位的隱藏才到，換頁結束後鍵盤再出來。
-      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
-      await tester.tap(_field);
-      await tester.pump(const Duration(milliseconds: 50));
-      tester.view.resetViewInsets();
-      await tester.pump(const Duration(milliseconds: 50));
-      await tester.pumpAndSettle();
-      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
-      await tester.pumpAndSettle();
-      await tester.pump(const Duration(seconds: 1));
-      expect(_pageOpen(), isTrue);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
     testWidgets('the page stays while the keyboard has not shown yet', (
@@ -248,7 +208,9 @@ void main() {
       expect(_pageOpen(), isTrue);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-    testWidgets('turning back to portrait closes the page', (tester) async {
+    testWidgets('turning back to portrait closes the page and keeps typing', (
+      tester,
+    ) async {
       await _pump(tester, _landscape, const TextField());
       await tester.tap(_field);
       await tester.pumpAndSettle();
@@ -258,6 +220,32 @@ void main() {
       await tester.pumpAndSettle();
       expect(_pageOpen(), isFalse);
       expect(tester.takeException(), isNull);
+      // 跟原生一樣，轉回直向後原欄位繼續打字。
+      expect(
+        tester
+            .widget<EditableText>(find.byType(EditableText))
+            .focusNode
+            .hasFocus,
+        isTrue,
+      );
+      expect(tester.testTextInput.isVisible, isTrue);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('the original field never asks for the system keyboard', (
+      tester,
+    ) async {
+      await _pump(tester, _landscape, const TextField());
+      tester.testTextInput.log.clear();
+      await tester.tap(_field);
+      await tester.pumpAndSettle();
+      expect(_pageOpen(), isTrue);
+      final types = [
+        for (final call in tester.testTextInput.log)
+          if (call.method == 'TextInput.setClient')
+            ((call.arguments as List)[1] as Map)['inputType']['name'],
+      ];
+      // 原欄位接上時類型是 none（系統鍵盤不出來），只有輸入頁的欄位是一般類型。
+      expect(types, ['TextInputType.none', 'TextInputType.text']);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
     testWidgets('a field in a dialog opens the page too', (tester) async {
