@@ -179,6 +179,87 @@ void main() {
       expect(tester.testTextInput.isVisible, isTrue);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    testWidgets('hiding the keyboard closes the page like back', (
+      tester,
+    ) async {
+      final controller = TextEditingController(text: 'old');
+      addTearDown(controller.dispose);
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      final saved = <String>[];
+      final submits = <String>[];
+      focus.addListener(() {
+        if (!focus.hasFocus) saved.add(controller.text);
+      });
+      await _pump(
+        tester,
+        _landscape,
+        TextField(
+          controller: controller,
+          focusNode: focus,
+          onSubmitted: submits.add,
+        ),
+      );
+      await tester.tap(_field);
+      await tester.pumpAndSettle();
+      addTearDown(tester.view.resetViewInsets);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+      await tester.pumpAndSettle();
+      await tester.enterText(_field, 'new');
+      expect(_pageOpen(), isTrue);
+
+      tester.view.resetViewInsets();
+      await tester.pump();
+      expect(_pageOpen(), isTrue, reason: 'waits in case the keyboard returns');
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+      expect(_pageOpen(), isFalse);
+      expect(submits, isEmpty);
+      expect(controller.text, 'new');
+      expect(saved.last, 'new');
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('a hide during the transition does not close the page', (
+      tester,
+    ) async {
+      await _pump(tester, _landscape, const TextField());
+      addTearDown(tester.view.resetViewInsets);
+      // 實機順序：點原欄位鍵盤先出來，輸入頁打開途中原欄位的隱藏才到，換頁結束後鍵盤再出來。
+      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+      await tester.tap(_field);
+      await tester.pump(const Duration(milliseconds: 50));
+      tester.view.resetViewInsets();
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pumpAndSettle();
+      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
+      expect(_pageOpen(), isTrue);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('the page stays while the keyboard has not shown yet', (
+      tester,
+    ) async {
+      await _pump(tester, _landscape, const TextField());
+      await tester.tap(_field);
+      await tester.pumpAndSettle();
+      // 鍵盤還沒出來過（viewInsets 一直是 0），不能當成玩家收起鍵盤。
+      await tester.pump(const Duration(seconds: 1));
+      expect(_pageOpen(), isTrue);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('turning back to portrait closes the page', (tester) async {
+      await _pump(tester, _landscape, const TextField());
+      await tester.tap(_field);
+      await tester.pumpAndSettle();
+      expect(_pageOpen(), isTrue);
+
+      tester.view.physicalSize = _portrait;
+      await tester.pumpAndSettle();
+      expect(_pageOpen(), isFalse);
+      expect(tester.takeException(), isNull);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     testWidgets('a field in a dialog opens the page too', (tester) async {
       tester.view.physicalSize = _landscape;
       tester.view.devicePixelRatio = 1;
@@ -208,6 +289,47 @@ void main() {
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
       expect(_pageOpen(), isFalse);
+      expect(find.byType(AlertDialog), findsOneWidget);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('submitting while the keyboard closes keeps the dialog', (
+      tester,
+    ) async {
+      tester.view.physicalSize = _landscape;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final submits = <String>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildDarkTheme(),
+          builder: (context, child) => LandscapeInputHost(child: child!),
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) =>
+                      AlertDialog(content: TextField(onSubmitted: submits.add)),
+                ),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.tap(_field);
+      await tester.pumpAndSettle();
+      addTearDown(tester.view.resetViewInsets);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+      await tester.pumpAndSettle();
+      await tester.enterText(_field, 'x');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      tester.view.resetViewInsets();
+      await tester.pumpAndSettle();
+      expect(_pageOpen(), isFalse);
+      expect(submits, ['x']);
       expect(find.byType(AlertDialog), findsOneWidget);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 

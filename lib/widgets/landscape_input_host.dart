@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -130,16 +132,50 @@ class _LandscapeInputPageState extends State<_LandscapeInputPage> {
   /// 換頁動畫；結束時檢查鍵盤。
   Animation<double>? _animation;
 
+  /// 換頁結束後鍵盤是否出來過；出來過之後收起才算玩家收起鍵盤。
+  bool _keyboardShown = false;
+
+  /// 鍵盤收起後等一下再關頁的計時；期間鍵盤又出來就取消。
+  Timer? _hideTimer;
+
+  /// 是否已經在關這頁，避免重複 pop。
+  bool _closing = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _animation?.removeStatusListener(_onAnimation);
     _animation = ModalRoute.of(context)?.animation
       ?..addStatusListener(_onAnimation);
+
+    // 照系統原生的全螢幕輸入：鍵盤收起或轉回直向，輸入區就跟著消失，等同返回、不送出。
+    if (MediaQuery.orientationOf(context) == Orientation.portrait) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _close());
+      return;
+    }
+    // 點原欄位時鍵盤先出來，原欄位關閉連線的隱藏在換頁途中才到（見 _onAnimation），
+    // 所以換頁結束前的變化不算；結束後收起也先等一下，補送的顯示讓鍵盤回來就不關。
+    if (_animation?.status != AnimationStatus.completed) return;
+    if (MediaQuery.viewInsetsOf(context).bottom > 0) {
+      _keyboardShown = true;
+      _hideTimer?.cancel();
+      _hideTimer = null;
+    } else if (_keyboardShown) {
+      _hideTimer ??= Timer(const Duration(milliseconds: 400), _close);
+    }
+  }
+
+  /// 不送出地關掉這頁（等同返回）；已經在關或不是最上層時不做事，免得把底下的對話框也關掉。
+  void _close() {
+    if (_closing || !mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    _closing = true;
+    Navigator.of(context).pop(false);
   }
 
   @override
   void dispose() {
+    _hideTimer?.cancel();
     _animation?.removeStatusListener(_onAnimation);
     _focus.dispose();
     super.dispose();
@@ -148,15 +184,25 @@ class _LandscapeInputPageState extends State<_LandscapeInputPage> {
   /// 原欄位是對話框一打開就自動取得焦點時，它關閉連線的「隱藏鍵盤」會蓋掉這頁的「顯示鍵盤」，
   /// 鍵盤就不會出來；換頁動畫結束後再要求一次。
   void _onAnimation(AnimationStatus status) {
-    if (status == AnimationStatus.completed && _focus.hasFocus) {
+    if (status != AnimationStatus.completed) return;
+    if (_focus.hasFocus) {
       SystemChannels.textInput.invokeMethod<void>('TextInput.show');
+    }
+    // 換頁結束時鍵盤已經在了（之後沒有變化就不會再收到通知），先記下來。
+    if ((MediaQuery.maybeViewInsetsOf(context)?.bottom ?? 0) > 0) {
+      _keyboardShown = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final field = widget.field;
-    void submit() => Navigator.of(context).pop(true);
+    void submit() {
+      if (_closing) return;
+      _closing = true;
+      Navigator.of(context).pop(true);
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
