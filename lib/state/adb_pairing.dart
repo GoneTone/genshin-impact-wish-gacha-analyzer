@@ -42,7 +42,11 @@ enum PairingPhase {
 /// 設定流程的狀態。
 class AdbPairingState {
   /// 建立狀態。
-  const AdbPairingState(this.phase, {this.notificationsDenied = false});
+  const AdbPairingState(
+    this.phase, {
+    this.notificationsDenied = false,
+    this.devOptionsUndetected = false,
+  });
 
   /// 目前階段。
   final PairingPhase phase;
@@ -50,9 +54,19 @@ class AdbPairingState {
   /// 玩家拒絕過通知權限（畫面改為引導到 App 通知設定）。
   final bool notificationsDenied;
 
-  /// 換階段，保留其他欄位。
-  AdbPairingState to(PairingPhase next) =>
-      AdbPairingState(next, notificationsDenied: notificationsDenied);
+  /// 玩家回到 App 後仍偵測不到開發人員選項（畫面改提示總開關可能被關掉）。
+  final bool devOptionsUndetected;
+
+  /// 複製並替換指定欄位。
+  AdbPairingState copyWith({
+    PairingPhase? phase,
+    bool? notificationsDenied,
+    bool? devOptionsUndetected,
+  }) => AdbPairingState(
+    phase ?? this.phase,
+    notificationsDenied: notificationsDenied ?? this.notificationsDenied,
+    devOptionsUndetected: devOptionsUndetected ?? this.devOptionsUndetected,
+  );
 }
 
 /// 無線偵錯設定流程：說明頁 → 開發人員選項 → 通知權限 → 配對 → 授權。
@@ -72,9 +86,12 @@ class AdbPairingController extends Notifier<AdbPairingState> {
   /// 開始設定時無線偵錯是否本來就開著；是的話設定完的那次更新不關它（只關照引導才打開的）。
   bool wirelessWasOnAtStart = false;
 
+  /// 是否已檢查過一次開發人員選項（之後再偵測不到才顯示總開關的提示）。
+  bool _devOptionsChecked = false;
+
   /// 切換階段；玩家已離開設定頁（provider 已回收）時忽略。
   void _go(PairingPhase phase) {
-    if (ref.mounted) state = state.to(phase);
+    if (ref.mounted) state = state.copyWith(phase: phase);
   }
 
   @override
@@ -119,7 +136,16 @@ class AdbPairingController extends Notifier<AdbPairingState> {
       return;
     }
     if (!await _platform.isDevelopmentSettingsEnabled()) {
-      _go(PairingPhase.needDevOptions);
+      // 第一次檢查在按「開始設定」時；之後回到 App 仍偵測不到，多半是入口還在但總開關被關掉
+      // （例如 vivo 連點版本號碼只會說入口已顯示），才提示玩家去開總開關。
+      final undetected = _devOptionsChecked;
+      _devOptionsChecked = true;
+      if (ref.mounted) {
+        state = state.copyWith(
+          phase: PairingPhase.needDevOptions,
+          devOptionsUndetected: state.devOptionsUndetected || undetected,
+        );
+      }
       return;
     }
     if (!await _platform.areNotificationsEnabled()) {
@@ -141,9 +167,7 @@ class AdbPairingController extends Notifier<AdbPairingState> {
     final granted = await _platform.requestNotificationPermission();
     _log.info('notification permission granted=$granted');
     if (!granted) {
-      if (ref.mounted) {
-        state = AdbPairingState(state.phase, notificationsDenied: true);
-      }
+      if (ref.mounted) state = state.copyWith(notificationsDenied: true);
       return;
     }
     await refresh();

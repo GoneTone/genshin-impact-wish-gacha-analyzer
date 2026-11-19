@@ -53,8 +53,8 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
         when (call.method) {
             "sdkInt" -> result.success(Build.VERSION.SDK_INT)
             "isWifiConnected" -> result.success(isWifiConnected())
-            "isDevelopmentSettingsEnabled" -> result.success(
-                Settings.Global.getInt(resolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) == 1
+            "developmentSettingsEnabledRaw" -> result.success(
+                Settings.Global.getString(resolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED)
             )
             "isAdbWifiEnabled" -> result.success(Settings.Global.getInt(resolver, ADB_WIFI_ENABLED, 0) == 1)
             "setAdbWifiEnabled" -> {
@@ -72,7 +72,7 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
                     PackageManager.PERMISSION_GRANTED
             )
             "discoverAdbConnectPorts" -> discoverPorts("_adb-tls-connect._tcp", result)
-            "openWirelessDebugging" -> { openWirelessDebugging(); result.success(null) }
+            "openWirelessDebugging" -> result.success(openWirelessDebugging())
             "openDeveloperOptions" -> {
                 startOrLog(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)); result.success(null)
             }
@@ -171,9 +171,9 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
 
     /**
      * 先用快速設定磚長按的入口直接開「無線偵錯」頁；同時帶 Shizuku 用的捲動參數，
-     * 系統不認得直接開頁時，至少會在開發人員選項捲到「無線偵錯」。
+     * 系統不認得直接開頁時，至少會在開發人員選項捲到「無線偵錯」。兩者都找不到頁面時回傳 false。
      */
-    private fun openWirelessDebugging() {
+    private fun openWirelessDebugging(): Boolean {
         // 接這個 action 的 Activity 各版本名稱不同（Android 13 是 DevelopmentSettingsDashboardActivity、
         // ASUS Android 16 是 DevelopmentSettingsActivity），跟系統介面一樣只指定套件讓系統解析。
         val direct = Intent("android.service.quicksettings.action.QS_TILE_PREFERENCES")
@@ -189,8 +189,7 @@ class LogAccessChannel(private val activity: Activity, messenger: BinaryMessenge
             // 開發人員選項處理完磚的 Intent 後留在底下，回到它時會再開一次無線偵錯頁，
             // 返回鍵永遠回不到本 App；不留歷史讓它開完頁面就結束。
             .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-        if (startOrLog(direct)) return
-        startOrLog(
+        return startOrLog(direct) || startOrLog(
             Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
                 .putExtra(":settings:fragment_args_key", "toggle_adb_wireless")
         )

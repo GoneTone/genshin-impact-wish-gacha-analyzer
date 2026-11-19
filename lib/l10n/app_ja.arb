@@ -1116,6 +1116,10 @@
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
+  "setupDevOptionsUndetected": "開発者向けオプションはまだオフです。「ビルド番号」をタップしたときに、これ以上の操作は不要と表示された場合（例：「すでにデベロッパーです」）、開発者向けオプションのメインスイッチがオフになっています。「開発者向けオプション」を開いて一番上のスイッチをオンにしてから、このアプリに戻ってください。",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
   "setupOpenAbout": "「デバイス情報」を開く",
   "@setupOpenAbout": {
     "description": "Button that opens the system About page"

@@ -84,5 +84,20 @@ void main() {
     expect(await p.sdkInt(), 0);
     expect(await p.discoverAdbConnectPorts(), isEmpty);
     await p.openWirelessDebugging();
+    expect(await p.isDevelopmentSettingsEnabled(), isFalse);
+  });
+
+  test('development settings follow AOSP: any non-zero value is on', () async {
+    final p = LogAccessPlatform();
+    for (final (raw, on) in [
+      ('1', true),
+      ('2', true),
+      ('0', false),
+      (null, false),
+    ]) {
+      respond((_) => raw);
+      expect(await p.isDevelopmentSettingsEnabled(), on, reason: '$raw');
+      expect(calls.single.method, 'developmentSettingsEnabledRaw');
+    }
   });
 }

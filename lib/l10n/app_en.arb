@@ -1116,6 +1116,10 @@
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
+  "setupDevOptionsUndetected": "Developer options are still off. If the system said there was nothing more to do when you tapped \"Build number\" (for example, \"You are already a developer\"), the main Developer options switch is off. Open Developer options, turn on the switch at the top, then come back to this app.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
   "setupOpenAbout": "Open About page",
   "@setupOpenAbout": {
     "description": "Button that opens the system About page"

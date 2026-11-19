@@ -36,9 +36,13 @@ class LogAccessPlatform {
   /// 目前的網路是否為 Wi‑Fi。
   Future<bool> isWifiConnected() => _call('isWifiConnected', false);
 
-  /// 開發人員選項是否已開啟。
-  Future<bool> isDevelopmentSettingsEnabled() =>
-      _call('isDevelopmentSettingsEnabled', false);
+  /// 開發人員選項是否已開啟；跟 AOSP 設定 App 一樣，值不是 0 就算開啟。
+  Future<bool> isDevelopmentSettingsEnabled() async {
+    final raw = await _call<String?>('developmentSettingsEnabledRaw', null);
+    final enabled = (int.tryParse(raw ?? '') ?? 0) != 0;
+    if (!enabled) _log.info('development settings not enabled raw=$raw');
+    return enabled;
+  }
 
   /// 無線偵錯（`adb_wifi_enabled`）目前是否開啟。
   Future<bool> isAdbWifiEnabled() => _call('isAdbWifiEnabled', false);
@@ -60,9 +64,14 @@ class LogAccessPlatform {
     return [for (final p in ports) p as int];
   }
 
-  /// 開啟系統的「無線偵錯」頁（不支援時退回開發人員選項）。
-  Future<void> openWirelessDebugging() =>
-      _call<Object?>('openWirelessDebugging', null);
+  /// 開啟系統的「無線偵錯」頁（不支援時退回開發人員選項）；兩者都找不到頁面時記 warning。
+  ///
+  /// 開發人員選項沒開時，系統通常會打開頁面再自己關掉並跳提示，這裡無法得知。
+  Future<void> openWirelessDebugging() async {
+    if (!await _call('openWirelessDebugging', false)) {
+      _log.warning('wireless debugging settings not found');
+    }
+  }
 
   /// 開啟開發人員選項。
   Future<void> openDeveloperOptions() =>

@@ -1116,6 +1116,10 @@
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
+  "setupDevOptionsUndetected": "Las Opciones para desarrolladores siguen desactivadas. Si al tocar \"Número de compilación\" el sistema indicó que no hacía falta hacer nada más (por ejemplo, \"Ya eres desarrollador\"), el interruptor principal de las Opciones para desarrolladores está desactivado. Abre las Opciones para desarrolladores, activa el interruptor de la parte superior y vuelve a esta app.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
   "setupOpenAbout": "Abrir información del dispositivo",
   "@setupOpenAbout": {
     "description": "Button that opens the system About page"

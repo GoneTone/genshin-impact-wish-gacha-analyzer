@@ -41,6 +41,7 @@ class _Platform extends LogAccessPlatform {
   Future<void> stopPairingService() async => serviceRunning = false;
   @override
   Future<void> openWirelessDebugging() async => wirelessOpens++;
+
   @override
   Future<bool> hasWriteSecureSettings() async => wss;
   bool adbWifiOn = true;
@@ -166,6 +167,18 @@ void main() {
     await ctl().refresh();
     expect(phase(), PairingPhase.ready);
   });
+
+  test(
+    'switch hint appears only after a re-check still finds dev options off',
+    () async {
+      platform.dev = false;
+      await ctl().startSetup();
+      expect(c.read(adbPairingProvider).devOptionsUndetected, isFalse);
+      await ctl().refresh();
+      expect(phase(), PairingPhase.needDevOptions);
+      expect(c.read(adbPairingProvider).devOptionsUndetected, isTrue);
+    },
+  );
 
   test('denied notification permission is remembered for the UI', () async {
     platform

@@ -1116,6 +1116,10 @@
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
+  "setupDevOptionsUndetected": "Tùy chọn cho nhà phát triển vẫn đang tắt. Nếu khi nhấn “Số bản dựng”, hệ thống báo không cần thao tác thêm (ví dụ “Bạn đã là nhà phát triển”), nghĩa là công tắc chính của Tùy chọn cho nhà phát triển đang tắt. Hãy mở Tùy chọn cho nhà phát triển, bật công tắc trên cùng rồi quay lại ứng dụng này.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
   "setupOpenAbout": "Mở trang Giới thiệu",
   "@setupOpenAbout": {
     "description": "Button that opens the system About page"

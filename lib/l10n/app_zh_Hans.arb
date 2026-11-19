@@ -1112,6 +1112,10 @@
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
+  "setupDevOptionsUndetected": "开发者选项仍未开启。如果连点版本号时，系统表示无需再操作（例如「您已处于开发者模式」），说明开发者选项的总开关被关闭了，请到「开发者选项」开启最上方的开关后，再回到本 App。",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
   "setupOpenAbout": "打开「关于」页面",
   "@setupOpenAbout": {
     "description": "Button that opens the system About page"
