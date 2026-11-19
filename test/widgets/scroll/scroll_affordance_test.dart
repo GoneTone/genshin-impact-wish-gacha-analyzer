@@ -52,4 +52,46 @@ void main() {
     );
     expect(inkWell.onTap, isNull);
   });
+
+  testWidgets('arrow hit area is 48dp on phones and its edge is tappable', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var taps = 0;
+    await tester.pumpWidget(
+      _wrap(
+        (tokens) => ScrollArrowButton(
+          icon: Icons.arrow_left,
+          tooltip: 'prev',
+          tokens: tokens,
+          onPressed: () => taps++,
+        ),
+      ),
+    );
+    final size = tester.getSize(find.byType(ScrollArrowButton));
+    expect(size.width, greaterThanOrEqualTo(48));
+    expect(size.height, greaterThanOrEqualTo(48));
+    // 點在 24dp 圓圈外、48dp 觸控區內。
+    await tester.tapAt(
+      tester.getCenter(find.byType(ScrollArrowButton)) + const Offset(20, 0),
+    );
+    await tester.pump();
+    expect(taps, 1);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('arrow stays 24dp on desktop', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (tokens) => ScrollArrowButton(
+          icon: Icons.arrow_left,
+          tooltip: 'prev',
+          tokens: tokens,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(ScrollArrowButton)).width, 24);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 }

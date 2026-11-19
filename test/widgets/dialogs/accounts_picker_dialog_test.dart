@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
 final _entries = [
   AccountPickerEntry(
@@ -207,5 +208,32 @@ void main() {
 
     expect(find.byIcon(Icons.close), findsOneWidget);
     expect(find.byIcon(Icons.check), findsOneWidget);
+  });
+
+  testWidgets('tapping the update time on a phone still toggles the row', (
+    tester,
+  ) async {
+    // 相對時間的提示框在手機上改成點一下顯示；勾選列裡不能讓它搶走點擊。
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _open(tester);
+    final row = find.widgetWithText(CheckboxListTile, '100000002');
+    await tester.tap(
+      find.descendant(
+        of: find.descendant(of: row, matching: find.byType(RelativeTimeText)),
+        matching: find.byType(Tooltip),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.widget<CheckboxListTile>(row).value, isFalse);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('account rows fit a phone width', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _open(tester);
+    expect(tester.takeException(), isNull);
   });
 }

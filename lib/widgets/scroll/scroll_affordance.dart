@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 
 /// 點擊捲動箭頭的動畫時長（timeline 與頁籤列共用）。
@@ -73,6 +74,7 @@ class ScrollArrowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
+    final circle = _circle(enabled);
     return Semantics(
       button: true,
       enabled: enabled,
@@ -81,32 +83,45 @@ class ScrollArrowButton extends StatelessWidget {
         message: tooltip,
         child: MouseRegion(
           cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-          child: Material(
-            color: tokens.surfaceCard.withValues(alpha: 0.85),
-            shape: CircleBorder(
-              side: BorderSide(
-                color: tokens.textMuted.withValues(alpha: 0.25),
-                width: 1,
-              ),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: onPressed,
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: Icon(
-                  icon,
-                  size: 16,
-                  color: enabled
-                      ? tokens.textPrimary
-                      : tokens.textMuted.withValues(alpha: 0.4),
-                ),
-              ),
-            ),
-          ),
+          // 手機排版時外圈多一層 48dp 觸控區，看得到的圓圈仍是 24dp。
+          child: isCompactLayout(context)
+              ? GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: onPressed,
+                  child: SizedBox.square(
+                    dimension: 48,
+                    child: Center(child: circle),
+                  ),
+                )
+              : circle,
         ),
       ),
     );
   }
+
+  /// 24dp 的圓形箭頭按鈕本體。
+  Widget _circle(bool enabled) => Material(
+    color: tokens.surfaceCard.withValues(alpha: 0.85),
+    shape: CircleBorder(
+      side: BorderSide(
+        color: tokens.textMuted.withValues(alpha: 0.25),
+        width: 1,
+      ),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap: onPressed,
+      child: SizedBox(
+        width: 24,
+        height: 24,
+        child: Icon(
+          icon,
+          size: 16,
+          color: enabled
+              ? tokens.textPrimary
+              : tokens.textMuted.withValues(alpha: 0.4),
+        ),
+      ),
+    ),
+  );
 }

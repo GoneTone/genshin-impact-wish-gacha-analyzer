@@ -319,4 +319,34 @@ void main() {
       expect(find.textContaining('123456789'), findsWidgets);
     });
   });
+
+  testWidgets('account drag handle is at least 48dp on phones', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final storage = GachaStorage(tempDir);
+    await tester.runAsync(() async {
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+    });
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(storage: storage);
+    });
+    addTearDown(container.dispose);
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final handle = tester.getSize(
+      find.byType(ReorderableDragStartListener).first,
+    );
+    expect(handle.width, greaterThanOrEqualTo(48));
+    expect(handle.height, greaterThanOrEqualTo(48));
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

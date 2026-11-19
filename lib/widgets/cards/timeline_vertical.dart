@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
@@ -439,6 +440,7 @@ class _EntryRow extends StatelessWidget {
             message: entry.name,
             preferBelow: false,
             waitDuration: const Duration(milliseconds: 100),
+            triggerMode: tapTooltipTrigger(context),
             child: SizedBox(
               width: _haloSize,
               child: Center(
@@ -472,6 +474,7 @@ class _EntryRow extends StatelessWidget {
                     message: entry.name,
                     preferBelow: false,
                     waitDuration: const Duration(milliseconds: 100),
+                    triggerMode: tapTooltipTrigger(context),
                     child: Text.rich(
                       TextSpan(
                         style: TextStyle(

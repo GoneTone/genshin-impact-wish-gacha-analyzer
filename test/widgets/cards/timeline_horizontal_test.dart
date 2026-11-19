@@ -434,4 +434,27 @@ void main() {
 
     expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
   });
+
+  testWidgets('timeline scrolls with a finger drag', (tester) async {
+    final entries = [
+      for (var i = 19; i >= 0; i--)
+        _e(
+          'E$i',
+          '301',
+          60 + (19 - i),
+          DateTime(2025, 1, 1).add(Duration(days: i)),
+        ),
+    ];
+    await pumpTimelineHorizontal(tester, entries: entries, targetRank: 5);
+    await tester.drag(find.byType(TimelineHorizontal), const Offset(-300, 0));
+    await tester.pumpAndSettle();
+    final state = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(state.position.pixels, greaterThan(0));
+    expect(tester.takeException(), isNull);
+  });
 }

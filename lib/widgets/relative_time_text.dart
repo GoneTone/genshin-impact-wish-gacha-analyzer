@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 
 /// 顯示「<前綴><相對時間><後綴>」格式的 localized 字串,並只對相對時間
@@ -21,6 +22,7 @@ class RelativeTimeText extends ConsumerWidget {
     this.useDateOnly = false,
     this.style,
     this.overflow,
+    this.tooltipOnTap = true,
   });
 
   /// 要轉成相對時間的目標時間。
@@ -39,6 +41,9 @@ class RelativeTimeText extends ConsumerWidget {
 
   /// 文字溢出處理方式。
   final TextOverflow? overflow;
+
+  /// 手機上是否點一下就顯示絕對時間；外層本身可點（例如勾選列）時設 `false`。
+  final bool tooltipOnTap;
 
   /// 用於切割 template 字串的占位字元（OBJECT REPLACEMENT CHARACTER U+FFFC）。
   static const _sentinel = '￼';
@@ -67,6 +72,7 @@ class RelativeTimeText extends ConsumerWidget {
             alignment: PlaceholderAlignment.middle,
             child: Tooltip(
               message: tooltipMessage,
+              triggerMode: tooltipOnTap ? tapTooltipTrigger(context) : null,
               child: Text(relative, style: style),
             ),
           ),

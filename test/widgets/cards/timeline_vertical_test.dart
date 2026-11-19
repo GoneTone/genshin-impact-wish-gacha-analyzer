@@ -799,4 +799,31 @@ void main() {
     )!;
     expect(find.text(l.luckTierLucky), findsOneWidget);
   });
+
+  testWidgets('on phones a tap on the node or the date shows the name', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineVertical(
+          entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+          colors: colors,
+          targetRank: 5,
+        ),
+      ),
+    );
+    final tips = find.descendant(
+      of: find.byType(TimelineVertical),
+      matching: find.byType(Tooltip),
+    );
+    for (final tip in [tips.first, tips.last]) {
+      await tester.tap(tip);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('夜蘭'), findsNWidgets(2));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+    }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

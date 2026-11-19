@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_affordance.dart';
 
@@ -136,7 +137,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
     return Row(
       children: [
         SizedBox(
-          width: _arrowSlotWidth,
+          width: isCompactLayout(context) ? 48 : _arrowSlotWidth,
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_left,
@@ -212,7 +213,7 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
         ),
         const SizedBox(width: _arrowGap),
         SizedBox(
-          width: _arrowSlotWidth,
+          width: isCompactLayout(context) ? 48 : _arrowSlotWidth,
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_right,

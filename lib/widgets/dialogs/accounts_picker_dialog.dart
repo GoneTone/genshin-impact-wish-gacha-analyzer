@@ -234,12 +234,13 @@ class _PickerRow extends StatelessWidget {
       ),
       subtitle: DefaultTextStyle.merge(
         style: TextStyle(color: tokens.textMuted, fontSize: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             RelativeTimeText(
               time: entry.lastUpdated,
               templateBuilder: l.accountLastUpdated,
+              tooltipOnTap: false,
             ),
             const Text(' ・ '),
             Text(l.accountRecordCount(entry.recordCount)),
