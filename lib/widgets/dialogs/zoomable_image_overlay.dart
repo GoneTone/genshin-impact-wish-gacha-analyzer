@@ -7,9 +7,18 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
 
-/// 開啟全螢幕 lightbox 顯示 [imageFile]，可拖曳平移、滾輪 / 單擊縮放、ESC / 點背景 / X 關閉。
+/// 會觸發長按選單的指標種類（觸控與觸控筆）；滑鼠長按不算，維持桌面的單擊行為。
+const Set<PointerDeviceKind> kTouchLikeDevices = {
+  PointerDeviceKind.touch,
+  PointerDeviceKind.stylus,
+  PointerDeviceKind.invertedStylus,
+};
+
+/// 開啟全螢幕 lightbox 顯示 [imageFile]：滑鼠可滾輪／單擊縮放，觸控可雙指縮放／點兩下縮放／往下滑關閉；
+/// 都可拖曳平移、右鍵或長按叫出選單、ESC／點背景／X 關閉。
 /// [suggestedBaseName] 為 copy／save 對話框的建議檔名（不含副檔名）。
 Future<void> showZoomableImageOverlay(
   BuildContext context, {
@@ -66,6 +75,21 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 放大狀態的目標 scale；fit ↔ 此值切換。
   static const double _zoomedScale = 2.0;
 
+  /// 觸控往下拖超過這個距離（且以垂直為主）就關閉。
+  static const double _swipeCloseDistance = 120;
+
+  /// 量觸控連點間隔用的時鐘（不加 DoubleTapGestureRecognizer，避免拖慢滑鼠單擊）。
+  final Stopwatch _tapClock = Stopwatch()..start();
+
+  /// 上一次觸控點擊的時間與位置；用來判斷「點兩下」。
+  ({Duration time, Offset position})? _lastTouchTap;
+
+  /// 觸控往下滑關閉：按下時的位置；多指、滑鼠或已放大時為 null。
+  Offset? _swipeStart;
+
+  /// 目前按著的指標數（雙指縮放時不判斷往下滑）。
+  int _pointers = 0;
+
   /// 控制 InteractiveViewer 的 Matrix4；wheel / 單擊會手動設置 scale，
   /// InteractiveViewer 自動處理 pan。
   final TransformationController _ctrl = TransformationController();
@@ -99,7 +123,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
   /// 目前是否已放大（scale > fit）；驅動圖片游標與縮放鈕 icon。
   bool _zoomed = false;
 
-  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放。
+  /// 最近一次 layout 的 viewport 尺寸；供縮放鈕以 viewport 中心為焦點縮放，改變（轉向）時重設縮放。
   Size? _viewportSize;
 
   @override
@@ -107,6 +131,8 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     super.initState();
     _stream = _imageProvider.resolve(ImageConfiguration.empty);
     _stream!.addListener(_streamListener);
+    // 雙指縮放與轉向重設由 InteractiveViewer／post-frame 直接寫矩陣，一律從矩陣同步 _zoomed。
+    _ctrl.addListener(_syncZoomed);
   }
 
   @override
@@ -116,7 +142,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     super.dispose();
   }
 
-  /// 關 overlay 並 log 來源。[reason] 走 `backdrop | outside-image | button` 三選一；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
+  /// 關 overlay 並 log 來源。[reason] 走 `backdrop | outside-image | button | swipe-down`；ESC 由 Navigator barrierDismissible 處理，不經此路徑。
   void _close(String reason) {
     Logger('gacha.hoyowiki.zoom').info('overlay close reason=$reason');
     Navigator.of(context).pop();
@@ -153,7 +179,6 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     if (event.scrollDelta.dy == 0) return;
     final delta = event.scrollDelta.dy < 0 ? _wheelStep : 1 / _wheelStep;
     _zoomAt(localFocal: event.localPosition, scaleDelta: delta);
-    _syncZoomed();
   }
 
   /// 由當前矩陣推導 [_zoomed]；有變才 setState（讓游標／icon 同步、避免多餘 rebuild）。
@@ -162,17 +187,72 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     if (z != _zoomed) setState(() => _zoomed = z);
   }
 
-  /// 單擊圖片或按縮放鈕：在 fit ↔ [_zoomedScale] 間切換，以 [viewportFocal]
+  /// 點擊圖片或按縮放鈕：在 fit ↔ [_zoomedScale] 間切換，以 [viewportFocal]
   /// （viewport 局部座標）為焦點。
   void _toggleZoom(Offset viewportFocal) {
     final current = _ctrl.value.getMaxScaleOnAxis();
     final atFit = (current - _minScale).abs() < 0.05;
     final target = atFit ? _zoomedScale : _minScale;
     _zoomAt(localFocal: viewportFocal, scaleDelta: target / current);
-    _syncZoomed();
     Logger(
       'gacha.hoyowiki.zoom',
     ).info('zoom toggle -> ${atFit ? 'in' : 'fit'}');
+  }
+
+  /// 點擊圖片：滑鼠單擊立即縮放；觸控單擊不做事，連點兩下才縮放。
+  /// 無 DoubleTapGR，滑鼠單擊不受 kDoubleTapTimeout 影響。[viewportFocal] 為落點的 viewport 局部座標。
+  void _onTapZoom(TapUpDetails details, Offset viewportFocal) {
+    if (details.kind != PointerDeviceKind.touch) {
+      _toggleZoom(viewportFocal);
+      return;
+    }
+    final now = _tapClock.elapsed;
+    final last = _lastTouchTap;
+    if (last != null &&
+        now - last.time <= kDoubleTapTimeout &&
+        (details.localPosition - last.position).distance <= kDoubleTapSlop) {
+      _lastTouchTap = null;
+      _toggleZoom(viewportFocal);
+      return;
+    }
+    _lastTouchTap = (time: now, position: details.localPosition);
+  }
+
+  /// 觸控按下：單指且未放大時記下起點，準備判斷往下滑關閉。
+  void _onPointerDown(PointerDownEvent event) {
+    _pointers++;
+    _swipeStart =
+        _pointers == 1 && event.kind == PointerDeviceKind.touch && !_zoomed
+        ? event.position
+        : null;
+  }
+
+  /// 觸控放開：往下拖得夠遠且以垂直為主就關閉（放大時拖曳是平移，不會走到這裡）。
+  void _onPointerUp(PointerUpEvent event) {
+    _pointers = (_pointers - 1).clamp(0, 99);
+    final start = _swipeStart;
+    _swipeStart = null;
+    if (start == null) return;
+    final delta = event.position - start;
+    if (delta.dy > _swipeCloseDistance && delta.dy.abs() > 2 * delta.dx.abs()) {
+      _close('swipe-down');
+    }
+  }
+
+  /// 指標被取消（例如手勢被系統攔走）時重設狀態。
+  void _onPointerCancel(PointerCancelEvent event) {
+    _pointers = (_pointers - 1).clamp(0, 99);
+    _swipeStart = null;
+  }
+
+  /// 記錄 viewport 大小；改變（轉向、視窗縮放）時把縮放重設回 fit，圖片不會卡在畫面外。
+  void _resetOnViewportChange(Size viewport) {
+    final last = _viewportSize;
+    _viewportSize = viewport;
+    if (last == null || last == viewport) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _ctrl.value = Matrix4.identity();
+    });
   }
 
   /// copy／save 共用選單項目（複製圖片 ／ 儲存圖片）；⋮ 按鈕與右鍵選單共用。
@@ -240,9 +320,13 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     child: child,
   );
 
-  /// 右鍵在圖片上叫出與 ⋮ 相同的選單，位置跟著游標。
-  Future<void> _showContextMenu(Offset globalPosition) async {
+  /// 右鍵或長按在圖片上叫出與 ⋮ 相同的選單，位置跟著游標／手指；[source] 寫進 log。
+  Future<void> _showContextMenu(
+    Offset globalPosition, {
+    String source = 'rightclick',
+  }) async {
     final l = AppLocalizations.of(context)!;
+    Logger('gacha.hoyowiki.zoom').info('menu open source=$source');
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final selected = await showMenu<String>(
       context: context,
@@ -268,11 +352,14 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
             onTap: () => _close('backdrop'),
           ),
         ),
-        // 中央圖片區 — 留 48px padding 給 backdrop tap 區。
+        // 中央圖片區 — 四周留給 backdrop tap 區（手機排版只留 8，讓圖片盡量大）。
         Padding(
-          padding: const EdgeInsets.all(48),
+          padding: EdgeInsets.all(isCompactLayout(context) ? 8 : 48),
           child: Listener(
             onPointerSignal: _onPointerSignal,
+            onPointerDown: _onPointerDown,
+            onPointerUp: _onPointerUp,
+            onPointerCancel: _onPointerCancel,
             child: GestureDetector(
               // image 像素外的暗區（BoxFit.contain 留白）也視為背景，點擊立即關閉。
               // 只掛 onTap（不掛 onDoubleTap），TapGR 不會被 DoubleTapGR
@@ -282,8 +369,11 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
               child: InteractiveViewer(
                 transformationController: _ctrl,
                 panEnabled: true,
-                // wheel / 單擊 自管 scale，避免兩套 scale source 打架。
-                scaleEnabled: false,
+                // 雙指縮放交給 InteractiveViewer；滾輪／點擊縮放自己寫矩陣。
+                scaleEnabled: true,
+                // InteractiveViewer 開了縮放也會吃滾輪；係數設成無限大讓它每格縮放 1 倍，
+                // 滾輪只走上面 Listener 的 1.1 倍，避免兩邊疊加。
+                scaleFactor: double.infinity,
                 minScale: _minScale,
                 maxScale: _maxScale,
                 child: Center(
@@ -295,10 +385,7 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                   // 就完成，使用者察覺不到。
                   child: LayoutBuilder(
                     builder: (_, constraints) {
-                      _viewportSize = Size(
-                        constraints.maxWidth,
-                        constraints.maxHeight,
-                      );
+                      _resetOnViewportChange(constraints.biggest);
                       final imgSize = _imageSize;
                       double w = constraints.maxWidth;
                       double h = constraints.maxHeight;
@@ -324,23 +411,33 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
                               : SystemMouseCursors.zoomIn,
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            // 單擊圖片像素區 → fit↔2x 切換（焦點＝點擊落點還原成 viewport 座標）。
-                            // 圖片不再單擊關閉；暗區關閉由外層 GD 處理（對應常見圖片檢視器的習慣）。
+                            // 點擊圖片像素區 → fit↔2x 切換（焦點＝點擊落點還原成 viewport 座標）。
+                            // 圖片不再點擊關閉；暗區關閉由外層 GD 處理（對應常見圖片檢視器的習慣）。
                             onTapUp: (d) =>
-                                _toggleZoom(d.localPosition + Offset(dx, dy)),
+                                _onTapZoom(d, d.localPosition + Offset(dx, dy)),
                             onSecondaryTapDown: (d) =>
                                 unawaited(_showContextMenu(d.globalPosition)),
-                            child: Image(
-                              image: _imageProvider,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, e, st) {
-                                Logger('gacha.hoyowiki.zoom').warning(
-                                  'image errorBuilder file=${widget.imageFile.path}',
-                                  e,
-                                  st,
-                                );
-                                return const SizedBox.shrink();
-                              },
+                            // 長按選單只給觸控：滑鼠按久一點放開仍要是單擊縮放（桌面行為不變）。
+                            child: GestureDetector(
+                              supportedDevices: kTouchLikeDevices,
+                              onLongPressStart: (d) => unawaited(
+                                _showContextMenu(
+                                  d.globalPosition,
+                                  source: 'longpress',
+                                ),
+                              ),
+                              child: Image(
+                                image: _imageProvider,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, e, st) {
+                                  Logger('gacha.hoyowiki.zoom').warning(
+                                    'image errorBuilder file=${widget.imageFile.path}',
+                                    e,
+                                    st,
+                                  );
+                                  return const SizedBox.shrink();
+                                },
+                              ),
                             ),
                           ),
                         ),
