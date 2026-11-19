@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -964,6 +965,35 @@ void main() {
       });
       return origFile;
     }
+
+    testWidgets('mouse long press on the image does not open the menu', (
+      tester,
+    ) async {
+      final origFile = await seedWithGallery(tester);
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+      await tester.longPressAt(
+        tester.getCenter(find.byKey(ValueKey(origFile.path))),
+        kind: PointerDeviceKind.mouse,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.text(l.actionSaveImage), findsNothing);
+    });
+
+    testWidgets('long press on the image opens the image menu', (tester) async {
+      final origFile = await seedWithGallery(tester);
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      final l = AppLocalizations.of(
+        tester.element(find.byType(GachaItemDetailDialog)),
+      )!;
+      await tester.longPress(find.byKey(ValueKey(origFile.path)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.text(l.actionSaveImage), findsOneWidget);
+    });
 
     /// 把測試畫面設成 [size]（dpr 1），測試結束後還原。
     void setPhoneView(WidgetTester tester, Size size) {

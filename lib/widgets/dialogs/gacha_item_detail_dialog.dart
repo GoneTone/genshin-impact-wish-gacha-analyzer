@@ -270,7 +270,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     );
   }
 
-  /// 右鍵在圖片上叫出與右上角按鈕相同的選單，位置跟著游標。
+  /// 右鍵或觸控長按在圖片上叫出與右上角按鈕相同的選單，位置跟著游標／手指。
   Future<void> _showImageContextMenu(
     BuildContext context,
     Offset globalPosition,
@@ -368,23 +368,34 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                       current,
                     ),
                   ),
-                  child: Image.file(
-                    file,
-                    key: ValueKey(file.path),
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
-                    // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
-                    // 解碼完才換；配合 precacheImage 消除「閃一下」。
-                    gaplessPlayback: true,
-                    errorBuilder: (_, e, st) {
-                      _log.warning(
-                        'gallery image errorBuilder '
-                        'path=${sanitizeFsPath(file.path)}',
-                        e,
-                        st,
-                      );
-                      return const SizedBox.shrink();
-                    },
+                  // 觸控沒有右鍵，長按叫出同一個選單；滑鼠長按不算，放開仍是開啟看圖。
+                  child: GestureDetector(
+                    supportedDevices: kTouchLikeDevices,
+                    onLongPressStart: (details) => unawaited(
+                      _showImageContextMenu(
+                        context,
+                        details.globalPosition,
+                        current,
+                      ),
+                    ),
+                    child: Image.file(
+                      file,
+                      key: ValueKey(file.path),
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                      // 切 chip / 同圖重 build 時保留前一張 frame，等新 frame
+                      // 解碼完才換；配合 precacheImage 消除「閃一下」。
+                      gaplessPlayback: true,
+                      errorBuilder: (_, e, st) {
+                        _log.warning(
+                          'gallery image errorBuilder '
+                          'path=${sanitizeFsPath(file.path)}',
+                          e,
+                          st,
+                        );
+                        return const SizedBox.shrink();
+                      },
+                    ),
                   ),
                 ),
               ),
