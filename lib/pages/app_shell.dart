@@ -157,7 +157,14 @@ class _AppShellState extends ConsumerState<AppShell> {
                   children: [
                     const _AppIcon(),
                     const SizedBox(width: AppSpacing.s),
-                    Text('${l.appName} v$version'),
+                    // 視窗可縮到 600～799 寬仍是桌面排版，帳號標示一長就會擠到標題。
+                    Flexible(
+                      child: Text(
+                        '${l.appName} v$version',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
           actions: compact

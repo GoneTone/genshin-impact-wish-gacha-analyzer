@@ -234,6 +234,23 @@ void main() {
     expect(find.text(TeamInfo.name), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
+  // 測試字型把拉丁字母與數字畫成全形寬，帳號標示會比實際寬很多；有別名的情況改在 800 寬檢查。
+  for (final (name, size, locale, alias) in [
+    ('640 zh', const Size(640, 450), const Locale('zh'), null),
+    ('640 en', const Size(640, 450), const Locale('en'), null),
+    ('800 zh alias', const Size(800, 450), const Locale('zh'), '主帳號別名'),
+  ]) {
+    testWidgets('narrow desktop title ellipsizes instead of clipping ($name)', (
+      tester,
+    ) async {
+      await pump(tester, size, locale: locale, alias: alias);
+      expect(tester.takeException(), isNull);
+      final title = tester.widget<Text>(find.textContaining('v1.8.1'));
+      expect(title.overflow, TextOverflow.ellipsis);
+      expect(title.maxLines, 1);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+  }
+
   for (final (name, locale, scale) in [
     ('zh', const Locale('zh'), 1.0),
     ('en', const Locale('en'), 1.0),
