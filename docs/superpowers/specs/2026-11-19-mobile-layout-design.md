@@ -263,3 +263,10 @@
 - 原因：系統 log 顯示是 App 自己要求收起鍵盤（`ImeTracker: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT`），而且在系統開始處理返回（`startBackNavigation`）之前。側邊滑動一開始，系統會先把「按下」交給 App，之後才接手並送來取消；`appActions` 覆寫的 `EditableTextTapOutsideIntent` 在按下時就收焦點，所以鍵盤立刻收起。
 - 處理：`appActions` 改覆寫 `EditableTextTapUpOutsideIntent`，在欄位外放開才收焦點（Flutter 文件也建議這樣避免捲動時收焦點）。被系統接手的手勢只有取消、沒有放開，不會收焦點；收起鍵盤交給系統的返回處理，放開才收。
 - 實機（ROG Phone 9 直向）：按住滑到一半鍵盤還在，滑回去取消鍵盤還在，完整滑動放開後鍵盤收起、App 留在前景；點外面一樣收起鍵盤。
+
+### B.4 窄手機狀態列的「最後更新」（總審查第 4 項，2026-11-19 使用者選 B）
+
+- 模擬器（Pixel 9 Pro 調成寬 360dp）實測：英文「Last updated: …」、法文「Dernière mise à jour …」的時間完全被截掉，繁中「最後更新：2 天前」正常。原因是原神版手機排版的連結列有 4 個圖示（比鳴潮版多 Line），各保留 48dp 觸控範圍，左邊只剩約 130dp。這是原神版特有的差異，鳴潮版只有 3 個圖示，不需要。
+- 處理：狀態列的「最後更新」改用 `_FooterLastUpdated`（`app_shell.dart`），每次重繪量完整文字放不放得下（跟著時鐘重算，相對時間長度會變）；放得下照原樣，放不下時前綴換成時鐘圖示（`Icons.update`），只留相對時間。圖示與時間整塊高 48dp，點一下顯示完整的「Last updated: 2 days ago」，長按時間仍顯示絕對時間。
+- 考慮過的其他做法：換兩行（狀態列高度隨語言變）、窄螢幕藏 Line 圖示（少一個入口）、縮小觸控範圍（違反 48dp）。
+- 實機（模擬器 360dp）：英文顯示圖示＋「2 days ago」，點圖示出現完整文字；法文圖示＋「Il y a 2 jours」；繁中維持完整文字。

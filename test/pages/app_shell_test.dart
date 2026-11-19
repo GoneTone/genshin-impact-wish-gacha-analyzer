@@ -351,6 +351,43 @@ void main() {
     expect(find.text(TeamInfo.name), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets('narrow phone footer swaps the last updated prefix for an icon', (
+    tester,
+  ) async {
+    // 原神版手機狀態列有 4 個連結圖示，360 寬時英文、法文的前綴就把時間擠掉了。
+    final l = await pump(
+      tester,
+      const Size(360, 800),
+      locale: const Locale('en'),
+    );
+    final full = l.footerLastUpdated(l.relativeNow);
+    expect(find.byIcon(Icons.update), findsOneWidget);
+    expect(find.text(l.relativeNow), findsOneWidget);
+    expect(find.textContaining('Last updated'), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byIcon(Icons.update));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text(full), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  for (final (name, size, locale) in [
+    ('zh phone', const Size(360, 800), const Locale('zh')),
+    ('en desktop', const Size(1280, 800), const Locale('en')),
+  ]) {
+    testWidgets(
+      'footer keeps the full last updated text when it fits ($name)',
+      (tester) async {
+        final l = await pump(tester, size, locale: locale);
+        expect(find.byIcon(Icons.update), findsNothing);
+        final prefix = l.footerLastUpdated('').trim();
+        expect(find.textContaining(prefix, findRichText: true), findsOneWidget);
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.android),
+    );
+  }
+
   testWidgets('system back closes the open drawer instead of leaving the app', (
     tester,
   ) async {

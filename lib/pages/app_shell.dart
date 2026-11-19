@@ -7,10 +7,12 @@ import 'package:go_router/go_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
@@ -259,11 +261,8 @@ class _AppShellState extends ConsumerState<AppShell> {
                                   style: Theme.of(context).textTheme.bodySmall,
                                   overflow: TextOverflow.ellipsis,
                                 )
-                              : RelativeTimeText(
+                              : _FooterLastUpdated(
                                   time: activeData.lastUpdated,
-                                  templateBuilder: l.footerLastUpdated,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                         ),
                         const SizedBox(width: AppSpacing.s),
@@ -843,6 +842,71 @@ class _BottomRailButton extends StatelessWidget {
                       )),
         ),
       ),
+    );
+  }
+}
+
+/// 底部狀態列的「最後更新」：放得下就顯示完整文字；放不下時前綴換成時鐘圖示，只留相對時間。
+///
+/// 原神版手機狀態列有 4 個連結圖示（多了 Line），360dp 寬時英文、法文的前綴就把時間擠掉了。
+/// 圖示和時間整塊點一下顯示完整文字，長按時間仍看得到絕對時間。
+class _FooterLastUpdated extends ConsumerWidget {
+  /// 建立 [_FooterLastUpdated]。
+  const _FooterLastUpdated({required this.time});
+
+  /// 最後更新時間。
+  final DateTime time;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 相對時間會變長變短（例如「59 分鐘前」→「1 小時前」），跟著重新判斷放不放得下。
+    ref.watch(clockTickProvider);
+    final l = AppLocalizations.of(context)!;
+    final style = Theme.of(context).textTheme.bodySmall;
+    final full = l.footerLastUpdated(relativeTime(time, l));
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final painter = TextPainter(
+          text: TextSpan(text: full, style: style),
+          maxLines: 1,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final fits = painter.width <= constraints.maxWidth;
+        painter.dispose();
+        if (fits) {
+          return RelativeTimeText(
+            time: time,
+            templateBuilder: l.footerLastUpdated,
+            style: style,
+            overflow: TextOverflow.ellipsis,
+          );
+        }
+        return Tooltip(
+          message: full,
+          triggerMode: tapTooltipTrigger(context),
+          // 整列高 48dp，點擊範圍才夠。
+          child: SizedBox(
+            height: 48,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.update, size: 16, semanticLabel: full),
+                const SizedBox(width: AppSpacing.xs),
+                Flexible(
+                  child: RelativeTimeText(
+                    time: time,
+                    templateBuilder: (s) => s,
+                    style: style,
+                    overflow: TextOverflow.ellipsis,
+                    tooltipOnTap: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
