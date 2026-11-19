@@ -242,6 +242,7 @@ class _LocaleDropdown extends ConsumerWidget {
         : const SystemLanguage();
     final dropdown = DropdownButtonFormField<LanguagePreference>(
       initialValue: effectiveCurrent,
+      isExpanded: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -1332,6 +1333,7 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
         const SizedBox(height: AppSpacing.s),
         DropdownButtonFormField<String?>(
           initialValue: current,
+          isExpanded: true,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

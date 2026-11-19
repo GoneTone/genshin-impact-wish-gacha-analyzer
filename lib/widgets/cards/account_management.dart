@@ -227,6 +227,22 @@ class _RowState extends State<_Row> {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
     final compact = isCompactLayout(context);
+    final actions = <Widget>[
+      if (!widget.isActive)
+        TextButton.icon(
+          onPressed: widget.onSetActive,
+          icon: const Icon(Icons.check_circle_outline, size: 18),
+          label: Text(l.accountSetActive),
+        ),
+      TextButton.icon(
+        onPressed: widget.onRemove,
+        icon: Icon(Icons.delete_outline, size: 18, color: tokens.stateDanger),
+        label: Text(
+          l.accountRemove,
+          style: TextStyle(color: tokens.stateDanger),
+        ),
+      ),
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(
@@ -255,7 +271,10 @@ class _RowState extends State<_Row> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Wrap(
+                  spacing: AppSpacing.s,
+                  runSpacing: AppSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       displayUid(widget.uid, mask: widget.maskUid),
@@ -266,7 +285,6 @@ class _RowState extends State<_Row> {
                       ),
                     ),
                     if (widget.isActive) ...[
-                      const SizedBox(width: AppSpacing.s),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.s,
@@ -296,7 +314,7 @@ class _RowState extends State<_Row> {
                 ),
                 const SizedBox(height: AppSpacing.s),
                 SizedBox(
-                  width: 240,
+                  width: compact ? double.infinity : 240,
                   child: TextField(
                     controller: _ctrl,
                     focusNode: _focus,
@@ -310,27 +328,11 @@ class _RowState extends State<_Row> {
                     ),
                   ),
                 ),
+                if (compact) Wrap(children: actions),
               ],
             ),
           ),
-          if (!widget.isActive)
-            TextButton.icon(
-              onPressed: widget.onSetActive,
-              icon: const Icon(Icons.check_circle_outline, size: 18),
-              label: Text(l.accountSetActive),
-            ),
-          TextButton.icon(
-            onPressed: widget.onRemove,
-            icon: Icon(
-              Icons.delete_outline,
-              size: 18,
-              color: tokens.stateDanger,
-            ),
-            label: Text(
-              l.accountRemove,
-              style: TextStyle(color: tokens.stateDanger),
-            ),
-          ),
+          if (!compact) ...actions,
         ],
       ),
     );

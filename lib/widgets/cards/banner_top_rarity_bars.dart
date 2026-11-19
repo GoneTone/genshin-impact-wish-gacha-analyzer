@@ -113,6 +113,64 @@ class _BannerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
+    final summary = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$topCount',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text('·', style: TextStyle(color: tokens.textMuted)),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            subtitle,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textMuted,
+            ),
+          ),
+        ),
+      ],
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 名稱 120 ＋說明 180 的固定欄寬放不進手機寬度，改成上下兩行。
+        if (constraints.maxWidth < _stackedBelowWidth) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(name, style: theme.textTheme.bodyMedium),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: summary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              _Bar(color: color, ratio: ratio),
+            ],
+          );
+        }
+        return _wide(theme, tokens);
+      },
+    );
+  }
+
+  /// 小於此寬度時改成上下兩行。
+  static const double _stackedBelowWidth = 420;
+
+  /// 寬螢幕的一行版面：名稱｜長條｜件數與說明。
+  Widget _wide(ThemeData theme, GachaTokens tokens) {
     return Row(
       children: [
         SizedBox(
