@@ -939,7 +939,7 @@
   },
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
-  "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
+  "settingsLogsHint": "If you run into issues, export the logs to help developers investigate.",
   "@settingsLogsHint": {},
   "settingsLogsReport": "Report an issue",
   "@settingsLogsReport": {},
