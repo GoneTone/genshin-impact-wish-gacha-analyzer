@@ -190,6 +190,23 @@ void main() {
 
     expect(foregroundCalls, 0);
   });
+
+  testWidgets('桌面：離開等待授權時把視窗帶回前景', (tester) async {
+    var foregroundCalls = 0;
+    await pumpSection(
+      tester,
+      extra: [
+        isAndroidProvider.overrideWithValue(false),
+        cloudAuthProvider.overrideWithValue(_FakeCloudAuth(hang: false)),
+      ],
+      onForeground: () => foregroundCalls++,
+    );
+
+    await tester.tap(find.text('Link Google account'));
+    await tester.pumpAndSettle();
+
+    expect(foregroundCalls, 1);
+  });
 }
 
 /// 測試用 [CloudAuth]：link 依 [hang] 永不完成或拋 scope 缺失。

@@ -62,7 +62,7 @@ Future<String> fetchCloudEmail(http.Client client) async {
   return email;
 }
 
-/// refresh token 已失效（使用者於 Google 端撤銷授權），需要重新連結時拋出。
+/// 已連結的授權無法再使用（Windows 的 refresh token 失效，或 Android 拿不到通行證、帳號不符），需要重新連結。
 class CloudReauthRequiredException implements Exception {
   /// 建立 [CloudReauthRequiredException]。
   const CloudReauthRequiredException();
