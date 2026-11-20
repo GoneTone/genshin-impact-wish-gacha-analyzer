@@ -169,4 +169,32 @@ void main() {
       expect(tester.getSize(find.byWidget(arrow.widget)).width, 48);
     }
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('desktop arrows have a hit area of at least 44x44', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _wrap(
+        GalleryChipBar(
+          labels: const ['A', 'B', 'C'],
+          selectedIndex: 1,
+          onSelected: (_) {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    for (final icon in [Icons.arrow_left, Icons.arrow_right]) {
+      final size = tester.getSize(
+        find.ancestor(
+          of: find.byIcon(icon),
+          matching: find.byType(ScrollArrowButton),
+        ),
+      );
+      expect(size.width, greaterThanOrEqualTo(44));
+      expect(size.height, greaterThanOrEqualTo(44));
+    }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 }

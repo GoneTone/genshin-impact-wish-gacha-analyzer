@@ -2,12 +2,11 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_affordance.dart';
 
-/// 左／右箭頭欄的寬度（含內距，足以容納 24px 圓鈕）。
-const double _arrowSlotWidth = 32;
+/// 左／右箭頭欄的寬度，與箭頭 48dp 觸控區等寬。
+const double _arrowSlotWidth = 48;
 
 /// 中間捲動區邊緣漸隱遮罩的寬度。
 const double _chipFadeWidth = 24;
@@ -137,12 +136,13 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
     return Row(
       children: [
         SizedBox(
-          width: isCompactLayout(context) ? 48 : _arrowSlotWidth,
+          width: _arrowSlotWidth,
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_left,
               tooltip: l.galleryPrevTab,
               tokens: tokens,
+              largeHitArea: true,
               onPressed: selected > 0
                   ? () => widget.onSelected(selected - 1)
                   : null,
@@ -213,12 +213,13 @@ class _GalleryChipBarState extends State<GalleryChipBar> {
         ),
         const SizedBox(width: _arrowGap),
         SizedBox(
-          width: isCompactLayout(context) ? 48 : _arrowSlotWidth,
+          width: _arrowSlotWidth,
           child: Center(
             child: ScrollArrowButton(
               icon: Icons.arrow_right,
               tooltip: l.galleryNextTab,
               tokens: tokens,
+              largeHitArea: true,
               onPressed: selected < lastIndex
                   ? () => widget.onSelected(selected + 1)
                   : null,

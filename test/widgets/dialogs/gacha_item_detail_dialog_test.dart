@@ -565,12 +565,16 @@ void main() {
       );
     }
 
-    Future<void> pumpDialog(WidgetTester tester, GachaRecord record) async {
+    Future<void> pumpDialog(
+      WidgetTester tester,
+      GachaRecord record, {
+      ThemeData? theme,
+    }) async {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: buildDarkTheme(),
+            theme: theme ?? buildDarkTheme(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Builder(
@@ -1269,6 +1273,241 @@ void main() {
       final (name, image) = await pumpPhone(tester, const Size(360, 800));
       expect(name.bottom, lessThan(image.top));
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    group('swipe between images', () {
+      /// 開啟「原圖＋Icon」兩張圖（[gif] 為 true 時中間多一張 GIF）的詳情，
+      /// 回傳依 chip 順序排列的圖檔。
+      Future<List<File>> openImages(
+        WidgetTester tester, {
+        bool gif = false,
+        ThemeData? theme,
+      }) async {
+        final orig = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/orig.png',
+        );
+        final anim = hoyowikiGalleryCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/anim.gif',
+        );
+        final icon = hoyowikiIconCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/icon.png',
+        );
+        await tester.runAsync(() async {
+          await _touchFile(tempDir, orig.uri.pathSegments.last);
+          if (gif) await _touchFile(tempDir, anim.uri.pathSegments.last);
+          await _touchFile(tempDir, icon.uri.pathSegments.last);
+          await seedEntry(
+            '12345',
+            'Hu Tao',
+            'en-us',
+            _entryWith(
+              iconUrl: 'https://x/icon.png',
+              picUrl: '',
+              list: [
+                HoYoWikiGalleryItem(
+                  id: 'a',
+                  key: 'Original',
+                  imgUrl: 'https://x/orig.png',
+                  imgDescHtml: '<p>Outfit One</p>',
+                ),
+                if (gif)
+                  HoYoWikiGalleryItem(
+                    id: 'b',
+                    key: 'Dance',
+                    imgUrl: 'https://x/anim.gif',
+                    imgDescHtml: '<p>Outfit Two</p>',
+                  ),
+              ],
+            ),
+          );
+        });
+        await pumpDialog(
+          tester,
+          _rec(name: 'Hu Tao', gachaType: '301'),
+          theme: theme,
+        );
+        return [orig, if (gif) anim, icon];
+      }
+
+      /// 圖片區目前顯示 [file] 的那張。
+      Finder shown(File file) => find.byKey(ValueKey(file.path));
+
+      /// 頁點（key 為 `page-dot-N`）。
+      Finder dots() => find.byWidgetPredicate((w) {
+        final k = w.key;
+        return k is ValueKey<String> && k.value.startsWith('page-dot-');
+      });
+
+      /// 第 [i] 個頁點的寬度。
+      double dotWidth(WidgetTester tester, int i) =>
+          tester.getSize(find.byKey(ValueKey('page-dot-$i'))).width;
+
+      testWidgets('swipe left goes to the next image, right goes back', (
+        tester,
+      ) async {
+        final [orig, icon] = await openImages(tester);
+        expect(shown(orig), findsOneWidget);
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        expect(shown(icon), findsOneWidget);
+        expect(shown(orig), findsNothing);
+        await tester.drag(shown(icon), const Offset(120, 0));
+        await tester.pump();
+        expect(shown(orig), findsOneWidget);
+      });
+
+      testWidgets('swiping keeps the chip bar selection in step', (
+        tester,
+      ) async {
+        final [orig, _] = await openImages(tester);
+        ChoiceChip chip(String label) =>
+            tester.widget<ChoiceChip>(find.widgetWithText(ChoiceChip, label));
+        expect(chip('Original').selected, isTrue);
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        expect(chip('Original').selected, isFalse);
+        expect(chip('Icon').selected, isTrue);
+      });
+
+      testWidgets('no wrap-around at either end', (tester) async {
+        final [orig, icon] = await openImages(tester);
+        await tester.drag(shown(orig), const Offset(120, 0));
+        await tester.pump();
+        expect(shown(orig), findsOneWidget);
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        await tester.drag(shown(icon), const Offset(-120, 0));
+        await tester.pump();
+        expect(shown(icon), findsOneWidget);
+      });
+
+      testWidgets('vertical drag never switches', (tester) async {
+        final [orig, _] = await openImages(tester);
+        await tester.drag(shown(orig), const Offset(0, -120));
+        await tester.pump();
+        expect(shown(orig), findsOneWidget);
+      });
+
+      testWidgets('short slow drag does not switch', (tester) async {
+        final [orig, _] = await openImages(tester);
+        await tester.timedDrag(
+          shown(orig),
+          const Offset(-20, 0),
+          const Duration(seconds: 1),
+        );
+        await tester.pump();
+        expect(shown(orig), findsOneWidget);
+      });
+
+      testWidgets('short fast flick switches', (tester) async {
+        final [orig, icon] = await openImages(tester);
+        await tester.timedDrag(
+          shown(orig),
+          const Offset(-40, 0),
+          const Duration(milliseconds: 60),
+        );
+        await tester.pump();
+        expect(shown(icon), findsOneWidget);
+      });
+
+      testWidgets('trackpad horizontal pan switches', (tester) async {
+        final [orig, icon] = await openImages(tester);
+        final center = tester.getCenter(shown(orig));
+        final pointer = TestPointer(1, PointerDeviceKind.trackpad);
+        await tester.sendEventToBinding(pointer.panZoomStart(center));
+        await tester.sendEventToBinding(
+          pointer.panZoomUpdate(center, pan: const Offset(-60, 0)),
+        );
+        await tester.sendEventToBinding(
+          pointer.panZoomUpdate(center, pan: const Offset(-120, 0)),
+        );
+        await tester.sendEventToBinding(pointer.panZoomEnd());
+        await tester.pump();
+        expect(shown(icon), findsOneWidget);
+      });
+
+      testWidgets('tap still opens zoom and the menu button stays', (
+        tester,
+      ) async {
+        final [orig, _] = await openImages(tester);
+        expect(find.byIcon(Icons.more_vert), findsOneWidget);
+        await tester.tap(shown(orig));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(find.byType(ZoomableImageOverlay), findsOneWidget);
+      });
+
+      testWidgets('page dots: one per image, selected one is wider', (
+        tester,
+      ) async {
+        final [orig, _] = await openImages(tester);
+        expect(dots(), findsNWidgets(2));
+        expect(dotWidth(tester, 0), 18);
+        expect(dotWidth(tester, 1), 6);
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(dotWidth(tester, 0), 6);
+        expect(dotWidth(tester, 1), 18);
+      });
+
+      testWidgets('swiping onto a GIF page shows the GIF', (tester) async {
+        final [orig, anim, icon] = await openImages(tester, gif: true);
+        expect(dots(), findsNWidgets(3));
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        expect(shown(anim), findsOneWidget);
+        expect(shown(orig), findsNothing);
+        expect(find.byIcon(Icons.more_vert), findsOneWidget);
+        await tester.drag(shown(anim), const Offset(-120, 0));
+        await tester.pump();
+        expect(shown(icon), findsOneWidget);
+      });
+
+      testWidgets('switching skin updates the skin caption', (tester) async {
+        final [orig, _, _] = await openImages(tester, gif: true);
+        expect(find.text('Outfit One'), findsOneWidget);
+        expect(find.text('Outfit Two'), findsNothing);
+        await tester.drag(shown(orig), const Offset(-120, 0));
+        await tester.pump();
+        expect(find.text('Outfit One'), findsNothing);
+        expect(find.text('Outfit Two'), findsOneWidget);
+        await tester.tap(find.text('Original'));
+        await tester.pump();
+        expect(find.text('Outfit One'), findsOneWidget);
+      });
+
+      testWidgets('single image has no page dots and swipes do nothing', (
+        tester,
+      ) async {
+        final icon = hoyowikiIconCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/icon.png',
+        );
+        await tester.runAsync(() async {
+          await _touchFile(tempDir, icon.uri.pathSegments.last);
+          await seedEntry(
+            '12345',
+            'Hu Tao',
+            'en-us',
+            _entryWith(iconUrl: 'https://x/icon.png', picUrl: '', list: []),
+          );
+        });
+        await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+        expect(dots(), findsNothing);
+        await tester.drag(shown(icon), const Offset(-120, 0));
+        await tester.drag(shown(icon), const Offset(120, 0));
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+        expect(shown(icon), findsOneWidget);
+      });
+    });
   });
 
   group('title 區 desc 間距', () {

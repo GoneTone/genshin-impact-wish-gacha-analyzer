@@ -57,6 +57,7 @@ class ScrollArrowButton extends StatelessWidget {
     required this.tooltip,
     required this.tokens,
     required this.onPressed,
+    this.largeHitArea = false,
   });
 
   /// 按鈕圖示（左箭頭或右箭頭）。
@@ -71,6 +72,9 @@ class ScrollArrowButton extends StatelessWidget {
   /// 點擊後的回呼；為 `null` 時按鈕停用。
   final VoidCallback? onPressed;
 
+  /// 為 true 時不論平台都外包 48dp 觸控區；false 時僅手機排版（[isCompactLayout]）放大。
+  final bool largeHitArea;
+
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
@@ -83,8 +87,8 @@ class ScrollArrowButton extends StatelessWidget {
         message: tooltip,
         child: MouseRegion(
           cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-          // 手機排版時外圈多一層 48dp 觸控區，看得到的圓圈仍是 24dp。
-          child: isCompactLayout(context)
+          // 外圈多一層 48dp 觸控區，看得到的圓圈仍是 24dp。
+          child: largeHitArea || isCompactLayout(context)
               ? GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: onPressed,
