@@ -45,4 +45,28 @@ void main() {
     );
     expect(link.url, RelatedProjects.wutheringWavesAnalyzer);
   });
+
+  testWidgets('game name wraps instead of overflowing on a narrow width', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('en'),
+        theme: buildDarkTheme(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(1.3)),
+          child: child!,
+        ),
+        home: const Scaffold(
+          body: SizedBox(width: 120, child: OtherGameVersions()),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+  });
 }
