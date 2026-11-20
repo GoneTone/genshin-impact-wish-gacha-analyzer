@@ -302,6 +302,73 @@ void main() {
     });
   });
 
+  for (final locale in const [Locale('en'), Locale('ja'), Locale('fr')]) {
+    testWidgets('360dp 寬、1.3 倍字級（${locale.languageCode}）：列、選單、別名對話框不溢出', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(360, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final storage = GachaStorage(tempDir);
+      await tester.runAsync(() async {
+        for (final e in {
+          '100000001': DateTime.utc(2026, 5, 9),
+          '100000002': DateTime.utc(2026, 1, 1),
+        }.entries) {
+          await storage.save(
+            BannerStorage(
+              uid: e.key,
+              lastUpdated: e.value,
+              banners: const {'301': []},
+            ),
+          );
+        }
+      });
+      final longAlias = 'A' * 45;
+      late ProviderContainer container;
+      await tester.runAsync(() async {
+        container = await _setupContainer(
+          storage: storage,
+          prefs: {'pref.uidAliases': '{"100000002":"$longAlias"}'},
+        );
+      });
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: locale,
+            theme: buildDarkTheme(),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(1.3)),
+              child: child!,
+            ),
+            home: const Scaffold(body: AccountManagement()),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.takeException(), isNull);
+
+      await tester.tap(find.byIcon(Icons.more_vert).at(1));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await tester.tapAt(const Offset(1, 1));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.more_vert).at(1));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byWidgetPredicate((w) => w is PopupMenuItem).first);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
   group('AccountManagement: maskUidInUi', () {
     /// 建立含單一 UID 的 storage 並 pump AccountManagement，回傳預熱完成的 container。
     Future<ProviderContainer> pumpWithUid(
