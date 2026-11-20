@@ -21,7 +21,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
@@ -275,7 +274,6 @@ class _OverviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final tokens = Theme.of(context).gacha;
     final hasData = banners.values.any((r) => r.isNotEmpty);
 
     if (!hasData) {
@@ -354,25 +352,14 @@ class _OverviewSection extends StatelessWidget {
                 final wide = c.maxWidth >= 1024;
                 final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
 
-                final rarityCard = ChartCard(
-                  title: l.statsRarityDistribution,
-                  icon: Icons.pie_chart_outline,
-                  chart: RarityPie(stats: stats),
-                  legend: DistributionLegend(
-                    entries: rarityDistributionEntries(stats, tokens, l),
-                  ),
+                final layout = ChartCardLayout.of(context, c.maxWidth);
+                final rarityCard = RarityChartCard(
+                  stats: stats,
+                  layout: layout,
                 );
-                final itemTypeCard = ChartCard(
-                  title: l.statsItemTypeDistribution,
-                  icon: Icons.donut_small_outlined,
-                  chart: ItemTypePie(stats: stats),
-                  legend: DistributionLegend(
-                    entries: itemTypeDistributionEntries(
-                      stats,
-                      Theme.of(context).brightness,
-                      l,
-                    ),
-                  ),
+                final itemTypeCard = ItemTypeChartCard(
+                  stats: stats,
+                  layout: layout,
                 );
 
                 if (wide) {
@@ -390,7 +377,7 @@ class _OverviewSection extends StatelessWidget {
                     ),
                   );
                 }
-                if (mid) {
+                if (mid || layout == ChartCardLayout.compactTitleBeside) {
                   return IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,

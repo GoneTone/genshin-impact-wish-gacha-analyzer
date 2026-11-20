@@ -3,6 +3,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_ring_pie.dart';
 
@@ -60,7 +61,11 @@ class ItemTypePie extends StatelessWidget {
     super.key,
     required this.stats,
     this.animationDuration = const Duration(milliseconds: 600),
+    this.diameter = kDefaultRingDiameter,
   });
+
+  /// 圓環直徑。
+  final double diameter;
 
   /// 用於計算各 Pie 區塊比例的統計資料。
   final GachaStats stats;
@@ -79,6 +84,42 @@ class ItemTypePie extends StatelessWidget {
       ),
       total: stats.total,
       animationDuration: animationDuration,
+      diameter: diameter,
+    );
+  }
+}
+
+/// 物品類型分佈 ChartCard（標題 + [ItemTypePie] + 圖例），overview / banner 兩頁共用。
+class ItemTypeChartCard extends StatelessWidget {
+  /// 建立 [ItemTypeChartCard]。
+  const ItemTypeChartCard({
+    super.key,
+    required this.stats,
+    this.layout = ChartCardLayout.standard,
+  });
+
+  /// 物品類型統計資料。
+  final GachaStats stats;
+
+  /// 卡片版面。
+  final ChartCardLayout layout;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return ChartCard(
+      layout: layout,
+      title: l.statsItemTypeDistribution,
+      icon: Icons.donut_small_outlined,
+      chart: ItemTypePie(stats: stats, diameter: layout.chartDiameter),
+      legend: DistributionLegend(
+        compact: layout.isCompact,
+        entries: itemTypeDistributionEntries(
+          stats,
+          Theme.of(context).brightness,
+          l,
+        ),
+      ),
     );
   }
 }

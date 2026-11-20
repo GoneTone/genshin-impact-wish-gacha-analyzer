@@ -32,7 +32,6 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
@@ -260,7 +259,12 @@ class BannerPage extends ConsumerWidget {
                   LayoutBuilder(
                     builder: (context, c) {
                       final wide = c.maxWidth >= 1024;
-                      final col = wide ? 3 : (c.maxWidth >= 800 ? 2 : 1);
+                      final layout = ChartCardLayout.of(context, c.maxWidth);
+                      final landscape =
+                          layout == ChartCardLayout.compactTitleBeside;
+                      final col = wide
+                          ? 3
+                          : (c.maxWidth >= 800 || landscape ? 2 : 1);
                       final tileWidth = col == 1
                           ? c.maxWidth
                           : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
@@ -270,32 +274,16 @@ class BannerPage extends ConsumerWidget {
                         children: [
                           SizedBox(
                             width: tileWidth,
-                            child: ChartCard(
-                              title: l.statsRarityDistribution,
-                              icon: Icons.pie_chart_outline,
-                              chart: RarityPie(stats: stats),
-                              legend: DistributionLegend(
-                                entries: rarityDistributionEntries(
-                                  stats,
-                                  tokens,
-                                  l,
-                                ),
-                              ),
+                            child: RarityChartCard(
+                              stats: stats,
+                              layout: layout,
                             ),
                           ),
                           SizedBox(
                             width: tileWidth,
-                            child: ChartCard(
-                              title: l.statsItemTypeDistribution,
-                              icon: Icons.donut_small_outlined,
-                              chart: ItemTypePie(stats: stats),
-                              legend: DistributionLegend(
-                                entries: itemTypeDistributionEntries(
-                                  stats,
-                                  Theme.of(context).brightness,
-                                  l,
-                                ),
-                              ),
+                            child: ItemTypeChartCard(
+                              stats: stats,
+                              layout: layout,
                             ),
                           ),
                           SizedBox(
