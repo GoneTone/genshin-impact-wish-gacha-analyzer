@@ -376,10 +376,11 @@
   "settingsGameDirNone": "找不到游戏文件夹",
   "actionClearGameDir": "清除",
   "settingsCloudSync": "云端同步",
-  "cloudSyncIntro": "关联 Google 账号后，卡池记录会自动备份到你的 Google 云端硬盘，并在多台电脑间同步。",
+  "cloudSyncIntro": "关联 Google 账号后，卡池记录会自动备份到你的 Google 云端硬盘，并在多台设备间同步。",
   "cloudSyncUnconfigured": "此构建未设置 Google OAuth 凭据，云端同步无法使用。",
   "cloudSyncLink": "关联 Google 账号",
   "cloudSyncAwaitingConsent": "已打开浏览器，请在浏览器完成授权...",
+  "cloudSyncAwaitingConsentAndroid": "请在 Google 窗口完成授权...",
   "cloudSyncLinkedAs": "已关联：{email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

@@ -380,10 +380,11 @@
   "settingsGameDirNone": "Không tìm thấy thư mục game",
   "actionClearGameDir": "Xóa",
   "settingsCloudSync": "Đồng bộ đám mây",
-  "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều máy tính.",
+  "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều thiết bị.",
   "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
   "cloudSyncLink": "Liên kết tài khoản Google",
   "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất uỷ quyền trong trình duyệt...",
+  "cloudSyncAwaitingConsentAndroid": "Vui lòng hoàn tất ủy quyền trong cửa sổ Google...",
   "cloudSyncLinkedAs": "Đã liên kết: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

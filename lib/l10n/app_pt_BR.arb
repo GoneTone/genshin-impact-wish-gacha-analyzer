@@ -380,10 +380,11 @@
   "settingsGameDirNone": "Pasta do jogo não encontrada",
   "actionClearGameDir": "Limpar",
   "settingsCloudSync": "Sincronização na nuvem",
-  "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários computadores.",
+  "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários dispositivos.",
   "cloudSyncUnconfigured": "Esta compilação não tem credenciais do Google OAuth configuradas; a sincronização na nuvem está indisponível.",
   "cloudSyncLink": "Vincular conta do Google",
   "cloudSyncAwaitingConsent": "Navegador aberto. Conclua a autorização no navegador...",
+  "cloudSyncAwaitingConsentAndroid": "Conclua a autorização na janela do Google...",
   "cloudSyncLinkedAs": "Vinculada: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

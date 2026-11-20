@@ -380,10 +380,11 @@
   "settingsGameDirNone": "ไม่พบโฟลเดอร์เกม",
   "actionClearGameDir": "ล้าง",
   "settingsCloudSync": "การซิงค์ผ่านคลาวด์",
-  "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างคอมพิวเตอร์หลายเครื่อง",
+  "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างหลายอุปกรณ์",
   "cloudSyncUnconfigured": "บิลด์นี้ไม่ได้ตั้งค่าข้อมูลรับรอง Google OAuth จึงใช้การซิงค์ผ่านคลาวด์ไม่ได้",
   "cloudSyncLink": "เชื่อมโยงบัญชี Google",
   "cloudSyncAwaitingConsent": "เปิดเบราว์เซอร์แล้ว โปรดทำการอนุญาตให้เสร็จในเบราว์เซอร์...",
+  "cloudSyncAwaitingConsentAndroid": "โปรดให้สิทธิ์ให้เสร็จในหน้าต่าง Google...",
   "cloudSyncLinkedAs": "เชื่อมโยงแล้ว: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

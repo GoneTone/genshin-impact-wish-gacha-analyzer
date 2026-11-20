@@ -380,10 +380,11 @@
   "settingsGameDirNone": "Dossier du jeu introuvable",
   "actionClearGameDir": "Effacer",
   "settingsCloudSync": "Synchronisation cloud",
-  "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs ordinateurs.",
+  "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs appareils.",
   "cloudSyncUnconfigured": "Cette version ne contient pas d'identifiants Google OAuth ; la synchronisation cloud est indisponible.",
   "cloudSyncLink": "Associer un compte Google",
   "cloudSyncAwaitingConsent": "Navigateur ouvert. Terminez l'autorisation dans le navigateur...",
+  "cloudSyncAwaitingConsentAndroid": "Veuillez terminer l'autorisation dans la fenêtre Google...",
   "cloudSyncLinkedAs": "Associé : {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

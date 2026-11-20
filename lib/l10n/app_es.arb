@@ -380,10 +380,11 @@
   "settingsGameDirNone": "No se encontró la carpeta del juego",
   "actionClearGameDir": "Borrar",
   "settingsCloudSync": "Sincronización en la nube",
-  "cloudSyncIntro": "Vincula tu cuenta de Google para respaldar automáticamente los registros de deseos en tu Google Drive y mantenerlos sincronizados entre varios equipos.",
+  "cloudSyncIntro": "Vincula tu cuenta de Google para respaldar automáticamente los registros de deseos en tu Google Drive y mantenerlos sincronizados entre varios dispositivos.",
   "cloudSyncUnconfigured": "Esta compilación no tiene credenciales de Google OAuth configuradas; la sincronización en la nube no está disponible.",
   "cloudSyncLink": "Vincular cuenta de Google",
   "cloudSyncAwaitingConsent": "Se abrió el navegador. Completa la autorización en el navegador...",
+  "cloudSyncAwaitingConsentAndroid": "Completa la autorización en la ventana de Google...",
   "cloudSyncLinkedAs": "Vinculada: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

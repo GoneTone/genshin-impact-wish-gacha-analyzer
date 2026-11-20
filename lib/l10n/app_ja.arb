@@ -380,10 +380,11 @@
   "settingsGameDirNone": "ゲームフォルダが見つかりません",
   "actionClearGameDir": "クリア",
   "settingsCloudSync": "クラウド同期",
-  "cloudSyncIntro": "Google アカウントを連携すると、祈願履歴が自動的に Google ドライブへバックアップされ、複数の PC 間で同期されます。",
+  "cloudSyncIntro": "Google アカウントを連携すると、祈願履歴が自動的に Google ドライブへバックアップされ、複数のデバイス間で同期されます。",
   "cloudSyncUnconfigured": "このビルドには Google OAuth 認証情報が設定されていないため、クラウド同期は利用できません。",
   "cloudSyncLink": "Google アカウントを連携",
   "cloudSyncAwaitingConsent": "ブラウザを開きました。ブラウザで認可を完了してください...",
+  "cloudSyncAwaitingConsentAndroid": "Google の画面で認可を完了してください...",
   "cloudSyncLinkedAs": "連携中：{email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {

@@ -301,10 +301,11 @@
   "@actionClearGameDir": {"description": "Button that clears the manually chosen game folder."},
 
   "settingsCloudSync": "雲端同步",
-  "cloudSyncIntro": "連結 Google 帳號後，卡池記錄會自動備份到你的 Google 雲端硬碟，並在多台電腦間同步。",
+  "cloudSyncIntro": "連結 Google 帳號後，卡池記錄會自動備份到你的 Google 雲端硬碟，並在多台裝置間同步。",
   "cloudSyncUnconfigured": "此建置未設定 Google OAuth 憑證，雲端同步無法使用。",
   "cloudSyncLink": "連結 Google 帳號",
   "cloudSyncAwaitingConsent": "已開啟瀏覽器，請在瀏覽器完成授權...",
+  "cloudSyncAwaitingConsentAndroid": "請在 Google 視窗完成授權...",
   "cloudSyncLinkedAs": "已連結：{email}",
   "@cloudSyncLinkedAs": {"placeholders": {"email": {"type": "String"}}},
   "cloudSyncAutoToggle": "自動同步",
