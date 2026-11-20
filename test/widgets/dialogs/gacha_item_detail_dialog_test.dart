@@ -1120,7 +1120,15 @@ void main() {
       await seedWithGallery(tester);
       await runMenuAction(tester, (l) => l.actionShare);
       expect(shared, isTrue);
-      expect(find.text(loc(tester).shareFailed), findsNothing);
+      final l = loc(tester);
+      for (final message in [
+        l.shareFailed,
+        l.imageCopied,
+        l.imageCopyFailed,
+        l.imageSaveFailed,
+      ]) {
+        expect(find.text(message), findsNothing);
+      }
     });
 
     testWidgets('Windows save toast shows the full path and logs the outcome', (

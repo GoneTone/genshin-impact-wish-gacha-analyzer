@@ -564,9 +564,13 @@ void main() {
       tester,
     ) async {
       var called = false;
+      bool? capturedIsGif;
+      String? capturedPath = 'unset';
       stubPrepared();
       imageClipboardWriter = (bytes, {required isGif, filePath}) async {
         called = true;
+        capturedIsGif = isGif;
+        capturedPath = filePath;
         return true;
       };
       await openOverlay(tester);
@@ -583,8 +587,10 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       expect(called, isTrue);
+      expect(capturedIsGif, isFalse);
+      expect(capturedPath, isNull);
       expect(find.text(l.imageCopied), findsOneWidget);
-    });
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
     testWidgets('copying a gif on Android sends no file path', (tester) async {
       bool? capturedIsGif;
@@ -687,6 +693,37 @@ void main() {
       await openOverlay(tester, android: true);
       final l = loc(tester);
       await pickMenu(tester, l.actionShare);
+      expect(find.text(l.shareFailed), findsOneWidget);
+    });
+
+    testWidgets('a failed image preparation on save never opens the dialog', (
+      tester,
+    ) async {
+      var asked = false;
+      prepareOutputImageOverride = (_) async => null;
+      fileSaveDialog = (bytes, name, extension, mimeType, title) async {
+        asked = true;
+        return null;
+      };
+      await openOverlay(tester);
+      final l = loc(tester);
+      await pickMenu(tester, l.actionSaveImage);
+      expect(asked, isFalse);
+      expect(find.text(l.imageSaveFailed), findsOneWidget);
+    });
+
+    testWidgets('a failed image preparation on share never shares', (
+      tester,
+    ) async {
+      var shared = false;
+      prepareOutputImageOverride = (_) async => null;
+      fileSharer = (_, _, _) async {
+        shared = true;
+      };
+      await openOverlay(tester, android: true);
+      final l = loc(tester);
+      await pickMenu(tester, l.actionShare);
+      expect(shared, isFalse);
       expect(find.text(l.shareFailed), findsOneWidget);
     });
 
