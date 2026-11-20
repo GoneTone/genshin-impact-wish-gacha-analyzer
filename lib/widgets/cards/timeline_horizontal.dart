@@ -135,18 +135,6 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
     }
   }
 
-  /// 相對捲動 [delta] px，夾在 0 與 maxScrollExtent 之間，使用動畫。
-  void _scrollBy(double delta) {
-    if (!_controller.hasClients) return;
-    final pos = _controller.position;
-    final target = (_controller.offset + delta).clamp(0.0, pos.maxScrollExtent);
-    _controller.animateTo(
-      target,
-      duration: kScrollAffordanceDuration,
-      curve: kScrollAffordanceCurve,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -268,7 +256,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
                   icon: Icons.chevron_left,
                   tooltip: l.timelineScrollLeft,
                   tokens: tokens,
-                  onPressed: () => _scrollBy(-_colWidth),
+                  onPressed: () => _controller.animateBy(-_colWidth),
                 ),
               ),
             ),
@@ -293,7 +281,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
                   icon: Icons.chevron_right,
                   tooltip: l.timelineScrollRight,
                   tokens: tokens,
-                  onPressed: () => _scrollBy(_colWidth),
+                  onPressed: () => _controller.animateBy(_colWidth),
                 ),
               ),
             ),
