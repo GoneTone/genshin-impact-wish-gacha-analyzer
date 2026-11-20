@@ -299,7 +299,7 @@ class _OverviewSection extends StatelessWidget {
             LayoutBuilder(
               builder: (context, c) {
                 final wide = c.maxWidth >= 1024;
-                final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+                final mid = c.maxWidth < 1024;
 
                 if (wide) {
                   return IntrinsicHeight(

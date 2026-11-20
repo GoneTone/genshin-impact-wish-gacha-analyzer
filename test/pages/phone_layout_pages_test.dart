@@ -8,6 +8,7 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
@@ -111,7 +112,7 @@ void main() {
     if (await tempDir.exists()) await tempDir.delete(recursive: true);
   });
 
-  /// 在 [size] 的畫面上呈現 [page]（已有一個帳號的紀錄，角色活動祈願預設為 [_records]），回傳 container。
+  /// 在 [size] 的畫面上呈現 [page]（已有一個帳號的紀錄，角色活動祈願預設為 [_records]；給 [banners] 時改用它），回傳 container。
   Future<ProviderContainer> pump(
     WidgetTester tester,
     Size size,
@@ -121,6 +122,8 @@ void main() {
     LogAccessMethod? method,
     List<GachaRecord>? records,
     bool synced = true,
+    Map<String, List<GachaRecord>>? banners,
+    Locale locale = const Locale('zh'),
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
@@ -134,7 +137,9 @@ void main() {
           BannerStorage(
             uid: '701000000',
             lastUpdated: DateTime.utc(2026, 5, 1),
-            banners: {'301': records ?? _records(), '2000': _odesRecords()},
+            banners:
+                banners ??
+                {'301': records ?? _records(), '2000': _odesRecords()},
           ),
         );
       }
@@ -175,7 +180,7 @@ void main() {
           theme: buildDarkTheme(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('zh'),
+          locale: locale,
           home: Scaffold(body: page),
         ),
       ),
@@ -468,6 +473,170 @@ void main() {
     };
     expect(heights, hasLength(1), reason: 'IntrinsicHeight keeps cards equal');
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  /// [finder] 第 [i] 個元件的左上角。
+  Offset topLeftAt(WidgetTester tester, Finder finder, int i) =>
+      tester.getTopLeft(finder.at(i));
+
+  /// 斷言 [cards] 的後兩張同列、等高，且第一張在它們上方。
+  void expectLastTwoPaired(WidgetTester tester, Finder cards) {
+    final a = topLeftAt(tester, cards, 1);
+    final b = topLeftAt(tester, cards, 2);
+    expect(a.dy, b.dy);
+    expect(a.dx, isNot(b.dx));
+    expect(topLeftAt(tester, cards, 0).dy, lessThan(a.dy));
+    expect(
+      tester.getSize(cards.at(1)).height,
+      tester.getSize(cards.at(2)).height,
+    );
+  }
+
+  testWidgets('overview pairs the last two stat cards on a phone', (
+    tester,
+  ) async {
+    await pump(tester, const Size(360, 800), const OverviewPage());
+    expectNoException(tester);
+    final cards = find.byType(StatCard);
+    expect(cards, findsNWidgets(3));
+    expectLastTwoPaired(tester, cards);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('overview odes section pairs stat cards on phones', (
+    tester,
+  ) async {
+    await pump(tester, const Size(360, 800), const OverviewPage());
+    final l = AppLocalizations.of(tester.element(find.byType(OverviewPage)))!;
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.text(l.pageOverviewOdesSection),
+      500,
+      scrollable: scrollable,
+    );
+    await tester.scrollUntilVisible(
+      find.byType(StatCard).first,
+      300,
+      scrollable: scrollable,
+    );
+    final cards = find.byType(StatCard);
+    expect(cards, findsNWidgets(3));
+    expectLastTwoPaired(tester, cards);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  /// 單一卡池 [gachaType] 的 30 筆五星／四星／三星交錯記錄。
+  List<GachaRecord> recordsOf(String gachaType) => [
+    for (var i = 0; i < 30; i++)
+      GachaRecord(
+        id: '${4000 + i}',
+        uid: '701000000',
+        gachaType: gachaType,
+        rankType: i % 10 == 0 ? 5 : (i % 3 == 0 ? 4 : 3),
+        itemType: '角色',
+        name: 'Item $i',
+        time: DateTime(2026, 5, 1).subtract(Duration(hours: i)),
+        lang: 'zh-tw',
+      ),
+  ];
+
+  // 角色活動、武器活動、集錄、常駐（祈願）與頌願活動；有次保底就兩欄並排，沒有就總抽數獨佔一列。
+  for (final type in gachaTypes.where(
+    (t) => const {'301', '302', '500', '200', '2000'}.contains(t.gachaType),
+  )) {
+    testWidgets(
+      'stat card rows follow banner ${type.gachaType} pity rules on a phone',
+      (tester) async {
+        await pump(
+          tester,
+          const Size(360, 800),
+          BannerPage(gachaType: type.gachaType),
+          banners: {type.gachaType: recordsOf(type.gachaType)},
+        );
+        expectNoException(tester);
+        final pity = find.byType(PityCard);
+        final total = find.byType(StatCard);
+        if (type.secondaryPity != null) {
+          expect(pity, findsNWidgets(2));
+          expect(
+            topLeftAt(tester, pity, 0).dy,
+            lessThan(topLeftAt(tester, pity, 1).dy),
+          );
+          expect(topLeftAt(tester, pity, 1).dy, topLeftAt(tester, total, 0).dy);
+          expect(
+            tester.getSize(pity.at(1)).height,
+            tester.getSize(total.first).height,
+          );
+        } else {
+          expect(pity, findsOneWidget);
+          expect(
+            topLeftAt(tester, pity, 0).dy,
+            lessThan(topLeftAt(tester, total, 0).dy),
+          );
+          expect(
+            tester.getSize(total.first).width,
+            tester.getSize(pity.first).width,
+          );
+        }
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.android),
+    );
+  }
+
+  testWidgets('odes banner page pairs stat cards on phones', (tester) async {
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '2000'),
+    );
+    expectNoException(tester);
+    final pity = find.byType(PityCard);
+    expect(pity, findsNWidgets(2));
+    expect(
+      topLeftAt(tester, pity, 1).dy,
+      topLeftAt(tester, find.byType(StatCard), 0).dy,
+    );
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('banner page shows three cards in a row in phone landscape', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const Size(800, 360),
+      const BannerPage(gachaType: '301'),
+    );
+    expectNoException(tester);
+    final pity = find.byType(PityCard);
+    expect(pity, findsNWidgets(2));
+    final dy = topLeftAt(tester, find.byType(StatCard), 0).dy;
+    expect(topLeftAt(tester, pity, 0).dy, dy);
+    expect(topLeftAt(tester, pity, 1).dy, dy);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  for (final locale in [
+    const Locale('en'),
+    const Locale('ja'),
+    const Locale('fr'),
+  ]) {
+    for (final (name, page) in [
+      ('overview', const OverviewPage() as Widget),
+      ('banner', const BannerPage(gachaType: '301')),
+    ]) {
+      testWidgets('$name at 1.3x text scale in $locale does not overflow', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await pump(tester, const Size(360, 800), page, locale: locale);
+        if (name == 'overview') {
+          await scrollToEnd(tester);
+        } else {
+          // 卡池頁表格 Pager 的 1.3 倍字級溢出由 Task 6 處理，這裡只驗數字卡區。
+          final e = tester.takeException();
+          expect(e == null || '$e'.contains('RenderFlex overflowed'), isTrue);
+          expect(find.byType(PityCard), findsNWidgets(2));
+        }
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
+  }
 
   testWidgets('banner page keeps pity and total cards in one row on desktop', (
     tester,

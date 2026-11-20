@@ -173,8 +173,11 @@ class BannerPage extends ConsumerWidget {
                   // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
                   LayoutBuilder(
                     builder: (context, c) {
-                      final wide = c.maxWidth >= 1024;
-                      final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+                      final wide =
+                          c.maxWidth >= 1024 ||
+                          phoneOrientationOf(context) ==
+                              PhoneOrientation.landscape;
+                      final mid = c.maxWidth < 1024;
 
                       final primaryCard = PityCard(
                         label: l.pityRank(l.rarityStar(primary.rank)),
