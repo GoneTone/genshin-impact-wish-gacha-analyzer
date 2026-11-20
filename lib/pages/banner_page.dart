@@ -292,7 +292,15 @@ class BannerPage extends ConsumerWidget {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
-                                    Expanded(child: rarityCard),
+                                    // 手機橫向的保底列是 6/3/3：第一張寬度要等於主保底卡，中間的縫才對齊（同總覽頁）。
+                                    if (col == 2 && landscape)
+                                      SizedBox(
+                                        width:
+                                            (c.maxWidth - AppSpacing.m * 2) / 2,
+                                        child: rarityCard,
+                                      )
+                                    else
+                                      Expanded(child: rarityCard),
                                     const SizedBox(width: AppSpacing.m),
                                     Expanded(child: itemTypeCard),
                                   ],

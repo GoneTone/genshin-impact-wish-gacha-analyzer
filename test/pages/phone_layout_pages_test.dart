@@ -694,6 +694,20 @@ void main() {
       );
       // 圖例列數不同（稀有度 3 列、類型 2 列）時，同一列的兩張卡仍要等高。
       expect(tester.getSize(itemType).height, tester.getSize(rarity).height);
+      // 兩張圓餅卡中間的縫要對齊上面數值卡列的縫。
+      final rarityRight = tester.getTopRight(rarity).dx;
+      final statRights = [
+        for (final e
+            in find
+                .byWidgetPredicate((w) => w is StatCard || w is PityCard)
+                .evaluate())
+          tester.getTopRight(find.byWidget(e.widget)).dx,
+      ];
+      expect(
+        statRights.any((x) => (x - rarityRight).abs() < 0.5),
+        isTrue,
+        reason: 'rarity right $rarityRight vs stat cards $statRights',
+      );
       await scrollToEnd(tester);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
