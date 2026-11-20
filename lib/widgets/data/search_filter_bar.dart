@@ -17,6 +17,7 @@ class SearchFilterBar extends StatefulWidget {
     required this.availableItemTypes,
     required this.onFilterChanged,
     required this.onClear,
+    this.trailing,
   });
 
   /// 當前篩選狀態。
@@ -30,6 +31,9 @@ class SearchFilterBar extends StatefulWidget {
 
   /// 清除所有篩選條件的回呼。
   final VoidCallback onClear;
+
+  /// 接在篩選控制項（含「清除篩選」）之後、同一個 [Wrap] 的尾端元件，例如排序按鈕。
+  final Widget? trailing;
 
   @override
   State<SearchFilterBar> createState() => _SearchFilterBarState();
@@ -152,6 +156,7 @@ class _SearchFilterBarState extends State<SearchFilterBar>
               icon: const Icon(Icons.clear, size: 16),
               label: Text(l.filterClear),
             ),
+          ?widget.trailing,
         ],
       ),
     );

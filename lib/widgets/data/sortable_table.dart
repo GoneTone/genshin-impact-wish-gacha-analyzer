@@ -6,12 +6,17 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_palette.dart';
+
+/// 記錄列表是否用卡片列呈現：手機排版（含橫向）或可用寬度小於 [kCompactBreakpoint]。
+bool recordListUsesCards(BuildContext context, double width) =>
+    isCompactLayout(context) || width < kCompactBreakpoint;
 
 /// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
@@ -22,6 +27,8 @@ class SortableTable extends StatefulWidget {
     required this.sort,
     required this.mainRank,
     required this.onSortColumnTapped,
+    this.showSortButton = true,
+    this.onPageChanged,
   });
 
   /// 已 filter / sort 完的 rows;元件本身不做篩選排序。
@@ -36,6 +43,12 @@ class SortableTable extends StatefulWidget {
 
   /// 使用者點擊欄位標題時的回呼。
   final ValueChanged<SortColumn> onSortColumnTapped;
+
+  /// 卡片模式下是否在表格上方顯示排序按鈕；呼叫端把按鈕放到別處時傳 false。
+  final bool showSortButton;
+
+  /// 頁碼實際改變後的回呼，參數為新頁碼（0-based）；停留在同一頁不會觸發。
+  final ValueChanged<int>? onPageChanged;
 
   @override
   State<SortableTable> createState() => _SortableTableState();
@@ -68,6 +81,13 @@ class _SortableTableState extends State<SortableTable>
   int get _totalPages =>
       (widget.rows.length / _pageSize).ceil().clamp(1, 99999);
 
+  /// 切換頁碼；頁碼沒變就什麼都不做，變了才通知 [SortableTable.onPageChanged]。
+  void _setPage(int page) {
+    if (page == _page) return;
+    setState(() => _page = page);
+    widget.onPageChanged?.call(page);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -95,16 +115,18 @@ class _SortableTableState extends State<SortableTable>
       builder: (context, constraints) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (constraints.maxWidth < _narrowWidth) ...[
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: _SortButton(
-                sort: widget.sort,
-                mainRank: widget.mainRank,
-                onTap: widget.onSortColumnTapped,
+          if (recordListUsesCards(context, constraints.maxWidth)) ...[
+            if (widget.showSortButton) ...[
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: RecordSortButton(
+                  sort: widget.sort,
+                  mainRank: widget.mainRank,
+                  onTap: widget.onSortColumnTapped,
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: AppSpacing.s),
+            ],
             Container(
               decoration: BoxDecoration(
                 color: tokens.surfaceCard,
@@ -154,18 +176,11 @@ class _SortableTableState extends State<SortableTable>
               ),
             ),
           const SizedBox(height: AppSpacing.m),
-          Pager(
-            page: _page,
-            totalPages: _totalPages,
-            onChanged: (p) => setState(() => _page = p),
-          ),
+          Pager(page: _page, totalPages: _totalPages, onChanged: _setPage),
         ],
       ),
     );
   }
-
-  /// 可用寬度小於此值時改用卡片列（手機直向、拉窄的視窗）。
-  static const double _narrowWidth = 600;
 }
 
 /// 欄位的顯示名稱（和表格標題相同）。
@@ -200,10 +215,11 @@ Color _pityColor(RecordRow row, int mainRank, GachaTokens tokens) =>
       tokens,
     );
 
-/// 卡片列上方的排序按鈕：顯示目前排序，點擊從底部滑出欄位選單（效果同點表格標題）。
-class _SortButton extends StatelessWidget {
-  /// 建立 [_SortButton]。
-  const _SortButton({
+/// 卡片列的排序按鈕：顯示目前排序，點擊從底部滑出欄位選單（效果同點表格標題）。
+class RecordSortButton extends StatelessWidget {
+  /// 建立 [RecordSortButton]。
+  const RecordSortButton({
+    super.key,
     required this.sort,
     required this.mainRank,
     required this.onTap,

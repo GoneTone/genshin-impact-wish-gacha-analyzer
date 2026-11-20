@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
   theme: buildDarkTheme(),
@@ -194,5 +195,64 @@ void main() {
       tester.widget<TextField>(find.byType(TextField)).controller?.text,
       'keqing',
     );
+  });
+
+  group('trailing', () {
+    /// 寬 [width] 的篩選列，尾端放排序按鈕。
+    Widget bar(double width, Locale locale) => MaterialApp(
+      theme: buildDarkTheme(),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: width,
+            child: SearchFilterBar(
+              state: const RecordFilterState(
+                filter: RecordFilter(),
+                sort: null,
+              ),
+              availableItemTypes: const [kItemKindCharacter, kItemKindWeapon],
+              onFilterChanged: (_) {},
+              onClear: () {},
+              trailing: RecordSortButton(
+                sort: null,
+                mainRank: 5,
+                onTap: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    testWidgets('sits on the same row as the rarity dropdown at 360', (
+      tester,
+    ) async {
+      await tester.pumpWidget(bar(360, const Locale('zh')));
+      // Wrap 以垂直置中對齊同一列，所以中心 dy 相同才算同列。
+      expect(
+        tester.getCenter(find.byType(RecordSortButton)).dy,
+        tester.getCenter(find.byType(DropdownButton<RarityFilter>)).dy,
+      );
+    });
+
+    for (final locale in [
+      const Locale('en'),
+      const Locale('zh'),
+      const Locale('ja'),
+    ]) {
+      testWidgets('does not overflow at 1.3x text and width 320 ($locale)', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await tester.pumpWidget(bar(320, locale));
+        final e = tester.takeException();
+        expect(e, isNull, reason: e is FlutterError ? e.toStringDeep() : '$e');
+      });
+    }
   });
 }

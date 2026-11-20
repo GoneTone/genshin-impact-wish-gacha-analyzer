@@ -402,6 +402,8 @@ void main() {
       ValueChanged<SortColumn>? onTap,
       Locale locale = const Locale('zh'),
       List<RecordRow>? rows,
+      bool showSortButton = true,
+      ValueChanged<int>? onPageChanged,
     }) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1;
@@ -413,6 +415,8 @@ void main() {
             sort: sort,
             mainRank: 5,
             onSortColumnTapped: onTap ?? (_) {},
+            showSortButton: showSortButton,
+            onPageChanged: onPageChanged,
           ),
           width: width,
           container: container,
@@ -614,5 +618,112 @@ void main() {
         },
       );
     }
+  });
+
+  group('record list cards and page change', () {
+    /// 回傳 [recordListUsesCards] 在目前視窗與 [width] 下的結果。
+    Future<bool> usesCards(WidgetTester tester, Size view, double width) async {
+      tester.view.physicalSize = view;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      late bool result;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) {
+              result = recordListUsesCards(context, width);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+      return result;
+    }
+
+    testWidgets('phone landscape uses cards even when wide', (tester) async {
+      expect(await usesCards(tester, const Size(800, 360), 776), isTrue);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('desktop wide window keeps the table', (tester) async {
+      expect(await usesCards(tester, const Size(1200, 800), 900), isFalse);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    testWidgets('desktop narrow width uses cards', (tester) async {
+      expect(await usesCards(tester, const Size(1200, 800), 500), isTrue);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    /// 45 筆記錄分 3 頁、寬 360 的卡片列表格。
+    Future<void> pumpPaged(
+      WidgetTester tester, {
+      ValueChanged<int>? onPageChanged,
+      bool showSortButton = true,
+    }) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final records = [
+        for (var i = 45; i >= 1; i--)
+          GachaRecord(
+            id: '$i',
+            uid: '1',
+            gachaType: '301',
+            name: 'N$i',
+            itemType: '角色',
+            rankType: 3,
+            time: DateTime(2025, 1, 1).add(Duration(days: i)),
+            lang: 'zh-tw',
+          ),
+      ];
+      await tester.pumpWidget(
+        _wrapWidth(
+          SortableTable(
+            rows: buildRecordRows(records, index: const HoYoWikiIndex.empty()),
+            sort: null,
+            mainRank: 5,
+            onSortColumnTapped: (_) {},
+            showSortButton: showSortButton,
+            onPageChanged: onPageChanged,
+          ),
+          width: 360,
+          container: container,
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('onPageChanged receives the new page', (tester) async {
+      final pages = <int>[];
+      await pumpPaged(tester, onPageChanged: pages.add);
+      await tester.tap(find.byIcon(Icons.chevron_right));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.last_page));
+      await tester.pumpAndSettle();
+      expect(pages, [1, 2]);
+    });
+
+    testWidgets('onPageChanged is silent when the page stays the same', (
+      tester,
+    ) async {
+      final pages = <int>[];
+      await pumpPaged(tester, onPageChanged: pages.add);
+      await tester.tap(find.byIcon(Icons.first_page), warnIfMissed: false);
+      await tester.tap(find.byType(DropdownButton<int>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('1 / 3').last);
+      await tester.pumpAndSettle();
+      expect(pages, isEmpty);
+    });
+
+    testWidgets('showSortButton false hides the sort button', (tester) async {
+      await pumpPaged(tester, showSortButton: false);
+      expect(find.byType(RecordSortButton), findsNothing);
+    });
+
+    testWidgets('showSortButton defaults to showing it in card mode', (
+      tester,
+    ) async {
+      await pumpPaged(tester);
+      expect(find.byType(RecordSortButton), findsOneWidget);
+    });
   });
 }

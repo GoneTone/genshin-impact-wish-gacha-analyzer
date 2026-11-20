@@ -457,6 +457,118 @@ void main() {
     expect(find.byType(SortableTable), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets('banner page has one sort button, inside the filter bar', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '301'),
+    );
+    await tester.scrollUntilVisible(
+      find.byType(SortableTable),
+      500,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byType(RecordSortButton), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(SearchFilterBar),
+        matching: find.byType(RecordSortButton),
+      ),
+      findsOneWidget,
+    );
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  for (final (name, page) in [
+    ('banner', const BannerPage(gachaType: '301')),
+    ('odes banner', const BannerPage(gachaType: '2000')),
+  ]) {
+    testWidgets('$name page shows record cards in phone landscape', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), page);
+      await tester.scrollUntilVisible(
+        find.byType(SortableTable),
+        500,
+        scrollable: find.byType(Scrollable).first,
+      );
+      final l = AppLocalizations.of(
+        tester.element(find.byType(SortableTable)),
+      )!;
+      expect(find.text(l.tableTotalIndex), findsNothing);
+      // 篩選列保活，捲過頭仍在樹上；不計畫面外的以免被捲動量影響。
+      expect(
+        find.byType(RecordSortButton, skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(find.textContaining('#', findRichText: true), findsWidgets);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
+  testWidgets('odes banner page uses one-row filters and landscape cards', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '2000'),
+    );
+    await tester.scrollUntilVisible(
+      find.byType(SortableTable),
+      500,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(SearchFilterBar),
+        matching: find.byType(RecordSortButton),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(RecordSortButton), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('changing the record page scrolls back to the list title', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '301'),
+      records: [
+        for (var i = 0; i < 45; i++)
+          GachaRecord(
+            id: '${5000 + i}',
+            uid: '701000000',
+            gachaType: '301',
+            rankType: 3,
+            itemType: '武器',
+            name: 'Item $i',
+            time: DateTime(2026, 5, 1).subtract(Duration(hours: i)),
+            lang: 'zh-tw',
+          ),
+      ],
+    );
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.byType(Pager),
+      100,
+      scrollable: scrollable,
+    );
+    final l = AppLocalizations.of(tester.element(find.byType(Pager)))!;
+    await tester.ensureVisible(find.byTooltip(l.actionNextPage));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip(l.actionNextPage));
+    await tester.pumpAndSettle();
+    final title = find.widgetWithText(
+      InlineSectionTitle,
+      l.pageBannerRecordList,
+    );
+    final top = tester.getTopLeft(scrollable).dy;
+    expect(tester.getTopLeft(title).dy, closeTo(top, 8));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
   testWidgets('overview keeps its three stat cards in one row on desktop', (
     tester,
   ) async {
