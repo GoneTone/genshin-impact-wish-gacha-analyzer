@@ -104,14 +104,19 @@ void _expectSubtitlesFlushRight(WidgetTester tester) {
 }
 
 void main() {
-  for (final (locale, width) in [
-    (const Locale('zh'), 800.0),
-    (const Locale('en'), 800.0),
+  for (final (locale, width, scale) in [
+    (const Locale('zh'), 800.0, 1.0),
+    (const Locale('en'), 800.0, 1.0),
     // 寬版門檻附近，英文說明會換行。
-    (const Locale('en'), 420.0),
+    (const Locale('en'), 420.0, 1.0),
+    // 放大字級時說明換行更多，仍不得溢出、右緣仍要對齊。
+    for (final lang in ['en', 'ja'])
+      for (final w in [800.0, 420.0]) (Locale(lang), w, 1.3),
   ]) {
     testWidgets('wide layout: trailing stats end flush at the right edge '
-        '(${locale.languageCode}, $width)', (tester) async {
+        '(${locale.languageCode}, $width, ${scale}x)', (tester) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       final t0 = DateTime(2025, 1, 1);
       final banners = <String, List<GachaRecord>>{
         '301': [
@@ -134,6 +139,7 @@ void main() {
           ),
           locale: locale,
           width: width,
+          height: 900, // 放大字級換行後仍放得下，避免容器溢出掩蓋對齊斷言
         ),
       );
       await tester.pumpAndSettle();
