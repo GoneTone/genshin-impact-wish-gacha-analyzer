@@ -519,6 +519,12 @@ void main() {
     );
     final cards = find.byType(StatCard);
     expect(cards, findsNWidgets(3));
+    expect(
+      topLeftAt(tester, cards, 0).dy,
+      greaterThan(
+        tester.getBottomLeft(find.text(l.pageOverviewOdesSection)).dy,
+      ),
+    );
     expectLastTwoPaired(tester, cards);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
@@ -537,10 +543,8 @@ void main() {
       ),
   ];
 
-  // 角色活動、武器活動、集錄、常駐（祈願）與頌願活動；有次保底就兩欄並排，沒有就總抽數獨佔一列。
-  for (final type in gachaTypes.where(
-    (t) => const {'301', '302', '500', '200', '2000'}.contains(t.gachaType),
-  )) {
+  // 全部卡池（含新手與頌願常駐）；有次保底就兩欄並排，沒有就總抽數獨佔一列。
+  for (final type in gachaTypes) {
     testWidgets(
       'stat card rows follow banner ${type.gachaType} pity rules on a phone',
       (tester) async {
@@ -629,9 +633,8 @@ void main() {
         if (name == 'overview') {
           await scrollToEnd(tester);
         } else {
-          // 卡池頁表格 Pager 的 1.3 倍字級溢出由 Task 6 處理，這裡只驗數字卡區。
-          final e = tester.takeException();
-          expect(e == null || '$e'.contains('RenderFlex overflowed'), isTrue);
+          // 表格與 Pager 在畫面外、按需才建構，首屏不會有任何溢出。
+          expectNoException(tester);
           expect(find.byType(PityCard), findsNWidgets(2));
         }
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
