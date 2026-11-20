@@ -334,7 +334,9 @@ class BannerPage extends ConsumerWidget {
                     title: l.pageBannerRecordList,
                   ),
                   const SizedBox(height: AppSpacing.s),
+                  // 加 key：上方「五星一覽」出現或消失會讓索引位移，清單才能依 key 找回原本的狀態。
                   SearchFilterBar(
+                    key: const ValueKey('banner-search'),
                     state: filterState,
                     availableItemTypes: availableItemTypes,
                     onFilterChanged: (f) => ref
@@ -346,6 +348,7 @@ class BannerPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.m),
                   SortableTable(
+                    key: const ValueKey('banner-table'),
                     rows: sorted,
                     sort: filterState.sort,
                     mainRank: primary.rank,

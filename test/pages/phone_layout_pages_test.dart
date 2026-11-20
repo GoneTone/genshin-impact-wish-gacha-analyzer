@@ -33,6 +33,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -402,6 +404,11 @@ void main() {
     ];
     expect(tops, hasLength(3));
     expect(tops.toSet(), hasLength(1));
+    final heights = {
+      for (final e in find.byType(StatCard).evaluate())
+        tester.getSize(find.byWidget(e.widget)).height,
+    };
+    expect(heights, hasLength(1), reason: 'IntrinsicHeight keeps cards equal');
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
   testWidgets('banner page keeps pity and total cards in one row on desktop', (
@@ -466,5 +473,118 @@ void main() {
     await pump(tester, const Size(1280, 800), const OverviewPage());
     // 平板寬度下祈願段較矮、它的時間軸落在預先建構範圍內；畫面外的頌願段時間軸還沒建構。
     expect(find.byType(TimelineVertical, skipOffstage: false), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets(
+    'banner page keeps table and search state when the five-star section appears',
+    (tester) async {
+      List<GachaRecord> records({required bool withFiveStar}) => [
+        for (var i = 0; i < 45; i++)
+          GachaRecord(
+            id: '${3000 + i}',
+            uid: '701000000',
+            gachaType: '301',
+            rankType: withFiveStar && i == 44 ? 5 : (i % 3 == 0 ? 4 : 3),
+            itemType: '武器',
+            name: 'Item $i',
+            time: DateTime(2026, 5, 1).subtract(Duration(hours: i)),
+            lang: 'zh-tw',
+          ),
+      ];
+      final container = await pump(
+        tester,
+        const Size(360, 800),
+        const BannerPage(gachaType: '301'),
+        records: records(withFiveStar: false),
+      );
+      final scrollable = find.byType(Scrollable).first;
+      await tester.scrollUntilVisible(
+        find.byType(Pager),
+        500,
+        scrollable: scrollable,
+      );
+      await tester.ensureVisible(find.byType(Pager));
+      await tester.pump();
+      await tester.tap(
+        find.descendant(
+          of: find.byType(Pager),
+          matching: find.byIcon(Icons.chevron_right),
+        ),
+      );
+      await tester.pump();
+      expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+      final searchBar = find.byType(SearchFilterBar, skipOffstage: false);
+      final searchState = tester.state(searchBar);
+
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      repo.state = repo.state.copyWith(
+        byUid: {
+          '701000000': BannerStorage(
+            uid: '701000000',
+            lastUpdated: DateTime.utc(2026, 5, 1),
+            banners: {
+              '301': records(withFiveStar: true),
+              '2000': _odesRecords(),
+            },
+          ),
+        },
+      );
+      await tester.pump();
+
+      final after = searchBar.evaluate();
+      expect(after, hasLength(1), reason: 'search bar state was dropped');
+      expect((after.single as StatefulElement).state, same(searchState));
+      expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+
+      // 確認五星一覽確實出現了（不是空轉的測試）。
+      await tester.scrollUntilVisible(
+        find.byIcon(Icons.star_outline),
+        -500,
+        scrollable: scrollable,
+      );
+      expect(find.byIcon(Icons.star_outline), findsOneWidget);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.android),
+  );
+
+  testWidgets('odes banner page keeps table page after scrolling out', (
+    tester,
+  ) async {
+    // 頌願頁共用 BannerPage：記錄表翻到第 2 頁、捲到頁首再捲回，仍停在第 2 頁。
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '2000'),
+    );
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.byType(Pager),
+      500,
+      scrollable: scrollable,
+    );
+    await tester.ensureVisible(find.byType(Pager));
+    await tester.pump();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(Pager),
+        matching: find.byIcon(Icons.chevron_right),
+      ),
+    );
+    await tester.pump();
+    expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+    final table = tester.state(find.byType(SortableTable));
+
+    await tester.drag(scrollable, const Offset(0, 6000));
+    await tester.pumpAndSettle();
+    expect(find.byType(Pager), findsNothing);
+    expect(find.byType(PageHeader), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.byType(Pager),
+      500,
+      scrollable: scrollable,
+    );
+    expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+    expect(tester.state(find.byType(SortableTable)), same(table));
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }
