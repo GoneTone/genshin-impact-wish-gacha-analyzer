@@ -20,8 +20,8 @@ enum ScrollSide {
 
 /// 邊緣漸隱遮罩，用於提示使用者該方向仍可捲動。
 ///
-/// 漸層自 [GachaTokens.surfaceCard]（不透明）漸隱到透明，會自動跟隨卡片／
-/// dialog 背景色。寬度由外層 [Positioned] 決定，此元件本身不設寬度。
+/// 漸層自背景色（不透明）漸隱到透明：在 dialog 內用 dialog 的底色，其他地方用
+/// [GachaTokens.surfaceCard]（卡片底色）。寬度由外層 [Positioned] 決定，此元件本身不設寬度。
 class ScrollEdgeFade extends StatelessWidget {
   /// 建立 [ScrollEdgeFade]。
   const ScrollEdgeFade({super.key, required this.side});
@@ -31,14 +31,21 @@ class ScrollEdgeFade extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = Theme.of(context).gacha.surfaceCard;
+    final theme = Theme.of(context);
+    final dialog = context.findAncestorWidgetOfExactType<Dialog>();
+    // 與 Dialog 解析底色的順序一致；dialog 底色比卡片深，用卡片色會浮出一塊白框。
+    final background = dialog == null
+        ? theme.gacha.surfaceCard
+        : dialog.backgroundColor ??
+              theme.dialogTheme.backgroundColor ??
+              theme.colorScheme.surfaceContainerHigh;
     final isLeft = side == ScrollSide.left;
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: isLeft ? Alignment.centerLeft : Alignment.centerRight,
           end: isLeft ? Alignment.centerRight : Alignment.centerLeft,
-          colors: [cardColor, cardColor.withValues(alpha: 0)],
+          colors: [background, background.withValues(alpha: 0)],
         ),
       ),
     );

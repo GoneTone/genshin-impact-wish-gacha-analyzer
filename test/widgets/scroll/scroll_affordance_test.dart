@@ -94,4 +94,70 @@ void main() {
     );
     expect(tester.getSize(find.byType(ScrollArrowButton)).width, 24);
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  group('ScrollEdgeFade colour', () {
+    /// 取 [ScrollEdgeFade] 漸層的起始（不透明）色。
+    Color fadeStart(WidgetTester tester) {
+      final box = tester.widget<DecoratedBox>(
+        find.descendant(
+          of: find.byType(ScrollEdgeFade),
+          matching: find.byType(DecoratedBox),
+        ),
+      );
+      return ((box.decoration as BoxDecoration).gradient! as LinearGradient)
+          .colors
+          .first;
+    }
+
+    for (final (name, theme) in [
+      ('light', buildLightTheme()),
+      ('dark', buildDarkTheme()),
+    ]) {
+      testWidgets('blends into the dialog surface inside a dialog ($name)', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme,
+            home: const Dialog(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: ScrollEdgeFade(side: ScrollSide.left),
+              ),
+            ),
+          ),
+        );
+        final dialogColor = tester
+            .widget<Material>(
+              find
+                  .descendant(
+                    of: find.byType(Dialog),
+                    matching: find.byType(Material),
+                  )
+                  .first,
+            )
+            .color;
+        expect(fadeStart(tester), dialogColor);
+      });
+
+      testWidgets('uses the card colour outside a dialog ($name)', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme,
+            home: const Scaffold(
+              body: SizedBox(
+                width: 100,
+                height: 100,
+                child: ScrollEdgeFade(side: ScrollSide.left),
+              ),
+            ),
+          ),
+        );
+        expect(fadeStart(tester), theme.gacha.surfaceCard);
+      });
+    }
+  });
 }
