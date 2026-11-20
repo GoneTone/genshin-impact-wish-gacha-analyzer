@@ -199,6 +199,8 @@ void resetFileAccessSeams() {
 }
 
 /// 讓使用者選位置存檔。取消回 null；寫入失敗記 severe 後 rethrow。
+///
+/// 呼叫端須先把 `suggestedName` 內的 `<>:"/\|?*` 換成 `_`，因為 Windows 上的 file_picker 會在 isolate 內丟例外，導致 await 永遠不會完成。
 Future<SavedFile?> saveBytes(
   Uint8List bytes, {
   required String suggestedName,

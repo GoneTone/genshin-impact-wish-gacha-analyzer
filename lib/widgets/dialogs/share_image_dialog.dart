@@ -52,6 +52,7 @@ class _ShareImageDialogState extends ConsumerState<_ShareImageDialog> {
     final android = ref.watch(isAndroidProvider);
     return AppDialog(
       size: AppDialogSize.sm,
+      scrollable: true,
       title: Text(l.shareImageDialogTitle),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
