@@ -23,12 +23,24 @@ class ShareActionButton extends StatefulWidget {
 }
 
 /// [ShareActionButton] 的狀態：追蹤生成中旗標以防重入。
-class _ShareActionButtonState extends State<ShareActionButton> {
+class _ShareActionButtonState extends State<ShareActionButton>
+    with AutomaticKeepAliveClientMixin {
   /// 分享圖生成進行中為 true，期間顯示 spinner 並鎖定按鈕。
   bool _busy = false;
 
+  /// 生成中被捲出按需建構的清單時也保留，否則按鈕會重建成可按、能再開一次流程。
+  @override
+  bool get wantKeepAlive => _busy;
+
+  /// 切換 [_busy] 並同步 keep-alive 狀態。
+  void _setBusy(bool busy) {
+    setState(() => _busy = busy);
+    updateKeepAlive();
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l = AppLocalizations.of(context)!;
     return SizedBox(
       width: 48,
@@ -46,11 +58,11 @@ class _ShareActionButtonState extends State<ShareActionButton> {
               icon: const Icon(Icons.ios_share),
               onPressed: widget.enabled
                   ? () async {
-                      setState(() => _busy = true);
+                      _setBusy(true);
                       try {
                         await widget.onGenerate();
                       } finally {
-                        if (mounted) setState(() => _busy = false);
+                        if (mounted) _setBusy(false);
                       }
                     }
                   : null,
