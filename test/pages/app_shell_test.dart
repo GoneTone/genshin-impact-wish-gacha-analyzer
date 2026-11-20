@@ -331,6 +331,19 @@ void main() {
     expect(find.byType(TeamLinksBar), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets('phone portrait with the keyboard open hides the footer', (
+    tester,
+  ) async {
+    // 直向才有底部列；開著鍵盤時一樣收起，把高度留給輸入框。
+    await pump(tester, const Size(360, 800), keyboard: 300);
+    final e = tester.takeException();
+    expect(e, isNull, reason: e is FlutterError ? e.toStringDeep() : '$e');
+    expect(find.byKey(const Key('shell-bottom-bar')), findsNothing);
+    tester.view.viewInsets = FakeViewPadding.zero;
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('shell-bottom-bar')), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
   testWidgets('phone footer is 48dp tall', (tester) async {
     await pump(tester, const Size(360, 800));
     expect(
@@ -776,6 +789,54 @@ void main() {
       expect(barHeight(tester), kToolbarHeight);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    /// 在列表上按住手指，先往上拖 60dp（越過捲動的觸控容差並收起標題列），再依序移動 [moves]，最後放開。
+    ///
+    /// 每一步之後記下標題列高度並回傳；放開後不再等慣性，避免慣性捲動影響結果。
+    Future<List<double>> dragThen(
+      WidgetTester tester,
+      List<double> moves,
+    ) async {
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(ListView)),
+      );
+      for (var i = 0; i < 2; i++) {
+        await gesture.moveBy(const Offset(0, -30));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(barHeight(tester), lessThan(1), reason: 'collapsed first');
+      final heights = <double>[];
+      for (final dy in moves) {
+        await gesture.moveBy(Offset(0, dy));
+        await tester.pump(const Duration(milliseconds: 16));
+        await tester.pump(const Duration(milliseconds: 300));
+        heights.add(barHeight(tester));
+      }
+      await gesture.up();
+      return heights;
+    }
+
+    testWidgets('slow upward drag under 18dp keeps it collapsed', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      final heights = await dragThen(tester, [5, 5, 5, 5]);
+      // 累計 15dp 仍未過觸控容差；第四步累計 20dp 才展開。
+      expect(heights.take(3), everyElement(lessThan(1)));
+      expect(heights.last, kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('changing direction mid-drag restarts the travel', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      // 往回 10、往前 5、再往回 10：換方向就從頭算，往回只累計到 10dp，不會展開。
+      final heights = await dragThen(tester, [10, -5, 10]);
+      expect(heights, everyElement(lessThan(1)));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     testWidgets('is always visible at the top of the page', (tester) async {
       await pump(tester, const Size(800, 360), body: longList);
       await drag(tester, -300);
@@ -817,6 +878,7 @@ void main() {
       tester.view.viewInsets = const FakeViewPadding(bottom: 200);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      expect(barHeight(tester), 0);
       tester.view.viewInsets = FakeViewPadding.zero;
       await tester.pumpAndSettle();
       expect(barHeight(tester), kToolbarHeight);

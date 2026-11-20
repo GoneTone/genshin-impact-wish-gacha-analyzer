@@ -276,6 +276,27 @@ void noSyncTests() {
         expect(find.textContaining('{icon}'), findsNothing);
         expect(tester.takeException(), isNull);
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+      testWidgets('$locale 電腦版按鈕圖案在 1.3 倍字級不溢出', (tester) async {
+        // 電腦版嵌的是「圖示＋文字」的縮小按鈕，比圓形圖示寬，放大字級時最容易撐破。
+        await _pumpNoSync(
+          tester,
+          size: const Size(600, 800),
+          locale: locale,
+          textScale: 1.3,
+        );
+        final e = tester.takeException();
+        expect(e, isNull, reason: e is FlutterError ? e.toStringDeep() : '$e');
+        final context = tester.element(_spanText());
+        expect(MediaQuery.textScalerOf(context).scale(10), 13);
+        expect(
+          find.descendant(
+            of: _spanText(),
+            matching: find.text(AppLocalizations.of(context)!.actionUpdate),
+          ),
+          findsOneWidget,
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
     }
   });
 }

@@ -1490,21 +1490,27 @@ void main() {
         expect(tester.getRect(link).top, linkTop);
       }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
-      testWidgets('bottom fade shows until scrolled to the end', (
-        tester,
-      ) async {
-        await pumpAt(tester, const Size(1280, 800), desc: longIntro);
-        await tester.pump();
-        expect(bottomFade(), findsOneWidget);
-        final position = tester
-            .state<ScrollableState>(
-              find.ancestor(of: intro(), matching: find.byType(Scrollable)),
-            )
-            .position;
-        position.jumpTo(position.maxScrollExtent);
-        await tester.pump();
-        expect(bottomFade(), findsNothing);
-      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+      for (final (name, size, platform) in [
+        ('desktop', const Size(1280, 800), TargetPlatform.windows),
+        ('phone landscape', const Size(914, 411), TargetPlatform.android),
+      ]) {
+        testWidgets('bottom fade shows until scrolled to the end ($name)', (
+          tester,
+        ) async {
+          await pumpAt(tester, size, desc: longIntro);
+          await tester.pump();
+          expect(find.byKey(detailsColumnKey), findsOneWidget);
+          expect(bottomFade(), findsOneWidget);
+          final position = tester
+              .state<ScrollableState>(
+                find.ancestor(of: intro(), matching: find.byType(Scrollable)),
+              )
+              .position;
+          position.jumpTo(position.maxScrollExtent);
+          await tester.pump();
+          expect(bottomFade(), findsNothing);
+        }, variant: TargetPlatformVariant.only(platform));
+      }
 
       testWidgets('divider separates tags from the skin caption only', (
         tester,

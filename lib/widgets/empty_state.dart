@@ -199,12 +199,17 @@ class _UpdateButtonGlyph extends StatelessWidget {
             children: [
               icon,
               SizedBox(width: fontSize * 0.4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: base,
-                  fontWeight: FontWeight.w600,
-                  color: scheme.onPrimary,
+              // 長語系（法文等）放大字級時，同一行剩下的寬度可能比標籤窄，改以省略號截斷。
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: base,
+                    fontWeight: FontWeight.w600,
+                    color: scheme.onPrimary,
+                  ),
                 ),
               ),
             ],

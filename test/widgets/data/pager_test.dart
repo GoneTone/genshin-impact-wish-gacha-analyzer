@@ -73,6 +73,40 @@ void main() {
     expect(received, isNull);
   });
 
+  for (final locale in const [Locale('zh'), Locale('en'), Locale('ja')]) {
+    testWidgets('320dp 寬、1.3 倍字級（${locale.languageCode}）不溢出', (tester) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: locale,
+          home: Scaffold(
+            body: Pager(
+              page: 127,
+              totalPages: 367,
+              totalItems: 7340,
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      );
+      final e = tester.takeException();
+      expect(e, isNull, reason: e is FlutterError ? e.toStringDeep() : '$e');
+      expect(tester.getSize(find.byType(Pager)).width, 320);
+      expect(find.text('128 / 367'), findsOneWidget);
+      expect(
+        MediaQuery.textScalerOf(tester.element(find.byType(Pager))).scale(10),
+        13,
+      );
+    });
+  }
+
   testWidgets('首頁 / 上一頁 在第 0 頁 disable', (tester) async {
     await tester.pumpWidget(
       _wrap(Pager(page: 0, totalPages: 3, onChanged: (_) {})),

@@ -294,6 +294,18 @@ void main() {
       expect(aliases(), isEmpty);
     });
 
+    testWidgets('編輯別名：前後空白在儲存時去掉', (tester) async {
+      final c = await pumpTwo(tester);
+      await openMenu(tester, 0);
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '  Main ');
+      await tester.tap(find.text('儲存'));
+      await tester.pumpAndSettle();
+      expect(c.read(settingsProvider).uidAliases, {'100000001': 'Main'});
+      expect(find.text('Main'), findsOneWidget);
+    });
+
     testWidgets('移除帳號 → 出現打字確認對話框', (tester) async {
       await pumpTwo(tester);
       await openMenu(tester, 0);
@@ -368,6 +380,9 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       expect(tester.takeException(), isNull);
+      final area = find.byType(AccountManagement);
+      expect(tester.getSize(area).width, 360);
+      expect(MediaQuery.textScalerOf(tester.element(area)).scale(10), 13);
 
       await tester.tap(find.byIcon(Icons.more_vert).at(1));
       await tester.pumpAndSettle();
@@ -377,9 +392,19 @@ void main() {
 
       await tester.tap(find.byIcon(Icons.more_vert).at(1));
       await tester.pumpAndSettle();
+      // 第一個選單項目是「編輯別名」；確認對話框真的打開了，不溢出的斷言才有意義。
+      expect(find.byType(TextField), findsNothing);
       await tester.tap(find.byWidgetPredicate((w) => w is PopupMenuItem).first);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      expect(
+        find.descendant(
+          of: find.byType(Dialog),
+          matching: find.byType(TextField),
+        ),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(TextField, longAlias), findsOneWidget);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   }
 
@@ -430,6 +455,24 @@ void main() {
       await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
       expect(find.text('123••••••'), findsOneWidget);
       expect(find.text('123456789'), findsNothing);
+    });
+
+    testWidgets('隱私模式下編輯別名對話框顯示遮蔽 UID', (tester) async {
+      await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      final dialog = find.byType(Dialog);
+      expect(dialog, findsOneWidget);
+      expect(
+        find.descendant(of: dialog, matching: find.text('123••••••')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: dialog, matching: find.textContaining('123456789')),
+        findsNothing,
+      );
     });
 
     testWidgets('刪除確認 dialog 仍顯示完整 UID（隱私模式下）', (tester) async {
