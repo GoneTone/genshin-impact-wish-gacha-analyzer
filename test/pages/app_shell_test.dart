@@ -71,6 +71,7 @@ void main() {
     String? alias,
     double keyboard = 0,
     String initialLocation = '/',
+    Widget? body,
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
@@ -94,7 +95,7 @@ void main() {
           .read(settingsProvider.notifier)
           .setUidAlias('701000000', alias);
     }
-    Widget page(GoRouterState s) => Text('page:${s.uri.path}');
+    Widget page(GoRouterState s) => body ?? Text('page:${s.uri.path}');
     final router = GoRouter(
       initialLocation: initialLocation,
       routes: [
@@ -713,4 +714,85 @@ void main() {
       800,
     );
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  group('phone landscape top bar collapse', () {
+    /// 頂端標題列目前的高度。
+    double barHeight(WidgetTester tester) =>
+        tester.getSize(find.byKey(const Key('shell-top-bar'))).height;
+
+    /// 一頁很長的垂直列表。
+    final longList = ListView.builder(
+      itemCount: 100,
+      itemBuilder: (_, i) => SizedBox(height: 48, child: Text('row $i')),
+    );
+
+    /// 在列表上拖曳 [dy]（負值＝內容往上捲）並等動畫結束。
+    Future<void> drag(WidgetTester tester, double dy) async {
+      await tester.drag(find.byType(ListView), Offset(0, dy));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('collapses on scroll down and returns on any scroll up', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      expect(barHeight(tester), kToolbarHeight);
+      await drag(tester, -300);
+      expect(barHeight(tester), lessThan(1));
+      await drag(tester, 50);
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('is always visible at the top of the page', (tester) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      await drag(tester, 1000);
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('ignores horizontal scrollers', (tester) async {
+      await pump(
+        tester,
+        const Size(800, 360),
+        body: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (var i = 0; i < 50; i++)
+              SizedBox(width: 100, child: Text('c$i')),
+          ],
+        ),
+      );
+      await tester.drag(find.byType(ListView), const Offset(-300, 0));
+      await tester.pumpAndSettle();
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('rotating to portrait shows the collapsed bar at once', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      tester.view.physicalSize = const Size(360, 800);
+      await tester.pump();
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('keyboard in landscape does not throw and bar returns', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 200);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      tester.view.viewInsets = FakeViewPadding.zero;
+      await tester.pumpAndSettle();
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('portrait never collapses', (tester) async {
+      await pump(tester, const Size(360, 800), body: longList);
+      await drag(tester, -300);
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  });
 }
