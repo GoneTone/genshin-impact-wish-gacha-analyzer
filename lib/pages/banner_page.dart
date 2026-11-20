@@ -88,10 +88,14 @@ class _BannerPageState extends ConsumerState<BannerPage> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final state = ref.watch(gachaRepositoryProvider);
-    final activeData = state.activeData;
+    // 只訂閱用到的欄位：更新時進度每換一池就變一次，訂閱整個狀態會讓整頁跟著重算統計。
+    final (:activeData, :isBootstrapping) = ref.watch(
+      gachaRepositoryProvider.select(
+        (s) => (activeData: s.activeData, isBootstrapping: s.isBootstrapping),
+      ),
+    );
 
-    if (state.isBootstrapping) {
+    if (isBootstrapping) {
       return const LoadingState();
     }
     if (activeData == null) {

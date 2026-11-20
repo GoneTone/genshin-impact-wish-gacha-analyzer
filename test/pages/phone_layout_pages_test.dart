@@ -745,6 +745,27 @@ void main() {
     expect(tester.getTopLeft(title).dy, closeTo(top, 8));
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  for (final (name, page) in [
+    ('overview', const OverviewPage()),
+    ('banner', const BannerPage(gachaType: '301')),
+    ('odes banner', const BannerPage(gachaType: '2000')),
+  ]) {
+    testWidgets('$name page does not rebuild when only progress changes', (
+      tester,
+    ) async {
+      final container = await pump(tester, const Size(360, 800), page);
+      var rebuilds = 0;
+      debugOnRebuildDirtyWidget = (e, _) {
+        if (e.widget.runtimeType == page.runtimeType) rebuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = null);
+      // clearProgress 每次都產生新的狀態物件，等同更新時每換一池更新一次進度。
+      container.read(gachaRepositoryProvider.notifier).clearProgress();
+      await tester.pump();
+      expect(rebuilds, 0);
+    });
+  }
+
   testWidgets('overview keeps its three stat cards in one row on desktop', (
     tester,
   ) async {
