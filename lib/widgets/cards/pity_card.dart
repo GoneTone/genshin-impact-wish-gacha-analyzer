@@ -48,7 +48,33 @@ class _PityCardState extends State<PityCard>
     _breath = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncBreath();
+  }
+
+  @override
+  void didUpdateWidget(PityCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncBreath();
+  }
+
+  /// 只在「快保底」且未要求減少動態時跑呼吸動畫；計時器一跑就會每個 vsync 都排一幀。
+  void _syncBreath() {
+    final animate =
+        _phase(widget.pity) == _Phase.close &&
+        !MediaQuery.disableAnimationsOf(context);
+    if (animate) {
+      if (!_breath.isAnimating) _breath.repeat(reverse: true);
+    } else if (_breath.isAnimating || _breath.value != 0) {
+      _breath
+        ..stop()
+        ..value = 0;
+    }
   }
 
   @override
@@ -185,11 +211,13 @@ class _ProgressBar extends StatelessWidget {
     );
 
     if (breath != null && phase == _Phase.close) {
-      bar = AnimatedBuilder(
-        animation: breath!,
-        builder: (_, child) =>
-            Opacity(opacity: 0.7 + 0.3 * breath!.value, child: child),
-        child: bar,
+      bar = RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: breath!,
+          builder: (_, child) =>
+              Opacity(opacity: 0.7 + 0.3 * breath!.value, child: child),
+          child: bar,
+        ),
       );
     }
     return bar;
