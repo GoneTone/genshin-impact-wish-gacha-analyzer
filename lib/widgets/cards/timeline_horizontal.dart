@@ -308,100 +308,97 @@ class _EntryColumn extends StatelessWidget {
       message: entry.name,
       preferBelow: false,
       waitDuration: const Duration(milliseconds: 100),
-      // 左框線畫在欄寬之外，分隔線欄實寬 _colWidth + 1。
       child: Container(
+        width: _colWidth,
         decoration: showMonthDivider
             ? BoxDecoration(
                 border: Border(left: BorderSide(color: tokens.borderEmphasis)),
               )
             : null,
-        child: SizedBox(
-          width: _colWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 月份標籤帶（首欄填年/月，其餘留白佔位）。
-              SizedBox(
-                height: _monthBandHeight,
-                child: monthLabel == null
-                    ? null
-                    : Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          monthLabel,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: tokens.textSecondary,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.4,
-                            fontFeatures: kTabularFigures,
-                          ),
-                        ),
-                      ),
-              ),
-              if (entry.sourceRecord != null)
-                GachaItemTapTarget(
-                  record: entry.sourceRecord!,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GachaItemIcon(record: entry.sourceRecord!, size: 32),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        entry.name,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 月份標籤帶（首欄填年/月，其餘留白佔位）。
+            SizedBox(
+              height: _monthBandHeight,
+              child: monthLabel == null
+                  ? null
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        monthLabel,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: luck,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          color: tokens.textSecondary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.4,
+                          fontFeatures: kTabularFigures,
                         ),
                       ),
-                    ],
-                  ),
-                )
-              else
-                Text(
-                  entry.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: luck,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              const SizedBox(height: AppSpacing.xs),
-              TimelineNode(color: luck, tokens: tokens),
-              const SizedBox(height: AppSpacing.xs),
-              Text.rich(
-                TextSpan(
-                  style: TextStyle(
-                    color: tokens.textMuted,
-                    fontSize: 10,
-                    fontFeatures: kTabularFigures,
-                  ),
+                    ),
+            ),
+            if (entry.sourceRecord != null)
+              GachaItemTapTarget(
+                record: entry.sourceRecord!,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TextSpan(text: '${formatShortMonthDay(entry.time)} · '),
-                    TextSpan(
-                      text: l.timelineSinceLast(entry.pullsSincePrev),
-                      style: TextStyle(color: luck),
+                    GachaItemIcon(record: entry.sourceRecord!, size: 32),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      entry.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: luck,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
+              )
+            else
+              Text(
+                entry.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: luck,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
               ),
-              // 對稱補回標籤帶高度，使節點維持在原垂直中心、對齊軸線。
-              const SizedBox(height: _monthBandHeight),
-            ],
-          ),
+            const SizedBox(height: AppSpacing.xs),
+            TimelineNode(color: luck, tokens: tokens),
+            const SizedBox(height: AppSpacing.xs),
+            Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  color: tokens.textMuted,
+                  fontSize: 10,
+                  fontFeatures: kTabularFigures,
+                ),
+                children: [
+                  TextSpan(text: '${formatShortMonthDay(entry.time)} · '),
+                  TextSpan(
+                    text: l.timelineSinceLast(entry.pullsSincePrev),
+                    style: TextStyle(color: luck),
+                  ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+            // 對稱補回標籤帶高度，使節點維持在原垂直中心、對齊軸線。
+            const SizedBox(height: _monthBandHeight),
+          ],
         ),
       ),
     );

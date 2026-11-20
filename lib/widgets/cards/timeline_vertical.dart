@@ -199,7 +199,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
               children: [
                 if (fillHeight) Expanded(child: scroller) else scroller,
                 const Padding(
-                  padding: EdgeInsets.only(top: AppSpacing.s),
+                  padding: EdgeInsets.only(top: AppSpacing.m),
                   child: LuckLegend(),
                 ),
               ],
@@ -241,7 +241,6 @@ class _TimelineVerticalState extends State<TimelineVertical> {
             ),
           ),
         ),
-        withLegend: widget.showLuckLegend,
       );
     }
 
@@ -316,7 +315,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
             ),
         ],
       ),
-      withLegend: widget.showLuckLegend,
+      withLegend: widget.showLuckLegend && entries.isNotEmpty,
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
@@ -789,10 +790,10 @@ void main() {
     );
   });
 
-  testWidgets('showLuckLegend 時顯示圖例', (tester) async {
+  testWidgets('luck legend shows when there are entries', (tester) async {
     await pumpTimelineVertical(
       tester,
-      entries: const [],
+      entries: [_e('夜蘭', '301', 87, DateTime(2026, 1, 5))],
       targetRank: 5,
       nowPulls: 10,
       showLuckLegend: true,
@@ -800,7 +801,44 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
+    expect(find.byType(LuckLegend), findsOneWidget);
     expect(find.text(l.luckTierLucky), findsOneWidget);
+  });
+
+  testWidgets('luck legend is hidden when there are no entries', (
+    tester,
+  ) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: const [],
+      targetRank: 5,
+      nowPulls: 10,
+      showLuckLegend: true,
+    );
+    expect(find.byType(LuckLegend), findsNothing);
+  });
+
+  testWidgets('luck legend sits AppSpacing.m below the timeline', (
+    tester,
+  ) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: [_e('夜蘭', '301', 87, DateTime(2026, 1, 5))],
+      targetRank: 5,
+      showLuckLegend: true,
+    );
+    final timelineBottom = tester
+        .getBottomLeft(
+          find
+              .descendant(
+                of: find.byType(TimelineVertical),
+                matching: find.byType(Stack),
+              )
+              .first,
+        )
+        .dy;
+    final legendTop = tester.getTopLeft(find.byType(LuckLegend)).dy;
+    expect(legendTop - timelineBottom, AppSpacing.m);
   });
 
   testWidgets('on phones a tap on the node or the date shows the name', (
@@ -830,18 +868,20 @@ void main() {
     }
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-  testWidgets('showLuckLegend 時沒有記錄也沒有「現在」仍顯示圖例', (tester) async {
+  testWidgets('luck legend is hidden when there are no records and no now', (
+    tester,
+  ) async {
     await pumpTimelineVertical(
       tester,
       entries: const [],
       targetRank: 5,
       showLuckLegend: true,
     );
-    expect(find.byType(LuckLegend), findsOneWidget);
+    expect(find.byType(LuckLegend), findsNothing);
   });
 
   for (final fillHeight in [false, true]) {
-    testWidgets('vertical timeline geometry is unchanged by the refactor '
+    testWidgets('vertical timeline geometry matches the sister layout '
         '(fillHeight: $fillHeight)', (tester) async {
       await tester.pumpWidget(
         _wrap(
@@ -871,7 +911,7 @@ void main() {
         find.byType(TimelineVertical),
         exclude: find.byType(LuckLegend),
       );
-      // 數值錄自重構前的原程式；圖例（Task 3 會改）不列入。
+      // 圖例文字不列入；數值為實測。
       expect(actual, <(String, Rect)>[
         ('Now', const Rect.fromLTRB(131.0, 19.0, 173.75, 39.0)),
         (
@@ -913,7 +953,7 @@ void main() {
         ('node', const Rect.fromLTRB(97.0, 333.0, 119.0, 355.0)),
         ('node', const Rect.fromLTRB(97.0, 386.0, 119.0, 408.0)),
         // 卡片外框；fillHeight 時撐滿測試畫面高 600。
-        ('border', Rect.fromLTRB(0, 0, 600, fillHeight ? 600 : 480)),
+        ('border', Rect.fromLTRB(0, 0, 600, fillHeight ? 600 : 484)),
       ]);
     });
   }

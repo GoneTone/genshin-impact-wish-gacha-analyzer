@@ -460,7 +460,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('horizontal timeline geometry is unchanged by the refactor', (
+  testWidgets('horizontal timeline geometry matches the sister layout', (
     tester,
   ) async {
     await pumpTimelineHorizontal(
@@ -476,7 +476,7 @@ void main() {
       targetRank: 5,
     );
     final actual = timelineGeometry(tester, find.byType(TimelineHorizontal));
-    // 數值錄自重構前的原程式；分隔線欄含 1px 左框線，寬 91。
+    // 數值為實測；分隔線欄的 1px 左框線吃進欄寬，所以每欄都是 90。
     expect(actual, <(String, Rect)>[
       ('Now', const Rect.fromLTRB(26.625, 49.5, 63.375, 66.5)),
       ('28 pulls', const Rect.fromLTRB(4.0, 96.5, 86.0, 110.5)),
@@ -485,22 +485,22 @@ void main() {
       ('01/05 · 87 pulls', const Rect.fromLTRB(90.0, 96.5, 180.0, 110.5)),
       ('流浪者', const Rect.fromLTRB(206.625, 49.5, 243.375, 66.5)),
       ('01/02 · 74 pulls', const Rect.fromLTRB(180.0, 96.5, 270.0, 110.5)),
-      ('12 / 2025', const Rect.fromLTRB(271.0, 23.5, 361.0, 39.5)),
-      ('納西妲', const Rect.fromLTRB(297.625, 49.5, 334.375, 66.5)),
-      ('12/20 · 40 pulls', const Rect.fromLTRB(271.0, 96.5, 361.0, 110.5)),
-      ('11 / 2025', const Rect.fromLTRB(362.0, 23.5, 452.0, 39.5)),
-      ('魈', const Rect.fromLTRB(400.875, 49.5, 413.125, 66.5)),
-      ('11/30 · 90 pulls', const Rect.fromLTRB(362.0, 96.5, 452.0, 110.5)),
-      ('刻晴', const Rect.fromLTRB(484.75, 49.5, 509.25, 66.5)),
-      ('11/03 · 62 pulls', const Rect.fromLTRB(452.0, 96.5, 542.0, 110.5)),
+      ('12 / 2025', const Rect.fromLTRB(271.0, 23.5, 360.0, 39.5)),
+      ('納西妲', const Rect.fromLTRB(297.125, 49.5, 333.875, 66.5)),
+      ('12/20 · 40 pulls', const Rect.fromLTRB(271.0, 96.5, 360.0, 110.5)),
+      ('11 / 2025', const Rect.fromLTRB(361.0, 23.5, 450.0, 39.5)),
+      ('魈', const Rect.fromLTRB(399.375, 49.5, 411.625, 66.5)),
+      ('11/30 · 90 pulls', const Rect.fromLTRB(361.0, 96.5, 450.0, 110.5)),
+      ('刻晴', const Rect.fromLTRB(482.75, 49.5, 507.25, 66.5)),
+      ('11/03 · 62 pulls', const Rect.fromLTRB(450.0, 96.5, 540.0, 110.5)),
       ('node', const Rect.fromLTRB(34.0, 70.5, 56.0, 92.5)),
       ('node', const Rect.fromLTRB(124.0, 70.5, 146.0, 92.5)),
       ('node', const Rect.fromLTRB(214.0, 70.5, 236.0, 92.5)),
-      ('node', const Rect.fromLTRB(305.0, 70.5, 327.0, 92.5)),
-      ('node', const Rect.fromLTRB(396.0, 70.5, 418.0, 92.5)),
-      ('node', const Rect.fromLTRB(486.0, 70.5, 508.0, 92.5)),
-      ('border', const Rect.fromLTRB(270.0, 23.5, 361.0, 136.5)),
-      ('border', const Rect.fromLTRB(361.0, 23.5, 452.0, 136.5)),
+      ('node', const Rect.fromLTRB(304.5, 70.5, 326.5, 92.5)),
+      ('node', const Rect.fromLTRB(394.5, 70.5, 416.5, 92.5)),
+      ('node', const Rect.fromLTRB(484.0, 70.5, 506.0, 92.5)),
+      ('border', const Rect.fromLTRB(270.0, 23.5, 360.0, 136.5)),
+      ('border', const Rect.fromLTRB(360.0, 23.5, 450.0, 136.5)),
     ]);
   });
 }
