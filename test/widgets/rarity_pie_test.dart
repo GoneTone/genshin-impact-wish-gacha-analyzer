@@ -1,8 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 
 void main() {
@@ -109,5 +111,44 @@ void main() {
       final entries = rarityDistributionEntries(stats, GachaTokens.dark, ja);
       expect(entries.map((e) => e.name).toList(), ['★5', '★4', '★3', '★2']);
     });
+  });
+
+  testWidgets('rarity pie sections are unchanged by the refactor', (t) async {
+    const stats = GachaStats(
+      total: 10,
+      fiveStarCount: 1,
+      fourStarCount: 2,
+      threeStarCount: 5,
+      twoStarCount: 2,
+      byItemType: {},
+    );
+    await t.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
+        home: const Scaffold(
+          body: SizedBox(
+            width: 240,
+            height: 240,
+            child: RarityPie(stats: stats, animationDuration: Duration.zero),
+          ),
+        ),
+      ),
+    );
+    await t.pump();
+    final data = t.widget<PieChart>(find.byType(PieChart)).data;
+    const tokens = GachaTokens.dark;
+    expect(data.sectionsSpace, 2);
+    expect(data.centerSpaceRadius, 40);
+    expect(data.sections.map((s) => s.value).toList(), [1, 2, 5, 2]);
+    expect(data.sections.map((s) => s.color).toList(), [
+      tokens.fiveStar,
+      tokens.fourStar,
+      tokens.threeStar,
+      tokens.twoStar,
+    ]);
+    expect(data.sections.every((s) => s.radius == 75 && !s.showTitle), isTrue);
   });
 }
