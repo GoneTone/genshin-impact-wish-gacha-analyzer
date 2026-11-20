@@ -121,6 +121,7 @@ class OverviewPage extends ConsumerWidget {
 
     // 按需建構：標題列與區塊內容都是清單裡的獨立項目，畫面外的五星一覽與時間軸不會被建構。
     return CustomScrollView(
+      scrollCacheExtent: pageScrollCacheExtent(),
       slivers: [
         SliverPadding(
           padding: EdgeInsets.all(

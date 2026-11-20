@@ -27,6 +27,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
@@ -417,4 +418,53 @@ void main() {
       tester.getTopLeft(find.byType(PityCard).first).dy,
     );
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  testWidgets(
+    'desktop builds the whole overview so the scrollbar stays stable',
+    (tester) async {
+      await pump(tester, const Size(1280, 800), const OverviewPage());
+      // 祈願、頌願兩段的時間軸都已建好。
+      expect(
+        find.byType(TimelineVertical, skipOffstage: false),
+        findsNWidgets(2),
+      );
+      expectNoException(tester);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.windows),
+  );
+
+  testWidgets(
+    'desktop builds the whole banner page so the scrollbar stays stable',
+    (tester) async {
+      await pump(
+        tester,
+        const Size(1280, 400),
+        const BannerPage(gachaType: '301'),
+      );
+      expect(find.byType(SortableTable, skipOffstage: false), findsOneWidget);
+      expectNoException(tester);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.windows),
+  );
+
+  testWidgets('narrow desktop window still builds the whole overview', (
+    tester,
+  ) async {
+    // 電腦視窗拉窄會切成手機排版，但捲軸仍常駐，整頁照樣預先建好。
+    await pump(tester, const Size(500, 800), const OverviewPage());
+    expect(isCompactLayout(tester.element(find.byType(OverviewPage))), isTrue);
+    expect(
+      find.byType(TimelineVertical, skipOffstage: false),
+      findsNWidgets(2),
+    );
+    expectNoException(tester);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  testWidgets('android tablets still build the overview on demand', (
+    tester,
+  ) async {
+    await pump(tester, const Size(1280, 800), const OverviewPage());
+    // 平板寬度下祈願段較矮、它的時間軸落在預先建構範圍內；畫面外的頌願段時間軸還沒建構。
+    expect(find.byType(TimelineVertical, skipOffstage: false), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

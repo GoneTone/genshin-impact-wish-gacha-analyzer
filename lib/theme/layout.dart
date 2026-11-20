@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/widgets.dart';
 
 /// 手機排版的門檻（dp）：手機作業系統比較短邊、電腦作業系統比較寬度。
@@ -22,6 +23,16 @@ bool isCompactLayout(BuildContext context) {
 /// 只給「點了沒有其他動作」的元素用；外層本身可點時會搶走那個點擊。
 TooltipTriggerMode? tapTooltipTrigger(BuildContext context) =>
     isCompactLayout(context) ? TooltipTriggerMode.tap : null;
+
+/// 長頁面清單的預先建構範圍：手機與平板按需建構（省語意樹與重繪）；
+/// 電腦系統會常駐捲軸，整頁建好滑塊才會依實際高度、不隨估算跳動。
+/// 數值取大的有限值：無限大會讓語意樹算出非有限範圍而 assert。
+ScrollCacheExtent? pageScrollCacheExtent() => switch (defaultTargetPlatform) {
+  TargetPlatform.windows ||
+  TargetPlatform.macOS ||
+  TargetPlatform.linux => const ScrollCacheExtent.pixels(100000),
+  _ => null,
+};
 
 /// 給 `MaterialApp.actions` 的全 App 動作表（預設動作加上本專案的覆寫）。
 final Map<Type, Action<Intent>> appActions = {
