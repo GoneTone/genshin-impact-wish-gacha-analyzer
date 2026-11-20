@@ -678,6 +678,9 @@
   "accountAdd": "新增帳號",
   "accountAliasLabel": "別名",
   "accountAliasHint": "為此帳號取一個好記的名稱",
+  "accountAliasNone": "未設定別名",
+  "accountActionEditAlias": "編輯別名",
+  "accountEditAliasTitle": "編輯別名",
   "accountDragHandleTooltip": "拖曳排序",
 
   "loadingBootstrap": "載入中…",

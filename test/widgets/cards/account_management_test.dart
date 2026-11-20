@@ -182,83 +182,124 @@ void main() {
     expect(reloaded!.uidOrder, ['100000002', '100000001']);
   });
 
-  testWidgets('編輯別名 onSubmitted → 寫入 setUidAlias', (tester) async {
-    final storage = GachaStorage(tempDir);
-    await tester.runAsync(() async {
-      await storage.save(
-        BannerStorage(
-          uid: '100000001',
-          lastUpdated: DateTime.utc(2026, 5, 9),
-          banners: const {
-            '301': [],
-            '302': [],
-            '500': [],
-            '200': [],
-            '100': [],
-          },
-        ),
-      );
+  group('AccountManagement: 緊湊列與 ⋮ 選單', () {
+    /// 存入兩個帳號（100000001 較新＝使用中）並 pump，回傳 container。
+    Future<ProviderContainer> pumpTwo(
+      WidgetTester tester, {
+      Map<String, dynamic> prefs = const {},
+    }) async {
+      final storage = GachaStorage(tempDir);
+      await tester.runAsync(() async {
+        for (final e in {
+          '100000001': DateTime.utc(2026, 5, 9),
+          '100000002': DateTime.utc(2026, 1, 1),
+        }.entries) {
+          await storage.save(
+            BannerStorage(
+              uid: e.key,
+              lastUpdated: e.value,
+              banners: const {'301': []},
+            ),
+          );
+        }
+      });
+      late ProviderContainer container;
+      await tester.runAsync(() async {
+        container = await _setupContainer(storage: storage, prefs: prefs);
+      });
+      addTearDown(container.dispose);
+      await tester.pumpWidget(_wrap(container));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      return container;
+    }
+
+    /// 開啟第 [row] 列的 ⋮ 選單。
+    Future<void> openMenu(WidgetTester tester, int row) async {
+      await tester.tap(find.byIcon(Icons.more_vert).at(row));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('列內沒有 TextField；無別名顯示提示、有別名顯示別名', (tester) async {
+      await pumpTwo(tester, prefs: {'pref.uidAliases': '{"100000001":"主帳號"}'});
+      expect(find.byType(TextField), findsNothing);
+      expect(find.text('主帳號'), findsOneWidget);
+      expect(find.text('未設定別名'), findsOneWidget);
     });
 
-    late ProviderContainer container;
-    await tester.runAsync(() async {
-      container = await _setupContainer(storage: storage);
-    });
-    addTearDown(container.dispose);
-
-    await tester.pumpWidget(_wrap(container));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-
-    final field = find.byType(TextField).first;
-    await tester.enterText(field, '主帳號');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-
-    final reloaded = await tester.runAsync(() => SettingsStorage.load());
-    expect(reloaded!.uidAliases, {'100000001': '主帳號'});
-  });
-
-  testWidgets('別名空字串 → 移除', (tester) async {
-    final storage = GachaStorage(tempDir);
-    await tester.runAsync(() async {
-      await storage.save(
-        BannerStorage(
-          uid: '100000001',
-          lastUpdated: DateTime.utc(2026, 5, 9),
-          banners: const {
-            '301': [],
-            '302': [],
-            '500': [],
-            '200': [],
-            '100': [],
-          },
-        ),
-      );
+    testWidgets('使用中標籤只出現在 active 列', (tester) async {
+      await pumpTwo(tester);
+      expect(find.text('活躍'), findsOneWidget);
     });
 
-    late ProviderContainer container;
-    await tester.runAsync(() async {
-      container = await _setupContainer(
-        storage: storage,
+    testWidgets('選單：active 列沒有「設為活躍」，非 active 列有', (tester) async {
+      await pumpTwo(tester);
+      await openMenu(tester, 0);
+      expect(find.text('編輯別名'), findsOneWidget);
+      expect(find.text('設為活躍'), findsNothing);
+      expect(find.text('移除'), findsOneWidget);
+      await tester.tapAt(const Offset(1, 1));
+      await tester.pumpAndSettle();
+      await openMenu(tester, 1);
+      expect(find.text('設為活躍'), findsOneWidget);
+    });
+
+    testWidgets('設為活躍 → activeUid 改變', (tester) async {
+      final c = await pumpTwo(tester);
+      await openMenu(tester, 1);
+      await tester.tap(find.text('設為活躍'));
+      await tester.pumpAndSettle();
+      expect(c.read(gachaRepositoryProvider).activeUid, '100000002');
+    });
+
+    testWidgets('編輯別名：預填、儲存、Enter、清空、取消', (tester) async {
+      final c = await pumpTwo(
+        tester,
         prefs: {'pref.uidAliases': '{"100000001":"舊名"}'},
       );
+      Map<String, String> aliases() => c.read(settingsProvider).uidAliases;
+
+      await openMenu(tester, 0);
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(TextField, '舊名'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), 'Main');
+      await tester.tap(find.text('儲存'));
+      await tester.pumpAndSettle();
+      expect(aliases()['100000001'], 'Main');
+
+      await openMenu(tester, 0);
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Enter');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(aliases()['100000001'], 'Enter');
+
+      await openMenu(tester, 0);
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'X');
+      await tester.tap(find.text('取消'));
+      await tester.pumpAndSettle();
+      expect(aliases()['100000001'], 'Enter');
+
+      await openMenu(tester, 0);
+      await tester.tap(find.text('編輯別名'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '');
+      await tester.tap(find.text('儲存'));
+      await tester.pumpAndSettle();
+      expect(aliases(), isEmpty);
     });
-    addTearDown(container.dispose);
 
-    await tester.pumpWidget(_wrap(container));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-
-    final field = find.byType(TextField).first;
-    await tester.enterText(field, '   ');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-
-    final reloaded = await tester.runAsync(() => SettingsStorage.load());
-    expect(reloaded!.uidAliases, isEmpty);
+    testWidgets('移除帳號 → 出現打字確認對話框', (tester) async {
+      await pumpTwo(tester);
+      await openMenu(tester, 0);
+      await tester.tap(find.text('移除'));
+      await tester.pumpAndSettle();
+      expect(find.byType(TextField), findsOneWidget);
+    });
   });
 
   group('AccountManagement: maskUidInUi', () {
@@ -312,7 +353,9 @@ void main() {
 
     testWidgets('刪除確認 dialog 仍顯示完整 UID（隱私模式下）', (tester) async {
       await pumpWithUid(tester, uid: '123456789', maskUidInUi: true);
-      await tester.tap(find.byIcon(Icons.delete_outline).first);
+      await tester.tap(find.byIcon(Icons.more_vert).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('移除'));
       await tester.pumpAndSettle();
       // confirm dialog 透過 i18n confirmClearActiveBody({uid}) 把完整 UID 嵌入訊息，
       // 即使介面隱私模式啟用也要顯示完整碼，避免使用者誤刪錯帳號。

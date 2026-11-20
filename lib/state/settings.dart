@@ -81,6 +81,9 @@ class SettingsNotifier extends Notifier<AppSettings> {
     }
     state = state.copyWith(uidAliases: next);
     await SettingsStorage.save(state);
+    Logger('app.settings').info(
+      'uidAlias ${next.containsKey(uid) ? 'set' : 'cleared'} uid=${sanitizeUid(uid)}',
+    );
   }
 
   /// 更新 UID 排列順序並持久化。
