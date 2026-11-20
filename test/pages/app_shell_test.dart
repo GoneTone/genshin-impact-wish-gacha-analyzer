@@ -868,5 +868,37 @@ void main() {
       await drag(tester, -300);
       expect(barHeight(tester), kToolbarHeight);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    /// 在列表上分 20 步慢慢往上拖 400dp，回傳期間 [AppShell] 重建的次數。
+    Future<int> shellBuildsDuringSlowDrag(WidgetTester tester) async {
+      var builds = 0;
+      final previous = debugOnRebuildDirtyWidget;
+      addTearDown(() => debugOnRebuildDirtyWidget = previous);
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget is AppShell) builds++;
+      };
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(ListView)),
+      );
+      for (var i = 0; i < 20; i++) {
+        await gesture.moveBy(const Offset(0, -20));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      await tester.pumpAndSettle();
+      debugOnRebuildDirtyWidget = previous;
+      return builds;
+    }
+
+    for (final (name, size, platform) in [
+      ('phone portrait', const Size(360, 800), TargetPlatform.android),
+      ('desktop', const Size(1280, 800), TargetPlatform.windows),
+    ]) {
+      testWidgets('$name drag does not rebuild the shell', (tester) async {
+        // 只有手機橫向會收起標題列；其他情況捲動不該讓外殼每幀重建。
+        await pump(tester, size, body: longList);
+        expect(await shellBuildsDuringSlowDrag(tester), 0);
+      }, variant: TargetPlatformVariant.only(platform));
+    }
   });
 }

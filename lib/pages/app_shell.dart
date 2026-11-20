@@ -66,6 +66,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     if (depth != 0 || metrics == null || metrics.axis != Axis.vertical) {
       return false;
     }
+    if (n is ScrollStartNotification) _dragTravel = 0;
     // 手指離開前常往回退幾 dp；只看捲動方向的話，每次滑動結束都會把標題列切回去。
     if (n is ScrollUpdateNotification && n.dragDetails != null) {
       final delta = n.scrollDelta ?? 0;
@@ -140,6 +141,8 @@ class _AppShellState extends ConsumerState<AppShell> {
       _barCollapsed = false;
     }
     _lastLocation = location;
+    final collapsible =
+        phoneOrientation == PhoneOrientation.landscape && !keyboardOpen;
     final barHidden =
         phoneOrientation == PhoneOrientation.landscape &&
         (_barCollapsed || keyboardOpen);
@@ -288,7 +291,8 @@ class _AppShellState extends ConsumerState<AppShell> {
             ),
           ),
           body: NotificationListener<Notification>(
-            onNotification: _onScroll,
+            // 不能收起時不聽捲動：否則拖動中每幀都把旗標設起來、又被上面重設，外殼跟著每幀重建。
+            onNotification: collapsible ? _onScroll : null,
             child: Column(
               children: [
                 // 標題列由 AppBar 自己避開安全區；內容區要自己避開橫向的開孔鏡頭，
