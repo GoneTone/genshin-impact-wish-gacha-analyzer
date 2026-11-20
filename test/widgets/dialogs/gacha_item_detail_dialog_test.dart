@@ -1,16 +1,21 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_image_save.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
@@ -63,10 +68,15 @@ void main() {
   late Directory tempDir;
   late ProviderContainer container;
 
+  /// 測試內設成 true 即走 Android 分支（`isAndroidProvider` 首次讀取時才取值）。
+  var android = false;
+
   setUp(() async {
+    android = false;
     tempDir = await Directory.systemTemp.createTemp('gacha_item_detail_test_');
     container = ProviderContainer(
       overrides: [
+        isAndroidProvider.overrideWith((ref) => android),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(tempDir),
         ),
@@ -935,8 +945,11 @@ void main() {
       );
     });
 
-    /// 種一筆含原圖（附三行說明）與 icon 的角色，回傳原圖的快取檔。
-    Future<File> seedWithGallery(WidgetTester tester) async {
+    /// 種一筆名為 [name]、含原圖（附三行說明）與 icon 的角色，回傳原圖的快取檔。
+    Future<File> seedWithGallery(
+      WidgetTester tester, {
+      String name = 'Hu Tao',
+    }) async {
       final origFile = hoyowikiGalleryCacheFile(
         baseDir: tempDir,
         id: '12345',
@@ -947,7 +960,7 @@ void main() {
         await _touchFile(tempDir, origFile.uri.pathSegments.last);
         await seedEntry(
           '12345',
-          'Hu Tao',
+          name,
           'en-us',
           _entryWith(
             iconUrl: 'https://x/icon.png',
@@ -993,6 +1006,218 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.text(l.actionSaveImage), findsOneWidget);
+    });
+
+    /// 開啟 ready 圖的溢出選單。
+    Future<void> openImageMenu(WidgetTester tester) async {
+      await tester.tap(
+        find.descendant(
+          of: find.byType(GachaItemDetailDialog),
+          matching: find.byIcon(Icons.more_vert),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+
+    /// 取詳情 dialog 所在 context 的 [AppLocalizations]。
+    AppLocalizations loc(WidgetTester tester) => AppLocalizations.of(
+      tester.element(find.byType(GachaItemDetailDialog)),
+    )!;
+
+    /// 開 [name] 的詳情、選單點 [label] 選出的項目，並等動作跑完。
+    Future<void> runMenuAction(
+      WidgetTester tester,
+      String Function(AppLocalizations l) label, {
+      String name = 'Hu Tao',
+    }) async {
+      await pumpDialog(tester, _rec(name: name, gachaType: '301'));
+      await openImageMenu(tester);
+      await tester.tap(find.text(label(loc(tester))));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+
+    /// 結束前 flush toast 的停留計時器與淡出動畫。
+    Future<void> flushToast(WidgetTester tester) async {
+      await tester.pump(const Duration(milliseconds: 2200));
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    /// 讓圖片準備直接回傳假 bytes（[isGif] 決定當成 GIF 或 PNG），並在測試結束時重設 seam。
+    void stubPrepared({bool isGif = false}) {
+      addTearDown(resetItemImageSaveSeams);
+      addTearDown(resetFileAccessSeams);
+      prepareOutputImageOverride = (_) async =>
+          OutputImage(bytes: Uint8List.fromList([1, 2, 3, 4]), isGif: isGif);
+    }
+
+    testWidgets('item image menu offers share only on Android', (tester) async {
+      android = true;
+      await seedWithGallery(tester);
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      await openImageMenu(tester);
+      expect(find.text(loc(tester).actionShare), findsOneWidget);
+    });
+
+    testWidgets('item image menu hides share on desktop', (tester) async {
+      await seedWithGallery(tester);
+      await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+      await openImageMenu(tester);
+      expect(find.text(loc(tester).actionShare), findsNothing);
+      expect(find.text(loc(tester).actionRefetchImage), findsOneWidget);
+    });
+
+    testWidgets('sharing an item image sends a png named after the item', (
+      tester,
+    ) async {
+      stubPrepared();
+      String? name;
+      String? mime;
+      fileSharer = (bytes, fileName, mimeType) async {
+        name = fileName;
+        mime = mimeType;
+      };
+      android = true;
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionShare);
+      expect(name, 'Hu Tao_Original.png');
+      expect(mime, 'image/png');
+    });
+
+    testWidgets('sharing a gif item image keeps it as a gif', (tester) async {
+      stubPrepared(isGif: true);
+      String? name;
+      String? mime;
+      fileSharer = (bytes, fileName, mimeType) async {
+        name = fileName;
+        mime = mimeType;
+      };
+      android = true;
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionShare);
+      expect(name, 'Hu Tao_Original.gif');
+      expect(mime, 'image/gif');
+    });
+
+    testWidgets('item image share failure shows shareFailed', (tester) async {
+      stubPrepared();
+      fileSharer = (_, _, _) async => throw Exception('boom');
+      android = true;
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionShare);
+      expect(find.text(loc(tester).shareFailed), findsOneWidget);
+      await flushToast(tester);
+    });
+
+    testWidgets('sharing successfully shows no toast', (tester) async {
+      stubPrepared();
+      var shared = false;
+      fileSharer = (_, _, _) async {
+        shared = true;
+      };
+      android = true;
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionShare);
+      expect(shared, isTrue);
+      expect(find.text(loc(tester).shareFailed), findsNothing);
+    });
+
+    testWidgets('Windows save toast shows the full path and logs the outcome', (
+      tester,
+    ) async {
+      stubPrepared();
+      String? title;
+      fileSaveDialog = (_, _, _, _, dialogTitle) async {
+        title = dialogTitle;
+        return r'C:\out\Hu Tao_Original.png';
+      };
+      final messages = <String>[];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'gacha.hoyowiki.save')
+          .listen((r) => messages.add(r.message));
+      addTearDown(sub.cancel);
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionSaveImage);
+      final l = loc(tester);
+      expect(title, l.dialogSaveAsTitle);
+      expect(
+        find.text(l.imageSavedTo(r'C:\out\Hu Tao_Original.png')),
+        findsOneWidget,
+      );
+      expect(messages, [
+        'item image action=save name=Hu Tao_Original.png outcome=ok',
+      ]);
+      await flushToast(tester);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    testWidgets('Android save toast shows only the file name', (tester) async {
+      stubPrepared();
+      fileSaveDialog = (_, _, _, _, _) async =>
+          '/document/primary:Download/Hu Tao_Original.png';
+      android = true;
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionSaveImage);
+      expect(
+        find.text(loc(tester).imageSavedTo('Hu Tao_Original.png')),
+        findsOneWidget,
+      );
+      await flushToast(tester);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('saving a gif item image asks for a .gif', (tester) async {
+      stubPrepared(isGif: true);
+      String? name;
+      String? ext;
+      String? mime;
+      fileSaveDialog = (_, suggestedName, extension, mimeType, _) async {
+        name = suggestedName;
+        ext = extension;
+        mime = mimeType;
+        return null;
+      };
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionSaveImage);
+      expect(name, endsWith('.gif'));
+      expect(ext, 'gif');
+      expect(mime, 'image/gif');
+    });
+
+    testWidgets(
+      'saving an image with illegal characters in its name passes a sanitized '
+      'name',
+      (tester) async {
+        stubPrepared();
+        String? name;
+        fileSaveDialog = (_, suggestedName, _, _, _) async {
+          name = suggestedName;
+          return null;
+        };
+        await seedWithGallery(tester, name: 'A:B/C');
+        await runMenuAction(tester, (l) => l.actionSaveImage, name: 'A:B/C');
+        expect(name, 'A_B_C_Original.png');
+        expect(name, isNot(matches(RegExp(r'[<>:"/\\|?*]'))));
+      },
+    );
+
+    testWidgets('a failed image preparation toasts and logs the base name', (
+      tester,
+    ) async {
+      addTearDown(resetItemImageSaveSeams);
+      prepareOutputImageOverride = (_) async => null;
+      final messages = <String>[];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'gacha.hoyowiki.save')
+          .listen((r) => messages.add(r.message));
+      addTearDown(sub.cancel);
+      await seedWithGallery(tester);
+      await runMenuAction(tester, (l) => l.actionCopyImage);
+      expect(find.text(loc(tester).imageCopyFailed), findsOneWidget);
+      expect(
+        messages.last,
+        'item image action=copy name=Hu Tao_Original outcome=failed',
+      );
+      await flushToast(tester);
     });
 
     /// 把測試畫面設成 [size]（dpr 1），測試結束後還原。

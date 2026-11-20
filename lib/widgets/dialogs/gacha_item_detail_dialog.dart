@@ -10,10 +10,10 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
@@ -21,6 +21,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_html.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gallery_chip_bar.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/item_image_actions.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
 /// 頌願卡池 gachaType 集合 — 永遠不可點。
@@ -207,26 +208,9 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     }
   }
 
-  /// 圖片選單項目（複製圖片 / 儲存圖片 / --- / 重抓圖片）；右上角按鈕與右鍵選單共用。
+  /// 圖片選單項目（共用的複製／儲存／分享 + --- + 重抓圖片）；右上角按鈕與右鍵選單共用。
   List<PopupMenuEntry<String>> _imageMenuItems(AppLocalizations l) => [
-    PopupMenuItem(
-      value: 'copy',
-      child: ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.copy, size: 20),
-        title: Text(l.actionCopyImage),
-      ),
-    ),
-    PopupMenuItem(
-      value: 'save',
-      child: ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.save_alt, size: 20),
-        title: Text(l.actionSaveImage),
-      ),
-    ),
+    ...itemImageMenuItems(l, share: ref.read(isAndroidProvider)),
     const PopupMenuDivider(),
     PopupMenuItem(
       value: 'refetch',
@@ -239,19 +223,24 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     ),
   ];
 
-  /// 分派圖片選單選擇（按鈕與右鍵選單共用）：複製 / 儲存 / 重抓。
+  /// 分派圖片選單選擇（按鈕與右鍵選單共用）：重抓自己處理，其餘交給共用動作。
   void _onImageMenuSelected(String value, _GalleryChipEntry current) {
-    switch (value) {
-      case 'copy':
-        unawaited(_copyImage(current));
-      case 'save':
-        unawaited(_saveImage(current));
-      case 'refetch':
-        _refetchEntry(current);
+    if (value == 'refetch') {
+      _refetchEntry(current);
+      return;
     }
+    unawaited(
+      runItemImageAction(
+        value,
+        file: current.file,
+        suggestedBaseName: _suggestedBaseName(current),
+        l: AppLocalizations.of(context)!,
+        toast: _showSnack,
+      ),
+    );
   }
 
-  /// 圖片區右上角的溢出選單按鈕：複製圖片 / 儲存圖片 / --- / 重抓圖片。
+  /// 圖片區右上角的溢出選單按鈕：共用圖片動作 / --- / 重抓圖片。
   /// 沿用 lightbox X 鈕的半透明黑底圓鈕視覺；僅在圖片 ready 時疊在圖上顯示。
   Widget _buildImageMenu(BuildContext context, _GalleryChipEntry current) {
     final l = AppLocalizations.of(context)!;
@@ -291,36 +280,11 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
   }
 
   /// 把 record 名稱與 chip 標籤組成存檔建議檔名（不含副檔名），並去掉非法字元。
-  /// 副檔名由 [saveImageFile] 依實際格式（gif／png）補上。
+  /// 副檔名由 [runItemImageAction] 依實際格式（gif／png）補上。
   String _suggestedBaseName(_GalleryChipEntry e) {
     final raw = '${widget.record.name}_${e.label}';
     // Windows 檔名非法字元（< > : " / \ | ? *）一律換 _，避免存檔對話框拒絕。
     return raw.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
-  }
-
-  /// 複製目前圖片到剪貼簿（GIF 保留原始、其餘轉 PNG），結果以 toast 回報。
-  Future<void> _copyImage(_GalleryChipEntry e) async {
-    final l = AppLocalizations.of(context)!;
-    final ok = await copyImageFileToClipboard(e.file);
-    if (!mounted) return;
-    _showSnack(ok ? l.imageCopied : l.imageCopyFailed);
-  }
-
-  /// 儲存目前圖片（GIF 存成 .gif 保留動畫、其餘轉 PNG）→ 系統存檔對話框，
-  /// 結果以 toast 回報。使用者取消不提示；準備／寫檔失敗提示失敗。
-  Future<void> _saveImage(_GalleryChipEntry e) async {
-    final l = AppLocalizations.of(context)!;
-    try {
-      final savedPath = await saveImageFile(
-        e.file,
-        suggestedBaseName: _suggestedBaseName(e),
-      );
-      if (!mounted || savedPath == null) return;
-      _showSnack(l.imageSavedTo(savedPath));
-    } catch (_) {
-      if (!mounted) return;
-      _showSnack(l.imageSaveFailed);
-    }
   }
 
   /// 以 toast 顯示 [message]。用 [showDialogToast]（疊在 dialog 之上的 overlay）

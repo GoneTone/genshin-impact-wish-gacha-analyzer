@@ -1,12 +1,14 @@
 import 'dart:io';
 
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/item_image_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 
@@ -95,7 +97,8 @@ void main() {
     // per memory project_image_cache_cross_test_race
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
-    resetImageClipboardSaveSeams();
+    resetItemImageSaveSeams();
+    resetFileAccessSeams();
     if (await tempDir.exists()) {
       try {
         await tempDir.delete(recursive: true);
@@ -104,21 +107,24 @@ void main() {
   });
 
   /// 把 [showZoomableImageOverlay] 開出來的 widget 在乾淨 MaterialApp 內呈現。
-  Future<void> openOverlay(WidgetTester tester) async {
+  Future<void> openOverlay(WidgetTester tester, {bool android = false}) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: buildDarkTheme(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Builder(
-          builder: (ctx) => Scaffold(
-            body: ElevatedButton(
-              onPressed: () => showZoomableImageOverlay(
-                ctx,
-                imageFile: imageFile,
-                suggestedBaseName: 'test',
+      ProviderScope(
+        overrides: [isAndroidProvider.overrideWithValue(android)],
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (ctx) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () => showZoomableImageOverlay(
+                  ctx,
+                  imageFile: imageFile,
+                  suggestedBaseName: 'test',
+                ),
+                child: const Text('open'),
               ),
-              child: const Text('open'),
             ),
           ),
         ),
@@ -536,20 +542,35 @@ void main() {
       expect(find.text(l.actionSaveImage), findsOneWidget);
     });
 
+    /// 取 overlay 所在 context 的 [AppLocalizations]。
+    AppLocalizations loc(WidgetTester tester) =>
+        AppLocalizations.of(tester.element(find.byType(ZoomableImageOverlay)))!;
+
+    /// 開 ⋮ 選單並點選 [itemText]；圖片準備已換成立即回傳，pumpAndSettle 即可
+    /// 讓所有 future 完成。
+    Future<void> pickMenu(WidgetTester tester, String itemText) async {
+      await tester.tap(find.byIcon(Icons.more_vert));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(itemText));
+      await tester.pumpAndSettle();
+    }
+
+    /// 讓圖片準備直接回傳假 bytes（[isGif] 決定當成 GIF 或 PNG）。
+    void stubPrepared({bool isGif = false}) =>
+        prepareOutputImageOverride = (_) async =>
+            OutputImage(bytes: Uint8List(4), isGif: isGif);
+
     testWidgets('copy menu item calls clipboard writer and toasts', (
       tester,
     ) async {
       var called = false;
-      prepareOutputImageOverride = (_) async =>
-          OutputImage(bytes: Uint8List(4), isGif: false);
+      stubPrepared();
       imageClipboardWriter = (bytes, {required isGif, filePath}) async {
         called = true;
         return true;
       };
       await openOverlay(tester);
-      final l = AppLocalizations.of(
-        tester.element(find.byType(ZoomableImageOverlay)),
-      )!;
+      final l = loc(tester);
       final center = tester.getCenter(find.byType(InteractiveViewer));
       final gesture = await tester.startGesture(
         center,
@@ -565,33 +586,123 @@ void main() {
       expect(find.text(l.imageCopied), findsOneWidget);
     });
 
-    testWidgets('save menu item calls save picker and toasts path', (
+    testWidgets('copying a gif on Android sends no file path', (tester) async {
+      bool? capturedIsGif;
+      String? capturedPath = 'unset';
+      stubPrepared(isGif: true);
+      imageClipboardWriter = (bytes, {required isGif, filePath}) async {
+        capturedIsGif = isGif;
+        capturedPath = filePath;
+        return true;
+      };
+      await openOverlay(tester, android: true);
+      await pickMenu(tester, loc(tester).actionCopyImage);
+      expect(capturedIsGif, isTrue);
+      expect(capturedPath, isNull);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('copying a gif on desktop attaches the file path', (
       tester,
     ) async {
-      prepareOutputImageOverride = (_) async =>
-          OutputImage(bytes: Uint8List(4), isGif: false);
-      imageSaveLocationPicker = (name) async =>
-          FileSaveLocation('${tempDir.path}/out.png');
-      imageFileWriter = (path, bytes) async {};
+      String? capturedPath;
+      stubPrepared(isGif: true);
+      imageClipboardWriter = (bytes, {required isGif, filePath}) async {
+        capturedPath = filePath;
+        return true;
+      };
       await openOverlay(tester);
-      final l = AppLocalizations.of(
-        tester.element(find.byType(ZoomableImageOverlay)),
-      )!;
-      final center = tester.getCenter(find.byType(InteractiveViewer));
-      final gesture = await tester.startGesture(
-        center,
-        kind: PointerDeviceKind.mouse,
-        buttons: kSecondaryMouseButton,
-      );
-      await gesture.up();
+      await pickMenu(tester, loc(tester).actionCopyImage);
+      expect(capturedPath, imageFile.path);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    testWidgets(
+      'save calls picker with suggestedBaseName and shows saved toast',
+      (tester) async {
+        String? capturedName;
+        String? capturedTitle;
+        final tmp = '${tempDir.path}/out.png';
+        stubPrepared();
+        fileSaveDialog = (bytes, name, extension, mimeType, title) async {
+          capturedName = name;
+          capturedTitle = title;
+          return tmp;
+        };
+        await openOverlay(tester);
+        final l = loc(tester);
+        await pickMenu(tester, l.actionSaveImage);
+        expect(capturedName, 'test.png');
+        expect(capturedTitle, l.dialogSaveAsTitle);
+        expect(find.text(l.imageSavedTo(tmp)), findsOneWidget);
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.windows),
+    );
+
+    testWidgets('save on Android shows the file name instead of a path', (
+      tester,
+    ) async {
+      stubPrepared();
+      fileSaveDialog = (bytes, name, extension, mimeType, title) async =>
+          '/document/primary:Download/test.png';
+      await openOverlay(tester, android: true);
+      final l = loc(tester);
+      await pickMenu(tester, l.actionSaveImage);
+      expect(find.text(l.imageSavedTo('test.png')), findsOneWidget);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('item image menu offers share only on Android', (tester) async {
+      await openOverlay(tester, android: true);
+      final l = loc(tester);
+      await tester.tap(find.byIcon(Icons.more_vert));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(l.actionSaveImage));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(
-        find.text(l.imageSavedTo('${tempDir.path}/out.png')),
-        findsOneWidget,
-      );
+      expect(find.text(l.actionShare), findsOneWidget);
+    });
+
+    testWidgets('item image menu hides share on desktop', (tester) async {
+      await openOverlay(tester);
+      final l = loc(tester);
+      await tester.tap(find.byIcon(Icons.more_vert));
+      await tester.pumpAndSettle();
+      expect(find.text(l.actionShare), findsNothing);
+    });
+
+    testWidgets('sharing an item image sends a png named after the item', (
+      tester,
+    ) async {
+      String? name;
+      String? mime;
+      stubPrepared();
+      fileSharer = (bytes, fileName, mimeType) async {
+        name = fileName;
+        mime = mimeType;
+      };
+      await openOverlay(tester, android: true);
+      await pickMenu(tester, loc(tester).actionShare);
+      expect(name, 'test.png');
+      expect(mime, 'image/png');
+    });
+
+    testWidgets('item image share failure shows shareFailed', (tester) async {
+      stubPrepared();
+      fileSharer = (_, _, _) async => throw Exception('boom');
+      await openOverlay(tester, android: true);
+      final l = loc(tester);
+      await pickMenu(tester, l.actionShare);
+      expect(find.text(l.shareFailed), findsOneWidget);
+    });
+
+    testWidgets('save cancelled shows no toast', (tester) async {
+      var asked = false;
+      stubPrepared();
+      fileSaveDialog = (bytes, name, extension, mimeType, title) async {
+        asked = true;
+        return null;
+      };
+      await openOverlay(tester);
+      final l = loc(tester);
+      await pickMenu(tester, l.actionSaveImage);
+      expect(asked, isTrue);
+      expect(find.textContaining(l.imageSavedTo('')), findsNothing);
+      expect(find.text(l.imageSaveFailed), findsNothing);
     });
   });
 

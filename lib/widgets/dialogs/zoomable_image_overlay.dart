@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/dialog_toast.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/item_image_actions.dart';
 
 /// 會觸發長按選單的指標種類（觸控與觸控筆）；滑鼠長按不算，維持桌面的單擊行為。
 const Set<PointerDeviceKind> kTouchLikeDevices = {
@@ -43,7 +45,7 @@ Future<void> showZoomableImageOverlay(
 }
 
 /// 全螢幕 lightbox 圖片檢視器；獨立可重用，不耦合 caller。
-class ZoomableImageOverlay extends StatefulWidget {
+class ZoomableImageOverlay extends ConsumerStatefulWidget {
   /// 建立 [ZoomableImageOverlay]。
   const ZoomableImageOverlay({
     super.key,
@@ -58,11 +60,12 @@ class ZoomableImageOverlay extends StatefulWidget {
   final String suggestedBaseName;
 
   @override
-  State<ZoomableImageOverlay> createState() => _ZoomableImageOverlayState();
+  ConsumerState<ZoomableImageOverlay> createState() =>
+      _ZoomableImageOverlayState();
 }
 
 /// [ZoomableImageOverlay] 的 state — 管理 [_ctrl] 縮放矩陣與 close 路徑。
-class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
+class _ZoomableImageOverlayState extends ConsumerState<ZoomableImageOverlay> {
   /// 縮放最小值（= fit，整圖可見）。
   static const double _minScale = 1.0;
 
@@ -255,62 +258,24 @@ class _ZoomableImageOverlayState extends State<ZoomableImageOverlay> {
     });
   }
 
-  /// copy／save 共用選單項目（複製圖片 ／ 儲存圖片）；⋮ 按鈕與右鍵選單共用。
-  List<PopupMenuEntry<String>> _menuItems(AppLocalizations l) => [
-    PopupMenuItem(
-      value: 'copy',
-      child: ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.copy, size: 20),
-        title: Text(l.actionCopyImage),
-      ),
-    ),
-    PopupMenuItem(
-      value: 'save',
-      child: ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        leading: const Icon(Icons.save_alt, size: 20),
-        title: Text(l.actionSaveImage),
-      ),
-    ),
-  ];
+  /// 共用的物品圖選單項目（複製／儲存／Android 分享）；⋮ 按鈕與右鍵選單共用。
+  List<PopupMenuEntry<String>> _menuItems(AppLocalizations l) =>
+      itemImageMenuItems(l, share: ref.read(isAndroidProvider));
 
-  /// 分派選單選擇：複製 ／ 儲存。
+  /// 分派選單選擇：記一行選單 log 後交給共用的物品圖動作。
   void _onMenuSelected(String value) {
-    switch (value) {
-      case 'copy':
-        unawaited(_copy());
-      case 'save':
-        unawaited(_save());
-    }
-  }
-
-  /// 複製目前圖片到剪貼簿（GIF 保留動畫、其餘轉 PNG），結果以 toast 回報。
-  Future<void> _copy() async {
-    final l = AppLocalizations.of(context)!;
-    Logger('gacha.hoyowiki.zoom').info('menu copy');
-    final ok = await copyImageFileToClipboard(widget.imageFile);
-    if (!mounted) return;
-    showDialogToast(context, ok ? l.imageCopied : l.imageCopyFailed);
-  }
-
-  /// 儲存目前圖片（GIF 存 .gif、其餘轉 PNG）→ 系統存檔對話框，結果以 toast 回報。
-  Future<void> _save() async {
-    final l = AppLocalizations.of(context)!;
-    Logger('gacha.hoyowiki.zoom').info('menu save');
-    try {
-      final path = await saveImageFile(
-        widget.imageFile,
+    Logger('gacha.hoyowiki.zoom').info('menu $value');
+    unawaited(
+      runItemImageAction(
+        value,
+        file: widget.imageFile,
         suggestedBaseName: widget.suggestedBaseName,
-      );
-      if (!mounted || path == null) return;
-      showDialogToast(context, l.imageSavedTo(path));
-    } catch (_) {
-      if (!mounted) return;
-      showDialogToast(context, l.imageSaveFailed);
-    }
+        l: AppLocalizations.of(context)!,
+        toast: (message) {
+          if (mounted) showDialogToast(context, message);
+        },
+      ),
+    );
   }
 
   /// 半透明黑底圓鈕包裝；右上角三顆按鈕共用，沿用既有 lightbox 視覺。
