@@ -692,6 +692,8 @@ void main() {
         tester.getTopLeft(itemType).dx,
         greaterThan(tester.getTopRight(rarity).dx),
       );
+      // 圖例列數不同（稀有度 3 列、類型 2 列）時，同一列的兩張卡仍要等高。
+      expect(tester.getSize(itemType).height, tester.getSize(rarity).height);
       await scrollToEnd(tester);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 

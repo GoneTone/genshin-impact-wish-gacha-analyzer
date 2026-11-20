@@ -268,24 +268,37 @@ class BannerPage extends ConsumerWidget {
                       final tileWidth = col == 1
                           ? c.maxWidth
                           : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
+                      final rarityCard = RarityChartCard(
+                        stats: stats,
+                        layout: layout,
+                      );
+                      final itemTypeCard = ItemTypeChartCard(
+                        stats: stats,
+                        layout: layout,
+                      );
                       return Wrap(
                         spacing: AppSpacing.m,
                         runSpacing: AppSpacing.m,
                         children: [
-                          SizedBox(
-                            width: tileWidth,
-                            child: RarityChartCard(
-                              stats: stats,
-                              layout: layout,
+                          if (col == 1) ...[
+                            SizedBox(width: tileWidth, child: rarityCard),
+                            SizedBox(width: tileWidth, child: itemTypeCard),
+                          ] else
+                            // 兩張圓餅卡同列時等高：精簡版高度跟著圖例列數走，不拉齊會一高一低。
+                            SizedBox(
+                              width: tileWidth * 2 + AppSpacing.m,
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(child: rarityCard),
+                                    const SizedBox(width: AppSpacing.m),
+                                    Expanded(child: itemTypeCard),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: tileWidth,
-                            child: ItemTypeChartCard(
-                              stats: stats,
-                              layout: layout,
-                            ),
-                          ),
                           SizedBox(
                             width: tileWidth,
                             child: ChartCard(
