@@ -869,6 +869,93 @@ void main() {
       expect(barHeight(tester), kToolbarHeight);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    testWidgets('hidden bar leaves the semantics and focus trees', (
+      tester,
+    ) async {
+      // ClipRect 只裁掉繪製；收起後讀屏和鍵盤焦點不能再停在看不到的按鈕上。
+      final handle = tester.ensureSemantics();
+      final l = await pump(tester, const Size(800, 360), body: longList);
+      final menuLabel = MaterialLocalizations.of(
+        tester.element(find.byType(AppShell)),
+      ).openAppDrawerTooltip;
+
+      /// 提示文字為 [tip] 的語意節點（圖示按鈕的名稱放在 tooltip 而非 label）。
+      SemanticsFinder byTip(String tip) =>
+          find.semantics.byPredicate((n) => n.tooltip == tip);
+
+      /// 更新按鈕能不能取得焦點。
+      bool refreshFocusable() =>
+          Focus.of(tester.element(find.byIcon(Icons.refresh))).canRequestFocus;
+
+      expect(byTip(l.actionUpdate), findsOne);
+      expect(byTip(menuLabel), findsOne);
+      expect(refreshFocusable(), isTrue);
+
+      await drag(tester, -300);
+      expect(barHeight(tester), lessThan(1));
+      expect(byTip(l.actionUpdate), findsNothing);
+      expect(byTip(menuLabel), findsNothing);
+      expect(refreshFocusable(), isFalse);
+
+      await drag(tester, 50);
+      expect(barHeight(tester), kToolbarHeight);
+      expect(byTip(l.actionUpdate), findsOne);
+      expect(byTip(menuLabel), findsOne);
+      expect(refreshFocusable(), isTrue);
+      handle.dispose();
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('stays put when collapsing would make the page fit', (
+      tester,
+    ) async {
+      // 內容只比畫面多出不到一個標題列高：收起後就不用捲，又會被展開，每次拖動閃一下。
+      await pump(
+        tester,
+        const Size(800, 360),
+        body: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (_, i) => SizedBox(height: 34, child: Text('row $i')),
+        ),
+      );
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(ListView)),
+      );
+      final heights = <double>[];
+      for (var i = 0; i < 10; i++) {
+        await gesture.moveBy(const Offset(0, -10));
+        await tester.pump(const Duration(milliseconds: 16));
+        heights.add(barHeight(tester));
+      }
+      await gesture.up();
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+        heights.add(barHeight(tester));
+      }
+      expect(heights, everyElement(kToolbarHeight));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('collapse animation rebuilds only the bar height', (
+      tester,
+    ) async {
+      // 收合動畫每幀只該改標題列高度；抽屜、側欄、按鈕不必跟著每幀重建。
+      final l = await pump(tester, const Size(800, 360), body: longList);
+      await tester.drag(find.byType(ListView), const Offset(0, -300));
+      await tester.pump();
+      var builds = 0;
+      final previous = debugOnRebuildDirtyWidget;
+      addTearDown(() => debugOnRebuildDirtyWidget = previous);
+      debugOnRebuildDirtyWidget = (element, _) {
+        final w = element.widget;
+        if (w is IconButton && w.tooltip == l.actionUpdate) builds++;
+      };
+      for (var i = 0; i < 15; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      debugOnRebuildDirtyWidget = previous;
+      expect(barHeight(tester), lessThan(1));
+      expect(builds, 0);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     /// 在列表上分 20 步慢慢往上拖 400dp，回傳期間 [AppShell] 重建的次數。
     Future<int> shellBuildsDuringSlowDrag(WidgetTester tester) async {
       var builds = 0;

@@ -56,7 +56,7 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// 手指同一方向連續拖動的距離（正值＝內容往上捲）；換方向就從頭算。
   double _dragTravel = 0;
 
-  /// 依頁面主要垂直捲動更新 [_barCollapsed]：手指往下捲超過觸控容差收起、往上捲超過觸控容差展開，回到頂端或內容已不需捲動時也展開。
+  /// 依頁面主要垂直捲動更新 [_barCollapsed]：手指往下捲超過觸控容差收起（收起後整頁就放得下時不收）、往上捲超過觸控容差展開，回到頂端或內容已不需捲動時也展開。
   bool _onScroll(Notification n) {
     final (depth, metrics) = switch (n) {
       ScrollNotification() => (n.depth, n.metrics),
@@ -76,7 +76,11 @@ class _AppShellState extends ConsumerState<AppShell> {
     }
     final collapsed = switch (n) {
       ScrollUpdateNotification() when metrics.pixels <= 0 => false,
-      ScrollUpdateNotification() when _dragTravel > kTouchSlop => true,
+      // 多出的高度不到一個標題列時，收起後整頁就放得下、又會被下面的規則展開，每次拖動閃一下。
+      ScrollUpdateNotification()
+          when _dragTravel > kTouchSlop &&
+              metrics.maxScrollExtent > kToolbarHeight =>
+        true,
       ScrollUpdateNotification() when _dragTravel < -kTouchSlop => false,
       ScrollMetricsNotification() when metrics.maxScrollExtent <= 0 => false,
       _ => _barCollapsed,
@@ -170,6 +174,172 @@ class _AppShellState extends ConsumerState<AppShell> {
     Future<void> update() =>
         ref.read(gachaRepositoryProvider.notifier).update();
 
+    // 收合動畫每幀只重算標題列高度；其餘部分先建好，動畫期間同一個實例不會重建。
+    final drawer = keepDrawer
+        ? Drawer(
+            child: SafeArea(
+              child: Builder(
+                builder: (drawerContext) => _Rail(
+                  selection: selection,
+                  isSettingsActive: isSettingsActive,
+                  isContributorsActive: isContributorsActive,
+                  extended: true,
+                  collapsedNoLabel: false,
+                  width: double.infinity,
+                  onNavigate: Scaffold.of(drawerContext).closeDrawer,
+                  header: _DrawerHeader(version: version, l: l),
+                  footer: phoneOrientation == null
+                      ? null
+                      : const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.m,
+                            vertical: AppSpacing.s,
+                          ),
+                          child: TeamLinksBar(stacked: true),
+                        ),
+                  l: l,
+                ),
+              ),
+            ),
+          )
+        : null;
+    // 收起時只把高度歸零並裁掉，標題列本體維持原尺寸，避免內容在 0 高度下擠壓溢出。
+    // 裁掉只影響繪製，看不到的按鈕還要另外移出語意與焦點樹，讀屏和鍵盤才不會停在上面。
+    final topBar = ExcludeSemantics(
+      excluding: barHidden,
+      child: ExcludeFocus(
+        excluding: barHidden,
+        child: ClipRect(
+          key: const Key('shell-top-bar'),
+          child: OverflowBox(
+            alignment: Alignment.topCenter,
+            minHeight: kToolbarHeight + MediaQuery.paddingOf(context).top,
+            maxHeight: kToolbarHeight + MediaQuery.paddingOf(context).top,
+            child: AppBar(
+              // 手機排版的 App 圖示、名稱和版本號放在抽屜頂部，標題列只留操作。
+              title: compact
+                  ? null
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const _AppIcon(),
+                        const SizedBox(width: AppSpacing.s),
+                        // 視窗可縮到 600～799 寬仍是桌面排版，帳號標示一長就會擠到標題。
+                        Flexible(
+                          child: Text(
+                            '${l.appName} v$version',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+              actions: compact
+                  ? [
+                      ConstrainedBox(
+                        // 扣掉 ☰（56）、與 ☰ 的間距（8）、更新按鈕含外距（64），帳號標示不會蓋到 ☰。
+                        constraints: BoxConstraints(
+                          maxWidth: math.max(0, width - 56 - AppSpacing.s - 64),
+                        ),
+                        child: const UidIndicator(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.s,
+                        ),
+                        child: IconButton.filled(
+                          icon: const Icon(Icons.refresh),
+                          tooltip: l.actionUpdate,
+                          onPressed: update,
+                        ),
+                      ),
+                    ]
+                  : [
+                      const UidIndicator(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.m,
+                          vertical: AppSpacing.s,
+                        ),
+                        child: FilledButton.icon(
+                          icon: const Icon(Icons.refresh),
+                          label: Text(l.actionUpdate),
+                          onPressed: update,
+                        ),
+                      ),
+                    ],
+            ),
+          ),
+        ),
+      ),
+    );
+    final body = NotificationListener<Notification>(
+      // 不能收起時不聽捲動：否則拖動中每幀都把旗標設起來、又被上面重設，外殼跟著每幀重建。
+      onNotification: collapsible ? _onScroll : null,
+      child: Column(
+        children: [
+          // 標題列由 AppBar 自己避開安全區；內容區要自己避開橫向的開孔鏡頭，
+          // 底部交給狀態列處理。背景色仍延伸到螢幕邊緣。
+          Expanded(
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (!compact) ...[
+                    _Rail(
+                      selection: selection,
+                      isSettingsActive: isSettingsActive,
+                      isContributorsActive: isContributorsActive,
+                      extended: extendedRail,
+                      collapsedNoLabel: collapsedNoLabel,
+                      l: l,
+                    ),
+                    const VerticalDivider(thickness: 1, width: 1),
+                  ],
+                  Expanded(child: widget.child),
+                ],
+              ),
+            ),
+          ),
+          // 手機橫向高度寶貴，不放狀態列；compact 排版開著鍵盤時高度更少，也先收起。
+          if (phoneOrientation != PhoneOrientation.landscape &&
+              !(compact && MediaQuery.viewInsetsOf(context).bottom > 0))
+            Container(
+              key: const Key('shell-bottom-bar'),
+              width: double.infinity,
+              color: tokens.surfaceCardHigh,
+              // 背景延伸到螢幕底與兩側，文字和連結避開手勢列與開孔鏡頭。
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  // 手機直向沒有連結圖示撐高，改用最小高度 48dp 維持觸控尺寸的狀態列。
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.l,
+                    vertical: compact ? 0 : AppSpacing.xs * 1.5,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: phoneOrientation == null ? 0 : 48,
+                    ),
+                    child: Row(
+                      children: [
+                        const Expanded(child: LastUpdatedLabel()),
+                        if (phoneOrientation == null) ...[
+                          const SizedBox(width: AppSpacing.s),
+                          TeamLinksBar(compact: compact),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+
     // 抽屜不是一個頁面：不先宣告由 App 處理返回，Android 的預測返回會直接關掉 App。
     // 側欄／抽屜切換的頁面是同一層：其他頁按返回先回綜合，在綜合才交給系統離開 App。
     final drawerOpen = compact && _drawerOpen;
@@ -193,169 +363,12 @@ class _AppShellState extends ConsumerState<AppShell> {
         builder: (context, barFactor, _) => Scaffold(
           key: _scaffoldKey,
           onDrawerChanged: (open) => setState(() => _drawerOpen = open),
-          drawer: keepDrawer
-              ? Drawer(
-                  child: SafeArea(
-                    child: Builder(
-                      builder: (drawerContext) => _Rail(
-                        selection: selection,
-                        isSettingsActive: isSettingsActive,
-                        isContributorsActive: isContributorsActive,
-                        extended: true,
-                        collapsedNoLabel: false,
-                        width: double.infinity,
-                        onNavigate: Scaffold.of(drawerContext).closeDrawer,
-                        header: _DrawerHeader(version: version, l: l),
-                        footer: phoneOrientation == null
-                            ? null
-                            : const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.m,
-                                  vertical: AppSpacing.s,
-                                ),
-                                child: TeamLinksBar(stacked: true),
-                              ),
-                        l: l,
-                      ),
-                    ),
-                  ),
-                )
-              : null,
+          drawer: drawer,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight * barFactor),
-            // 收起時只把高度歸零並裁掉，標題列本體維持原尺寸，避免內容在 0 高度下擠壓溢出。
-            child: ClipRect(
-              key: const Key('shell-top-bar'),
-              child: OverflowBox(
-                alignment: Alignment.topCenter,
-                minHeight: kToolbarHeight + MediaQuery.paddingOf(context).top,
-                maxHeight: kToolbarHeight + MediaQuery.paddingOf(context).top,
-                child: AppBar(
-                  // 手機排版的 App 圖示、名稱和版本號放在抽屜頂部，標題列只留操作。
-                  title: compact
-                      ? null
-                      : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const _AppIcon(),
-                            const SizedBox(width: AppSpacing.s),
-                            // 視窗可縮到 600～799 寬仍是桌面排版，帳號標示一長就會擠到標題。
-                            Flexible(
-                              child: Text(
-                                '${l.appName} v$version',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                  actions: compact
-                      ? [
-                          ConstrainedBox(
-                            // 扣掉 ☰（56）、與 ☰ 的間距（8）、更新按鈕含外距（64），帳號標示不會蓋到 ☰。
-                            constraints: BoxConstraints(
-                              maxWidth: math.max(
-                                0,
-                                width - 56 - AppSpacing.s - 64,
-                              ),
-                            ),
-                            child: const UidIndicator(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.s,
-                            ),
-                            child: IconButton.filled(
-                              icon: const Icon(Icons.refresh),
-                              tooltip: l.actionUpdate,
-                              onPressed: update,
-                            ),
-                          ),
-                        ]
-                      : [
-                          const UidIndicator(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.m,
-                              vertical: AppSpacing.s,
-                            ),
-                            child: FilledButton.icon(
-                              icon: const Icon(Icons.refresh),
-                              label: Text(l.actionUpdate),
-                              onPressed: update,
-                            ),
-                          ),
-                        ],
-                ),
-              ),
-            ),
+            child: topBar,
           ),
-          body: NotificationListener<Notification>(
-            // 不能收起時不聽捲動：否則拖動中每幀都把旗標設起來、又被上面重設，外殼跟著每幀重建。
-            onNotification: collapsible ? _onScroll : null,
-            child: Column(
-              children: [
-                // 標題列由 AppBar 自己避開安全區；內容區要自己避開橫向的開孔鏡頭，
-                // 底部交給狀態列處理。背景色仍延伸到螢幕邊緣。
-                Expanded(
-                  child: SafeArea(
-                    top: false,
-                    bottom: false,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (!compact) ...[
-                          _Rail(
-                            selection: selection,
-                            isSettingsActive: isSettingsActive,
-                            isContributorsActive: isContributorsActive,
-                            extended: extendedRail,
-                            collapsedNoLabel: collapsedNoLabel,
-                            l: l,
-                          ),
-                          const VerticalDivider(thickness: 1, width: 1),
-                        ],
-                        Expanded(child: widget.child),
-                      ],
-                    ),
-                  ),
-                ),
-                // 手機橫向高度寶貴，不放狀態列；開著鍵盤時高度更少，電腦版與直向也先收起。
-                if (phoneOrientation != PhoneOrientation.landscape &&
-                    !(compact && MediaQuery.viewInsetsOf(context).bottom > 0))
-                  Container(
-                    key: const Key('shell-bottom-bar'),
-                    width: double.infinity,
-                    color: tokens.surfaceCardHigh,
-                    // 背景延伸到螢幕底與兩側，文字和連結避開手勢列與開孔鏡頭。
-                    child: SafeArea(
-                      top: false,
-                      child: Padding(
-                        // 手機直向沒有連結圖示撐高，改用最小高度 48dp 維持觸控尺寸的狀態列。
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSpacing.l,
-                          vertical: compact ? 0 : AppSpacing.xs * 1.5,
-                        ),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: phoneOrientation == null ? 0 : 48,
-                          ),
-                          child: Row(
-                            children: [
-                              const Expanded(child: LastUpdatedLabel()),
-                              if (phoneOrientation == null) ...[
-                                const SizedBox(width: AppSpacing.s),
-                                TeamLinksBar(compact: compact),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          body: body,
         ),
       ),
     );
