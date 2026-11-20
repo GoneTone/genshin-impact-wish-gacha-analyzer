@@ -1415,6 +1415,68 @@ void main() {
         expect(divider, findsNothing);
       }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
+      /// 左欄往下捲的箭頭按鈕。
+      Finder scrollDown() => find.byTooltip('Scroll down');
+
+      /// 以左欄捲軸的 painter 在其實際尺寸上作畫的函式，供 `paints` 比對。
+      void Function(Canvas) paintDetailsScrollbar(WidgetTester tester) {
+        final finder = find.descendant(
+          of: find.byKey(detailsColumnKey),
+          matching: find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.foregroundPainter is ScrollbarPainter,
+          ),
+        );
+        final painter = tester.widget<CustomPaint>(finder).foregroundPainter!;
+        final size = tester.getSize(finder);
+        return (canvas) => painter.paint(canvas, size);
+      }
+
+      /// 畫出不透明度大於 0 的捲軸 thumb（淡出時仍會以全透明色作畫）。
+      final visibleThumb = paints
+        ..something((_, args) => args.last is Paint && args.last.color.a > 0);
+
+      for (final (name, size, platform) in [
+        ('desktop', const Size(1280, 800), TargetPlatform.windows),
+        ('phone landscape', const Size(914, 411), TargetPlatform.android),
+      ]) {
+        testWidgets('scrollbar thumb shows without interaction ($name)', (
+          tester,
+        ) async {
+          await pumpAt(tester, size, desc: longIntro);
+          await tester.pump(const Duration(milliseconds: 500));
+          expect(paintDetailsScrollbar(tester), visibleThumb);
+        }, variant: TargetPlatformVariant.only(platform));
+
+        testWidgets('scroll-down chevron pages the column until the end '
+            '($name)', (tester) async {
+          await pumpAt(tester, size, desc: longIntro);
+          await tester.pump();
+          expect(scrollDown(), findsOneWidget);
+          expect(tester.getSize(scrollDown()).width, greaterThanOrEqualTo(44));
+          expect(tester.getSize(scrollDown()).height, greaterThanOrEqualTo(44));
+          final position = tester
+              .state<ScrollableState>(
+                find.ancestor(of: intro(), matching: find.byType(Scrollable)),
+              )
+              .position;
+          await tester.tap(scrollDown());
+          await tester.pumpAndSettle();
+          expect(position.pixels, closeTo(position.viewportDimension * 0.8, 1));
+          position.jumpTo(position.maxScrollExtent);
+          await tester.pump();
+          expect(scrollDown(), findsNothing);
+          expect(bottomFade(), findsNothing);
+        }, variant: TargetPlatformVariant.only(platform));
+
+        testWidgets('no scrollbar thumb or chevron when the column fits '
+            '($name)', (tester) async {
+          await pumpAt(tester, size, desc: '<p>Short</p>');
+          await tester.pump(const Duration(milliseconds: 500));
+          expect(scrollDown(), findsNothing);
+          expect(paintDetailsScrollbar(tester), isNot(visibleThumb));
+        }, variant: TargetPlatformVariant.only(platform));
+      }
+
       testWidgets('no bottom fade when the column fits', (tester) async {
         await pumpAt(tester, const Size(1280, 800), desc: '<p>Short</p>');
         await tester.pump();
@@ -1433,6 +1495,7 @@ void main() {
         expect(tester.getSize(inner).height, lessThanOrEqualTo(120));
         expect(tester.getSize(intro()).height, greaterThan(120));
         expect(bottomFade(), findsNothing);
+        expect(scrollDown(), findsNothing);
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     });
 

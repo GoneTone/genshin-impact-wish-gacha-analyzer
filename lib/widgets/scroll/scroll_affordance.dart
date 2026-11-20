@@ -9,6 +9,19 @@ const Duration kScrollAffordanceDuration = Duration(milliseconds: 240);
 /// 點擊捲動箭頭的動畫曲線（timeline 與頁籤列共用）。
 const Curve kScrollAffordanceCurve = Curves.easeOutCubic;
 
+/// 點擊捲動箭頭時的相對捲動（詳情左欄使用）。
+extension ScrollAffordanceScroll on ScrollController {
+  /// 以共用動畫相對捲動 [delta]，夾在 0 與 maxScrollExtent 之間；尚未接上捲動區時不動作。
+  void animateBy(double delta) {
+    if (!hasClients) return;
+    animateTo(
+      (offset + delta).clamp(0.0, position.maxScrollExtent),
+      duration: kScrollAffordanceDuration,
+      curve: kScrollAffordanceCurve,
+    );
+  }
+}
+
 /// 捲動可及性元件的方向。
 enum ScrollSide {
   /// 左側：fade 從左往右漸隱。
@@ -74,7 +87,7 @@ class ScrollArrowButton extends StatelessWidget {
     this.largeHitArea = false,
   });
 
-  /// 按鈕圖示（左箭頭或右箭頭）。
+  /// 按鈕圖示（左、右或下箭頭）。
   final IconData icon;
 
   /// 無障礙 tooltip 文字。
