@@ -34,6 +34,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rari
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
@@ -264,6 +265,23 @@ void main() {
       await scrollToEnd(tester);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    for (final (pageName, page) in [
+      ('settings', const SettingsPage() as Widget),
+      ('contributors', const ContributorsPage()),
+    ]) {
+      testWidgets('$pageName section cards are one card gap apart ($name)', (
+        tester,
+      ) async {
+        await pump(tester, size, page);
+        final cards = find.byType(SectionCard);
+        expect(
+          tester.getTopLeft(cards.at(1)).dy -
+              tester.getBottomLeft(cards.at(0)).dy,
+          AppSpacing.m,
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
+
     for (final phase in [
       PairingPhase.disclosure,
       PairingPhase.ready,
@@ -404,6 +422,23 @@ void main() {
     );
     expect(tester.getTopLeft(find.byType(PityCard).first).dx, 12);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  for (final (pageName, page) in [
+    ('settings', const SettingsPage() as Widget),
+    ('contributors', const ContributorsPage()),
+  ]) {
+    testWidgets('$pageName section cards are one card gap apart on desktop', (
+      tester,
+    ) async {
+      await pump(tester, const Size(1280, 800), page);
+      final cards = find.byType(SectionCard);
+      expect(
+        tester.getTopLeft(cards.at(1)).dy -
+            tester.getBottomLeft(cards.at(0)).dy,
+        AppSpacing.m,
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+  }
 
   testWidgets('banner page padding stays 16 on desktop', (tester) async {
     await pump(

@@ -36,13 +36,13 @@ class ContributorsPage extends StatelessWidget {
                 icon: Icons.workspace_premium_outlined,
                 child: const _ContributorChips(projectLeaders),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTesters,
                 icon: Icons.bug_report_outlined,
                 child: const _ContributorChips(testers),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsGithubContributors,
                 icon: Icons.groups_outlined,
@@ -51,13 +51,13 @@ class ContributorsPage extends StatelessWidget {
                       '<a href="$githubContributorsUrl">$githubContributorsUrl</a>',
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTranslationReviewer,
                 icon: Icons.translate,
                 child: const _ContributorChips(translationReviewers),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTranslatedLanguages,
                 icon: Icons.public,
@@ -75,7 +75,7 @@ class ContributorsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsProjectLicense,
                 icon: Icons.gavel_outlined,

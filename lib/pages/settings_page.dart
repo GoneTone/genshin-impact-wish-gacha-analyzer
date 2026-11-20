@@ -82,7 +82,7 @@ class SettingsPage extends ConsumerWidget {
                   l: l,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsLanguage,
                 icon: Icons.language,
@@ -92,31 +92,31 @@ class SettingsPage extends ConsumerWidget {
                   l: l,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsDataLanguage,
                 icon: Icons.translate_outlined,
                 child: const _DataLanguageSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsPrivacySectionTitle,
                 icon: Icons.shield_outlined,
                 child: const _PrivacySection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsAccountManagement,
                 icon: Icons.manage_accounts_outlined,
                 child: const AccountManagement(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               // 手機上的遊戲資料夾是固定的，改為顯示讀取遊戲記錄的方式。
               if (ref.watch(isAndroidProvider))
                 SectionCard(
@@ -130,31 +130,31 @@ class SettingsPage extends ConsumerWidget {
                   icon: Icons.sports_esports_outlined,
                   child: _GameDirSection(pickDirectory: pickGameDir),
                 ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsCloudSync,
                 icon: Icons.cloud_sync_outlined,
                 child: const CloudSyncSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsItemData,
                 icon: Icons.dataset_outlined,
                 child: const _ItemDataSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsImageCache,
                 icon: Icons.image_outlined,
                 child: const _ImageCacheSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsLogs,
                 icon: Icons.bug_report_outlined,
                 child: const _LogsSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsAbout,
                 icon: Icons.info_outline,
