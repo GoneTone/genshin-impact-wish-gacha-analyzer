@@ -9,7 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 /// 顯示「<前綴><相對時間><後綴>」格式的 localized 字串,並只對相對時間
 /// 那段套 Tooltip(滑鼠 hover 顯示絕對時間)。
 ///
-/// 用 sentinel `￼` (OBJECT REPLACEMENT CHARACTER) 對 [templateBuilder]
+/// 用 sentinel U+FFFC (OBJECT REPLACEMENT CHARACTER) 對 [templateBuilder]
 /// 套用 placeholder 後的字串做切割 — 此字元在任何自然語言翻譯都不會出現。
 ///
 /// 自動訂閱 [clockTickProvider],每 30 秒重繪。
@@ -46,7 +46,7 @@ class RelativeTimeText extends ConsumerWidget {
   final bool tooltipOnTap;
 
   /// 用於切割 template 字串的占位字元（OBJECT REPLACEMENT CHARACTER U+FFFC）。
-  static const _sentinel = '￼';
+  static const _sentinel = '\uFFFC';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

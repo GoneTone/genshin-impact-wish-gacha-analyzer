@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_ring_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 
 /// [ChartCard] 的版面：標準（圖在上、圖例在下）與手機精簡（圖例在圓餅側邊）。
 enum ChartCardLayout {
   /// 標準版：固定高度，圖表在上、圖例在下。
-  standard(230),
+  standard(kDefaultRingDiameter),
 
   /// 精簡版：標題在上，下方為圓餅與右側圖例，高度依內容。
   compact(112),
@@ -73,8 +74,10 @@ class ChartCard extends StatelessWidget {
     final titleText = icon == null
         ? Text(title, style: theme.textTheme.titleLarge)
         : InlineSectionTitle(icon: icon!, title: title);
-    final side = layout.chartDiameter;
-    final chartBox = SizedBox(width: side, height: side, child: chart);
+
+    /// 精簡版用的固定尺寸圓餅。
+    Widget chartBox() =>
+        SizedBox.square(dimension: layout.chartDiameter, child: chart);
 
     final Widget body = switch (layout) {
       ChartCardLayout.standard => Column(
@@ -99,7 +102,7 @@ class ChartCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              chartBox,
+              chartBox(),
               const SizedBox(width: AppSpacing.m),
               Expanded(child: legend ?? const SizedBox.shrink()),
             ],
@@ -109,7 +112,7 @@ class ChartCard extends StatelessWidget {
       ChartCardLayout.compactTitleBeside => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          chartBox,
+          chartBox(),
           const SizedBox(width: AppSpacing.m),
           Expanded(
             child: Column(

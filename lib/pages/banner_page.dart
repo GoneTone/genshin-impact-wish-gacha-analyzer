@@ -26,8 +26,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_ba
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/rank_palette.dart';
