@@ -537,45 +537,77 @@ void main() {
     expect(find.byType(RecordSortButton), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-  testWidgets(
-    'banner page does not rebuild its cards when only height changes',
-    (tester) async {
-      // 橫向標題列收合、鍵盤開合時內容區高度每幀都在變，上方卡片不該跟著重建。
-      final height = ValueNotifier(300.0);
-      addTearDown(height.dispose);
-      await pump(
-        tester,
-        const Size(800, 360),
-        ValueListenableBuilder<double>(
-          valueListenable: height,
-          builder: (_, h, child) => Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(height: h, child: child),
-          ),
-          child: const BannerPage(gachaType: '301'),
+  /// 在高度會變的容器裡呈現 [page]，回傳高度 notifier；橫向標題列收合、鍵盤開合時內容區高度每幀都在變。
+  Future<ValueNotifier<double>> pumpResizable(
+    WidgetTester tester,
+    Widget page,
+  ) async {
+    final height = ValueNotifier(300.0);
+    addTearDown(height.dispose);
+    await pump(
+      tester,
+      const Size(800, 360),
+      ValueListenableBuilder<double>(
+        valueListenable: height,
+        builder: (_, h, child) => Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(height: h, child: child),
         ),
-      );
-      var rebuilds = 0;
-      final previous = debugOnRebuildDirtyWidget;
-      addTearDown(() => debugOnRebuildDirtyWidget = previous);
-      debugOnRebuildDirtyWidget = (element, _) {
-        if (element.widget
-            case PageHeader() ||
-                PityCard() ||
-                StatCard() ||
-                RarityChartCard()) {
-          rebuilds++;
-        }
-      };
-      for (var h = 248.0; h <= 300; h += 4) {
-        height.value = h;
-        await tester.pump(const Duration(milliseconds: 16));
+        child: page,
+      ),
+    );
+    return height;
+  }
+
+  /// 把高度由 248 逐幀拉到 300，回傳期間重建了幾次標題、保底卡、統計卡與圓餅卡。
+  Future<int> cardRebuildsWhileResizing(
+    WidgetTester tester,
+    ValueNotifier<double> height,
+  ) async {
+    var rebuilds = 0;
+    final previous = debugOnRebuildDirtyWidget;
+    addTearDown(() => debugOnRebuildDirtyWidget = previous);
+    debugOnRebuildDirtyWidget = (element, _) {
+      if (element.widget
+          case PageHeader() || PityCard() || StatCard() || RarityChartCard()) {
+        rebuilds++;
       }
-      debugOnRebuildDirtyWidget = previous;
-      expect(rebuilds, 0);
-    },
-    variant: TargetPlatformVariant.only(TargetPlatform.android),
-  );
+    };
+    for (var h = 248.0; h <= 300; h += 4) {
+      height.value = h;
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    debugOnRebuildDirtyWidget = previous;
+    return rebuilds;
+  }
+
+  for (final (name, page) in [
+    ('banner', const BannerPage(gachaType: '301')),
+    ('overview', const OverviewPage()),
+  ]) {
+    testWidgets(
+      '$name page does not rebuild its cards when only height changes',
+      (tester) async {
+        final height = await pumpResizable(tester, page);
+        expect(await cardRebuildsWhileResizing(tester, height), 0);
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.android),
+    );
+  }
+
+  testWidgets('overview odes section does not rebuild on height-only changes', (
+    tester,
+  ) async {
+    final height = await pumpResizable(tester, const OverviewPage());
+    final l = AppLocalizations.of(tester.element(find.byType(OverviewPage)))!;
+    await tester.scrollUntilVisible(
+      find.text(l.pageOverviewOdesSection),
+      150,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pump();
+    expect(await cardRebuildsWhileResizing(tester, height), 0);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
   testWidgets('banner filter bar is kept alive when scrolled out of view', (
     tester,

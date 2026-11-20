@@ -32,6 +32,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/width_layout_builder.dart';
 
 /// 總覽頁，將 gacha 與 odes 分兩段各自呈現統計、圖表、timeline。
 class OverviewPage extends ConsumerWidget {
@@ -294,10 +295,10 @@ class _OverviewSection extends StatelessWidget {
             const SizedBox(height: AppSpacing.m),
 
             // Stat row: 三聯卡片（無保底）
-            LayoutBuilder(
-              builder: (context, c) {
-                final wide = c.maxWidth >= 1024;
-                final mid = c.maxWidth < 1024;
+            WidthLayoutBuilder(
+              builder: (context, width) {
+                final wide = width >= 1024;
+                final mid = width < 1024;
 
                 if (wide) {
                   return IntrinsicHeight(
@@ -347,12 +348,12 @@ class _OverviewSection extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
 
             // Pie row: 稀有度 + 物品類型
-            LayoutBuilder(
-              builder: (context, c) {
-                final wide = c.maxWidth >= 1024;
-                final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+            WidthLayoutBuilder(
+              builder: (context, width) {
+                final wide = width >= 1024;
+                final mid = width >= 800 && width < 1024;
 
-                final layout = ChartCardLayout.of(context, c.maxWidth);
+                final layout = ChartCardLayout.of(context, width);
                 final rarityCard = RarityChartCard(
                   stats: stats,
                   layout: layout,
@@ -365,7 +366,7 @@ class _OverviewSection extends StatelessWidget {
                 if (wide) {
                   // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
                   // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
-                  final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
+                  final card1Width = (width - AppSpacing.m * 2) / 2;
                   return IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
