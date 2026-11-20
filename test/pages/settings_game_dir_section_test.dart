@@ -209,9 +209,6 @@ void main() {
   testWidgets('does not overflow at 360 px width and 1.3x text scale', (
     tester,
   ) async {
-    // 設定頁其他區塊在窄寬度另有既存 overflow；這裡吞掉錯誤，只驗證遊戲資料夾區塊的幾何。
-    final prev = FlutterError.onError;
-    FlutterError.onError = (_) {};
     await pump(
       tester,
       settingDir: r'D:\' + 'VeryLongFolderName' * 12 + r'\Genshin',
@@ -219,7 +216,8 @@ void main() {
       textScale: 1.3,
     );
     await waitForText(tester, find.textContaining('Set manually'));
-    FlutterError.onError = prev;
+    // 整頁（含「關於」的版本與按鈕列）在窄寬度不能有任何版面錯誤。
+    expect(tester.takeException(), isNull);
     final choose = tester.getRect(
       find.byKey(const ValueKey('settings.gameDirChoose')),
     );
