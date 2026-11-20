@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_remote.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_auth_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/token_store.dart';
@@ -54,7 +55,10 @@ class FakeAuthService extends GoogleAuthService {
   /// （例如驗證 cancelLink 對「尚在等待中」授權的丟棄行為）。
   Future<void>? signInGate;
 
-  /// 記錄 `revokeToken` 被呼叫過的 refresh token 清單。
+  /// signIn 是否要模擬「授權未含必要 scope」而拋 [CloudScopeMissingException]。
+  bool signInThrowsScopeMissing = false;
+
+  /// 被撤銷的 refresh token 清單；App 已不向 Google 撤銷，供斷言恆為空。
   final List<String> revokedTokens = [];
 
   /// 模擬登入：呼叫 openUrl 後（視 [signInGate] 等待）回傳成功 session（refresh token 交由呼叫端寫入）。
@@ -65,6 +69,7 @@ class FakeAuthService extends GoogleAuthService {
   }) async {
     openUrl('https://accounts.google.com/consent');
     if (signInGate != null) await signInGate;
+    if (signInThrowsScopeMissing) throw const CloudScopeMissingException();
     return CloudAuthSession(
       client: FakeAuthClient(),
       email: 'u@example.com',
@@ -83,12 +88,6 @@ class FakeAuthService extends GoogleAuthService {
   /// 模擬登出：清除 store 內 token。
   @override
   Future<void> signOut() async => store.deleteRefreshToken();
-
-  /// 模擬 revoke：記錄被 revoke 的 token，供測試斷言。
-  @override
-  Future<void> revokeToken(String refreshToken) async {
-    revokedTokens.add(refreshToken);
-  }
 }
 
 /// 記錄呼叫的 fake 遠端。

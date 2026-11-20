@@ -231,7 +231,7 @@ void main() {
     expect(container.read(gachaRepositoryProvider).progress, isNull);
   });
 
-  test('cancelLink：等待授權中途取消 → 回到 idle，遲到的 signIn 結果被丟棄並 revoke', () async {
+  test('cancelLink：等待授權中途取消 → 回到 idle，遲到的 signIn 結果被丟棄、不撤銷', () async {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     final gate = Completer<void>();
@@ -252,7 +252,22 @@ void main() {
 
     expect(tokenStore.token, isNull);
     expect(container.read(settingsProvider).cloudAccountEmail, isNull);
-    expect(authService.revokedTokens, contains('refresh-1'));
+    expect(authService.revokedTokens, isEmpty);
+    expect(remote.uploads, 0);
+  });
+
+  test('link：授權未含 drive.appdata → error(scopeMissing)、不寫入任何狀態、不撤銷', () async {
+    authService.signInThrowsScopeMissing = true;
+    final container = await makeContainer();
+
+    await container.read(cloudSyncProvider.notifier).link();
+
+    final s = container.read(cloudSyncProvider);
+    expect(s.phase, CloudSyncPhase.error);
+    expect(s.errorToken, 'scopeMissing');
+    expect(container.read(settingsProvider).cloudAccountEmail, isNull);
+    expect(tokenStore.token, isNull);
+    expect(authService.revokedTokens, isEmpty);
     expect(remote.uploads, 0);
   });
 

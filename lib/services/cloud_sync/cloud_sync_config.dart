@@ -22,7 +22,18 @@ bool? debugCloudSyncConfiguredOverride;
 /// 雲端同步是否已設定 OAuth 憑證；false 時設定頁顯示未設定提示、所有同步入口 no-op。
 bool get isCloudSyncConfigured =>
     debugCloudSyncConfiguredOverride ??
-    (cloudSyncClientId.isNotEmpty && cloudSyncClientSecret.isNotEmpty);
+    cloudSyncConfiguredFor(
+      android: defaultTargetPlatform == TargetPlatform.android,
+      clientId: cloudSyncClientId,
+      clientSecret: cloudSyncClientSecret,
+    );
+
+/// 依平台判斷憑證是否齊全：Android 只需 client id，Windows 需 id 與 secret。
+bool cloudSyncConfiguredFor({
+  required bool android,
+  required String clientId,
+  required String clientSecret,
+}) => clientId.isNotEmpty && (android || clientSecret.isNotEmpty);
 
 /// Google Drive appDataFolder 內的同步檔名，內容即 AccountsBundle JSON。
 const String cloudSyncFileName = 'genshin_gacha_sync.json';
