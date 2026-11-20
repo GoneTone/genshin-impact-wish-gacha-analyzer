@@ -125,6 +125,12 @@ To enable it in your own build:
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
 
+4. Android reuses the same `secrets/cloud_sync_defines.json`, but you must also create an **Android** OAuth client in the **same** Google Cloud project: package name `tw.reh.genshin.gacha`, and the SHA-1 of the key that signs the APK (for the debug key, run `keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android`). This client's ID does not go into the defines file; Google matches the app by package name and signature. It must live in the same project as the desktop client, otherwise the phone and the PC see different sync files.
+
+   ```bash
+   flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
+
 ### Rust ↔ Dart bridge code generation
 
 After changing Rust functions in `rust/src/api/`, regenerate the bridge code. Install the codegen tool on first use:

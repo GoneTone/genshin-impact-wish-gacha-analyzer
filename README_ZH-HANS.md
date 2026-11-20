@@ -125,6 +125,12 @@ flutter run -d windows
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
 
+4. Android 沿用同一个 `secrets/cloud_sync_defines.json`，但要在**同一个** Google Cloud 项目再创建一个「**Android**」类型的 OAuth 客户端：软件包名称填 `tw.reh.genshin.gacha`，SHA-1 填签署 APK 那把密钥的指纹（开发用 debug 密钥可用 `keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android` 查询）。这个客户端的 ID 不需要放进配置文件，Google 会用软件包名称和签名比对。必须和桌面版客户端在同一个项目，两边才会读写同一份同步文件。
+
+   ```bash
+   flutter run -d <设备 ID> --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
+
 ### Rust ↔ Dart 桥接代码生成
 
 修改 `rust/src/api/` 内的 Rust 函数后，重新生成桥接代码。第一次使用前先安装 codegen 工具：

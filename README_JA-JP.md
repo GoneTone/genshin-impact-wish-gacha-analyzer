@@ -125,6 +125,12 @@ flutter run -d windows
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
 
+4. Android でも同じ `secrets/cloud_sync_defines.json` を使いますが、**同じ** Google Cloud プロジェクトに「**Android**」タイプの OAuth クライアントを追加で作成してください。パッケージ名は `tw.reh.genshin.gacha`、SHA-1 には APK に署名する鍵のフィンガープリントを指定します（開発用の debug 鍵は `keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android` で確認できます）。このクライアントの ID を設定ファイルに入れる必要はありません。Google がパッケージ名と署名で照合します。デスクトップ用クライアントと同じプロジェクトでないと、スマホと PC で別々の同期ファイルを読み書きすることになります。
+
+   ```bash
+   flutter run -d <デバイス ID> --dart-define-from-file=secrets/cloud_sync_defines.json
+   ```
+
 ### Rust ↔ Dart のブリッジコード生成
 
 `rust/src/api/` 内の Rust 関数を変更したら、ブリッジコードを再生成します。初回利用前に codegen ツールをインストールしてください：
