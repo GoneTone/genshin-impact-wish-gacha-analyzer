@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "Este app não usa essa permissão enquanto não estiver pareado. Para removê-la por completo, conecte-se a uma rede Wi‑Fi, pareie de novo e depois remova o pareamento outra vez.",
   "settingsUnpairLeftover": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema vai continuar mostrando \"{name}\". Ele não consegue mais se conectar, então você pode deixá-lo; para removê-lo, toque nele e exclua.",
   "settingsUnpairLeftoverAlso": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema também ainda mostra \"{name}\"; toque nele para excluir.",
-  "settingsLogAccessMethod": "Método"
+  "settingsLogAccessMethod": "Método",
+  "actionShare": "Compartilhar",
+  "shareFailed": "Não foi possível compartilhar",
+  "dialogSaveAsTitle": "Salvar como",
+  "dialogOpenTitle": "Abrir",
+  "dialogSelectFolderTitle": "Selecionar pasta",
+  "actionSave": "Salvar",
+  "settingsLogsShare": "Compartilhar logs"
 }

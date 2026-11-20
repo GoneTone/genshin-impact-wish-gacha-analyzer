@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "ペア設定していない間、このアプリはこの権限を使いません。完全に取り消すには、Wi‑Fi に接続してもう一度ペア設定し、再度解除してください。",
   "settingsUnpairLeftover": "システムの「ワイヤレスデバッグ → ペア設定済みのデバイス」には「{name}」が残ります。このペア設定はもう接続できないため、そのままでも問題ありません。削除する場合はタップして削除してください。",
   "settingsUnpairLeftoverAlso": "システムの「ワイヤレスデバッグ → ペア設定済みのデバイス」にも「{name}」が残っています。タップすると削除できます。",
-  "settingsLogAccessMethod": "読み取り方法"
+  "settingsLogAccessMethod": "読み取り方法",
+  "actionShare": "共有",
+  "shareFailed": "共有できませんでした",
+  "dialogSaveAsTitle": "名前を付けて保存",
+  "dialogOpenTitle": "開く",
+  "dialogSelectFolderTitle": "フォルダーの選択",
+  "actionSave": "保存",
+  "settingsLogsShare": "ログを共有"
 }

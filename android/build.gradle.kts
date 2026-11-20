@@ -1,4 +1,5 @@
 apply(from = "cargokit_gradle9_shim.gradle")
+apply(from = "file_picker_kotlin_shim.gradle")
 
 allprojects {
     repositories {

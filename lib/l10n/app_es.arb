@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "Esta app no usa ese permiso mientras no está vinculada. Para retirarlo por completo, conéctate a una red Wi‑Fi, vuelve a vincular y luego desvincula otra vez.",
   "settingsUnpairLeftover": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema seguirá mostrando «{name}». Ya no puede conectarse, así que puedes dejarlo; para quitarlo, tócalo y elimínalo.",
   "settingsUnpairLeftoverAlso": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema también sigue mostrando «{name}»; tócalo para eliminarlo.",
-  "settingsLogAccessMethod": "Método"
+  "settingsLogAccessMethod": "Método",
+  "actionShare": "Compartir",
+  "shareFailed": "No se pudo compartir",
+  "dialogSaveAsTitle": "Guardar como",
+  "dialogOpenTitle": "Abrir",
+  "dialogSelectFolderTitle": "Seleccionar carpeta",
+  "actionSave": "Guardar",
+  "settingsLogsShare": "Compartir logs"
 }

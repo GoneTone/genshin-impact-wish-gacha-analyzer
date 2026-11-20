@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "This app doesn't use that permission while unpaired. To remove it completely, connect to Wi‑Fi, pair again, then unpair once more.",
   "settingsUnpairLeftover": "The system's Wireless debugging → Paired devices list will still show \"{name}\". It can no longer connect, so you can leave it; to remove it, tap it and delete it.",
   "settingsUnpairLeftoverAlso": "The system's Wireless debugging → Paired devices list also still shows \"{name}\"; tap it to delete it.",
-  "settingsLogAccessMethod": "Method"
+  "settingsLogAccessMethod": "Method",
+  "actionShare": "Share",
+  "shareFailed": "Couldn't share",
+  "dialogSaveAsTitle": "Save as",
+  "dialogOpenTitle": "Open",
+  "dialogSelectFolderTitle": "Select folder",
+  "actionSave": "Save",
+  "settingsLogsShare": "Share logs"
 }

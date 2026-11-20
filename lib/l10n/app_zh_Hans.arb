@@ -1227,5 +1227,12 @@
   "settingsUnpairUnreachableRevokeHint": "未配对时本 App 不会使用这个权限；想完全收回，可以连上 Wi‑Fi 后重新配对，再解除一次。",
   "settingsUnpairLeftover": "系统「无线调试」的配对列表里还会留着「{name}」。这条配对已经无法再连接，可以不用理会；想移除的话，点击它即可删除。",
   "settingsUnpairLeftoverAlso": "系统「无线调试」的配对列表里也还留着「{name}」，点击它即可删除。",
-  "settingsLogAccessMethod": "读取方式"
+  "settingsLogAccessMethod": "读取方式",
+  "actionShare": "分享",
+  "shareFailed": "无法分享",
+  "dialogSaveAsTitle": "另存为",
+  "dialogOpenTitle": "打开",
+  "dialogSelectFolderTitle": "选择文件夹",
+  "actionSave": "保存",
+  "settingsLogsShare": "分享 logs"
 }

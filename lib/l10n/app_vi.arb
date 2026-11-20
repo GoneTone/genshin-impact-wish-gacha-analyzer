@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "Khi chưa ghép nối, ứng dụng này không dùng quyền đó. Muốn thu hồi hoàn toàn, hãy kết nối Wi‑Fi, ghép nối lại rồi gỡ ghép nối thêm một lần nữa.",
   "settingsUnpairLeftover": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống vẫn sẽ hiển thị \"{name}\". Mục này không thể kết nối được nữa nên bạn có thể để nguyên; muốn xóa thì nhấn vào và xóa.",
   "settingsUnpairLeftoverAlso": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống cũng vẫn hiển thị \"{name}\"; nhấn vào để xóa.",
-  "settingsLogAccessMethod": "Phương thức"
+  "settingsLogAccessMethod": "Phương thức",
+  "actionShare": "Chia sẻ",
+  "shareFailed": "Không chia sẻ được",
+  "dialogSaveAsTitle": "Lưu thành",
+  "dialogOpenTitle": "Mở",
+  "dialogSelectFolderTitle": "Chọn thư mục",
+  "actionSave": "Lưu",
+  "settingsLogsShare": "Chia sẻ logs"
 }

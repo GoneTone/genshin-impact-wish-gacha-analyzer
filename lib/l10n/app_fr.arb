@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "Cette application n'utilise pas cette autorisation tant qu'elle n'est pas associée. Pour la retirer complètement, connectez-vous à un réseau Wi‑Fi, associez à nouveau, puis dissociez une nouvelle fois.",
   "settingsUnpairLeftover": "La liste Débogage sans fil → Appareils associés du système affichera toujours « {name} ». Il ne peut plus se connecter, vous pouvez donc le laisser ; pour le retirer, appuyez dessus puis supprimez-le.",
   "settingsUnpairLeftoverAlso": "La liste Débogage sans fil → Appareils associés du système affiche aussi toujours « {name} » ; appuyez dessus pour le supprimer.",
-  "settingsLogAccessMethod": "Méthode"
+  "settingsLogAccessMethod": "Méthode",
+  "actionShare": "Partager",
+  "shareFailed": "Impossible de partager",
+  "dialogSaveAsTitle": "Enregistrer sous",
+  "dialogOpenTitle": "Ouvrir",
+  "dialogSelectFolderTitle": "Choisir un dossier",
+  "actionSave": "Enregistrer",
+  "settingsLogsShare": "Partager les journaux"
 }

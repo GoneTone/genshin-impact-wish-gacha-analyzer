@@ -1,0 +1,19 @@
+// shortcut: file_picker 在 AGP 9 以上假設 AGP 內建 Kotlin 會編它的 Kotlin 程式，因此不套 Kotlin 外掛、也不設 jvmTarget；
+// 但本專案 android.builtInKotlin=false（其他外掛仍自己套 Kotlin 外掛，改 true 會衝突），
+// 結果沒有人編 file_picker 的 Kotlin，建置找不到 FilePickerPlugin。這裡替它補套外掛並對齊 Java 17。上游修正後刪除本檔。
+subprojects { p ->
+    if (p.name == 'file_picker') {
+        p.pluginManager.withPlugin('com.android.library') {
+            p.pluginManager.apply('org.jetbrains.kotlin.android')
+        }
+        p.pluginManager.withPlugin('org.jetbrains.kotlin.android') {
+            p.tasks.configureEach { t ->
+                if (t.name.startsWith('compile') && t.name.endsWith('Kotlin')) {
+                    def target = t.compilerOptions.jvmTarget
+                    // 用列舉的類別取 JVM_17，避免根專案腳本直接引用 Kotlin Gradle 外掛的類別。
+                    target.set(Enum.valueOf(target.get().getDeclaringClass(), 'JVM_17'))
+                }
+            }
+        }
+    }
+}

@@ -1124,5 +1124,12 @@
   "settingsLogAccessMethod": "讀取方式",
   "@settingsLogAccessMethod": {
     "description": "Settings row label: the current log access method"
-  }
+  },
+  "actionShare": "分享",
+  "shareFailed": "無法分享",
+  "dialogSaveAsTitle": "另存新檔",
+  "dialogOpenTitle": "開啟",
+  "dialogSelectFolderTitle": "選取資料夾",
+  "actionSave": "儲存",
+  "settingsLogsShare": "分享 logs"
 }

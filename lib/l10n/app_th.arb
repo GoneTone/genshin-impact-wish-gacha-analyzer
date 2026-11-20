@@ -1231,5 +1231,12 @@
   "settingsUnpairUnreachableRevokeHint": "แอปนี้จะไม่ใช้สิทธิ์นี้ขณะที่ยังไม่ได้จับคู่ หากต้องการเพิกถอนทั้งหมด ให้เชื่อมต่อ Wi‑Fi แล้วจับคู่ใหม่ จากนั้นยกเลิกการจับคู่อีกครั้ง",
   "settingsUnpairLeftover": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบจะยังแสดง \"{name}\" อยู่ อุปกรณ์นี้เชื่อมต่อไม่ได้แล้ว จึงปล่อยไว้ได้ หากต้องการนำออก ให้แตะแล้วลบ",
   "settingsUnpairLeftoverAlso": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบยังแสดง \"{name}\" อยู่ด้วย แตะเพื่อลบได้",
-  "settingsLogAccessMethod": "วิธีการ"
+  "settingsLogAccessMethod": "วิธีการ",
+  "actionShare": "แชร์",
+  "shareFailed": "แชร์ไม่ได้",
+  "dialogSaveAsTitle": "บันทึกเป็น",
+  "dialogOpenTitle": "เปิด",
+  "dialogSelectFolderTitle": "เลือกโฟลเดอร์",
+  "actionSave": "บันทึก",
+  "settingsLogsShare": "แชร์ logs"
 }
