@@ -537,7 +537,8 @@ void main() {
   });
 
   testWidgets('nodes with an icon above stay on the axis line', (tester) async {
-    await pumpIconTimeline(tester);
+    final entries = await pumpIconTimeline(tester);
+    expect(find.byType(TimelineNode), findsNWidgets(entries.length));
     final axisY = tester.getCenter(find.byType(TimelineHorizontal)).dy;
     for (final node in find.byType(TimelineNode).evaluate()) {
       expect(

@@ -49,8 +49,6 @@ class DistributionLegend extends StatelessWidget {
         ? entries
         : entries.where((e) => e.count > 0).toList(growable: false);
 
-    final tabular = kTabularFigures;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -84,7 +82,7 @@ class DistributionLegend extends StatelessWidget {
                     textAlign: TextAlign.right,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: tokens.textPrimary,
-                      fontFeatures: tabular,
+                      fontFeatures: kTabularFigures,
                     ),
                   ),
                 ),
@@ -96,7 +94,7 @@ class DistributionLegend extends StatelessWidget {
                     textAlign: TextAlign.right,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: tokens.textMuted,
-                      fontFeatures: tabular,
+                      fontFeatures: kTabularFigures,
                     ),
                   ),
                 ),

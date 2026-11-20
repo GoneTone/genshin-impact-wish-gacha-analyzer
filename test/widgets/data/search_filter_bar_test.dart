@@ -155,4 +155,44 @@ void main() {
       expect(tester.getSize(find.byType(TextField)).width, want);
     });
   }
+
+  testWidgets('query text survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      _wrap(
+        ListView(
+          key: listKey,
+          children: [
+            SearchFilterBar(
+              state: const RecordFilterState(
+                filter: RecordFilter(),
+                sort: null,
+              ),
+              availableItemTypes: const [kItemKindCharacter],
+              onFilterChanged: (_) {},
+              onClear: () {},
+            ),
+            const SizedBox(height: 5000),
+          ],
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'keqing');
+    // 聚焦中的 EditableText 自帶 keep-alive，要先失焦才驗得出 SearchFilterBar 自己的 keep-alive。
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pump();
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -6000));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 6000));
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller?.text,
+      'keqing',
+    );
+  });
 }
