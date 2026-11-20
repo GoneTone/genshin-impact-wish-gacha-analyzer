@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_image_dialog.dart';
 
 void main() {
   Future<({ShareImageOptions options, ShareImageAction action})?>? captured;
 
-  Widget host() => MaterialApp(
-    theme: buildDarkTheme(),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    locale: const Locale('zh'),
-    home: Builder(
-      builder: (ctx) => Scaffold(
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () => captured = showShareImageDialog(
-              ctx,
-              initialBrightness: Brightness.dark,
+  Widget host({bool android = false}) => ProviderScope(
+    overrides: [isAndroidProvider.overrideWithValue(android)],
+    child: MaterialApp(
+      theme: buildDarkTheme(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('zh'),
+      home: Builder(
+        builder: (ctx) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () => captured = showShareImageDialog(
+                ctx,
+                initialBrightness: Brightness.dark,
+              ),
+              child: const Text('open'),
             ),
-            child: const Text('open'),
           ),
         ),
       ),
@@ -68,5 +73,38 @@ void main() {
     await t.pumpAndSettle();
 
     expect(await captured!, isNull);
+  });
+
+  testWidgets('Android 才顯示「分享」鈕，按下 → action=share', (t) async {
+    await t.pumpWidget(host(android: true));
+    await t.tap(find.text('open'));
+    await t.pumpAndSettle();
+
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    await t.tap(find.text(l.actionShare));
+    await t.pumpAndSettle();
+
+    expect((await captured!)!.action, ShareImageAction.share);
+  });
+
+  testWidgets('Windows 不顯示「分享」鈕', (t) async {
+    await t.pumpWidget(host());
+    await t.tap(find.text('open'));
+    await t.pumpAndSettle();
+
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    expect(find.text(l.actionShare), findsNothing);
+  });
+
+  testWidgets('narrow Windows window still has no share button', (t) async {
+    t.view.physicalSize = const Size(360, 800);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.reset);
+    await t.pumpWidget(host());
+    await t.tap(find.text('open'));
+    await t.pumpAndSettle();
+
+    final l = await AppLocalizations.delegate.load(const Locale('zh'));
+    expect(find.text(l.actionShare), findsNothing);
   });
 }

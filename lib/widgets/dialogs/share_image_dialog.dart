@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
@@ -18,18 +20,18 @@ showShareImageDialog(
 }
 
 /// 分享圖設定 dialog 的實作 widget。
-class _ShareImageDialog extends StatefulWidget {
+class _ShareImageDialog extends ConsumerStatefulWidget {
   const _ShareImageDialog({required this.initialBrightness});
 
   /// 初始亮暗模式，通常取自目前 app 主題。
   final Brightness initialBrightness;
 
   @override
-  State<_ShareImageDialog> createState() => _ShareImageDialogState();
+  ConsumerState<_ShareImageDialog> createState() => _ShareImageDialogState();
 }
 
 /// State for [_ShareImageDialog]；管理使用者選擇的分享圖選項。
-class _ShareImageDialogState extends State<_ShareImageDialog> {
+class _ShareImageDialogState extends ConsumerState<_ShareImageDialog> {
   /// 目前選擇的分享圖亮暗模式。
   late Brightness _brightness = widget.initialBrightness;
 
@@ -47,6 +49,7 @@ class _ShareImageDialogState extends State<_ShareImageDialog> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final android = ref.watch(isAndroidProvider);
     return AppDialog(
       size: AppDialogSize.sm,
       title: Text(l.shareImageDialogTitle),
@@ -89,6 +92,11 @@ class _ShareImageDialogState extends State<_ShareImageDialog> {
           onPressed: () => _pop(ShareImageAction.copy),
           child: Text(l.shareImageActionCopy),
         ),
+        if (android)
+          TextButton(
+            onPressed: () => _pop(ShareImageAction.share),
+            child: Text(l.actionShare),
+          ),
         FilledButton(
           onPressed: () => _pop(ShareImageAction.save),
           child: Text(l.shareImageActionSave),

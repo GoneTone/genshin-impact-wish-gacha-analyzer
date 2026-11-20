@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -83,12 +83,12 @@ Widget buildShareRenderTree({
   );
 }
 
-/// 依 [action] 把已渲染的 [png] 複製或儲存，並顯示結果 dialog。
+/// 依 [action] 把 [png] 存檔、分享或複製，並以結果視窗回報。
 ///
-/// copy：成功與失敗皆跳結果 dialog（[shareImageCopiedOnly] / [shareImageCopyFailed]）。
-/// save：成功跳結果 dialog（[shareImageSaved] 附開資料夾）；使用者取消選路徑則靜默；
-/// 寫檔失敗由 [saveImagePng] rethrow，交由呼叫端（[generateAndShareImage]）處理。
-Future<void> exportRenderedShareImage({
+/// 取消存檔與分享成功不彈視窗；Android 存檔訊息只顯示檔名、不給開啟資料夾。
+/// 存檔寫入失敗由 [saveBytes] rethrow，交由呼叫端（[generateAndShareImage]）處理。
+@visibleForTesting
+Future<void> deliverShareImage({
   required BuildContext context,
   required AppLocalizations l,
   required ShareImageAction action,
@@ -96,27 +96,40 @@ Future<void> exportRenderedShareImage({
   required String suggestedName,
 }) async {
   switch (action) {
+    case ShareImageAction.save:
+      final saved = await saveBytes(
+        png,
+        suggestedName: suggestedName,
+        extension: 'png',
+        mimeType: 'image/png',
+        dialogTitle: l.dialogSaveAsTitle,
+      );
+      if (!context.mounted || saved == null) return;
+      await showExportResultDialog(
+        context,
+        success: true,
+        message: l.shareImageSaved(saved.path ?? saved.displayName),
+        revealPath: saved.path,
+      );
+    case ShareImageAction.share:
+      final ok = await shareBytes(
+        png,
+        fileName: suggestedName,
+        mimeType: 'image/png',
+      );
+      if (!context.mounted || ok) return;
+      await showExportResultDialog(
+        context,
+        success: false,
+        message: l.shareFailed,
+      );
     case ShareImageAction.copy:
-      final ok = await copyImagePngToClipboard(png);
-      _log.info('share image copy clipboard=$ok bytes=${png.length}');
+      final ok = await copyImageToClipboard(png);
       if (!context.mounted) return;
       await showExportResultDialog(
         context,
         success: ok,
         message: ok ? l.shareImageCopiedOnly : l.shareImageCopyFailed,
-      );
-    case ShareImageAction.save:
-      final path = await saveImagePng(png, suggestedName: suggestedName);
-      if (path == null) {
-        _log.info('share image save cancelled');
-        return;
-      }
-      if (!context.mounted) return;
-      await showExportResultDialog(
-        context,
-        success: true,
-        message: l.shareImageSaved(path),
-        revealPath: path,
       );
   }
 }
@@ -179,7 +192,7 @@ Future<void> generateAndShareImage({
       progressOpen = false;
     }
     if (!context.mounted) return;
-    await exportRenderedShareImage(
+    await deliverShareImage(
       context: context,
       l: l,
       action: choice.action,
