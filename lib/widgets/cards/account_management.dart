@@ -159,7 +159,16 @@ class AccountManagement extends ConsumerWidget {
 }
 
 /// ⋮ 選單的動作。
-enum _RowAction { editAlias, setActive, remove }
+enum _RowAction {
+  /// 開啟別名編輯對話框，修改此 UID 的別名。
+  editAlias,
+
+  /// 將此 UID 設為使用中的帳號。
+  setActive,
+
+  /// 移除此 UID 的帳號，會先跳出確認對話框。
+  remove,
+}
 
 /// 帳號清單中單一 UID 的可拖排緊湊列：UID、別名、最後更新與 ⋮ 動作選單。
 class _Row extends StatelessWidget {

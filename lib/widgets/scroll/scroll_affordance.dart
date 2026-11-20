@@ -9,7 +9,7 @@ const Duration kScrollAffordanceDuration = Duration(milliseconds: 240);
 /// 點擊捲動箭頭的動畫曲線（timeline 與頁籤列共用）。
 const Curve kScrollAffordanceCurve = Curves.easeOutCubic;
 
-/// 點擊捲動箭頭時的相對捲動（詳情左欄使用）。
+/// 點擊捲動箭頭時的相對捲動（timeline 與詳情左欄共用）。
 extension ScrollAffordanceScroll on ScrollController {
   /// 以共用動畫相對捲動 [delta]，夾在 0 與 maxScrollExtent 之間；尚未接上捲動區時不動作。
   void animateBy(double delta) {

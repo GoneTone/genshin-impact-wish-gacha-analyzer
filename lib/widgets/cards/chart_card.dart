@@ -19,6 +19,7 @@ enum ChartCardLayout {
   /// 手機橫向精簡版：圓餅在左，標題與圖例疊在右側欄。
   compactTitleBeside(96);
 
+  /// 建立 [ChartCardLayout]，[chartDiameter] 為圓餅直徑。
   const ChartCardLayout(this.chartDiameter);
 
   /// 此版面下圓餅的直徑（邏輯像素）。
