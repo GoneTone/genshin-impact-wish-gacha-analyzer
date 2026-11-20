@@ -192,6 +192,12 @@ void main() {
           tester.getTopLeft(find.text('1234')).dy,
           greaterThanOrEqualTo(tester.getBottomLeft(find.text(name)).dy),
         );
+        // 換行的數字仍靠右，與其他列的右緣對齊；名稱留在起始側（色塊 10 ＋ 間距 8 之後）。
+        expect(
+          tester.getRect(find.text('65.43%')).right,
+          closeTo(phoneLegendWidth, 0.5),
+        );
+        expect(tester.getRect(find.text(name)).left, closeTo(18, 0.5));
         // 放得下的列維持原本的單行排法：數字靠右、與名稱同一行。
         final short = tester.getRect(find.text('5★'));
         final count = tester.getRect(find.text('56'));
@@ -202,5 +208,102 @@ void main() {
         );
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     }
+
+    /// 360dp、1.3 倍字級下含一個放不下的長名稱的精簡圖例。
+    const longNameLegend = DistributionLegend(
+      compact: true,
+      entries: [
+        DistributionEntry(
+          color: Color(0xFF7EC0D8),
+          name: 'Character',
+          count: 1234,
+          rate: 0.6543,
+        ),
+        DistributionEntry(
+          color: Color(0xFFE6C389),
+          name: '5★',
+          count: 56,
+          rate: 0.3457,
+        ),
+      ],
+    );
+
+    testWidgets('wrapped row works under IntrinsicHeight', (tester) async {
+      // 橫向總覽頁把圓餅卡排在 IntrinsicHeight 裡，會向圖例查詢 intrinsic 尺寸。
+      tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildDarkTheme(),
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 112 + 12 + phoneLegendWidth,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(width: 112),
+                      const SizedBox(width: 12),
+                      Expanded(child: longNameLegend),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final legend = tester.getRect(find.byType(DistributionLegend));
+      expect(
+        tester.getTopLeft(find.text('1234')).dy,
+        greaterThanOrEqualTo(tester.getBottomLeft(find.text('Character')).dy),
+      );
+      expect(
+        tester.getRect(find.text('65.43%')).right,
+        closeTo(legend.right, 0.5),
+      );
+      // IntrinsicHeight 量到的高度要剛好容納換行後的內容。
+      expect(
+        tester.getRect(find.text('34.57%')).bottom,
+        lessThanOrEqualTo(legend.bottom),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('RTL mirrors: name at the start (right), numbers at the end', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      Widget app(TextDirection direction) => MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Directionality(
+            textDirection: direction,
+            child: const Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(width: phoneLegendWidth, child: longNameLegend),
+            ),
+          ),
+        ),
+      );
+      // 先以 LTR 建好再切到 RTL，確認既有 render object 會跟著更新方向。
+      await tester.pumpWidget(app(TextDirection.ltr));
+      await tester.pumpWidget(app(TextDirection.rtl));
+      expect(tester.takeException(), isNull);
+      expect(
+        tester.getRect(find.text('Character')).right,
+        closeTo(phoneLegendWidth - 18, 0.5),
+      );
+      for (final rate in ['65.43%', '34.57%']) {
+        expect(tester.getRect(find.text(rate)).left, closeTo(0, 0.5));
+      }
+      expect(
+        tester.getTopLeft(find.text('1234')).dy,
+        greaterThanOrEqualTo(tester.getBottomLeft(find.text('Character')).dy),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   });
 }
