@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dar
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_node.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 
 import '../../helpers/timeline_geometry.dart';
@@ -246,6 +249,37 @@ void main() {
     expect(find.byIcon(Icons.chevron_right), findsNothing);
   });
 
+  testWidgets('drag cursor only shows over columns, not empty space', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx) =>
+            const TimelineHorizontal(entries: [], targetRank: 5, nowPulls: 3),
+      ),
+    );
+    final mouse = await tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      pointer: 1,
+    );
+    addTearDown(mouse.removePointer);
+    final origin = tester.getTopLeft(find.byType(TimelineHorizontal));
+
+    await mouse.addPointer(location: origin + const Offset(45, 80));
+    await tester.pump();
+    expect(
+      RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
+      SystemMouseCursors.resizeLeftRight,
+    );
+
+    await mouse.moveTo(origin + const Offset(500, 80));
+    await tester.pump();
+    expect(
+      RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
+      SystemMouseCursors.basic,
+    );
+  });
+
   testWidgets('only builds the columns near the viewport', (tester) async {
     await tester.pumpWidget(
       _wrap(
@@ -425,7 +459,11 @@ void main() {
     expect(find.text(l.timelineMonthLabel('2026', '05')), findsOneWidget);
   });
 
-  testWidgets('每欄名稱上方顯示 GachaItemIcon', (tester) async {
+  /// 呈現帶圖示的兩欄時間軸（夜蘭、納西妲），回傳其條目。
+  Future<List<TimelineEntry>> pumpIconTimeline(
+    WidgetTester tester, {
+    double height = 240,
+  }) async {
     late Directory tempDir;
     await tester.runAsync(() async {
       tempDir = await Directory.systemTemp.createTemp('timeline_h_icon_test_');
@@ -482,7 +520,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 1000,
-              height: 160,
+              height: height,
               child: TimelineHorizontal(entries: entries, targetRank: 5),
             ),
           ),
@@ -490,8 +528,24 @@ void main() {
       ),
     );
     await tester.pump();
+    return entries;
+  }
 
+  testWidgets('每欄名稱上方顯示 GachaItemIcon', (tester) async {
+    final entries = await pumpIconTimeline(tester);
     expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
+  });
+
+  testWidgets('nodes with an icon above stay on the axis line', (tester) async {
+    await pumpIconTimeline(tester);
+    final axisY = tester.getCenter(find.byType(TimelineHorizontal)).dy;
+    for (final node in find.byType(TimelineNode).evaluate()) {
+      expect(
+        tester.getCenter(find.byWidget(node.widget)).dy,
+        closeTo(axisY, 1.5),
+      );
+    }
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('timeline scrolls with a finger drag', (tester) async {

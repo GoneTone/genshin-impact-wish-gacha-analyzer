@@ -25,6 +25,12 @@ const double _edgeFadeWidth = 32;
 /// 多出的高度成為標籤與下方名稱之間的間隔。
 const double _monthBandHeight = 26;
 
+/// 名稱上方物品圖示的邊長。
+const double _iconSize = 32;
+
+/// 圖示加上它與名稱的間距；有圖示的欄要在底部對稱補回這段高度，節點才會落在軸線上。
+const double _iconBlockHeight = _iconSize + AppSpacing.xs;
+
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
 /// [DistributionLegend] (記得搭配 `showAllEntries: true`) 的條目,作為
 /// [TimelineHorizontal] 在跨卡池場景下的顏色圖例。
@@ -193,37 +199,31 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
                 PointerDeviceKind.stylus,
               },
             ),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.resizeLeftRight,
-              // 按需建構：五星可能上百欄，整排常駐會讓外層每次捲動都重算所有欄。
-              child: ListView.builder(
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                itemExtent: _colWidth,
-                itemCount: widget.entries.length + nowOffset,
-                // 包 Center 等同原本 Row 的 crossAxisAlignment.center：
-                // 欄高依內容，月份分隔線長度不變。
-                itemBuilder: (context, index) {
-                  if (index < nowOffset) {
-                    return Center(
-                      child: _NowColumn(
-                        nowPulls: widget.nowPulls!,
-                        tokens: tokens,
-                      ),
-                    );
-                  }
-                  final i = index - nowOffset;
-                  return Center(
-                    child: _EntryColumn(
-                      entry: widget.entries[i],
-                      targetRank: widget.targetRank,
-                      tokens: tokens,
-                      isMonthStart: monthStart[i],
-                      // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
-                      showMonthDivider: monthStart[i] && i > 0,
-                    ),
-                  );
-                },
+            // 按需建構：五星可能上百欄，整排常駐會讓外層每次捲動都重算所有欄。
+            child: ListView.builder(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              itemExtent: _colWidth,
+              itemCount: widget.entries.length + nowOffset,
+              // 包 Center 等同原本 Row 的 crossAxisAlignment.center：
+              // 欄高依內容，月份分隔線長度不變。
+              // 拖曳游標只套在欄上：欄數少時右側空白拖不動，不該顯示左右箭頭游標。
+              itemBuilder: (context, index) => MouseRegion(
+                cursor: SystemMouseCursors.resizeLeftRight,
+                child: Center(
+                  child: index < nowOffset
+                      ? _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens)
+                      : _EntryColumn(
+                          entry: widget.entries[index - nowOffset],
+                          targetRank: widget.targetRank,
+                          tokens: tokens,
+                          isMonthStart: monthStart[index - nowOffset],
+                          // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
+                          showMonthDivider:
+                              monthStart[index - nowOffset] &&
+                              index > nowOffset,
+                        ),
+                ),
               ),
             ),
           ),
@@ -363,7 +363,7 @@ class _EntryColumn extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GachaItemIcon(record: entry.sourceRecord!, size: 32),
+                    GachaItemIcon(record: entry.sourceRecord!, size: _iconSize),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       entry.name,
@@ -413,8 +413,12 @@ class _EntryColumn extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
-            // 對稱補回標籤帶高度，使節點維持在原垂直中心、對齊軸線。
-            const SizedBox(height: _monthBandHeight),
+            // 對稱補回標籤帶（與圖示）高度，使節點維持在原垂直中心、對齊軸線。
+            SizedBox(
+              height:
+                  _monthBandHeight +
+                  (entry.sourceRecord != null ? _iconBlockHeight : 0),
+            ),
           ],
         ),
       ),
