@@ -31,7 +31,7 @@ class _DialogCounter extends NavigatorObserver {
 
 /// 以真實 event loop 推進非同步工作（icon 解碼、離屏渲染），直到 [done] 成立。
 Future<void> _pumpUntil(WidgetTester t, bool Function() done) async {
-  for (var i = 0; i < 200 && !done(); i++) {
+  for (var i = 0; i < 500 && !done(); i++) {
     await t.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 10)),
     );
@@ -133,7 +133,11 @@ void main() {
   testWidgets('progress dialog is gone before the save dialog opens', (
     t,
   ) async {
-    shareImagePreloadOverride = (_) async => <String, ui.Image>{};
+    int? openAtPreload;
+    shareImagePreloadOverride = (_) async {
+      openAtPreload = dialogs.open;
+      return <String, ui.Image>{};
+    };
     int? openAtSave;
     fileSaveDialog = (b, n, e, m, title) async {
       openAtSave = dialogs.open;
@@ -143,6 +147,8 @@ void main() {
     await _pumpUntil(t, () => openAtSave != null);
     await t.pumpAndSettle();
 
+    // 預載時唯一開著的是進度視窗（選項對話框已關），確保 0 不是因為從沒開過。
+    expect(openAtPreload, 1);
     expect(openAtSave, 0);
     expect(find.text(l.shareImageGenerating), findsNothing);
   });
