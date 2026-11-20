@@ -952,6 +952,16 @@ void main() {
           find.text(l.timelineMonthLabel('2026', '05')).first,
         );
         expect(label.top - timeline.top, lessThan(2));
+        // 底部也沒有空白帶：最低的日期列貼近時間軸底端。
+        final lowestText = find
+            .descendant(
+              of: find.byType(TimelineHorizontal),
+              matching: find.byType(RichText),
+            )
+            .evaluate()
+            .map((e) => tester.getRect(find.byWidget(e.widget)).bottom)
+            .reduce((a, b) => a > b ? a : b);
+        expect(timeline.bottom - lowestText, lessThanOrEqualTo(16));
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     }
   }

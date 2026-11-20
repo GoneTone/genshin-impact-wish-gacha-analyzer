@@ -459,10 +459,10 @@ void main() {
     expect(find.text(l.timelineMonthLabel('2026', '05')), findsOneWidget);
   });
 
-  /// 呈現帶圖示的兩欄時間軸（夜蘭、納西妲），回傳其條目。
+  /// 呈現帶圖示的兩欄時間軸（夜蘭、納西妲），回傳其條目；[height] 為 null 時高度不受限（依內容）。
   Future<List<TimelineEntry>> pumpIconTimeline(
     WidgetTester tester, {
-    double height = 240,
+    double? height = 240,
   }) async {
     late Directory tempDir;
     await tester.runAsync(() async {
@@ -518,10 +518,12 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: SizedBox(
-              width: 1000,
-              height: height,
-              child: TimelineHorizontal(entries: entries, targetRank: 5),
+            body: SingleChildScrollView(
+              child: SizedBox(
+                width: 1000,
+                height: height,
+                child: TimelineHorizontal(entries: entries, targetRank: 5),
+              ),
             ),
           ),
         ),
@@ -547,6 +549,44 @@ void main() {
       );
     }
     expect(tester.takeException(), isNull);
+  });
+
+  /// 時間軸背景軸線（2dp 高的 Container）。
+  Finder axisLine() => find.descendant(
+    of: find.byType(TimelineHorizontal),
+    matching: find.byWidgetPredicate(
+      (w) => w is Container && w.constraints?.maxHeight == 2,
+    ),
+  );
+
+  testWidgets('unbounded height leaves no blank band under the date row', (
+    tester,
+  ) async {
+    await pumpIconTimeline(tester, height: null);
+    final timeline = tester.getRect(find.byType(TimelineHorizontal));
+    final lowestText = find
+        .descendant(
+          of: find.byType(TimelineHorizontal),
+          matching: find.byType(RichText),
+        )
+        .evaluate()
+        .map((e) => tester.getRect(find.byWidget(e.widget)).bottom)
+        .reduce((a, b) => a > b ? a : b);
+    expect(timeline.bottom - lowestText, lessThanOrEqualTo(16));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('unbounded height keeps the nodes on the axis line', (
+    tester,
+  ) async {
+    await pumpIconTimeline(tester, height: null);
+    final axisY = tester.getCenter(axisLine()).dy;
+    for (final node in find.byType(TimelineNode).evaluate()) {
+      expect(
+        tester.getCenter(find.byWidget(node.widget)).dy,
+        closeTo(axisY, 1.5),
+      );
+    }
   });
 
   testWidgets('timeline scrolls with a finger drag', (tester) async {
