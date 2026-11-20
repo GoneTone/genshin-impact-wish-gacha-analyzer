@@ -60,7 +60,7 @@ class StatCard extends StatelessWidget {
                     fontSize: AppFontSize.display,
                     fontWeight: FontWeight.w800,
                     color: tokens.textPrimary,
-                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontFeatures: kTabularFigures,
                     height: 1.1,
                   ),
                 ),

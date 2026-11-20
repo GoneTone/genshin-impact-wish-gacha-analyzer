@@ -281,7 +281,7 @@ class _RowState extends State<_Row> {
                       style: TextStyle(
                         color: tokens.textPrimary,
                         fontWeight: FontWeight.w600,
-                        fontFeatures: const [FontFeature.tabularFigures()],
+                        fontFeatures: kTabularFigures,
                       ),
                     ),
                     if (widget.isActive) ...[

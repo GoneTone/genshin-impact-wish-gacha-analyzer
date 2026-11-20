@@ -343,7 +343,7 @@ class _EntryColumn extends StatelessWidget {
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.4,
-                            fontFeatures: const [FontFeature.tabularFigures()],
+                            fontFeatures: kTabularFigures,
                           ),
                         ),
                       ),
@@ -391,7 +391,7 @@ class _EntryColumn extends StatelessWidget {
                   style: TextStyle(
                     color: tokens.textMuted,
                     fontSize: 10,
-                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontFeatures: kTabularFigures,
                   ),
                   children: [
                     TextSpan(text: '${_formatShortDate(entry.time)} · '),
@@ -454,7 +454,7 @@ class _NowColumn extends StatelessWidget {
             style: TextStyle(
               color: tokens.textMuted,
               fontSize: 10,
-              fontFeatures: const [FontFeature.tabularFigures()],
+              fontFeatures: kTabularFigures,
             ),
           ),
         ],

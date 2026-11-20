@@ -84,5 +84,10 @@ void main() {
     test('formatAbsoluteDate 用 yyyy-MM-dd', () {
       expect(formatAbsoluteDate(DateTime(2026, 5, 13, 14, 30)), '2026-05-13');
     });
+
+    test('formatShortMonthDay 用 MM/dd 並補零', () {
+      expect(formatShortMonthDay(DateTime(2026, 3, 7)), '03/07');
+      expect(formatShortMonthDay(DateTime(2026, 12, 25)), '12/25');
+    });
   });
 }

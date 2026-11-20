@@ -46,6 +46,10 @@ String formatAbsoluteDateTime(DateTime t) =>
 String formatAbsoluteDate(DateTime t) =>
     DateFormat('yyyy-MM-dd').format(t.toLocal());
 
+/// `MM/dd` 月／日短標。沿用時間軸既有慣例「不轉時區」，直接取 [t] 的月／日
+/// 欄位（與舊版手寫補零版逐位等價）。
+String formatShortMonthDay(DateTime t) => DateFormat('MM/dd').format(t);
+
 /// 適合檔名的時間戳：yyyy-MM-dd_HHmmss（本地時間）。
 String fileTimestamp([DateTime? now]) =>
     DateFormat('yyyy-MM-dd_HHmmss').format(now ?? DateTime.now());

@@ -297,7 +297,7 @@ class _RecordCard extends StatelessWidget {
     final accent = _accentFor(record, tokens);
     final meta = theme.textTheme.bodySmall?.copyWith(
       color: tokens.textMuted,
-      fontFeatures: const [FontFeature.tabularFigures()],
+      fontFeatures: kTabularFigures,
     );
     return GachaItemTapTarget(
       record: record,
@@ -621,7 +621,7 @@ class _Row extends StatelessWidget {
         : TextStyle(color: accent, fontWeight: FontWeight.bold);
     final mutedNum = TextStyle(
       color: tokens.textMuted,
-      fontFeatures: const [FontFeature.tabularFigures()],
+      fontFeatures: kTabularFigures,
     );
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -689,7 +689,7 @@ class _Row extends StatelessWidget {
               textAlign: TextAlign.end,
               style: TextStyle(
                 color: _pityColor(row, mainRank, tokens),
-                fontFeatures: const [FontFeature.tabularFigures()],
+                fontFeatures: kTabularFigures,
               ),
             ),
           ),

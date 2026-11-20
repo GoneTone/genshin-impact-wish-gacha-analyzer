@@ -49,7 +49,7 @@ class DistributionLegend extends StatelessWidget {
         ? entries
         : entries.where((e) => e.count > 0).toList(growable: false);
 
-    final tabular = const [FontFeature.tabularFigures()];
+    final tabular = kTabularFigures;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

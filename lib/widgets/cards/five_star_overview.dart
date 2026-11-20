@@ -107,7 +107,7 @@ class _FiveStarChip extends StatelessWidget {
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   height: 1,
-                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontFeatures: kTabularFigures,
                 ),
               ),
             ),
