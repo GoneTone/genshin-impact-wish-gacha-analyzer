@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.da
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
 
+/// 測試用的假 PNG bytes。
 final _png = Uint8List.fromList([1, 2, 3, 4]);
 
 /// 開一個按鈕執行 [deliverShareImage]，回傳 zh 在地化字串。

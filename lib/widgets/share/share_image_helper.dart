@@ -134,6 +134,12 @@ Future<void> deliverShareImage({
   }
 }
 
+/// 取代 [generateAndShareImage] 預載 hoyowiki icon 那一步的測試 seam；null 表示
+/// 使用 [preloadHoYoWikiImages]。
+@visibleForTesting
+Future<Map<String, ui.Image>> Function(Iterable<GachaRecord> records)?
+shareImagePreloadOverride;
+
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
 /// 分享圖寬固定為 [kShareCardWidth]、高隨內容自適應（底部不留白、不裁切）；
 /// [suggestedName] 完整建議檔名（含時間戳）。
@@ -158,23 +164,34 @@ Future<void> generateAndShareImage({
   final container = ProviderScope.containerOf(context);
   final hoyowikiIndex = container.read(hoyowikiIndexProvider);
   final cacheDir = container.read(hoyowikiCacheDirProvider);
-  final icon = await loadAppIconImage();
-  final preloaded = await preloadHoYoWikiImages(
-    index: hoyowikiIndex,
-    cacheDir: cacheDir,
-    records: recordsForPreload,
-  );
 
-  if (!context.mounted) {
-    icon.dispose();
-    disposePreloadedHoYoWikiImages(preloaded);
-    return;
+  // 預載 + 離屏渲染期間顯示不可關閉的「生成中」進度視窗；closeProgress 可重複
+  // 呼叫，渲染一完成（早於存檔系統視窗／複製結果通知）即關閉，catch 與 finally
+  // 再各呼叫一次當保險，確保任何路徑都不會卡住進度視窗。
+  var progressOpen = false;
+
+  /// 進度視窗仍開著且 context 還掛著時關閉它。
+  void closeProgress() {
+    if (progressOpen && context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+      progressOpen = false;
+    }
   }
-  // 進度 dialog 只覆蓋渲染這段；render 完成或失敗後即關閉，再進入複製／存檔，
-  // 避免遮住系統存檔對話框。progressOpen 防止 catch 分支重複 pop。
+
   showShareProgressDialog(context);
-  var progressOpen = true;
+  progressOpen = true;
+
+  ui.Image? icon;
+  Map<String, ui.Image>? preloaded;
   try {
+    icon = await loadAppIconImage();
+    preloaded =
+        await (shareImagePreloadOverride?.call(recordsForPreload) ??
+            preloadHoYoWikiImages(
+              index: hoyowikiIndex,
+              cacheDir: cacheDir,
+              records: recordsForPreload,
+            ));
     final png = await renderWidgetToPng(
       buildShareRenderTree(
         card: PreloadedHoYoWikiImages(
@@ -187,10 +204,7 @@ Future<void> generateAndShareImage({
       ),
       width: kShareCardWidth,
     );
-    if (context.mounted) {
-      Navigator.of(context, rootNavigator: true).pop();
-      progressOpen = false;
-    }
+    closeProgress();
     if (!context.mounted) return;
     await deliverShareImage(
       context: context,
@@ -201,9 +215,7 @@ Future<void> generateAndShareImage({
     );
   } catch (e, st) {
     _log.warning('share image flow failed', e, st);
-    if (progressOpen && context.mounted) {
-      Navigator.of(context, rootNavigator: true).pop();
-    }
+    closeProgress();
     if (!context.mounted) return;
     await showExportResultDialog(
       context,
@@ -211,7 +223,8 @@ Future<void> generateAndShareImage({
       message: l.shareImageFailed,
     );
   } finally {
-    icon.dispose();
-    disposePreloadedHoYoWikiImages(preloaded);
+    closeProgress();
+    icon?.dispose();
+    if (preloaded != null) disposePreloadedHoYoWikiImages(preloaded);
   }
 }
