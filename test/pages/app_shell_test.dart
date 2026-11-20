@@ -789,6 +789,47 @@ void main() {
       expect(barHeight(tester), kToolbarHeight);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    testWidgets('navigating while collapsed shows the bar', (tester) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      GoRouter.of(tester.element(find.byType(AppShell))).go('/settings');
+      await tester.pumpAndSettle();
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('shows the bar when the page no longer needs scrolling', (
+      tester,
+    ) async {
+      final count = ValueNotifier(100);
+      addTearDown(count.dispose);
+      await pump(
+        tester,
+        const Size(800, 360),
+        body: ValueListenableBuilder(
+          valueListenable: count,
+          builder: (_, n, _) => ListView.builder(
+            itemCount: n,
+            itemBuilder: (_, i) => SizedBox(height: 48, child: Text('row $i')),
+          ),
+        ),
+      );
+      await drag(tester, -300);
+      expect(barHeight(tester), lessThan(1));
+      count.value = 2;
+      await tester.pumpAndSettle();
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('collapse animates instead of jumping', (tester) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await tester.drag(find.byType(ListView), const Offset(0, -300));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(barHeight(tester), inExclusiveRange(0, kToolbarHeight));
+      await tester.pumpAndSettle();
+      expect(barHeight(tester), lessThan(1));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     testWidgets('portrait never collapses', (tester) async {
       await pump(tester, const Size(360, 800), body: longList);
       await drag(tester, -300);
