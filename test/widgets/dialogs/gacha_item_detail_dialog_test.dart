@@ -1392,6 +1392,29 @@ void main() {
         expect(bottomFade(), findsNothing);
       }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
+      testWidgets('divider separates tags from the skin caption only', (
+        tester,
+      ) async {
+        await pumpAt(tester, const Size(1280, 800), tags: ['Pyro']);
+        final divider = find.descendant(
+          of: find.byKey(detailsColumnKey),
+          matching: find.byType(Divider),
+        );
+        expect(divider, findsOneWidget);
+        expect(
+          tester.getRect(find.text('Pyro')).bottom,
+          lessThan(tester.getRect(divider).top),
+        );
+        expect(
+          tester.getRect(divider).bottom,
+          lessThan(tester.getRect(find.text('Outfit').first).top),
+        );
+        // 切到 Icon（無圖片說明）→ 分隔線一併消失。
+        await tester.tap(find.byType(ChoiceChip).last);
+        await tester.pump();
+        expect(divider, findsNothing);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
       testWidgets('no bottom fade when the column fits', (tester) async {
         await pumpAt(tester, const Size(1280, 800), desc: '<p>Short</p>');
         await tester.pump();

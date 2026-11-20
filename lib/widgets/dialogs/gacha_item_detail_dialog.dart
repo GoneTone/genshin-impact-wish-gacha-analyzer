@@ -838,7 +838,13 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                                 children: [
                                   header,
                                   if (imageDesc != null) ...[
-                                    const SizedBox(height: 12),
+                                    // 標籤與圖片說明之間的分隔線，上下留白對稱。
+                                    const SizedBox(height: AppSpacing.m),
+                                    Divider(
+                                      height: 1,
+                                      color: tokens.borderSubtle,
+                                    ),
+                                    const SizedBox(height: AppSpacing.m),
                                     imageDesc,
                                   ],
                                 ],
