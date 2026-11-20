@@ -1,6 +1,6 @@
 # Android 雲端同步登入（子專案 5）— 設計 spec
 
-- 狀態：已核准（2026-11-20）
+- 狀態：已完成（2026-11-20，驗收見附錄 B）
 - 日期：2026-11-20
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 5、第七節 Google Cloud）
 - 既有雲端同步設計：`2026-07-06-google-drive-cloud-sync-design.md`
@@ -155,3 +155,40 @@ Android release 版實跑照之前的決定，留到 `feat/android` 開 PR 前�
 7. **舊版 Play 服務不支援清除快取憑證**：模擬器（Play 服務 23.18）呼叫 `clearAuthorizationToken` 會丟 `Missing Feature{name=auth_api_credentials_clear_token}`，而且要好幾分鐘才回來，所以清除一律盡力而為。
 8. **App 完全關掉再開，靜默授權直接拿到通行證**；「只忘記本機」之後靜默授權拿不到，再授權時跳帳號選擇，可以換帳號。
 9. **模擬器關機會存快照**，重開後是從原狀態繼續跑。模擬器連結真實帳號後，測完要中斷連結。
+
+---
+
+## 附錄 B：原神版驗收結果（2026-11-20）
+
+實作 commit：`72b2cb5`（介面、不撤銷）、`6baaceb`（Android 授權）、`8929771`（設定頁文字、ARB）、`9889413`（README）、`99dc6ad`（桌面帶回前景的對照測試，整體審查要求）、`3f507bf`（越南文聲調位置統一，使用者要求）。自動測試 1660 個全過，analyze 無問題。debug 版都帶 `--dart-define-from-file=secrets/cloud_sync_defines.json`。
+
+### B.1 模擬器（`wuwa_api37`，Android 17，Play 服務 26.43.30）
+
+改用 `wuwa_api37` 而不是原定的 Pixel_8a：這台在鳴潮版驗收時已登入使用者的 Google 帳號（使用者提醒），Pixel_8a 沒登入帳號而且 `/data` 只剩 311 MB，裝不下 272 MB 的 debug APK。
+
+- 帳號選擇畫面按返回：回到「Link Google account」，沒有錯誤；log `link cancelled by user reason=unknownError: SDK reported an exception: 16: [16] Cancelled by user.`，和鳴潮實測相同（附錄 A 第 5 點）。等待時顯示「Please finish authorization in the Google window...」與 Cancel。
+- 連結：沒有跳授權畫面（沿用專案既有授權，附錄 A 第 3 點），下載電腦上傳的同步檔（2 個帳號），自動補抓 86 張物品圖。
+- 同一個 App 程序開 63 分鐘後按「Sync now」：`android restore ok`，同步成功。這時手機與電腦都已中斷連結又重連過，模擬器不受影響。
+- 測完中斷連結：1 秒內完成，`android unlink done (local only)`。這台的 Play 服務夠新，沒遇到附錄 A 第 7 點的「清除快取要好幾分鐘」，所以這次沒有可以判斷要不要加逾時的資料；舊版 Play 服務的情況維持和鳴潮相同（盡力而為、不加逾時）。
+
+### B.2 手機（ROG Phone，Android 16，Play 服務 26.45.31，debug 覆蓋安裝保留資料）
+
+- 連結：跳出帳號選擇（手機有 6 個 Google 帳號），選同一個帳號後沒有授權畫面，合併成功。
+- 強制關閉再開：`trigger=startup` 自動同步，靜默授權成功。
+- 中斷連結：1 秒內完成，`android unlink done (local only)`，畫面回到「連結 Google 帳號」。
+- 再連結：重新跳出帳號選擇（附錄 A 第 8 點）；按返回取消，同樣不顯示錯誤，手機維持原本未連結的狀態。
+- **沒驗到「手機的新記錄傳到電腦」**：手機上的朋友帳號，雲端本來就有相同資料，合併後上傳內容沒有變。上傳本身每輪都有發生（`upload: updated`），同步本體也和電腦共用，所以不另外造資料測。
+- 測完：旋轉設定維持 free／1／0；agent-device 自動安裝的 snapshot helper 已依使用者同意移除。
+
+### B.3 Windows（debug 版，和正式安裝版共用同一個資料夾）
+
+- 既有使用者升級：啟動時用原本存的 refresh token `restore ok`，自動同步，不必重新連結。
+- 中斷連結：`signOut done (local only)`，沒有呼叫撤銷；`flutter_secure_storage.dat` 從 358 bytes 變成 230 bytes（refresh token 已移除）。
+- 重新連結：瀏覽器授權（使用者按允許）後 `signIn ok`，同步一輪。電腦版結束時和測試前一樣是已連結。
+- 「授權完成把視窗帶回前景」沒有在實機上確認（使用者授權後自己切回 T3）；行為由 `cloud_sync_section_test.dart` 的桌面對照測試鎖住。
+
+### B.4 留待之後
+
+- Android release 版（R8）實跑：`google_sign_in_android` 解出 7.2.19（鳴潮是 7.2.18），兩版 Dart／Kotlin 程式碼相同，只把 plugin 的 `keep.xml` 改名為 `google_sign_in_keep.xml`；開 `feat/android` PR 前的 release 實跑要確認授權正常。
+- 子專案 7：上傳金鑰與 Play 簽署金鑰的 SHA-1 補登記到 Android OAuth 用戶端。
+- 每一輪同步即使雲端內容沒變也會上傳（`upload: updated`）。鳴潮在子專案 8 的效能改動（`57eb498` 等）會處理，留到子專案 8。
