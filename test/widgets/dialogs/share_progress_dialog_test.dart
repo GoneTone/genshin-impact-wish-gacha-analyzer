@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_progress_dialog.dart';
 
 void main() {
@@ -27,6 +28,7 @@ void main() {
 
     final l = await AppLocalizations.delegate.load(const Locale('zh'));
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    expect(find.byType(AppDialogCloseButton), findsNothing);
     expect(find.text(l.shareImageGenerating), findsOneWidget);
   });
 

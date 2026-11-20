@@ -225,7 +225,8 @@ void main() {
   testWidgets('action buttons render with icons', (tester) async {
     await _open(tester);
 
-    expect(find.byIcon(Icons.close), findsOneWidget);
+    // 取消鈕＋右上 ✕ 各一。
+    expect(find.byIcon(Icons.close), findsNWidgets(2));
     expect(find.byIcon(Icons.check), findsOneWidget);
   });
 

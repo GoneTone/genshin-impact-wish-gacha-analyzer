@@ -20,6 +20,7 @@ void showShareProgressDialog(BuildContext context) {
       builder: (_) => PopScope(
         canPop: false,
         child: AppDialog(
+          showCloseButton: false,
           title: Text(l.shareImageGenerating),
           content: const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.s),

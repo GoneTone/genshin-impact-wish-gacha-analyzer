@@ -44,6 +44,8 @@ class UpdateProgressDialog extends ConsumerWidget {
         // size 預設 sm，符合短訊息 + LinearProgressIndicator 語意。
         // 手機橫向高度只剩約 390，等待畫面放不下，要能捲動。
         scrollable: true,
+        // 進行中的更新只能用下方按鈕取消，不給 ✕ 直接關窗。
+        showCloseButton: false,
         title: _Title(
           progress: progress,
           l: l,

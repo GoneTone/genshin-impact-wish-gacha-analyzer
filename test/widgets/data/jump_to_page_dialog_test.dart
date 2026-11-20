@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/jump_to_page_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 /// 開啟對話框並回傳「結果 Future」，讓測試在對話框開著時操作。
 Future<Future<int?>> _open(
@@ -55,6 +56,13 @@ void main() {
   testWidgets('取消回傳 null', (tester) async {
     final result = await _open(tester);
     await tester.tap(find.text('取消'));
+    await tester.pumpAndSettle();
+    expect(await result, isNull);
+  });
+
+  testWidgets('close button returns null', (tester) async {
+    final result = await _open(tester);
+    await tester.tap(find.byType(AppDialogCloseButton));
     await tester.pumpAndSettle();
     expect(await result, isNull);
   });

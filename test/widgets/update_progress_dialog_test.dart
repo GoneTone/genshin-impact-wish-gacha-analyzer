@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
 
 import '../helpers/no_game_dir.dart';
@@ -54,6 +55,18 @@ Future<void> _pumpDialog(
 }
 
 void main() {
+  for (final progress in const <UpdateProgress>[
+    Preparing(),
+    WaitingForCapture(),
+  ]) {
+    testWidgets('no close button while running (${progress.runtimeType})', (
+      tester,
+    ) async {
+      await _pumpDialog(tester, progress: progress);
+      expect(find.byType(AppDialogCloseButton), findsNothing);
+    });
+  }
+
   const link = '已經開啟祈願歷史紀錄，卻一直沒有反應？';
   const unavailable = '無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請開啟祈願歷史紀錄。';
   const unavailableNoDir =

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 
 /// Dialog 寬度語意尺寸。
@@ -44,6 +45,9 @@ enum AppDialogSize {
 /// 整體需要捲動時設 `scrollable: true`；內容已自帶捲動元件（`ListView` 等）
 /// 維持預設 `false` 避免雙層捲動衝突。
 ///
+/// 標題列右端預設有 ✕（[AppDialogCloseButton]），效果同點外圍／按返回；執行中、
+/// 不可中途放棄的進度視窗設 `showCloseButton: false`。
+///
 /// 個別 dialog 內容明顯較高（如含大圖預覽）可透過 `maxHeight` 顯式覆寫高度
 /// 上限；其他 dialog 維持預設 720 上限。
 ///
@@ -58,6 +62,7 @@ class AppDialog extends StatelessWidget {
     this.size = AppDialogSize.sm,
     this.scrollable = false,
     this.maxHeight,
+    this.showCloseButton = true,
   });
 
   /// dialog 標題 widget，傳給 [AlertDialog.title]；null 時不顯示標題區。
@@ -78,6 +83,9 @@ class AppDialog extends StatelessWidget {
   /// dialog 整體最大高度上限；null 時用預設 720。實際高度仍受
   /// `mq.size.height - 120` 限制，小視窗下會自動 fit。
   final double? maxHeight;
+
+  /// 是否在標題列右端顯示 ✕；沒有 [title] 時 ✕ 仍在右上角。
+  final bool showCloseButton;
 
   /// 手機排版時 dialog 四周的留白（dp）。
   static const double _compactInset = 12;
@@ -106,9 +114,41 @@ class AppDialog extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: dialogMaxHeight),
       // title 與 content 同寬：title 內容（如長描述 Html）的 intrinsic 寬度
       // 不再能把整個 AlertDialog 撐寬，過長文字會在 dialogWidth 內換行。
-      title: title == null ? null : SizedBox(width: dialogWidth, child: title),
+      title: showCloseButton
+          ? SizedBox(
+              width: dialogWidth,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: title ?? const SizedBox.shrink()),
+                  const AppDialogCloseButton(),
+                ],
+              ),
+            )
+          : title == null
+          ? null
+          : SizedBox(width: dialogWidth, child: title),
       content: body,
       actions: actions.isEmpty ? null : actions,
     );
   }
+}
+
+/// dialog 右上角的 ✕：關閉所在 dialog（回傳 null），效果同點外圍／按返回。
+///
+/// [AppDialog] 標題列自帶；版面特殊、自行擺放 ✕ 的 dialog（如詳情雙欄）也用這顆，
+/// 確保尺寸與提示一致。
+class AppDialogCloseButton extends StatelessWidget {
+  /// 建立 [AppDialogCloseButton]。
+  const AppDialogCloseButton({super.key});
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    icon: const Icon(Icons.close),
+    tooltip: AppLocalizations.of(context)!.actionClose,
+    // 電腦版密度會把按鈕縮到 40 以下，固定標準密度以保住 44 的觸控區。
+    visualDensity: VisualDensity.standard,
+    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+    onPressed: () => Navigator.maybePop(context),
+  );
 }

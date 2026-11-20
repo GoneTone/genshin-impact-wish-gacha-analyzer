@@ -740,18 +740,28 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
     // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
     // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
     // 變動，dialog 整體高度仍固定（只有 image 區大小被重新分配）。
+    final chipBar = chipEntries.length > 1
+        ? GalleryChipBar(
+            labels: [for (final e in chipEntries) e.label],
+            selectedIndex: clampedIndex,
+            onSelected: (i) => setState(() => _selectedIndex = i),
+          )
+        : null;
     final galleryArea = Column(
       mainAxisSize: current != null ? MainAxisSize.max : MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (chipEntries.length > 1) ...[
-          GalleryChipBar(
-            labels: [for (final e in chipEntries) e.label],
-            selectedIndex: clampedIndex,
-            onSelected: (i) => setState(() => _selectedIndex = i),
-          ),
-          const SizedBox(height: 12),
-        ],
+        // 兩欄時沒有標題列，✕ 改放右欄頂列、接在頁籤列的 › 之後。
+        if (twoColumn)
+          Row(
+            children: [
+              Expanded(child: chipBar ?? const SizedBox.shrink()),
+              const AppDialogCloseButton(),
+            ],
+          )
+        else
+          ?chipBar,
+        if (twoColumn || chipBar != null) const SizedBox(height: 12),
         if (current != null) ...[
           Expanded(
             child: _buildCurrentImageArea(
@@ -792,6 +802,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
       return AppDialog(
         size: phoneLandscape ? AppDialogSize.lg : AppDialogSize.xl,
         maxHeight: 880,
+        showCloseButton: false,
         content: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

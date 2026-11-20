@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
@@ -24,6 +25,9 @@ Future<void> _pumpDialog(
   await tester.pumpWidget(
     MaterialApp(
       theme: buildDarkTheme(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('zh'),
       home: Scaffold(
         body: Builder(
           builder: (ctx) => Center(
@@ -159,6 +163,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
         home: Scaffold(
           body: Builder(
             builder: (ctx) => Center(
@@ -197,7 +204,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: buildDarkTheme(),
-        home: const Scaffold(body: AppDialog(content: Text('Body'))),
+        home: const Scaffold(
+          body: AppDialog(content: Text('Body'), showCloseButton: false),
+        ),
       ),
     );
     expect(tester.widget<AlertDialog>(find.byType(AlertDialog)).title, isNull);
@@ -216,6 +225,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
         home: Scaffold(
           body: Builder(
             builder: (ctx) => Center(
@@ -243,8 +255,8 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    // title 應被約束到 md 的 640，而非渲染成內在的 1400。
-    expect(tester.getSize(find.byKey(const Key('wide-title'))).width, 640);
+    // title 應被約束到 md 的 640 扣掉右側 ✕（此時按鈕含 padding 為 48），而非渲染成內在的 1400。
+    expect(tester.getSize(find.byKey(const Key('wide-title'))).width, 640 - 48);
   });
 
   testWidgets('maxHeight = min(720, mq.height - 120) — tall window', (
@@ -374,6 +386,9 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
         home: Scaffold(
           body: Builder(
             builder: (ctx) => Center(
@@ -398,5 +413,122 @@ void main() {
 
     final dialog = tester.widget<AlertDialog>(find.byType(AlertDialog));
     expect(dialog.actions, isNull);
+  });
+
+  group('close button', () {
+    /// 以 [dialog] 開啟對話框並回傳結果 Future，讓測試在對話框開著時操作。
+    Future<Future<Object?>> open(
+      WidgetTester tester,
+      Widget dialog, {
+      Size surfaceSize = const Size(1280, 800),
+      Locale locale = const Locale('zh'),
+    }) async {
+      tester.view.physicalSize = surfaceSize;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: locale,
+          home: const Scaffold(body: Text('host')),
+        ),
+      );
+      final result = showDialog<Object>(
+        context: tester.element(find.text('host')),
+        builder: (_) => dialog,
+      );
+      await tester.pumpAndSettle();
+      return result;
+    }
+
+    /// 對話框面板（[Dialog] 內的 [Material]）的位置。
+    Rect panel(WidgetTester tester) => tester.getRect(
+      find
+          .descendant(of: find.byType(Dialog), matching: find.byType(Material))
+          .first,
+    );
+
+    final close = find.byType(AppDialogCloseButton);
+
+    for (final platform in [TargetPlatform.android, TargetPlatform.windows]) {
+      testWidgets('shows at the right end of the title row and returns null '
+          '(${platform.name})', (tester) async {
+        final result = await open(
+          tester,
+          AppDialog(
+            title: const Text('Title'),
+            content: const Text('Body'),
+            actions: [TextButton(onPressed: () {}, child: const Text('OK'))],
+          ),
+        );
+        expect(close, findsOneWidget);
+        expect(find.byTooltip('關閉'), findsOneWidget);
+        final rect = tester.getRect(close);
+        final title = tester.getRect(find.text('Title'));
+        expect(rect.width, greaterThanOrEqualTo(44));
+        expect(rect.height, greaterThanOrEqualTo(44));
+        expect(rect.left, greaterThanOrEqualTo(title.right));
+        expect(rect.top, lessThan(title.bottom));
+        expect(panel(tester).right - rect.right, lessThan(32));
+
+        await tester.tap(close);
+        await tester.pumpAndSettle();
+        expect(find.byType(AppDialog), findsNothing);
+        expect(await result, isNull);
+      }, variant: TargetPlatformVariant.only(platform));
+    }
+
+    testWidgets('absent when turned off', (tester) async {
+      await open(
+        tester,
+        const AppDialog(
+          title: Text('Title'),
+          content: Text('Body'),
+          showCloseButton: false,
+        ),
+      );
+      expect(close, findsNothing);
+    });
+
+    testWidgets('sits top-right without a title', (tester) async {
+      final result = await open(tester, const AppDialog(content: Text('Body')));
+      final rect = tester.getRect(close);
+      expect(
+        rect.bottom,
+        lessThanOrEqualTo(tester.getRect(find.text('Body')).top),
+      );
+      expect(panel(tester).right - rect.right, lessThan(32));
+      await tester.tap(close);
+      await tester.pumpAndSettle();
+      expect(await result, isNull);
+    });
+
+    for (final locale in [const Locale('en'), const Locale('ja')]) {
+      testWidgets(
+        'long title wraps beside it at 1.3x text (${locale.languageCode})',
+        (tester) async {
+          tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+          addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+          await open(
+            tester,
+            AppDialog(
+              title: Text('A rather long dialog title ' * 3),
+              content: const Text('Body'),
+            ),
+            surfaceSize: const Size(360, 800),
+            locale: locale,
+          );
+          expect(tester.takeException(), isNull);
+          expect(close, findsOneWidget);
+          expect(
+            tester.getRect(close).right,
+            lessThanOrEqualTo(panel(tester).right),
+          );
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+    }
   });
 }

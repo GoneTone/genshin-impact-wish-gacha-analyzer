@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/item_image_save.dart
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_affordance.dart';
@@ -1331,6 +1332,52 @@ void main() {
         findsOneWidget,
       );
     }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    group('close button', () {
+      final close = find.byType(AppDialogCloseButton);
+
+      /// [a] 與 [b] 在垂直方向有重疊（同一列）。
+      bool sameRow(Rect a, Rect b) => a.top < b.bottom && b.top < a.bottom;
+
+      /// 點 ✕ 後詳情應關閉。
+      Future<void> tapClosesDialog(WidgetTester tester) async {
+        await tester.tap(close);
+        await tester.pumpAndSettle();
+        expect(find.byType(GachaItemDetailDialog), findsNothing);
+      }
+
+      testWidgets('phone portrait: at the right end of the header row', (
+        tester,
+      ) async {
+        final (name, _) = await pumpAt(tester, const Size(360, 800));
+        expect(close, findsOneWidget);
+        final rect = tester.getRect(close);
+        expect(sameRow(rect, name), isTrue);
+        expect(rect.left, greaterThanOrEqualTo(name.right));
+        expect(rect.width, greaterThanOrEqualTo(44));
+        expect(rect.height, greaterThanOrEqualTo(44));
+        await tapClosesDialog(tester);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+      for (final (label, size, platform) in [
+        ('phone landscape', const Size(914, 411), TargetPlatform.android),
+        ('desktop', const Size(1280, 800), TargetPlatform.windows),
+      ]) {
+        testWidgets('two columns: right of the chip bar arrow ($label)', (
+          tester,
+        ) async {
+          final (_, image) = await pumpAt(tester, size);
+          expect(close, findsOneWidget);
+          final rect = tester.getRect(close);
+          final arrow = tester.getRect(find.byTooltip('Next'));
+          expect(sameRow(rect, arrow), isTrue);
+          expect(rect.left, greaterThanOrEqualTo(arrow.right));
+          expect(rect.bottom, lessThanOrEqualTo(image.top));
+          expect(rect.width, greaterThanOrEqualTo(44));
+          await tapClosesDialog(tester);
+        }, variant: TargetPlatformVariant.only(platform));
+      }
+    });
 
     group('two-column details scroll as one region', () {
       /// 超過原本內層捲動上限的長簡介。
