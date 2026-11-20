@@ -50,8 +50,10 @@ class DistributionLegend extends StatelessWidget {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final scaler = MediaQuery.textScalerOf(context);
-    final countWidth = compact ? scaler.scale(36) : 60.0;
-    final rateWidth = compact ? scaler.scale(54) : 70.0;
+    // Roboto 14dp 下「12345」約 41dp、「100.00%」約 55dp，各留一點餘裕才不會斷行。
+    // shortcut: 件數只量到五位數，六位數以上會斷行；真有帳號抽到十萬抽再改成依內容量寬。
+    final countWidth = compact ? scaler.scale(44) : 60.0;
+    final rateWidth = compact ? scaler.scale(58) : 70.0;
     final visible = showAllEntries
         ? entries
         : entries.where((e) => e.count > 0).toList(growable: false);
