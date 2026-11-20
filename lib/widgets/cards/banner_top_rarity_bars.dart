@@ -128,6 +128,7 @@ class _BannerRow extends StatelessWidget {
         Flexible(
           child: Text(
             subtitle,
+            textAlign: TextAlign.end,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: tokens.textMuted,
             ),
@@ -161,7 +162,7 @@ class _BannerRow extends StatelessWidget {
             ],
           );
         }
-        return _wide(theme, tokens);
+        return _wide(theme, summary);
       },
     );
   }
@@ -169,8 +170,8 @@ class _BannerRow extends StatelessWidget {
   /// 小於此寬度時改成上下兩行。
   static const double _stackedBelowWidth = 420;
 
-  /// 寬螢幕的一行版面：名稱｜長條｜件數與說明。
-  Widget _wide(ThemeData theme, GachaTokens tokens) {
+  /// 寬螢幕的一行版面：名稱｜長條｜件數與說明（[summary] 靠右，各列右緣對齊）。
+  Widget _wide(ThemeData theme, Widget summary) {
     return Row(
       children: [
         SizedBox(
@@ -190,27 +191,9 @@ class _BannerRow extends StatelessWidget {
         SizedBox(
           width:
               180, // count + separator + subtitle; subtitle wraps freely (no ellipsis)
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$topCount',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text('·', style: TextStyle(color: tokens.textMuted)),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  subtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: tokens.textMuted,
-                  ),
-                ),
-              ),
-            ],
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: summary,
           ),
         ),
       ],

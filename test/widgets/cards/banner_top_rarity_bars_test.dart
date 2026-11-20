@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
@@ -51,7 +52,118 @@ Widget _wrap(
   ),
 );
 
+/// [finder] 文字每一行實際字形的右緣（全域座標），用來判斷是否靠右對齊。
+///
+/// 略過空白字元：換行處的行尾空白會懸出段落寬度之外，不算可見字形。
+List<double> _lineRights(WidgetTester tester, Finder finder) {
+  final paragraph = tester.renderObject<RenderParagraph>(finder);
+  final text = paragraph.text.toPlainText();
+  final boxes = [
+    for (var i = 0; i < text.length; i++)
+      if (text[i].trim().isNotEmpty)
+        ...paragraph.getBoxesForSelection(
+          TextSelection(baseOffset: i, extentOffset: i + 1),
+        ),
+  ];
+  final rightByLine = <double, double>{};
+  for (final b in boxes) {
+    rightByLine.update(
+      b.top,
+      (r) => r > b.right ? r : b.right,
+      ifAbsent: () => b.right,
+    );
+  }
+  return [
+    for (final r in rightByLine.values)
+      paragraph.localToGlobal(Offset(r, 0)).dx,
+  ];
+}
+
+/// 斷言每個卡池的說明文字每一行右緣都貼齊 [BannerTopRarityBars] 右緣。
+void _expectSubtitlesFlushRight(WidgetTester tester) {
+  final l = AppLocalizations.of(
+    tester.element(find.byType(BannerTopRarityBars)),
+  )!;
+  final edge = tester.getRect(find.byType(BannerTopRarityBars)).right;
+  final subtitles = [
+    find.text(l.bannerTopRarityPullsSinceLast(l.rarityStar(5), 25)),
+    find.text(l.pityNoMainRarity(l.rarityStar(5))),
+    find.text(l.pityNoMainRarity(l.rarityStar(4))),
+    find.text(l.pityBeginnerEnded),
+  ];
+  var checked = 0;
+  for (final s in subtitles) {
+    for (var i = 0; i < s.evaluate().length; i++) {
+      checked++;
+      for (final right in _lineRights(tester, s.at(i))) {
+        expect(right, closeTo(edge, 0.5));
+      }
+    }
+  }
+  expect(checked, gachaTypes.length);
+}
+
 void main() {
+  for (final (locale, width) in [
+    (const Locale('zh'), 800.0),
+    (const Locale('en'), 800.0),
+    // 寬版門檻附近，英文說明會換行。
+    (const Locale('en'), 420.0),
+  ]) {
+    testWidgets('wide layout: trailing stats end flush at the right edge '
+        '(${locale.languageCode}, $width)', (tester) async {
+      final t0 = DateTime(2025, 1, 1);
+      final banners = <String, List<GachaRecord>>{
+        '301': [
+          for (var i = 0; i < 25; i++)
+            _r(
+              id: '4-$i',
+              gachaType: '301',
+              rank: 4,
+              time: t0.add(Duration(days: 30 - i)),
+            ),
+          _r(id: '5', gachaType: '301', rank: 5, time: t0),
+        ],
+      };
+      await tester.pumpWidget(
+        _wrap(
+          (ctx, colors) => BannerTopRarityBars(
+            types: gachaTypes,
+            banners: banners,
+            colors: colors,
+          ),
+          locale: locale,
+          width: width,
+        ),
+      );
+      await tester.pumpAndSettle();
+      _expectSubtitlesFlushRight(tester);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('stacked layout keeps the summary end-aligned', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => BannerTopRarityBars(
+          types: gachaTypes,
+          banners: const {},
+          colors: colors,
+        ),
+        width: 360,
+        height: 600,
+      ),
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(BannerTopRarityBars)),
+    )!;
+    final edge = tester.getRect(find.byType(BannerTopRarityBars)).right;
+    final subtitle = find.text(l.pityNoMainRarity(l.rarityStar(5))).first;
+    for (final right in _lineRights(tester, subtitle)) {
+      expect(right, closeTo(edge, 0.5));
+    }
+  });
+
   testWidgets('empty banners → renders one row per gachaType', (tester) async {
     await tester.pumpWidget(
       _wrap(
