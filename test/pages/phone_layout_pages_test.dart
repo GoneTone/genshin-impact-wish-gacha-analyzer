@@ -529,6 +529,46 @@ void main() {
     expect(find.byType(RecordSortButton), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets(
+    'banner page does not rebuild its cards when only height changes',
+    (tester) async {
+      // 橫向標題列收合、鍵盤開合時內容區高度每幀都在變，上方卡片不該跟著重建。
+      final height = ValueNotifier(300.0);
+      addTearDown(height.dispose);
+      await pump(
+        tester,
+        const Size(800, 360),
+        ValueListenableBuilder<double>(
+          valueListenable: height,
+          builder: (_, h, child) => Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(height: h, child: child),
+          ),
+          child: const BannerPage(gachaType: '301'),
+        ),
+      );
+      var rebuilds = 0;
+      final previous = debugOnRebuildDirtyWidget;
+      addTearDown(() => debugOnRebuildDirtyWidget = previous);
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget
+            case PageHeader() ||
+                PityCard() ||
+                StatCard() ||
+                RarityChartCard()) {
+          rebuilds++;
+        }
+      };
+      for (var h = 248.0; h <= 300; h += 4) {
+        height.value = h;
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      debugOnRebuildDirtyWidget = previous;
+      expect(rebuilds, 0);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.android),
+  );
+
   testWidgets('changing the record page scrolls back to the list title', (
     tester,
   ) async {

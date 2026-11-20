@@ -160,286 +160,274 @@ class _BannerPageState extends ConsumerState<BannerPage> {
 
     final pagePadding = isCompactLayout(context) ? AppSpacing.m : AppSpacing.l;
     // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final recordsAsCards = recordListUsesCards(
-          context,
-          constraints.maxWidth - pagePadding * 2,
-        );
-        void cycleSort(SortColumn col) =>
-            ref.read(recordFilterProvider(gachaType).notifier).cycleSort(col);
-        return CustomScrollView(
-          scrollCacheExtent: pageScrollCacheExtent(),
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.all(pagePadding),
-              sliver: SliverMainAxisGroup(
-                slivers: [
-                  SliverList.list(
+    void cycleSort(SortColumn col) =>
+        ref.read(recordFilterProvider(gachaType).notifier).cycleSort(col);
+    return CustomScrollView(
+      scrollCacheExtent: pageScrollCacheExtent(),
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(pagePadding),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              SliverList.list(
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: PageHeader(
-                              title: type.resolveName(l),
-                              icon: _iconForGachaType(type),
-                              trailing: phoneLandscapeLastUpdated(context),
-                            ),
-                          ),
-                          ShareActionButton(
-                            enabled: records.isNotEmpty,
-                            onGenerate: () => _generateBannerShare(
-                              context,
-                              ref,
-                              l,
-                              type,
-                              activeData.uid,
-                              activeData.lastUpdated,
-                              records,
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: PageHeader(
+                          title: type.resolveName(l),
+                          icon: _iconForGachaType(type),
+                          trailing: phoneLandscapeLastUpdated(context),
+                        ),
                       ),
+                      ShareActionButton(
+                        enabled: records.isNotEmpty,
+                        onGenerate: () => _generateBannerShare(
+                          context,
+                          ref,
+                          l,
+                          type,
+                          activeData.uid,
+                          activeData.lastUpdated,
+                          records,
+                        ),
+                      ),
+                    ],
+                  ),
 
-                      // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
-                      LayoutBuilder(
-                        builder: (context, c) {
-                          final wide =
-                              c.maxWidth >= 1024 ||
-                              phoneOrientationOf(context) ==
-                                  PhoneOrientation.landscape;
-                          final mid = c.maxWidth < 1024;
+                  // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
+                  LayoutBuilder(
+                    builder: (context, c) {
+                      final wide =
+                          c.maxWidth >= 1024 ||
+                          phoneOrientationOf(context) ==
+                              PhoneOrientation.landscape;
+                      final mid = c.maxWidth < 1024;
 
-                          final primaryCard = PityCard(
-                            label: l.pityRank(l.rarityStar(primary.rank)),
-                            rank: primary.rank,
-                            pity: primaryPityData,
-                            accent: accentForRank(primary.rank, tokens),
-                            isEndedPool: isEndedPool,
-                          );
-                          final secondaryCard =
-                              (secondary == null || secondaryPityData == null)
-                              ? null
-                              : PityCard(
-                                  label: l.pityRank(
-                                    l.rarityStar(secondary.rank),
-                                  ),
-                                  rank: secondary.rank,
-                                  pity: secondaryPityData,
-                                  accent: accentForRank(secondary.rank, tokens),
-                                  isEndedPool: isEndedPool,
-                                );
-                          final totalCard = StatCard(
-                            label: l.statsTotal,
-                            value: '${stats.total}',
-                            accent: tokens.accentPrimary,
-                          );
+                      final primaryCard = PityCard(
+                        label: l.pityRank(l.rarityStar(primary.rank)),
+                        rank: primary.rank,
+                        pity: primaryPityData,
+                        accent: accentForRank(primary.rank, tokens),
+                        isEndedPool: isEndedPool,
+                      );
+                      final secondaryCard =
+                          (secondary == null || secondaryPityData == null)
+                          ? null
+                          : PityCard(
+                              label: l.pityRank(l.rarityStar(secondary.rank)),
+                              rank: secondary.rank,
+                              pity: secondaryPityData,
+                              accent: accentForRank(secondary.rank, tokens),
+                              isEndedPool: isEndedPool,
+                            );
+                      final totalCard = StatCard(
+                        label: l.statsTotal,
+                        value: '${stats.total}',
+                        accent: tokens.accentPrimary,
+                      );
 
-                          if (wide) {
-                            return IntrinsicHeight(
+                      if (wide) {
+                        return IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(flex: 6, child: primaryCard),
+                              if (secondaryCard != null) ...[
+                                const SizedBox(width: AppSpacing.m),
+                                Expanded(flex: 3, child: secondaryCard),
+                              ],
+                              const SizedBox(width: AppSpacing.m),
+                              Expanded(flex: 3, child: totalCard),
+                            ],
+                          ),
+                        );
+                      }
+                      if (mid) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            primaryCard,
+                            const SizedBox(height: AppSpacing.m),
+                            IntrinsicHeight(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Expanded(flex: 6, child: primaryCard),
                                   if (secondaryCard != null) ...[
+                                    Expanded(child: secondaryCard),
                                     const SizedBox(width: AppSpacing.m),
-                                    Expanded(flex: 3, child: secondaryCard),
                                   ],
-                                  const SizedBox(width: AppSpacing.m),
-                                  Expanded(flex: 3, child: totalCard),
+                                  Expanded(child: totalCard),
                                 ],
                               ),
-                            );
-                          }
-                          if (mid) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                primaryCard,
-                                const SizedBox(height: AppSpacing.m),
-                                IntrinsicHeight(
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      if (secondaryCard != null) ...[
-                                        Expanded(child: secondaryCard),
-                                        const SizedBox(width: AppSpacing.m),
-                                      ],
-                                      Expanded(child: totalCard),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              primaryCard,
-                              const SizedBox(height: AppSpacing.m),
-                              if (secondaryCard != null) ...[
-                                secondaryCard,
-                                const SizedBox(height: AppSpacing.m),
-                              ],
-                              totalCard,
-                            ],
-                          );
-                        },
-                      ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          primaryCard,
+                          const SizedBox(height: AppSpacing.m),
+                          if (secondaryCard != null) ...[
+                            secondaryCard,
+                            const SizedBox(height: AppSpacing.m),
+                          ],
+                          totalCard,
+                        ],
+                      );
+                    },
+                  ),
 
-                      const SizedBox(height: AppSpacing.l),
+                  const SizedBox(height: AppSpacing.l),
 
-                      // Row 2: 兩 Pie + Timeline placeholder
-                      LayoutBuilder(
-                        builder: (context, c) {
-                          final wide = c.maxWidth >= 1024;
-                          final layout = ChartCardLayout.of(
-                            context,
-                            c.maxWidth,
-                          );
-                          final landscape =
-                              layout == ChartCardLayout.compactTitleBeside;
-                          final col = wide
-                              ? 3
-                              : (c.maxWidth >= 800 || landscape ? 2 : 1);
-                          final tileWidth = col == 1
-                              ? c.maxWidth
-                              : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
-                          final rarityCard = RarityChartCard(
-                            stats: stats,
-                            layout: layout,
-                          );
-                          final itemTypeCard = ItemTypeChartCard(
-                            stats: stats,
-                            layout: layout,
-                          );
-                          return Wrap(
-                            spacing: AppSpacing.m,
-                            runSpacing: AppSpacing.m,
-                            children: [
-                              if (col == 1) ...[
-                                SizedBox(width: tileWidth, child: rarityCard),
-                                SizedBox(width: tileWidth, child: itemTypeCard),
-                              ] else
-                                // 兩張圓餅卡同列時等高：精簡版高度跟著圖例列數走，不拉齊會一高一低。
-                                SizedBox(
-                                  width: tileWidth * 2 + AppSpacing.m,
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        // 手機橫向的保底列是 6/3/3：第一張寬度要等於主保底卡，中間的縫才對齊（同總覽頁）。
-                                        if (col == 2 && landscape)
-                                          SizedBox(
-                                            width:
-                                                (c.maxWidth -
-                                                    AppSpacing.m * 2) /
-                                                2,
-                                            child: rarityCard,
-                                          )
-                                        else
-                                          Expanded(child: rarityCard),
-                                        const SizedBox(width: AppSpacing.m),
-                                        Expanded(child: itemTypeCard),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              SizedBox(
-                                width: tileWidth,
-                                child: ChartCard(
-                                  title: l.timelineTopRarityTitle(
-                                    l.rarityStar(primary.rank),
-                                    _countAtRank(stats, primary.rank),
-                                  ),
-                                  icon: Icons.timeline,
-                                  legend: const LuckLegend(),
-                                  chart: TimelineHorizontal(
-                                    entries: buildTimelineEntries(
-                                      records,
-                                      targetRank: primary.rank,
-                                    ),
-                                    targetRank: primary.rank,
-                                    nowPulls: pullsSinceLastRanked(
-                                      records,
-                                      rank: primary.rank,
-                                    ),
-                                  ),
+                  // Row 2: 兩 Pie + Timeline placeholder
+                  LayoutBuilder(
+                    builder: (context, c) {
+                      final wide = c.maxWidth >= 1024;
+                      final layout = ChartCardLayout.of(context, c.maxWidth);
+                      final landscape =
+                          layout == ChartCardLayout.compactTitleBeside;
+                      final col = wide
+                          ? 3
+                          : (c.maxWidth >= 800 || landscape ? 2 : 1);
+                      final tileWidth = col == 1
+                          ? c.maxWidth
+                          : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
+                      final rarityCard = RarityChartCard(
+                        stats: stats,
+                        layout: layout,
+                      );
+                      final itemTypeCard = ItemTypeChartCard(
+                        stats: stats,
+                        layout: layout,
+                      );
+                      return Wrap(
+                        spacing: AppSpacing.m,
+                        runSpacing: AppSpacing.m,
+                        children: [
+                          if (col == 1) ...[
+                            SizedBox(width: tileWidth, child: rarityCard),
+                            SizedBox(width: tileWidth, child: itemTypeCard),
+                          ] else
+                            // 兩張圓餅卡同列時等高：精簡版高度跟著圖例列數走，不拉齊會一高一低。
+                            SizedBox(
+                              width: tileWidth * 2 + AppSpacing.m,
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    // 手機橫向的保底列是 6/3/3：第一張寬度要等於主保底卡，中間的縫才對齊（同總覽頁）。
+                                    if (col == 2 && landscape)
+                                      SizedBox(
+                                        width:
+                                            (c.maxWidth - AppSpacing.m * 2) / 2,
+                                        child: rarityCard,
+                                      )
+                                    else
+                                      Expanded(child: rarityCard),
+                                    const SizedBox(width: AppSpacing.m),
+                                    Expanded(child: itemTypeCard),
+                                  ],
                                 ),
                               ),
-                            ],
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppSpacing.xl),
-                      if (fiveStarItems.isNotEmpty) ...[
-                        InlineSectionTitle(
-                          icon: Icons.star_outline,
-                          title: l.rarityOverviewTitle(l.rarityStar(5)),
-                        ),
-                        const SizedBox(height: AppSpacing.s),
-                      ],
-                    ],
-                  ),
-                  // 五星一覽獨立成按列建構的 sliver：數十個圖示一次建好會在捲入的那一幀卡頓。
-                  if (fiveStarItems.isNotEmpty) ...[
-                    SliverFiveStarOverview(items: fiveStarItems),
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: AppSpacing.xl),
-                    ),
-                  ],
-                  SliverList.list(
-                    children: [
-                      _KeepAlive(
-                        child: KeyedSubtree(
-                          key: _recordsTitleKey,
-                          child: InlineSectionTitle(
-                            icon: Icons.table_chart_outlined,
-                            title: l.pageBannerRecordList,
+                            ),
+                          SizedBox(
+                            width: tileWidth,
+                            child: ChartCard(
+                              title: l.timelineTopRarityTitle(
+                                l.rarityStar(primary.rank),
+                                _countAtRank(stats, primary.rank),
+                              ),
+                              icon: Icons.timeline,
+                              legend: const LuckLegend(),
+                              chart: TimelineHorizontal(
+                                entries: buildTimelineEntries(
+                                  records,
+                                  targetRank: primary.rank,
+                                ),
+                                targetRank: primary.rank,
+                                nowPulls: pullsSinceLastRanked(
+                                  records,
+                                  rank: primary.rank,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: AppSpacing.xl),
+                  if (fiveStarItems.isNotEmpty) ...[
+                    InlineSectionTitle(
+                      icon: Icons.star_outline,
+                      title: l.rarityOverviewTitle(l.rarityStar(5)),
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                  ],
+                ],
+              ),
+              // 五星一覽獨立成按列建構的 sliver：數十個圖示一次建好會在捲入的那一幀卡頓。
+              if (fiveStarItems.isNotEmpty) ...[
+                SliverFiveStarOverview(items: fiveStarItems),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xl),
+                ),
+              ],
+              SliverList.list(
+                children: [
+                  _KeepAlive(
+                    child: KeyedSubtree(
+                      key: _recordsTitleKey,
+                      child: InlineSectionTitle(
+                        icon: Icons.table_chart_outlined,
+                        title: l.pageBannerRecordList,
                       ),
-                      const SizedBox(height: AppSpacing.s),
-                      // 加 key：上方「五星一覽」出現或消失會讓索引位移，清單才能依 key 找回原本的狀態。
-                      SearchFilterBar(
-                        key: const ValueKey('banner-search'),
-                        state: filterState,
-                        availableItemTypes: availableItemTypes,
-                        trailing: recordsAsCards
-                            ? RecordSortButton(
-                                sort: filterState.sort,
-                                mainRank: primary.rank,
-                                onTap: cycleSort,
-                              )
-                            : null,
-                        onFilterChanged: (f) => ref
-                            .read(recordFilterProvider(gachaType).notifier)
-                            .setFilter(f),
-                        onClear: () => ref
-                            .read(recordFilterProvider(gachaType).notifier)
-                            .clear(),
-                      ),
-                      const SizedBox(height: AppSpacing.m),
-                      SortableTable(
-                        key: const ValueKey('banner-table'),
-                        rows: sorted,
-                        sort: filterState.sort,
-                        mainRank: primary.rank,
-                        onSortColumnTapped: cycleSort,
-                        showSortButton: !recordsAsCards,
-                        onPageChanged: (_) => _scrollToRecordsTitle(),
-                      ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  // 加 key：上方「五星一覽」出現或消失會讓索引位移，清單才能依 key 找回原本的狀態。
+                  // 清單子項只拿到寬度限制，高度變化不會重建這裡；卡片模式與下方表格用同一個寬度判斷。
+                  LayoutBuilder(
+                    key: const ValueKey('banner-search'),
+                    builder: (context, c) => SearchFilterBar(
+                      state: filterState,
+                      availableItemTypes: availableItemTypes,
+                      trailing: recordListUsesCards(context, c.maxWidth)
+                          ? RecordSortButton(
+                              sort: filterState.sort,
+                              mainRank: primary.rank,
+                              onTap: cycleSort,
+                            )
+                          : null,
+                      onFilterChanged: (f) => ref
+                          .read(recordFilterProvider(gachaType).notifier)
+                          .setFilter(f),
+                      onClear: () => ref
+                          .read(recordFilterProvider(gachaType).notifier)
+                          .clear(),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.m),
+                  SortableTable(
+                    key: const ValueKey('banner-table'),
+                    rows: sorted,
+                    sort: filterState.sort,
+                    mainRank: primary.rank,
+                    onSortColumnTapped: cycleSort,
+                    // 卡片模式的排序按鈕放在上方篩選列。
+                    showSortButton: false,
+                    onPageChanged: (_) => _scrollToRecordsTitle(),
                   ),
                 ],
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          ),
+        ),
+      ],
     );
   }
 
