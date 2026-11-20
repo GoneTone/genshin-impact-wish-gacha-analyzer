@@ -383,7 +383,7 @@
   "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều thiết bị.",
   "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
   "cloudSyncLink": "Liên kết tài khoản Google",
-  "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất uỷ quyền trong trình duyệt...",
+  "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất ủy quyền trong trình duyệt...",
   "cloudSyncAwaitingConsentAndroid": "Vui lòng hoàn tất ủy quyền trong cửa sổ Google...",
   "cloudSyncLinkedAs": "Đã liên kết: {email}",
   "@cloudSyncLinkedAs": {
@@ -396,8 +396,8 @@
   "cloudSyncAutoToggle": "Tự động đồng bộ",
   "cloudSyncAutoToggleHint": "Tự động đồng bộ khi mở ứng dụng và sau khi dữ liệu thay đổi; tắt đi vẫn có thể đồng bộ thủ công.",
   "cloudSyncNow": "Đồng bộ ngay",
-  "cloudSyncUnlink": "Huỷ liên kết",
-  "cloudSyncUnlinkConfirmTitle": "Huỷ liên kết",
+  "cloudSyncUnlink": "Hủy liên kết",
+  "cloudSyncUnlinkConfirmTitle": "Hủy liên kết",
   "cloudSyncUnlinkConfirmBody": "Đồng bộ sẽ dừng lại. Dữ liệu trên máy và bản sao lưu trên đám mây đều được giữ nguyên.",
   "cloudSyncLastSynced": "Đồng bộ lần cuối: {time}",
   "@cloudSyncLastSynced": {
@@ -411,11 +411,11 @@
   "cloudSyncErrorNetwork": "Đồng bộ thất bại: sự cố mạng. Sẽ tự động thử lại.",
   "cloudSyncErrorBusy": "Hoãn đồng bộ: đang có cập nhật hoặc nhập dữ liệu. Sẽ tự động thử lại.",
   "cloudSyncErrorSchemaTooNew": "Đã bỏ qua đồng bộ: dữ liệu trên đám mây được tạo bởi phiên bản ứng dụng mới hơn. Vui lòng cập nhật ứng dụng trước.",
-  "cloudSyncErrorAuthFailed": "Uỷ quyền thất bại. Vui lòng thử lại.",
-  "cloudSyncErrorScopeMissing": "Lần uỷ quyền không bao gồm quyền truy cập Google Drive. Vui lòng liên kết lại và đánh dấu ô dữ liệu Drive trên trang đồng ý của Google.",
-  "cloudSyncReauthRequired": "Uỷ quyền đã hết hạn. Vui lòng liên kết lại tài khoản Google.",
-  "cloudSyncRemoveFromCloud": "Đồng thời xoá tài khoản này khỏi dữ liệu đồng bộ trên đám mây",
-  "cloudSyncPostAuthTitle": "Uỷ quyền hoàn tất",
+  "cloudSyncErrorAuthFailed": "Ủy quyền thất bại. Vui lòng thử lại.",
+  "cloudSyncErrorScopeMissing": "Lần ủy quyền không bao gồm quyền truy cập Google Drive. Vui lòng liên kết lại và đánh dấu ô dữ liệu Drive trên trang đồng ý của Google.",
+  "cloudSyncReauthRequired": "Ủy quyền đã hết hạn. Vui lòng liên kết lại tài khoản Google.",
+  "cloudSyncRemoveFromCloud": "Đồng thời xóa tài khoản này khỏi dữ liệu đồng bộ trên đám mây",
+  "cloudSyncPostAuthTitle": "Ủy quyền hoàn tất",
   "cloudSyncPostAuthBody": "Bạn có thể đóng thẻ này và quay lại ứng dụng.",
   "cloudSyncPostAuthScopeMissingTitle": "Thiếu quyền Google Drive",
   "cloudSyncPostAuthScopeMissingBody": "Ô dữ liệu Google Drive chưa được đánh dấu. Vui lòng quay lại ứng dụng, liên kết lại và đánh dấu quyền đó.",
@@ -593,7 +593,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xoá bộ nhớ đệm hình ảnh vật phẩm cục bộ và tải lại biểu tượng từ HoYoWiki. Ảnh chi tiết sẽ được tải khi bạn mở vật phẩm lần tới. Tuỳ vào số lượng vật phẩm, có thể mất vài phút.",
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa bộ nhớ đệm hình ảnh vật phẩm cục bộ và tải lại biểu tượng từ HoYoWiki. Ảnh chi tiết sẽ được tải khi bạn mở vật phẩm lần tới. Tùy vào số lượng vật phẩm, có thể mất vài phút.",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -621,7 +621,7 @@
   "@confirmRefreshItemDataTitle": {
     "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
   },
-  "confirmRefreshItemDataBody": "Thao tác này sẽ kết nối HoYoWiki để tải lại thông tin chi tiết của tất cả vật phẩm, có thể mất một lúc tuỳ vào số lượng. Ảnh đã tải sẽ được giữ nguyên, không bị xoá.",
+  "confirmRefreshItemDataBody": "Thao tác này sẽ kết nối HoYoWiki để tải lại thông tin chi tiết của tất cả vật phẩm, có thể mất một lúc tùy vào số lượng. Ảnh đã tải sẽ được giữ nguyên, không bị xóa.",
   "@confirmRefreshItemDataBody": {
     "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
   },
@@ -653,19 +653,19 @@
   "@settingsImageCacheFailed": {
     "description": "Shown when scanning cache size fails (e.g. permission denied)."
   },
-  "settingsImageCacheClearFailed": "Không thể xoá ảnh chi tiết",
+  "settingsImageCacheClearFailed": "Không thể xóa ảnh chi tiết",
   "@settingsImageCacheClearFailed": {
     "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
   },
-  "settingsImageCacheClearGallery": "Xoá ảnh chi tiết",
+  "settingsImageCacheClearGallery": "Xóa ảnh chi tiết",
   "@settingsImageCacheClearGallery": {
     "description": "Button label: clear gallery cache (keeps icons)."
   },
-  "confirmClearGalleryCacheTitle": "Xoá ảnh chi tiết?",
+  "confirmClearGalleryCacheTitle": "Xóa ảnh chi tiết?",
   "@confirmClearGalleryCacheTitle": {
     "description": "Confirmation dialog title for clearing gallery cache."
   },
-  "confirmClearGalleryCacheBody": "Khoảng {size} ảnh chi tiết sẽ bị xoá; bộ nhớ đệm biểu tượng được giữ lại. Sẽ tải lại lần tới khi bạn mở chi tiết vật phẩm.",
+  "confirmClearGalleryCacheBody": "Khoảng {size} ảnh chi tiết sẽ bị xóa; bộ nhớ đệm biểu tượng được giữ lại. Sẽ tải lại lần tới khi bạn mở chi tiết vật phẩm.",
   "@confirmClearGalleryCacheBody": {
     "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
     "placeholders": {
@@ -674,7 +674,7 @@
       }
     }
   },
-  "confirmClearGalleryCacheConfirm": "Xoá",
+  "confirmClearGalleryCacheConfirm": "Xóa",
   "@confirmClearGalleryCacheConfirm": {
     "description": "Confirm button label for clearing gallery cache."
   },
