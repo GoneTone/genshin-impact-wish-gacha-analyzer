@@ -5,6 +5,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_ring_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 
+/// [ChartCard] 標準版的預設固定高度（電腦版同列卡片等高用）。
+const double kChartCardHeight = 380;
+
 /// [ChartCard] 的版面：標準（圖在上、圖例在下）與手機精簡（圖例在圓餅側邊）。
 enum ChartCardLayout {
   /// 標準版：固定高度，圖表在上、圖例在下。
@@ -41,7 +44,7 @@ class ChartCard extends StatelessWidget {
     required this.title,
     required this.chart,
     this.legend,
-    this.height = 380,
+    this.height = kChartCardHeight,
     this.icon,
     this.layout = ChartCardLayout.standard,
   });

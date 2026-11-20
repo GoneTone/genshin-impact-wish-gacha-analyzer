@@ -174,111 +174,132 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
 
     final nowOffset = widget.nowPulls != null ? 1 : 0;
 
-    return Stack(
-      children: [
-        // 背景軸線
-        Positioned.fill(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-            child: Center(
-              child: Container(
-                height: 2,
-                color: tokens.textMuted.withValues(alpha: 0.3),
+    /// 第 [index] 欄（含最左的「現在」欄）。
+    Widget columnAt(int index) => index < nowOffset
+        ? _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens)
+        : _EntryColumn(
+            entry: widget.entries[index - nowOffset],
+            targetRank: widget.targetRank,
+            tokens: tokens,
+            isMonthStart: monthStart[index - nowOffset],
+            // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
+            showMonthDivider:
+                monthStart[index - nowOffset] && index > nowOffset,
+          );
+
+    // 帶圖示的欄最高；沒有就取第一筆紀錄（月份標籤帶讓它仍比「現在」欄高）。
+    final iconIndex = widget.entries.indexWhere((e) => e.sourceRecord != null);
+    final tallestIndex = widget.entries.isEmpty
+        ? 0
+        : nowOffset + (iconIndex < 0 ? 0 : iconIndex);
+
+    return LayoutBuilder(
+      builder: (context, constraints) => Stack(
+        children: [
+          // 高度不受限（卡片依內容定高）時，以不繪製的最高欄撐出時間軸高度；
+          // 清單本身是 Positioned.fill，無法自行決定高度。
+          if (!constraints.hasBoundedHeight)
+            Visibility(
+              visible: false,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: SizedBox(
+                width: double.infinity,
+                child: Center(child: columnAt(tallestIndex)),
               ),
             ),
-          ),
-        ),
-        // 內容層 (橫向 scroll)
-        Positioned.fill(
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: const {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.trackpad,
-                PointerDeviceKind.stylus,
-              },
-            ),
-            // 按需建構：五星可能上百欄，整排常駐會讓外層每次捲動都重算所有欄。
-            child: ListView.builder(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
-              itemExtent: _colWidth,
-              itemCount: widget.entries.length + nowOffset,
-              // 包 Center 等同原本 Row 的 crossAxisAlignment.center：
-              // 欄高依內容，月份分隔線長度不變。
-              // 拖曳游標只套在欄上：欄數少時右側空白拖不動，不該顯示左右箭頭游標。
-              itemBuilder: (context, index) => MouseRegion(
-                cursor: SystemMouseCursors.resizeLeftRight,
-                child: Center(
-                  child: index < nowOffset
-                      ? _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens)
-                      : _EntryColumn(
-                          entry: widget.entries[index - nowOffset],
-                          targetRank: widget.targetRank,
-                          tokens: tokens,
-                          isMonthStart: monthStart[index - nowOffset],
-                          // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
-                          showMonthDivider:
-                              monthStart[index - nowOffset] &&
-                              index > nowOffset,
-                        ),
+          // 背景軸線
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+              child: Center(
+                child: Container(
+                  height: 2,
+                  color: tokens.textMuted.withValues(alpha: 0.3),
                 ),
               ),
             ),
           ),
-        ),
-        // 左 fade + 左箭頭
-        if (_hasLeft) ...[
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: _edgeFadeWidth,
-            child: const IgnorePointer(
-              child: ScrollEdgeFade(side: ScrollSide.left),
-            ),
-          ),
-          Positioned(
-            left: 4,
-            top: 0,
-            bottom: 0,
-            child: Center(
-              child: ScrollArrowButton(
-                icon: Icons.chevron_left,
-                tooltip: l.timelineScrollLeft,
-                tokens: tokens,
-                onPressed: () => _scrollBy(-_colWidth),
+          // 內容層 (橫向 scroll)
+          Positioned.fill(
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                dragDevices: const {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                  PointerDeviceKind.stylus,
+                },
+              ),
+              // 按需建構：五星可能上百欄，整排常駐會讓外層每次捲動都重算所有欄。
+              child: ListView.builder(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                itemExtent: _colWidth,
+                itemCount: widget.entries.length + nowOffset,
+                // 包 Center 等同原本 Row 的 crossAxisAlignment.center：
+                // 欄高依內容，月份分隔線長度不變。
+                // 拖曳游標只套在欄上：欄數少時右側空白拖不動，不該顯示左右箭頭游標。
+                itemBuilder: (context, index) => MouseRegion(
+                  cursor: SystemMouseCursors.resizeLeftRight,
+                  child: Center(child: columnAt(index)),
+                ),
               ),
             ),
           ),
-        ],
-        // 右 fade + 右箭頭
-        if (_hasRight) ...[
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: _edgeFadeWidth,
-            child: const IgnorePointer(
-              child: ScrollEdgeFade(side: ScrollSide.right),
-            ),
-          ),
-          Positioned(
-            right: 4,
-            top: 0,
-            bottom: 0,
-            child: Center(
-              child: ScrollArrowButton(
-                icon: Icons.chevron_right,
-                tooltip: l.timelineScrollRight,
-                tokens: tokens,
-                onPressed: () => _scrollBy(_colWidth),
+          // 左 fade + 左箭頭
+          if (_hasLeft) ...[
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: _edgeFadeWidth,
+              child: const IgnorePointer(
+                child: ScrollEdgeFade(side: ScrollSide.left),
               ),
             ),
-          ),
+            Positioned(
+              left: 4,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: ScrollArrowButton(
+                  icon: Icons.chevron_left,
+                  tooltip: l.timelineScrollLeft,
+                  tokens: tokens,
+                  onPressed: () => _scrollBy(-_colWidth),
+                ),
+              ),
+            ),
+          ],
+          // 右 fade + 右箭頭
+          if (_hasRight) ...[
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: _edgeFadeWidth,
+              child: const IgnorePointer(
+                child: ScrollEdgeFade(side: ScrollSide.right),
+              ),
+            ),
+            Positioned(
+              right: 4,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: ScrollArrowButton(
+                  icon: Icons.chevron_right,
+                  tooltip: l.timelineScrollRight,
+                  tokens: tokens,
+                  onPressed: () => _scrollBy(_colWidth),
+                ),
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

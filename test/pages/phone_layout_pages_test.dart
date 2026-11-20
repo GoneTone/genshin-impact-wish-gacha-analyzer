@@ -35,6 +35,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
@@ -914,6 +915,64 @@ void main() {
       expect(tester.getSize(find.byType(RarityChartCard).first).height, 380);
     }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
   }
+
+  /// 橫向時間軸所在的 [ChartCard]。
+  Finder timelineCard() => find.ancestor(
+    of: find.byType(TimelineHorizontal),
+    matching: find.byType(ChartCard),
+  );
+
+  for (final (name, size) in const [
+    ('portrait', Size(360, 800)),
+    ('landscape', Size(914, 411)),
+  ]) {
+    for (final gachaType in const ['301', '2000']) {
+      testWidgets('banner $gachaType timeline card spans the row and fits '
+          'its content on a phone ($name)', (tester) async {
+        await pump(tester, size, BannerPage(gachaType: gachaType));
+        await tester.scrollUntilVisible(
+          find.byType(TimelineHorizontal),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pump();
+        expectNoException(tester);
+        final card = tester.getRect(timelineCard());
+        // 與上方圓餅列同寬：左緣對齊稀有度卡、右緣對齊類型卡。
+        final rarity = find.byType(RarityChartCard, skipOffstage: false);
+        final itemType = find.byType(ItemTypeChartCard, skipOffstage: false);
+        expect(card.left, tester.getTopLeft(rarity).dx);
+        expect(card.right, tester.getTopRight(itemType).dx);
+        expect(card.top, greaterThan(tester.getBottomLeft(itemType).dy));
+        expect(card.height, lessThan(kChartCardHeight - 60));
+        // 時間軸高度貼合欄內容：首個月份標籤就在時間軸頂端，上方沒有空白帶。
+        final l = AppLocalizations.of(tester.element(timelineCard()))!;
+        final timeline = tester.getRect(find.byType(TimelineHorizontal));
+        final label = tester.getRect(
+          find.text(l.timelineMonthLabel('2026', '05')).first,
+        );
+        expect(label.top - timeline.top, lessThan(2));
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
+  }
+
+  testWidgets('banner timeline card shares the pie row on desktop', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const Size(1280, 800),
+      const BannerPage(gachaType: '301'),
+    );
+    expectNoException(tester);
+    final card = tester.getRect(timelineCard());
+    final rarity = tester.getRect(find.byType(RarityChartCard));
+    expect(card.top, rarity.top);
+    expect(card.height, rarity.height);
+    expect(card.height, kChartCardHeight);
+    expect(card.width, rarity.width);
+    expect(card.left, greaterThan(rarity.right));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
   testWidgets('banner page keeps pity and total cards in one row on desktop', (
     tester,
