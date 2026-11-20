@@ -48,6 +48,19 @@ void main() {
     expect(received, 3);
   });
 
+  testWidgets('closing the jump dialog with X keeps the page', (tester) async {
+    int? received;
+    await tester.pumpWidget(
+      _wrap(Pager(page: 1, totalPages: 5, onChanged: (p) => received = p)),
+    );
+    await tester.tap(find.text('2 / 5'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppDialogCloseButton));
+    await tester.pumpAndSettle();
+    expect(find.byType(AppDialog), findsNothing);
+    expect(received, isNull);
+  });
+
   testWidgets('取消跳頁不回呼 onChanged', (tester) async {
     int? received;
     await tester.pumpWidget(
