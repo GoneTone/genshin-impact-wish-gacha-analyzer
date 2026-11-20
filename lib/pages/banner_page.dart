@@ -279,7 +279,7 @@ class _BannerPageState extends ConsumerState<BannerPage> {
                     },
                   ),
 
-                  const SizedBox(height: AppSpacing.l),
+                  const SizedBox(height: AppSpacing.m),
 
                   // Row 2: 兩 Pie + Timeline
                   LayoutBuilder(

@@ -345,7 +345,7 @@ class _OverviewSection extends StatelessWidget {
               },
             ),
 
-            const SizedBox(height: AppSpacing.l),
+            const SizedBox(height: AppSpacing.m),
 
             // Pie row: 稀有度 + 物品類型
             WidthLayoutBuilder(
