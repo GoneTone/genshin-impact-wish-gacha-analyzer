@@ -246,6 +246,63 @@ void main() {
     expect(find.byIcon(Icons.chevron_right), findsNothing);
   });
 
+  testWidgets('only builds the columns near the viewport', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (ctx) => TimelineHorizontal(entries: manyEntries(300), targetRank: 5),
+      ),
+    );
+    expect(find.text('E299'), findsOneWidget);
+    expect(find.text('E0', skipOffstage: false), findsNothing);
+  });
+
+  testWidgets('scroll offset survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: ListView(
+            key: listKey,
+            children: [
+              SizedBox(
+                height: 160,
+                child: TimelineHorizontal(
+                  entries: manyEntries(60),
+                  targetRank: 5,
+                ),
+              ),
+              const SizedBox(height: 5000),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -6000));
+    await tester.pumpAndSettle();
+    expect(find.byType(TimelineHorizontal), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 6000));
+    await tester.pumpAndSettle();
+
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(TimelineHorizontal),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(scrollable.position.pixels, closeTo(180, 0.5));
+  });
+
   testWidgets('tap right arrow → scrolls by one column (90 px)', (
     tester,
   ) async {

@@ -79,8 +79,13 @@ class TimelineHorizontal extends StatefulWidget {
 }
 
 /// State for [TimelineHorizontal]; 管理橫向捲動控制器與邊緣箭頭可見性。
-class _TimelineHorizontalState extends State<TimelineHorizontal> {
-  /// 橫向 [SingleChildScrollView] 的捲動控制器。
+class _TimelineHorizontalState extends State<TimelineHorizontal>
+    with AutomaticKeepAliveClientMixin {
+  /// 放在按需建構的清單裡時，捲出畫面也保留橫向捲動位置。
+  @override
+  bool get wantKeepAlive => true;
+
+  /// 橫向 [ListView] 的捲動控制器。
   late final ScrollController _controller;
 
   /// true 時顯示左側漸隱遮罩與箭頭。
@@ -138,6 +143,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final l = AppLocalizations.of(context)!;
@@ -159,6 +165,8 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
       monthStart.add(prevYearMonth != ym);
       prevYearMonth = ym;
     }
+
+    final nowOffset = widget.nowPulls != null ? 1 : 0;
 
     return Stack(
       children: [
@@ -185,28 +193,37 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
                 PointerDeviceKind.stylus,
               },
             ),
-            child: SingleChildScrollView(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.resizeLeftRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (widget.nowPulls != null)
-                      _NowColumn(nowPulls: widget.nowPulls!, tokens: tokens),
-                    for (var i = 0; i < widget.entries.length; i++)
-                      _EntryColumn(
-                        entry: widget.entries[i],
-                        targetRank: widget.targetRank,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.resizeLeftRight,
+              // 按需建構：五星可能上百欄，整排常駐會讓外層每次捲動都重算所有欄。
+              child: ListView.builder(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                itemExtent: _colWidth,
+                itemCount: widget.entries.length + nowOffset,
+                // 包 Center 等同原本 Row 的 crossAxisAlignment.center：
+                // 欄高依內容，月份分隔線長度不變。
+                itemBuilder: (context, index) {
+                  if (index < nowOffset) {
+                    return Center(
+                      child: _NowColumn(
+                        nowPulls: widget.nowPulls!,
                         tokens: tokens,
-                        isMonthStart: monthStart[i],
-                        // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
-                        showMonthDivider: monthStart[i] && i > 0,
                       ),
-                  ],
-                ),
+                    );
+                  }
+                  final i = index - nowOffset;
+                  return Center(
+                    child: _EntryColumn(
+                      entry: widget.entries[i],
+                      targetRank: widget.targetRank,
+                      tokens: tokens,
+                      isMonthStart: monthStart[i],
+                      // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
+                      showMonthDivider: monthStart[i] && i > 0,
+                    ),
+                  );
+                },
               ),
             ),
           ),
