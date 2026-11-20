@@ -7,6 +7,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizati
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/adb_pairing.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_dialog.dart';
@@ -101,7 +102,7 @@ class _LogAccessSetupPageState extends ConsumerState<LogAccessSetupPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 640),
             child: ListView(
-              padding: EdgeInsets.all(AppSpacing.l),
+              padding: EdgeInsets.all(pagePaddingOf(context)),
               children: switch (s.phase) {
                 PairingPhase.disclosure => _disclosure(l),
                 PairingPhase.grantFailed => _grantFailed(l),

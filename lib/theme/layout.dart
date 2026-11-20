@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/widgets.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+
 /// 手機排版的門檻（dp）：手機作業系統比較短邊、電腦作業系統比較寬度。
 const double kCompactBreakpoint = 600;
 
@@ -17,6 +19,10 @@ bool isCompactLayout(BuildContext context) {
   };
   return (mobileOs ? size.shortestSide : size.width) < kCompactBreakpoint;
 }
+
+/// 頁面內容與螢幕邊緣的留白：手機排版 12dp、其他 16dp，所有頁面共用同一個值。
+double pagePaddingOf(BuildContext context) =>
+    isCompactLayout(context) ? AppSpacing.m : AppSpacing.l;
 
 /// 手機排版的螢幕方向。
 enum PhoneOrientation {

@@ -102,9 +102,7 @@ class _BannerPageState extends ConsumerState<BannerPage> {
 
     if (records.isEmpty) {
       return Padding(
-        padding: EdgeInsets.all(
-          isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
-        ),
+        padding: EdgeInsets.all(pagePaddingOf(context)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -158,7 +156,7 @@ class _BannerPageState extends ConsumerState<BannerPage> {
       index: hoyowikiIndex,
     );
 
-    final pagePadding = isCompactLayout(context) ? AppSpacing.m : AppSpacing.l;
+    final pagePadding = pagePaddingOf(context);
     // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
     void cycleSort(SortColumn col) =>
         ref.read(recordFilterProvider(gachaType).notifier).cycleSort(col);

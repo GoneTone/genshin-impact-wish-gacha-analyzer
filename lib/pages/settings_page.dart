@@ -29,6 +29,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/format_bytes.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
@@ -65,7 +66,7 @@ class SettingsPage extends ConsumerWidget {
     final notifier = ref.read(settingsProvider.notifier);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.l),
+      padding: EdgeInsets.all(pagePaddingOf(context)),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),

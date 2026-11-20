@@ -125,9 +125,7 @@ class OverviewPage extends ConsumerWidget {
       scrollCacheExtent: pageScrollCacheExtent(),
       slivers: [
         SliverPadding(
-          padding: EdgeInsets.all(
-            isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
-          ),
+          padding: EdgeInsets.all(pagePaddingOf(context)),
           sliver: SliverMainAxisGroup(
             slivers: [
               SliverToBoxAdapter(

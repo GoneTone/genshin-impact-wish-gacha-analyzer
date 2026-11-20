@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -422,6 +423,28 @@ void main() {
     );
     expect(tester.getTopLeft(find.byType(PityCard).first).dx, 12);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  // 頁面邊緣留白全 App 一致：手機排版 12、其他 16（與卡池頁、綜合頁相同）。
+  for (final (pageName, page) in [
+    ('settings', const SettingsPage() as Widget),
+    ('contributors', const ContributorsPage()),
+  ]) {
+    for (final (form, size, platform, padding) in const [
+      ('portrait phone', Size(360, 800), TargetPlatform.android, 12.0),
+      ('landscape phone', Size(800, 360), TargetPlatform.android, 12.0),
+      ('desktop', Size(700, 800), TargetPlatform.windows, 16.0),
+    ]) {
+      testWidgets('$pageName page padding is $padding ($form)', (tester) async {
+        await pump(tester, size, page);
+        // 內容上限 720：扣掉留白後還比 720 寬時，卡片會再被置中推開。
+        final centering = math.max(0.0, (size.width - padding * 2 - 720) / 2);
+        expect(
+          tester.getTopLeft(find.byType(SectionCard).first).dx,
+          padding + centering,
+        );
+      }, variant: TargetPlatformVariant.only(platform));
+    }
+  }
 
   for (final (pageName, page) in [
     ('settings', const SettingsPage() as Widget),
