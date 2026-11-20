@@ -817,7 +817,7 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
   }
 }
 
-/// 圖片區底部的頁點：選中者寬 18、主色，其餘 6x6、[GachaTokens.borderEmphasis] 色。
+/// 圖片區底部的頁點：選中者寬 18、主色，其餘 6x6、白色；墊在半透明黑底膠囊上。
 class _PageDots extends StatelessWidget {
   /// 建立 [_PageDots]。
   const _PageDots({required this.count, required this.index});
@@ -831,26 +831,39 @@ class _PageDots extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (var i = 0; i < count; i++)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: AnimatedContainer(
-              key: ValueKey('page-dot-$i'),
-              duration: const Duration(milliseconds: 150),
-              width: i == index ? 18 : 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: i == index
-                    ? theme.colorScheme.primary
-                    : theme.gacha.borderEmphasis,
-                borderRadius: BorderRadius.circular(3),
-              ),
-            ),
+    // 頁點直接疊在圖上，深淺圖都要看得清楚：比照圖上 ⋮ 鈕用半透明黑底，不跟主題變。
+    return Center(
+      child: DecoratedBox(
+        key: const ValueKey('page-dots-scrim'),
+        decoration: ShapeDecoration(
+          color: Colors.black.withValues(alpha: 0.4),
+          shape: const StadiumBorder(),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < count; i++)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: AnimatedContainer(
+                    key: ValueKey('page-dot-$i'),
+                    duration: const Duration(milliseconds: 150),
+                    width: i == index ? 18 : 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: i == index
+                          ? theme.colorScheme.primary
+                          : Colors.white70,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                ),
+            ],
           ),
-      ],
+        ),
+      ),
     );
   }
 }

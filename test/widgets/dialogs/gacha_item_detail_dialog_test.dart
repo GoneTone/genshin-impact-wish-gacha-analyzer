@@ -1456,6 +1456,43 @@ void main() {
         expect(dotWidth(tester, 1), 18);
       });
 
+      /// 第 [i] 個頁點的底色。
+      Color dotColor(WidgetTester tester, int i) =>
+          ((tester
+                      .widget<AnimatedContainer>(
+                        find.byKey(ValueKey('page-dot-$i')),
+                      )
+                      .decoration!
+                  as BoxDecoration)
+              .color)!;
+
+      for (final (name, theme) in [
+        ('light', buildLightTheme()),
+        ('dark', buildDarkTheme()),
+      ]) {
+        testWidgets('page dots sit on a dark pill readable over any image '
+            '($name)', (tester) async {
+          // 頁點直接畫在圖上，深色圖會吃掉 borderEmphasis 色的點；比照 ⋮ 鈕墊半透明黑底。
+          await openImages(tester, theme: theme);
+          final pill = find.byKey(const ValueKey('page-dots-scrim'));
+          expect(pill, findsOneWidget);
+          for (final i in [0, 1]) {
+            expect(
+              find.descendant(
+                of: pill,
+                matching: find.byKey(ValueKey('page-dot-$i')),
+              ),
+              findsOneWidget,
+            );
+          }
+          final decoration =
+              tester.widget<DecoratedBox>(pill).decoration as ShapeDecoration;
+          expect(decoration.color, Colors.black.withValues(alpha: 0.4));
+          expect(dotColor(tester, 0), theme.colorScheme.primary);
+          expect(dotColor(tester, 1), Colors.white70);
+        });
+      }
+
       testWidgets('swiping onto a GIF page shows the GIF', (tester) async {
         final [orig, anim, icon] = await openImages(tester, gif: true);
         expect(dots(), findsNWidgets(3));
