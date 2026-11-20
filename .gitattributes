@@ -11,3 +11,5 @@
 *.woff2 binary
 *.ttf binary
 *.otf binary
+
+*.sh text eol=lf
