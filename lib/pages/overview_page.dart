@@ -119,65 +119,77 @@ class OverviewPage extends ConsumerWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(
-        isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: PageHeader(
-                  title: l.pageOverviewTitle,
-                  icon: Icons.dashboard_outlined,
+    // 按需建構：標題列與區塊內容都是清單裡的獨立項目，畫面外的五星一覽與時間軸不會被建構。
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(
+            isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
+          ),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PageHeader(
+                        title: l.pageOverviewTitle,
+                        icon: Icons.dashboard_outlined,
+                      ),
+                    ),
+                    ShareActionButton(
+                      enabled: activeData.banners.values.any(
+                        (r) => r.isNotEmpty,
+                      ),
+                      onGenerate: () =>
+                          _generateOverviewShare(context, ref, l, activeData),
+                    ),
+                  ],
                 ),
               ),
-              ShareActionButton(
-                enabled: activeData.banners.values.any((r) => r.isNotEmpty),
-                onGenerate: () =>
-                    _generateOverviewShare(context, ref, l, activeData),
+              _OverviewSection(
+                title: l.pageOverviewGachaSection,
+                types: gachaSec.types,
+                banners: gachaSec.banners,
+                stats: gachaSec.stats,
+                bannerColors: bannerColors,
+                statCards: gachaStatCards,
+                emptyTitle: l.emptyNoGachaRecords,
+                timeline: gachaSec.timeline,
+                timelineNowPulls: gachaSec.timelineNowPulls,
+                timelineRank: gachaSec.timelineRank,
+                fiveStarItems: buildFiveStarCollectionAcrossBanners(
+                  gachaSec.banners,
+                  index: ref.watch(hoyowikiIndexProvider),
+                ),
+              ),
+              SliverList.list(
+                children: [
+                  const SizedBox(height: AppSpacing.xxxl),
+                  Divider(
+                    color: Theme.of(context).gacha.borderEmphasis,
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  const SizedBox(height: AppSpacing.xxxl),
+                ],
+              ),
+              _OverviewSection(
+                title: l.pageOverviewOdesSection,
+                types: odesSec.types,
+                banners: odesSec.banners,
+                stats: odesSec.stats,
+                bannerColors: bannerColors,
+                statCards: odesStatCards,
+                emptyTitle: l.emptyNoOdesRecords,
+                timeline: odesSec.timeline,
+                timelineNowPulls: odesSec.timelineNowPulls,
+                timelineRank: odesSec.timelineRank,
               ),
             ],
           ),
-          _OverviewSection(
-            title: l.pageOverviewGachaSection,
-            types: gachaSec.types,
-            banners: gachaSec.banners,
-            stats: gachaSec.stats,
-            bannerColors: bannerColors,
-            statCards: gachaStatCards,
-            emptyTitle: l.emptyNoGachaRecords,
-            timeline: gachaSec.timeline,
-            timelineNowPulls: gachaSec.timelineNowPulls,
-            timelineRank: gachaSec.timelineRank,
-            fiveStarItems: buildFiveStarCollectionAcrossBanners(
-              gachaSec.banners,
-              index: ref.watch(hoyowikiIndexProvider),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          Divider(
-            color: Theme.of(context).gacha.borderEmphasis,
-            height: 1,
-            thickness: 1,
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          _OverviewSection(
-            title: l.pageOverviewOdesSection,
-            types: odesSec.types,
-            banners: odesSec.banners,
-            stats: odesSec.stats,
-            bannerColors: bannerColors,
-            statCards: odesStatCards,
-            emptyTitle: l.emptyNoOdesRecords,
-            timeline: odesSec.timeline,
-            timelineNowPulls: odesSec.timelineNowPulls,
-            timelineRank: odesSec.timelineRank,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -208,7 +220,7 @@ class OverviewPage extends ConsumerWidget {
   }
 }
 
-/// 總覽頁中 gacha 或 odes 的單一段落，包含 stat 卡、圖表與 timeline。
+/// 總覽頁中 gacha 或 odes 的單一段落，包含 stat 卡、圖表與 timeline；以 sliver 回傳，讓每個區塊按需建構。
 class _OverviewSection extends StatelessWidget {
   const _OverviewSection({
     required this.title,
@@ -264,8 +276,7 @@ class _OverviewSection extends StatelessWidget {
     final hasData = banners.values.any((r) => r.isNotEmpty);
 
     if (!hasData) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      return SliverList.list(
         children: [
           InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
           const SizedBox(height: AppSpacing.m),
@@ -274,8 +285,7 @@ class _OverviewSection extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SliverList.list(
       children: [
         InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
         const SizedBox(height: AppSpacing.m),

@@ -132,218 +132,232 @@ class BannerPage extends ConsumerWidget {
       index: hoyowikiIndex,
     );
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(
-        isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: PageHeader(
-                  title: type.resolveName(l),
-                  icon: _iconForGachaType(type),
-                ),
-              ),
-              ShareActionButton(
-                enabled: records.isNotEmpty,
-                onGenerate: () => _generateBannerShare(
-                  context,
-                  ref,
-                  l,
-                  type,
-                  activeData.uid,
-                  activeData.lastUpdated,
-                  records,
-                ),
+    // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(
+            isCompactLayout(context) ? AppSpacing.m : AppSpacing.l,
+          ),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              SliverList.list(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: PageHeader(
+                          title: type.resolveName(l),
+                          icon: _iconForGachaType(type),
+                        ),
+                      ),
+                      ShareActionButton(
+                        enabled: records.isNotEmpty,
+                        onGenerate: () => _generateBannerShare(
+                          context,
+                          ref,
+                          l,
+                          type,
+                          activeData.uid,
+                          activeData.lastUpdated,
+                          records,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
+                  LayoutBuilder(
+                    builder: (context, c) {
+                      final wide = c.maxWidth >= 1024;
+                      final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+                      final primaryCard = PityCard(
+                        label: l.pityRank(l.rarityStar(primary.rank)),
+                        rank: primary.rank,
+                        pity: primaryPityData,
+                        accent: accentForRank(primary.rank, tokens),
+                        isEndedPool: isEndedPool,
+                      );
+                      final secondaryCard =
+                          (secondary == null || secondaryPityData == null)
+                          ? null
+                          : PityCard(
+                              label: l.pityRank(l.rarityStar(secondary.rank)),
+                              rank: secondary.rank,
+                              pity: secondaryPityData,
+                              accent: accentForRank(secondary.rank, tokens),
+                              isEndedPool: isEndedPool,
+                            );
+                      final totalCard = StatCard(
+                        label: l.statsTotal,
+                        value: '${stats.total}',
+                        accent: tokens.accentPrimary,
+                      );
+
+                      if (wide) {
+                        return IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(flex: 6, child: primaryCard),
+                              if (secondaryCard != null) ...[
+                                const SizedBox(width: AppSpacing.m),
+                                Expanded(flex: 3, child: secondaryCard),
+                              ],
+                              const SizedBox(width: AppSpacing.m),
+                              Expanded(flex: 3, child: totalCard),
+                            ],
+                          ),
+                        );
+                      }
+                      if (mid) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            primaryCard,
+                            const SizedBox(height: AppSpacing.m),
+                            IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (secondaryCard != null) ...[
+                                    Expanded(child: secondaryCard),
+                                    const SizedBox(width: AppSpacing.m),
+                                  ],
+                                  Expanded(child: totalCard),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          primaryCard,
+                          const SizedBox(height: AppSpacing.m),
+                          if (secondaryCard != null) ...[
+                            secondaryCard,
+                            const SizedBox(height: AppSpacing.m),
+                          ],
+                          totalCard,
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: AppSpacing.l),
+
+                  // Row 2: 兩 Pie + Timeline placeholder
+                  LayoutBuilder(
+                    builder: (context, c) {
+                      final wide = c.maxWidth >= 1024;
+                      final col = wide ? 3 : (c.maxWidth >= 800 ? 2 : 1);
+                      final tileWidth = col == 1
+                          ? c.maxWidth
+                          : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
+                      return Wrap(
+                        spacing: AppSpacing.m,
+                        runSpacing: AppSpacing.m,
+                        children: [
+                          SizedBox(
+                            width: tileWidth,
+                            child: ChartCard(
+                              title: l.statsRarityDistribution,
+                              icon: Icons.pie_chart_outline,
+                              chart: RarityPie(stats: stats),
+                              legend: DistributionLegend(
+                                entries: rarityDistributionEntries(
+                                  stats,
+                                  tokens,
+                                  l,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: tileWidth,
+                            child: ChartCard(
+                              title: l.statsItemTypeDistribution,
+                              icon: Icons.donut_small_outlined,
+                              chart: ItemTypePie(stats: stats),
+                              legend: DistributionLegend(
+                                entries: itemTypeDistributionEntries(
+                                  stats,
+                                  Theme.of(context).brightness,
+                                  l,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: tileWidth,
+                            child: ChartCard(
+                              title: l.timelineTopRarityTitle(
+                                l.rarityStar(primary.rank),
+                                _countAtRank(stats, primary.rank),
+                              ),
+                              icon: Icons.timeline,
+                              legend: const LuckLegend(),
+                              chart: TimelineHorizontal(
+                                entries: buildTimelineEntries(
+                                  records,
+                                  targetRank: primary.rank,
+                                ),
+                                targetRank: primary.rank,
+                                nowPulls: pullsSinceLastRanked(
+                                  records,
+                                  rank: primary.rank,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: AppSpacing.xl),
+                  if (fiveStarItems.isNotEmpty) ...[
+                    InlineSectionTitle(
+                      icon: Icons.star_outline,
+                      title: l.rarityOverviewTitle(l.rarityStar(5)),
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    FiveStarOverview(items: fiveStarItems),
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                  InlineSectionTitle(
+                    icon: Icons.table_chart_outlined,
+                    title: l.pageBannerRecordList,
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  SearchFilterBar(
+                    state: filterState,
+                    availableItemTypes: availableItemTypes,
+                    onFilterChanged: (f) => ref
+                        .read(recordFilterProvider(gachaType).notifier)
+                        .setFilter(f),
+                    onClear: () => ref
+                        .read(recordFilterProvider(gachaType).notifier)
+                        .clear(),
+                  ),
+                  const SizedBox(height: AppSpacing.m),
+                  SortableTable(
+                    rows: sorted,
+                    sort: filterState.sort,
+                    mainRank: primary.rank,
+                    onSortColumnTapped: (col) => ref
+                        .read(recordFilterProvider(gachaType).notifier)
+                        .cycleSort(col),
+                  ),
+                ],
               ),
             ],
           ),
-
-          // Row 1: 三聯 Stat 卡（主 / 副保底用 PityCard，總抽數用 StatCard）
-          LayoutBuilder(
-            builder: (context, c) {
-              final wide = c.maxWidth >= 1024;
-              final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-
-              final primaryCard = PityCard(
-                label: l.pityRank(l.rarityStar(primary.rank)),
-                rank: primary.rank,
-                pity: primaryPityData,
-                accent: accentForRank(primary.rank, tokens),
-                isEndedPool: isEndedPool,
-              );
-              final secondaryCard =
-                  (secondary == null || secondaryPityData == null)
-                  ? null
-                  : PityCard(
-                      label: l.pityRank(l.rarityStar(secondary.rank)),
-                      rank: secondary.rank,
-                      pity: secondaryPityData,
-                      accent: accentForRank(secondary.rank, tokens),
-                      isEndedPool: isEndedPool,
-                    );
-              final totalCard = StatCard(
-                label: l.statsTotal,
-                value: '${stats.total}',
-                accent: tokens.accentPrimary,
-              );
-
-              if (wide) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(flex: 6, child: primaryCard),
-                      if (secondaryCard != null) ...[
-                        const SizedBox(width: AppSpacing.m),
-                        Expanded(flex: 3, child: secondaryCard),
-                      ],
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(flex: 3, child: totalCard),
-                    ],
-                  ),
-                );
-              }
-              if (mid) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    primaryCard,
-                    const SizedBox(height: AppSpacing.m),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (secondaryCard != null) ...[
-                            Expanded(child: secondaryCard),
-                            const SizedBox(width: AppSpacing.m),
-                          ],
-                          Expanded(child: totalCard),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  primaryCard,
-                  const SizedBox(height: AppSpacing.m),
-                  if (secondaryCard != null) ...[
-                    secondaryCard,
-                    const SizedBox(height: AppSpacing.m),
-                  ],
-                  totalCard,
-                ],
-              );
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.l),
-
-          // Row 2: 兩 Pie + Timeline placeholder
-          LayoutBuilder(
-            builder: (context, c) {
-              final wide = c.maxWidth >= 1024;
-              final col = wide ? 3 : (c.maxWidth >= 800 ? 2 : 1);
-              final tileWidth = col == 1
-                  ? c.maxWidth
-                  : (c.maxWidth - AppSpacing.m * (col - 1)) / col;
-              return Wrap(
-                spacing: AppSpacing.m,
-                runSpacing: AppSpacing.m,
-                children: [
-                  SizedBox(
-                    width: tileWidth,
-                    child: ChartCard(
-                      title: l.statsRarityDistribution,
-                      icon: Icons.pie_chart_outline,
-                      chart: RarityPie(stats: stats),
-                      legend: DistributionLegend(
-                        entries: rarityDistributionEntries(stats, tokens, l),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: tileWidth,
-                    child: ChartCard(
-                      title: l.statsItemTypeDistribution,
-                      icon: Icons.donut_small_outlined,
-                      chart: ItemTypePie(stats: stats),
-                      legend: DistributionLegend(
-                        entries: itemTypeDistributionEntries(
-                          stats,
-                          Theme.of(context).brightness,
-                          l,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: tileWidth,
-                    child: ChartCard(
-                      title: l.timelineTopRarityTitle(
-                        l.rarityStar(primary.rank),
-                        _countAtRank(stats, primary.rank),
-                      ),
-                      icon: Icons.timeline,
-                      legend: const LuckLegend(),
-                      chart: TimelineHorizontal(
-                        entries: buildTimelineEntries(
-                          records,
-                          targetRank: primary.rank,
-                        ),
-                        targetRank: primary.rank,
-                        nowPulls: pullsSinceLastRanked(
-                          records,
-                          rank: primary.rank,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-
-          const SizedBox(height: AppSpacing.xl),
-          if (fiveStarItems.isNotEmpty) ...[
-            InlineSectionTitle(
-              icon: Icons.star_outline,
-              title: l.rarityOverviewTitle(l.rarityStar(5)),
-            ),
-            const SizedBox(height: AppSpacing.s),
-            FiveStarOverview(items: fiveStarItems),
-            const SizedBox(height: AppSpacing.xl),
-          ],
-          InlineSectionTitle(
-            icon: Icons.table_chart_outlined,
-            title: l.pageBannerRecordList,
-          ),
-          const SizedBox(height: AppSpacing.s),
-          SearchFilterBar(
-            state: filterState,
-            availableItemTypes: availableItemTypes,
-            onFilterChanged: (f) =>
-                ref.read(recordFilterProvider(gachaType).notifier).setFilter(f),
-            onClear: () =>
-                ref.read(recordFilterProvider(gachaType).notifier).clear(),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          SortableTable(
-            rows: sorted,
-            sort: filterState.sort,
-            mainRank: primary.rank,
-            onSortColumnTapped: (col) => ref
-                .read(recordFilterProvider(gachaType).notifier)
-                .cycleSort(col),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
