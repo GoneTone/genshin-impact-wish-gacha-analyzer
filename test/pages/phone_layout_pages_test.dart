@@ -569,6 +569,44 @@ void main() {
     variant: TargetPlatformVariant.only(TargetPlatform.android),
   );
 
+  testWidgets('banner filter bar is kept alive when scrolled out of view', (
+    tester,
+  ) async {
+    // 篩選列包在 LayoutBuilder 裡建構，捲出可視範圍後仍要保留原本的 State（輸入框內容、計時器）。
+    await pump(
+      tester,
+      const Size(360, 800),
+      const BannerPage(gachaType: '301'),
+      records: [
+        for (var i = 0; i < 60; i++)
+          GachaRecord(
+            id: '${6000 + i}',
+            uid: '701000000',
+            gachaType: '301',
+            rankType: 3,
+            itemType: '武器',
+            name: 'Item $i',
+            time: DateTime(2026, 5, 1).subtract(Duration(hours: i)),
+            lang: 'zh-tw',
+          ),
+      ],
+    );
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.byType(SearchFilterBar),
+      300,
+      scrollable: scrollable,
+    );
+    final bar = tester.state(find.byType(SearchFilterBar));
+    await tester.drag(scrollable, const Offset(0, -3000));
+    await tester.pumpAndSettle();
+    expect(find.byType(SearchFilterBar), findsNothing);
+    expect(
+      tester.state(find.byType(SearchFilterBar, skipOffstage: false)),
+      same(bar),
+    );
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
   testWidgets('changing the record page scrolls back to the list title', (
     tester,
   ) async {
