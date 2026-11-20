@@ -42,7 +42,7 @@ class DistributionLegend extends StatelessWidget {
   /// true:全部顯示 — 適合純色彩說明(如時間軸卡池色票)
   final bool showAllEntries;
 
-  /// true：窄欄用的精簡版，件數與百分比欄寬縮小並隨字級縮放。
+  /// true：窄欄用的精簡版，件數與百分比欄寬縮小並隨字級縮放；名稱放不下時數字改排到下一行。
   final bool compact;
 
   @override
@@ -58,6 +58,57 @@ class DistributionLegend extends StatelessWidget {
         ? entries
         : entries.where((e) => e.count > 0).toList(growable: false);
 
+    final nameStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: tokens.textPrimary,
+    );
+
+    /// [e] 的色塊與名稱；名稱超過可用寬度時才換行。
+    Widget swatchAndName(DistributionEntry e) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: e.color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.s),
+        Flexible(child: Text(e.name, style: nameStyle)),
+      ],
+    );
+
+    /// [e] 的件數與百分比，各自靠右對齊在固定寬度欄內。
+    Widget countAndRate(DistributionEntry e) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: countWidth,
+          child: Text(
+            '${e.count}',
+            textAlign: TextAlign.right,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textPrimary,
+              fontFeatures: kTabularFigures,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.s),
+        SizedBox(
+          width: rateWidth,
+          child: Text(
+            '${(e.rate * 100).toStringAsFixed(2)}%',
+            textAlign: TextAlign.right,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textMuted,
+              fontFeatures: kTabularFigures,
+            ),
+          ),
+        ),
+      ],
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -65,50 +116,19 @@ class DistributionLegend extends StatelessWidget {
         for (final e in visible)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Row(
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: e.color,
-                    borderRadius: BorderRadius.circular(2),
+            // 精簡版名稱欄很窄，放大字級時長名稱會逐字斷行；整列放不下就把數字移到名稱下一行。
+            // 用 OverflowBar 而非 LayoutBuilder：橫向圓餅卡外層有 IntrinsicHeight。
+            child: compact
+                ? OverflowBar(
+                    alignment: MainAxisAlignment.spaceBetween,
+                    children: [swatchAndName(e), countAndRate(e)],
+                  )
+                : Row(
+                    children: [
+                      Expanded(child: swatchAndName(e)),
+                      countAndRate(e),
+                    ],
                   ),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: Text(
-                    e.name,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: tokens.textPrimary,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: countWidth,
-                  child: Text(
-                    '${e.count}',
-                    textAlign: TextAlign.right,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: tokens.textPrimary,
-                      fontFeatures: kTabularFigures,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                SizedBox(
-                  width: rateWidth,
-                  child: Text(
-                    '${(e.rate * 100).toStringAsFixed(2)}%',
-                    textAlign: TextAlign.right,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: tokens.textMuted,
-                      fontFeatures: kTabularFigures,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
       ],
     );

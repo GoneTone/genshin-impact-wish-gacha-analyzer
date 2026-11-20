@@ -139,5 +139,68 @@ void main() {
         expect(tester.getSize(find.text('12345')).height, lineHeight);
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     }
+
+    // 360dp 手機直向的精簡圓餅卡：360 − 頁面內距 12×2 − 卡片內距 12×2 − 圓餅 112 − 間距 12。
+    const phoneLegendWidth = 188.0;
+
+    for (final (lang, name) in [
+      ('en', 'Character'),
+      ('ja', 'キャラクター'),
+      ('fr', 'Personnage'),
+    ]) {
+      testWidgets('long name stays on one line at 360dp and 1.3x ($lang)', (
+        tester,
+      ) async {
+        // 名稱欄只剩約 30dp 時會逐字斷行；放不下就把件數與百分比移到名稱下一行。
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: buildDarkTheme(),
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: phoneLegendWidth,
+                  child: DistributionLegend(
+                    compact: true,
+                    entries: [
+                      DistributionEntry(
+                        color: const Color(0xFF7EC0D8),
+                        name: name,
+                        count: 1234,
+                        rate: 0.6543,
+                      ),
+                      const DistributionEntry(
+                        color: Color(0xFFE6C389),
+                        name: '5★',
+                        count: 56,
+                        rate: 0.3457,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(tester.takeException(), isNull);
+        final lineHeight = tester.getSize(find.text('1234')).height;
+        expect(tester.getSize(find.text(name)).height, lineHeight);
+        expect(find.text('65.43%'), findsOneWidget);
+        expect(
+          tester.getTopLeft(find.text('1234')).dy,
+          greaterThanOrEqualTo(tester.getBottomLeft(find.text(name)).dy),
+        );
+        // 放得下的列維持原本的單行排法：數字靠右、與名稱同一行。
+        final short = tester.getRect(find.text('5★'));
+        final count = tester.getRect(find.text('56'));
+        expect(count.center.dy, closeTo(short.center.dy, 1));
+        expect(
+          tester.getRect(find.text('34.57%')).right,
+          closeTo(phoneLegendWidth, 0.5),
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
   });
 }
