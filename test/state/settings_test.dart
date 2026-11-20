@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
@@ -97,6 +98,29 @@ void main() {
     await container.read(settingsProvider.notifier).setUidAlias('A', '主帳');
     await container.read(settingsProvider.notifier).setUidAlias('A', null);
     expect(container.read(settingsProvider).uidAliases, isEmpty);
+  });
+
+  test('setUidAlias 別名沒變時不寫入也不記 log', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setUidAlias('A', 'Main');
+
+    Logger.root.level = Level.ALL;
+    final logs = <String>[];
+    final sub = Logger.root.onRecord.listen((r) => logs.add(r.message));
+    addTearDown(sub.cancel);
+    final before = container.read(settingsProvider);
+
+    await notifier.setUidAlias('A', '  Main ');
+    await notifier.setUidAlias('B', '   ');
+    await notifier.setUidAlias('B', null);
+    expect(logs, isEmpty);
+    expect(container.read(settingsProvider), same(before));
+
+    await notifier.setUidAlias('A', 'Alt');
+    expect(logs, hasLength(1));
   });
 
   test('setUidOrder 寫入並持久化', () async {

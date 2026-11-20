@@ -70,14 +70,16 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await SettingsStorage.save(state);
   }
 
-  /// 設定指定 UID 的別名；[alias] 為 null 或空白時刪除別名。
+  /// 設定指定 UID 的別名；[alias] 為 null 或空白時刪除別名，與現值相同時不寫入。
   Future<void> setUidAlias(String uid, String? alias) async {
     final trimmed = alias?.trim();
+    final value = trimmed == null || trimmed.isEmpty ? null : trimmed;
+    if (state.uidAliases[uid] == value) return;
     final next = Map<String, String>.from(state.uidAliases);
-    if (trimmed == null || trimmed.isEmpty) {
+    if (value == null) {
       next.remove(uid);
     } else {
-      next[uid] = trimmed;
+      next[uid] = value;
     }
     state = state.copyWith(uidAliases: next);
     await SettingsStorage.save(state);
