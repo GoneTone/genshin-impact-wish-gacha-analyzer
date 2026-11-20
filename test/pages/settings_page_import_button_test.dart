@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/settings_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
@@ -69,14 +71,19 @@ Widget _wrap(ProviderContainer container) => UncontrolledProviderScope(
   ),
 );
 
+/// 最近一次選檔對話框收到的標題。
+String? openTitle;
+
 void main() {
   late Directory tempDir;
 
   setUp(() async {
+    openTitle = null;
     tempDir = await Directory.systemTemp.createTemp('settings_import_btn_');
   });
 
   tearDown(() async {
+    resetFileAccessSeams();
     if (await tempDir.exists()) await tempDir.delete(recursive: true);
   });
 
@@ -132,4 +139,54 @@ void main() {
       reason: 'progress 非 null 時匯入按鈕應 disabled',
     );
   });
+
+  /// 以 [bytes] 當選檔內容，點擊 [buttonText] 並等流程跑完。
+  Future<AppLocalizations> tapImportWith(
+    WidgetTester tester,
+    Uint8List bytes,
+    String buttonText,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(
+        storage: GachaStorage(tempDir),
+        tempDir: tempDir,
+      );
+    });
+    addTearDown(container.dispose);
+    fileOpenDialog = (_, title) async {
+      openTitle = title;
+      return bytes;
+    };
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    final btn = find.widgetWithText(OutlinedButton, buttonText);
+    await tester.ensureVisible(btn);
+    await tester.tap(btn);
+    await tester.pumpAndSettle();
+    return AppLocalizations.of(tester.element(find.byType(SettingsPage)))!;
+  }
+
+  testWidgets('import dialog gets the localized open title', (tester) async {
+    final l = await tapImportWith(tester, Uint8List.fromList([0xff]), '匯入資料');
+    expect(openTitle, l.dialogOpenTitle);
+  });
+
+  testWidgets(
+    'importing a backup with invalid UTF-8 shows the unreadable message',
+    (tester) async {
+      final l = await tapImportWith(
+        tester,
+        Uint8List.fromList([0xff, 0xfe, 0xfd]),
+        '匯入資料',
+      );
+
+      expect(
+        find.text(l.settingsImportFailed(l.importReasonUnreadable)),
+        findsOneWidget,
+      );
+    },
+  );
 }

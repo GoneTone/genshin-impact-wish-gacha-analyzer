@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
@@ -180,14 +178,4 @@ void main() {
     );
     expect(() => importAccounts(text), throwsA(isA<ForeignBundleException>()));
   });
-
-  test(
-    'Android 選檔回傳的 XFile.fromData 以 UTF-8 讀出別名（防 cross_file 亂碼回歸）',
-    () async {
-      final text = await XFile.fromData(
-        Uint8List.fromList(utf8.encode('{"alias": "我的帳號"}')),
-      ).readAsString();
-      expect(jsonDecode(text), {'alias': '我的帳號'});
-    },
-  );
 }

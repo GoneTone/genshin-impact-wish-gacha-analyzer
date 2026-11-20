@@ -31,12 +31,13 @@ final _entries = [
 // 用 file-level 變數捕捉 dialog 結果。每個 test 跑前 _open 會重置。
 // 直接從 async _open return Future 會被 Dart auto-unwrap，所以採用
 // 捕捉變數模式（同 test/widgets/dialogs/confirm_dialog_test.dart）。
-List<String>? _result;
+({List<String> uids, bool secondary})? _result;
 bool _completed = false;
 
 Future<void> _open(
   WidgetTester tester, {
   List<AccountPickerEntry>? entries,
+  String? secondaryConfirmLabel,
 }) async {
   _result = null;
   _completed = false;
@@ -57,6 +58,7 @@ Future<void> _open(
                     title: '選擇要匯出的帳號',
                     confirmLabel: '匯出',
                     entries: entries ?? _entries,
+                    secondaryConfirmLabel: secondaryConfirmLabel,
                   );
                   _completed = true;
                 },
@@ -192,7 +194,8 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '匯出'));
     await tester.pumpAndSettle();
     expect(_completed, isTrue);
-    expect(_result, ['100000001', '100000003']);
+    expect(_result?.uids, ['100000001', '100000003']);
+    expect(_result?.secondary, isFalse);
   });
 
   testWidgets('confirm returns all UIDs when nothing toggled', (tester) async {
@@ -200,7 +203,21 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, '匯出'));
     await tester.pumpAndSettle();
     expect(_completed, isTrue);
-    expect(_result, ['100000001', '100000002', '100000003']);
+    expect(_result?.uids, ['100000001', '100000002', '100000003']);
+  });
+
+  testWidgets('secondary button returns secondary == true', (tester) async {
+    await _open(tester, secondaryConfirmLabel: '分享');
+    expect(find.widgetWithText(FilledButton, '匯出'), findsOneWidget);
+    await tester.tap(find.widgetWithText(OutlinedButton, '分享'));
+    await tester.pumpAndSettle();
+    expect(_result?.secondary, isTrue);
+    expect(_result?.uids, ['100000001', '100000002', '100000003']);
+  });
+
+  testWidgets('no secondary button unless a label is given', (tester) async {
+    await _open(tester);
+    expect(find.byType(OutlinedButton), findsNothing);
   });
 
   testWidgets('action buttons render with icons', (tester) async {
