@@ -5,7 +5,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_node.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
@@ -15,18 +17,13 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_afforda
 /// 每個時間軸欄的固定寬度。
 const double _colWidth = 90;
 
-/// 節點內圓直徑。
-const double _nodeSize = 14;
-
-/// 節點外圍 halo（觸控熱區）直徑。
-const double _haloSize = 22;
-
-/// 月份標籤帶高度。每欄頂部保留此高（組首填年/月、其餘留白），底部以等高
-/// spacer 對稱補回，使節點 y 不因標籤帶位移、仍對齊背景軸線。
-const double _monthBandHeight = 26;
-
 /// 邊緣漸隱遮罩的寬度。
 const double _edgeFadeWidth = 32;
+
+/// 月份標籤帶高度。每欄頂部保留此高（首欄填標籤、其餘留白），底部以等高
+/// spacer 對稱補回，使節點 y 不因標籤帶位移、仍對齊背景軸線。標籤靠上對齊，
+/// 多出的高度成為標籤與下方名稱之間的間隔。
+const double _monthBandHeight = 26;
 
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
 /// [DistributionLegend] (記得搭配 `showAllEntries: true`) 的條目,作為
@@ -71,7 +68,7 @@ class TimelineHorizontal extends StatefulWidget {
   /// 要顯示的時間軸條目（由新到舊排序）。
   final List<TimelineEntry> entries;
 
-  /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案及歐非色計算。
+  /// 該卡池萃取的稀有度（5 或 4）。用於「暫無 N★ 紀錄」文案。
   final int targetRank;
 
   /// 傳入時在時間軸最左端加入「現在」欄，值為距上次目標稀有度的抽數。
@@ -205,6 +202,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal> {
                         targetRank: widget.targetRank,
                         tokens: tokens,
                         isMonthStart: monthStart[i],
+                        // 月份交界畫分隔線；最左欄（最新月份起點）不畫。
                         showMonthDivider: monthStart[i] && i > 0,
                       ),
                   ],
@@ -293,19 +291,13 @@ class _EntryColumn extends StatelessWidget {
   /// 是否在左側畫月份分隔線（月份交界、且非最左欄時為 true）。
   final bool showMonthDivider;
 
-  /// 將 [DateTime] 格式化為 `MM/dd` 字串。
-  static String _formatShortDate(DateTime t) {
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${two(t.month)}/${two(t.day)}';
-  }
-
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final rank = entry.sourceRecord?.rankType ?? targetRank;
     final pity = pityThresholdFor(entry.gachaType, rank);
     final tier = luckTierFor(entry.pullsSincePrev, pity);
     final luck = luckColorFor(tier, tokens);
-    final l = AppLocalizations.of(context)!;
     final monthLabel = isMonthStart
         ? l.timelineMonthLabel(
             entry.time.year.toString(),
@@ -316,6 +308,7 @@ class _EntryColumn extends StatelessWidget {
       message: entry.name,
       preferBelow: false,
       waitDuration: const Duration(milliseconds: 100),
+      // 左框線畫在欄寬之外，分隔線欄實寬 _colWidth + 1。
       child: Container(
         decoration: showMonthDivider
             ? BoxDecoration(
@@ -328,7 +321,7 @@ class _EntryColumn extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 月份標籤帶（組首填年/月，其餘留白佔位）。
+              // 月份標籤帶（首欄填年/月，其餘留白佔位）。
               SizedBox(
                 height: _monthBandHeight,
                 child: monthLabel == null
@@ -384,7 +377,7 @@ class _EntryColumn extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: AppSpacing.xs),
-              _Node(color: luck, tokens: tokens),
+              TimelineNode(color: luck, tokens: tokens),
               const SizedBox(height: AppSpacing.xs),
               Text.rich(
                 TextSpan(
@@ -394,7 +387,7 @@ class _EntryColumn extends StatelessWidget {
                     fontFeatures: kTabularFigures,
                   ),
                   children: [
-                    TextSpan(text: '${_formatShortDate(entry.time)} · '),
+                    TextSpan(text: '${formatShortMonthDay(entry.time)} · '),
                     TextSpan(
                       text: l.timelineSinceLast(entry.pullsSincePrev),
                       style: TextStyle(color: luck),
@@ -405,7 +398,7 @@ class _EntryColumn extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
-              // 對稱補回標籤帶高度，使節點維持原垂直中心、對齊軸線。
+              // 對稱補回標籤帶高度，使節點維持在原垂直中心、對齊軸線。
               const SizedBox(height: _monthBandHeight),
             ],
           ),
@@ -445,7 +438,11 @@ class _NowColumn extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          _Node(color: tokens.accentPrimary, tokens: tokens, hollow: true),
+          TimelineNode(
+            color: tokens.accentPrimary,
+            tokens: tokens,
+            hollow: true,
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             l.timelineNowPulls(nowPulls),
@@ -458,42 +455,6 @@ class _NowColumn extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// 節點圓:外圍 halo + 內圓。`hollow=true` 時內圓填容器底色看起來只剩 border。
-class _Node extends StatelessWidget {
-  const _Node({required this.color, required this.tokens, this.hollow = false});
-
-  /// 節點與 halo 的主色。
-  final Color color;
-
-  /// 主題 token，用於取得 [GachaTokens.surfaceCard]（hollow 填色）。
-  final GachaTokens tokens;
-
-  /// true 時內圓填 surfaceCard 使節點看起來只有邊框，用於「現在」節點。
-  final bool hollow;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _haloSize,
-      height: _haloSize,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color.withValues(alpha: 0.25),
-      ),
-      child: Container(
-        width: _nodeSize,
-        height: _nodeSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: hollow ? tokens.surfaceCard : color,
-          border: Border.all(color: color, width: 2),
-        ),
       ),
     );
   }

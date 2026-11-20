@@ -13,6 +13,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
+
+import '../../helpers/timeline_geometry.dart';
 
 TimelineEntry _e(String name, String gachaType, int pulls, DateTime time) =>
     TimelineEntry(
@@ -826,4 +829,92 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 3));
     }
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('showLuckLegend 時沒有記錄也沒有「現在」仍顯示圖例', (tester) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: const [],
+      targetRank: 5,
+      showLuckLegend: true,
+    );
+    expect(find.byType(LuckLegend), findsOneWidget);
+  });
+
+  for (final fillHeight in [false, true]) {
+    testWidgets('vertical timeline geometry is unchanged by the refactor '
+        '(fillHeight: $fillHeight)', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          (ctx, colors) => SizedBox(
+            height: fillHeight ? 700 : null,
+            child: TimelineVertical(
+              entries: [
+                _e('夜蘭', '301', 87, DateTime(2026, 1, 5)),
+                _e('流浪者', '301', 74, DateTime(2026, 1, 2)),
+                _e('納西妲', '301', 40, DateTime(2025, 12, 20)),
+                _e('魈', '200', 90, DateTime(2025, 11, 30)),
+                _e('刻晴', '302', 62, DateTime(2025, 11, 3)),
+              ],
+              colors: colors,
+              targetRank: 5,
+              nowPulls: 28,
+              isAcrossBanners: true,
+              showLuckLegend: true,
+              fillHeight: fillHeight,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      final actual = timelineGeometry(
+        tester,
+        find.byType(TimelineVertical),
+        exclude: find.byType(LuckLegend),
+      );
+      // 數值錄自重構前的原程式；圖例（Task 3 會改）不列入。
+      expect(actual, <(String, Rect)>[
+        ('Now', const Rect.fromLTRB(131.0, 19.0, 173.75, 39.0)),
+        (
+          '28 pulls since last 5★ across banners',
+          const Rect.fromLTRB(131.0, 41.0, 583.0, 75.0),
+        ),
+        ('01 / 2026', const Rect.fromLTRB(17.0, 103.0, 89.0, 119.0)),
+        ('夜蘭', const Rect.fromLTRB(131.0, 101.0, 159.5, 121.0)),
+        (
+          '01/05 · Character Event Wish · 87 pulls',
+          const Rect.fromLTRB(131.0, 123.0, 583.0, 157.0),
+        ),
+        ('流浪者', const Rect.fromLTRB(131.0, 171.0, 173.75, 191.0)),
+        (
+          '01/02 · Character Event Wish · 74 pulls',
+          const Rect.fromLTRB(131.0, 193.0, 583.0, 227.0),
+        ),
+        ('12 / 2025', const Rect.fromLTRB(17.0, 255.0, 89.0, 271.0)),
+        ('納西妲', const Rect.fromLTRB(131.0, 253.0, 173.75, 273.0)),
+        (
+          '12/20 · Character Event Wish · 40 pulls',
+          const Rect.fromLTRB(131.0, 275.0, 583.0, 309.0),
+        ),
+        ('11 / 2025', const Rect.fromLTRB(17.0, 337.0, 89.0, 353.0)),
+        ('魈', const Rect.fromLTRB(131.0, 335.0, 145.25, 355.0)),
+        (
+          '11/30 · Standard Wish · 90 pulls',
+          const Rect.fromLTRB(131.0, 357.0, 523.0, 374.0),
+        ),
+        ('刻晴', const Rect.fromLTRB(131.0, 388.0, 159.5, 408.0)),
+        (
+          '11/03 · Weapon Event Wish · 62 pulls',
+          const Rect.fromLTRB(131.0, 410.0, 572.0, 427.0),
+        ),
+        ('node', const Rect.fromLTRB(97.0, 17.0, 119.0, 39.0)),
+        ('node', const Rect.fromLTRB(97.0, 99.0, 119.0, 121.0)),
+        ('node', const Rect.fromLTRB(97.0, 169.0, 119.0, 191.0)),
+        ('node', const Rect.fromLTRB(97.0, 251.0, 119.0, 273.0)),
+        ('node', const Rect.fromLTRB(97.0, 333.0, 119.0, 355.0)),
+        ('node', const Rect.fromLTRB(97.0, 386.0, 119.0, 408.0)),
+        // 卡片外框；fillHeight 時撐滿測試畫面高 600。
+        ('border', Rect.fromLTRB(0, 0, 600, fillHeight ? 600 : 480)),
+      ]);
+    });
+  }
 }
