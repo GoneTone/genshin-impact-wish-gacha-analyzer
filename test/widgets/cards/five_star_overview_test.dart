@@ -115,4 +115,99 @@ void main() {
     expect(find.text('A'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  group('SliverFiveStarOverview', () {
+    List<FiveStarCollectionItem> manyItems(int n) => buildFiveStarCollection([
+      for (var i = 0; i < n; i++)
+        _r(
+          '${5000 + i}',
+          'Item $i',
+          DateTime(2025, 1, 1).add(Duration(days: i)),
+        ),
+    ], index: emptyIndex);
+
+    Widget host(ProviderContainer c, Widget child, {double height = 2000}) =>
+        UncontrolledProviderScope(
+          container: c,
+          child: MaterialApp(
+            theme: buildDarkTheme(),
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(width: 400, height: height, child: child),
+              ),
+            ),
+          ),
+        );
+
+    List<Offset> iconOffsets(WidgetTester tester) => [
+      for (final e in find.byType(GachaItemIcon).evaluate())
+        tester.getTopLeft(find.byWidget(e.widget)),
+    ];
+
+    testWidgets('lays chips out exactly like the wrap version', (tester) async {
+      final c = await _container(tester);
+      final items = manyItems(20);
+      await tester.pumpWidget(
+        host(c, SingleChildScrollView(child: FiveStarOverview(items: items))),
+      );
+      await tester.pump();
+      final wrapOffsets = iconOffsets(tester);
+
+      await tester.pumpWidget(
+        host(
+          c,
+          CustomScrollView(slivers: [SliverFiveStarOverview(items: items)]),
+        ),
+      );
+      await tester.pump();
+
+      expect(wrapOffsets, hasLength(20));
+      expect(iconOffsets(tester), wrapOffsets);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('scrolling does not rebuild rows already on screen', (
+      tester,
+    ) async {
+      final c = await _container(tester);
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        host(
+          c,
+          CustomScrollView(
+            controller: controller,
+            slivers: [SliverFiveStarOverview(items: manyItems(300))],
+          ),
+          height: 400,
+        ),
+      );
+      await tester.pump();
+      final rowBefore = tester.widget(find.byType(Row).at(1));
+
+      controller.jumpTo(10);
+      await tester.pump();
+
+      expect(tester.widget(find.byType(Row).at(1)), same(rowBefore));
+    });
+
+    testWidgets('builds rows on demand', (tester) async {
+      final c = await _container(tester);
+      await tester.pumpWidget(
+        host(
+          c,
+          CustomScrollView(
+            slivers: [SliverFiveStarOverview(items: manyItems(300))],
+          ),
+          height: 200,
+        ),
+      );
+      await tester.pump();
+      expect(
+        find.byType(GachaItemIcon, skipOffstage: false).evaluate().length,
+        lessThan(100),
+      );
+    });
+  });
 }

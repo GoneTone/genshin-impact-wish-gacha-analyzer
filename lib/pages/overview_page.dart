@@ -286,168 +286,179 @@ class _OverviewSection extends StatelessWidget {
       );
     }
 
-    return SliverList.list(
-      children: [
-        InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
-        const SizedBox(height: AppSpacing.m),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverList.list(
+          children: [
+            InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
+            const SizedBox(height: AppSpacing.m),
 
-        // Stat row: 三聯卡片（無保底）
-        LayoutBuilder(
-          builder: (context, c) {
-            final wide = c.maxWidth >= 1024;
-            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+            // Stat row: 三聯卡片（無保底）
+            LayoutBuilder(
+              builder: (context, c) {
+                final wide = c.maxWidth >= 1024;
+                final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
 
-            if (wide) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(flex: 6, child: statCards[0]),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(flex: 3, child: statCards[1]),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(flex: 3, child: statCards[2]),
-                  ],
-                ),
-              );
-            }
-            if (mid) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  statCards[0],
-                  const SizedBox(height: AppSpacing.m),
-                  IntrinsicHeight(
+                if (wide) {
+                  return IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(child: statCards[1]),
+                        Expanded(flex: 6, child: statCards[0]),
                         const SizedBox(width: AppSpacing.m),
-                        Expanded(child: statCards[2]),
+                        Expanded(flex: 3, child: statCards[1]),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(flex: 3, child: statCards[2]),
                       ],
                     ),
+                  );
+                }
+                if (mid) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      statCards[0],
+                      const SizedBox(height: AppSpacing.m),
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(child: statCards[1]),
+                            const SizedBox(width: AppSpacing.m),
+                            Expanded(child: statCards[2]),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 0; i < statCards.length; i++) ...[
+                      if (i > 0) const SizedBox(height: AppSpacing.m),
+                      statCards[i],
+                    ],
+                  ],
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.l),
+
+            // Pie row: 稀有度 + 物品類型
+            LayoutBuilder(
+              builder: (context, c) {
+                final wide = c.maxWidth >= 1024;
+                final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+
+                final rarityCard = ChartCard(
+                  title: l.statsRarityDistribution,
+                  icon: Icons.pie_chart_outline,
+                  chart: RarityPie(stats: stats),
+                  legend: DistributionLegend(
+                    entries: rarityDistributionEntries(stats, tokens, l),
                   ),
-                ],
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (var i = 0; i < statCards.length; i++) ...[
-                  if (i > 0) const SizedBox(height: AppSpacing.m),
-                  statCards[i],
-                ],
-              ],
-            );
-          },
-        ),
+                );
+                final itemTypeCard = ChartCard(
+                  title: l.statsItemTypeDistribution,
+                  icon: Icons.donut_small_outlined,
+                  chart: ItemTypePie(stats: stats),
+                  legend: DistributionLegend(
+                    entries: itemTypeDistributionEntries(
+                      stats,
+                      Theme.of(context).brightness,
+                      l,
+                    ),
+                  ),
+                );
 
-        const SizedBox(height: AppSpacing.l),
-
-        // Pie row: 稀有度 + 物品類型
-        LayoutBuilder(
-          builder: (context, c) {
-            final wide = c.maxWidth >= 1024;
-            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-
-            final rarityCard = ChartCard(
-              title: l.statsRarityDistribution,
-              icon: Icons.pie_chart_outline,
-              chart: RarityPie(stats: stats),
-              legend: DistributionLegend(
-                entries: rarityDistributionEntries(stats, tokens, l),
-              ),
-            );
-            final itemTypeCard = ChartCard(
-              title: l.statsItemTypeDistribution,
-              icon: Icons.donut_small_outlined,
-              chart: ItemTypePie(stats: stats),
-              legend: DistributionLegend(
-                entries: itemTypeDistributionEntries(
-                  stats,
-                  Theme.of(context).brightness,
-                  l,
-                ),
-              ),
-            );
-
-            if (wide) {
-              // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
-              // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
-              final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
-              return IntrinsicHeight(
-                child: Row(
+                if (wide) {
+                  // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
+                  // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
+                  final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(width: card1Width, child: rarityCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: itemTypeCard),
+                      ],
+                    ),
+                  );
+                }
+                if (mid) {
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: rarityCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: itemTypeCard),
+                      ],
+                    ),
+                  );
+                }
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(width: card1Width, child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
+                    rarityCard,
+                    const SizedBox(height: AppSpacing.m),
+                    itemTypeCard,
                   ],
-                ),
-              );
-            }
-            if (mid) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
-                  ],
-                ),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                rarityCard,
-                const SizedBox(height: AppSpacing.m),
-                itemTypeCard,
-              ],
-            );
-          },
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.m),
+
+            // 各卡池主稀有度件數
+            ChartCard(
+              title: l.bannerTopRarityCountTitle,
+              icon: Icons.bar_chart,
+              height: null,
+              chart: BannerTopRarityBars(
+                types: types,
+                banners: banners,
+                colors: bannerColors,
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.xl),
+            if (fiveStarItems.isNotEmpty) ...[
+              InlineSectionTitle(
+                icon: Icons.star_outline,
+                title: l.rarityOverviewTitle(l.rarityStar(5)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+            ],
+          ],
         ),
-
-        const SizedBox(height: AppSpacing.m),
-
-        // 各卡池主稀有度件數
-        ChartCard(
-          title: l.bannerTopRarityCountTitle,
-          icon: Icons.bar_chart,
-          height: null,
-          chart: BannerTopRarityBars(
-            types: types,
-            banners: banners,
-            colors: bannerColors,
-          ),
-        ),
-
-        const SizedBox(height: AppSpacing.xl),
+        // 五星一覽獨立成按列建構的 sliver：數十個圖示一次建好會在捲入的那一幀卡頓。
         if (fiveStarItems.isNotEmpty) ...[
-          InlineSectionTitle(
-            icon: Icons.star_outline,
-            title: l.rarityOverviewTitle(l.rarityStar(5)),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          FiveStarOverview(items: fiveStarItems),
-          const SizedBox(height: AppSpacing.xl),
+          SliverFiveStarOverview(items: fiveStarItems),
+          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
         ],
-        InlineSectionTitle(
-          icon: Icons.timeline,
-          title: l.timelineTopRarityTitle(
-            l.rarityStar(timelineRank),
-            timeline.length,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.s),
-        TimelineVertical(
-          entries: timeline,
-          colors: bannerColors,
-          targetRank: timelineRank,
-          nowPulls: timelineNowPulls,
-          isAcrossBanners: true,
-          showLuckLegend: true,
+        SliverList.list(
+          children: [
+            InlineSectionTitle(
+              icon: Icons.timeline,
+              title: l.timelineTopRarityTitle(
+                l.rarityStar(timelineRank),
+                timeline.length,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            TimelineVertical(
+              entries: timeline,
+              colors: bannerColors,
+              targetRank: timelineRank,
+              nowPulls: timelineNowPulls,
+              isAcrossBanners: true,
+              showLuckLegend: true,
+            ),
+          ],
         ),
       ],
     );

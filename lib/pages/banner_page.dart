@@ -326,9 +326,18 @@ class BannerPage extends ConsumerWidget {
                       title: l.rarityOverviewTitle(l.rarityStar(5)),
                     ),
                     const SizedBox(height: AppSpacing.s),
-                    FiveStarOverview(items: fiveStarItems),
-                    const SizedBox(height: AppSpacing.xl),
                   ],
+                ],
+              ),
+              // 五星一覽獨立成按列建構的 sliver：數十個圖示一次建好會在捲入的那一幀卡頓。
+              if (fiveStarItems.isNotEmpty) ...[
+                SliverFiveStarOverview(items: fiveStarItems),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xl),
+                ),
+              ],
+              SliverList.list(
+                children: [
                   InlineSectionTitle(
                     icon: Icons.table_chart_outlined,
                     title: l.pageBannerRecordList,

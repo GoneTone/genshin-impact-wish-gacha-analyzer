@@ -29,6 +29,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
@@ -37,6 +40,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 
 import '../helpers/no_game_dir.dart';
@@ -587,4 +592,81 @@ void main() {
     expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
     expect(tester.state(find.byType(SortableTable)), same(table));
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  /// 200 個不同的五星（手機寬約 40 列），用來驗證五星一覽按列建構。
+  List<GachaRecord> manyFiveStars() => [
+    for (var i = 0; i < 200; i++)
+      GachaRecord(
+        id: '${3000 + i}',
+        uid: '701000000',
+        gachaType: '301',
+        rankType: 5,
+        itemType: '角色',
+        name: 'Star $i',
+        time: DateTime(2026, 5, 1).subtract(Duration(hours: i)),
+        lang: 'zh-tw',
+      ),
+  ];
+
+  for (final (name, page) in [
+    ('overview', const OverviewPage() as Widget),
+    ('banner page', const BannerPage(gachaType: '301')),
+  ]) {
+    testWidgets('$name builds the five-star overview row by row', (
+      tester,
+    ) async {
+      await pump(tester, const Size(360, 800), page, records: manyFiveStars());
+      await tester.scrollUntilVisible(
+        find.byIcon(Icons.star_outline),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      final chips = find.descendant(
+        of: find.byType(SliverFiveStarOverview, skipOffstage: false),
+        matching: find.byType(GachaItemIcon, skipOffstage: false),
+      );
+      expect(chips.evaluate(), isNotEmpty);
+      expect(chips.evaluate().length, lessThan(200));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
+  testWidgets('odes section has no five-star overview rows', (tester) async {
+    // 只有祈願段有五星一覽，頌願段不多出空區塊或間距。
+    // 視窗拉高讓兩段都在畫面內：畫面外 sliver 的繪製位置會被夾住，量不出間距。
+    await pump(tester, const Size(1280, 6000), const OverviewPage());
+    expectNoException(tester);
+    expect(
+      find.byType(SliverFiveStarOverview, skipOffstage: false),
+      findsOneWidget,
+    );
+    expect(
+      find.byIcon(Icons.star_outline, skipOffstage: false),
+      findsOneWidget,
+    );
+    // 頌願段在下方：取各自最下面的那一個。
+    double lowest(Finder f, double Function(Rect) edge) => f
+        .evaluate()
+        .map(
+          (e) => edge(
+            tester.getRect(find.byWidget(e.widget, skipOffstage: false)),
+          ),
+        )
+        .reduce((a, b) => a > b ? a : b);
+    final barsBottom = lowest(
+      find.byWidgetPredicate(
+        (w) => w is ChartCard && w.chart is BannerTopRarityBars,
+        skipOffstage: false,
+      ),
+      (r) => r.bottom,
+    );
+    final timelineTitleTop = lowest(
+      find.byWidgetPredicate(
+        (w) => w is InlineSectionTitle && w.icon == Icons.timeline,
+        skipOffstage: false,
+      ),
+      (r) => r.top,
+    );
+    expect(timelineTitleTop - barsBottom, AppSpacing.xl);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 }
