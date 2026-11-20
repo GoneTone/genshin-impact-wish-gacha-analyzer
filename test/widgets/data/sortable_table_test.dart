@@ -221,6 +221,55 @@ void main() {
     expect(dropdown.value, 0);
   });
 
+  testWidgets('page survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    final records = List.generate(
+      45,
+      (i) => _r(id: '${i + 1}', rank: 4, name: 'r$i'),
+    );
+    final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          locale: const Locale('zh'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: ListView(
+              key: listKey,
+              children: [
+                SortableTable(
+                  rows: rows,
+                  sort: null,
+                  mainRank: 5,
+                  onSortColumnTapped: (_) {},
+                ),
+                const SizedBox(height: 5000),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.ensureVisible(find.byIcon(Icons.chevron_right).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.chevron_right).first);
+    await tester.pumpAndSettle();
+    expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -6000));
+    await tester.pumpAndSettle();
+    expect(find.byType(Pager), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 6000));
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<Pager>(find.byType(Pager)).page, 1);
+  });
+
   testWidgets('表頭點擊呼叫 onSortColumnTapped(對應欄)', (tester) async {
     final records = [_r(id: '1', rank: 5, name: 'A')];
     final rows = buildRecordRows(records, index: const HoYoWikiIndex.empty());

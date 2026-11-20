@@ -36,7 +36,12 @@ class SearchFilterBar extends StatefulWidget {
 }
 
 /// [SearchFilterBar] 的 State：管理輸入控制器與 debounce 計時器。
-class _SearchFilterBarState extends State<SearchFilterBar> {
+class _SearchFilterBarState extends State<SearchFilterBar>
+    with AutomaticKeepAliveClientMixin {
+  /// 放在按需建構的清單裡時，捲出畫面也保留本地狀態。
+  @override
+  bool get wantKeepAlive => true;
+
   /// 搜尋欄位的文字控制器。
   late final TextEditingController _ctrl;
 
@@ -74,6 +79,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) => Wrap(

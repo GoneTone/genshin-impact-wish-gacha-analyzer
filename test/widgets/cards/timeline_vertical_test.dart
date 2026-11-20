@@ -429,6 +429,46 @@ void main() {
     );
   });
 
+  testWidgets('loaded count survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    final entries = List<TimelineEntry>.generate(
+      25,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 28 - i)),
+    );
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => ListView(
+          key: listKey,
+          children: [
+            TimelineVertical(entries: entries, colors: colors, targetRank: 5),
+            const SizedBox(height: 5000),
+          ],
+        ),
+      ),
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineVertical)),
+    )!;
+    await tester.ensureVisible(find.text(l.timelineLoadMore(15)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l.timelineLoadMore(15)));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -8000));
+    await tester.pumpAndSettle();
+    expect(find.text('item-0'), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 8000));
+    await tester.pumpAndSettle();
+
+    expect(find.text('item-19', skipOffstage: false), findsOneWidget);
+    expect(
+      find.text(l.timelineLoadMore(5), skipOffstage: false),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('entries=11 → defaults to first 10 entries only', (tester) async {
     final entries = List<TimelineEntry>.generate(
       11,

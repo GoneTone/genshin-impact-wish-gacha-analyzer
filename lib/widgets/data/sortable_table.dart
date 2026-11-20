@@ -42,7 +42,12 @@ class SortableTable extends StatefulWidget {
 }
 
 /// [SortableTable] 的 State：管理排序狀態與條紋背景。
-class _SortableTableState extends State<SortableTable> {
+class _SortableTableState extends State<SortableTable>
+    with AutomaticKeepAliveClientMixin {
+  /// 放在按需建構的清單裡時，捲出畫面也保留本地狀態。
+  @override
+  bool get wantKeepAlive => true;
+
   /// 每頁顯示的記錄筆數。
   static const _pageSize = 20;
 
@@ -65,6 +70,7 @@ class _SortableTableState extends State<SortableTable> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final tokens = theme.gacha;

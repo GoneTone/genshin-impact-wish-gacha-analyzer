@@ -87,7 +87,12 @@ class TimelineVertical extends StatefulWidget {
 }
 
 /// [TimelineVertical] 的 State：管理分頁顯示數量 [_visibleCount]。
-class _TimelineVerticalState extends State<TimelineVertical> {
+class _TimelineVerticalState extends State<TimelineVertical>
+    with AutomaticKeepAliveClientMixin {
+  /// 放在按需建構的清單裡時，捲出畫面也保留本地狀態。
+  @override
+  bool get wantKeepAlive => true;
+
   /// 首次渲染顯示的最大條目數。
   static const int _initialPageSize = 10;
 
@@ -140,6 +145,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final l = AppLocalizations.of(context)!;
