@@ -265,6 +265,7 @@ void main() {
       expect(shares.single.name, matches(r'^genshin_gacha_backup_.+\.json$'));
       expect(shares.single.mime, 'application/json');
       expect(find.text(l.shareFailed), findsNothing);
+      expect(find.byType(Dialog), findsNothing);
     },
     variant: android,
   );
@@ -326,6 +327,7 @@ void main() {
     expect(shares.single.name, matches(r'^giwga_logs_.+\.log$'));
     expect(shares.single.mime, 'text/plain');
     expect(utf8.decode(shares.single.bytes), 'fake log bundle');
+    expect(find.byType(Dialog), findsNothing);
   }, variant: android);
 
   testWidgets('exporting logs saves them as text/plain', (tester) async {

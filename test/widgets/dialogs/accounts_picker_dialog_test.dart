@@ -38,6 +38,8 @@ Future<void> _open(
   WidgetTester tester, {
   List<AccountPickerEntry>? entries,
   String? secondaryConfirmLabel,
+  String confirmLabel = '匯出',
+  Locale locale = const Locale('zh', 'Hant'),
 }) async {
   _result = null;
   _completed = false;
@@ -46,7 +48,7 @@ Future<void> _open(
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('zh', 'Hant'),
+        locale: locale,
         theme: buildDarkTheme(),
         home: Scaffold(
           body: Builder(
@@ -56,7 +58,7 @@ Future<void> _open(
                   _result = await showAccountsPickerDialog(
                     context: ctx,
                     title: '選擇要匯出的帳號',
-                    confirmLabel: '匯出',
+                    confirmLabel: confirmLabel,
                     entries: entries ?? _entries,
                     secondaryConfirmLabel: secondaryConfirmLabel,
                   );
@@ -253,4 +255,41 @@ void main() {
     await _open(tester);
     expect(tester.takeException(), isNull);
   });
+
+  for (final size in const [Size(360, 800), Size(800, 360)]) {
+    for (final locale in const [
+      Locale('zh', 'Hant'),
+      Locale('en'),
+      Locale('fr'),
+    ]) {
+      testWidgets(
+        'Android cancel / share / save buttons fit $size in $locale',
+        (tester) async {
+          tester.view.physicalSize = size;
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          final l = lookupAppLocalizations(locale);
+          await _open(
+            tester,
+            locale: locale,
+            confirmLabel: l.actionSave,
+            secondaryConfirmLabel: l.actionShare,
+          );
+          expect(tester.takeException(), isNull);
+          expect(
+            find.widgetWithText(TextButton, l.actionCancel),
+            findsOneWidget,
+          );
+          expect(
+            find.widgetWithText(OutlinedButton, l.actionShare),
+            findsOneWidget,
+          );
+          expect(
+            find.widgetWithText(FilledButton, l.actionSave),
+            findsOneWidget,
+          );
+        },
+      );
+    }
+  }
 }

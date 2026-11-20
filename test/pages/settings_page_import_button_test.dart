@@ -140,10 +140,10 @@ void main() {
     );
   });
 
-  /// 以 [bytes] 當選檔內容，點擊 [buttonText] 並等流程跑完。
+  /// 以 [bytes]（null 代表取消）當選檔內容，點擊 [buttonText] 並等流程跑完。
   Future<AppLocalizations> tapImportWith(
     WidgetTester tester,
-    Uint8List bytes,
+    Uint8List? bytes,
     String buttonText,
   ) async {
     SharedPreferences.setMockInitialValues({});
@@ -189,4 +189,14 @@ void main() {
       );
     },
   );
+
+  testWidgets('cancelling the import file picker shows nothing', (
+    tester,
+  ) async {
+    final l = await tapImportWith(tester, null, '匯入資料');
+
+    expect(openTitle, l.dialogOpenTitle);
+    expect(find.byType(SnackBar), findsNothing);
+    expect(find.byType(Dialog), findsNothing);
+  });
 }

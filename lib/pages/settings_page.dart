@@ -533,7 +533,7 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  /// 匯出帳號資料：讓使用者選取帳號、存檔位置後寫出 JSON。
+  /// 匯出帳號資料：把勾選的帳號存成 JSON 檔（Android 也可改為分享）。
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final gacha = ref.read(gachaRepositoryProvider);
