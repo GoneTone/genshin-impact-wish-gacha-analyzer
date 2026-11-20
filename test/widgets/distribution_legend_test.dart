@@ -93,6 +93,39 @@ void main() {
     expect(find.text('50.01%'), findsOneWidget);
   });
 
+  testWidgets('one-line compact row centres children in a taller tight box', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: SizedBox(
+            width: 100,
+            height: 60,
+            child: CompactLegendRow(
+              name: const SizedBox(key: Key('name'), width: 20, height: 10),
+              numbers: const SizedBox(
+                key: Key('numbers'),
+                width: 30,
+                height: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    final row = tester.getRect(find.byType(CompactLegendRow));
+    expect(row.height, 60);
+    for (final key in ['name', 'numbers']) {
+      expect(
+        tester.getRect(find.byKey(Key(key))).center.dy,
+        closeTo(row.center.dy, 0.01),
+      );
+    }
+    expect(tester.getRect(find.byKey(const Key('numbers'))).right, row.right);
+  });
+
   group('compact columns with the real phone font', () {
     // 測試預設字型每個字都是正方形，量不出實機寬度；載入 SDK 附的 Roboto（Android 預設字型）。
     setUpAll(() async {

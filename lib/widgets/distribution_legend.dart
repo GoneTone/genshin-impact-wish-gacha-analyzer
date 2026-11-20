@@ -121,7 +121,7 @@ class DistributionLegend extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 2),
             // 精簡版名稱欄很窄，放大字級時長名稱會逐字斷行；整列放不下就把數字移到名稱下一行。
             child: compact
-                ? _CompactLegendRow(
+                ? CompactLegendRow(
                     name: swatchAndName(e),
                     numbers: countAndRate(e),
                   )
@@ -142,9 +142,11 @@ class DistributionLegend extends StatelessWidget {
 /// 一行放得下就排同一行並垂直置中；放不下時數字換到名稱下一行，但仍靠結束側，
 /// 讓各列數字右緣對齊。不用 LayoutBuilder 是因為橫向圓餅卡外層有 IntrinsicHeight，
 /// 會向圖例查詢 intrinsic 尺寸；OverflowBar 換行時無法只讓數字靠右。
-class _CompactLegendRow extends MultiChildRenderObjectWidget {
-  /// 建立 [_CompactLegendRow]，[name] 與 [numbers] 依序成為兩個 child。
-  _CompactLegendRow({required Widget name, required Widget numbers})
+/// 只供 [DistributionLegend] 使用；公開僅為了讓測試能直接給它緊約束高度。
+@visibleForTesting
+class CompactLegendRow extends MultiChildRenderObjectWidget {
+  /// 建立 [CompactLegendRow]，[name] 與 [numbers] 依序成為兩個 child。
+  CompactLegendRow({super.key, required Widget name, required Widget numbers})
     : super(children: [name, numbers]);
 
   @override
@@ -152,18 +154,17 @@ class _CompactLegendRow extends MultiChildRenderObjectWidget {
       _RenderCompactLegendRow(Directionality.of(context));
 
   @override
-  void updateRenderObject(
-    BuildContext context,
-    _RenderCompactLegendRow renderObject,
-  ) {
-    renderObject.textDirection = Directionality.of(context);
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    (renderObject as _RenderCompactLegendRow).textDirection = Directionality.of(
+      context,
+    );
   }
 }
 
-/// [_CompactLegendRow] 的 parent data，儲存各 child 的位移。
+/// [CompactLegendRow] 的 parent data，儲存各 child 的位移。
 class _CompactLegendRowParentData extends ContainerBoxParentData<RenderBox> {}
 
-/// [_CompactLegendRow] 的 render object。
+/// [CompactLegendRow] 的 render object。
 class _RenderCompactLegendRow extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _CompactLegendRowParentData>,
@@ -209,7 +210,7 @@ class _RenderCompactLegendRow extends RenderBox
     BoxConstraints constraints,
     ChildLayouter layoutChild,
   ) {
-    assert(childCount == 2, '_CompactLegendRow 必須恰兩個 children');
+    assert(childCount == 2, 'CompactLegendRow 必須恰兩個 children');
     final numbers = layoutChild(_numbers, constraints.loosen());
     final width = constraints.hasBoundedWidth
         ? constraints.maxWidth
@@ -220,16 +221,18 @@ class _RenderCompactLegendRow extends RenderBox
     final height = oneLine
         ? math.max(name.height, numbers.height)
         : name.height + numbers.height;
+    final size = constraints.constrain(Size(width, height));
     final rtl = textDirection == TextDirection.rtl;
+    // 以最終尺寸定位：父層給較高的緊約束時，同一行的內容仍在整列中垂直置中。
     return (
-      size: constraints.constrain(Size(width, height)),
+      size: size,
       name: Offset(
-        rtl ? width - name.width : 0,
-        oneLine ? (height - name.height) / 2 : 0,
+        rtl ? size.width - name.width : 0,
+        oneLine ? (size.height - name.height) / 2 : 0,
       ),
       numbers: Offset(
-        rtl ? 0 : width - numbers.width,
-        oneLine ? (height - numbers.height) / 2 : name.height,
+        rtl ? 0 : size.width - numbers.width,
+        oneLine ? (size.height - numbers.height) / 2 : name.height,
       ),
     );
   }
