@@ -143,18 +143,15 @@ class _BannerRow extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // spaceBetween 把短名稱用不完的空間放在兩者之間，數字才會貼齊右緣。
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: Text(name, style: theme.textTheme.bodyMedium),
                   ),
                   const SizedBox(width: AppSpacing.s),
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: summary,
-                    ),
-                  ),
+                  Flexible(child: summary),
                 ],
               ),
               const SizedBox(height: AppSpacing.xs),
