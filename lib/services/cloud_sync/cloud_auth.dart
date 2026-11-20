@@ -1,4 +1,6 @@
 import 'package:googleapis/oauth2/v2.dart' as oauth2;
+import 'package:googleapis_auth/googleapis_auth.dart'
+    show AccessDeniedException;
 import 'package:http/http.dart' as http;
 
 /// 一次互動式連結的結果；呼叫端確認結果仍有效後才 [commit]。
@@ -93,3 +95,11 @@ bool isInsufficientScope(Object e) {
       s.contains('insufficient authentication scopes') ||
       s.contains('ACCESS_TOKEN_SCOPE_INSUFFICIENT');
 }
+
+/// 判斷例外是否為 API 拒絕 access token（已撤銷／失效）。
+///
+/// 兩種表面：googleapis 的 `DetailedApiRequestError` 401；或 `AuthenticatedClient`
+/// 遇 `www-authenticate: ... error="invalid_token"` 直接拋的 `AccessDeniedException`。
+bool isInvalidToken(Object e) =>
+    (e is oauth2.DetailedApiRequestError && e.status == 401) ||
+    (e is AccessDeniedException && e.message.contains('invalid_token'));

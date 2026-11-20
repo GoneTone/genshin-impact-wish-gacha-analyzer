@@ -9,13 +9,16 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_remote.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_auth_service.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_authorization_gateway.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/token_store.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 /// 雲端同步的即時狀態。
@@ -62,9 +65,19 @@ final googleAuthServiceProvider = Provider<GoogleAuthService>(
   ),
 );
 
+/// [GoogleAuthorizationGateway] provider（Android 授權 API，測試可替換）。
+final googleAuthorizationGatewayProvider = Provider<GoogleAuthorizationGateway>(
+  (ref) => PluginGoogleAuthorizationGateway(),
+);
+
 /// 目前平台的 [CloudAuth] provider。
 final cloudAuthProvider = Provider<CloudAuth>(
-  (ref) => ref.watch(googleAuthServiceProvider),
+  (ref) => ref.watch(isAndroidProvider)
+      ? AndroidCloudAuth(
+          gateway: ref.watch(googleAuthorizationGatewayProvider),
+          baseClientFactory: http.Client.new,
+        )
+      : ref.watch(googleAuthServiceProvider),
 );
 
 /// 以授權 client 建立 [CloudSyncRemote] 的工廠 provider。
@@ -154,9 +167,22 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     if (!ref.mounted || !_linked) return;
     // 沒等本機 bootstrap 完成就同步，byUid 會是空的，雲端內容會把本機檔案當「全新」覆蓋掉。
     await ref.read(gachaRepositoryProvider.notifier).waitForBootstrap();
-    if (!ref.mounted) return;
+    if (!ref.mounted || !_linked) return;
+    final auth = ref.read(cloudAuthProvider);
+    // 短效授權的 client 用不到跨輪：同步輪自己會還原，這裡不重複還原。
+    if (!auth.keepsClientAcrossRounds) {
+      if (_syncing) return;
+      if (ref.read(settingsProvider).cloudAutoSyncEnabled) {
+        await syncNow(manual: false, trigger: 'startup');
+        return;
+      }
+    }
     try {
-      await _ensureClient();
+      if (auth.keepsClientAcrossRounds) {
+        await _ensureClient();
+      } else {
+        (await _restoreClient(auth)).close();
+      }
     } on CloudReauthRequiredException {
       state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
       return;
@@ -169,7 +195,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return;
     }
     if (!ref.mounted) return;
-    if (ref.read(settingsProvider).cloudAutoSyncEnabled) {
+    if (auth.keepsClientAcrossRounds &&
+        ref.read(settingsProvider).cloudAutoSyncEnabled) {
       await syncNow(manual: false, trigger: 'startup');
     }
   }
@@ -195,13 +222,22 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         result.client.close();
         return;
       }
-      await result.commit();
+      try {
+        await result.commit();
+      } catch (_) {
+        result.client.close();
+        rethrow;
+      }
       _client?.close();
       _client = result.client;
       await ref.read(settingsProvider.notifier).setCloudAccount(result.email);
       if (!ref.mounted) return;
       state = const CloudSyncState();
       await syncNow(manual: true, trigger: 'link');
+    } on CloudLinkCancelledException catch (e) {
+      if (!ref.mounted || gen != _authGeneration) return;
+      _log.info('link cancelled by user reason=${e.reason}');
+      state = const CloudSyncState();
     } on CloudScopeMissingException {
       if (!ref.mounted || gen != _authGeneration) return;
       _log.warning('link failed: required Drive scope not granted');
@@ -357,6 +393,10 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       );
     } finally {
       _syncing = false;
+      if (ref.mounted && !ref.read(cloudAuthProvider).keepsClientAcrossRounds) {
+        _client?.close();
+        _client = null;
+      }
       if (_pendingRerun && ref.mounted) {
         _pendingRerun = false;
         unawaited(syncNow(manual: false, trigger: 'rerun'));
@@ -364,16 +404,24 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     }
   }
 
-  /// 還原授權 client（已有就直接用）；無 token 視同需要重新連結。
+  /// 為同步輪備妥 [_client]；無 token 視同需要重新連結。
+  ///
+  /// 跨輪沿用的授權（Windows）已有 client 就直接用；否則每次重新還原並先關掉舊的。
   Future<void> _ensureClient() async {
-    if (_client != null) return;
-    final restored = await ref
-        .read(cloudAuthProvider)
-        .restoreClient(
-          expectedEmail: ref.read(settingsProvider).cloudAccountEmail!,
-        );
+    final auth = ref.read(cloudAuthProvider);
+    if (_client != null && auth.keepsClientAcrossRounds) return;
+    _client?.close();
+    _client = null;
+    _client = await _restoreClient(auth);
+  }
+
+  /// 以 [auth] 還原授權 client；無法靜默還原時拋 [CloudReauthRequiredException]。
+  Future<http.Client> _restoreClient(CloudAuth auth) async {
+    final restored = await auth.restoreClient(
+      expectedEmail: ref.read(settingsProvider).cloudAccountEmail!,
+    );
     if (restored == null) throw const CloudReauthRequiredException();
-    _client = restored;
+    return restored;
   }
 
   /// 本機資料（byUid／別名）變動時排程 debounce 同步。

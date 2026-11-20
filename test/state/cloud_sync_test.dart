@@ -11,13 +11,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_authorization_gateway.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 import '../helpers/cloud_sync_fakes.dart';
@@ -54,6 +58,71 @@ String _cloudBundleJson(String uid, {bool withRecord = false}) => jsonEncode({
   ],
 });
 
+/// 記錄是否已 close 的 fake client。
+class _ClosableClient extends FakeAuthClient {
+  /// 是否已被 close。
+  bool closed = false;
+
+  /// 標記為已 close。
+  @override
+  void close() => closed = true;
+}
+
+/// 不跨輪沿用 client 的 fake 授權，記錄 restoreClient 收到的 email。
+class _NonPersistentAuth implements CloudAuth {
+  /// restoreClient 每次收到的 expectedEmail。
+  final restoredEmails = <String>[];
+
+  /// restoreClient 回傳過的 client。
+  final clients = <_ClosableClient>[];
+
+  /// link 要回傳的結果；null 代表不支援 link。
+  CloudLinkResult? linkResult;
+
+  /// 不跨輪沿用。
+  @override
+  bool get keepsClientAcrossRounds => false;
+
+  /// 回傳 [linkResult]；未設定時拋 [UnimplementedError]。
+  @override
+  Future<CloudLinkResult> link({
+    required void Function(String url) openUrl,
+    String? postAuthPage,
+  }) async => linkResult ?? (throw UnimplementedError());
+
+  /// 記錄 [expectedEmail] 並回傳新的 [_ClosableClient]。
+  @override
+  Future<http.Client?> restoreClient({required String expectedEmail}) async {
+    restoredEmails.add(expectedEmail);
+    final client = _ClosableClient();
+    clients.add(client);
+    return client;
+  }
+
+  /// 不做任何事。
+  @override
+  Future<void> unlink() async {}
+}
+
+/// 所有步驟都拋錯的 gateway，模擬 Play services 清理失敗。
+class _ThrowingGateway implements GoogleAuthorizationGateway {
+  /// 一律拋錯。
+  @override
+  Future<String?> silentToken() async => throw StateError('down');
+
+  /// 一律拋錯。
+  @override
+  Future<String> interactiveToken() async => throw StateError('down');
+
+  /// 一律拋錯。
+  @override
+  Future<void> clearToken(String token) async => throw StateError('down');
+
+  /// 一律拋錯。
+  @override
+  Future<void> signOut() async => throw StateError('down');
+}
+
 void main() {
   late Directory tempDir;
   late InMemoryTokenStore tokenStore;
@@ -79,8 +148,9 @@ void main() {
     if (await tempDir.exists()) await tempDir.delete(recursive: true);
   });
 
-  /// 建立完成載入的 container（HoYoWiki API 一律回 500，補抓 best-effort 空跑）。
-  Future<ProviderContainer> makeContainer() async {
+  /// 建立完成載入的 container（HoYoWiki API 一律回 500，補抓 best-effort 空跑）；
+  /// 給 [auth] 時直接以它取代平台授權實作。
+  Future<ProviderContainer> makeContainer({CloudAuth? auth}) async {
     final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
     await hoyowikiDir.create();
     final container = ProviderContainer(
@@ -103,6 +173,7 @@ void main() {
         }),
         tokenStoreProvider.overrideWithValue(tokenStore),
         googleAuthServiceProvider.overrideWithValue(authService),
+        if (auth != null) cloudAuthProvider.overrideWithValue(auth),
         cloudSyncRemoteFactoryProvider.overrideWithValue((_) => remote),
         cloudSyncUrlOpenerProvider.overrideWithValue((_) {}),
         windowForegroundProvider.overrideWithValue(() async {}),
@@ -232,6 +303,14 @@ void main() {
   });
 
   test('cancelLink：等待授權中途取消 → 回到 idle，遲到的 signIn 結果被丟棄、不撤銷', () async {
+    var baseClientCalls = 0;
+    authService = FakeAuthService(
+      tokenStore,
+      baseClientFactory: () {
+        baseClientCalls++;
+        return MockClient((_) async => http.Response('', 500));
+      },
+    );
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     final gate = Completer<void>();
@@ -253,6 +332,7 @@ void main() {
     expect(tokenStore.token, isNull);
     expect(container.read(settingsProvider).cloudAccountEmail, isNull);
     expect(authService.revokedTokens, isEmpty);
+    expect(baseClientCalls, 0);
     expect(remote.uploads, 0);
   });
 
@@ -269,6 +349,175 @@ void main() {
     expect(tokenStore.token, isNull);
     expect(authService.revokedTokens, isEmpty);
     expect(remote.uploads, 0);
+  });
+
+  test('Android unlink → Play services 清理失敗仍清掉 email 並回 idle', () async {
+    final container = await makeContainer(
+      auth: AndroidCloudAuth(
+        gateway: _ThrowingGateway(),
+        baseClientFactory: () =>
+            MockClient((_) async => http.Response('', 500)),
+      ),
+    );
+    await container
+        .read(settingsProvider.notifier)
+        .setCloudAccount('u@example.com');
+
+    await container.read(cloudSyncProvider.notifier).unlink();
+
+    expect(container.read(settingsProvider).cloudAccountEmail, isNull);
+    expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.idle);
+  });
+
+  test('link cancelled by the user → idle without error', () async {
+    authService.signInThrowsCancelled = true;
+    final container = await makeContainer();
+
+    await container.read(cloudSyncProvider.notifier).link();
+
+    final state = container.read(cloudSyncProvider);
+    expect(state.phase, CloudSyncPhase.idle);
+    expect(state.errorToken, isNull);
+    expect(container.read(settingsProvider).cloudAccountEmail, isNull);
+    expect(tokenStore.token, isNull);
+  });
+
+  test(
+    'non-persistent auth → client restored again on the next round',
+    () async {
+      final auth = _NonPersistentAuth();
+      final container = await makeContainer(auth: auth);
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAccount('u@example.com');
+
+      final notifier = container.read(cloudSyncProvider.notifier);
+      await notifier.syncNow(manual: true);
+      await notifier.syncNow(manual: true);
+
+      expect(auth.restoredEmails, ['u@example.com', 'u@example.com']);
+      expect(auth.clients.every((c) => c.closed), isTrue);
+    },
+  );
+
+  test(
+    'persistent auth → start keeps the client a completed link established',
+    () async {
+      final container = await makeContainer();
+      final notifier = container.read(cloudSyncProvider.notifier);
+      await notifier.link();
+      expect(authService.restoreCalls, 0);
+
+      await notifier.start();
+
+      expect(authService.restoreCalls, 0);
+    },
+  );
+
+  test(
+    'link: commit throws → client closed, authFailed, no email saved',
+    () async {
+      final client = _ClosableClient();
+      final auth = _NonPersistentAuth()
+        ..linkResult = CloudLinkResult(
+          client: client,
+          email: 'u@example.com',
+          commit: () async => throw StateError('commit failed'),
+        );
+      final container = await makeContainer(auth: auth);
+
+      await container.read(cloudSyncProvider.notifier).link();
+
+      final state = container.read(cloudSyncProvider);
+      expect(client.closed, isTrue);
+      expect(state.phase, CloudSyncPhase.error);
+      expect(state.errorToken, 'authFailed');
+      expect(container.read(settingsProvider).cloudAccountEmail, isNull);
+    },
+  );
+
+  test(
+    'non-persistent auth + auto-sync on → start restores exactly once',
+    () async {
+      final auth = _NonPersistentAuth();
+      final container = await makeContainer(auth: auth);
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAccount('u@example.com');
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAutoSyncEnabled(true);
+
+      await container.read(cloudSyncProvider.notifier).start();
+
+      expect(auth.restoredEmails, hasLength(1));
+      expect(remote.uploads, 1);
+    },
+  );
+
+  test(
+    'non-persistent auth + auto-sync off → start validates and closes the client',
+    () async {
+      final auth = _NonPersistentAuth();
+      final container = await makeContainer(auth: auth);
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAccount('u@example.com');
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAutoSyncEnabled(false);
+
+      await container.read(cloudSyncProvider.notifier).start();
+
+      expect(auth.restoredEmails, hasLength(1));
+      expect(auth.clients.single.closed, isTrue);
+      expect(remote.uploads, 0);
+    },
+  );
+
+  test(
+    'non-persistent auth + sync round running → start skips the restore',
+    () async {
+      final gate = Completer<void>();
+      remote.downloadGate = gate;
+      final auth = _NonPersistentAuth();
+      final container = await makeContainer(auth: auth);
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAccount('u@example.com');
+      await container
+          .read(settingsProvider.notifier)
+          .setCloudAutoSyncEnabled(false);
+
+      final notifier = container.read(cloudSyncProvider.notifier);
+      final round = notifier.syncNow(manual: true);
+      await Future<void>.delayed(Duration.zero);
+      await notifier.start();
+      gate.complete();
+      await round;
+
+      expect(auth.restoredEmails, hasLength(1));
+      expect(auth.clients.single.closed, isTrue);
+    },
+  );
+
+  test('cloudAuthProvider picks the implementation by platform', () {
+    ProviderContainer make(bool android) {
+      final c = ProviderContainer(
+        overrides: [
+          isAndroidProvider.overrideWithValue(android),
+          googleAuthServiceProvider.overrideWithValue(authService),
+          googleAuthorizationGatewayProvider.overrideWithValue(
+            _ThrowingGateway(),
+          ),
+        ],
+      );
+      addTearDown(c.dispose);
+      return c;
+    }
+
+    expect(make(true).read(cloudAuthProvider), isA<AndroidCloudAuth>());
+    expect(make(false).read(cloudAuthProvider), same(authService));
   });
 
   test('setAutoSync(false→true)：關閉不同步，開啟立即補跑一輪', () async {

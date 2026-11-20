@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:googleapis/oauth2/v2.dart' show DetailedApiRequestError;
+import 'package:googleapis_auth/googleapis_auth.dart'
+    show AccessDeniedException;
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 
 void main() {
@@ -68,6 +71,45 @@ void main() {
 
     test('一般網路錯誤 → false', () {
       expect(isInsufficientScope(Exception('Connection refused')), isFalse);
+    });
+  });
+
+  group('isInvalidToken', () {
+    test('DetailedApiRequestError 401 → true', () {
+      expect(isInvalidToken(DetailedApiRequestError(401, 'x')), isTrue);
+    });
+
+    test('AccessDeniedException 帶 invalid_token → true', () {
+      expect(
+        isInvalidToken(
+          AccessDeniedException(
+            'Access was denied (www-authenticate header was: '
+            'Bearer realm="https://accounts.google.com/", '
+            'error="invalid_token").',
+          ),
+        ),
+        isTrue,
+      );
+    });
+
+    test('insufficient_scope 的 AccessDeniedException → false', () {
+      expect(
+        isInvalidToken(
+          AccessDeniedException(
+            'Access was denied (www-authenticate header was: '
+            'Bearer error="insufficient_scope").',
+          ),
+        ),
+        isFalse,
+      );
+    });
+
+    test('DetailedApiRequestError 403 → false', () {
+      expect(isInvalidToken(DetailedApiRequestError(403, 'x')), isFalse);
+    });
+
+    test('一般網路錯誤 → false', () {
+      expect(isInvalidToken(Exception('Connection refused')), isFalse);
     });
   });
 }

@@ -41,9 +41,13 @@ class FakeAuthClient extends http.BaseClient implements AuthClient {
 
 /// 可程式化行為的 fake 授權服務。
 class FakeAuthService extends GoogleAuthService {
-  /// 建立 [FakeAuthService]。
-  FakeAuthService(this.store)
-    : super(tokenStore: store, baseClientFactory: http.Client.new);
+  /// 建立 [FakeAuthService]，以 [store] 作為底層 token store；
+  /// [baseClientFactory] 供測試計數底層 HTTP client 的建立。
+  FakeAuthService(this.store, {http.Client Function()? baseClientFactory})
+    : super(
+        tokenStore: store,
+        baseClientFactory: baseClientFactory ?? http.Client.new,
+      );
 
   /// 供斷言的 token store。
   final InMemoryTokenStore store;
@@ -58,6 +62,12 @@ class FakeAuthService extends GoogleAuthService {
   /// signIn 是否要模擬「授權未含必要 scope」而拋 [CloudScopeMissingException]。
   bool signInThrowsScopeMissing = false;
 
+  /// signIn 是否要模擬使用者取消而拋 [CloudLinkCancelledException]。
+  bool signInThrowsCancelled = false;
+
+  /// restore() 被呼叫的次數，供斷言「不重複還原」用。
+  int restoreCalls = 0;
+
   /// 被撤銷的 refresh token 清單；App 已不向 Google 撤銷，供斷言恆為空。
   final List<String> revokedTokens = [];
 
@@ -69,6 +79,9 @@ class FakeAuthService extends GoogleAuthService {
   }) async {
     openUrl('https://accounts.google.com/consent');
     if (signInGate != null) await signInGate;
+    if (signInThrowsCancelled) {
+      throw const CloudLinkCancelledException('canceled');
+    }
     if (signInThrowsScopeMissing) throw const CloudScopeMissingException();
     return CloudAuthSession(
       client: FakeAuthClient(),
@@ -80,6 +93,7 @@ class FakeAuthService extends GoogleAuthService {
   /// 模擬還原：依 [restoreThrowsReauth] 與 store 內容回傳。
   @override
   Future<AuthClient?> restore() async {
+    restoreCalls++;
     if (restoreThrowsReauth) throw const CloudReauthRequiredException();
     if (store.token == null) return null;
     return FakeAuthClient();
