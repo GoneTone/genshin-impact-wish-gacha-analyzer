@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/rendering.dart' show ScrollDirection;
+import 'package:flutter/gestures.dart' show kTouchSlop;
 import 'package:flutter/material.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,7 +53,10 @@ class _AppShellState extends ConsumerState<AppShell> {
   /// 目前路由路徑；換頁時把收起的標題列展開。
   String? _lastLocation;
 
-  /// 依頁面主要垂直捲動更新 [_barCollapsed]：往下捲收起，往上捲、回到頂端或內容已不需捲動時展開。
+  /// 手指同一方向連續拖動的距離（正值＝內容往上捲）；換方向就從頭算。
+  double _dragTravel = 0;
+
+  /// 依頁面主要垂直捲動更新 [_barCollapsed]：手指往下捲超過觸控容差收起、往上捲超過觸控容差展開，回到頂端或內容已不需捲動時也展開。
   bool _onScroll(Notification n) {
     final (depth, metrics) = switch (n) {
       ScrollNotification() => (n.depth, n.metrics),
@@ -63,14 +66,17 @@ class _AppShellState extends ConsumerState<AppShell> {
     if (depth != 0 || metrics == null || metrics.axis != Axis.vertical) {
       return false;
     }
+    // 手指離開前常往回退幾 dp；只看捲動方向的話，每次滑動結束都會把標題列切回去。
+    if (n is ScrollUpdateNotification && n.dragDetails != null) {
+      final delta = n.scrollDelta ?? 0;
+      _dragTravel = delta.sign == _dragTravel.sign
+          ? _dragTravel + delta
+          : delta;
+    }
     final collapsed = switch (n) {
-      UserScrollNotification(:final direction)
-          when direction == ScrollDirection.reverse =>
-        true,
-      UserScrollNotification(:final direction)
-          when direction == ScrollDirection.forward =>
-        false,
       ScrollUpdateNotification() when metrics.pixels <= 0 => false,
+      ScrollUpdateNotification() when _dragTravel > kTouchSlop => true,
+      ScrollUpdateNotification() when _dragTravel < -kTouchSlop => false,
       ScrollMetricsNotification() when metrics.maxScrollExtent <= 0 => false,
       _ => _barCollapsed,
     };

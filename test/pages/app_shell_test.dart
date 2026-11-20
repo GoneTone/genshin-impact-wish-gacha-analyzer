@@ -732,7 +732,7 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('collapses on scroll down and returns on any scroll up', (
+    testWidgets('collapses on scroll down and returns on scroll up', (
       tester,
     ) async {
       await pump(tester, const Size(800, 360), body: longList);
@@ -740,6 +740,39 @@ void main() {
       await drag(tester, -300);
       expect(barHeight(tester), lessThan(1));
       await drag(tester, 50);
+      expect(barHeight(tester), kToolbarHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    /// 手指先往 [dy] 方向分 10 步拖動，放開前再往回退 2.5dp（實機每次滑動放開時都會這樣）。
+    Future<void> swipeWithLiftBackStep(WidgetTester tester, double dy) async {
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(ListView)),
+      );
+      for (var i = 0; i < 10; i++) {
+        await gesture.moveBy(Offset(0, dy / 10));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.moveBy(Offset(0, -2.5 * dy.sign));
+      await tester.pump(const Duration(milliseconds: 16));
+      await gesture.up();
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('a back-step at finger lift keeps it collapsed', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -300);
+      await swipeWithLiftBackStep(tester, -200);
+      expect(barHeight(tester), lessThan(1));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('a back-step at finger lift keeps it shown', (tester) async {
+      await pump(tester, const Size(800, 360), body: longList);
+      await drag(tester, -600);
+      await drag(tester, 100);
+      expect(barHeight(tester), kToolbarHeight);
+      await swipeWithLiftBackStep(tester, 200);
       expect(barHeight(tester), kToolbarHeight);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
