@@ -101,7 +101,7 @@
   "uidNotSynced": "未同步",
   "uidActiveSuffix": "（活跃）",
   "emptyNoSyncTitle": "尚未同步任何数据",
-  "emptyNoSyncMessage": "点右上「更新数据」开始",
+  "emptyNoSyncMessage": "点右上 {icon} 开始",
   "emptyNoRecords": "此卡池无记录",
   "emptyNoFilterMatch": "没有符合条件的记录",
   "emptyNoOdesRecords": "暂无颂愿记录",

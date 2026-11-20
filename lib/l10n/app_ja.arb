@@ -105,7 +105,7 @@
   "uidNotSynced": "未同期",
   "uidActiveSuffix": "（使用中）",
   "emptyNoSyncTitle": "まだデータが同期されていません",
-  "emptyNoSyncMessage": "右上の「データ更新」から開始してください",
+  "emptyNoSyncMessage": "右上の {icon} から開始してください",
   "emptyNoRecords": "この祈願に記録がありません",
   "emptyNoFilterMatch": "条件に一致する記録がありません",
   "emptyNoOdesRecords": "星願の記録がまだありません",

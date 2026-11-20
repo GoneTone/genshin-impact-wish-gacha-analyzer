@@ -105,7 +105,7 @@
   "uidNotSynced": "Non synchronisé",
   "uidActiveSuffix": " (actif)",
   "emptyNoSyncTitle": "Aucune donnée synchronisée",
-  "emptyNoSyncMessage": "Cliquez sur \"Mettre à jour les données\" en haut à droite pour commencer",
+  "emptyNoSyncMessage": "Appuyez sur {icon} en haut à droite pour commencer",
   "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
   "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
   "emptyNoOdesRecords": "Aucun enregistrement d'odes",

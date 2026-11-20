@@ -321,6 +321,13 @@ void main() {
       await pump(tester, const Size(800, 360), page, synced: false);
       expect(find.text('尚未同步'), findsOneWidget);
       expect(find.byType(EmptyState), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(EmptyState),
+          matching: find.byIcon(Icons.refresh),
+        ),
+        findsOneWidget,
+      );
       expectNoException(tester);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   }

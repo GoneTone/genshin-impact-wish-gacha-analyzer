@@ -105,7 +105,7 @@
   "uidNotSynced": "Chưa đồng bộ",
   "uidActiveSuffix": " (đang dùng)",
   "emptyNoSyncTitle": "Chưa đồng bộ dữ liệu nào",
-  "emptyNoSyncMessage": "Nhấn \"Cập Nhật Dữ Liệu\" ở góc trên bên phải để bắt đầu",
+  "emptyNoSyncMessage": "Nhấn {icon} ở góc trên bên phải để bắt đầu",
   "emptyNoRecords": "Banner này chưa có bản ghi",
   "emptyNoFilterMatch": "Không tìm thấy bản ghi phù hợp với điều kiện",
   "emptyNoOdesRecords": "Chưa có bản ghi Ca Tụng",

@@ -86,7 +86,10 @@
   "uidActiveSuffix": "（活躍）",
 
   "emptyNoSyncTitle": "尚未同步任何資料",
-  "emptyNoSyncMessage": "點右上「更新資料」開始",
+  "emptyNoSyncMessage": "點右上 {icon} 開始",
+  "@emptyNoSyncMessage": {
+    "placeholders": { "icon": { "type": "String" } }
+  },
   "emptyNoRecords": "此卡池無紀錄",
   "emptyNoFilterMatch": "沒有符合條件的紀錄",
   "emptyNoOdesRecords": "尚無頌願記錄",

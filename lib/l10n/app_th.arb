@@ -105,7 +105,7 @@
   "uidNotSynced": "ยังไม่ได้ซิงค์",
   "uidActiveSuffix": " (ใช้งานอยู่)",
   "emptyNoSyncTitle": "ยังไม่ได้ซิงค์ข้อมูล",
-  "emptyNoSyncMessage": "กดปุ่ม \"อัพเดทข้อมูล\" ที่มุมบนขวาเพื่อเริ่มต้น",
+  "emptyNoSyncMessage": "กด {icon} ที่มุมบนขวาเพื่อเริ่มต้น",
   "emptyNoRecords": "ไม่มีบันทึกสำหรับ banner นี้",
   "emptyNoFilterMatch": "ไม่พบรายการที่ตรงกับเงื่อนไข",
   "emptyNoOdesRecords": "ยังไม่มีบันทึกภาวนา",

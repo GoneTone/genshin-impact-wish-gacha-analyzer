@@ -105,7 +105,7 @@
   "uidNotSynced": "No sincronizado",
   "uidActiveSuffix": " (Activo)",
   "emptyNoSyncTitle": "Aún no se ha sincronizado ningún dato",
-  "emptyNoSyncMessage": "Pulsa «Actualizar datos» en la esquina superior derecha para comenzar",
+  "emptyNoSyncMessage": "Toca {icon} en la esquina superior derecha para comenzar",
   "emptyNoRecords": "No hay registros para este banner",
   "emptyNoFilterMatch": "No hay registros que coincidan con los filtros",
   "emptyNoOdesRecords": "Aún no hay registros de Odas",

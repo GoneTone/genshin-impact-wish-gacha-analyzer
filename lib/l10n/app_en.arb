@@ -105,7 +105,7 @@
   "uidNotSynced": "Not synced",
   "uidActiveSuffix": " (active)",
   "emptyNoSyncTitle": "No data synced yet",
-  "emptyNoSyncMessage": "Click \"Update\" in the top right to start",
+  "emptyNoSyncMessage": "Tap {icon} in the top right to start",
   "emptyNoRecords": "No records for this banner",
   "emptyNoFilterMatch": "No records match the current filter",
   "emptyNoOdesRecords": "No Odes records yet",
