@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/item_image_save.dart
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
@@ -1354,10 +1355,76 @@ void main() {
         final rect = tester.getRect(close);
         expect(sameRow(rect, name), isTrue);
         expect(rect.left, greaterThanOrEqualTo(name.right));
-        expect(rect.width, greaterThanOrEqualTo(44));
-        expect(rect.height, greaterThanOrEqualTo(44));
+        expect(tester.getSize(close), const Size(44, 44));
+        final icon = tester.getCenter(
+          find.descendant(of: close, matching: find.byIcon(Icons.close)),
+        );
+        expect((icon.dy - name.center.dy).abs(), lessThanOrEqualTo(2));
         await tapClosesDialog(tester);
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+      /// 圖片區（圖片最近的 [Expanded]）頂端與 ✕ 所在頂列底端的距離。
+      double gapBelowClose(WidgetTester tester, Finder image) =>
+          tester
+              .getTopLeft(
+                find.ancestor(of: image, matching: find.byType(Expanded)).first,
+              )
+              .dy -
+          tester
+              .getRect(
+                find.ancestor(of: close, matching: find.byType(Row)).first,
+              )
+              .bottom;
+
+      testWidgets('two columns with a chip bar: gap under the top row', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1280, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+        final origFile = await seedWithGallery(tester);
+        await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+        expect(find.byType(ChoiceChip), findsWidgets);
+        expect(
+          gapBelowClose(tester, find.byKey(ValueKey(origFile.path))),
+          closeTo(AppSpacing.m, 0.5),
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+      testWidgets('two columns, single image: X row without the extra gap', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1280, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+        final iconFile = hoyowikiIconCacheFile(
+          baseDir: tempDir,
+          id: '12345',
+          url: 'https://x/icon.png',
+        );
+        await tester.runAsync(() async {
+          await _touchFile(tempDir, iconFile.uri.pathSegments.last);
+          await seedEntry(
+            '12345',
+            'Hu Tao',
+            'en-us',
+            _entryWith(
+              iconUrl: 'https://x/icon.png',
+              picUrl: '',
+              desc: '',
+              tags: const [],
+              list: const [],
+            ),
+          );
+        });
+        await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
+        expect(find.byType(ChoiceChip), findsNothing);
+        expect(close, findsOneWidget);
+        expect(
+          gapBelowClose(tester, find.byKey(ValueKey(iconFile.path))),
+          closeTo(0, 0.5),
+        );
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
       for (final (label, size, platform) in [
         ('phone landscape', const Size(914, 411), TargetPlatform.android),

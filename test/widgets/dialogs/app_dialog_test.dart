@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -255,8 +256,8 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    // title 應被約束到 md 的 640 扣掉右側 ✕（此時按鈕含 padding 為 48），而非渲染成內在的 1400。
-    expect(tester.getSize(find.byKey(const Key('wide-title'))).width, 640 - 48);
+    // title 應被約束到 md 的 640 扣掉右側 ✕（44），而非渲染成內在的 1400。
+    expect(tester.getSize(find.byKey(const Key('wide-title'))).width, 640 - 44);
   });
 
   testWidgets('maxHeight = min(720, mq.height - 120) — tall window', (
@@ -530,5 +531,105 @@ void main() {
         variant: TargetPlatformVariant.only(TargetPlatform.android),
       );
     }
+
+    /// ✕ 圖示中心的 y。
+    double iconCentreY(WidgetTester tester) => tester
+        .getCenter(
+          find.descendant(of: close, matching: find.byIcon(Icons.close)),
+        )
+        .dy;
+
+    /// [text] 第一行的垂直中心（全域座標）。
+    double firstLineCentreY(WidgetTester tester, Finder text) {
+      final paragraph = tester.renderObject<RenderParagraph>(text);
+      final lineHeight = paragraph.getFullHeightForCaret(
+        const TextPosition(offset: 0),
+      );
+      return tester.getTopLeft(text).dy + lineHeight / 2;
+    }
+
+    /// 以相同標題開關 ✕ 各開一次，回傳（標題頂、內容頂）供比對版面是否被撐開。
+    Future<(double, double)> titleAndBodyTop(
+      WidgetTester tester, {
+      required bool showCloseButton,
+    }) async {
+      await open(
+        tester,
+        AppDialog(
+          title: const Text('Title'),
+          content: const Text('Body'),
+          showCloseButton: showCloseButton,
+        ),
+        surfaceSize: const Size(360, 800),
+      );
+      final tops = (
+        tester.getTopLeft(find.text('Title')).dy,
+        tester.getTopLeft(find.text('Body')).dy,
+      );
+      Navigator.of(tester.element(find.text('Body'))).pop();
+      await tester.pumpAndSettle();
+      return tops;
+    }
+
+    for (final platform in [TargetPlatform.android, TargetPlatform.windows]) {
+      testWidgets('single-line title: X centred on it without moving the title '
+          'or content (${platform.name})', (tester) async {
+        final without = await titleAndBodyTop(tester, showCloseButton: false);
+        final withX = await titleAndBodyTop(tester, showCloseButton: true);
+        expect(withX.$1, closeTo(without.$1, 1));
+        expect(withX.$2, closeTo(without.$2, 1));
+
+        await open(
+          tester,
+          const AppDialog(title: Text('Title'), content: Text('Body')),
+          surfaceSize: const Size(360, 800),
+        );
+        expect(
+          (iconCentreY(tester) - tester.getCenter(find.text('Title')).dy).abs(),
+          lessThanOrEqualTo(2),
+        );
+      }, variant: TargetPlatformVariant.only(platform));
+    }
+
+    for (final edge in const [
+      Offset(0, -20),
+      Offset(0, 20),
+      Offset(-20, 0),
+      Offset(20, 0),
+    ]) {
+      testWidgets('whole 44dp hit area closes the dialog ($edge)', (
+        tester,
+      ) async {
+        final result = await open(
+          tester,
+          const AppDialog(title: Text('Title'), content: Text('Body')),
+          surfaceSize: const Size(360, 800),
+        );
+        expect(tester.getSize(close), const Size(44, 44));
+        await tester.tapAt(tester.getCenter(close) + edge);
+        await tester.pumpAndSettle();
+        expect(find.byType(AppDialog), findsNothing);
+        expect(await result, isNull);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    }
+
+    testWidgets('wrapped title: X centred on the first line', (tester) async {
+      final text = 'A rather long dialog title ' * 3;
+      await open(
+        tester,
+        AppDialog(title: Text(text), content: const Text('Body')),
+        surfaceSize: const Size(360, 800),
+      );
+      final title = find.text(text);
+      expect(tester.getSize(title).height, greaterThan(60));
+      expect(
+        (iconCentreY(tester) - firstLineCentreY(tester, title)).abs(),
+        lessThanOrEqualTo(2),
+      );
+      expect(
+        tester.getRect(close).left,
+        greaterThanOrEqualTo(tester.getRect(title).right),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   });
 }

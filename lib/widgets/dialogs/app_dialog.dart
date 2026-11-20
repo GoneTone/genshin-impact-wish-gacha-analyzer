@@ -90,6 +90,9 @@ class AppDialog extends StatelessWidget {
   /// 手機排版時 dialog 四周的留白（dp）。
   static const double _compactInset = 12;
 
+  /// [AppDialogCloseButton] 的觸控區邊長（dp）。
+  static const double _closeSize = 44;
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -104,6 +107,19 @@ class AppDialog extends StatelessWidget {
       mq.size.height - (compact ? _compactInset * 2 : 120),
     );
 
+    // ✕ 列固定 44 高（整塊都點得到），標題第一行置中其上；多出的高度從 AlertDialog
+    // 的標題上留白與內容上留白扣回，標題與內容位置跟沒有 ✕ 時一樣。
+    // 標題字型同 AlertDialog 的預設解析（M3 為 headlineSmall）。
+    final titleStyle =
+        DialogTheme.of(context).titleTextStyle ??
+        Theme.of(context).textTheme.headlineSmall;
+    final titleLineHeight =
+        mq.textScaler.scale(titleStyle?.fontSize ?? 24) *
+        (titleStyle?.height ?? 1.2);
+    final closeInset = showCloseButton
+        ? math.max(0.0, (_closeSize - titleLineHeight) / 2)
+        : 0.0;
+
     Widget body = SizedBox(width: dialogWidth, child: content);
     if (scrollable) {
       body = SingleChildScrollView(child: body);
@@ -111,6 +127,9 @@ class AppDialog extends StatelessWidget {
 
     return AlertDialog(
       insetPadding: compact ? const EdgeInsets.all(_compactInset) : null,
+      // 數值為 AlertDialog M3 預設（標題 24/24/24/0、內容 24/16/24/24）扣掉 closeInset。
+      titlePadding: EdgeInsets.fromLTRB(24, 24 - closeInset, 24, 0),
+      contentPadding: EdgeInsets.fromLTRB(24, 16 - closeInset, 24, 24),
       constraints: BoxConstraints(maxHeight: dialogMaxHeight),
       // title 與 content 同寬：title 內容（如長描述 Html）的 intrinsic 寬度
       // 不再能把整個 AlertDialog 撐寬，過長文字會在 dialogWidth 內換行。
@@ -120,7 +139,12 @@ class AppDialog extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: title ?? const SizedBox.shrink()),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: closeInset),
+                      child: title ?? const SizedBox.shrink(),
+                    ),
+                  ),
                   const AppDialogCloseButton(),
                 ],
               ),
@@ -146,9 +170,16 @@ class AppDialogCloseButton extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
     icon: const Icon(Icons.close),
     tooltip: AppLocalizations.of(context)!.actionClose,
-    // 電腦版密度會把按鈕縮到 40 以下，固定標準密度以保住 44 的觸控區。
+    // 固定 44×44：電腦版密度會再縮小、手機的 padded 觸控區會撐到 48，
+    // 兩者都會讓標題列的對齊算式失準。
     visualDensity: VisualDensity.standard,
-    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+    style: IconButton.styleFrom(
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    ),
+    constraints: const BoxConstraints.tightFor(
+      width: AppDialog._closeSize,
+      height: AppDialog._closeSize,
+    ),
     onPressed: () => Navigator.maybePop(context),
   );
 }
