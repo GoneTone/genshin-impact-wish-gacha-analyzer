@@ -6,7 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 
 /// Dialog 寬度語意尺寸。
 ///
-/// 三檔對應的最大內容寬：sm = 480、md = 640、lg = 720。
+/// 四檔對應的最大內容寬：sm = 480、md = 640、lg = 720、xl = 960。
 /// 視窗較窄時實際寬度會 fallback 到 `mq.size.width - 80`（扣掉 AlertDialog
 /// 預設左右 insetPadding 40 * 2）。
 enum AppDialogSize {
@@ -17,13 +17,17 @@ enum AppDialogSize {
   md,
 
   /// 大尺寸，最大寬度 720px。
-  lg;
+  lg,
+
+  /// 特大尺寸，最大寬度 960px（電腦版雙欄詳情）。
+  xl;
 
   /// 對應尺寸的最大內容寬度（px）。
   double get maxWidth => switch (this) {
     AppDialogSize.sm => 480,
     AppDialogSize.md => 640,
     AppDialogSize.lg => 720,
+    AppDialogSize.xl => 960,
   };
 }
 

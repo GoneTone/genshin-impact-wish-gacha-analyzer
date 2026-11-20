@@ -19,6 +19,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/zoomable_image_overlay.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/scroll/scroll_affordance.dart';
 
 GachaRecord _rec({
   required String name,
@@ -35,6 +36,9 @@ GachaRecord _rec({
   time: DateTime(2026, 5, 24),
   lang: lang,
 );
+
+/// 雙欄版面左欄（資訊欄）的 key。
+const detailsColumnKey = ValueKey('detail-info-column');
 
 /// 在 [dir] 內建立一個指定路徑的假圖檔（內容隨意，僅供 existsSync 命中）。
 Future<File> _touchFile(Directory dir, String relative) async {
@@ -953,6 +957,9 @@ void main() {
     Future<File> seedWithGallery(
       WidgetTester tester, {
       String name = 'Hu Tao',
+      String desc = '',
+      List<String> tags = const [],
+      String imgDescHtml = '<p>Outfit</p><p>Line two</p><p>Line three</p>',
     }) async {
       final origFile = hoyowikiGalleryCacheFile(
         baseDir: tempDir,
@@ -969,12 +976,14 @@ void main() {
           _entryWith(
             iconUrl: 'https://x/icon.png',
             picUrl: '',
+            desc: desc,
+            tags: tags,
             list: [
               HoYoWikiGalleryItem(
                 id: 'a',
                 key: 'Original',
                 imgUrl: 'https://x/orig.png',
-                imgDescHtml: '<p>Outfit</p><p>Line two</p><p>Line three</p>',
+                imgDescHtml: imgDescHtml,
               ),
             ],
           ),
@@ -1239,10 +1248,15 @@ void main() {
       addTearDown(tester.view.reset);
     }
 
-    /// 以 [size] 的手機畫面開啟詳情，回傳名稱與圖片的位置。
-    Future<(Rect, Rect)> pumpPhone(WidgetTester tester, Size size) async {
+    /// 以 [size] 的畫面開啟詳情（平台由 test variant 決定），回傳名稱與圖片的位置。
+    Future<(Rect, Rect)> pumpAt(
+      WidgetTester tester,
+      Size size, {
+      String desc = '',
+      List<String> tags = const [],
+    }) async {
       setPhoneView(tester, size);
-      final origFile = await seedWithGallery(tester);
+      final origFile = await seedWithGallery(tester, desc: desc, tags: tags);
       await pumpDialog(tester, _rec(name: 'Hu Tao', gachaType: '301'));
       expect(tester.takeException(), isNull);
       return (
@@ -1254,14 +1268,15 @@ void main() {
     testWidgets('phone landscape puts details and image side by side', (
       tester,
     ) async {
-      final (name, image) = await pumpPhone(tester, const Size(800, 360));
+      final (name, image) = await pumpAt(tester, const Size(800, 360));
       expect(name.right, lessThan(image.left));
       expect((name.top - image.top).abs(), lessThan(100));
+      expect(tester.getSize(find.byKey(detailsColumnKey)).width, 240);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
     testWidgets('phone landscape keeps the image tall with its description '
         'in the left column', (tester) async {
-      final (_, image) = await pumpPhone(tester, const Size(800, 360));
+      final (_, image) = await pumpAt(tester, const Size(800, 360));
       expect(image.height, greaterThanOrEqualTo(200));
       final desc = tester.getRect(find.textContaining('Outfit'));
       expect(desc.right, lessThan(image.left));
@@ -1270,9 +1285,133 @@ void main() {
     testWidgets('phone portrait stacks details above the image', (
       tester,
     ) async {
-      final (name, image) = await pumpPhone(tester, const Size(360, 800));
+      final (name, image) = await pumpAt(tester, const Size(360, 800));
       expect(name.bottom, lessThan(image.top));
+      expect(find.byKey(detailsColumnKey), findsNothing);
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('wide desktop window puts details and image side by side', (
+      tester,
+    ) async {
+      final (name, image) = await pumpAt(tester, const Size(1280, 800));
+      expect(name.right, lessThan(image.left));
+      expect(tester.getSize(find.byKey(detailsColumnKey)).width, 320);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    testWidgets('desktop window under 1000 wide stays single column', (
+      tester,
+    ) async {
+      final (name, image) = await pumpAt(tester, const Size(900, 700));
+      expect(name.bottom, lessThan(image.top));
+      expect(find.byKey(detailsColumnKey), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    testWidgets('two-column detail keeps HoYoWiki tags, skins and the '
+        'HoYoWiki link', (tester) async {
+      await pumpAt(
+        tester,
+        const Size(1280, 800),
+        desc: '<p>Intro text</p>',
+        tags: ['Pyro', 'Polearm'],
+      );
+      final column = find.byKey(detailsColumnKey);
+      for (final text in ['Hu Tao', 'Intro text', 'Pyro', 'Polearm']) {
+        expect(
+          find.descendant(of: column, matching: find.textContaining(text)),
+          findsWidgets,
+          reason: text,
+        );
+      }
+      expect(
+        find.descendant(of: column, matching: find.textContaining('Outfit')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: column, matching: find.byIcon(Icons.open_in_new)),
+        findsOneWidget,
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+    group('two-column details scroll as one region', () {
+      /// 超過原本內層捲動上限的長簡介。
+      final longIntro = '<p>${'A very long intro sentence. ' * 120}</p>';
+
+      /// 簡介的 [Html]（左欄第一個 Html）。
+      Finder intro() => find.byType(Html).first;
+
+      /// 左欄底部的漸層提示。
+      Finder bottomFade() => find.byWidgetPredicate(
+        (w) => w is ScrollEdgeFade && w.side == ScrollSide.bottom,
+      );
+
+      testWidgets('dragging on the intro scrolls the whole column', (
+        tester,
+      ) async {
+        await pumpAt(tester, const Size(1280, 800), desc: longIntro);
+        final scrollables = find.ancestor(
+          of: intro(),
+          matching: find.byType(Scrollable),
+        );
+        expect(scrollables, findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byKey(detailsColumnKey),
+            matching: find.byType(Scrollable),
+          ),
+          findsOneWidget,
+        );
+        final introTop = tester.getRect(intro()).top;
+        final link = find.byIcon(Icons.open_in_new);
+        final linkTop = tester.getRect(link).top;
+
+        await tester.dragFrom(
+          tester.getTopLeft(intro()) + const Offset(40, 20),
+          const Offset(0, -200),
+        );
+        await tester.pump();
+
+        final position = tester.state<ScrollableState>(scrollables).position;
+        expect(position.pixels, greaterThan(0));
+        expect(tester.getRect(intro()).top, lessThan(introTop));
+        expect(tester.getRect(link).top, linkTop);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+      testWidgets('bottom fade shows until scrolled to the end', (
+        tester,
+      ) async {
+        await pumpAt(tester, const Size(1280, 800), desc: longIntro);
+        await tester.pump();
+        expect(bottomFade(), findsOneWidget);
+        final position = tester
+            .state<ScrollableState>(
+              find.ancestor(of: intro(), matching: find.byType(Scrollable)),
+            )
+            .position;
+        position.jumpTo(position.maxScrollExtent);
+        await tester.pump();
+        expect(bottomFade(), findsNothing);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+      testWidgets('no bottom fade when the column fits', (tester) async {
+        await pumpAt(tester, const Size(1280, 800), desc: '<p>Short</p>');
+        await tester.pump();
+        expect(bottomFade(), findsNothing);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+      testWidgets('phone portrait keeps the capped inner intro scroll', (
+        tester,
+      ) async {
+        await pumpAt(tester, const Size(360, 800), desc: longIntro);
+        final inner = find.ancestor(
+          of: intro(),
+          matching: find.byType(SingleChildScrollView),
+        );
+        expect(inner, findsOneWidget);
+        expect(tester.getSize(inner).height, lessThanOrEqualTo(120));
+        expect(tester.getSize(intro()).height, greaterThan(120));
+        expect(bottomFade(), findsNothing);
+      }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+    });
 
     group('swipe between images', () {
       /// 開啟「原圖＋Icon」兩張圖（[gif] 為 true 時中間多一張 GIF）的詳情，

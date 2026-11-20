@@ -16,12 +16,15 @@ enum ScrollSide {
 
   /// 右側：fade 從右往左漸隱。
   right,
+
+  /// 底部：fade 從下往上漸隱。
+  bottom,
 }
 
 /// 邊緣漸隱遮罩，用於提示使用者該方向仍可捲動。
 ///
 /// 漸層自背景色（不透明）漸隱到透明：在 dialog 內用 dialog 的底色，其他地方用
-/// [GachaTokens.surfaceCard]（卡片底色）。寬度由外層 [Positioned] 決定，此元件本身不設寬度。
+/// [GachaTokens.surfaceCard]（卡片底色）。寬高由外層 [Positioned] 決定，此元件本身不設尺寸。
 class ScrollEdgeFade extends StatelessWidget {
   /// 建立 [ScrollEdgeFade]。
   const ScrollEdgeFade({super.key, required this.side});
@@ -39,12 +42,16 @@ class ScrollEdgeFade extends StatelessWidget {
         : dialog.backgroundColor ??
               theme.dialogTheme.backgroundColor ??
               theme.colorScheme.surfaceContainerHigh;
-    final isLeft = side == ScrollSide.left;
+    final (begin, end) = switch (side) {
+      ScrollSide.left => (Alignment.centerLeft, Alignment.centerRight),
+      ScrollSide.right => (Alignment.centerRight, Alignment.centerLeft),
+      ScrollSide.bottom => (Alignment.bottomCenter, Alignment.topCenter),
+    };
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: isLeft ? Alignment.centerLeft : Alignment.centerRight,
-          end: isLeft ? Alignment.centerRight : Alignment.centerLeft,
+          begin: begin,
+          end: end,
           colors: [background, background.withValues(alpha: 0)],
         ),
       ),

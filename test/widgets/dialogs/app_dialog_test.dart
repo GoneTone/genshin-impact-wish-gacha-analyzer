@@ -101,6 +101,26 @@ void main() {
     expect(_innerWidth(tester), 720);
   });
 
+  testWidgets('xl size uses 960 width in wide window', (tester) async {
+    await _pumpDialog(
+      tester,
+      surfaceSize: const Size(1280, 800),
+      size: AppDialogSize.xl,
+    );
+    expect(_innerWidth(tester), 960);
+  });
+
+  testWidgets('xl size falls back to mq.width - 80 in a 1000 window', (
+    tester,
+  ) async {
+    await _pumpDialog(
+      tester,
+      surfaceSize: const Size(1000, 800),
+      size: AppDialogSize.xl,
+    );
+    expect(_innerWidth(tester), 920);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
   testWidgets('narrow window falls back to mq.width - 80', (tester) async {
     // 視窗寬 700（還不是手機排版）→ lg 應變成 620
     await _pumpDialog(
