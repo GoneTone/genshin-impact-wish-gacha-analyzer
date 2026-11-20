@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/pager.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
   theme: buildDarkTheme(),
@@ -14,26 +15,49 @@ Widget _wrap(Widget child) => MaterialApp(
 );
 
 void main() {
-  testWidgets('totalPages == 1 也顯示 dropdown', (tester) async {
+  testWidgets('totalPages == 1 顯示頁碼按鈕但 disabled，且沒有 dropdown', (tester) async {
     await tester.pumpWidget(
       _wrap(Pager(page: 0, totalPages: 1, onChanged: (_) {})),
     );
-    expect(find.byType(DropdownButton<int>), findsOneWidget);
-    // 純文字 fallback（獨立 Text widget）不應出現；'1 / 1' 只能出現在 dropdown 內部
-    expect(
-      find.descendant(
-        of: find.byType(DropdownButton<int>),
-        matching: find.text('1 / 1'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.byType(DropdownButton<int>), findsNothing);
+    final btn = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
+    expect(btn.onPressed, isNull);
+    expect(find.text('1 / 1'), findsOneWidget);
   });
 
-  testWidgets('totalPages == 5 也顯示 dropdown（不再走 >20 條件）', (tester) async {
+  testWidgets('點頁碼按鈕開出跳頁對話框，確認後回呼 onChanged', (tester) async {
+    int? received;
     await tester.pumpWidget(
-      _wrap(Pager(page: 1, totalPages: 5, onChanged: (_) {})),
+      _wrap(
+        Pager(
+          page: 1,
+          totalPages: 5,
+          totalItems: 90,
+          onChanged: (p) => received = p,
+        ),
+      ),
     );
-    expect(find.byType(DropdownButton<int>), findsOneWidget);
+    expect(find.byType(DropdownButton<int>), findsNothing);
+    await tester.tap(find.text('2 / 5'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AppDialog), findsOneWidget);
+    await tester.enterText(find.byType(TextField), '4');
+    await tester.pump();
+    await tester.tap(find.byType(FilledButton));
+    await tester.pumpAndSettle();
+    expect(received, 3);
+  });
+
+  testWidgets('取消跳頁不回呼 onChanged', (tester) async {
+    int? received;
+    await tester.pumpWidget(
+      _wrap(Pager(page: 1, totalPages: 5, onChanged: (p) => received = p)),
+    );
+    await tester.tap(find.text('2 / 5'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(received, isNull);
   });
 
   testWidgets('首頁 / 上一頁 在第 0 頁 disable', (tester) async {

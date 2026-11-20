@@ -176,7 +176,12 @@ class _SortableTableState extends State<SortableTable>
               ),
             ),
           const SizedBox(height: AppSpacing.m),
-          Pager(page: _page, totalPages: _totalPages, onChanged: _setPage),
+          Pager(
+            page: _page,
+            totalPages: _totalPages,
+            totalItems: widget.rows.length,
+            onChanged: _setPage,
+          ),
         ],
       ),
     );

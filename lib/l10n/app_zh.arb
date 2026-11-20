@@ -435,6 +435,41 @@
 
   "pagerFirst": "首頁",
   "pagerLast": "末頁",
+  "pagerJumpTitle": "前往頁數",
+  "pagerJumpLabel": "頁碼（{min}–{max}）",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "目前在第 {page} 頁，共 {total} 筆",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "前往",
+  "pagerJumpInvalid": "請輸入 {min}–{max} 的頁碼",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
 
   "settingsClearActive": "清除目前帳號資料",
   "settingsClearAll": "清除所有資料",

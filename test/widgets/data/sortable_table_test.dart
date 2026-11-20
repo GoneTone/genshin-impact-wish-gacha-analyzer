@@ -195,7 +195,7 @@ void main() {
     expect(find.text('1'), findsWidgets); // totalIndex of C
   });
 
-  testWidgets('paginates with 20 per page (always shows dropdown)', (
+  testWidgets('paginates with 20 per page (page button shows 1 / 3)', (
     tester,
   ) async {
     final records = List.generate(
@@ -214,11 +214,8 @@ void main() {
         container: container,
       ),
     );
-    final dropdown = tester.widget<DropdownButton<int>>(
-      find.byType(DropdownButton<int>),
-    );
-    expect(dropdown.items, hasLength(3));
-    expect(dropdown.value, 0);
+    expect(find.byType(DropdownButton<int>), findsNothing);
+    expect(find.text('1 / 3'), findsOneWidget);
   });
 
   testWidgets('page survives being scrolled out of a lazy list', (
@@ -707,11 +704,28 @@ void main() {
       final pages = <int>[];
       await pumpPaged(tester, onPageChanged: pages.add);
       await tester.tap(find.byIcon(Icons.first_page), warnIfMissed: false);
-      await tester.tap(find.byType(DropdownButton<int>));
+      await tester.ensureVisible(find.text('1 / 3'));
+      await tester.tap(find.text('1 / 3'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('1 / 3').last);
+      await tester.enterText(find.byType(TextField), '1');
+      await tester.pump();
+      await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
       expect(pages, isEmpty);
+    });
+
+    testWidgets('jumping via the dialog fires onPageChanged', (tester) async {
+      final pages = <int>[];
+      await pumpPaged(tester, onPageChanged: pages.add);
+      await tester.ensureVisible(find.text('1 / 3'));
+      await tester.tap(find.text('1 / 3'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '3');
+      await tester.pump();
+      await tester.tap(find.byType(FilledButton));
+      await tester.pumpAndSettle();
+      expect(pages, [2]);
+      expect(find.text('3 / 3'), findsOneWidget);
     });
 
     testWidgets('showSortButton false hides the sort button', (tester) async {
