@@ -42,7 +42,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/manual_url_di
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 
 import '../helpers/no_game_dir.dart';
 
@@ -118,6 +120,7 @@ void main() {
     PairingPhase phase = PairingPhase.disclosure,
     LogAccessMethod? method,
     List<GachaRecord>? records,
+    bool synced = true,
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
@@ -126,13 +129,15 @@ void main() {
     late ProviderContainer container;
     await tester.runAsync(() async {
       final storage = GachaStorage(tempDir);
-      await storage.save(
-        BannerStorage(
-          uid: '701000000',
-          lastUpdated: DateTime.utc(2026, 5, 1),
-          banners: {'301': records ?? _records(), '2000': _odesRecords()},
-        ),
-      );
+      if (synced) {
+        await storage.save(
+          BannerStorage(
+            uid: '701000000',
+            lastUpdated: DateTime.utc(2026, 5, 1),
+            banners: {'301': records ?? _records(), '2000': _odesRecords()},
+          ),
+        );
+      }
       container = ProviderContainer(
         overrides: [
           noGameDirOverride,
@@ -263,6 +268,54 @@ void main() {
         await scrollToEnd(tester);
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     }
+  }
+
+  for (final (name, page) in [
+    ('overview', const OverviewPage()),
+    ('banner', const BannerPage(gachaType: '301')),
+    ('odes banner', const BannerPage(gachaType: '2000')),
+  ]) {
+    testWidgets('$name header shows last updated in phone landscape', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), page);
+      expect(find.byType(LastUpdatedLabel), findsOneWidget);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('$name landscape header: label after title, share at edge', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), page);
+      final title = tester.getRect(
+        find
+            .descendant(
+              of: find.byType(PageHeader),
+              matching: find.byType(Text),
+            )
+            .first,
+      );
+      final label = tester.getRect(find.byType(LastUpdatedLabel));
+      expect(label.left - title.right, inInclusiveRange(0, 16));
+      expect(label.center.dy, inInclusiveRange(title.top, title.bottom));
+      // 頁面左右內距 12：分享按鈕和直向一樣貼齊右緣。
+      expect(tester.getRect(find.byType(ShareActionButton)).right, 800 - 12);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('$name header has no last updated in phone portrait', (
+      tester,
+    ) async {
+      await pump(tester, const Size(360, 800), page);
+      expect(find.byType(LastUpdatedLabel), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('$name unsynced landscape shows not-synced text and empty', (
+      tester,
+    ) async {
+      await pump(tester, const Size(800, 360), page, synced: false);
+      expect(find.text('尚未同步'), findsOneWidget);
+      expect(find.byType(EmptyState), findsOneWidget);
+      expectNoException(tester);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   }
 
   testWidgets('banner page with keyboard open does not overflow', (

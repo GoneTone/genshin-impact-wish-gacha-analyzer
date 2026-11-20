@@ -35,6 +35,33 @@ void main() {
     );
   }
 
+  for (final (platform, size, want) in [
+    (TargetPlatform.android, const Size(360, 800), PhoneOrientation.portrait),
+    (TargetPlatform.android, const Size(800, 360), PhoneOrientation.landscape),
+    (TargetPlatform.windows, const Size(500, 300), null),
+    (TargetPlatform.android, const Size(1280, 800), null),
+  ]) {
+    testWidgets(
+      'phoneOrientationOf ${platform.name} ${size.width}x${size.height} is $want',
+      (tester) async {
+        PhoneOrientation? got;
+        await tester.pumpWidget(
+          MediaQuery(
+            data: MediaQueryData(size: size),
+            child: Builder(
+              builder: (c) {
+                got = phoneOrientationOf(c);
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        expect(got, want);
+      },
+      variant: TargetPlatformVariant.only(platform),
+    );
+  }
+
   testWidgets('touching outside a text field drops its focus on phones', (
     tester,
   ) async {

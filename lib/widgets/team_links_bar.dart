@@ -7,45 +7,52 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
-/// AppShell 底部 footer 右側的團隊資訊列：
-/// 4 個社群 icon（Facebook / Discord / Line / GitHub）+ 分隔線 + 團隊名稱連結。
+/// 團隊資訊列：4 個社群 icon（Facebook / Discord / Line / GitHub）+ 分隔線 + 團隊名稱連結。
+///
+/// 電腦版放在底部狀態列右側；手機排版放在抽屜底部（[stacked]）。
 class TeamLinksBar extends StatelessWidget {
-  /// 建立 [TeamLinksBar]；[compact] 為手機排版。
-  const TeamLinksBar({super.key, this.compact = false});
+  /// 建立 [TeamLinksBar]；[compact] 為手機排版的圖示列，[stacked] 為上下兩行。
+  const TeamLinksBar({super.key, this.compact = false, this.stacked = false});
 
   /// 手機排版：只留四個圖示，觸控區放大到 48dp。
   final bool compact;
 
+  /// 上下兩行：第一行 4 個 48dp 圖示，第二行團隊名稱（放不下時換行）；各自置中、不畫分隔線。
+  final bool stacked;
+
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).gacha;
+    final bigTargets = compact || stacked;
+    final icons = [
+      for (final (icon, tooltip, url) in [
+        (FontAwesomeIcons.facebookF, 'Facebook', TeamInfo.facebookUrl),
+        (FontAwesomeIcons.discord, 'Discord', TeamInfo.discordUrl),
+        (FontAwesomeIcons.line, 'Line', TeamInfo.lineUrl),
+        (FontAwesomeIcons.github, 'GitHub', AppRepo.githubUrl),
+      ])
+        _IconLink(icon: icon, tooltip: tooltip, url: url, compact: bigTargets),
+    ];
+    if (stacked) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(mainAxisSize: MainAxisSize.min, children: icons),
+          AppLink(
+            url: TeamInfo.websiteUrl,
+            child: Text(
+              TeamInfo.name,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      );
+    }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _IconLink(
-          icon: FontAwesomeIcons.facebookF,
-          tooltip: 'Facebook',
-          url: TeamInfo.facebookUrl,
-          compact: compact,
-        ),
-        _IconLink(
-          icon: FontAwesomeIcons.discord,
-          tooltip: 'Discord',
-          url: TeamInfo.discordUrl,
-          compact: compact,
-        ),
-        _IconLink(
-          icon: FontAwesomeIcons.line,
-          tooltip: 'Line',
-          url: TeamInfo.lineUrl,
-          compact: compact,
-        ),
-        _IconLink(
-          icon: FontAwesomeIcons.github,
-          tooltip: 'GitHub',
-          url: AppRepo.githubUrl,
-          compact: compact,
-        ),
+        ...icons,
         if (!compact) ...[
           const SizedBox(width: AppSpacing.xs),
           Container(width: 1, height: 16, color: tokens.textMuted),

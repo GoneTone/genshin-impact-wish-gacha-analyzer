@@ -7,14 +7,12 @@ import 'package:go_router/go_router.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/state/clock_tick.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
@@ -92,9 +90,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
     final location = GoRouterState.of(context).uri.path;
-    final activeData = ref.watch(
-      gachaRepositoryProvider.select((s) => s.activeData),
-    );
+    final phoneOrientation = phoneOrientationOf(context);
     final width = MediaQuery.of(context).size.width;
     final compact = isCompactLayout(context);
     final extendedRail = width >= 1180;
@@ -151,6 +147,15 @@ class _AppShellState extends ConsumerState<AppShell> {
                       width: double.infinity,
                       onNavigate: Scaffold.of(drawerContext).closeDrawer,
                       header: _DrawerHeader(version: version, l: l),
+                      footer: phoneOrientation == null
+                          ? null
+                          : const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSpacing.m,
+                                vertical: AppSpacing.s,
+                              ),
+                              child: TeamLinksBar(stacked: true),
+                            ),
                       l: l,
                     ),
                   ),
@@ -238,36 +243,35 @@ class _AppShellState extends ConsumerState<AppShell> {
                 ),
               ),
             ),
-            // 手機開著鍵盤時高度很少（橫向約 50dp），先收起狀態列讓內容有空間。
-            if (!(compact && MediaQuery.viewInsetsOf(context).bottom > 0))
+            // 手機橫向高度寶貴，不放狀態列；開著鍵盤時高度更少，電腦版與直向也先收起。
+            if (phoneOrientation != PhoneOrientation.landscape &&
+                !(compact && MediaQuery.viewInsetsOf(context).bottom > 0))
               Container(
+                key: const Key('shell-bottom-bar'),
                 width: double.infinity,
                 color: tokens.surfaceCardHigh,
                 // 背景延伸到螢幕底與兩側，文字和連結避開手勢列與開孔鏡頭。
                 child: SafeArea(
                   top: false,
                   child: Padding(
-                    // 手機排版的連結圖示已有 48dp 觸控區，不再加上下內距，狀態列維持 48dp。
+                    // 手機直向沒有連結圖示撐高，改用最小高度 48dp 維持觸控尺寸的狀態列。
                     padding: EdgeInsets.symmetric(
                       horizontal: AppSpacing.l,
                       vertical: compact ? 0 : AppSpacing.xs * 1.5,
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: activeData == null
-                              ? Text(
-                                  l.footerNotSynced,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : _FooterLastUpdated(
-                                  time: activeData.lastUpdated,
-                                ),
-                        ),
-                        const SizedBox(width: AppSpacing.s),
-                        TeamLinksBar(compact: compact),
-                      ],
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: phoneOrientation == null ? 0 : 48,
+                      ),
+                      child: Row(
+                        children: [
+                          const Expanded(child: LastUpdatedLabel()),
+                          if (phoneOrientation == null) ...[
+                            const SizedBox(width: AppSpacing.s),
+                            TeamLinksBar(compact: compact),
+                          ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -337,7 +341,11 @@ class _Rail extends StatelessWidget {
     this.width,
     this.onNavigate,
     this.header,
+    this.footer,
   });
+
+  /// 抽屜底部（團隊社群連結）；固定在底部按鈕下方，太矮時跟著清單捲動。桌面 rail 沒有。
+  final Widget? footer;
 
   /// 抽屜頂部（App 資訊）；跟著清單一起捲動。桌面 rail 沒有。
   final Widget? header;
@@ -468,12 +476,12 @@ class _Rail extends StatelessWidget {
                           hideLabel: collapsedNoLabel,
                         ),
                       const SizedBox(height: AppSpacing.s),
-                      if (!pinBottom) ...bottomButtons,
+                      if (!pinBottom) ...[...bottomButtons, ?footer],
                     ],
                   ),
                 ),
               ),
-              if (pinBottom) ...bottomButtons,
+              if (pinBottom) ...[...bottomButtons, ?footer],
             ],
           );
         },
@@ -842,71 +850,6 @@ class _BottomRailButton extends StatelessWidget {
                       )),
         ),
       ),
-    );
-  }
-}
-
-/// 底部狀態列的「最後更新」：放得下就顯示完整文字；放不下時前綴換成時鐘圖示，只留相對時間。
-///
-/// 原神版手機狀態列有 4 個連結圖示（多了 Line），360dp 寬時英文、法文的前綴就把時間擠掉了。
-/// 圖示和時間整塊點一下顯示完整文字，長按時間仍看得到絕對時間。
-class _FooterLastUpdated extends ConsumerWidget {
-  /// 建立 [_FooterLastUpdated]。
-  const _FooterLastUpdated({required this.time});
-
-  /// 最後更新時間。
-  final DateTime time;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // 相對時間會變長變短（例如「59 分鐘前」→「1 小時前」），跟著重新判斷放不放得下。
-    ref.watch(clockTickProvider);
-    final l = AppLocalizations.of(context)!;
-    final style = Theme.of(context).textTheme.bodySmall;
-    final full = l.footerLastUpdated(relativeTime(time, l));
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final painter = TextPainter(
-          text: TextSpan(text: full, style: style),
-          maxLines: 1,
-          textDirection: Directionality.of(context),
-          textScaler: MediaQuery.textScalerOf(context),
-        )..layout();
-        final fits = painter.width <= constraints.maxWidth;
-        painter.dispose();
-        if (fits) {
-          return RelativeTimeText(
-            time: time,
-            templateBuilder: l.footerLastUpdated,
-            style: style,
-            overflow: TextOverflow.ellipsis,
-          );
-        }
-        return Tooltip(
-          message: full,
-          triggerMode: tapTooltipTrigger(context),
-          // 整列高 48dp，點擊範圍才夠。
-          child: SizedBox(
-            height: 48,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.update, size: 16, semanticLabel: full),
-                const SizedBox(width: AppSpacing.xs),
-                Flexible(
-                  child: RelativeTimeText(
-                    time: time,
-                    templateBuilder: (s) => s,
-                    style: style,
-                    overflow: TextOverflow.ellipsis,
-                    tooltipOnTap: false,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

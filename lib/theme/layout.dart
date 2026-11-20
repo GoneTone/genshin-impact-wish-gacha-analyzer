@@ -18,6 +18,30 @@ bool isCompactLayout(BuildContext context) {
   return (mobileOs ? size.shortestSide : size.width) < kCompactBreakpoint;
 }
 
+/// 手機排版的螢幕方向。
+enum PhoneOrientation {
+  /// 直向（寬不大於高）。
+  portrait,
+
+  /// 橫向（寬大於高）。
+  landscape,
+}
+
+/// 手機（Android／iOS 且為手機排版）目前的螢幕方向；電腦系統或平板排版回傳 null。
+///
+/// 底部列、標題列收起等「手機專屬」規則一律用它判斷，電腦版視窗再窄也不套用。
+PhoneOrientation? phoneOrientationOf(BuildContext context) {
+  final mobileOs = switch (defaultTargetPlatform) {
+    TargetPlatform.android || TargetPlatform.iOS => true,
+    _ => false,
+  };
+  if (!mobileOs || !isCompactLayout(context)) return null;
+  final size = MediaQuery.sizeOf(context);
+  return size.width > size.height
+      ? PhoneOrientation.landscape
+      : PhoneOrientation.portrait;
+}
+
 /// 提示框的觸發方式：手機排版點一下就顯示，其他沿用預設（滑鼠停留、觸控長按）。
 ///
 /// 只給「點了沒有其他動作」的元素用；外層本身可點時會搶走那個點擊。

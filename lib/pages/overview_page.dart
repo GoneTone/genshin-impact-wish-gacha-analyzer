@@ -24,6 +24,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertic
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -49,7 +50,7 @@ class OverviewPage extends ConsumerWidget {
       return const LoadingState();
     }
     if (activeData == null) {
-      return EmptyState.noSync(context);
+      return noSyncPageBody(context);
     }
 
     final sections = buildOverviewSections(
@@ -136,6 +137,7 @@ class OverviewPage extends ConsumerWidget {
                       child: PageHeader(
                         title: l.pageOverviewTitle,
                         icon: Icons.dashboard_outlined,
+                        trailing: phoneLandscapeLastUpdated(context),
                       ),
                     ),
                     ShareActionButton(

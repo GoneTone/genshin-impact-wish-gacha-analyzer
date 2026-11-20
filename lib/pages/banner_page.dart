@@ -26,6 +26,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_ba
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -70,7 +71,7 @@ class BannerPage extends ConsumerWidget {
       return const LoadingState();
     }
     if (activeData == null) {
-      return EmptyState.noSync(context);
+      return noSyncPageBody(context);
     }
     final type = _resolveType();
     final records = activeData.banners[gachaType] ?? const [];
@@ -86,6 +87,7 @@ class BannerPage extends ConsumerWidget {
             PageHeader(
               title: type.resolveName(l),
               icon: _iconForGachaType(type),
+              trailing: phoneLandscapeLastUpdated(context),
             ),
             // 填滿標題下方的高度再置中，直向、橫向與電腦視窗都落在中間（固定高度只會在那一段裡置中）。
             Expanded(child: EmptyState.noRecords(context)),
@@ -150,6 +152,7 @@ class BannerPage extends ConsumerWidget {
                         child: PageHeader(
                           title: type.resolveName(l),
                           icon: _iconForGachaType(type),
+                          trailing: phoneLandscapeLastUpdated(context),
                         ),
                       ),
                       ShareActionButton(

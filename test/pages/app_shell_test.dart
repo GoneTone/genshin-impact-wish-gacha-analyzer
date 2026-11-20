@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,8 +18,8 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 
 /// 已有一個帳號、記錄 update 呼叫次數的 repository 替身。
@@ -331,34 +332,156 @@ void main() {
 
   testWidgets('phone footer is 48dp tall', (tester) async {
     await pump(tester, const Size(360, 800));
-    final footer = find
-        .ancestor(
-          of: find.byType(TeamLinksBar),
-          matching: find.byType(Container),
-        )
-        .first;
-    expect(tester.getSize(footer).height, 48);
+    expect(
+      tester.getSize(find.byKey(const Key('shell-bottom-bar'))).height,
+      48,
+    );
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-  testWidgets('phone footer keeps last updated and only the icon links', (
+  testWidgets('phone bottom bar has no team links in portrait or landscape', (
     tester,
   ) async {
     await pump(tester, const Size(360, 800));
+    final bar = find.byKey(const Key('shell-bottom-bar'));
     expect(
-      tester.widget<TeamLinksBar>(find.byType(TeamLinksBar)).compact,
-      isTrue,
+      find.descendant(of: bar, matching: find.byType(LastUpdatedLabel)),
+      findsOneWidget,
     );
-    expect(find.text(TeamInfo.name), findsNothing);
+    expect(
+      find.descendant(of: bar, matching: find.byType(TeamLinksBar)),
+      findsNothing,
+    );
+    await pump(tester, const Size(800, 360));
+    expect(find.byKey(const Key('shell-bottom-bar')), findsNothing);
+    expect(find.byType(LastUpdatedLabel), findsNothing);
+    expect(find.byType(TeamLinksBar), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('phone landscape has no footer', (tester) async {
+    await pump(tester, const Size(800, 360));
+    expect(find.byKey(const Key('shell-bottom-bar')), findsNothing);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('desktop bottom bar keeps the one-row team links', (
+    tester,
+  ) async {
+    await pump(tester, const Size(1280, 800));
+    final bar = find.byKey(const Key('shell-bottom-bar'));
+    expect(
+      find.descendant(of: bar, matching: find.byType(LastUpdatedLabel)),
+      findsOneWidget,
+    );
+    final links = find.descendant(of: bar, matching: find.byType(TeamLinksBar));
+    expect(links, findsOneWidget);
+    expect(tester.widget<TeamLinksBar>(links).stacked, isFalse);
+    expect(find.byType(Drawer), findsNothing);
+    final icon = tester.getRect(find.byType(FaIcon).first);
+    final name = tester.getRect(find.text(TeamInfo.name));
+    expect((icon.center.dy - name.center.dy).abs(), lessThan(8));
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  for (final (name, size) in const [
+    ('portrait', Size(360, 800)),
+    ('landscape', Size(914, 411)),
+  ]) {
+    testWidgets('phone drawer shows the stacked team links ($name)', (
+      tester,
+    ) async {
+      await pump(tester, size);
+      await tester.tap(drawerButton(tester));
+      await tester.pumpAndSettle();
+      final bar = find.descendant(
+        of: find.byType(Drawer),
+        matching: find.byType(TeamLinksBar),
+      );
+      expect(bar, findsOneWidget);
+      expect(tester.widget<TeamLinksBar>(bar).stacked, isTrue);
+      expect(find.text(TeamInfo.name), findsOneWidget);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
+  for (final (name, size) in const [
+    ('portrait', Size(360, 800)),
+    ('landscape', Size(914, 411)),
+  ]) {
+    testWidgets('drawer team links stack icons over the team name ($name)', (
+      tester,
+    ) async {
+      await pump(tester, size);
+      await tester.tap(drawerButton(tester));
+      await tester.pumpAndSettle();
+      final bar = find.descendant(
+        of: find.byType(Drawer),
+        matching: find.byType(TeamLinksBar),
+      );
+      await tester.ensureVisible(bar);
+      await tester.pumpAndSettle();
+      final buttons = find.descendant(
+        of: bar,
+        matching: find.byType(IconButton),
+      );
+      expect(buttons, findsNWidgets(4));
+      var iconsBottom = 0.0;
+      var iconsLeft = double.infinity;
+      var iconsRight = 0.0;
+      for (var i = 0; i < 4; i++) {
+        final rect = tester.getRect(buttons.at(i));
+        expect(rect.width, greaterThanOrEqualTo(48));
+        expect(rect.height, greaterThanOrEqualTo(48));
+        iconsBottom = rect.bottom > iconsBottom ? rect.bottom : iconsBottom;
+        iconsLeft = rect.left < iconsLeft ? rect.left : iconsLeft;
+        iconsRight = rect.right > iconsRight ? rect.right : iconsRight;
+      }
+      final nameRect = tester.getRect(find.text(TeamInfo.name));
+      expect(iconsBottom, lessThanOrEqualTo(nameRect.top));
+      // 兩行各自在抽屜可見內容間置中：圖示按鈕左右的空白對稱，名稱本身置中。
+      final center = tester.getCenter(find.byType(Drawer)).dx;
+      expect((iconsLeft + iconsRight) / 2, closeTo(center, 1));
+      expect(nameRect.center.dx, closeTo(center, 1));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  }
+
+  for (final locale in const [Locale('en'), Locale('ja')]) {
+    testWidgets(
+      'drawer team links fit at 1.3x text in ${locale.languageCode}',
+      (tester) async {
+        await pump(
+          tester,
+          const Size(360, 800),
+          locale: locale,
+          textScale: 1.3,
+        );
+        await tester.tap(drawerButton(tester));
+        await tester.pumpAndSettle();
+        final bar = find.descendant(
+          of: find.byType(Drawer),
+          matching: find.byType(TeamLinksBar),
+        );
+        await tester.ensureVisible(bar);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(
+          find.ancestor(of: bar, matching: find.byType(FittedBox)),
+          findsNothing,
+        );
+        final drawer = tester.getRect(find.byType(Drawer));
+        final nameRect = tester.getRect(find.text(TeamInfo.name));
+        expect(nameRect.left, greaterThanOrEqualTo(drawer.left));
+        expect(nameRect.right, lessThanOrEqualTo(drawer.right));
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.android),
+    );
+  }
 
   testWidgets('narrow phone footer swaps the last updated prefix for an icon', (
     tester,
   ) async {
-    // 原神版手機狀態列有 4 個連結圖示，360 寬時英文、法文的前綴就把時間擠掉了。
+    // 放大字級時前綴會把時間擠掉；手機狀態列不再放連結圖示，改用大字級重現。
     final l = await pump(
       tester,
       const Size(360, 800),
       locale: const Locale('en'),
+      textScale: 2,
     );
     final full = l.footerLastUpdated(l.relativeNow);
     expect(find.byIcon(Icons.update), findsOneWidget);
@@ -567,34 +690,27 @@ void main() {
   testWidgets('phone landscape keeps the page clear of the camera cutout', (
     tester,
   ) async {
-    // 橫向時開孔鏡頭在左邊；標題列由 AppBar 自己避開，內容區和狀態列也要避開。
+    // 橫向時開孔鏡頭在左邊；標題列由 AppBar 自己避開，內容區也要避開。
     await pump(tester, const Size(800, 360));
     tester.view.padding = const FakeViewPadding(left: 44);
     tester.view.viewPadding = const FakeViewPadding(left: 44);
     await tester.pumpAndSettle();
     expect(tester.getRect(find.text('page:/')).left, greaterThanOrEqualTo(44));
-    expect(
-      tester.getRect(find.byType(RelativeTimeText)).left,
-      greaterThanOrEqualTo(44),
-    );
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
   testWidgets('phone footer sits above the gesture bar', (tester) async {
-    // 背景延伸到螢幕底，但文字和連結要在手勢列上方。
+    // 背景延伸到螢幕底，但文字要在手勢列上方。
     await pump(tester, const Size(360, 800));
     tester.view.padding = const FakeViewPadding(bottom: 24);
     tester.view.viewPadding = const FakeViewPadding(bottom: 24);
     await tester.pumpAndSettle();
     expect(
-      tester.getRect(find.byType(TeamLinksBar)).bottom,
+      tester.getRect(find.byType(LastUpdatedLabel)).bottom,
       lessThanOrEqualTo(800 - 24),
     );
-    final footer = find
-        .ancestor(
-          of: find.byType(TeamLinksBar),
-          matching: find.byType(Container),
-        )
-        .first;
-    expect(tester.getRect(footer).bottom, 800);
+    expect(
+      tester.getRect(find.byKey(const Key('shell-bottom-bar'))).bottom,
+      800,
+    );
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }
