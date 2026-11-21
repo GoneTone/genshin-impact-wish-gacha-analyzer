@@ -102,7 +102,7 @@ void main() {
       await tester.pumpWidget(
         _wrap(Builder(builder: (context) => EmptyState.noRecords(context))),
       );
-      expect(find.text('此卡池無紀錄'), findsOneWidget);
+      expect(find.text('此卡池無記錄'), findsOneWidget);
     });
 
     testWidgets('uses title override when provided', (tester) async {
@@ -115,7 +115,7 @@ void main() {
         ),
       );
       expect(find.text('自訂標題 XYZ'), findsOneWidget);
-      expect(find.text('此卡池無紀錄'), findsNothing);
+      expect(find.text('此卡池無記錄'), findsNothing);
     });
 
     testWidgets('compact:true makes icon 40px', (tester) async {

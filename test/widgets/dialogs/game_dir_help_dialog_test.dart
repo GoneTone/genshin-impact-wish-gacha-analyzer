@@ -198,13 +198,13 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 100));
       if (pick == null) {
-        await tester.tap(find.text('已經開啟祈願歷史紀錄，卻一直沒有反應？'));
+        await tester.tap(find.text('已經開啟祈願歷史記錄，卻一直沒有反應？'));
       } else {
         showGameDirHelpDialog(baseCtx, pickDirectory: pick);
       }
       await _pumpUntil(
         tester,
-        () => find.text('偵測不到祈願歷史紀錄').evaluate().isNotEmpty,
+        () => find.text('偵測不到祈願歷史記錄').evaluate().isNotEmpty,
       );
       await _pumpUntil(
         tester,
@@ -257,7 +257,7 @@ void main() {
       );
       await _pumpUntil(
         tester,
-        () => find.text('偵測不到祈願歷史紀錄').evaluate().isEmpty,
+        () => find.text('偵測不到祈願歷史記錄').evaluate().isEmpty,
       );
       expect(find.byType(UpdateProgressDialog), findsOneWidget);
     });
@@ -270,7 +270,7 @@ void main() {
       await _pumpUntil(
         tester,
         () =>
-            find.text('偵測不到祈願歷史紀錄').evaluate().isEmpty &&
+            find.text('偵測不到祈願歷史記錄').evaluate().isEmpty &&
             find.byType(UpdateProgressDialog).evaluate().isEmpty,
       );
       expect(find.text('BASE'), findsOneWidget);

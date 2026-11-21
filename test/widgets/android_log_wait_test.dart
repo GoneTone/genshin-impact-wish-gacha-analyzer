@@ -104,8 +104,8 @@ void main() {
         tester,
         const WaitingForCapture(gamePackage: genshinGlobalPackage),
       );
-      expect(find.text('等待祈願紀錄...'), findsOneWidget);
-      expect(find.text('請開啟原神 → 祈願 → 歷史紀錄'), findsOneWidget);
+      expect(find.text('等待祈願記錄...'), findsOneWidget);
+      expect(find.text('請開啟原神 → 祈願 → 歷史記錄'), findsOneWidget);
       expect(find.text(l.progressNotDetectedLink), findsNothing);
       expect(find.text(l.manualUrlEntry), findsOneWidget);
       await tester.tap(find.text(l.actionOpenGame));
@@ -154,7 +154,7 @@ void main() {
       ),
     );
     expect(
-      find.text('這台裝置無法自動讀取祈願紀錄網址（需要 Android 11 以上，或已 root），請改用手動輸入。'),
+      find.text('這台裝置無法自動讀取祈願記錄網址（需要 Android 11 以上，或已 root），請改用手動輸入。'),
       findsOneWidget,
     );
   });

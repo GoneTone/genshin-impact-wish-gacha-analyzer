@@ -54,13 +54,13 @@ void main() {
   ) async {
     final repo = await _pump(tester);
     expect(
-      find.text('如果已經用其他方式（例如電腦上的工具）取得祈願紀錄網址，可以貼在這裡；整段文字也可以，App 會自動找出網址。'),
+      find.text('如果已經用其他方式（例如電腦上的工具）取得祈願記錄網址，可以貼在這裡；整段文字也可以，App 會自動找出網址。'),
       findsOneWidget,
     );
     await tester.enterText(find.byType(TextField), 'no url here');
     await tester.tap(find.text('確定'));
     await tester.pumpAndSettle();
-    expect(find.text('找不到祈願紀錄網址，請確認貼上的內容。'), findsOneWidget);
+    expect(find.text('找不到祈願記錄網址，請確認貼上的內容。'), findsOneWidget);
     expect(repo.submitted, isEmpty);
   });
 

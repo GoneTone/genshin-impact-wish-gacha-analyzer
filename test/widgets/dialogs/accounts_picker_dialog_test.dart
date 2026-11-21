@@ -175,9 +175,9 @@ void main() {
     await _open(tester);
     // 第一個 entry：lastUpdated = 2026-05-10 12:00 UTC，本地時間轉換可能不同
     // 用 substring 斷言避開時區差異。
-    expect(find.textContaining('1234 筆紀錄'), findsOneWidget);
-    expect(find.textContaining('567 筆紀錄'), findsOneWidget);
-    expect(find.textContaining('0 筆紀錄'), findsOneWidget);
+    expect(find.textContaining('1234 筆記錄'), findsOneWidget);
+    expect(find.textContaining('567 筆記錄'), findsOneWidget);
+    expect(find.textContaining('0 筆記錄'), findsOneWidget);
   });
 
   testWidgets('cancel returns null', (tester) async {

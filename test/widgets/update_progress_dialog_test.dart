@@ -67,8 +67,8 @@ void main() {
     });
   }
 
-  const link = '已經開啟祈願歷史紀錄，卻一直沒有反應？';
-  const unavailable = '無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請開啟祈願歷史紀錄。';
+  const link = '已經開啟祈願歷史記錄，卻一直沒有反應？';
+  const unavailable = '無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請開啟祈願歷史記錄。';
   const unavailableNoDir =
       '無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），也找不到遊戲資料夾。請按下方「選擇遊戲資料夾」手動指定。';
   const chooseGameDir = '選擇遊戲資料夾';
@@ -77,8 +77,8 @@ void main() {
     tester,
   ) async {
     await _pumpDialog(tester, progress: const WaitingForCapture());
-    expect(find.text('手動輸入祈願紀錄網址'), findsOneWidget);
-    await tester.tap(find.text('手動輸入祈願紀錄網址'));
+    expect(find.text('手動輸入祈願記錄網址'), findsOneWidget);
+    await tester.tap(find.text('手動輸入祈願記錄網址'));
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byType(TextField), findsOneWidget);
@@ -93,7 +93,7 @@ void main() {
       await tester.tap(find.text(link));
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('偵測不到祈願歷史紀錄'), findsOneWidget);
+      expect(find.text('偵測不到祈願歷史記錄'), findsOneWidget);
     },
   );
 
