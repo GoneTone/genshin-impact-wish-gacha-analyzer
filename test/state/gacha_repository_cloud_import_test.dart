@@ -174,6 +174,44 @@ void main() {
     expect(second.duplicateRecords, 1);
   });
 
+  test('更新完成視窗還開著時照常合併，進度維持原狀', () async {
+    final container = await makeContainer();
+    final repo = container.read(gachaRepositoryProvider.notifier);
+    final completed = UpdateCompleted(
+      totalNewRecords: 0,
+      failedBanners: const [],
+      updatedAt: DateTime.utc(2026, 11, 21),
+      hoYoWikiImagesDownloaded: 0,
+    );
+    repo.debugSetProgress(completed);
+
+    final result = await repo.importBundleForCloudSync(_bundle('800000001'));
+
+    expect(result.addedRecords, 1);
+    expect(container.read(gachaRepositoryProvider).progress, same(completed));
+  });
+
+  test('更新失敗視窗還開著時照常合併', () async {
+    final container = await makeContainer();
+    final repo = container.read(gachaRepositoryProvider.notifier);
+    repo.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
+
+    final result = await repo.importBundleForCloudSync(_bundle('800000001'));
+
+    expect(result.addedRecords, 1);
+  });
+
+  test('更新進行中仍視為忙碌', () async {
+    final container = await makeContainer();
+    final repo = container.read(gachaRepositoryProvider.notifier);
+    repo.debugSetProgress(const Preparing());
+
+    await expectLater(
+      repo.importBundleForCloudSync(_bundle('800000001')),
+      throwsA(isA<CloudSyncBusyException>()),
+    );
+  });
+
   group('合併後內容與本機相同時省略寫檔', () {
     test('完全相同 → 不寫檔、byUid 不換物件、新增 0 筆', () async {
       final storage = CountingStorage(tempDir);
