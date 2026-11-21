@@ -44,7 +44,7 @@ class RustGachaCapture implements GachaCapture {
           // system proxy 已還原；此時呼叫 HTTP fetcher 才不會誤走代理
         },
         onError: (Object e, StackTrace st) {
-          _log.severe('capture error', e, st);
+          _log.severe('capture error ${describeErrorForLog(e)}', null, st);
           if (!completer.isCompleted) completer.completeError(e, st);
         },
         onDone: () {
@@ -57,7 +57,7 @@ class RustGachaCapture implements GachaCapture {
         },
       );
     } catch (e, st) {
-      _log.severe('capture error', e, st);
+      _log.severe('capture error ${describeErrorForLog(e)}', null, st);
       completer.completeError(e, st);
     }
 

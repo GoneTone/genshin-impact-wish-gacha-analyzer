@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' show DetailedApiRequestError;
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 void main() {
@@ -217,6 +218,17 @@ void main() {
         ),
       );
       expect(out, 'error=GoogleSignInException code=interrupted');
+    });
+
+    test('ApiErrorException / AuthExpiredException → retcode, no message', () {
+      expect(
+        describeErrorForLog(ApiErrorException(-1, 'authkey=abc')),
+        'error=ApiErrorException retcode=-1',
+      );
+      expect(
+        describeErrorForLog(AuthExpiredException(-101)),
+        'error=AuthExpiredException retcode=-101',
+      );
     });
 
     test('PlatformException → code, no message or details', () {
