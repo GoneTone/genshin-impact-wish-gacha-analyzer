@@ -1624,7 +1624,11 @@ class GachaRepository extends Notifier<GachaState> {
         final data = state.byUid[uid]!;
         try {
           final outcome = await converter.convert(data, targetLang);
-          await storage.save(outcome.data);
+          // 沒有任何記錄需要轉換時不重寫檔案、不換物件：寫檔與整份 state 替換都會卡住畫面。
+          if (!outcome.data.sameContentAs(data)) {
+            await storage.save(outcome.data);
+            newByUid[uid] = outcome.data;
+          }
           for (final h in outcome.hints) {
             allHints.add((
               name: h.name,
@@ -1633,7 +1637,6 @@ class GachaRepository extends Notifier<GachaState> {
               menuId: h.menuId,
             ));
           }
-          newByUid[uid] = outcome.data;
           agg = agg + outcome.result;
         } catch (e, st) {
           Logger(
@@ -1642,7 +1645,12 @@ class GachaRepository extends Notifier<GachaState> {
         }
       }
       await indexNotifier.setSearches(allHints);
-      if (ref.mounted) state = state.copyWith(byUid: newByUid);
+      if (ref.mounted &&
+          newByUid.entries.any(
+            (e) => !identical(state.byUid[e.key], e.value),
+          )) {
+        state = state.copyWith(byUid: newByUid);
+      }
       // best-effort：補抓目標語言的 icon／詳情（`pageByLang[target]`），讓轉換後
       // 角色說明與 gallery 頁籤即時可看；失敗不影響已完成的轉換。首次轉某語言會抓
       // 該語言全部 entry_page（一次性、會快取，期間由 _fetchHoYoWiki emit

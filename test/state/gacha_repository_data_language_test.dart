@@ -19,6 +19,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converte
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
+import '../helpers/counting_storage.dart';
 import '../helpers/no_game_dir.dart';
 
 /// 建立測試用的 [GachaRecord]，預設 5★ 角色。
@@ -73,8 +74,9 @@ Future<ProviderContainer> _bootstrap({
   required Directory tempDir,
   GachaLanguageConverter? converter,
   http.Client? apiClient,
+  GachaStorage? storage,
 }) async {
-  final storage = GachaStorage(tempDir);
+  storage ??= GachaStorage(tempDir);
   final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
   if (!await hoyowikiDir.exists()) await hoyowikiDir.create(recursive: true);
   final indexStorage = HoYoWikiIndexStorage(hoyowikiDir);
@@ -205,6 +207,103 @@ void main() {
         .read(hoyowikiIndexProvider)
         .lookupId(name: 'Hu Tao', lang: 'en-us');
     expect(id, '1');
+  });
+
+  test('unifyDataLanguage：沒有任何記錄需要轉換 → 不重寫記錄檔、不替換記憶體中的帳號', () async {
+    final tempDir = await Directory.systemTemp.createTemp('gacha_lang_same_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+    final storage = CountingStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: '1001',
+        lastUpdated: DateTime.utc(2026, 5, 25),
+        banners: {
+          '301': [
+            _rec(
+              id: '1',
+              uid: '1001',
+              name: 'Hu Tao',
+              gachaType: '301',
+              lang: 'en-us',
+            ),
+          ],
+        },
+      ),
+    );
+    storage.saves = 0;
+
+    final container = await _bootstrap(
+      tempDir: tempDir,
+      converter: _fakeConverter(),
+      storage: storage,
+    );
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).setDataLanguage('en-us');
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+    final accountBefore = container.read(gachaRepositoryProvider).byUid['1001'];
+
+    final result = await notifier.unifyDataLanguage();
+
+    expect(result.total, 0);
+    expect(storage.saves, 0);
+    expect(
+      identical(
+        container.read(gachaRepositoryProvider).byUid['1001'],
+        accountBefore,
+      ),
+      isTrue,
+    );
+  });
+
+  test('unifyDataLanguage：有記錄要轉換 → 照常寫檔', () async {
+    final tempDir = await Directory.systemTemp.createTemp('gacha_lang_write_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+    final storage = CountingStorage(tempDir);
+    await storage.save(
+      BannerStorage(
+        uid: '1001',
+        lastUpdated: DateTime.utc(2026, 5, 25),
+        banners: {
+          '301': [
+            _rec(
+              id: '1',
+              uid: '1001',
+              name: '胡桃',
+              gachaType: '301',
+              lang: 'zh-tw',
+            ),
+          ],
+        },
+      ),
+    );
+    storage.saves = 0;
+
+    final container = await _bootstrap(
+      tempDir: tempDir,
+      converter: _fakeConverter(),
+      storage: storage,
+    );
+    addTearDown(container.dispose);
+    await container.read(settingsProvider.notifier).setDataLanguage('en-us');
+
+    await container.read(gachaRepositoryProvider.notifier).unifyDataLanguage();
+
+    expect(storage.saves, 1);
+    expect(
+      container
+          .read(gachaRepositoryProvider)
+          .byUid['1001']!
+          .banners['301']!
+          .single
+          .name,
+      'Hu Tao',
+    );
   });
 
   test('unifyDataLanguage：未設定資料語言時回零結果、不動資料', () async {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
@@ -21,6 +23,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 /// 空 [GachaCapture] 替身，避免測試啟動真實 MITM session。
 class _NullCapture implements GachaCapture {
@@ -187,6 +190,57 @@ void main() {
         find.text(l.settingsImportFailed(l.importReasonUnreadable)),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'importing a corrupt backup parsed in the background shows the invalid '
+    'format message and logs the failure on the main isolate',
+    (tester) async {
+      final messages = <String>[];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'accounts.io')
+          .listen((r) => messages.add(r.message));
+      addTearDown(sub.cancel);
+
+      final l = await tapImportWith(
+        tester,
+        Uint8List.fromList(utf8.encode('{ not json')),
+        '匯入資料',
+      );
+      final failed = find.text(
+        l.settingsImportFailed(l.importReasonInvalidFormat),
+      );
+      await pumpUntil(tester, () => failed.evaluate().isNotEmpty);
+
+      expect(failed, findsOneWidget);
+      expect(messages, contains(startsWith('import failed')));
+    },
+  );
+
+  testWidgets(
+    'importing a foreign backup shows the foreign app message and logs it',
+    (tester) async {
+      final messages = <String>[];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'accounts.io')
+          .listen((r) => messages.add(r.message));
+      addTearDown(sub.cancel);
+
+      final l = await tapImportWith(
+        tester,
+        Uint8List.fromList(
+          utf8.encode('{"app":"other","schema_version":1,"accounts":[]}'),
+        ),
+        '匯入資料',
+      );
+      final failed = find.text(
+        l.settingsImportFailed(l.importReasonForeignApp),
+      );
+      await pumpUntil(tester, () => failed.evaluate().isNotEmpty);
+
+      expect(failed, findsOneWidget);
+      expect(messages, contains('import failed: foreign bundle'));
     },
   );
 

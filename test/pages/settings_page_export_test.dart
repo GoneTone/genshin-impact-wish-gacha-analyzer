@@ -10,6 +10,7 @@ import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helpers/wait_until.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
@@ -216,7 +217,7 @@ void main() {
       final l = await pump(tester, android: true);
       await openBackupPicker(tester, l);
       await tester.tap(find.widgetWithText(FilledButton, l.actionSave));
-      await tester.pumpAndSettle();
+      await pumpUntil(tester, () => saves.isNotEmpty);
       expect(saves, hasLength(1));
       expect(saves.single.name, matches(r'^genshin_gacha_backup_.+\.json$'));
       expect(saves.single.ext, 'json');
@@ -234,14 +235,17 @@ void main() {
     final l = await pump(tester, android: true, alias: '主號');
     await openBackupPicker(tester, l);
     await tester.tap(find.widgetWithText(FilledButton, l.actionSave));
-    await tester.pumpAndSettle();
+    await pumpUntil(tester, () => saves.isNotEmpty);
     await tester.tap(find.text(l.actionClose));
     await tester.pumpAndSettle();
 
     final saved = saves.single.bytes;
     fileOpenDialog = (_, _) async => saved;
     await tester.tap(find.text(l.settingsImportData));
-    await tester.pumpAndSettle();
+    await pumpUntil(
+      tester,
+      () => find.text(l.settingsImportSelectTitle).evaluate().isNotEmpty,
+    );
 
     expect(find.text(l.settingsImportSelectTitle), findsOneWidget);
     expect(
@@ -259,7 +263,7 @@ void main() {
       final l = await pump(tester, android: true);
       await openBackupPicker(tester, l);
       await tester.tap(find.widgetWithText(OutlinedButton, l.actionShare));
-      await tester.pumpAndSettle();
+      await pumpUntil(tester, () => shares.isNotEmpty);
       expect(saves, isEmpty);
       expect(shares, hasLength(1));
       expect(shares.single.name, matches(r'^genshin_gacha_backup_.+\.json$'));
@@ -275,7 +279,10 @@ void main() {
     final l = await pump(tester, android: true);
     await openBackupPicker(tester, l);
     await tester.tap(find.widgetWithText(OutlinedButton, l.actionShare));
-    await tester.pumpAndSettle();
+    await pumpUntil(
+      tester,
+      () => find.text(l.shareFailed).evaluate().isNotEmpty,
+    );
     expect(find.text(l.shareFailed), findsOneWidget);
   }, variant: android);
 
@@ -286,7 +293,7 @@ void main() {
     final l = await pump(tester, android: false);
     await openBackupPicker(tester, l);
     await tester.tap(find.widgetWithText(FilledButton, l.confirmExport));
-    await tester.pumpAndSettle();
+    await pumpUntil(tester, () => saves.isNotEmpty);
     expect(saves.single.mime, 'application/json');
     expect(find.text(l.actionOpenFolder), findsOneWidget);
     expect(find.textContaining(r'C:\tmp\genshin_backup.json'), findsOneWidget);
@@ -346,7 +353,7 @@ void main() {
     final l = await pump(tester, android: false);
     await openBackupPicker(tester, l);
     await tester.tap(find.widgetWithText(FilledButton, l.confirmExport));
-    await tester.pumpAndSettle();
+    await pumpUntil(tester, () => saves.isNotEmpty);
     expect(saves, hasLength(1));
     expect(find.byType(Dialog), findsNothing);
   }, variant: windows);
@@ -358,7 +365,13 @@ void main() {
     final l = await pump(tester, android: false);
     await openBackupPicker(tester, l);
     await tester.tap(find.widgetWithText(FilledButton, l.confirmExport));
-    await tester.pumpAndSettle();
+    await pumpUntil(
+      tester,
+      () => find
+          .text(l.settingsExportFailed(l.exportReasonWriteFailed))
+          .evaluate()
+          .isNotEmpty,
+    );
     expect(
       find.text(l.settingsExportFailed(l.exportReasonWriteFailed)),
       findsOneWidget,
@@ -423,7 +436,7 @@ void main() {
       final l = await pump(tester, android: false);
       await openBackupPicker(tester, l);
       await tester.tap(find.widgetWithText(FilledButton, l.confirmExport));
-      await tester.pumpAndSettle();
+      await pumpUntil(tester, () => saves.isNotEmpty);
       expect(
         messages,
         contains(contains('path=${sanitizeFsPath(saveResult!)}')),

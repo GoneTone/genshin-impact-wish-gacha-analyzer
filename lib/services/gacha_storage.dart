@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 
@@ -45,7 +46,7 @@ class GachaStorage {
     try {
       await _atomicWrite(
         recordsFile(data.uid),
-        jsonEncode(data.toJson()),
+        await _encodeInBackground(data),
         data.uid,
       );
       final total = data.banners.values.fold<int>(0, (a, b) => a + b.length);
@@ -162,3 +163,9 @@ class GachaStorage {
   /// [_retryWhileHeld] 的最多嘗試次數（等待 20、40、80、160 ms，合計約 300 ms）。
   static const _maxAttempts = 5;
 }
+
+/// 在背景 isolate 把 [data] 編成 JSON：大帳號的 jsonEncode 在主 isolate 實機量到數十毫秒。
+///
+/// 送過去的物件複製仍在主 isolate，但比整份編碼便宜得多；寫成 top-level 讓閉包只抓參數。
+Future<String> _encodeInBackground(BannerStorage data) =>
+    Isolate.run(() => jsonEncode(data.toJson()));

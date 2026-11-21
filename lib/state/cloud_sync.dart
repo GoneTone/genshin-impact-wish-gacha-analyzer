@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
@@ -482,63 +478,17 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   }
 
   /// 把本機全帳號打包成與手動匯出同格式的 bundle JSON（在背景 isolate 序列化）。
-  ///
-  /// 有記錄檔的帳號只傳路徑、由背景 isolate 自己讀檔：把全部記錄當訊息傳過去，
-  /// 複製本身在主 isolate 就要十幾 ms。每條寫入路徑都是先存檔才更新 state，
-  /// 所以檔案內容與記憶體一致；還沒有檔案的帳號（測試直接塞的資料）才傳物件。
   Future<String> _exportLocal() {
     final gacha = ref.read(gachaRepositoryProvider);
     final settings = ref.read(settingsProvider);
-    final storage = ref.read(gachaStorageProvider);
-    final filePaths = <String, String>{};
-    final inMemory = <String, BannerStorage>{};
-    for (final MapEntry(:key, :value) in gacha.byUid.entries) {
-      final file = storage.recordsFile(key);
-      if (file.existsSync()) {
-        filePaths[key] = file.path;
-      } else {
-        inMemory[key] = value;
-      }
-    }
-    return _exportInBackground(
-      filePaths: filePaths,
-      inMemory: inMemory,
+    return exportAccountsInBackground(
+      byUid: gacha.byUid,
+      recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
       uidOrder: settings.uidOrder,
       uidAliases: settings.uidAliases,
       lastActiveUid: gacha.activeUid,
       appVersion: ref.read(appVersionProvider),
+      now: DateTime.now(),
     );
   }
-}
-
-/// 在背景 isolate 讀記錄檔並跑 [exportAccounts]：數 MB 的 jsonEncode 在主 isolate 會卡住畫面。
-///
-/// 刻意寫成 top-level：閉包只抓參數，不會把 notifier（含 Timer 等無法跨 isolate
-/// 傳送的物件）一起帶進去。
-Future<String> _exportInBackground({
-  required Map<String, String> filePaths,
-  required Map<String, BannerStorage> inMemory,
-  required List<String> uidOrder,
-  required Map<String, String> uidAliases,
-  required String? lastActiveUid,
-  required String appVersion,
-}) {
-  final now = DateTime.now();
-  return Isolate.run(() {
-    final byUid = <String, BannerStorage>{
-      for (final MapEntry(:key, :value) in filePaths.entries)
-        key: BannerStorage.fromJson(
-          jsonDecode(File(value).readAsStringSync()) as Map<String, dynamic>,
-        ),
-      ...inMemory,
-    };
-    return exportAccounts(
-      byUid: byUid,
-      uidOrder: uidOrder,
-      uidAliases: uidAliases,
-      lastActiveUid: lastActiveUid,
-      appVersion: appVersion,
-      now: now,
-    );
-  });
 }
