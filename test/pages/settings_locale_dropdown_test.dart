@@ -56,6 +56,7 @@ Future<ProviderContainer> _setupContainer(Directory tempDir) async {
   return container;
 }
 
+/// 將 [SettingsPage] 包進 [MaterialApp] 與 [UncontrolledProviderScope]，套用 i18n delegates 與英文語系。
 Widget _wrap(ProviderContainer container) => UncontrolledProviderScope(
   container: container,
   child: MaterialApp(

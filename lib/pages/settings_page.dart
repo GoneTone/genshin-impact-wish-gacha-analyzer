@@ -292,7 +292,7 @@ class _LocaleDropdown extends ConsumerWidget {
 /// 下拉選單按鈕上的已選項目：只有值等於 [selected] 的那項放文字，其餘留空。
 ///
 /// `DropdownButton` 會把每個選項放進 `IndexedStack` 全部排版；選項是各國文字時，每次打開設定頁都要排版全部名稱，
-/// 第一次還要載入多種字型（實機約 30 ms）。展開後的清單仍由 `items` 顯示全部名稱。
+/// 第一次還要載入多種字型（ROG Phone 實測約 51 ms）。展開後的清單仍由 `items` 顯示全部名稱。
 DropdownButtonBuilder _onlySelectedLabel<T>(
   List<DropdownMenuItem<T>> items,
   T selected,
