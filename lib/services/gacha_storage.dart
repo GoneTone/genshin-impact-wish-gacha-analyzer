@@ -32,7 +32,7 @@ class GachaStorage {
     final f = recordsFile(uid);
     if (!await f.exists()) return null;
     try {
-      return await Isolate.run(() => readRecordsFileSync(f.path));
+      return await _readRecordsFileInBackground(f.path);
     } catch (e, st) {
       _log.severe('load failed for uid=${sanitizeUid(uid)}', e, st);
       rethrow;
@@ -170,6 +170,10 @@ class GachaStorage {
 /// 送過去的物件複製仍在主 isolate，但比整份編碼便宜得多；寫成 top-level 讓閉包只抓參數。
 Future<String> _encodeInBackground(BannerStorage data) =>
     Isolate.run(() => jsonEncode(data.toJson()));
+
+/// 在背景 isolate 讀取並解析 [path] 的記錄檔；寫成 top-level 讓閉包只抓參數。
+Future<BannerStorage> _readRecordsFileInBackground(String path) =>
+    Isolate.run(() => readRecordsFileSync(path));
 
 /// 同步讀取並解析 [path] 的記錄檔；只在背景 isolate 呼叫（匯出與 [GachaStorage.load] 共用）。
 BannerStorage readRecordsFileSync(String path) => BannerStorage.fromJson(
