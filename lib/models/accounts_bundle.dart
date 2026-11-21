@@ -1,3 +1,4 @@
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 
 /// 本軟體的匯出識別字串，寫入備份檔的 `app` 欄位供匯入端辨識來源。
@@ -110,10 +111,12 @@ class AccountsBundle {
       try {
         account = ExportedAccount.fromJson(entry);
       } catch (e) {
-        throw FormatException('accounts[$i]: $e');
+        throw FormatException('accounts[$i]: ${describeErrorForLog(e)}');
       }
       if (!seen.add(account.data.uid)) {
-        throw FormatException('Duplicate UID in accounts: ${account.data.uid}');
+        throw FormatException(
+          'Duplicate UID in accounts: ${sanitizeUid(account.data.uid)}',
+        );
       }
       accounts.add(account);
     }

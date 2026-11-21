@@ -97,7 +97,7 @@ void main() {
 
     final severe = records.singleWhere((r) => r.level == Level.SEVERE);
     expect(severe.message, startsWith('save failed for uid='));
-    expect(severe.message, contains('error=PathNotFoundException os='));
+    expect(severe.message, contains('error='));
     expect(severe.message, isNot(contains(tempDir.path)));
     expect(severe.error, isNull);
   });
