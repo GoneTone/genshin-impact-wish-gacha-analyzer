@@ -135,4 +135,68 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+  _registerOpenTests();
+}
+
+/// 以按鈕開啟 [UpdateProgressDialog]，進度初始為 [initial]，回傳 container 供操作 repository。
+Future<ProviderContainer> _pumpOpenedDialog(
+  WidgetTester tester, {
+  required UpdateProgress? initial,
+}) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        noGameDirOverride,
+        gachaRepositoryProvider.overrideWith(
+          () => _FakeGachaRepository(initial),
+        ),
+      ],
+      child: MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh', 'Hant'),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const UpdateProgressDialog(),
+              ),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.tap(find.text('open'));
+  // LinearProgressIndicator 是無限動畫，不能 pumpAndSettle。
+  await tester.pump(const Duration(milliseconds: 300));
+  return ProviderScope.containerOf(tester.element(find.text('open')));
+}
+
+void _registerOpenTests() {
+  testWidgets('進度在 dialog 建構前就已清空 → dialog 自己關掉，不留空白框', (tester) async {
+    await _pumpOpenedDialog(tester, initial: null);
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(UpdateProgressDialog), findsNothing);
+    expect(find.text('open'), findsOneWidget);
+  });
+
+  testWidgets('開啟時進度非 null（轉換資料語言）→ 不提早關，清空後才關', (tester) async {
+    final container = await _pumpOpenedDialog(
+      tester,
+      initial: const ConvertingDataLanguage(),
+    );
+    expect(find.byType(UpdateProgressDialog), findsOneWidget);
+
+    container.read(gachaRepositoryProvider.notifier).clearProgress();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(UpdateProgressDialog), findsNothing);
+    expect(find.text('open'), findsOneWidget);
+  });
 }
