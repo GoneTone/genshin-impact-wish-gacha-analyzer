@@ -11,6 +11,17 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 
+/// 在背景 isolate 覆寫雲端檔（編碼與送出都不經主 isolate）；寫成 top-level 讓閉包只抓參數。
+Future<int> _putInBackground(String fileId, String accessToken, String text) =>
+    Isolate.run(() async {
+      final client = http.Client();
+      try {
+        return await putDriveMedia(client, fileId, accessToken, text);
+      } finally {
+        client.close();
+      }
+    });
+
 /// 在背景 isolate 做 UTF-8 解碼：數 MB 的同步檔在主 isolate 實機量到約 30ms（掉好幾格）。
 ///
 /// 寫成 top-level 讓閉包只抓參數，不會把 Drive client 等無法跨 isolate 的物件帶進去。
@@ -23,9 +34,7 @@ Future<Uint8List> _encodeInBackground(String text) =>
 
 /// 以 [accessToken] 透過 [client] 下載 Drive 檔 [fileId] 的內容並以 UTF-8 解碼。
 ///
-/// 錯誤表面對齊 googleapis／googleapis_auth，讓呼叫端既有的授權失效判斷照常運作：
-/// 回應帶 `www-authenticate` 時拋 [AccessDeniedException]（訊息格式同 googleapis_auth），
-/// 其他非 2xx 拋 [drive.DetailedApiRequestError]（訊息含回應內容）。
+/// 錯誤表面見 [_throwIfDriveError]。
 @visibleForTesting
 Future<({String text, int bytes})> fetchDriveMedia(
   http.Client client,
@@ -38,6 +47,41 @@ Future<({String text, int bytes})> fetchDriveMedia(
     }),
     headers: {'Authorization': 'Bearer $accessToken'},
   );
+  _throwIfDriveError(resp, 'download');
+  return (text: utf8.decode(resp.bodyBytes), bytes: resp.bodyBytes.length);
+}
+
+/// 以 [accessToken] 透過 [client] 直接覆寫 Drive 檔 [fileId] 的內容（`uploadType=media`）。
+///
+/// googleapis 預設的 multipart 上傳會把整份內容做 Base64（多約三分之一流量），
+/// 而且編碼在呼叫端 isolate 上跑，實機量到每次約 32～47ms；這裡直接送原始位元組。
+/// 錯誤表面同 [fetchDriveMedia]。回傳送出的位元組數。
+@visibleForTesting
+Future<int> putDriveMedia(
+  http.Client client,
+  String fileId,
+  String accessToken,
+  String content,
+) async {
+  final bytes = utf8.encode(content);
+  final resp = await client.patch(
+    Uri.https('www.googleapis.com', '/upload/drive/v3/files/$fileId', {
+      'uploadType': 'media',
+    }),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    body: bytes,
+  );
+  _throwIfDriveError(resp, 'upload');
+  return bytes.length;
+}
+
+/// 依 googleapis／googleapis_auth 的錯誤表面丟例外，讓呼叫端既有的授權失效判斷照常運作：
+/// 回應帶 `www-authenticate` 時拋 [AccessDeniedException]（訊息格式同 googleapis_auth），
+/// 其他非 2xx 拋 [drive.DetailedApiRequestError]（訊息含回應內容）。
+void _throwIfDriveError(http.Response resp, String action) {
   final wwwAuthenticate = resp.headers['www-authenticate'];
   if (wwwAuthenticate != null) {
     throw AccessDeniedException(
@@ -47,10 +91,9 @@ Future<({String text, int bytes})> fetchDriveMedia(
   if (resp.statusCode < 200 || resp.statusCode >= 300) {
     throw drive.DetailedApiRequestError(
       resp.statusCode,
-      'Drive download failed: ${resp.body}',
+      'Drive $action failed: ${resp.body}',
     );
   }
-  return (text: utf8.decode(resp.bodyBytes), bytes: resp.bodyBytes.length);
 }
 
 /// 在背景 isolate 下載並解碼同步檔：連 HTTP 解析都不經主 isolate（實機約 11ms）。
@@ -145,9 +188,20 @@ class DriveSyncRemote implements CloudSyncRemote {
   /// 上傳（覆蓋）appDataFolder 內的同步檔；無檔時建立、有檔時更新。
   @override
   Future<void> upload(String json) async {
+    final id = await _findFileId();
+    // _findFileId 剛用同一個 client 打過 API，自動續期的 token 此時是有效的。
+    final client = _client;
+    if (id != null && client is AuthClient) {
+      final sent = await _putInBackground(
+        id,
+        client.credentials.accessToken.data,
+        json,
+      );
+      _log.info('upload: updated, $sent bytes (background)');
+      return;
+    }
     final data = await _encodeInBackground(json);
     final media = drive.Media(Stream.value(data), data.length);
-    final id = await _findFileId();
     if (id == null) {
       await _api.files.create(
         drive.File()

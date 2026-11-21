@@ -85,7 +85,8 @@ Future<CloudSyncOutcome> runSyncRound({
       if (filtered.accounts.isNotEmpty) {
         // 雲端與本機已一致（同一台裝置重開 App 最常見）：合併與上傳都不必做，
         // 省下主 isolate 上的逐筆比對；指紋在背景算。
-        final before = await syncFingerprintInBackground(await exportLocal());
+        final localBefore = await exportLocal();
+        final before = await syncFingerprintInBackground(localBefore);
         if (before == remoteFingerprint) {
           await clearPendingRemovals(pendingRemovals);
           _log.info(
@@ -94,7 +95,18 @@ Future<CloudSyncOutcome> runSyncRound({
           );
           return CloudSyncSuccess(uploadedFingerprint: before);
         }
-        await applyRemote(filtered);
+        // 跨裝置時常只差「目前選中的帳號」等設定，記錄完全相同；這些帳號合併不會有任何
+        // 變化，先在背景挑掉（也就不會進入資料語言轉換），省下主 isolate 上的逐筆比對。
+        final same = await _identicalAccountsInBackground(
+          remoteJson,
+          localBefore,
+        );
+        final toMerge = _withoutUids(filtered, same);
+        if (toMerge.accounts.isNotEmpty) {
+          await applyRemote(toMerge);
+        } else {
+          _log.info('merge skipped: all ${same.length} remote accounts match');
+        }
       } else {
         _log.info('merge skipped: remote has no applicable accounts');
       }
@@ -114,6 +126,27 @@ Future<CloudSyncOutcome> runSyncRound({
   );
   return CloudSyncSuccess(uploadedFingerprint: localFingerprint);
 }
+
+/// 在背景比對兩份 bundle JSON，回傳內容完全相同（忽略別名）的帳號 UID。
+Future<Set<String>> _identicalAccountsInBackground(
+  String remoteJson,
+  String localJson,
+) => Isolate.run(() {
+  Map<String, String> byUid(String json) => {
+    for (final a
+        in (jsonDecode(json) as Map<String, dynamic>)['accounts']
+            as List<dynamic>)
+      (a as Map<String, dynamic>)['uid'] as String: jsonEncode(
+        Map<String, dynamic>.from(a)..remove('alias'),
+      ),
+  };
+  final remote = byUid(remoteJson);
+  final local = byUid(localJson);
+  return {
+    for (final MapEntry(:key, :value) in remote.entries)
+      if (local[key] == value) key,
+  };
+});
 
 /// 回傳剔除 [uids] 帳號後的新 bundle（其餘欄位不變）。
 AccountsBundle _withoutUids(AccountsBundle bundle, Set<String> uids) {

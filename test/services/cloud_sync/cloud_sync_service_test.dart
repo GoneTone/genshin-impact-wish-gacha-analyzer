@@ -101,6 +101,59 @@ void main() {
       expect(cleared, ['999']);
     });
 
+    test('記錄全相同、只差目前選中的帳號 → 不合併，但仍上傳', () async {
+      final remote = _FakeRemote(
+        content: _bundleJson(uids: ['800000001', '800000002']),
+      );
+      var applied = false;
+      await runSyncRound(
+        remote: remote,
+        pendingRemovals: const [],
+        applyRemote: (_) async => applied = true,
+        // 帳號順序相反 → last_active_uid 不同，各帳號內容相同。
+        exportLocal: () async => _bundleJson(uids: ['800000002', '800000001']),
+        clearPendingRemovals: (_) async {},
+      );
+      expect(applied, isFalse);
+      expect(remote.uploads, 1);
+    });
+
+    test('只有部分帳號與本機相同 → 只合併不同的帳號', () async {
+      final remote = _FakeRemote(
+        content: _bundleJson(uids: ['800000001', '800000002']),
+      );
+      AccountsBundle? applied;
+      await runSyncRound(
+        remote: remote,
+        pendingRemovals: const [],
+        applyRemote: (b) async => applied = b,
+        exportLocal: () async => _bundleJson(uids: ['800000001']),
+        clearPendingRemovals: (_) async {},
+      );
+      expect(applied!.accounts.map((a) => a.data.uid), ['800000002']);
+    });
+
+    test(
+      'identical-account skip keeps accounts that exist on one side only',
+      () async {
+        // 雲端 A、B；本機 B、C；B 相同 → 只有 A 送進合併，C 只在本機、不受影響。
+        final remote = _FakeRemote(
+          content: _bundleJson(uids: ['800000001', '800000002']),
+        );
+        AccountsBundle? applied;
+        await runSyncRound(
+          remote: remote,
+          pendingRemovals: const [],
+          applyRemote: (b) async => applied = b,
+          exportLocal: () async =>
+              _bundleJson(uids: ['800000002', '800000003']),
+          clearPendingRemovals: (_) async {},
+        );
+        expect(applied!.accounts.map((a) => a.data.uid), ['800000001']);
+        expect(remote.uploads, 1);
+      },
+    );
+
     test('合併前本機就與雲端相同 → 不合併也不上傳', () async {
       final remote = _FakeRemote(content: _localJson());
       var applied = false;
@@ -171,7 +224,7 @@ void main() {
         remote: remote,
         pendingRemovals: const ['800000001'],
         applyRemote: (b) async => appliedBundle = b,
-        exportLocal: () async => _localJson(),
+        exportLocal: () async => _bundleJson(uids: ['800000003']),
         clearPendingRemovals: (_) async {},
       );
       expect(appliedBundle!.accounts.map((a) => a.data.uid), ['800000002']);

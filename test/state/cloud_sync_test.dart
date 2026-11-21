@@ -401,6 +401,50 @@ void main() {
     );
   });
 
+  test('兩個帳號只有一個有差異 → 相同的帳號不轉換語言、不重寫檔案、不替換記憶體資料', () async {
+    final storage = CountingStorage(tempDir);
+    final converter = _CountingConverter();
+    final same = _localBannerStorage('800000001');
+    await GachaStorage(tempDir).save(same);
+    await GachaStorage(tempDir).save(_localBannerStorage('800000002'));
+    // 雲端：800000001 與本機完全相同；800000002 多一筆記錄。
+    final cloud =
+        jsonDecode(_cloudBundleJson('800000002', withRecord: true))
+            as Map<String, dynamic>;
+    (cloud['accounts'] as List).insert(0, same.toJson());
+    remote.content = jsonEncode(cloud);
+    final container = await makeContainer(
+      storage: storage,
+      converter: converter,
+    );
+    await container.read(settingsProvider.notifier).setDataLanguage('en-us');
+    final file = GachaStorage(tempDir).recordsFile('800000001');
+    final modifiedBefore = file.lastModifiedSync();
+    final sameBefore = container
+        .read(gachaRepositoryProvider)
+        .byUid['800000001'];
+    final savesBefore = storage.saves;
+    final convertsBefore = converter.converts;
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    await container.read(cloudSyncProvider.notifier).link();
+
+    expect(converter.converts - convertsBefore, 1);
+    expect(storage.saves - savesBefore, 1);
+    expect(file.lastModifiedSync(), modifiedBefore);
+    expect(
+      identical(
+        container.read(gachaRepositoryProvider).byUid['800000001'],
+        sameBefore,
+      ),
+      isTrue,
+    );
+    expect(
+      container.read(gachaRepositoryProvider).byUid['800000002']!.allRecords,
+      hasLength(2),
+    );
+  });
+
   test('雲端只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔、不觸發補抓', () async {
     final storage = CountingStorage(tempDir);
     final cloudOnly = _cloudBundleJson('800000001', withRecord: true);

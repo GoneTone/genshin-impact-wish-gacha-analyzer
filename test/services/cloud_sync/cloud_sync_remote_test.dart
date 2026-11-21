@@ -66,4 +66,62 @@ void main() {
       },
     );
   });
+
+  group('putDriveMedia', () {
+    test('PATCHes raw UTF-8 bytes with uploadType=media (no base64)', () async {
+      late http.Request seen;
+      final client = MockClient((req) async {
+        seen = req;
+        return http.Response('{}', 200);
+      });
+      const content = '{"名稱":"值"}';
+      final sent = await putDriveMedia(client, 'file-1', 'tok', content);
+      expect(sent, utf8.encode(content).length);
+      expect(seen.method, 'PATCH');
+      expect(seen.url.path, '/upload/drive/v3/files/file-1');
+      expect(seen.url.queryParameters['uploadType'], 'media');
+      expect(seen.headers['Authorization'], 'Bearer tok');
+      expect(seen.bodyBytes, utf8.encode(content));
+    });
+
+    test(
+      'www-authenticate response → AccessDeniedException the existing check recognises',
+      () async {
+        final client = MockClient(
+          (_) async => http.Response(
+            '',
+            401,
+            headers: {'www-authenticate': 'Bearer error="invalid_token"'},
+          ),
+        );
+        final error = await putDriveMedia(
+          client,
+          'f',
+          't',
+          '{}',
+        ).then<Object?>((_) => null, onError: (Object e) => e);
+        expect(error, isA<AccessDeniedException>());
+        expect(isInvalidToken(error!), isTrue);
+      },
+    );
+
+    test(
+      'non-2xx without www-authenticate → DetailedApiRequestError',
+      () async {
+        final client = MockClient((_) async => http.Response('boom', 500));
+        final error = await putDriveMedia(
+          client,
+          'f',
+          't',
+          '{}',
+        ).then<Object?>((_) => null, onError: (Object e) => e);
+        expect(error, isA<drive.DetailedApiRequestError>());
+        expect((error! as drive.DetailedApiRequestError).status, 500);
+        expect(
+          (error as drive.DetailedApiRequestError).message,
+          contains('Drive upload failed'),
+        );
+      },
+    );
+  });
 }
