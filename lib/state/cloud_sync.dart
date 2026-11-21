@@ -9,7 +9,6 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
@@ -104,9 +103,7 @@ final windowForegroundProvider = Provider<Future<void> Function()>(
       await windowManager.show();
       await windowManager.focus();
     } catch (e) {
-      Logger(
-        'cloudsync.sync',
-      ).warning('bring-to-foreground failed ${describeErrorForLog(e)}');
+      Logger('cloudsync.sync').warning('bring-to-foreground failed: $e');
     }
   },
 );
@@ -193,7 +190,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
       return;
     } catch (e) {
-      _log.warning('startup restore failed ${describeErrorForLog(e)}');
+      _log.warning('startup restore failed: $e');
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'network',
@@ -253,7 +250,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       );
     } catch (e) {
       if (!ref.mounted || gen != _authGeneration) return;
-      _log.warning('link failed ${describeErrorForLog(e)}');
+      _log.warning('link failed: $e');
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'authFailed',
@@ -397,7 +394,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         );
         return;
       }
-      _log.warning('sync round failed ${describeErrorForLog(e)}', null, st);
+      _log.warning('sync round failed', e, st);
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'network',
@@ -463,12 +460,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         fingerprint = await syncFingerprintInBackground(await _exportLocal());
       } catch (e, st) {
         // 狀態維持不變：下一次資料變動或啟動輪會再比對。
-        // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
-        _log.warning(
-          'dataChange check failed ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _log.warning('dataChange check failed', e, st);
         return;
       }
       if (!ref.mounted || !_linked) return;

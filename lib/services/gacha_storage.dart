@@ -35,11 +35,7 @@ class GachaStorage {
     try {
       return await _readRecordsFileInBackground(f.path);
     } catch (e, st) {
-      _log.severe(
-        'load failed for uid=${sanitizeUid(uid)} ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      _log.severe('load failed for uid=${sanitizeUid(uid)}', e, st);
       rethrow;
     }
   }
@@ -55,11 +51,7 @@ class GachaStorage {
       final total = data.banners.values.fold<int>(0, (a, b) => a + b.length);
       _log.fine('saved uid=${sanitizeUid(data.uid)} records=$total');
     } catch (e, st) {
-      _log.severe(
-        'save failed for uid=${sanitizeUid(data.uid)} ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      _log.severe('save failed for uid=${sanitizeUid(data.uid)}', e, st);
       rethrow;
     }
   }

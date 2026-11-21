@@ -979,41 +979,11 @@ void main() {
       final failedAt = messages.indexWhere(
         (m) => m.startsWith('dataChange check failed'),
       );
-      expect(errors[failedAt], isNull);
-      expect(messages[failedAt], isNot(contains('800000001')));
-      expect(messages[failedAt], isNot(contains(tempDir.path)));
+      expect(errors[failedAt], isA<FormatException>());
 
       file.writeAsStringSync(good);
       repo.debugSeedAccount(_localBannerStorage('800000003'));
       await waitUntil(() => remote.uploads > uploadsAfterLink);
-    },
-  );
-
-  test(
-    'sync round failure log carries neither the uid nor the path nor an error object',
-    () async {
-      final records = <LogRecord>[];
-      final sub = Logger.root.onRecord
-          .where((r) => r.loggerName == 'cloudsync.sync')
-          .listen(records.add);
-      addTearDown(sub.cancel);
-      final storage = GachaStorage(tempDir);
-      await storage.save(_localBannerStorage('800000001'));
-      remote.content = _cloudBundleJson('800000001');
-      final container = await makeContainer();
-      final notifier = container.read(cloudSyncProvider.notifier);
-      await notifier.link();
-
-      storage.recordsFile('800000001').writeAsStringSync('{ not json');
-      await notifier.syncNow(manual: true);
-
-      final failed = records.singleWhere(
-        (r) => r.message.startsWith('sync round failed'),
-      );
-      expect(failed.error, isNull);
-      expect(failed.stackTrace, isNotNull);
-      expect(failed.message, isNot(contains('800000001')));
-      expect(failed.message, isNot(contains(tempDir.path)));
     },
   );
 

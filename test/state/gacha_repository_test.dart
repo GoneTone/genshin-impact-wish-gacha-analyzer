@@ -1595,68 +1595,6 @@ void main() {
       Logger.root.clearListeners();
     });
 
-    test('fetch error logs type only, no message content', () async {
-      final records = <LogRecord>[];
-      final sub = Logger.root.onRecord.listen(records.add);
-      addTearDown(sub.cancel);
-
-      final storage = GachaStorage(tempDir);
-      await storage.save(
-        BannerStorage(
-          uid: '100000001',
-          lastUpdated: DateTime.utc(2026),
-          banners: const {
-            '301': [],
-            '302': [],
-            '500': [],
-            '200': [],
-            '100': [],
-          },
-        ),
-      );
-      await storage.saveCapturedUrl(
-        '100000001',
-        'https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog'
-            '?authkey=fakekey&authkey_ver=1&sign_type=2'
-            '&game_biz=hk4e_global&lang=zh-tw&gacha_type=301&page=1&size=20&end_id=0',
-      );
-      final container = ProviderContainer(
-        overrides: [
-          gachaStorageProvider.overrideWithValue(storage),
-          noGameDirOverride,
-          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
-          cancellableHttpClientFactoryProvider.overrideWithValue(
-            () => CancellableHttpClient(
-              client: MockClient(
-                (_) async => throw const FormatException(
-                  'C:/Users/bob/secret authkey=LEAKED',
-                ),
-              ),
-              cancel: () {},
-            ),
-          ),
-          gachaFetcherProvider.overrideWithValue(
-            GachaFetcher(rateLimit: Duration.zero, retryBackoff: Duration.zero),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-      container.read(gachaRepositoryProvider);
-      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
-
-      await container.read(gachaRepositoryProvider.notifier).update();
-
-      expect(
-        records.any((r) => r.message.contains('error=FormatException')),
-        isTrue,
-      );
-      for (final r in records) {
-        expect(r.message, isNot(contains('LEAKED')));
-        expect(r.message, isNot(contains('bob')));
-        expect(r.error?.toString() ?? '', isNot(contains('LEAKED')));
-      }
-    });
-
     test('emits update start and update completed on happy path', () async {
       final records = <LogRecord>[];
       final sub = Logger.root.onRecord.listen(records.add);

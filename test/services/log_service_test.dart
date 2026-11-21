@@ -67,6 +67,35 @@ void main() {
     expect(snap.last, contains('line 2999'));
   });
 
+  test('寫入前遮罩訊息、例外物件與 stack trace 裡的敏感資料，錯誤原因照留', () async {
+    svc = await LogService.bootstrap(tempDir);
+    const path =
+        r'C:\Users\Jane Doe\AppData\Roaming\tw.reh\gacha\800123456.json';
+    Logger('test').warning(
+      'load failed url=https://x.example.com/y?authkey=SECRET&size=5',
+      const PathAccessException(
+        path,
+        OSError('The process cannot access the file', 32),
+        'Cannot open file',
+      ),
+      StackTrace.fromString(
+        '#0 load (file:///C:/Users/Jane%20Doe/src/gacha_storage.dart:12:5)',
+      ),
+    );
+    await svc.flush();
+
+    final line = svc.snapshot().last;
+    expect(line, isNot(contains('Jane')));
+    expect(line, isNot(contains('800123456')));
+    expect(line, isNot(contains('SECRET')));
+    expect(line, contains(r'C:\Users\***\AppData'));
+    expect(line, contains(r'\800****456.json'));
+    expect(line, contains('file:///C:/Users/***/src'));
+    expect(line, contains('authkey=***'));
+    expect(line, contains('The process cannot access the file'));
+    expect(line, contains('errno = 32'));
+  });
+
   test('live stream emits new records', () async {
     svc = await LogService.bootstrap(tempDir);
     final received = <String>[];

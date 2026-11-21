@@ -1,11 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/drive/v3.dart' show DetailedApiRequestError;
 
-import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 void main() {
@@ -99,6 +93,46 @@ void main() {
       expect('authkey=***'.allMatches(out).length, equals(2));
     });
 
+    test('masks the user name of home paths anywhere in the text', () {
+      expect(
+        sanitizeLogMessage(
+          r"PathNotFoundException: Cannot open file, path = 'c:\users\bob\a.txt'",
+        ),
+        r"PathNotFoundException: Cannot open file, path = 'c:\users\***\a.txt'",
+      );
+      expect(
+        sanitizeLogMessage('at file:///C:/Users/bob/x.dart:1:2'),
+        'at file:///C:/Users/***/x.dart:1:2',
+      );
+      expect(sanitizeLogMessage('dir=/home/bob/app'), 'dir=/home/***/app');
+      expect(sanitizeLogMessage('dir=/Users/bob/app'), 'dir=/Users/***/app');
+    });
+
+    test('keeps url paths and non-home paths', () {
+      expect(
+        sanitizeLogMessage('GET https://h.example.com/home/page'),
+        'GET https://h.example.com/home/page',
+      );
+      expect(sanitizeLogMessage(r'D:\Games\Genshin'), r'D:\Games\Genshin');
+      expect(sanitizeLogMessage('/data/user/0/x'), '/data/user/0/x');
+    });
+
+    test('masks the uid in records file names', () {
+      expect(sanitizeLogMessage('/d/800123456.json'), '/d/800****456.json');
+      expect(
+        sanitizeLogMessage(r'\d\800123456.url.json'),
+        r'\d\800****456.url.json',
+      );
+      expect(
+        sanitizeLogMessage('/d/800123456.json.tmp'),
+        '/d/800****456.json.tmp',
+      );
+      expect(
+        sanitizeLogMessage('/d/hoyowiki_index.json'),
+        '/d/hoyowiki_index.json',
+      );
+    });
+
     test('redacts authkey even when scheme is uppercase', () {
       final out = sanitizeLogMessage(
         'weird HTTPS://x.example.com/y?authkey=SECRET&size=5',
@@ -174,68 +208,6 @@ void main() {
 
     test('passes through empty string unchanged', () {
       expect(sanitizeFsPath(''), equals(''));
-    });
-  });
-
-  group('describeErrorForLog', () {
-    test('plain error → type only', () {
-      expect(
-        describeErrorForLog(const FormatException('secret content')),
-        'error=FormatException',
-      );
-    });
-
-    test('FileSystemException → os code, no path', () {
-      final out = describeErrorForLog(
-        const FileSystemException(
-          'msg',
-          'C:/Users/bob/801.json',
-          OSError('x', 5),
-        ),
-      );
-      expect(out, 'error=FileSystemException os=5');
-    });
-
-    test('SocketException → os code, no address', () {
-      final out = describeErrorForLog(
-        const SocketException('boom', osError: OSError('x', 11001)),
-      );
-      expect(out, 'error=SocketException os=11001');
-    });
-
-    test('DetailedApiRequestError → status, no message', () {
-      final out = describeErrorForLog(
-        DetailedApiRequestError(403, 'token=abc'),
-      );
-      expect(out, 'error=DetailedApiRequestError status=403');
-    });
-
-    test('GoogleSignInException → code name, no description', () {
-      final out = describeErrorForLog(
-        const GoogleSignInException(
-          code: GoogleSignInExceptionCode.interrupted,
-          description: 'user@example.com',
-        ),
-      );
-      expect(out, 'error=GoogleSignInException code=interrupted');
-    });
-
-    test('ApiErrorException / AuthExpiredException → retcode, no message', () {
-      expect(
-        describeErrorForLog(ApiErrorException(-1, 'authkey=abc')),
-        'error=ApiErrorException retcode=-1',
-      );
-      expect(
-        describeErrorForLog(AuthExpiredException(-101)),
-        'error=AuthExpiredException retcode=-101',
-      );
-    });
-
-    test('PlatformException → code, no message or details', () {
-      final out = describeErrorForLog(
-        PlatformException(code: 'read_failed', message: 'C:/Users/bob'),
-      );
-      expect(out, 'error=PlatformException code=read_failed');
     });
   });
 }

@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
 /// Logger 實例（帳號匯入/匯出）。
 final _log = Logger('accounts.io');
@@ -35,7 +34,7 @@ AccountsBundle importAccounts(String text) {
   try {
     raw = jsonDecode(text);
   } catch (e) {
-    _log.warning('import failed: invalid JSON ${describeErrorForLog(e)}');
+    _log.warning('import failed: invalid JSON ($e)');
     throw const FormatException('Invalid JSON');
   }
   if (raw is! Map<String, dynamic>) {
@@ -64,12 +63,8 @@ AccountsBundle importAccounts(String text) {
     _log.warning('import failed: ${e.message}');
     rethrow;
   } catch (e, st) {
-    _log.warning(
-      'import failed: parse error ${describeErrorForLog(e)}',
-      null,
-      st,
-    );
-    throw FormatException('Failed to parse: ${e.runtimeType}');
+    _log.warning('import failed: parse error', e, st);
+    throw FormatException('Failed to parse: $e');
   }
 }
 

@@ -370,28 +370,20 @@ class GachaRepository extends Notifier<GachaState> {
           state = state.copyWith(clearProgress: true);
         } else {
           _log.warning(
-            'http client error ${describeErrorForLog(e)}'
+            'http client error: ${e.message}'
             '${e.uri != null ? " uri=${sanitizeUrl(e.uri!.toString())}" : ""}',
           );
           state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
         }
       } catch (e, st) {
         if (!ref.mounted) return;
-        _log.severe(
-          'update unexpected error ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _log.severe('update unexpected error', e, st);
         state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
     } catch (e, st) {
       // 取得網址時的錯誤（例如 Android 讀不到配對金鑰）原本會逃出 update()、讓等待畫面卡住，在此轉成更新失敗。
       if (!ref.mounted) return;
-      _log.severe(
-        'update failed while acquiring url ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      _log.severe('update failed while acquiring url', e, st);
       state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
     } finally {
       await _disableWirelessIfPairingUnused();
@@ -976,7 +968,7 @@ class GachaRepository extends Notifier<GachaState> {
       } on http.ClientException {
         rethrow;
       } catch (e) {
-        _log.warning('banner=${t.nameKey} failed ${describeErrorForLog(e)}');
+        _log.warning('banner=${t.nameKey} failed: $e');
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);
       }
@@ -1018,11 +1010,7 @@ class GachaRepository extends Notifier<GachaState> {
       final result = await _fetchHoYoWiki(client);
       hoYoWikiImagesDownloaded = result.imagesDownloaded;
     } catch (e, st) {
-      _log.warning(
-        'hoyowiki stage threw (ignored) ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      _log.warning('hoyowiki stage threw (ignored)', e, st);
     }
     if (!ref.mounted) return;
     if (_cancelTriggered) {
@@ -1126,11 +1114,7 @@ class GachaRepository extends Notifier<GachaState> {
         );
         unawaited(_bestEffortStaleProxyCleanup());
       } catch (e, st) {
-        _log.warning(
-          'cancelCapture: stopCapture failed ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _log.warning('cancelCapture: stopCapture failed', e, st);
       }
     }
     final backstop = _captureBackstop;
@@ -1145,11 +1129,7 @@ class GachaRepository extends Notifier<GachaState> {
       final cleared = await rust_capture.cleanupStaleProxy();
       _log.info('stale proxy cleanup after cancel timeout: cleared=$cleared');
     } catch (e, st) {
-      _log.warning(
-        'stale proxy cleanup failed ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      _log.warning('stale proxy cleanup failed', e, st);
     }
   }
 
@@ -1189,7 +1169,7 @@ class GachaRepository extends Notifier<GachaState> {
         if (!ref.mounted) return;
         _refetchLog.info('wiped (index+cache cleared)');
       } catch (e, st) {
-        _refetchLog.severe('wipeFailed ${describeErrorForLog(e)}', null, st);
+        _refetchLog.severe('wipeFailed', e, st);
         if (!ref.mounted) return;
         state = state.copyWith(
           progress: UpdateFailed(
@@ -1204,11 +1184,7 @@ class GachaRepository extends Notifier<GachaState> {
         final result = await _fetchHoYoWiki(cancellable.client);
         hoYoWikiImagesDownloaded = result.imagesDownloaded;
       } catch (e, st) {
-        _refetchLog.warning(
-          'hoyowiki stage threw (ignored) ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _refetchLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
       if (!ref.mounted) return;
 
@@ -1271,11 +1247,7 @@ class GachaRepository extends Notifier<GachaState> {
           pruneStaleLangs: true,
         );
       } catch (e, st) {
-        _refreshMetaLog.warning(
-          'hoyowiki stage threw (ignored) ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _refreshMetaLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
       if (!ref.mounted) return;
 
@@ -1345,11 +1317,7 @@ class GachaRepository extends Notifier<GachaState> {
         final fetchResult = await _fetchHoYoWiki(cancellable.client);
         images = fetchResult.imagesDownloaded;
       } catch (e, st) {
-        _importLog.warning(
-          'hoyowiki stage threw (ignored) ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _importLog.warning('hoyowiki stage threw (ignored)', e, st);
       }
       if (!ref.mounted) return;
 
@@ -1455,9 +1423,8 @@ class GachaRepository extends Notifier<GachaState> {
         result = await _fetchHoYoWiki(cancellable.client);
       } catch (e, st) {
         _cloudSyncLog.warning(
-          'post-sync hoyowiki stage threw (ignored) '
-          '${describeErrorForLog(e)}',
-          null,
+          'post-sync hoyowiki stage threw (ignored)',
+          e,
           st,
         );
       }
@@ -1704,11 +1671,9 @@ class GachaRepository extends Notifier<GachaState> {
           }
           agg = agg + outcome.result;
         } catch (e, st) {
-          Logger('wish.langconvert').warning(
-            'unify skip uid=${sanitizeUid(uid)} ${describeErrorForLog(e)}',
-            null,
-            st,
-          );
+          Logger(
+            'wish.langconvert',
+          ).warning('unify skip uid=${sanitizeUid(uid)}', e, st);
         }
       }
       await indexNotifier.setSearches(allHints);
@@ -1727,11 +1692,9 @@ class GachaRepository extends Notifier<GachaState> {
       try {
         await _fetchHoYoWiki(cancellable.client);
       } catch (e, st) {
-        Logger('wish.langconvert').warning(
-          'unify prewarm failed (ignored) ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        Logger(
+          'wish.langconvert',
+        ).warning('unify prewarm failed (ignored)', e, st);
       } finally {
         cancellable.client.close();
       }
@@ -1799,9 +1762,8 @@ class GachaRepository extends Notifier<GachaState> {
       return outcome.data;
     } catch (e, st) {
       Logger('wish.langconvert').warning(
-        'convert account failed uid=${sanitizeUid(data.uid)} (kept original) '
-        '${describeErrorForLog(e)}',
-        null,
+        'convert account failed uid=${sanitizeUid(data.uid)} (kept original)',
+        e,
         st,
       );
       return data;
@@ -1997,9 +1959,7 @@ class GachaRepository extends Notifier<GachaState> {
               }
             }
           } catch (e) {
-            _log.warning(
-              'hoyowiki search failed name=${pair.$1} ${describeErrorForLog(e)}',
-            );
+            _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
           }
           if (!ref.mounted) return;
           doneSearch++;
@@ -2047,8 +2007,7 @@ class GachaRepository extends Notifier<GachaState> {
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
           } catch (e) {
             _log.warning(
-              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} '
-              '${describeErrorForLog(e)}',
+              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} err=$e',
             );
           }
           if (!ref.mounted) return;
@@ -2093,8 +2052,7 @@ class GachaRepository extends Notifier<GachaState> {
             }
           } catch (e) {
             _log.warning(
-              'hoyowiki download failed url=${sanitizeUrl(item.url)} '
-              '${describeErrorForLog(e)}',
+              'hoyowiki download failed url=${sanitizeUrl(item.url)} err=$e',
             );
           }
           if (!ref.mounted) return;
@@ -2123,11 +2081,7 @@ class GachaRepository extends Notifier<GachaState> {
       try {
         await indexNotifier.persistNow();
       } catch (e, st) {
-        _log.warning(
-          'index re-persist failed (ignored) ${describeErrorForLog(e)}',
-          null,
-          st,
-        );
+        _log.warning('index re-persist failed (ignored)', e, st);
       }
     }
     return (

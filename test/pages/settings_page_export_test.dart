@@ -399,9 +399,7 @@ void main() {
     final failed = records.singleWhere(
       (r) => r.message.startsWith('export failed'),
     );
-    expect(failed.error, isNull);
-    expect(failed.message, isNot(contains('1001')));
-    expect(failed.message, isNot(contains(tempDir!.path)));
+    expect(failed.error, isA<FormatException>());
   }, variant: windows);
 
   testWidgets('a failing logs save shows the logs export failed dialog', (

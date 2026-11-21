@@ -628,12 +628,7 @@ class _DataManagement extends ConsumerWidget {
         now: now,
       );
     } catch (e, st) {
-      // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
-      Logger('accounts.io').warning(
-        'export failed: building file ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      Logger('accounts.io').warning('export failed: building file', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -672,11 +667,7 @@ class _DataManagement extends ConsumerWidget {
         dialogTitle: l.dialogSaveAsTitle,
       );
     } catch (e, st) {
-      Logger('accounts.io').severe(
-        'export failed name=$fileName ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      Logger('accounts.io').severe('export failed name=$fileName', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -709,9 +700,7 @@ class _DataManagement extends ConsumerWidget {
         dialogTitle: l.dialogOpenTitle,
       );
     } catch (e, st) {
-      Logger(
-        'accounts.io',
-      ).warning('import: read file failed ${describeErrorForLog(e)}', null, st);
+      Logger('accounts.io').warning('import: read file failed', e, st);
       if (!ctx.mounted) return;
       ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
@@ -1069,9 +1058,7 @@ class _ImageCacheSectionState extends ConsumerState<_ImageCacheSection> {
       ref.invalidate(hoyowikiCacheUsageProvider);
       Logger('gacha.hoyowiki.storage').info('user cleared gallery cache');
     } catch (e, st) {
-      Logger(
-        'gacha.hoyowiki.storage',
-      ).warning('clear gallery failed ${describeErrorForLog(e)}', null, st);
+      Logger('gacha.hoyowiki.storage').warning('clear gallery failed', e, st);
       if (!ctx.mounted) return;
       ref.invalidate(hoyowikiCacheUsageProvider);
       ScaffoldMessenger.of(
@@ -1300,11 +1287,7 @@ class _LogsSection extends ConsumerWidget {
     try {
       bundle = await _buildBundle(ref);
     } catch (e, st) {
-      Logger('accounts.io').severe(
-        'logs export failed: build bundle ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      Logger('accounts.io').severe('logs export failed: build bundle', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -1324,11 +1307,7 @@ class _LogsSection extends ConsumerWidget {
         dialogTitle: l.dialogSaveAsTitle,
       );
     } catch (e, st) {
-      Logger('accounts.io').severe(
-        'logs export failed name=$fileName ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      Logger('accounts.io').severe('logs export failed name=$fileName', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -1356,11 +1335,7 @@ class _LogsSection extends ConsumerWidget {
     try {
       bundle = await _buildBundle(ref);
     } catch (e, st) {
-      Logger('accounts.io').severe(
-        'logs share failed: build bundle ${describeErrorForLog(e)}',
-        null,
-        st,
-      );
+      Logger('accounts.io').severe('logs share failed: build bundle', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,

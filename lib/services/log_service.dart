@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+
 /// 應用層 log pipeline。在 `main()` 透過 [bootstrap] 啟動,
 /// 訂閱 `Logger.root.onRecord` 並把每條紀錄分發到:
 /// 1. `dart:developer.log()`(IDE / DevTools);
@@ -63,7 +65,7 @@ class LogService {
     // (例如 main.dart 的 onError 寫 log) 會炸 "Cannot fire new event"。
     // 只能用 developer.log 報失敗，不要再呼叫 Logger.xxx。
     try {
-      final line = _format(r);
+      final line = sanitizeLogMessage(_format(r));
 
       developer.log(
         r.message,

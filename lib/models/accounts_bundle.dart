@@ -111,7 +111,7 @@ class AccountsBundle {
       try {
         account = ExportedAccount.fromJson(entry);
       } catch (e) {
-        throw FormatException('accounts[$i]: ${describeErrorForLog(e)}');
+        throw FormatException('accounts[$i]: $e');
       }
       if (!seen.add(account.data.uid)) {
         throw FormatException(

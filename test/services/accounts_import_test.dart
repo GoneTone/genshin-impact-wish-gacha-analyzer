@@ -180,22 +180,6 @@ void main() {
     expect(() => importAccounts(text), throwsA(isA<ForeignBundleException>()));
   });
 
-  test('invalid JSON 的 log 不含檔案內容', () {
-    final records = <LogRecord>[];
-    final sub = Logger.root.onRecord.listen(records.add);
-    addTearDown(sub.cancel);
-
-    expect(
-      () => importAccounts('SECRET-CONTENT-801057625'),
-      throwsA(isA<FormatException>()),
-    );
-
-    final warning = records.singleWhere((r) => r.level == Level.WARNING);
-    expect(warning.message, contains('invalid JSON error=FormatException'));
-    expect(warning.message, isNot(contains('SECRET')));
-    expect(warning.error, isNull);
-  });
-
   test('duplicate UID 的 log 不含完整 uid', () {
     final records = <LogRecord>[];
     final sub = Logger.root.onRecord.listen(records.add);
