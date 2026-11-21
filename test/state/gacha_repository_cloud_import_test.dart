@@ -8,7 +8,6 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
@@ -16,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import '../helpers/counting_storage.dart';
 import '../helpers/no_game_dir.dart';
 
 /// 不會被觸發的 fake capture。
@@ -68,22 +68,6 @@ http.Client _hoYoWikiMockClient() => MockClient((req) async {
   }
   return http.Response.bytes([1, 2, 3], 200);
 });
-
-/// 記錄 [save] 次數的 [GachaStorage]，用來斷言有沒有重寫檔案。
-class _CountingStorage extends GachaStorage {
-  /// 建立 [_CountingStorage]。
-  _CountingStorage(super.baseDir);
-
-  /// [save] 被呼叫的次數。
-  int saves = 0;
-
-  /// 計數後交給父類別寫檔。
-  @override
-  Future<void> save(BannerStorage data) {
-    saves++;
-    return super.save(data);
-  }
-}
 
 /// 單帳號 bundle（記錄 [ids] 各一筆五星祈願，gacha_type=301）。
 AccountsBundle _bundle(
@@ -192,7 +176,7 @@ void main() {
 
   group('合併後內容與本機相同時省略寫檔', () {
     test('完全相同 → 不寫檔、byUid 不換物件、新增 0 筆', () async {
-      final storage = _CountingStorage(tempDir);
+      final storage = CountingStorage(tempDir);
       final container = await makeContainer(storage: storage);
       final repo = container.read(gachaRepositoryProvider.notifier);
       await repo.importBundleForCloudSync(_bundle('800000001'));
@@ -211,7 +195,7 @@ void main() {
     });
 
     test('只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔', () async {
-      final storage = _CountingStorage(tempDir);
+      final storage = CountingStorage(tempDir);
       final container = await makeContainer(storage: storage);
       final repo = container.read(gachaRepositoryProvider.notifier);
       await repo.importBundleForCloudSync(_bundle('800000001'));
@@ -230,7 +214,7 @@ void main() {
     });
 
     test('新增 1 筆 → 寫檔、addedRecords == 1', () async {
-      final storage = _CountingStorage(tempDir);
+      final storage = CountingStorage(tempDir);
       final container = await makeContainer(storage: storage);
       final repo = container.read(gachaRepositoryProvider.notifier);
       await repo.importBundleForCloudSync(_bundle('800000001'));

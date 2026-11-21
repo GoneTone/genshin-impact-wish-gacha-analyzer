@@ -13,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
@@ -30,6 +31,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 import '../helpers/cloud_sync_fakes.dart';
+import '../helpers/counting_storage.dart';
 import '../helpers/no_game_dir.dart';
 import '../helpers/wait_until.dart';
 
@@ -83,22 +85,6 @@ BannerStorage _localBannerStorage(String uid) => BannerStorage(
     ],
   },
 );
-
-/// 記錄 [save] 次數的 [GachaStorage]，用來斷言同步有沒有重寫記錄檔。
-class _CountingStorage extends GachaStorage {
-  /// 建立 [_CountingStorage]。
-  _CountingStorage(super.baseDir);
-
-  /// [save] 被呼叫的次數。
-  int saves = 0;
-
-  /// 計數後交給父類別寫檔。
-  @override
-  Future<void> save(BannerStorage data) {
-    saves++;
-    return super.save(data);
-  }
-}
 
 /// 記錄 [convert] 次數的 converter；轉換一律失敗（被 repository 吞掉、保留原資料）。
 class _CountingConverter extends GachaLanguageConverter {
@@ -372,8 +358,26 @@ void main() {
     expect(container.read(gachaRepositoryProvider).progress, isNull);
   });
 
+  test('合併一份與本機相同的資料 → 不重寫記錄檔、不替換記憶體中的記錄', () async {
+    remote.content = _cloudBundleJson('800000001', withRecord: true);
+    final container = await makeContainer();
+    await container.read(cloudSyncProvider.notifier).link();
+
+    final file = GachaStorage(tempDir).recordsFile('800000001');
+    final modifiedBefore = file.lastModifiedSync();
+    final byUidBefore = container.read(gachaRepositoryProvider).byUid;
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    await container
+        .read(gachaRepositoryProvider.notifier)
+        .importBundleForCloudSync(importAccounts(remote.content!));
+
+    expect(container.read(gachaRepositoryProvider).byUid, same(byUidBefore));
+    expect(file.lastModifiedSync(), modifiedBefore);
+  });
+
   test('雲端與本機相同 → 一輪同步不寫記錄檔、不轉換資料語言', () async {
-    final storage = _CountingStorage(tempDir);
+    final storage = CountingStorage(tempDir);
     final converter = _CountingConverter();
     await GachaStorage(tempDir).save(_localBannerStorage('800000001'));
     final container = await makeContainer(
@@ -398,11 +402,11 @@ void main() {
   });
 
   test('雲端只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔、不觸發補抓', () async {
-    final storage = _CountingStorage(tempDir);
+    final storage = CountingStorage(tempDir);
     final cloudOnly = _cloudBundleJson('800000001', withRecord: true);
-    final cloudRecord = (jsonDecode(cloudOnly) as Map<String, dynamic>);
+    final cloudBundle = jsonDecode(cloudOnly) as Map<String, dynamic>;
     final local = BannerStorage.fromJson(
-      (cloudRecord['accounts'] as List).first as Map<String, dynamic>,
+      (cloudBundle['accounts'] as List).first as Map<String, dynamic>,
     ).copyWith(lastUpdated: DateTime.utc(2026, 6, 1));
     await GachaStorage(tempDir).save(local);
     remote.content = cloudOnly;
