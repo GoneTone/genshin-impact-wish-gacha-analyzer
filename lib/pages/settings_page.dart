@@ -630,7 +630,7 @@ class _DataManagement extends ConsumerWidget {
     } catch (e, st) {
       // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
       Logger('accounts.io').warning(
-        'export failed: building file error=${e.runtimeType}',
+        'export failed: building file ${describeErrorForLog(e)}',
         null,
         st,
       );

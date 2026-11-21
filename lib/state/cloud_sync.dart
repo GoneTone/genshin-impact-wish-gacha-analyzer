@@ -463,7 +463,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         // 狀態維持不變：下一次資料變動或啟動輪會再比對。
         // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
         _log.warning(
-          'dataChange check failed error=${e.runtimeType}',
+          'dataChange check failed ${describeErrorForLog(e)}',
           null,
           st,
         );
