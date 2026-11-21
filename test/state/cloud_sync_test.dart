@@ -549,6 +549,9 @@ void main() {
     expect(remote.uploads, 1);
 
     await notifier.syncNow(manual: true, trigger: 'manual2');
+    expect(remote.downloads, 2);
+    expect(remote.uploads, 1);
+
     await notifier.syncNow(manual: true, trigger: 'manual3');
     expect(remote.downloads, 3);
     expect(remote.uploads, 1);
@@ -567,7 +570,8 @@ void main() {
     // syncNow 在第一個 await 前已同步把 state 設成 syncing、鎖上單飛旗標。
     expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.syncing);
 
-    // 進行中再呼叫：立即返回（不等待輪完），只標記 pendingRerun，不觸發下載/上傳。
+    // 進行中再呼叫：立即返回（不等待輪完），只標記 pendingRerun，不另外觸發下載
+    // （downloads 仍是 link 那輪加上被卡住的這輪）。
     await notifier.syncNow(manual: true, trigger: 'duringFlight');
     expect(remote.downloads, 2);
 
