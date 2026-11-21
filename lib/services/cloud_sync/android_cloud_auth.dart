@@ -1,3 +1,4 @@
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
@@ -123,7 +124,7 @@ class AndroidCloudAuth implements CloudAuth {
     try {
       await step();
     } catch (e) {
-      _log.warning('android $label failed (ignored): $e');
+      _log.warning('android $label failed (ignored) ${describeErrorForLog(e)}');
     }
   }
 }

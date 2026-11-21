@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/drive/v3.dart' show DetailedApiRequestError;
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 
@@ -168,6 +173,57 @@ void main() {
 
     test('passes through empty string unchanged', () {
       expect(sanitizeFsPath(''), equals(''));
+    });
+  });
+
+  group('describeErrorForLog', () {
+    test('plain error → type only', () {
+      expect(
+        describeErrorForLog(const FormatException('secret content')),
+        'error=FormatException',
+      );
+    });
+
+    test('FileSystemException → os code, no path', () {
+      final out = describeErrorForLog(
+        const FileSystemException(
+          'msg',
+          'C:/Users/bob/801.json',
+          OSError('x', 5),
+        ),
+      );
+      expect(out, 'error=FileSystemException os=5');
+    });
+
+    test('SocketException → os code, no address', () {
+      final out = describeErrorForLog(
+        const SocketException('boom', osError: OSError('x', 11001)),
+      );
+      expect(out, 'error=SocketException os=11001');
+    });
+
+    test('DetailedApiRequestError → status, no message', () {
+      final out = describeErrorForLog(
+        DetailedApiRequestError(403, 'token=abc'),
+      );
+      expect(out, 'error=DetailedApiRequestError status=403');
+    });
+
+    test('GoogleSignInException → code name, no description', () {
+      final out = describeErrorForLog(
+        const GoogleSignInException(
+          code: GoogleSignInExceptionCode.interrupted,
+          description: 'user@example.com',
+        ),
+      );
+      expect(out, 'error=GoogleSignInException code=interrupted');
+    });
+
+    test('PlatformException → code, no message or details', () {
+      final out = describeErrorForLog(
+        PlatformException(code: 'read_failed', message: 'C:/Users/bob'),
+      );
+      expect(out, 'error=PlatformException code=read_failed');
     });
   });
 }

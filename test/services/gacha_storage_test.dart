@@ -74,6 +74,34 @@ void main() {
     expect(severe.single.error, isNull);
   });
 
+  test('save 失敗 → 記 severe log，不帶例外物件與路徑', () async {
+    final blocker = File('${tempDir.path}/blocker');
+    await blocker.writeAsString('x');
+    final broken = GachaStorage(Directory('${blocker.path}/sub'));
+    final records = <LogRecord>[];
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+
+    await expectLater(
+      broken.save(
+        BannerStorage(
+          uid: '801057625',
+          lastUpdated: DateTime.utc(2026, 5, 9),
+          banners: {
+            '301': [makeRecord('1')],
+          },
+        ),
+      ),
+      throwsA(isA<FileSystemException>()),
+    );
+
+    final severe = records.singleWhere((r) => r.level == Level.SEVERE);
+    expect(severe.message, startsWith('save failed for uid='));
+    expect(severe.message, contains('error=PathNotFoundException os='));
+    expect(severe.message, isNot(contains(tempDir.path)));
+    expect(severe.error, isNull);
+  });
+
   test('listKnownUids 只列出純數字 <uid>.json，忽略 .url.json 與非數字檔', () async {
     await File('${tempDir.path}/123.json').writeAsString('{}');
     await File('${tempDir.path}/456.json').writeAsString('{}');
