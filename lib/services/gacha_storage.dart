@@ -117,7 +117,10 @@ class GachaStorage {
     final entries = await baseDir.list().toList();
     for (final e in entries) {
       if (e is File && e.path.endsWith('.json')) {
-        await _retryWhileHeld(e.delete, e.uri.pathSegments.last);
+        await _retryWhileHeld(
+          e.delete,
+          e.uri.pathSegments.last.split('.').first,
+        );
       }
     }
     _log.info('clear all gacha data');

@@ -127,7 +127,7 @@ Future<CloudSyncOutcome> runSyncRound({
   return CloudSyncSuccess(uploadedFingerprint: localFingerprint);
 }
 
-/// 在背景比對兩份 bundle JSON，回傳內容完全相同（忽略別名）的帳號 UID。
+/// 在背景比對兩份 bundle JSON，回傳可跳過合併的帳號 UID：內容（不看別名）相同，且本機已有別名或雲端沒有別名。
 Future<Set<String>> _identicalAccountsInBackground(
   String remoteJson,
   String localJson,
