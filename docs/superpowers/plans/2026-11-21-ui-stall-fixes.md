@@ -144,6 +144,16 @@
 - [ ] **Step 2:** 照搬 lib 改動；`unifyDataLanguage` 在原神約第 1588 行起，`converter.convert` 後 `storage.save` 的那段。
 - [ ] **Step 3:** 測試全過後 Commit `perf: move record encoding, export and import parsing off the UI isolate`。
 
+### Task 8b: 開 App 讀存檔在背景解析（spec 第二節「追加二」）
+
+**Files:** Modify `lib/services/gacha_storage.dart`（`load`）；Test `test/services/gacha_storage_test.dart`
+
+- [ ] **Step 1:** 先找 Task 5、8 有沒有已經寫好「在背景讀記錄檔並解析成 `BannerStorage`」的 top-level 函式（例如背景匯出讀 `recordsFile`），有就直接用，不另寫一個。
+- [ ] **Step 2:** 確認既有測試涵蓋：正常讀回內容相同、檔案不存在回 null、損毀的 JSON 拋例外且主 isolate 記 `severe` log（`load failed for uid=`）。缺的補上（損毀檔案例要用 `Logger.root.onRecord` 確認 log 在主 isolate 記到）。
+- [ ] **Step 3:** `load` 改成在背景 isolate 讀檔、解析、`BannerStorage.fromJson`；`exists` 檢查與 catch／log／`rethrow` 留在主 isolate。
+- [ ] **Step 4:** 相關測試全過後 Commit `perf(storage): decode the records file off the UI isolate`。
+- 鳴潮的同一修正由主控在鳴潮 master 做，push 前問使用者，不屬於這個任務。
+
 ### Task 9: 進度在對話框建構前就清空時自己關（鳴潮 `ac19cfa`、`c0f4217`）
 
 **Files:** Modify `lib/widgets/update_progress_dialog.dart`；Test `test/widgets/update_progress_dialog_test.dart`
