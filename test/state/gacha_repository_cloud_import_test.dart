@@ -285,6 +285,39 @@ void main() {
   );
 
   test(
+    '每一種進行中的 progress 都讓 importBundleForCloudSync 拋 CloudSyncBusyException',
+    () async {
+      const inFlight = <UpdateProgress>[
+        Preparing(),
+        ConvertingDataLanguage(),
+        WaitingForCapture(),
+        FetchingBanner(
+          gachaType: '301',
+          displayName: 'x',
+          pageIndex: 1,
+          newRecordsSoFar: 0,
+        ),
+        FetchingHoYoWiki(
+          phase: HoYoWikiPhase.searching,
+          doneCount: 0,
+          totalCount: 1,
+        ),
+      ];
+      final container = await makeContainer();
+      final repo = container.read(gachaRepositoryProvider.notifier);
+
+      for (final progress in inFlight) {
+        repo.debugSetProgress(progress);
+        await expectLater(
+          repo.importBundleForCloudSync(_bundle('800000001')),
+          throwsA(isA<CloudSyncBusyException>()),
+          reason: '${progress.runtimeType}',
+        );
+      }
+    },
+  );
+
+  test(
     'fetchItemImagesForCloudSync → 補抓並 emit UpdateCompleted 不帶 importSummary',
     () async {
       final container = await makeContainer();
