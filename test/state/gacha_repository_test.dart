@@ -250,6 +250,7 @@ void main() {
 
     // 把 microtask 跑一輪，讓 loadCapturedUrl 完成、進到 probe 並 await
     // mock client 的 future（永遠不 complete），此刻 state.progress 應該是 Preparing
+    // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
     expect(
@@ -302,6 +303,7 @@ void main() {
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     final updateFut = notifier.update();
+    // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
     notifier.cancelPreparing();
@@ -347,6 +349,7 @@ void main() {
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       expect(
@@ -366,6 +369,7 @@ void main() {
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       notifier.cancelPreparing();
@@ -820,6 +824,7 @@ void main() {
 
       // 等更長一點，讓 probe 完成（命中第一個 banner）、進入 fetchBannerWithMerge、
       // 處理 primer（onProgress → state=FetchingBanner）、再 await 第二頁 HTTP（block.future）
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // 確認此刻已經是 FetchingBanner
