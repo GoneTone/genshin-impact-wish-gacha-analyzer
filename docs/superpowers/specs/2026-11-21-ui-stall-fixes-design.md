@@ -145,6 +145,37 @@
 - 本 spec 附錄 A：各鳴潮 commit 在原神的落點與偏離、實作坑。附錄 B：量測結果（修正前後對照）與電腦版驗收。
 - 不改 README。
 
+## 附錄 A：各鳴潮 commit 在原神的落點、偏離與實作坑
+
+| 鳴潮 commit | 原神 commit | 偏離與說明 |
+|---|---|---|
+| `1b7f8e8` | `db101c9` | 只改 `PKG` 與 `bursts` 辨識 App 函式的套件名稱 |
+| `2e0a962` | `4d80df3`、`bd6a161` | 共用 `pumpUntil` 加進 `test/helpers/wait_until.dart`，`waitUntil` 保留原神寫法。`game_dir_help_dialog_test`、`share_image_progress_test` 保留自帶 helper：共用的 `pumpUntil` 最後會 `pumpAndSettle`，這兩個測試有一直在跑的動畫，換上去會逾時。`gacha_repository_test` 38 處固定延遲換掉 33 處，剩 5 處是 `update()` 同步設好進度後才 await mock HTTP，改成等進度會太早返回，每處都加了註解 |
+| `4a0a9db`、`57eb498` | `679de4a`、`dd67566` | lib 逐字照搬。原神 `cloud_sync_test` 有 5 個測試原本數「上傳次數」，雲端已是最新時不再上傳後改數「下載次數」，斷言沒有刪減 |
+| `c80f960`、`e526a20` | `430dcba` | `fetchDriveMedia` 簽名以鳴潮為準（`client, fileId, accessToken`）；照搬鳴潮既有的 `debugSeedAccount` 供測試用；`GachaStorage._dataFile` 公開為 `recordsFile` |
+| （追加三） | `90f0d73`、`2e43b88` | 不是鳴潮 commit。`e526a20` 讓同步匯出在背景讀記錄檔後，Windows 上同時進行的存檔、刪除會拋 `PathAccessException`（審查實測重現），改成短暫重試。鳴潮同步修正 |
+| `f4d8555` | `aef38b5`、`900cb20` | `sameContentAs` 依原神 `GachaRecord` 的 8 個欄位比對。測試共用的 `CountingStorage` 抽到 `test/helpers/counting_storage.dart`（鳴潮各檔自帶） |
+| `52cb8c8` | `6d472de`、`c79c90c` | 比對 key 用 `uid`。相同帳號在原神的轉換資料語言之前就剔除，有測試鎖住。**偏離**（追加四）：別名規則，鳴潮同步修正。原神一個既有測試的本機帳號從 800000002 改成 800000003，因為它剛好和雲端帳號相同，會被正確剔除；斷言不變 |
+| `b8a6bf1` | `068e2bd`、`2c4f030` | 鳴潮的 `unify_data_language_test` 對應原神 `gacha_repository_data_language_test`；轉換後內容沒變就不寫檔、不換 `byUid`，hints 照常收集 |
+| （追加二） | `d53433e` | 不是鳴潮 commit。`GachaStorage.load` 改在背景解析；新增 top-level `readRecordsFileSync`，背景匯出也改用它，沒有重複的讀檔邏輯。鳴潮同步修正（鳴潮保留自己「損毀檔 → warning＋null」的語意） |
+| `ac19cfa`、`c0f4217` | `d408e9f` | 直接套 `c0f4217` 的最終形，`ac19cfa` 每次 build 都檢查的中間版已被取代。另有測試鎖住 `ConvertingDataLanguage` 期間不會被誤關 |
+| `81d3dfa` | — | 不適用：原神頁面已經只訂閱需要的欄位，`WebCacheUrlWatch` 本來就在背景掃描 |
+| `a5aafcf` | — | 原神已經有（`phone_layout_pages_test.dart`） |
+| `60b6f2a` | `3f3cd53` | 背景函式多帶 `lang` 參數，因為原神的 `LangCatalog.fromEntries` 需要它 |
+| `19a911d` | `f4a8953`、`b6cfc8c` | `_onlySelectedLabel` 套用到介面語言與資料語言兩個選單；setter 原神本來就先改狀態再存檔，不用改。測試改選「日本語」，因為原神的德文沒有翻譯 |
+| （追加） | `64af71a` | 不是鳴潮 commit。結果視窗開著時，雲端合併不再被當成忙碌。鳴潮同步修正 |
+| — | `886d000` | 鳴潮分支整體審查發現的兩個小問題（過時的 dartdoc、`clearAll` 的 log ID），原神也有，一併修正 |
+
+**同步不再順帶轉換資料語言**：照鳴潮的做法，雲端與本機相同時整輪跳過，相同的帳號也不送進合併，所以這些帳號不會被轉換。其餘帳號照原本的流程轉換。
+
+**實作坑**
+- 背景 isolate 的 `Logger` 不會寫進 App log。`importAccounts` 在背景解析失敗時，原本那行較詳細的 warning（`app=` 值與 stack trace）會留在背景，主 isolate 只記得到例外訊息。鳴潮也是這樣，全域限制禁止另外新增 log，所以保持一致。
+- Windows 的 Dart 開檔不帶 `FILE_SHARE_DELETE`。只要有一個 isolate 開著檔案，另一個 isolate 的 rename 或 delete 就會失敗（追加三）。
+- 只在 Windows 才會發生的重試測試，用 `skip: !Platform.isWindows` 跳過；CI 是 Linux，所以只有本機 Windows 會實際跑到。
+- 檢查結果不要看 `| tail` 的結束碼：鳴潮分支曾經因此漏看一個 analyze info。
+
+**鳴潮同步修正**：追加、追加二、追加三、追加四共四項，加上 `886d000` 的對應修正，放在鳴潮 PR 121。
+
 ## 附錄 B：量測結果
 
 ### 修正前（2026-11-21，ROG Phone 9，profile 版 `bd6a161`）
