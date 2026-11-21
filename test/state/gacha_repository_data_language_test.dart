@@ -243,17 +243,14 @@ void main() {
     addTearDown(container.dispose);
     await container.read(settingsProvider.notifier).setDataLanguage('en-us');
     final notifier = container.read(gachaRepositoryProvider.notifier);
-    final accountBefore = container.read(gachaRepositoryProvider).byUid['1001'];
+    final byUidBefore = container.read(gachaRepositoryProvider).byUid;
 
     final result = await notifier.unifyDataLanguage();
 
     expect(result.total, 0);
     expect(storage.saves, 0);
     expect(
-      identical(
-        container.read(gachaRepositoryProvider).byUid['1001'],
-        accountBefore,
-      ),
+      identical(container.read(gachaRepositoryProvider).byUid, byUidBefore),
       isTrue,
     );
   });
