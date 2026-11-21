@@ -187,4 +187,67 @@ void main() {
       expect(await storage.recordsFile('42').exists(), isFalse);
     }, skip: !Platform.isWindows);
   });
+
+  group('retryWhileHeld', () {
+    /// 前 [failures] 次丟 [error]、之後成功的操作；[calls] 記錄被呼叫次數。
+    Future<Object?> Function() flaky(
+      List<int> calls,
+      int failures,
+      Object error,
+    ) => () async {
+      calls.add(calls.length + 1);
+      if (calls.length <= failures) throw error;
+      return null;
+    };
+
+    test(
+      'succeeds after two PathAccessException retries and logs it',
+      () async {
+        final messages = <String>[];
+        final sub = Logger.root.onRecord
+            .where((r) => r.loggerName == 'gacha.storage')
+            .listen((r) => messages.add(r.message));
+        addTearDown(sub.cancel);
+        final calls = <int>[];
+
+        await retryWhileHeld(
+          flaky(calls, 2, const PathAccessException('x', OSError('held', 32))),
+          '42',
+        );
+
+        expect(calls, hasLength(3));
+        expect(messages, contains(contains('retries=2')));
+      },
+    );
+
+    test('rethrows after five attempts when always held', () async {
+      final calls = <int>[];
+      await expectLater(
+        retryWhileHeld(
+          flaky(calls, 99, const PathAccessException('x', OSError('held', 32))),
+          '42',
+        ),
+        throwsA(isA<PathAccessException>()),
+      );
+      expect(calls, hasLength(5));
+    });
+
+    test('rethrows another FileSystemException without retrying', () async {
+      final calls = <int>[];
+      await expectLater(
+        retryWhileHeld(
+          flaky(calls, 99, const FileSystemException('other')),
+          '42',
+        ),
+        throwsA(
+          isA<FileSystemException>().having(
+            (e) => e is PathAccessException,
+            'is PathAccessException',
+            isFalse,
+          ),
+        ),
+      );
+      expect(calls, hasLength(1));
+    });
+  });
 }
