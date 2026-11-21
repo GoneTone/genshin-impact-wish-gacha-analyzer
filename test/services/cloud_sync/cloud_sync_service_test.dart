@@ -101,20 +101,43 @@ void main() {
       expect(cleared, ['999']);
     });
 
+    test('合併前本機就與雲端相同 → 不合併也不上傳', () async {
+      final remote = _FakeRemote(content: _localJson());
+      var applied = false;
+      final outcome = await runSyncRound(
+        remote: remote,
+        pendingRemovals: const [],
+        applyRemote: (_) async => applied = true,
+        exportLocal: () async => _localJson(),
+        clearPendingRemovals: (_) async {},
+      );
+      expect(applied, isFalse);
+      expect(remote.uploads, 0);
+      expect(
+        (outcome as CloudSyncSuccess).uploadedFingerprint,
+        syncFingerprint(_localJson()),
+      );
+    });
+
     test('合併後本機與雲端內容相同（只差匯出時間）→ 不上傳，仍清 pendingRemovals', () async {
       final cloud = _localJson();
       final remote = _FakeRemote(content: cloud);
       List<String>? cleared;
+      // 合併前本機只有另一個帳號；合併後才變成與雲端相同（只差匯出時間）。
+      var merged = false;
       final outcome = await runSyncRound(
         remote: remote,
         pendingRemovals: const ['999'],
-        applyRemote: (_) async {},
-        exportLocal: () async => _localJson().replaceFirst(
-          '2026-07-06T00:00:00.000Z',
-          '2026-11-08T00:00:00.000Z',
-        ),
+        applyRemote: (_) async => merged = true,
+        exportLocal: () async => merged
+            ? _localJson().replaceFirst(
+                '2026-07-06T00:00:00.000Z',
+                '2026-11-08T00:00:00.000Z',
+              )
+            : _bundleJson(uids: ['800000003']),
         clearPendingRemovals: (uids) async => cleared = uids,
       );
+      expect(merged, isTrue);
       expect(remote.uploads, 0);
       expect(remote.content, cloud);
       expect(cleared, ['999']);

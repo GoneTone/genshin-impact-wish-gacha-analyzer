@@ -8,6 +8,7 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
@@ -68,8 +69,28 @@ http.Client _hoYoWikiMockClient() => MockClient((req) async {
   return http.Response.bytes([1, 2, 3], 200);
 });
 
-/// 單帳號 bundle（1 筆五星祈願記錄，gacha_type=301）。
-AccountsBundle _bundle(String uid) => AccountsBundle.fromJson(
+/// 記錄 [save] 次數的 [GachaStorage]，用來斷言有沒有重寫檔案。
+class _CountingStorage extends GachaStorage {
+  /// 建立 [_CountingStorage]。
+  _CountingStorage(super.baseDir);
+
+  /// [save] 被呼叫的次數。
+  int saves = 0;
+
+  /// 計數後交給父類別寫檔。
+  @override
+  Future<void> save(BannerStorage data) {
+    saves++;
+    return super.save(data);
+  }
+}
+
+/// 單帳號 bundle（記錄 [ids] 各一筆五星祈願，gacha_type=301）。
+AccountsBundle _bundle(
+  String uid, {
+  List<String> ids = const ['1900000000000000001'],
+  String lastUpdated = '2026-07-01T00:00:00.000Z',
+}) => AccountsBundle.fromJson(
   jsonDecode(
         jsonEncode({
           'schema_version': AccountsBundle.currentSchemaVersion,
@@ -80,19 +101,20 @@ AccountsBundle _bundle(String uid) => AccountsBundle.fromJson(
           'accounts': [
             {
               'uid': uid,
-              'last_updated': '2026-07-01T00:00:00.000Z',
+              'last_updated': lastUpdated,
               'banners': {
                 '301': [
-                  {
-                    'id': '1900000000000000001',
-                    'uid': uid,
-                    'gacha_type': '301',
-                    'name': '測試角色',
-                    'item_type': '角色',
-                    'rank_type': 5,
-                    'time': '2026-06-30 12:00:00',
-                    'lang': 'zh-tw',
-                  },
+                  for (final id in ids)
+                    {
+                      'id': id,
+                      'uid': uid,
+                      'gacha_type': '301',
+                      'name': '測試角色',
+                      'item_type': '角色',
+                      'rank_type': 5,
+                      'time': '2026-06-30 12:00:00',
+                      'lang': 'zh-tw',
+                    },
                 ],
               },
             },
@@ -115,12 +137,14 @@ void main() {
   });
 
   /// 建立完成 bootstrap 的 container（含 HoYoWiki 依賴覆寫）。
-  Future<ProviderContainer> makeContainer() async {
+  Future<ProviderContainer> makeContainer({GachaStorage? storage}) async {
     final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
     await hoyowikiDir.create();
     final container = ProviderContainer(
       overrides: [
-        gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        gachaStorageProvider.overrideWithValue(
+          storage ?? GachaStorage(tempDir),
+        ),
         noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
@@ -164,6 +188,64 @@ void main() {
 
     expect(second.addedRecords, 0);
     expect(second.duplicateRecords, 1);
+  });
+
+  group('合併後內容與本機相同時省略寫檔', () {
+    test('完全相同 → 不寫檔、byUid 不換物件、新增 0 筆', () async {
+      final storage = _CountingStorage(tempDir);
+      final container = await makeContainer(storage: storage);
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      await repo.importBundleForCloudSync(_bundle('800000001'));
+      final savesBefore = storage.saves;
+      final byUidBefore = container.read(gachaRepositoryProvider).byUid;
+
+      final result = await repo.importBundleForCloudSync(_bundle('800000001'));
+
+      expect(storage.saves, savesBefore);
+      expect(
+        identical(container.read(gachaRepositoryProvider).byUid, byUidBefore),
+        isTrue,
+      );
+      expect(result.addedRecords, 0);
+      expect(result.successAccounts, 1);
+    });
+
+    test('只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔', () async {
+      final storage = _CountingStorage(tempDir);
+      final container = await makeContainer(storage: storage);
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      await repo.importBundleForCloudSync(_bundle('800000001'));
+      final savesBefore = storage.saves;
+
+      final result = await repo.importBundleForCloudSync(
+        _bundle('800000001', lastUpdated: '2026-07-05T00:00:00.000Z'),
+      );
+
+      expect(storage.saves, savesBefore + 1);
+      expect(result.addedRecords, 0);
+      expect(
+        container.read(gachaRepositoryProvider).byUid['800000001']!.lastUpdated,
+        DateTime.utc(2026, 7, 5),
+      );
+    });
+
+    test('新增 1 筆 → 寫檔、addedRecords == 1', () async {
+      final storage = _CountingStorage(tempDir);
+      final container = await makeContainer(storage: storage);
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      await repo.importBundleForCloudSync(_bundle('800000001'));
+      final savesBefore = storage.saves;
+
+      final result = await repo.importBundleForCloudSync(
+        _bundle(
+          '800000001',
+          ids: ['1900000000000000001', '1900000000000000002'],
+        ),
+      );
+
+      expect(storage.saves, savesBefore + 1);
+      expect(result.addedRecords, 1);
+    });
   });
 
   test(

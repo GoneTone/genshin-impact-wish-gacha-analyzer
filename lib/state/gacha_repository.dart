@@ -1469,8 +1469,14 @@ class GachaRepository extends Notifier<GachaState> {
         final merged = localBefore == null
             ? incoming
             : localBefore.mergeWith(incoming);
-        final toSave = await _convertAccountToDataLanguage(merged);
-        await storage.save(toSave);
+        var toSave = await _convertAccountToDataLanguage(merged);
+        // 合併後與本機完全相同（例如雲端同步重抓到同一份）就沿用原物件、不重寫檔案：
+        // 寫檔的 JSON 編碼在主 isolate 實機量到數十毫秒。
+        if (localBefore != null && toSave.sameContentAs(localBefore)) {
+          toSave = localBefore;
+        } else {
+          await storage.save(toSave);
+        }
         if (!ref.mounted) {
           return ImportResult(
             successAccounts: successCount,
@@ -1535,8 +1541,12 @@ class GachaRepository extends Notifier<GachaState> {
       );
     }
 
+    // 沒有任何帳號換物件就保留原 Map：頁面與「本機資料變動」監聽都不必重跑。
+    final byUidChanged =
+        newByUid.length != state.byUid.length ||
+        newByUid.entries.any((e) => !identical(state.byUid[e.key], e.value));
     state = state.copyWith(
-      byUid: newByUid,
+      byUid: byUidChanged ? newByUid : null,
       activeUid: newActive,
       clearActiveUid: newActive == null,
     );

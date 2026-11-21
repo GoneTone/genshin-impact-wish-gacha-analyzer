@@ -98,7 +98,37 @@ class BannerStorage {
     return byId.values.toList()..sort((a, b) => b.id.compareTo(a.id));
   }
 
+  /// 與 [other] 的內容（uid、更新時間、各卡池每筆記錄的所有欄位）是否完全相同。
+  ///
+  /// 合併後沒有任何變化時用來省掉寫檔與 state 替換；[GachaRecord] 刻意不定義 `==`。
+  bool sameContentAs(BannerStorage other) {
+    if (uid != other.uid ||
+        lastUpdated != other.lastUpdated ||
+        banners.length != other.banners.length) {
+      return false;
+    }
+    for (final MapEntry(:key, :value) in banners.entries) {
+      final theirs = other.banners[key];
+      if (theirs == null || theirs.length != value.length) return false;
+      for (var i = 0; i < value.length; i++) {
+        if (!_sameRecord(value[i], theirs[i])) return false;
+      }
+    }
+    return true;
+  }
+
   /// 全 banner 串成一條 list（OverviewPage 用）
   List<GachaRecord> get allRecords =>
       banners.values.expand((l) => l).toList(growable: false);
 }
+
+/// 兩筆記錄的所有欄位是否相同。
+bool _sameRecord(GachaRecord a, GachaRecord b) =>
+    a.id == b.id &&
+    a.uid == b.uid &&
+    a.gachaType == b.gachaType &&
+    a.name == b.name &&
+    a.itemType == b.itemType &&
+    a.rankType == b.rankType &&
+    a.time == b.time &&
+    a.lang == b.lang;

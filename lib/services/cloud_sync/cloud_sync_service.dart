@@ -56,7 +56,7 @@ class CloudSyncSkippedSchemaTooNew extends CloudSyncOutcome {
 ///   被合併復活），上傳成功後經 [clearPendingRemovals] 清除。
 /// - 雲端檔損毀（非 JSON／外來檔）視為不存在，直接以本機內容上傳自癒。
 /// - [applyRemote] 拋出的例外（如更新進行中）原樣往外傳，由呼叫端重排。
-/// - 合併後本機內容與雲端相同（[syncFingerprint] 一致）就不上傳，省下整份同步檔的流量。
+/// - 合併前本機已與雲端相同就整輪跳過合併與上傳；合併後才相同則只省上傳。
 Future<CloudSyncOutcome> runSyncRound({
   required CloudSyncRemote remote,
   required List<String> pendingRemovals,
@@ -83,6 +83,17 @@ Future<CloudSyncOutcome> runSyncRound({
     if (bundle != null) {
       final filtered = _withoutUids(bundle, pendingRemovals.toSet());
       if (filtered.accounts.isNotEmpty) {
+        // 雲端與本機已一致（同一台裝置重開 App 最常見）：合併與上傳都不必做，
+        // 省下主 isolate 上的逐筆比對；指紋在背景算。
+        final before = await syncFingerprintInBackground(await exportLocal());
+        if (before == remoteFingerprint) {
+          await clearPendingRemovals(pendingRemovals);
+          _log.info(
+            'round done in ${sw.elapsedMilliseconds}ms, '
+            'remote=${remoteJson.length}B already in sync (merge and upload skipped)',
+          );
+          return CloudSyncSuccess(uploadedFingerprint: before);
+        }
         await applyRemote(filtered);
       } else {
         _log.info('merge skipped: remote has no applicable accounts');

@@ -18,10 +18,12 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_c
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_authorization_gateway.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
@@ -81,6 +83,42 @@ BannerStorage _localBannerStorage(String uid) => BannerStorage(
     ],
   },
 );
+
+/// 記錄 [save] 次數的 [GachaStorage]，用來斷言同步有沒有重寫記錄檔。
+class _CountingStorage extends GachaStorage {
+  /// 建立 [_CountingStorage]。
+  _CountingStorage(super.baseDir);
+
+  /// [save] 被呼叫的次數。
+  int saves = 0;
+
+  /// 計數後交給父類別寫檔。
+  @override
+  Future<void> save(BannerStorage data) {
+    saves++;
+    return super.save(data);
+  }
+}
+
+/// 記錄 [convert] 次數的 converter；轉換一律失敗（被 repository 吞掉、保留原資料）。
+class _CountingConverter extends GachaLanguageConverter {
+  /// 建立 [_CountingConverter]。
+  _CountingConverter()
+    : super(ensureCatalog: (lang, {forceRefresh = false}) async => throw 0);
+
+  /// [convert] 被呼叫的次數。
+  int converts = 0;
+
+  /// 計數後拋錯。
+  @override
+  Future<
+    ({BannerStorage data, LangConvertResult result, List<IndexHint> hints})
+  >
+  convert(BannerStorage data, String targetLang) async {
+    converts++;
+    throw StateError('not under test');
+  }
+}
 
 /// 記錄是否已 close 的 fake client。
 class _ClosableClient extends FakeAuthClient {
@@ -174,13 +212,19 @@ void main() {
 
   /// 建立完成載入的 container（HoYoWiki API 一律回 500，補抓 best-effort 空跑）；
   /// 給 [auth] 時直接以它取代平台授權實作。
-  Future<ProviderContainer> makeContainer({CloudAuth? auth}) async {
+  Future<ProviderContainer> makeContainer({
+    CloudAuth? auth,
+    GachaStorage? storage,
+    GachaLanguageConverter? converter,
+  }) async {
     final hoyowikiDir = Directory('${tempDir.path}/hoyowiki');
     await hoyowikiDir.create();
     final container = ProviderContainer(
       overrides: [
         appVersionProvider.overrideWithValue('1.6.0'),
-        gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        gachaStorageProvider.overrideWithValue(
+          storage ?? GachaStorage(tempDir),
+        ),
         noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(FakeCapture()),
         hoyowikiIndexStorageProvider.overrideWithValue(
@@ -198,6 +242,8 @@ void main() {
         tokenStoreProvider.overrideWithValue(tokenStore),
         googleAuthServiceProvider.overrideWithValue(authService),
         if (auth != null) cloudAuthProvider.overrideWithValue(auth),
+        if (converter != null)
+          gachaLanguageConverterProvider.overrideWithValue(converter),
         cloudSyncRemoteFactoryProvider.overrideWithValue((_) => remote),
         cloudSyncUrlOpenerProvider.overrideWithValue((_) {}),
         windowForegroundProvider.overrideWithValue(() async {}),
@@ -324,6 +370,53 @@ void main() {
 
     expect(httpFactoryCalls, 0);
     expect(container.read(gachaRepositoryProvider).progress, isNull);
+  });
+
+  test('雲端與本機相同 → 一輪同步不寫記錄檔、不轉換資料語言', () async {
+    final storage = _CountingStorage(tempDir);
+    final converter = _CountingConverter();
+    await GachaStorage(tempDir).save(_localBannerStorage('800000001'));
+    final container = await makeContainer(
+      storage: storage,
+      converter: converter,
+    );
+    final notifier = container.read(cloudSyncProvider.notifier);
+    await notifier.link();
+    expect(remote.uploads, 1);
+    await container.read(settingsProvider.notifier).setDataLanguage('en-us');
+    final byUidBefore = container.read(gachaRepositoryProvider).byUid;
+
+    await notifier.syncNow(manual: true, trigger: 'manual2');
+
+    expect(remote.downloads, 2);
+    expect(storage.saves, 0);
+    expect(converter.converts, 0);
+    expect(
+      identical(container.read(gachaRepositoryProvider).byUid, byUidBefore),
+      isTrue,
+    );
+  });
+
+  test('雲端只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔、不觸發補抓', () async {
+    final storage = _CountingStorage(tempDir);
+    final cloudOnly = _cloudBundleJson('800000001', withRecord: true);
+    final cloudRecord = (jsonDecode(cloudOnly) as Map<String, dynamic>);
+    final local = BannerStorage.fromJson(
+      (cloudRecord['accounts'] as List).first as Map<String, dynamic>,
+    ).copyWith(lastUpdated: DateTime.utc(2026, 6, 1));
+    await GachaStorage(tempDir).save(local);
+    remote.content = cloudOnly;
+    final container = await makeContainer(storage: storage);
+
+    await container.read(cloudSyncProvider.notifier).link();
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+
+    expect(storage.saves, 1);
+    expect(
+      container.read(gachaRepositoryProvider).byUid['800000001']!.lastUpdated,
+      DateTime.utc(2026, 7, 1),
+    );
+    expect(httpFactoryCalls, 0);
   });
 
   test('cancelLink：等待授權中途取消 → 回到 idle，遲到的 signIn 結果被丟棄、不撤銷', () async {
