@@ -70,7 +70,8 @@ void main() {
     final severe = records.where((r) => r.level == Level.SEVERE);
     expect(severe, hasLength(1));
     expect(severe.single.message, startsWith('load failed for uid='));
-    expect(severe.single.error, isA<FormatException>());
+    expect(severe.single.message, contains('error=FormatException'));
+    expect(severe.single.error, isNull);
   });
 
   test('listKnownUids 只列出純數字 <uid>.json，忽略 .url.json 與非數字檔', () async {
@@ -187,6 +188,28 @@ void main() {
       expect(await storage.recordsFile('42').exists(), isFalse);
     }, skip: !Platform.isWindows);
   });
+
+  test(
+    'load failure log carries neither the uid nor the path nor an error object',
+    () async {
+      final records = <LogRecord>[];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'gacha.storage')
+          .listen(records.add);
+      addTearDown(sub.cancel);
+      storage.recordsFile('800000001').writeAsStringSync('{ not json');
+
+      await expectLater(storage.load('800000001'), throwsA(isA<Exception>()));
+
+      final failed = records.singleWhere(
+        (r) => r.message.startsWith('load failed for uid='),
+      );
+      expect(failed.error, isNull);
+      expect(failed.stackTrace, isNotNull);
+      expect(failed.message, isNot(contains('800000001')));
+      expect(failed.message, isNot(contains(tempDir.path)));
+    },
+  );
 
   group('retryWhileHeld', () {
     /// 前 [failures] 次丟 [error]、之後成功的操作；[calls] 記錄被呼叫次數。

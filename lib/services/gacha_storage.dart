@@ -35,7 +35,11 @@ class GachaStorage {
     try {
       return await _readRecordsFileInBackground(f.path);
     } catch (e, st) {
-      _log.severe('load failed for uid=${sanitizeUid(uid)}', e, st);
+      _log.severe(
+        'load failed for uid=${sanitizeUid(uid)} ${describeErrorForLog(e)}',
+        null,
+        st,
+      );
       rethrow;
     }
   }

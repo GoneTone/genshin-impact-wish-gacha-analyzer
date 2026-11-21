@@ -9,6 +9,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
@@ -394,7 +395,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         );
         return;
       }
-      _log.warning('sync round failed', e, st);
+      _log.warning('sync round failed ${describeErrorForLog(e)}', null, st);
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'network',

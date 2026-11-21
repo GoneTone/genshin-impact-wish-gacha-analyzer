@@ -1,3 +1,5 @@
+import 'dart:io' show FileSystemException;
+
 /// 把 authkey / authkey_ver / sign_type / game_biz 等敏感 query value 改成 `***`,
 /// 其餘 query 保留。malformed URL 回 `<malformed url>`。
 String sanitizeUrl(String raw) {
@@ -58,4 +60,12 @@ String sanitizeFsPath(String raw) {
     }
   }
   return raw;
+}
+
+/// 回傳可安全寫進 log 的錯誤摘要：只有型別（與 [FileSystemException] 的系統錯誤碼）。
+///
+/// 例外訊息可能帶完整檔案路徑（含使用者名稱、uid）或檔案內容片段，不可直接寫進 log。
+String describeErrorForLog(Object e) {
+  final osCode = e is FileSystemException ? e.osError?.errorCode : null;
+  return 'error=${e.runtimeType}${osCode == null ? '' : ' os=$osCode'}';
 }
