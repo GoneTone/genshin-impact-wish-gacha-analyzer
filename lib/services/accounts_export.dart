@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 
 /// 把目前狀態打包成 [AccountsBundle] 並序列化成 pretty-printed JSON 字串。
@@ -114,9 +115,7 @@ Future<T> _exportInBackground<T>({
   return Isolate.run(() {
     final loaded = <String, BannerStorage>{
       for (final MapEntry(:key, :value) in filePaths.entries)
-        key: BannerStorage.fromJson(
-          jsonDecode(File(value).readAsStringSync()) as Map<String, dynamic>,
-        ),
+        key: readRecordsFileSync(value),
       ...inMemory,
     };
     return finish(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
@@ -53,6 +54,23 @@ void main() {
 
   test('load 不存在的 UID → null', () async {
     expect(await storage.load('not_exist'), isNull);
+  });
+
+  test('load 損毀的 JSON → 拋 FormatException，主 isolate 記 severe log', () async {
+    await File('${tempDir.path}/801057625.json').writeAsString('{not json');
+    final records = <LogRecord>[];
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+
+    await expectLater(
+      storage.load('801057625'),
+      throwsA(isA<FormatException>()),
+    );
+
+    final severe = records.where((r) => r.level == Level.SEVERE);
+    expect(severe, hasLength(1));
+    expect(severe.single.message, startsWith('load failed for uid='));
+    expect(severe.single.error, isA<FormatException>());
   });
 
   test('listKnownUids 只列出純數字 <uid>.json，忽略 .url.json 與非數字檔', () async {
