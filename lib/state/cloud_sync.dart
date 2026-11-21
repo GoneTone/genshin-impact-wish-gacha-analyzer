@@ -460,7 +460,12 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         fingerprint = await syncFingerprintInBackground(await _exportLocal());
       } catch (e, st) {
         // 狀態維持不變：下一次資料變動或啟動輪會再比對。
-        _log.warning('dataChange check failed', e, st);
+        // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
+        _log.warning(
+          'dataChange check failed error=${e.runtimeType}',
+          null,
+          st,
+        );
         return;
       }
       if (!ref.mounted || !_linked) return;

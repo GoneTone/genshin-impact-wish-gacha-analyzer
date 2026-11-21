@@ -425,6 +425,27 @@ void main() {
       expect(fetchStarts(), 1);
     });
 
+    test('關閉視窗時另一輪匯入占著 → 延後的補圖不遺失，匯入結束後補跑', () async {
+      final container = await makeContainer();
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      await repo.importBundleForCloudSync(_bundle('800000001'));
+      repo.debugSetProgress(
+        UpdateCompleted(
+          totalNewRecords: 0,
+          failedBanners: const [],
+          updatedAt: DateTime.utc(2026, 7, 2),
+          hoYoWikiImagesDownloaded: 0,
+        ),
+      );
+      await repo.fetchItemImagesForCloudSync();
+      expect(fetchStarts(), 0);
+
+      final importing = repo.importBundleForCloudSync(_bundle('800000002'));
+      repo.clearProgress();
+      await importing;
+      await waitUntil(() => fetchStarts() == 1);
+    });
+
     test('進行中的 progress → 照舊略過，clearProgress 後不補跑', () async {
       final container = await makeContainer();
       final repo = container.read(gachaRepositoryProvider.notifier);

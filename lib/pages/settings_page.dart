@@ -628,12 +628,17 @@ class _DataManagement extends ConsumerWidget {
         now: now,
       );
     } catch (e, st) {
-      Logger('accounts.io').warning('export failed: building file', e, st);
+      // 不帶例外物件：訊息可能含完整路徑（使用者名稱、uid）或檔案內容片段。
+      Logger('accounts.io').warning(
+        'export failed: building file error=${e.runtimeType}',
+        null,
+        st,
+      );
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
         success: false,
-        message: l.settingsExportFailed(e.toString()),
+        message: l.settingsExportFailed(l.importReasonUnreadable),
       );
       return;
     }
