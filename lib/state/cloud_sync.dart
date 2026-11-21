@@ -455,9 +455,14 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         _scheduleDebounced();
         return;
       }
-      final fingerprint = await syncFingerprintInBackground(
-        await _exportLocal(),
-      );
+      final String fingerprint;
+      try {
+        fingerprint = await syncFingerprintInBackground(await _exportLocal());
+      } catch (e, st) {
+        // 狀態維持不變：下一次資料變動或啟動輪會再比對。
+        _log.warning('dataChange check failed', e, st);
+        return;
+      }
       if (!ref.mounted || !_linked) return;
       if (fingerprint == _lastFingerprint) {
         _log.info('dataChange check: fingerprint unchanged, round skipped');
