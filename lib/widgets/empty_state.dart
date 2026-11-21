@@ -167,8 +167,8 @@ class _UpdateButtonGlyph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final base = DefaultTextStyle.of(context).style.fontSize ?? 14;
-    final fontSize = MediaQuery.textScalerOf(context).scale(base);
+    // WidgetSpan 已依外層字級縮放整個圖案，尺寸用未縮放的字級算，內部文字也不再縮放，否則會放大兩次。
+    final fontSize = DefaultTextStyle.of(context).style.fontSize ?? 14;
     final icon = Icon(
       Icons.refresh,
       size: fontSize * 1.1,
@@ -199,17 +199,13 @@ class _UpdateButtonGlyph extends StatelessWidget {
             children: [
               icon,
               SizedBox(width: fontSize * 0.4),
-              // 長語系（法文等）放大字級時，同一行剩下的寬度可能比標籤窄，改以省略號截斷。
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: base,
-                    fontWeight: FontWeight.w600,
-                    color: scheme.onPrimary,
-                  ),
+              Text(
+                label,
+                textScaler: TextScaler.noScaling,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w600,
+                  color: scheme.onPrimary,
                 ),
               ),
             ],

@@ -73,7 +73,12 @@ class RelativeTimeText extends ConsumerWidget {
             child: Tooltip(
               message: tooltipMessage,
               triggerMode: tooltipOnTap ? tapTooltipTrigger(context) : null,
-              child: Text(relative, style: style),
+              // WidgetSpan 已依外層字級縮放整個子元件，這裡再套一次會放大兩次。
+              child: Text(
+                relative,
+                style: style,
+                textScaler: TextScaler.noScaling,
+              ),
             ),
           ),
           if (suffix.isNotEmpty) TextSpan(text: suffix),

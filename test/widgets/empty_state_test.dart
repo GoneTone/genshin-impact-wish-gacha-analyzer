@@ -217,6 +217,26 @@ void noSyncTests() {
       );
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+    testWidgets('放大字級時圖案只放大一次（與文字同倍率）', (tester) async {
+      /// [scale] 字級下圓形圖案實際畫出的高度（含 WidgetSpan 外層的縮放變換）。
+      Future<double> glyphHeight(double scale) async {
+        await _pumpNoSync(tester, size: const Size(360, 800), textScale: scale);
+        final circle = find.descendant(
+          of: _spanText(),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is DecoratedBox &&
+                (w.decoration as BoxDecoration).shape == BoxShape.circle,
+          ),
+        );
+        return tester.getRect(circle).height;
+      }
+
+      final normal = await glyphHeight(1.0);
+      final large = await glyphHeight(1.5);
+      expect(large, closeTo(normal * 1.5, 0.5));
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     testWidgets('Windows 1280x800：refresh 圖示加 actionUpdate 文字', (tester) async {
       await _pumpNoSync(tester, size: const Size(1280, 800));
       expect(

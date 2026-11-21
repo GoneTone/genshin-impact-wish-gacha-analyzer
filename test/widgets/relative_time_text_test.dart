@@ -38,6 +38,48 @@ void main() {
     expect(find.text(formatAbsoluteDateTime(time)), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets('large text scale grows the time as much as the label', (
+    tester,
+  ) async {
+    const style = TextStyle(fontSize: 12);
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(1.5)),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RelativeTimeText(
+                  time: time,
+                  templateBuilder: (s) => 'updated $s',
+                  style: style,
+                ),
+                const Text('reference', style: style),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    final timeText = find.descendant(
+      of: find.byType(Tooltip),
+      matching: find.byType(Text),
+    );
+    // getRect 含 WidgetSpan 外層的縮放變換，量的是實際畫出的高度。
+    expect(
+      tester.getRect(timeText).height,
+      closeTo(tester.getRect(find.text('reference')).height, 0.5),
+    );
+  });
+
   testWidgets('tooltipOnTap false leaves the tap to the parent', (
     tester,
   ) async {
