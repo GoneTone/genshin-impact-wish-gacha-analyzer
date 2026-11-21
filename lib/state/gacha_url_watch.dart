@@ -151,7 +151,7 @@ class WebCacheUrlWatch implements GachaUrlWatch {
         await Future<void>.delayed(interval);
       }
     } catch (e, st) {
-      _log.severe('web cache watch crashed error=${e.runtimeType}', null, st);
+      _log.severe('web cache watch crashed', e, st);
       if (!completer.isCompleted) completer.complete(null);
     }
   }

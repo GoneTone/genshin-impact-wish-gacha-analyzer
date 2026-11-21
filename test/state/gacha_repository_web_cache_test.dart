@@ -364,8 +364,7 @@ void main() {
         (r) =>
             r.loggerName == 'gacha.webCache' &&
             r.level == Level.WARNING &&
-            r.message ==
-                'capture teardown error after cache win error=_Exception',
+            r.message == 'capture teardown error after cache win',
       ),
       isTrue,
     );
@@ -416,7 +415,8 @@ void main() {
         (r) =>
             r.loggerName == 'gacha.webCache' &&
             r.level == Level.WARNING &&
-            r.message == 'capture failed error=_Exception',
+            r.message == 'capture failed' &&
+            r.error is Exception,
       ),
       isTrue,
     );
@@ -474,7 +474,8 @@ void main() {
         (r) =>
             r.loggerName == 'gacha.webCache' &&
             r.level == Level.WARNING &&
-            r.message == 'failed capture stop error=_Exception',
+            r.message == 'failed capture stop' &&
+            r.error is Exception,
       ),
       isTrue,
     );
@@ -506,7 +507,8 @@ void main() {
         (r) =>
             r.loggerName == 'gacha.webCache' &&
             r.level == Level.WARNING &&
-            r.message == 'failed capture stop error=TimeoutException',
+            r.message == 'failed capture stop' &&
+            r.error is TimeoutException,
       ),
       isTrue,
     );

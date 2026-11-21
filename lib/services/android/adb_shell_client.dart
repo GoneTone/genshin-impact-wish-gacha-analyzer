@@ -110,7 +110,7 @@ class AdbShellClient {
         }
         _log.warning('adb session is not the shell user port=$port');
       } catch (e) {
-        _log.info('adb connect failed port=$port error=${e.runtimeType}');
+        _log.info('adb connect failed port=$port', e);
       }
       await session?.close();
     }
@@ -137,13 +137,13 @@ class AdbShellClient {
       try {
         return await _shell(session, command);
       } catch (e) {
-        _log.info('adb shell failed, retrying error=${e.runtimeType}');
+        _log.info('adb shell failed, retrying', e);
       }
       await Future<void>.delayed(retryDelay);
       try {
         return await _shell(session, command);
       } catch (e) {
-        _log.warning('adb shell retry failed error=${e.runtimeType}');
+        _log.warning('adb shell retry failed', e);
       }
     }
     final rediscover = _rediscover;
@@ -159,7 +159,7 @@ class AdbShellClient {
     try {
       return await _shell(_session!, command);
     } catch (e) {
-      throw AdbShellException('shell failed after reconnect ${e.runtimeType}');
+      throw AdbShellException('shell failed after reconnect: $e');
     }
   }
 

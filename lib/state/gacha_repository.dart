@@ -429,7 +429,7 @@ class GachaRepository extends Notifier<GachaState> {
         captureFinished = !fromCache;
       } catch (e) {
         // 攔截出錯（例如根憑證被拒絕、18080 埠被佔用）不判定失敗，改為只等快取。
-        _webCacheLog.warning('capture failed error=${e.runtimeType}');
+        _webCacheLog.warning('capture failed', e);
         captureFinished = true;
         if (await _canWaitCacheOnly(watchStart, backstop)) {
           (url, fromCache) = await _waitCacheOnly(
@@ -690,10 +690,7 @@ class GachaRepository extends Notifier<GachaState> {
   void _queueAndroidTeardown(Future<void> teardown, String what) {
     final chained = Future.wait<void>([
       ?_androidTeardown,
-      teardown.catchError(
-        (Object e) =>
-            _androidLog.warning('$what failed error=${e.runtimeType}'),
-      ),
+      teardown.catchError((Object e) => _androidLog.warning('$what failed', e)),
     ]);
     _androidTeardown = chained;
     unawaited(
@@ -728,7 +725,7 @@ class GachaRepository extends Notifier<GachaState> {
     try {
       await (await starting)?.cancel();
     } catch (e) {
-      _androidLog.warning('logcat watch stop failed error=${e.runtimeType}');
+      _androidLog.warning('logcat watch stop failed', e);
     }
     final leftOn = await ready.release();
     // 連上時可能順便補回授權，設定頁的配對狀態要重讀。
@@ -767,9 +764,7 @@ class GachaRepository extends Notifier<GachaState> {
       } on TimeoutException {
         _webCacheLog.info('capture still running after grace, cancelling');
       } catch (e) {
-        _webCacheLog.warning(
-          'capture teardown error after cache win error=${e.runtimeType}',
-        );
+        _webCacheLog.warning('capture teardown error after cache win', e);
         return;
       }
     }
@@ -781,9 +776,7 @@ class GachaRepository extends Notifier<GachaState> {
       try {
         await Future.any([step(), backstop.future]);
       } catch (e) {
-        _webCacheLog.warning(
-          'capture teardown error after cache win error=${e.runtimeType}',
-        );
+        _webCacheLog.warning('capture teardown error after cache win', e);
       }
     }
   }
@@ -813,7 +806,7 @@ class GachaRepository extends Notifier<GachaState> {
         backstop.future,
       ]).timeout(_cancelTeardownTimeout);
     } catch (e) {
-      _webCacheLog.warning('failed capture stop error=${e.runtimeType}');
+      _webCacheLog.warning('failed capture stop', e);
       if (e is TimeoutException) unawaited(_bestEffortStaleProxyCleanup());
     }
     _webCacheLog.info(
@@ -861,9 +854,7 @@ class GachaRepository extends Notifier<GachaState> {
       _syncCacheOnlyNotice();
     } catch (e) {
       // FileSystemException 的字串會帶原始路徑，只記型別。
-      _webCacheLog.warning(
-        'web cache watch start failed error=${e.runtimeType}',
-      );
+      _webCacheLog.warning('web cache watch start failed', e);
     }
   }
 
@@ -889,9 +880,7 @@ class GachaRepository extends Notifier<GachaState> {
     try {
       await watch?.cancel();
     } catch (e) {
-      _webCacheLog.warning(
-        'web cache watch stop failed error=${e.runtimeType}',
-      );
+      _webCacheLog.warning('web cache watch stop failed', e);
     }
   }
 

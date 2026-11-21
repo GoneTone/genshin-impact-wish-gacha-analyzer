@@ -62,6 +62,7 @@
   - 卡池記錄檔名裡的 uid：套用 `sanitizeUid`。
 
   呼叫端照常傳 `(message, e, st)` 給 `Logger`。Rust log 原本在 `main.dart` 另外呼叫 `sanitizeLogMessage`，現在一併由 `LogService` 處理。
+- **Android 移植留下的只記型別寫法**（`error=${e.runtimeType}`，例如 adb、遊戲資料夾偵測、logcat）：也統一改成傳例外物件。只有讀取／解析 adb 金鑰與配對這四處維持只記型別，因為例外訊息可能夾帶私鑰內容或配對碼，統一遮罩擋不住。
 - **已知限制**：例外訊息若夾帶檔案內容片段（例如 `jsonDecode` 的 `FormatException`），統一遮罩擋不住。訊息裡自己組的 uid 仍然要經過 `sanitizeUid`。
 - **鳴潮**：同樣改。
 

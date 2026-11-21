@@ -63,9 +63,7 @@ void main() {
     });
     await Future<void>.delayed(Duration.zero);
     expect(value, 7);
-    expect(records.map((r) => r.message), [
-      'adb socket error error=SocketExceptionStub',
-    ]);
+    expect(records.map((r) => r.message), ['adb socket error']);
     await sub.cancel();
   });
 

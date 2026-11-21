@@ -271,8 +271,7 @@ void main() {
     expect(shell.starts, hasLength(1));
     expect(
       warnings.first,
-      'logcat poll failed phase=check pid=1234 since=11-18 10:00:00.000 '
-      'error=StateError',
+      'logcat poll failed phase=check pid=1234 since=11-18 10:00:00.000',
     );
     await s.cancel();
     await sub.cancel();

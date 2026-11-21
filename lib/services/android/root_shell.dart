@@ -124,7 +124,7 @@ class RootShell {
       if (!ok) _detach()?.kill();
       return ok;
     } catch (e) {
-      _log.info('root verify failed error=${e.runtimeType}');
+      _log.info('root verify failed', e);
       _detach()?.kill();
       return false;
     }

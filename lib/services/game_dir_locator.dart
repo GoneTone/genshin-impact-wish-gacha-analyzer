@@ -108,9 +108,7 @@ class GameDirLocator {
           root.close();
         }
       } on Exception catch (e) {
-        _log.warning(
-          'registry enumerate failed hive=${hive.name} error=${e.runtimeType}',
-        );
+        _log.warning('registry enumerate failed hive=${hive.name}', e);
       }
     }
     return paths;
@@ -129,9 +127,7 @@ class GameDirLocator {
         key.close();
       }
     } on Exception catch (e) {
-      _log.warning(
-        'registry value read failed hive=${hive.name} error=${e.runtimeType}',
-      );
+      _log.warning('registry value read failed hive=${hive.name}', e);
     }
     return null;
   }
@@ -147,7 +143,7 @@ class GameDirLocator {
       if (!await file.exists()) return null;
       return await file.readAsString();
     } on Exception catch (e) {
-      _log.warning('output_log read failed error=${e.runtimeType}');
+      _log.warning('output_log read failed', e);
       return null;
     }
   }
@@ -208,7 +204,7 @@ class GameDirLocator {
       final dir = content == null ? null : gameDirFromOutputLog(content);
       return [?dir];
     } catch (e) {
-      _log.warning('output_log read failed error=${e.runtimeType}');
+      _log.warning('output_log read failed', e);
       return const [];
     }
   }
@@ -218,7 +214,7 @@ class GameDirLocator {
     try {
       return await _readInstallPaths();
     } catch (e) {
-      _log.warning('registry read failed error=${e.runtimeType}');
+      _log.warning('registry read failed', e);
       return const [];
     }
   }

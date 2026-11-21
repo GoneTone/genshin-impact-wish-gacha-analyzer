@@ -154,7 +154,8 @@ class PollingLogcatUrlWatch implements LogcatUrlWatch {
       } on Object catch (e) {
         _log.warning(
           'logcat poll failed phase=${p == null ? 'launch' : 'check'} '
-          'pid=$p since=$since error=${e.runtimeType}',
+          'pid=$p since=$since',
+          e,
         );
       } finally {
         polling = false;
@@ -179,7 +180,7 @@ class PollingLogcatUrlWatch implements LogcatUrlWatch {
         try {
           await cleanup();
         } on Object catch (e) {
-          _log.warning('logcat cleanup failed error=${e.runtimeType}');
+          _log.warning('logcat cleanup failed', e);
         }
       },
     );
