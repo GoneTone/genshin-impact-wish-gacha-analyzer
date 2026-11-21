@@ -54,6 +54,17 @@
 - **改法**：帳號只有在「內容（不看別名）相同」而且「本機已有別名，或雲端沒有別名」時才算相同，與 `_runImport`「本機已有別名就保留本機」的規則一致。
 - **鳴潮**：同樣改。
 
+**追加五（2026-11-22，使用者決定，鳴潮同步修正）**：審查時發現，log 寫入的例外物件與 stack trace 可能帶出 Windows 使用者名稱（家目錄路徑）、檔名裡的 uid，以及網址的 authkey。
+- **曾經的做法**：起初逐處改成只記錄錯誤型別。這樣改動量大、寫法不一致，排查時也看不到錯誤原因（例如 `errno`、`Permission denied`），因此撤回。
+- **改法**：改在 `LogService` 寫入每一筆 log 前，對整行文字統一套用 `sanitizeLogMessage`，範圍涵蓋訊息、例外物件與 stack trace：
+  - 網址：沿用 `sanitizeUrl`。
+  - 任意位置的家目錄路徑：使用者名稱換成 `***`。
+  - 卡池記錄檔名裡的 uid：套用 `sanitizeUid`。
+
+  呼叫端照常傳 `(message, e, st)` 給 `Logger`。Rust log 原本在 `main.dart` 另外呼叫 `sanitizeLogMessage`，現在一併由 `LogService` 處理。
+- **已知限制**：例外訊息若夾帶檔案內容片段（例如 `jsonDecode` 的 `FormatException`），統一遮罩擋不住。訊息裡自己組的 uid 仍然要經過 `sanitizeUid`。
+- **鳴潮**：同樣改。
+
 **鳴潮的提交方式（使用者 2026-11-22 決定）**：上面四項鳴潮修正都放在鳴潮分支 `fix/cloud-sync-follow-ups`，做完後開 PR，不直接進 master。
 
 ## 三、目標／非目標／反目標
@@ -176,7 +187,7 @@
 - 只在 Windows 才會發生的重試測試，用 `skip: !Platform.isWindows` 跳過；CI 是 Linux，所以只有本機 Windows 會實際跑到。
 - 檢查結果不要看 `| tail` 的結束碼：鳴潮分支曾經因此漏看一個 analyze info。
 
-**鳴潮同步修正**：追加、追加二、追加三、追加四共四項，加上 `886d000` 的對應修正，放在鳴潮 PR 121。
+**鳴潮同步修正**：追加、追加二、追加三、追加四、追加五共五項，加上 `886d000` 的對應修正，放在鳴潮 PR 121。
 
 ## 附錄 B：量測結果
 
