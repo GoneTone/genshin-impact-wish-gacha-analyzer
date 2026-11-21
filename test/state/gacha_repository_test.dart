@@ -19,6 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 class _FakeCapture implements GachaCapture {
   _FakeCapture(this._url);
@@ -97,7 +98,7 @@ void main() {
     expect(initial.byUid, isEmpty);
 
     // 等 bootstrap fire-and-forget 完成
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     final after = container.read(gachaRepositoryProvider);
     expect(after.activeUid, isNull);
   });
@@ -135,7 +136,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final state = container.read(gachaRepositoryProvider);
     expect(state.knownUids.toSet(), {'100000001', '100000002'});
@@ -190,7 +191,7 @@ void main() {
 
     // 等 bootstrap 完成
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
 
     await container.read(gachaRepositoryProvider.notifier).update();
@@ -242,7 +243,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     final updateFut = notifier.update();
@@ -297,7 +298,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     final updateFut = notifier.update();
@@ -342,7 +343,7 @@ void main() {
       final block = Completer<http.Response>();
       final container = captureThenBlockedProbe(block);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
@@ -361,7 +362,7 @@ void main() {
       final block = Completer<http.Response>();
       final container = captureThenBlockedProbe(block);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
@@ -406,7 +407,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).update();
 
@@ -433,7 +434,7 @@ void main() {
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     // 等 bootstrap 完成，避免 async 工作洩漏到測試邊界後
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await notifier.waitForBootstrap();
 
     notifier.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
     expect(
@@ -464,12 +465,14 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
-      await Future<void>.delayed(
-        const Duration(milliseconds: 30),
+      await waitUntil(
+        () =>
+            container.read(gachaRepositoryProvider).progress
+                is WaitingForCapture,
       ); // 進入 WaitingForCapture
 
       expect(
@@ -513,15 +516,16 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     // 縮短逾時，避免真實掛鐘等待；只 await 完成、不做時間斷言 → 不 flaky。
     notifier.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
 
     final updateFut = notifier.update();
-    await Future<void>.delayed(
-      const Duration(milliseconds: 30),
+    await waitUntil(
+      () =>
+          container.read(gachaRepositoryProvider).progress is WaitingForCapture,
     ); // 進入 WaitingForCapture
     expect(
       container.read(gachaRepositoryProvider).progress,
@@ -582,7 +586,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
@@ -634,7 +638,7 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
       expect(
         container.read(gachaRepositoryProvider).activeUid,
         '100000002',
@@ -671,7 +675,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
     final reloaded = await SettingsStorage.load();
     expect(reloaded.lastActiveUid, '100000001');
@@ -713,7 +717,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     // lastActiveUid 為 null → fallback 走 mergeUidOrder.first → 自訂順序的第一個 = 100000001
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
@@ -809,7 +813,7 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
@@ -871,7 +875,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -918,7 +922,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -963,7 +967,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -999,7 +1003,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -1042,7 +1046,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).clearActive();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000002');
@@ -1080,7 +1084,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).clearAll();
     expect(container.read(gachaRepositoryProvider).activeUid, isNull);
@@ -1115,7 +1119,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final beforeReload = await SettingsStorage.load();
     await container
@@ -1169,7 +1173,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final newA = BannerStorage(
         uid: '100000001',
@@ -1244,7 +1248,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1302,7 +1306,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final bundle = AccountsBundle(
       exportedAt: DateTime.utc(2026, 5, 12),
@@ -1355,7 +1359,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1430,7 +1434,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       expect(container.read(gachaRepositoryProvider).activeUid, '200000001');
 
@@ -1477,7 +1481,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1542,7 +1546,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1684,7 +1688,7 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       await container.read(gachaRepositoryProvider.notifier).update();
 

@@ -17,6 +17,8 @@ import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helpers/wait_until.dart';
+
 /// 測試用的祈願 API 網址。
 const _url =
     'https://public-operation-hk4e-sg.hoyoverse.com/gacha_info/api/getGachaLog'
@@ -107,17 +109,6 @@ class _FakeLocator extends GameDirLocator {
   Future<GameDirLocation?> locate({String? settingDir}) async {
     calls++;
     return location;
-  }
-}
-
-/// 反覆讓出事件迴圈直到 [cond] 成立，最多等 5 秒。
-Future<void> _until(bool Function() cond) async {
-  final deadline = DateTime.now().add(const Duration(seconds: 5));
-  while (!cond()) {
-    if (DateTime.now().isAfter(deadline)) {
-      fail('condition never became true within 5s');
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 1));
   }
 }
 
@@ -260,11 +251,11 @@ void main() {
       );
 
       final done = t.repo.update();
-      await _until(() => watch.hits.isNotEmpty);
+      await waitUntil(() => watch.hits.isNotEmpty);
       expect(watch.dirs.single, _gameDir);
       watch.hits[0].complete(_url);
 
-      await _until(() => records.any(isGraceStart));
+      await waitUntil(() => records.any(isGraceStart));
       expect(t.hits, isEmpty, reason: 'no fetch before capture stops');
       expect(capture.cancelCalls, 0);
 
@@ -290,11 +281,11 @@ void main() {
     t.repo.debugSetCacheWinCaptureGrace(grace);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     final sinceHit = Stopwatch()..start();
     watch.hits[0].complete(_url);
 
-    await _until(() => capture.cancelCalls > 0);
+    await waitUntil(() => capture.cancelCalls > 0);
     expect(sinceHit.elapsed, greaterThanOrEqualTo(grace));
     expect(t.hits, isEmpty, reason: 'no fetch before capture teardown');
 
@@ -318,9 +309,9 @@ void main() {
     );
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     watch.hits[0].complete(_url);
-    await _until(() => records.any(isGraceStart));
+    await waitUntil(() => records.any(isGraceStart));
     await t.repo.cancelCapture();
     // 預設寬限 3 秒；1 秒內結束代表取消沒等寬限跑完。
     await done.timeout(const Duration(seconds: 1));
@@ -341,9 +332,9 @@ void main() {
     t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     watch.hits[0].complete(_url);
-    await _until(() => capture.cancelCalls > 0);
+    await waitUntil(() => capture.cancelCalls > 0);
     capture.result.completeError(Exception('proxy restore failed'));
     await done.timeout(const Duration(seconds: 5));
 
@@ -361,9 +352,9 @@ void main() {
     );
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     watch.hits[0].complete(_url);
-    await _until(() => records.any(isGraceStart));
+    await waitUntil(() => records.any(isGraceStart));
     capture.result.completeError(Exception('proxy restore failed'));
     await done.timeout(const Duration(seconds: 5));
 
@@ -392,7 +383,7 @@ void main() {
     );
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     capture.result.complete(_url);
     await done.timeout(const Duration(seconds: 5));
 
@@ -413,9 +404,9 @@ void main() {
     final cancels = cancelsAtUnavailable(t, capture);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     capture.result.completeError(Exception('certificate rejected'));
-    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    await waitUntil(() => waitingOf(t)?.captureUnavailable ?? false);
 
     expect(cancels, [1], reason: 'capture stopped before cache-only wait');
     expect(waitingOf(t)!.gameDirMissing, isFalse);
@@ -450,9 +441,9 @@ void main() {
     final cancels = cancelsAtUnavailable(t, capture);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     capture.result.complete(null);
-    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    await waitUntil(() => waitingOf(t)?.captureUnavailable ?? false);
     expect(cancels, [1], reason: 'capture stopped before cache-only wait');
     expect(waitingOf(t)!.gameDirMissing, isFalse);
 
@@ -474,9 +465,9 @@ void main() {
     );
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     capture.result.complete(null);
-    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    await waitUntil(() => waitingOf(t)?.captureUnavailable ?? false);
     expect(capture.cancelCalls, 1);
     expect(
       records.any(
@@ -506,9 +497,9 @@ void main() {
     t.repo.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     capture.result.complete(null);
-    await _until(() => waitingOf(t)?.captureUnavailable ?? false);
+    await waitUntil(() => waitingOf(t)?.captureUnavailable ?? false);
     expect(capture.cancelCalls, 1);
     expect(
       records.any(
@@ -533,9 +524,9 @@ void main() {
     final t = await race(capture: capture, watch: watch, locator: locator);
 
     final done = t.repo.update();
-    await _until(() => locator.calls > 0);
+    await waitUntil(() => locator.calls > 0);
     capture.result.completeError(Exception('port in use'));
-    await _until(() => waitingOf(t)?.gameDirMissing ?? false);
+    await waitUntil(() => waitingOf(t)?.gameDirMissing ?? false);
     expect(waitingOf(t)!.captureUnavailable, isTrue);
 
     await t.repo.cancelCapture();
@@ -556,7 +547,7 @@ void main() {
     );
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     await t.repo.cancelCapture();
     await done.timeout(const Duration(seconds: 5));
 
@@ -578,7 +569,7 @@ void main() {
       );
 
       final done = t.repo.update();
-      await _until(() => watch.hits.isNotEmpty);
+      await waitUntil(() => watch.hits.isNotEmpty);
       await t.repo.cancelCapture();
       await done.timeout(const Duration(seconds: 5));
 
@@ -598,9 +589,9 @@ void main() {
     t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     watch.hits[0].complete(_url);
-    await _until(() => capture.cancelCalls > 0);
+    await waitUntil(() => capture.cancelCalls > 0);
     await t.repo.cancelCapture();
     await done.timeout(const Duration(seconds: 5));
     capture.result.complete(null);
@@ -621,9 +612,9 @@ void main() {
     t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     watch.hits[0].complete(_url);
-    await _until(() => capture.cancelCalls > 0);
+    await waitUntil(() => capture.cancelCalls > 0);
     await t.repo.cancelCapture();
     await done.timeout(const Duration(seconds: 5));
 
@@ -638,7 +629,7 @@ void main() {
     final t = await race(capture: capture, watch: watch, locator: locator);
 
     final done = t.repo.update();
-    await _until(() => locator.calls > 0);
+    await waitUntil(() => locator.calls > 0);
     capture.result.complete(_url);
     await done.timeout(const Duration(seconds: 5));
 
@@ -657,9 +648,9 @@ void main() {
     expect(locator.calls, 0, reason: 'no-op outside WaitingForCapture');
 
     final done = t.repo.update();
-    await _until(() => locator.calls > 0);
+    await waitUntil(() => locator.calls > 0);
     capture.result.completeError(Exception('certificate rejected'));
-    await _until(() => waitingOf(t)?.gameDirMissing ?? false);
+    await waitUntil(() => waitingOf(t)?.gameDirMissing ?? false);
 
     // 使用者在說明視窗選好資料夾 → 監看接上，提示換回只等快取。
     locator.location = _loc;
@@ -710,10 +701,10 @@ void main() {
     t.repo.debugSetCacheWinCaptureGrace(Duration.zero);
 
     final done = t.repo.update();
-    await _until(() => watch.hits.isNotEmpty);
+    await waitUntil(() => watch.hits.isNotEmpty);
     expect(waitingOf(t)!.isFallback, isTrue);
     watch.hits[0].complete(_url);
-    await _until(() => capture.cancelCalls > 0);
+    await waitUntil(() => capture.cancelCalls > 0);
     capture.result.complete(null);
     await done.timeout(const Duration(seconds: 5));
 
