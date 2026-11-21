@@ -1577,6 +1577,14 @@ class GachaRepository extends Notifier<GachaState> {
     );
   }
 
+  /// 測試用：直接塞一筆帳號到 state.byUid（不走 bootstrap/storage）。生產勿用。
+  @visibleForTesting
+  void debugSeedAccount(BannerStorage data) {
+    final next = Map<String, BannerStorage>.from(state.byUid)
+      ..[data.uid] = data;
+    state = state.copyWith(byUid: next, activeUid: data.uid);
+  }
+
   /// 測試用：暴露 [_runImport] 給單元測試（驗證純 import 邏輯，
   /// 不必 mock HoYoWiki fetcher）。生產勿用。
   @visibleForTesting

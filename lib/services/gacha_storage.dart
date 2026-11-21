@@ -20,15 +20,15 @@ class GachaStorage {
   /// `<applicationSupportDirectory>/gacha_data/`，main.dart 創建後傳入
   final Directory baseDir;
 
-  /// 回傳 [uid] 對應的資料檔路徑。
-  File _dataFile(String uid) => File('${baseDir.path}/$uid.json');
+  /// 回傳 [uid] 對應的資料檔路徑（雲端同步匯出會在背景 isolate 直接讀它）。
+  File recordsFile(String uid) => File('${baseDir.path}/$uid.json');
 
   /// 回傳 [uid] 對應的已擷取 URL 檔路徑。
   File _urlFile(String uid) => File('${baseDir.path}/$uid.url.json');
 
   /// 讀取 [uid] 的祈願資料；檔案不存在時回傳 null。
   Future<BannerStorage?> load(String uid) async {
-    final f = _dataFile(uid);
+    final f = recordsFile(uid);
     if (!await f.exists()) return null;
     try {
       final text = await f.readAsString();
@@ -43,7 +43,7 @@ class GachaStorage {
   /// 將 [data] 寫回磁碟。
   Future<void> save(BannerStorage data) async {
     try {
-      await _atomicWrite(_dataFile(data.uid), jsonEncode(data.toJson()));
+      await _atomicWrite(recordsFile(data.uid), jsonEncode(data.toJson()));
       final total = data.banners.values.fold<int>(0, (a, b) => a + b.length);
       _log.fine('saved uid=${sanitizeUid(data.uid)} records=$total');
     } catch (e, st) {
@@ -102,7 +102,7 @@ class GachaStorage {
 
   /// 刪除 [uid] 的所有本地資料（資料檔 + URL 檔）。
   Future<void> delete(String uid) async {
-    final f = _dataFile(uid);
+    final f = recordsFile(uid);
     if (await f.exists()) await f.delete();
     await deleteCapturedUrl(uid);
     _log.info('delete uid=${sanitizeUid(uid)}');

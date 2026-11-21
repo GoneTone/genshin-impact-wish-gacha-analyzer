@@ -6,10 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
@@ -58,6 +61,26 @@ String _cloudBundleJson(String uid, {bool withRecord = false}) => jsonEncode({
     },
   ],
 });
+
+/// 產生本機側只有一筆 301 五星記錄的存檔。
+BannerStorage _localBannerStorage(String uid) => BannerStorage(
+  uid: uid,
+  lastUpdated: DateTime.utc(2026, 7, 2),
+  banners: {
+    '301': [
+      GachaRecord(
+        id: '1900000000000000002',
+        uid: uid,
+        gachaType: '301',
+        name: '本機角色',
+        itemType: '角色',
+        rankType: 5,
+        time: DateTime(2026, 7, 1, 12),
+        lang: 'zh-tw',
+      ),
+    ],
+  },
+);
 
 /// 記錄是否已 close 的 fake client。
 class _ClosableClient extends FakeAuthClient {
@@ -678,4 +701,107 @@ void main() {
       contains('800000002'),
     );
   });
+
+  test('the sync round merge does not schedule a dataChange check', () async {
+    final messages = <String>[];
+    final sub = Logger.root.onRecord.listen((r) {
+      if (r.loggerName == 'cloudsync.sync') messages.add(r.message);
+    });
+    addTearDown(sub.cancel);
+
+    remote.content = _cloudBundleJson('800000001', withRecord: true);
+    final container = await makeContainer();
+    final notifier = container.read(cloudSyncProvider.notifier);
+    notifier.debounceDelay = const Duration(milliseconds: 10);
+    await notifier.link();
+    expect(
+      container.read(gachaRepositoryProvider).byUid.keys,
+      contains('800000001'),
+    );
+
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    expect(messages.where((m) => m.startsWith('dataChange check')), isEmpty);
+  });
+
+  test(
+    'a dataChange check that comes due mid-round waits for the round instead of queueing a rerun',
+    () async {
+      final messages = <String>[];
+      final sub = Logger.root.onRecord.listen((r) {
+        if (r.loggerName == 'cloudsync.sync') messages.add(r.message);
+      });
+      addTearDown(sub.cancel);
+
+      await GachaStorage(tempDir).save(_localBannerStorage('800000001'));
+      remote.content = _cloudBundleJson('800000001');
+      SharedPreferences.setMockInitialValues({
+        'pref.cloudAccountEmail': 'u@example.com',
+      });
+      tokenStore.token = 'refresh-1';
+      final container = await makeContainer();
+      final notifier = container.read(cloudSyncProvider.notifier);
+      notifier.debounceDelay = const Duration(milliseconds: 10);
+
+      // 啟動那輪卡在下載時，本機出現一次內容沒變的變動（換成同內容的新 Map），
+      // 變動檢查在該輪還沒跑完時到點；此時還沒有上一輪的指紋可比。
+      remote.downloadGate = Completer<void>();
+      final round = notifier.start();
+      await waitUntil(() => remote.downloads == 1);
+      container
+          .read(gachaRepositoryProvider.notifier)
+          .debugSeedAccount(
+            container.read(gachaRepositoryProvider).byUid['800000001']!,
+          );
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      remote.downloadGate!.complete();
+      await round;
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+
+      expect(remote.downloads, 1);
+      expect(messages.any((m) => m.contains('trigger=rerun')), isFalse);
+    },
+  );
+
+  test(
+    'upload contains both an account read from its records file and an in-memory-only one',
+    () async {
+      final onDisk = _localBannerStorage('800000001');
+      await GachaStorage(tempDir).save(onDisk);
+      final container = await makeContainer();
+      container
+          .read(gachaRepositoryProvider.notifier)
+          .debugSeedAccount(_localBannerStorage('800000002'));
+      await container.read(cloudSyncProvider.notifier).link();
+
+      final uploaded = jsonDecode(remote.content!) as Map<String, dynamic>;
+      final accounts = (uploaded['accounts'] as List)
+          .cast<Map<String, dynamic>>();
+      expect(
+        accounts.map((a) => a['uid']),
+        containsAll(['800000001', '800000002']),
+      );
+      final fromDisk = accounts.firstWhere((a) => a['uid'] == '800000001');
+      expect(fromDisk, onDisk.toJson());
+    },
+  );
+
+  test(
+    'export includes an account whose records file does not exist yet',
+    () async {
+      final memoryOnly = _localBannerStorage('800000003');
+      final container = await makeContainer();
+      container
+          .read(gachaRepositoryProvider.notifier)
+          .debugSeedAccount(memoryOnly);
+      expect(File('${tempDir.path}/800000003.json').existsSync(), isFalse);
+
+      await container.read(cloudSyncProvider.notifier).link();
+
+      final uploaded = jsonDecode(remote.content!) as Map<String, dynamic>;
+      final accounts = (uploaded['accounts'] as List)
+          .cast<Map<String, dynamic>>();
+      expect(accounts, hasLength(1));
+      expect(accounts.single, memoryOnly.toJson());
+    },
+  );
 }
