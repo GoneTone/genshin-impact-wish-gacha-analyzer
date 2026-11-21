@@ -459,10 +459,12 @@ void main() {
     expect(find.text(l.timelineMonthLabel('2026', '05')), findsOneWidget);
   });
 
-  /// 呈現帶圖示的兩欄時間軸（夜蘭、納西妲），回傳其條目；[height] 為 null 時高度不受限（依內容）。
+  /// 呈現帶圖示的兩欄時間軸（夜蘭、納西妲），回傳其條目；[height] 為 null 時高度不受限（依內容），
+  /// [gachaType] 為頌願時兩筆紀錄沒有圖示。
   Future<List<TimelineEntry>> pumpIconTimeline(
     WidgetTester tester, {
     double? height = 240,
+    String gachaType = '301',
   }) async {
     late Directory tempDir;
     await tester.runAsync(() async {
@@ -490,7 +492,7 @@ void main() {
       GachaRecord(
         id: '1',
         uid: '100000001',
-        gachaType: '301',
+        gachaType: gachaType,
         name: '夜蘭',
         itemType: '角色',
         rankType: 5,
@@ -500,7 +502,7 @@ void main() {
       GachaRecord(
         id: '2',
         uid: '100000001',
-        gachaType: '301',
+        gachaType: gachaType,
         name: '納西妲',
         itemType: '角色',
         rankType: 5,
@@ -558,6 +560,23 @@ void main() {
       (w) => w is Container && w.constraints?.maxHeight == 2,
     ),
   );
+
+  for (final height in <double?>[240, null]) {
+    testWidgets('odes nodes without an icon stay on the axis line '
+        '(height=$height)', (tester) async {
+      await pumpIconTimeline(tester, height: height, gachaType: '2000');
+      final axisY = tester.getCenter(axisLine()).dy;
+      expect(find.byType(GachaItemIcon), findsNothing);
+      // 不限高度時另有一個撐高度用的隱形欄，同樣置中在軸線上。
+      for (final node in find.byType(TimelineNode).evaluate()) {
+        expect(
+          tester.getCenter(find.byWidget(node.widget)).dy,
+          closeTo(axisY, 1.5),
+        );
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('unbounded height leaves no blank band under the date row', (
     tester,

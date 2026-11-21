@@ -178,7 +178,7 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
           );
 
     // 帶圖示的欄最高；沒有就取第一筆紀錄（月份標籤帶讓它仍比「現在」欄高）。
-    final iconIndex = widget.entries.indexWhere((e) => e.sourceRecord != null);
+    final iconIndex = widget.entries.indexWhere(_EntryColumn.hasIcon);
     final tallestIndex = widget.entries.isEmpty
         ? 0
         : nowOffset + (iconIndex < 0 ? 0 : iconIndex);
@@ -321,7 +321,11 @@ class _EntryColumn extends StatelessWidget {
 
   /// [entry] 欄底部對稱留白的高度：補回頂部標籤帶（與圖示）高度，使節點落在欄的垂直中心。
   static double trailingSpacerFor(TimelineEntry entry) =>
-      _monthBandHeight + (entry.sourceRecord != null ? _iconBlockHeight : 0);
+      _monthBandHeight + (hasIcon(entry) ? _iconBlockHeight : 0);
+
+  /// [entry] 欄是否在名稱上方畫物品圖示（頌願物品沒有圖示）。
+  static bool hasIcon(TimelineEntry entry) =>
+      entry.sourceRecord != null && showsGachaItemIcon(entry.sourceRecord!);
 
   /// 該欄對應的時間軸條目。
   final TimelineEntry entry;
@@ -389,7 +393,7 @@ class _EntryColumn extends StatelessWidget {
                       ),
                     ),
             ),
-            if (entry.sourceRecord != null)
+            if (hasIcon(entry))
               GachaItemTapTarget(
                 record: entry.sourceRecord!,
                 child: Column(

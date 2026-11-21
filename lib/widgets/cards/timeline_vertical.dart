@@ -356,7 +356,8 @@ class _EntryRow extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      if (entry.sourceRecord != null) ...[
+      if (entry.sourceRecord != null &&
+          showsGachaItemIcon(entry.sourceRecord!)) ...[
         GachaItemIcon(record: entry.sourceRecord!, size: 32),
         const SizedBox(width: 6),
       ],

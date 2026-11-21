@@ -733,6 +733,84 @@ void main() {
     expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
   });
 
+  testWidgets('odes names line up with entries that have no icon', (
+    tester,
+  ) async {
+    late Directory tempDir;
+    await tester.runAsync(() async {
+      tempDir = await Directory.systemTemp.createTemp('timeline_v_odes_test_');
+    });
+    addTearDown(() async {
+      try {
+        await tempDir.delete(recursive: true);
+      } catch (_) {}
+    });
+    final container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    addTearDown(container.dispose);
+    await tester.runAsync(
+      () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+    );
+
+    final odes = buildTimelineEntries([
+      GachaRecord(
+        id: '1',
+        uid: '100000001',
+        gachaType: '2000',
+        name: 'OdeItem',
+        itemType: '裝扮套裝',
+        rankType: 5,
+        time: DateTime(2025, 4, 1),
+        lang: 'zh-tw',
+      ),
+    ], targetRank: 5);
+    final entries = [
+      ...odes,
+      TimelineEntry(
+        name: 'PlainItem',
+        gachaType: '2000',
+        time: DateTime(2025, 3, 1),
+        pullsSincePrev: 10,
+      ),
+    ];
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Builder(
+              builder: (ctx) => SizedBox(
+                width: 600,
+                child: TimelineVertical(
+                  entries: entries,
+                  colors: BannerColors.of(Theme.of(ctx).brightness),
+                  targetRank: 5,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(GachaItemIcon), findsNothing);
+    expect(
+      tester.getTopLeft(find.text('OdeItem').first).dx,
+      tester.getTopLeft(find.text('PlainItem').first).dx,
+    );
+  });
+
   testWidgets(
     'Tooltip 不被 GachaItemTapTarget 包裝破壞：longPress 名稱會疊出 tooltip overlay',
     (tester) async {
