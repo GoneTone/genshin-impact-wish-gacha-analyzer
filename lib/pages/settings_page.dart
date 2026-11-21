@@ -243,6 +243,17 @@ class _LocaleDropdown extends ConsumerWidget {
                 selectableTags.contains((current as LocaleLanguage).code))
         ? current
         : const SystemLanguage();
+    final items = [
+      DropdownMenuItem<LanguagePreference>(
+        value: const SystemLanguage(),
+        child: Text(l.settingsLocaleSystem),
+      ),
+      for (final entry in sorted)
+        DropdownMenuItem<LanguagePreference>(
+          value: LocaleLanguage(entry.key),
+          child: Text(entry.value.nativeName),
+        ),
+    ];
     final dropdown = DropdownButtonFormField<LanguagePreference>(
       initialValue: effectiveCurrent,
       isExpanded: true,
@@ -250,17 +261,8 @@ class _LocaleDropdown extends ConsumerWidget {
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
-      items: [
-        DropdownMenuItem(
-          value: const SystemLanguage(),
-          child: Text(l.settingsLocaleSystem),
-        ),
-        for (final entry in sorted)
-          DropdownMenuItem(
-            value: LocaleLanguage(entry.key),
-            child: Text(entry.value.nativeName),
-          ),
-      ],
+      items: items,
+      selectedItemBuilder: _onlySelectedLabel(items, effectiveCurrent),
       onChanged: (v) {
         if (v != null) onChanged(v);
       },
@@ -286,6 +288,19 @@ class _LocaleDropdown extends ConsumerWidget {
     );
   }
 }
+
+/// 下拉選單按鈕上的已選項目：只有值等於 [selected] 的那項放文字，其餘留空。
+///
+/// `DropdownButton` 會把每個選項放進 `IndexedStack` 全部排版；選項是各國文字時，每次打開設定頁都要排版全部名稱，
+/// 第一次還要載入多種字型（實機約 30 ms）。展開後的清單仍由 `items` 顯示全部名稱。
+DropdownButtonBuilder _onlySelectedLabel<T>(
+  List<DropdownMenuItem<T>> items,
+  T selected,
+) =>
+    (context) => [
+      for (final item in items)
+        item.value == selected ? item.child : const SizedBox.shrink(),
+    ];
 
 /// 關於區塊，顯示版本號、更新檢查按鈕與開發團隊資訊。
 class _AboutContent extends ConsumerWidget {
@@ -1432,6 +1447,14 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final current = ref.watch(dataLanguageProvider);
+    final items = [
+      DropdownMenuItem<String?>(
+        value: null,
+        child: Text(l.settingsDataLanguageUnset),
+      ),
+      for (final o in kDataLanguageOptions)
+        DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
+    ];
     final notifier = ref.read(settingsProvider.notifier);
     final theme = Theme.of(context);
 
@@ -1452,14 +1475,8 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
-          items: [
-            DropdownMenuItem<String?>(
-              value: null,
-              child: Text(l.settingsDataLanguageUnset),
-            ),
-            for (final o in kDataLanguageOptions)
-              DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
-          ],
+          items: items,
+          selectedItemBuilder: _onlySelectedLabel(items, current),
           onChanged: _busy ? null : (v) => notifier.setDataLanguage(v),
         ),
         const SizedBox(height: AppSpacing.s),
