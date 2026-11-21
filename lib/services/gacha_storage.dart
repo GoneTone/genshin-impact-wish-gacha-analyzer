@@ -43,7 +43,11 @@ class GachaStorage {
   /// 將 [data] 寫回磁碟。
   Future<void> save(BannerStorage data) async {
     try {
-      await _atomicWrite(recordsFile(data.uid), jsonEncode(data.toJson()));
+      await _atomicWrite(
+        recordsFile(data.uid),
+        jsonEncode(data.toJson()),
+        data.uid,
+      );
       final total = data.banners.values.fold<int>(0, (a, b) => a + b.length);
       _log.fine('saved uid=${sanitizeUid(data.uid)} records=$total');
     } catch (e, st) {
@@ -87,7 +91,7 @@ class GachaStorage {
       'url': url,
       'captured_at': DateTime.now().toUtc().toIso8601String(),
     };
-    await _atomicWrite(_urlFile(uid), jsonEncode(json));
+    await _atomicWrite(_urlFile(uid), jsonEncode(json), uid);
     _log.fine('saved captured url for uid=${sanitizeUid(uid)}');
   }
 
@@ -114,19 +118,19 @@ class GachaStorage {
     final entries = await baseDir.list().toList();
     for (final e in entries) {
       if (e is File && e.path.endsWith('.json')) {
-        await e.delete();
+        await _retryWhileHeld(e.delete, e.uri.pathSegments.last);
       }
     }
     _log.info('clear all gacha data');
   }
 
   /// 先寫入 `.tmp` 再 rename，確保寫入的原子性。
-  Future<void> _atomicWrite(File target, String content) async {
+  Future<void> _atomicWrite(File target, String content, String uid) async {
     final tmp = File('${target.path}.tmp');
     await tmp.writeAsString(content);
     await _retryWhileHeld(
       () => tmp.rename(target.path), // atomic on same volume
-      target.uri.pathSegments.last.split('.').first,
+      uid,
     );
   }
 

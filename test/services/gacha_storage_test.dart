@@ -154,6 +154,8 @@ void main() {
         throwsA(isA<PathAccessException>()),
       );
       expect(await storage.listKnownUids(), ['42']);
+      final kept = await storage.recordsFile('42').readAsString();
+      expect(kept, contains('2026-01-01'));
     }, skip: !Platform.isWindows);
 
     test('delete retries when the records file is briefly held open', () async {
