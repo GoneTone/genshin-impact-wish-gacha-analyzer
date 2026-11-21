@@ -121,4 +121,50 @@ void main() {
     expect(loaded.lastUpdated, DateTime.utc(2026, 5, 9));
     expect(await File('${tempDir.path}/999.json.tmp').exists(), isFalse);
   });
+
+  group('背景讀檔占住記錄檔時（Windows 無 FILE_SHARE_DELETE）', () {
+    /// 建立只含 [uid] 的最小資料。
+    BannerStorage sample(String uid, DateTime t) =>
+        BannerStorage(uid: uid, lastUpdated: t, banners: {'301': []});
+
+    /// 先存一份舊資料，回傳以唯讀開啟 `<uid>.json` 的 handle。
+    Future<RandomAccessFile> holdOpen(String uid) async {
+      await storage.save(sample(uid, DateTime.utc(2026, 1, 1)));
+      return storage.recordsFile(uid).open();
+    }
+
+    test('save retries when the records file is briefly held open', () async {
+      final raf = await holdOpen('42');
+      Future<void>.delayed(
+        const Duration(milliseconds: 50),
+      ).then((_) => raf.close());
+
+      await storage.save(sample('42', DateTime.utc(2026, 6, 1)));
+
+      final loaded = await storage.load('42');
+      expect(loaded!.lastUpdated, DateTime.utc(2026, 6, 1));
+    }, skip: !Platform.isWindows);
+
+    test('save still throws when the records file stays locked', () async {
+      final raf = await holdOpen('42');
+      addTearDown(raf.close);
+
+      await expectLater(
+        storage.save(sample('42', DateTime.utc(2026, 6, 1))),
+        throwsA(isA<PathAccessException>()),
+      );
+      expect(await storage.listKnownUids(), ['42']);
+    }, skip: !Platform.isWindows);
+
+    test('delete retries when the records file is briefly held open', () async {
+      final raf = await holdOpen('42');
+      Future<void>.delayed(
+        const Duration(milliseconds: 50),
+      ).then((_) => raf.close());
+
+      await storage.delete('42');
+
+      expect(await storage.recordsFile('42').exists(), isFalse);
+    }, skip: !Platform.isWindows);
+  });
 }

@@ -103,7 +103,7 @@ class GachaStorage {
   /// 刪除 [uid] 的所有本地資料（資料檔 + URL 檔）。
   Future<void> delete(String uid) async {
     final f = recordsFile(uid);
-    if (await f.exists()) await f.delete();
+    if (await f.exists()) await _retryWhileHeld(f.delete, uid);
     await deleteCapturedUrl(uid);
     _log.info('delete uid=${sanitizeUid(uid)}');
   }
@@ -124,6 +124,37 @@ class GachaStorage {
   Future<void> _atomicWrite(File target, String content) async {
     final tmp = File('${target.path}.tmp');
     await tmp.writeAsString(content);
-    await tmp.rename(target.path); // atomic on same volume
+    await _retryWhileHeld(
+      () => tmp.rename(target.path), // atomic on same volume
+      target.uri.pathSegments.last.split('.').first,
+    );
   }
+
+  /// 執行 [op]；Windows 上背景 isolate 讀檔會暫時占住檔案，遇 [PathAccessException] 時短暫退避重試。
+  Future<void> _retryWhileHeld(
+    Future<Object?> Function() op,
+    String uid,
+  ) async {
+    // Dart 開檔不帶 FILE_SHARE_DELETE，讀檔期間 rename／delete 會被擋；讀檔只持續毫秒級，不需要鎖。
+    var delay = const Duration(milliseconds: 20);
+    for (var attempt = 1; ; attempt++) {
+      try {
+        await op();
+        if (attempt > 1) {
+          _log.info(
+            'file op succeeded after retry uid=${sanitizeUid(uid)} '
+            'retries=${attempt - 1}',
+          );
+        }
+        return;
+      } on PathAccessException {
+        if (attempt == _maxAttempts) rethrow;
+        await Future<void>.delayed(delay);
+        delay *= 2;
+      }
+    }
+  }
+
+  /// [_retryWhileHeld] 的最多嘗試次數（等待 20、40、80、160 ms，合計約 300 ms）。
+  static const _maxAttempts = 5;
 }
