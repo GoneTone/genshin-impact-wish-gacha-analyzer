@@ -236,6 +236,11 @@ class GachaRepository extends Notifier<GachaState> {
   /// 清除目前的更新進度狀態。
   void clearProgress() {
     state = state.copyWith(clearProgress: true);
+    if (_imageFetchPending) {
+      _imageFetchPending = false;
+      _cloudSyncLog.info('post-sync item fetch resumed: result dialog closed');
+      unawaited(fetchItemImagesForCloudSync());
+    }
   }
 
   /// 啟動祈願資料更新，優先使用快取 URL，無快取則等待取得網址（電腦版攔截＋網頁快取，Android 讀系統記錄）。
@@ -1047,6 +1052,9 @@ class GachaRepository extends Notifier<GachaState> {
   /// 防 re-entrancy 旗標，update 進行中為 true。
   bool _isUpdating = false;
 
+  /// 雲端同步合併時結果視窗還開著而延後的補圖；視窗關閉（[clearProgress]）時補跑一次。
+  bool _imageFetchPending = false;
+
   /// 使用者觸發取消時設為 true，避免將 ClientException 誤判為錯誤。
   bool _cancelTriggered = false;
 
@@ -1374,7 +1382,18 @@ class GachaRepository extends Notifier<GachaState> {
   /// best-effort：補抓失敗僅記 log，仍照常收尾；更新／匯入進行中或
   /// bootstrap 未完成時直接略過，缺圖留待下次「更新」自然補齊。
   Future<void> fetchItemImagesForCloudSync() async {
-    if (state.progress != null) {
+    final progress = state.progress;
+    if (progress != null) {
+      // 只是結果視窗還開著（合併可在此時進行）：等視窗關閉（[clearProgress]）再補。
+      if ((progress is UpdateCompleted || progress is UpdateFailed) &&
+          !_isUpdating &&
+          !state.isBootstrapping) {
+        _imageFetchPending = true;
+        _cloudSyncLog.info(
+          'post-sync item fetch deferred: result dialog still open',
+        );
+        return;
+      }
       _cloudSyncLog.info('post-sync item fetch skipped: progress in-flight');
       return;
     }

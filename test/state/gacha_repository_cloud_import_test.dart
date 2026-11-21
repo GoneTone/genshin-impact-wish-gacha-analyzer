@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
@@ -17,6 +18,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import '../helpers/counting_storage.dart';
 import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 /// 不會被觸發的 fake capture。
 class _FakeCapture implements GachaCapture {
@@ -374,5 +376,66 @@ void main() {
     await repo.fetchItemImagesForCloudSync();
 
     expect(container.read(gachaRepositoryProvider).progress, isA<Preparing>());
+  });
+
+  group('結果視窗開著時的補圖延後', () {
+    late List<String> messages;
+
+    setUp(() {
+      messages = [];
+      final sub = Logger.root.onRecord
+          .where((r) => r.loggerName == 'cloudsync.sync')
+          .listen((r) => messages.add(r.message));
+      addTearDown(sub.cancel);
+    });
+
+    /// 已出現的補圖啟動次數。
+    int fetchStarts() => messages
+        .where((m) => m.startsWith('post-sync item fetch start'))
+        .length;
+
+    test('結果視窗（UpdateCompleted）開著 → 先不補圖，clearProgress 後補一次', () async {
+      final container = await makeContainer();
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      final shown = UpdateCompleted(
+        totalNewRecords: 0,
+        failedBanners: const [],
+        updatedAt: DateTime.utc(2026, 7, 2),
+        hoYoWikiImagesDownloaded: 0,
+      );
+      repo.debugSetProgress(shown);
+      await repo.importBundleForCloudSync(_bundle('800000001'));
+
+      await repo.fetchItemImagesForCloudSync();
+      expect(fetchStarts(), 0);
+      expect(container.read(gachaRepositoryProvider).progress, same(shown));
+
+      repo.clearProgress();
+      await waitUntil(
+        () => switch (container.read(gachaRepositoryProvider).progress) {
+          UpdateCompleted(:final hoYoWikiImagesDownloaded) =>
+            hoYoWikiImagesDownloaded > 0,
+          _ => false,
+        },
+      );
+      expect(fetchStarts(), 1);
+
+      repo.clearProgress();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(fetchStarts(), 1);
+    });
+
+    test('進行中的 progress → 照舊略過，clearProgress 後不補跑', () async {
+      final container = await makeContainer();
+      final repo = container.read(gachaRepositoryProvider.notifier);
+      repo.debugSetProgress(const Preparing());
+
+      await repo.fetchItemImagesForCloudSync();
+      repo.clearProgress();
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(fetchStarts(), 0);
+      expect(container.read(gachaRepositoryProvider).progress, isNull);
+    });
   });
 }
