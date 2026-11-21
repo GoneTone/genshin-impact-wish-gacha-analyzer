@@ -38,6 +38,10 @@
 
 **不在範圍**：鳴潮 `1b7f8e8` 之後改擷取流程的 commit（`3a49857`、`e5e6cbc`、`5a00899`、`c0a8870`、`199c979`）屬於鳴潮的 Client.log 擷取，原神沒有這條路徑；`337ce7d` 是鳴潮的用字修正。
 
+**追加（2026-11-21，使用者決定在這次一起改，鳴潮同步修正）**：修正前量測的情境 6 發現，「更新完成」或「更新失敗」視窗開著時，`importBundleForCloudSync` 把留給視窗顯示的終態進度（`UpdateCompleted`、`UpdateFailed`）也當成忙碌，拋 `CloudSyncBusyException`。同步層接著每 5 秒 `busyRetry` 一次，而且每次都先整份下載雲端檔再被擋，直到使用者關閉視窗。
+- **改法**：忙碌判斷改成 `_isUpdating` 為真，或進度不是 null 且不是終態。更新、匯入、轉換資料語言的入口原本就會檢查 `_isUpdating`，所以雲端合併與這些流程仍然互斥。
+- **鳴潮**：`lib/state/gacha_repository.dart` 的同一處（另有 `isBootstrapping` 條件，保留），在鳴潮 master 另外 commit；push 前問使用者。
+
 ## 三、目標／非目標／反目標
 
 **目標**

@@ -169,6 +169,20 @@
 - [ ] **Step 2:** 照搬 `_onlySelectedLabel`，套到 `_LocaleDropdown`（約第 246 行的 `DropdownButtonFormField`）與 `_DataLanguageSection`（約第 1443 行）。setter 不改（spec 第二節）。
 - [ ] **Step 3:** 測試全過後 Commit `perf(settings): lay out only the selected label in language dropdowns`。
 
+### Task 11b: 更新結果視窗開著時雲端合併不再當成忙碌（spec 第二節「追加」）
+
+**Files:** Modify `lib/state/gacha_repository.dart`（`importBundleForCloudSync`，約第 1343 行）；Test `test/state/gacha_repository_cloud_import_test.dart`
+
+- [ ] **Step 1:** 新增測試：
+  - 進度是 `UpdateCompleted` 時，`importBundleForCloudSync` 正常合併、不拋 `CloudSyncBusyException`，合併後進度仍是同一個 `UpdateCompleted`（視窗內容不變）。
+  - 進度是 `UpdateFailed` 時同上。
+  - 更新進行中（進度是 `WaitingForCapture` 等非終態）時，仍然拋 `CloudSyncBusyException`。
+
+  跑一次，確認前兩個測試失敗。
+- [ ] **Step 2:** 忙碌條件改成 `_isUpdating || (progress != null && progress is! UpdateCompleted && progress is! UpdateFailed)`，log 訊息不變。dartdoc 改成說明終態進度不算忙碌。
+- [ ] **Step 3:** 相關測試全過後 Commit `fix(cloudsync): stop treating a finished update dialog as busy`。
+- 鳴潮的同一修正由主控在鳴潮 master 做，push 前問使用者，不屬於這個任務。
+
 ### Task 12: 附錄 A
 
 - [ ] **Step 1:** spec 附錄 A：每個鳴潮 commit 對應的原神 commit、偏離（`recordsFile` 對應 `<uid>.json`、`sameContentAs` 欄位、同步不再順帶轉換資料語言、只清 `gacha_repository_test` 的延遲、setter 不用改、`81d3dfa` 輪詢不適用），以及實作中遇到的坑。
