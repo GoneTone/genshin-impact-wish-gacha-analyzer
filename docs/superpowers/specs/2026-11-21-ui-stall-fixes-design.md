@@ -44,7 +44,13 @@
 
 **追加二（2026-11-21，使用者決定這次一起做，鳴潮同步修正）**：開 App 讀存檔 `GachaStorage.load` 在主 isolate 讀檔＋解析 JSON＋轉成資料物件，朋友帳號約 1,100 筆時 31 ms；時間隨記錄筆數線性增加，記錄很多的使用者開 App 時載入動畫會停住。
 - **改法**：讀檔、解析與 `BannerStorage.fromJson` 整段放進背景 isolate（top-level 函式、只抓路徑）；錯誤丟回主 isolate 後照原本的 `severe` log 與 `rethrow`。檔案不存在時仍回 null。
-- **鳴潮**：`lib/services/gacha_storage.dart` 的 `load` 同樣改，在鳴潮 master 另外 commit；push 前問使用者。
+- **鳴潮**：`lib/services/gacha_storage.dart` 的 `load` 同樣改，在鳴潮另外 commit。
+
+**追加三（2026-11-22，使用者決定，鳴潮同步修正）**：Task 5 照搬鳴潮 `e526a20` 後，同步匯出會在背景 isolate 讀 `<uid>.json`。Windows 上 Dart 開檔不帶 `FILE_SHARE_DELETE`，同一瞬間的存檔（`_atomicWrite` 的 rename）或刪除會拋 `PathAccessException`（errno 5，審查已實測重現），那次更新、匯入或刪帳號就會失敗。不會毀損資料，Android 不受影響。
+- **改法**：`GachaStorage` 的 rename 與 delete 遇到 `PathAccessException` 時短暫重試，用盡才照原本的方式拋出。不改同步層，也不加鎖（使用者選擇）。
+- **鳴潮**：同樣改。
+
+**鳴潮的提交方式（使用者 2026-11-22 決定）**：上面三項鳴潮修正都放在鳴潮分支 `fix/cloud-sync-follow-ups`，做完後開 PR，不直接進 master。
 
 ## 三、目標／非目標／反目標
 

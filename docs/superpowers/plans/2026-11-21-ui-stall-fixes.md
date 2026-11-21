@@ -107,6 +107,20 @@
 - [ ] **Step 2:** 照搬 lib 改動。查檔案 ID 仍在主 isolate 用 googleapis；第一次建檔仍走 googleapis。
 - [ ] **Step 3:** 測試全過後 Commit（subject `perf(cloudsync): decode and encode the bundle off the UI isolate`，body 列 `e526a20`）。
 
+### Task 5b: 存檔、刪除在 Windows 被背景讀檔擋住時短暫重試（spec 第二節「追加三」）
+
+**Files:** Modify `lib/services/gacha_storage.dart`（`_atomicWrite` 的 rename、`delete`／其他刪除記錄檔的地方）；Test `test/services/gacha_storage_test.dart`
+
+- [ ] **Step 1:** 新增測試（Windows 才有這個鎖定行為，非 Windows 用 `skip: !Platform.isWindows` 跳過）：
+  - `save retries when the records file is briefly held open`：先用 `RandomAccessFile` 開著 `<uid>.json`，50 ms 後關閉；同時呼叫 `save`，結果成功、檔案內容是新的。
+  - `save still throws when the records file stays locked`：一直開著不關，`save` 最後拋 `PathAccessException`，而且 `.tmp` 不會被當成資料留下來誤讀（`listKnownUids` 不含它）。
+  - `delete retries when the records file is briefly held open`：同第一個，改測 `delete`。
+
+  在 Windows 跑，確認失敗。
+- [ ] **Step 2:** 在 `GachaStorage` 加一個私有 helper，重試只針對 `PathAccessException`：最多 5 次，等待從 20 ms 開始每次加倍（總共約 300 ms）。rename 與 delete 都走它；重試後成功時記 `info` log（英文，帶 `sanitizeUid` 後的 uid 和重試次數），用盡就照原本拋出。
+- [ ] **Step 3:** 相關測試全過後 Commit `fix(storage): retry rename and delete while another isolate holds the file`。
+- 鳴潮的同一修正由主控在鳴潮分支 `fix/cloud-sync-follow-ups` 做，不屬於這個任務。
+
 ### Task 6: 雲端已相同時跳過合併（鳴潮 `f4d8555`）
 
 **Files:** Modify `lib/models/banner_storage.dart`、`lib/services/cloud_sync/cloud_sync_service.dart`、`lib/state/gacha_repository.dart`；Test `test/models/banner_storage_test.dart`、`test/services/cloud_sync/cloud_sync_service_test.dart`、`test/state/cloud_sync_test.dart`、`test/state/gacha_repository_cloud_import_test.dart`
