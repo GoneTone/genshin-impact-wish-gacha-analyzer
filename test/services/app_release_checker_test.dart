@@ -155,6 +155,20 @@ void main() {
       );
     });
 
+    test('200 但 body 是非法 UTF-8 → ReleaseCheckFormat', () async {
+      final client = MockClient(
+        (_) async => http.Response.bytes(
+          [0x5b, 0xff, 0xfe, 0x5d],
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
+      );
+      await expectLater(
+        fetchNewerReleases(currentVersion: '1.0.0', client: client),
+        throwsA(isA<ReleaseCheckFormat>()),
+      );
+    });
+
     test('503 → ReleaseCheckServer(503)', () async {
       final client = MockClient((_) async => http.Response('boom', 503));
       try {
