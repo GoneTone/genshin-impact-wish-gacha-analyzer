@@ -616,15 +616,27 @@ class _DataManagement extends ConsumerWidget {
         ? settings.lastActiveUid
         : null;
 
-    final bytes = await exportAccountsBytesInBackground(
-      byUid: filteredByUid,
-      recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
-      uidOrder: filteredOrder,
-      uidAliases: filteredAliases,
-      lastActiveUid: lastActive,
-      appVersion: appVersion,
-      now: now,
-    );
+    final Uint8List bytes;
+    try {
+      bytes = await exportAccountsBytesInBackground(
+        byUid: filteredByUid,
+        recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
+        uidOrder: filteredOrder,
+        uidAliases: filteredAliases,
+        lastActiveUid: lastActive,
+        appVersion: appVersion,
+        now: now,
+      );
+    } catch (e, st) {
+      Logger('accounts.io').warning('export failed: building file', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: l.settingsExportFailed(e.toString()),
+      );
+      return;
+    }
     if (!ctx.mounted) return;
     final records = filteredByUid.values.fold<int>(
       0,
