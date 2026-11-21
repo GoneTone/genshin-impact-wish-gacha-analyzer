@@ -52,11 +52,15 @@ class DistributionLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
-    final scaler = MediaQuery.textScalerOf(context);
+    // 欄寬依內文字實際放大的倍率縮放；Android 14 起字級是非線性的，直接 scale(58) 會把寬度
+    // 當成大字、放大得比內文少而斷行。
+    final bodySize = theme.textTheme.bodyMedium?.fontSize ?? 14;
+    final widthFactor =
+        MediaQuery.textScalerOf(context).scale(bodySize) / bodySize;
     // Roboto 14dp 下「12345」約 41dp、「100.00%」約 55dp，各留一點餘裕才不會斷行。
     // shortcut: 件數只量到五位數，六位數以上會斷行；真有帳號抽到十萬抽再改成依內容量寬。
-    final countWidth = compact ? scaler.scale(44) : 60.0;
-    final rateWidth = compact ? scaler.scale(58) : 70.0;
+    final countWidth = compact ? 44 * widthFactor : 60.0;
+    final rateWidth = compact ? 58 * widthFactor : 70.0;
     final visible = showAllEntries
         ? entries
         : entries.where((e) => e.count > 0).toList(growable: false);

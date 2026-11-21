@@ -173,6 +173,41 @@ void main() {
       }, variant: TargetPlatformVariant.only(TargetPlatform.android));
     }
 
+    testWidgets('columns follow the text under nonlinear Android scaling', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildDarkTheme(),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const _NonlinearScaler()),
+            child: child!,
+          ),
+          home: const Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: DistributionLegend(
+                compact: true,
+                entries: [
+                  DistributionEntry(
+                    color: Color(0xFFD4A64A),
+                    name: 'A',
+                    count: 12345,
+                    rate: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final lineHeight = tester.getSize(find.text('A')).height;
+      expect(tester.getSize(find.text('100.00%')).height, lineHeight);
+      expect(tester.getSize(find.text('12345')).height, lineHeight);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
     // 360dp 手機直向的精簡圓餅卡：360 − 頁面內距 12×2 − 卡片內距 12×2 − 圓餅 112 − 間距 12。
     const phoneLegendWidth = 188.0;
 
@@ -339,4 +374,21 @@ void main() {
       );
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   });
+}
+
+/// 模擬 Android 14 起的非線性字級：一般字放大 1.35 倍，20 以上的大字只放大 1.1 倍。
+class _NonlinearScaler extends TextScaler {
+  /// 建立 [_NonlinearScaler]。
+  const _NonlinearScaler();
+
+  @override
+  double scale(double fontSize) => fontSize * (fontSize < 20 ? 1.35 : 1.1);
+
+  @override
+  // ignore: deprecated_member_use
+  double get textScaleFactor => 1.35;
+
+  @override
+  TextScaler clamp({double minScaleFactor = 0, double maxScaleFactor = 9}) =>
+      this;
 }
