@@ -429,6 +429,7 @@ void main() {
 
     await container.read(cloudSyncProvider.notifier).link();
 
+    // 舊行為下相同帳號也會被轉換（之後才被 sameContentAs 擋下寫檔），只有這條能鎖住「不轉換」。
     expect(converter.converts - convertsBefore, 1);
     expect(storage.saves - savesBefore, 1);
     expect(file.lastModifiedSync(), modifiedBefore);
@@ -443,6 +444,47 @@ void main() {
       container.read(gachaRepositoryProvider).byUid['800000002']!.allRecords,
       hasLength(2),
     );
+  });
+
+  test('雲端 A、B／本機 B、C，B 相同 → 同步後三個帳號都在本機', () async {
+    final b = _localBannerStorage('800000002');
+    await GachaStorage(tempDir).save(b);
+    await GachaStorage(tempDir).save(_localBannerStorage('800000003'));
+    final cloud =
+        jsonDecode(_cloudBundleJson('800000001', withRecord: true))
+            as Map<String, dynamic>;
+    (cloud['accounts'] as List).add(b.toJson());
+    remote.content = jsonEncode(cloud);
+    final container = await makeContainer();
+
+    await container.read(cloudSyncProvider.notifier).link();
+
+    expect(container.read(gachaRepositoryProvider).byUid.keys.toSet(), {
+      '800000001',
+      '800000002',
+      '800000003',
+    });
+    final uploaded = jsonDecode(remote.content!) as Map<String, dynamic>;
+    expect(
+      (uploaded['accounts'] as List).map((a) => (a as Map)['uid']).toSet(),
+      {'800000001', '800000002', '800000003'},
+    );
+  });
+
+  test('雲端帳號有別名、本機沒有（記錄相同）→ 同步後別名進到設定', () async {
+    final local = _localBannerStorage('800000001');
+    await GachaStorage(tempDir).save(local);
+    final cloud =
+        jsonDecode(_cloudBundleJson('800000001')) as Map<String, dynamic>;
+    cloud['accounts'] = [
+      {...local.toJson(), 'alias': '主帳'},
+    ];
+    remote.content = jsonEncode(cloud);
+    final container = await makeContainer();
+
+    await container.read(cloudSyncProvider.notifier).link();
+
+    expect(container.read(settingsProvider).uidAliases['800000001'], '主帳');
   });
 
   test('雲端只有 lastUpdated 較新（新增 0 筆）→ 照常寫檔、不觸發補抓', () async {

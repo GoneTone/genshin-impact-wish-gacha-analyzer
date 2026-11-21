@@ -54,7 +54,7 @@ Future<({String text, int bytes})> fetchDriveMedia(
 /// 以 [accessToken] 透過 [client] 直接覆寫 Drive 檔 [fileId] 的內容（`uploadType=media`）。
 ///
 /// googleapis 預設的 multipart 上傳會把整份內容做 Base64（多約三分之一流量），
-/// 而且編碼在呼叫端 isolate 上跑，實機量到每次約 32～47ms；這裡直接送原始位元組。
+/// 而且編碼在呼叫端 isolate 上跑，實機量到每次約 32～47ms（見 docs/superpowers/specs/2026-11-21-ui-stall-fixes-design.md 附錄 B）；這裡直接送原始位元組。
 /// 錯誤表面同 [fetchDriveMedia]。回傳送出的位元組數。
 @visibleForTesting
 Future<int> putDriveMedia(

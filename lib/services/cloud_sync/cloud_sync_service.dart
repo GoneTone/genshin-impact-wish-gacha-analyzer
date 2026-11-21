@@ -132,19 +132,25 @@ Future<Set<String>> _identicalAccountsInBackground(
   String remoteJson,
   String localJson,
 ) => Isolate.run(() {
-  Map<String, String> byUid(String json) => {
+  Map<String, Map<String, dynamic>> byUid(String json) => {
     for (final a
         in (jsonDecode(json) as Map<String, dynamic>)['accounts']
             as List<dynamic>)
-      (a as Map<String, dynamic>)['uid'] as String: jsonEncode(
-        Map<String, dynamic>.from(a)..remove('alias'),
-      ),
+      (a as Map<String, dynamic>)['uid'] as String: a,
   };
+  String content(Map<String, dynamic> a) =>
+      jsonEncode(Map<String, dynamic>.from(a)..remove('alias'));
+  bool hasAlias(Map<String, dynamic> a) =>
+      ((a['alias'] as String?)?.trim().isNotEmpty ?? false);
   final remote = byUid(remoteJson);
   final local = byUid(localJson);
   return {
     for (final MapEntry(:key, :value) in remote.entries)
-      if (local[key] == value) key,
+      // 別名規則同 _runImport：本機沒有別名而雲端有時，雲端別名要靠合併帶進來。
+      if (local[key] case final l?
+          when content(l) == content(value) &&
+              (hasAlias(l) || !hasAlias(value)))
+        key,
   };
 });
 

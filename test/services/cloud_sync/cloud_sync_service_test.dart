@@ -26,22 +26,26 @@ class _FakeRemote implements CloudSyncRemote {
 }
 
 /// 產生多帳號的 bundle JSON（正確 app id；schema 可覆寫）。
-String _bundleJson({List<String> uids = const ['800000001'], int? schema}) =>
-    jsonEncode({
-      'schema_version': schema ?? AccountsBundle.currentSchemaVersion,
-      'app': accountsBundleAppId,
-      'exported_at': '2026-07-06T00:00:00.000Z',
-      'app_version': '1.6.0',
-      'last_active_uid': uids.first,
-      'accounts': [
-        for (final uid in uids)
-          {
-            'uid': uid,
-            'last_updated': '2026-07-01T00:00:00.000Z',
-            'banners': {'301': <Object>[]},
-          },
-      ],
-    });
+String _bundleJson({
+  List<String> uids = const ['800000001'],
+  int? schema,
+  Map<String, String> aliases = const {},
+}) => jsonEncode({
+  'schema_version': schema ?? AccountsBundle.currentSchemaVersion,
+  'app': accountsBundleAppId,
+  'exported_at': '2026-07-06T00:00:00.000Z',
+  'app_version': '1.6.0',
+  'last_active_uid': uids.first,
+  'accounts': [
+    for (final uid in uids)
+      {
+        'uid': uid,
+        'last_updated': '2026-07-01T00:00:00.000Z',
+        'banners': {'301': <Object>[]},
+        if (aliases.containsKey(uid)) 'alias': aliases[uid],
+      },
+  ],
+});
 
 /// 本機匯出內容（固定字串即可，內容真實性由整合層測試保證）。
 String _localJson() => _bundleJson(uids: ['800000002']);
@@ -153,6 +157,36 @@ void main() {
         expect(remote.uploads, 1);
       },
     );
+
+    test('雲端帳號有別名、本機沒有（其餘相同）→ 仍送進合併，別名才進得來', () async {
+      final remote = _FakeRemote(
+        content: _bundleJson(aliases: {'800000001': '主帳'}),
+      );
+      AccountsBundle? applied;
+      await runSyncRound(
+        remote: remote,
+        pendingRemovals: const [],
+        applyRemote: (b) async => applied = b,
+        exportLocal: () async => _bundleJson(),
+        clearPendingRemovals: (_) async {},
+      );
+      expect(applied!.accounts.single.alias, '主帳');
+    });
+
+    test('本機已有別名、雲端別名不同（其餘相同）→ 仍跳過，本機別名優先', () async {
+      final remote = _FakeRemote(
+        content: _bundleJson(aliases: {'800000001': '雲端名'}),
+      );
+      var applied = false;
+      await runSyncRound(
+        remote: remote,
+        pendingRemovals: const [],
+        applyRemote: (_) async => applied = true,
+        exportLocal: () async => _bundleJson(aliases: {'800000001': '本機名'}),
+        clearPendingRemovals: (_) async {},
+      );
+      expect(applied, isFalse);
+    });
 
     test('合併前本機就與雲端相同 → 不合併也不上傳', () async {
       final remote = _FakeRemote(content: _localJson());
