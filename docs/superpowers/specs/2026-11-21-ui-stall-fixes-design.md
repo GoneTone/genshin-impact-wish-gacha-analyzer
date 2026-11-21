@@ -126,3 +126,51 @@
 - 程式與測試（第二節）、`tool/measure_ui_stalls.py`。
 - 本 spec 附錄 A：各鳴潮 commit 在原神的落點與偏離、實作坑。附錄 B：量測結果（修正前後對照）與電腦版驗收。
 - 不改 README。
+
+## 附錄 B：量測結果
+
+### 修正前（2026-11-21，ROG Phone 9，profile 版 `bd6a161`）
+
+**量法**：用 `tool/measure_ui_stalls.py` 量。
+- 情境 1A、1B：重開 App 後等 15 秒，再用 `dump` 抓回資料。
+- 情境 3、6：先清空緩衝區，由人操作，再用 `dump` 抓回資料。
+- 其餘情境：用 `record` 量。
+
+下表列出主 isolate 上 ≥ 8 ms 的連續忙碌時段中，與本次範圍相關的幾段，已排除量測工具自己的 VM Service 時段。量測期間手機與電腦連的是同一個 Google 帳號，帳號清單相同（800…、801…）；電腦端用已安裝的 1.7.0 正式版同步一次。
+
+| 情境 | 停頓 | 主因 | 對應任務 |
+|---|---|---|---|
+| 1A 同裝置重開 | 31.9 ms | 同步上傳時編碼請求內容（`_UnicodeSubsetEncoderSink`，googleapis 上傳） | Task 7 |
+| | 31.1 ms | 開 App 讀存檔 `GachaStorage.load` | 範圍外 |
+| | 21.3 ms | 同步後的變動檢查：`_exportLocal` → `exportAccounts`＋`syncFingerprint` | Task 4、5 |
+| | 20.4 ms | 同步輪匯出本機：`_exportLocal` → `exportAccounts` | Task 5 |
+| | 15.1 ms | 同步輪計算指紋 `syncFingerprint` | Task 4 |
+| | 14.8 ms | 同步輪解析雲端內容 `importAccounts` | Task 4 |
+| | 8.6 ms | 合併後存檔 `_runImport` → `GachaStorage.save` | Task 6 |
+| 1B 先在電腦同步 | 47.1 ms | 同步上傳時編碼請求內容（同 1A） | Task 7 |
+| | 21.2 ms | 同步後的變動檢查（同 1A） | Task 4、5 |
+| | 17.8 ms | 同步輪計算指紋 `syncFingerprint` | Task 4 |
+| | 14.6 ms | 同步輪解析雲端內容 `importAccounts` | Task 4 |
+| | 13.7 ms | 同步輪匯出本機 `exportAccounts` | Task 5 |
+| | 9.6 ms | 合併後存檔 `_runImport` → `GachaStorage.save` | Task 6 |
+| 2 轉換資料語言（0 筆要轉） | 25.7 ms | `unifyDataLanguage` → `GachaStorage.save`：沒有東西要轉也重寫存檔 | Task 8 |
+| | 22.5 ms | 存檔觸發的同步變動檢查（`exportAccounts`＋`syncFingerprint`） | Task 4、5 |
+| 3 匯出 | 13.8 ms | `_DataManagement._export` → `exportAccounts` | Task 8 |
+| 3 匯入相同的檔案（新增 0 筆） | 32.3 ms | `_runImport` → `GachaStorage.save`：沒有新增也重寫存檔 | Task 6、8 |
+| | 21.9 ms | 存檔觸發的同步變動檢查 | Task 4、5 |
+| 4 轉向、切換帳號 | 20.2 ms | 切帳號後版面重建（`OverviewPage.build`、圖例排版） | 範圍外 |
+| 5 第一次開設定頁 | 51.0 ms | `_LocaleDropdown.build`、`localeMetadataProvider` | Task 11 |
+| 6 更新記錄（新增 0 筆） | 39.5 ms | 更新後的同步變動檢查（`syncFingerprint`＋`exportAccounts`） | Task 4、5 |
+| | 16.0 ms | 同步輪解析雲端內容 `importAccounts` | Task 4 |
+| | 8.4 ms | 同步下載 `DriveSyncRemote.download` | Task 5 |
+
+**每輪同步**：雲端與本機內容相同時，每一輪仍然整份上傳（log 每輪都是 `upload: updated, 335177 bytes`），一輪約 3.6～4.3 秒。
+
+**原神獨有路徑**：
+- **logcat 輪詢**：情境 6 等網址的約 56 秒內，沒有 ≥ 8 ms 的停頓。
+- **HoYoWiki**：情境 3 匯入有一段 11.7 ms、情境 6 有一段 25.2 ms 的停頓，堆疊裡出現 `_fetchHoYoWiki`，但 App 函式各只佔 1 筆取樣，大部分是原生或框架的工作，不是 JSON 編碼或寫檔。沒有可以歸到這條路徑、超過 16 ms 的停頓，修正後再對照。
+- **物品類型對照**：`itemTypeKeyOf` 只在情境 1A 開 App 首頁計算的 9.1 ms 時段裡出現 1 筆取樣。
+
+**範圍外的發現**（兩個專案寫法相同，回報使用者，這次不改）：
+- 「更新完成」對話框開著時，資料變動後的同步會被 `cloud import rejected: busy` 擋下，接著每 5 秒（`busyRetry`）重試一次，每次都先整份下載雲端檔（335 KB），直到使用者關閉對話框才同步成功。
+- 開 App 讀存檔 `GachaStorage.load` 31 ms。
