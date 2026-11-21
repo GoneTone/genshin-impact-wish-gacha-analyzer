@@ -31,6 +31,14 @@ const double _iconSize = 32;
 /// 圖示加上它與名稱的間距；有圖示的欄要在底部對稱補回這段高度，節點才會落在軸線上。
 const double _iconBlockHeight = _iconSize + AppSpacing.xs;
 
+/// 節點上方名稱（12）與下方日期（10）共用的固定行高：兩行等高，節點才會在欄的正中間；
+/// 1.4 倍容得下中文字型，名稱是中文時行高也不會跟著變高。
+const StrutStyle _labelStrut = StrutStyle(
+  fontSize: 12,
+  height: 1.4,
+  forceStrutHeight: true,
+);
+
 /// 從跨卡池 timeline entries 統計各卡池的 5★ 數量,輸出可餵給
 /// [DistributionLegend] (記得搭配 `showAllEntries: true`) 的條目,作為
 /// [TimelineHorizontal] 在跨卡池場景下的顏色圖例。
@@ -405,6 +413,7 @@ class _EntryColumn extends StatelessWidget {
                     Text(
                       entry.name,
                       maxLines: 1,
+                      strutStyle: _labelStrut,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -420,6 +429,7 @@ class _EntryColumn extends StatelessWidget {
               Text(
                 entry.name,
                 maxLines: 1,
+                strutStyle: _labelStrut,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -447,6 +457,7 @@ class _EntryColumn extends StatelessWidget {
                 ],
               ),
               maxLines: 1,
+              strutStyle: _labelStrut,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
@@ -481,6 +492,7 @@ class _NowColumn extends StatelessWidget {
           Text(
             l.timelineNowLabel,
             maxLines: 1,
+            strutStyle: _labelStrut,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: tokens.accentPrimary,
@@ -498,6 +510,7 @@ class _NowColumn extends StatelessWidget {
           Text(
             l.timelineNowPulls(nowPulls),
             maxLines: 1,
+            strutStyle: _labelStrut,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: tokens.textMuted,

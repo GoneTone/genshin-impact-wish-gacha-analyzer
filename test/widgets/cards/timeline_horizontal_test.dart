@@ -547,7 +547,7 @@ void main() {
     for (final node in find.byType(TimelineNode).evaluate()) {
       expect(
         tester.getCenter(find.byWidget(node.widget)).dy,
-        closeTo(axisY, 1.5),
+        closeTo(axisY, 0.5),
       );
     }
     expect(tester.takeException(), isNull);
@@ -561,6 +561,29 @@ void main() {
     ),
   );
 
+  for (final scale in [1.0, 1.3]) {
+    testWidgets('now and entry nodes sit on the axis line at ${scale}x', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await pumpTimelineHorizontal(
+        tester,
+        entries: [_e('A', '301', 70, DateTime(2026, 6, 2))],
+        targetRank: 5,
+        nowPulls: 5,
+      );
+      final axisY = tester.getCenter(axisLine()).dy;
+      expect(find.byType(TimelineNode), findsNWidgets(2));
+      for (final node in find.byType(TimelineNode).evaluate()) {
+        expect(
+          tester.getCenter(find.byWidget(node.widget)).dy,
+          closeTo(axisY, 0.5),
+        );
+      }
+    });
+  }
+
   for (final height in <double?>[240, null]) {
     testWidgets('odes nodes without an icon stay on the axis line '
         '(height=$height)', (tester) async {
@@ -571,7 +594,7 @@ void main() {
       for (final node in find.byType(TimelineNode).evaluate()) {
         expect(
           tester.getCenter(find.byWidget(node.widget)).dy,
-          closeTo(axisY, 1.5),
+          closeTo(axisY, 0.5),
         );
       }
       expect(tester.takeException(), isNull);
@@ -603,7 +626,7 @@ void main() {
     for (final node in find.byType(TimelineNode).evaluate()) {
       expect(
         tester.getCenter(find.byWidget(node.widget)).dy,
-        closeTo(axisY, 1.5),
+        closeTo(axisY, 0.5),
       );
     }
   });
@@ -649,29 +672,29 @@ void main() {
     final actual = timelineGeometry(tester, find.byType(TimelineHorizontal));
     // 數值為實測；分隔線欄的 1px 左框線吃進欄寬，所以每欄都是 90。
     expect(actual, <(String, Rect)>[
-      ('Now', const Rect.fromLTRB(26.625, 49.5, 63.375, 66.5)),
-      ('28 pulls', const Rect.fromLTRB(4.0, 96.5, 86.0, 110.5)),
-      ('01 / 2026', const Rect.fromLTRB(90.0, 23.5, 180.0, 39.5)),
-      ('夜蘭', const Rect.fromLTRB(122.75, 49.5, 147.25, 66.5)),
-      ('01/05 · 87 pulls', const Rect.fromLTRB(90.0, 96.5, 180.0, 110.5)),
-      ('流浪者', const Rect.fromLTRB(206.625, 49.5, 243.375, 66.5)),
-      ('01/02 · 74 pulls', const Rect.fromLTRB(180.0, 96.5, 270.0, 110.5)),
-      ('12 / 2025', const Rect.fromLTRB(271.0, 23.5, 360.0, 39.5)),
-      ('納西妲', const Rect.fromLTRB(297.125, 49.5, 333.875, 66.5)),
-      ('12/20 · 40 pulls', const Rect.fromLTRB(271.0, 96.5, 360.0, 110.5)),
-      ('11 / 2025', const Rect.fromLTRB(361.0, 23.5, 450.0, 39.5)),
-      ('魈', const Rect.fromLTRB(399.375, 49.5, 411.625, 66.5)),
-      ('11/30 · 90 pulls', const Rect.fromLTRB(361.0, 96.5, 450.0, 110.5)),
-      ('刻晴', const Rect.fromLTRB(482.75, 49.5, 507.25, 66.5)),
-      ('11/03 · 62 pulls', const Rect.fromLTRB(450.0, 96.5, 540.0, 110.5)),
-      ('node', const Rect.fromLTRB(34.0, 70.5, 56.0, 92.5)),
-      ('node', const Rect.fromLTRB(124.0, 70.5, 146.0, 92.5)),
-      ('node', const Rect.fromLTRB(214.0, 70.5, 236.0, 92.5)),
-      ('node', const Rect.fromLTRB(304.5, 70.5, 326.5, 92.5)),
-      ('node', const Rect.fromLTRB(394.5, 70.5, 416.5, 92.5)),
-      ('node', const Rect.fromLTRB(484.0, 70.5, 506.0, 92.5)),
-      ('border', const Rect.fromLTRB(270.0, 23.5, 360.0, 136.5)),
-      ('border', const Rect.fromLTRB(360.0, 23.5, 450.0, 136.5)),
+      ('Now', const Rect.fromLTRB(26.625, 48.0, 63.375, 65.0)),
+      ('28 pulls', const Rect.fromLTRB(4.0, 95.0, 86.0, 112.0)),
+      ('01 / 2026', const Rect.fromLTRB(90.0, 22.0, 180.0, 38.0)),
+      ('夜蘭', const Rect.fromLTRB(122.75, 48.0, 147.25, 65.0)),
+      ('01/05 · 87 pulls', const Rect.fromLTRB(90.0, 95.0, 180.0, 112.0)),
+      ('流浪者', const Rect.fromLTRB(206.625, 48.0, 243.375, 65.0)),
+      ('01/02 · 74 pulls', const Rect.fromLTRB(180.0, 95.0, 270.0, 112.0)),
+      ('12 / 2025', const Rect.fromLTRB(271.0, 22.0, 360.0, 38.0)),
+      ('納西妲', const Rect.fromLTRB(297.125, 48.0, 333.875, 65.0)),
+      ('12/20 · 40 pulls', const Rect.fromLTRB(271.0, 95.0, 360.0, 112.0)),
+      ('11 / 2025', const Rect.fromLTRB(361.0, 22.0, 450.0, 38.0)),
+      ('魈', const Rect.fromLTRB(399.375, 48.0, 411.625, 65.0)),
+      ('11/30 · 90 pulls', const Rect.fromLTRB(361.0, 95.0, 450.0, 112.0)),
+      ('刻晴', const Rect.fromLTRB(482.75, 48.0, 507.25, 65.0)),
+      ('11/03 · 62 pulls', const Rect.fromLTRB(450.0, 95.0, 540.0, 112.0)),
+      ('node', const Rect.fromLTRB(34.0, 69.0, 56.0, 91.0)),
+      ('node', const Rect.fromLTRB(124.0, 69.0, 146.0, 91.0)),
+      ('node', const Rect.fromLTRB(214.0, 69.0, 236.0, 91.0)),
+      ('node', const Rect.fromLTRB(304.5, 69.0, 326.5, 91.0)),
+      ('node', const Rect.fromLTRB(394.5, 69.0, 416.5, 91.0)),
+      ('node', const Rect.fromLTRB(484.0, 69.0, 506.0, 91.0)),
+      ('border', const Rect.fromLTRB(270.0, 22.0, 360.0, 138.0)),
+      ('border', const Rect.fromLTRB(360.0, 22.0, 450.0, 138.0)),
     ]);
   });
 }

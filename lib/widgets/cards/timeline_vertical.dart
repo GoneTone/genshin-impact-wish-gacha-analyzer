@@ -19,8 +19,11 @@ const double _monthColumnWidth = 80;
 /// 節點外圍 halo（觸控熱區）直徑。
 const double _haloSize = 22;
 
-/// 軸線 left 偏移：月份欄右緣 + halo 半徑，使軸線穿過節點中心。
-const double _railLeft = _monthColumnWidth + (_haloSize / 2);
+/// 軸線寬度。
+const double _railWidth = 2;
+
+/// 軸線 left 偏移：月份欄右緣 + halo 半徑（節點中心）再退半個線寬，使軸線以節點中心置中。
+const double _railLeft = _monthColumnWidth + (_haloSize / 2) - (_railWidth / 2);
 
 /// 直向時間軸(視覺隱喻 B):
 /// - 上 → 下 = 新 → 舊
@@ -276,7 +279,7 @@ class _TimelineVerticalState extends State<TimelineVertical>
                 left: _railLeft,
                 top: 0,
                 bottom: 0,
-                width: 2,
+                width: _railWidth,
                 child: Container(
                   color: tokens.textMuted.withValues(alpha: 0.3),
                 ),
