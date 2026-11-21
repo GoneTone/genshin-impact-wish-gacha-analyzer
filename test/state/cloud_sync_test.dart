@@ -26,6 +26,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 import '../helpers/cloud_sync_fakes.dart';
 import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 /// 產生雲端側 bundle JSON；[withRecord] 為 true 時帶一筆 301 五星記錄。
 String _cloudBundleJson(String uid, {bool withRecord = false}) => jsonEncode({
@@ -524,14 +525,14 @@ void main() {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 1);
 
     await notifier.setAutoSync(false);
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 1);
     expect(container.read(settingsProvider).cloudAutoSyncEnabled, isFalse);
 
     await notifier.setAutoSync(true);
-    expect(remote.uploads, 2);
+    expect(remote.downloads, 2);
     expect(container.read(settingsProvider).cloudAutoSyncEnabled, isTrue);
   });
 
@@ -539,25 +540,25 @@ void main() {
   // 真實 Timer，要驗證「到點時 fingerprint 沒變就跳過」需要真的等 5 秒以上
   // 掛鐘時間，會拖慢且不穩定；在不改動 production code（注入時鐘）的前提下，
   // 此分支標記為 untestable-without-refactor。改測可驗證的替代行為：
-  // syncNow 手動呼叫本身不做 fingerprint 比對，內容不變仍每次真的上傳。
-  test('syncNow 手動呼叫不做 fingerprint 比對，內容不變仍每次上傳', () async {
+  // syncNow 手動呼叫本身不做 fingerprint 比對，每次都真的跑一輪；但雲端已與
+  // 本機內容相同時，該輪會跳過上傳。
+  test('syncNow 手動呼叫每次都跑一輪，雲端已是最新則不重複上傳', () async {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
     expect(remote.uploads, 1);
 
     await notifier.syncNow(manual: true, trigger: 'manual2');
-    expect(remote.uploads, 2);
-
     await notifier.syncNow(manual: true, trigger: 'manual3');
-    expect(remote.uploads, 3);
+    expect(remote.downloads, 3);
+    expect(remote.uploads, 1);
   });
 
   test('syncNow 進行中再呼叫 → 標記 pendingRerun，結束後補跑一輪', () async {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 1);
 
     final gate = Completer<void>();
     remote.downloadGate = gate;
@@ -568,18 +569,21 @@ void main() {
 
     // 進行中再呼叫：立即返回（不等待輪完），只標記 pendingRerun，不觸發下載/上傳。
     await notifier.syncNow(manual: true, trigger: 'duringFlight');
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 2);
 
     gate.complete();
     remote.downloadGate = null;
     await first;
-    // finally 區塊 unawaited 補跑的一輪；等它跑完。
-    await Future<void>.delayed(Duration.zero);
-    await Future<void>.delayed(Duration.zero);
+    // finally 區塊 unawaited 補跑的一輪（含背景 isolate 的 JSON 工作）；等它跑完。
+    await waitUntil(
+      () =>
+          remote.downloads == 3 &&
+          container.read(cloudSyncProvider).phase == CloudSyncPhase.idle,
+    );
 
     // link 時的第一輪（1）+ 被卡住後放行完成的 in-flight 輪（+1）
-    // + pendingRerun 觸發的補跑輪（+1）＝ 3。
-    expect(remote.uploads, 3);
+    // + pendingRerun 觸發的補跑輪（+1）＝ 3 次下載（雲端已是最新，不再上傳）。
+    expect(remote.downloads, 3);
     expect(container.read(cloudSyncProvider).phase, CloudSyncPhase.idle);
   });
 
@@ -588,7 +592,7 @@ void main() {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 1);
 
     // 換一份新帳號的雲端內容，確保這輪合併真的會呼叫 applyRemote。
     remote.content = _cloudBundleJson('800000002');
@@ -601,8 +605,8 @@ void main() {
     final s = container.read(cloudSyncProvider);
     expect(s.phase, CloudSyncPhase.error);
     expect(s.errorToken, 'busy');
-    // 合併階段就失敗，沒有走到上傳。
-    expect(remote.uploads, 1);
+    // 合併階段就失敗，沒有走到上傳（link 那輪雲端已是最新，同樣沒上傳）。
+    expect(remote.uploads, 0);
   });
 
   test('同步中途缺 Drive scope（既存 token）→ reauthRequired(scopeMissing)', () async {
@@ -647,7 +651,7 @@ void main() {
     final container = await makeContainer();
     final notifier = container.read(cloudSyncProvider.notifier);
     await notifier.link();
-    expect(remote.uploads, 1);
+    expect(remote.downloads, 1);
 
     // 模擬該輪撞上更新／匯入 busy 被擋；換一份新帳號的雲端內容，
     // 確保被擋的那輪確實下載到了未合併的雲端資料。

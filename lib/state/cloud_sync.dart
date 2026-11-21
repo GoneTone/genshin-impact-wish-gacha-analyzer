@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
@@ -439,9 +441,13 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// （避免同步自身的合併寫入造成空轉輪）。
   void _scheduleDebounced() {
     _debounce?.cancel();
-    _debounce = Timer(debounceDelay, () {
+    _debounce = Timer(debounceDelay, () async {
       if (!ref.mounted || !_linked) return;
-      if (syncFingerprint(_exportLocal()) == _lastFingerprint) return;
+      final fingerprint = await syncFingerprintInBackground(
+        await _exportLocal(),
+      );
+      if (!ref.mounted || !_linked) return;
+      if (fingerprint == _lastFingerprint) return;
       unawaited(syncNow(manual: false, trigger: 'dataChange'));
     });
   }
@@ -456,17 +462,40 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     });
   }
 
-  /// 把本機全帳號打包成與手動匯出同格式的 bundle JSON。
-  String _exportLocal() {
+  /// 把本機全帳號打包成與手動匯出同格式的 bundle JSON（在背景 isolate 序列化）。
+  Future<String> _exportLocal() {
     final gacha = ref.read(gachaRepositoryProvider);
     final settings = ref.read(settingsProvider);
-    return exportAccounts(
+    return _exportInBackground(
       byUid: gacha.byUid,
       uidOrder: settings.uidOrder,
       uidAliases: settings.uidAliases,
       lastActiveUid: gacha.activeUid,
       appVersion: ref.read(appVersionProvider),
-      now: DateTime.now(),
     );
   }
+}
+
+/// 在背景 isolate 跑 [exportAccounts]：數 MB 的 jsonEncode 在主 isolate 會卡住畫面。
+///
+/// 刻意寫成 top-level：閉包只抓參數，不會把 notifier（含 Timer 等無法跨 isolate
+/// 傳送的物件）一起帶進去。
+Future<String> _exportInBackground({
+  required Map<String, BannerStorage> byUid,
+  required List<String> uidOrder,
+  required Map<String, String> uidAliases,
+  required String? lastActiveUid,
+  required String appVersion,
+}) {
+  final now = DateTime.now();
+  return Isolate.run(
+    () => exportAccounts(
+      byUid: byUid,
+      uidOrder: uidOrder,
+      uidAliases: uidAliases,
+      lastActiveUid: lastActiveUid,
+      appVersion: appVersion,
+      now: now,
+    ),
+  );
 }

@@ -112,6 +112,9 @@ class FakeRemote implements CloudSyncRemote {
   /// upload 次數。
   int uploads = 0;
 
+  /// download 次數（雲端已是最新時會跳過 upload，輪數要靠它數）。
+  int downloads = 0;
+
   /// 非 null 時 `download` 會先 await 此 completer 的 future，供測試卡住同步輪
   /// （驗證 single-flight／pendingRerun 行為）。
   Completer<void>? downloadGate;
@@ -122,6 +125,7 @@ class FakeRemote implements CloudSyncRemote {
   /// 回傳目前雲端檔內容；視 [downloadGate]／[downloadError] 而定。
   @override
   Future<String?> download() async {
+    downloads++;
     if (downloadGate != null) await downloadGate!.future;
     if (downloadError != null) throw downloadError!;
     return content;
