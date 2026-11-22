@@ -200,11 +200,13 @@ class _BannerPageState extends ConsumerState<BannerPage> {
     );
 
     final pagePadding = pagePaddingOf(context);
-    // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
+
+    /// 依 [col] 輪替排序（降冪 → 升冪 → 取消）。
     void cycleSort(SortColumn col) =>
         ref.read(recordFilterProvider(gachaType).notifier).cycleSort(col);
 
     /// 整頁內容；[midAd]／[listAd] 為已載入可顯示的位置 3／位置 1 廣告。
+    // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
     Widget content(
       LoadedNative? midAd,
       LoadedNative? listAd,

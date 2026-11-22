@@ -27,10 +27,10 @@ enum NativeAdPlacement {
   /// 卡池頁段落之間。
   bannerMid,
 
-  /// 總覽頁祈願段與頌願段之間。
+  /// 總覽頁祈願段的類型分布下方。
   overviewGacha,
 
-  /// 總覽頁頌願段之後。
+  /// 總覽頁頌願段的類型分布下方。
   overviewOdes;
 
   /// 此位置使用的模板：列表內用小型，其他用中型。

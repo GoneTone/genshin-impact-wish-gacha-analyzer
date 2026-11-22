@@ -55,7 +55,8 @@ class OverviewPage extends ConsumerWidget {
     );
     // 兩段各自判斷有沒有記錄：空狀態的段落不放廣告。
     final isAndroid = ref.watch(isAndroidProvider);
-    final canRequestAds = ref.watch(adsProvider.select((s) => s.canRequestAds));
+    final canRequestAds =
+        isAndroid && ref.watch(adsProvider.select((s) => s.canRequestAds));
     final gachaAdsAllowed =
         isAndroid &&
         canRequestAds &&
@@ -86,11 +87,16 @@ class OverviewPage extends ConsumerWidget {
       return noSyncPageBody(context);
     }
 
+    final hoyowikiIndex = ref.watch(hoyowikiIndexProvider);
     final sections = buildOverviewSections(
       activeData.banners,
-      index: ref.watch(hoyowikiIndexProvider),
+      index: hoyowikiIndex,
     );
     final gachaSec = sections.gacha;
+    final gachaFiveStarItems = buildFiveStarCollectionAcrossBanners(
+      gachaSec.banners,
+      index: hoyowikiIndex,
+    );
     final odesSec = sections.odes;
     final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
@@ -186,6 +192,7 @@ class OverviewPage extends ConsumerWidget {
               odesStatCards,
               bannerColors,
               pagePadding,
+              gachaFiveStarItems,
               adOf(NativeAdPlacement.overviewGacha, gachaAdsAllowed),
               adOf(NativeAdPlacement.overviewOdes, odesAdsAllowed),
             );
@@ -207,6 +214,7 @@ class OverviewPage extends ConsumerWidget {
     List<Widget> odesStatCards,
     BannerColors bannerColors,
     double pagePadding,
+    List<FiveStarCollectionItem> gachaFiveStarItems,
     LoadedNative? gachaAd,
     LoadedNative? odesAd,
   ) {
@@ -250,10 +258,7 @@ class OverviewPage extends ConsumerWidget {
                 timeline: gachaSec.timeline,
                 timelineNowPulls: gachaSec.timelineNowPulls,
                 timelineRank: gachaSec.timelineRank,
-                fiveStarItems: buildFiveStarCollectionAcrossBanners(
-                  gachaSec.banners,
-                  index: ref.watch(hoyowikiIndexProvider),
-                ),
+                fiveStarItems: gachaFiveStarItems,
                 nativeAd: gachaAd,
               ),
               SliverList.list(

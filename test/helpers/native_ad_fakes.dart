@@ -27,7 +27,7 @@ class FixedGachaRepository extends GachaRepository {
   @override
   GachaState build() => _stateOf(banners);
 
-  /// 以 [banners] 取代目前帳號的記錄，模擬切換帳號。
+  /// 以 [banners] 取代目前帳號的記錄（對頁面而言等同切到另一個帳號）。
   void setBanners(Map<String, List<GachaRecord>> banners) =>
       state = _stateOf(banners);
 
