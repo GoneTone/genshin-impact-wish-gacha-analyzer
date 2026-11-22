@@ -423,6 +423,14 @@
   "settingsPrivacySectionTitle": "ความเป็นส่วนตัว",
   "settingsMaskUidInUi": "ปิดบัง UID ในอินเทอร์เฟซ",
   "settingsMaskUidInUiHint": "เมื่อเปิดใช้งาน UID ในอินเทอร์เฟซและรายการบัญชีจะแสดง 3 หลักแรกและส่วนที่เหลือจะถูกปิดบัง (เช่น 123•••••) เหมาะสำหรับการสตรีมหรือการแชร์หน้าจอ ภาพแชร์ ไฟล์ส่งออก และกล่องโต้ตอบยืนยันการลบจะไม่ได้รับผลกระทบ",
+  "settingsAdPrivacyOptions": "ตัวเลือกความเป็นส่วนตัวของโฆษณา",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "เปลี่ยนการยินยอมให้แสดงโฆษณาที่ปรับให้เหมาะกับคุณ",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "เกี่ยวกับ",
   "settingsAboutVersion": "เวอร์ชัน {version}",
   "@settingsAboutVersion": {

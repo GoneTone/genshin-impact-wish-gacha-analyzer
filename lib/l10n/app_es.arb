@@ -423,6 +423,14 @@
   "settingsPrivacySectionTitle": "Privacidad",
   "settingsMaskUidInUi": "Ocultar UID en la interfaz",
   "settingsMaskUidInUiHint": "Cuando está activado, los UID en la interfaz y la lista de cuentas muestran los primeros 3 dígitos y el resto enmascarado (por ejemplo, 123•••••). Útil para transmisiones en vivo o al compartir pantalla. Las imágenes para compartir, los archivos exportados y el diálogo de confirmación de eliminación no se ven afectados.",
+  "settingsAdPrivacyOptions": "Opciones de privacidad de anuncios",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Cambia si aceptas ver anuncios personalizados.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "Sobre",
   "settingsAboutVersion": "Versión {version}",
   "@settingsAboutVersion": {

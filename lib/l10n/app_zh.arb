@@ -336,6 +336,14 @@
   "settingsPrivacySectionTitle": "隱私",
   "settingsMaskUidInUi": "遮蔽介面中的 UID",
   "settingsMaskUidInUiHint": "開啟後，畫面與帳號清單中的 UID 會以前 3 碼搭配 • 顯示（例如 123•••••），適合實況或螢幕分享時使用。分享圖、匯出檔案、刪除確認框不受影響。",
+  "settingsAdPrivacyOptions": "廣告隱私權選項",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "變更是否同意顯示個人化廣告。",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "關於",
   "settingsAboutVersion": "版本 {version}",
   "@settingsAboutVersion": {

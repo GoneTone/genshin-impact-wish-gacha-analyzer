@@ -22,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
@@ -1166,7 +1167,7 @@ Future<void> _shareOrReport(
   await showExportResultDialog(ctx, success: false, message: l.shareFailed);
 }
 
-/// 隱私設定區塊：目前僅含「遮蔽介面 UID」開關。
+/// 隱私設定區塊：「遮蔽介面 UID」開關，以及 Android 在需要時顯示的「廣告隱私權選項」。
 class _PrivacySection extends ConsumerWidget {
   /// 建立 [_PrivacySection]。
   const _PrivacySection();
@@ -1179,7 +1180,7 @@ class _PrivacySection extends ConsumerWidget {
     final maskUid = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
     final notifier = ref.read(settingsProvider.notifier);
 
-    return SwitchListTile(
+    final maskSwitch = SwitchListTile(
       key: const ValueKey('settings.maskUidInUiSwitch'),
       value: maskUid,
       title: Text(l.settingsMaskUidInUi),
@@ -1194,6 +1195,35 @@ class _PrivacySection extends ConsumerWidget {
       ),
       contentPadding: EdgeInsets.zero,
       onChanged: notifier.setMaskUidInUi,
+    );
+
+    final showAdPrivacy =
+        ref.watch(isAndroidProvider) &&
+        ref.watch(adsProvider.select((s) => s.privacyOptionsRequired));
+    if (!showAdPrivacy) return maskSwitch;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        maskSwitch,
+        const SizedBox(height: AppSpacing.s),
+        Text(
+          l.settingsAdPrivacyOptionsHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: tokens.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: OutlinedButton(
+            key: const ValueKey('settings.adPrivacyOptionsButton'),
+            onPressed: () =>
+                ref.read(adsProvider.notifier).showPrivacyOptions(),
+            child: Text(l.settingsAdPrivacyOptions),
+          ),
+        ),
+      ],
     );
   }
 }

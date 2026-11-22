@@ -423,6 +423,14 @@
   "settingsPrivacySectionTitle": "プライバシー",
   "settingsMaskUidInUi": "画面上の UID をマスク",
   "settingsMaskUidInUiHint": "オンにすると、画面とアカウント一覧の UID が先頭 3 桁と残りを • でマスクして表示されます（例：123•••••）。配信や画面共有時に便利です。共有画像、エクスポートファイル、削除確認ダイアログは影響を受けません。",
+  "settingsAdPrivacyOptions": "広告のプライバシーオプション",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "パーソナライズ広告の表示に同意するかどうかを変更します。",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "このツールについて",
   "settingsAboutVersion": "バージョン {version}",
   "@settingsAboutVersion": {
