@@ -1,10 +1,10 @@
 # 多國語言補齊與術語表（子專案 11）— 設計 spec
 
-- 狀態：待使用者核准
+- 狀態：待使用者核准（使用者 2026-11-22 決定先做子專案 9b，本子專案排在 9b 之後）
 - 日期：2026-11-22
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 11 與「子專案 11 的術語表」段落；順序 8 → 9 → 12 → 10 → 11 → 7 → 13）
 - 對應鳴潮版：移植筆記第 49 節（`docs/Android移植筆記.md` 第 700～738 行），commit 見第二節
-- 前一個子專案：`2026-11-22-android-native-ads-design.md`（子專案 10）
+- 前一個子專案：子專案 9b（啟動畫面配合主題、系統「應用程式語言」雙向同步）。9b 會帶進 `locales_config.xml` 與 `android_locales_config_test`，本子專案以它們為前提。
 
 ---
 
@@ -27,13 +27,13 @@
 | 遊戲有出的語言照官方用語 | `a11352c`、`56ec259` |
 | 沒有支援的系統語言改回英文 | `cde6409` |
 | Android 啟動器名稱與配對通知翻譯 | `d6bf944` |
-| 挪威文對應（只搬 Dart 端與 `values-nb`，見下） | `0069630` |
+| 挪威文對應 | `0069630` |
 | 數量為 1 時的詞形變化 | `46ae22d` |
 | 遊戲沒出的語言用英文官方名稱 | `2cef632` |
 | 之後針對文案的修正（照原神現況判斷是否適用） | `337ce7d`、`6b0978e`、`307a45e`、`08bb4ab`、`8dbb5e9`、`a53f4f0` |
 
 **不在這次範圍**：
-- 子專案 9b（系統「應用程式語言」雙向同步）的部分：`locales_config.xml`、送給系統的語言代碼 `systemLocaleTagOf`、從系統讀回語言。鳴潮 `0069630` 的挪威文修正中屬於這些的部分留給 9b；這次只做 Dart 端 `localeListResolution` 把 `nb`／`nn` 對到 `no`，以及 Android 原生字串資料夾用 `values-nb`。
+- 子專案 9b 的功能本身（啟動畫面、系統「應用程式語言」雙向同步）。9b 先做（使用者 2026-11-22 選 A），所以這次 `0069630` 可以整個搬，包含 `locales_config.xml` 與送給系統的代碼改用 `nb`；`locales_config.xml` 也要列出補齊後的所有語言。
 - 合併前 Crowdin 的處理（既有待辦「30 處原文改動要補傳翻譯」）與合併後的 Crowdin 同步：照鳴潮，翻譯先直接寫進 repo，合併後若被蓋掉再處理。
 - README、商店文字（子專案 13、7）。
 
@@ -73,7 +73,7 @@
 
 ## 五、翻譯流程
 
-照鳴潮的做法，並依原神規則以繁中為原文：
+兩個專案的原文都是繁中（`l10n.yaml` 範本 `app_zh.arb`、Crowdin 原文也是繁中）。鳴潮第 49 節那次批次翻譯讓子代理看英文文字翻、繁中 `@` 說明當語境；這次依原神規則改成以繁中為原文：
 - **原文**：`app_zh.arb`（含 `@` 說明當語境），`app_en.arb` 當參考。省略號一律半形 `...`（含 CJK）。
 - **分工**：子代理平行翻譯，每個負責 3 種語言，共用一份翻譯說明（術語表、上面第四節的規則、複數規則、引號與空格規則）。派子代理的指示用中文寫。
 - **檢查腳本**（每個檔）：key 與範本一致、佔位符與 ICU 參數名稱不變、沒有殘留中日文（遊戲沒出的語言）、翻譯者欄位正確、`@@locale` 正確（不帶地區碼）。
@@ -86,7 +86,7 @@
 - **不支援的語言改回英文**（`cde6409`）：`lib/state/localization_metadata.dart` 的 `localeListResolution` 在整份清單都對不上或清單為空時回傳英文；`nb`／`nn` 對到 `no`。`locale_metadata_test` 用實際語言清單鎖住。
 - **由右往左**（`f87c2a4`）：卡片彩色邊條、進度條對齊與漸層、垂直時間軸軸線、水平捲動區的邊緣漸層與箭頭改用 directional；比例數字（「5 / 80」）與遮罩 UID 固定 `TextDirection.ltr`；遊戲資料文字（HoYoWiki 說明）在由右往左介面裡用 `Directionality(ltr)` 包住。新增 `test/widgets/rtl_layout_test.dart` 以阿拉伯文鎖住。實際要改的位置以原神程式為準（原神的元件和鳴潮不完全一樣，例如原神圖片來自 HoYoWiki）。
 - **長字串溢出**（`7370042`）：`phone_layout_pages_test` 的「1.3 倍字級不溢出」改跑全部語言並加上設定頁；抓到的溢出照鳴潮的修法（`CompactLegendRow`、`Wrap`）處理。
-- **Android 原生字串**（`d6bf944`、`0069630` 的資料夾部分）：所有語言都要有 `res/values-*/strings.xml`，App 名稱沿用各語言 ARB 的 `appName`，系統用語照術語表；資料夾代碼：希伯來文 `values-iw`、挪威文 `values-nb`、巴西葡文 `values-pt-rBR`、繁中 `values-zh-rTW`、簡中 `values-zh-rCN`、英文 `values/`。單、雙引號要跳脫。新增測試檢查每個語言資料夾的字串名稱與英文版一致（鳴潮的版本是對 `locales_config.xml` 檢查；原神沒有這個檔，改成對 ARB 語言清單檢查）。
+- **Android 原生字串**（`d6bf944`、`0069630` 的資料夾部分）：所有語言都要有 `res/values-*/strings.xml`，App 名稱沿用各語言 ARB 的 `appName`，系統用語照術語表；資料夾代碼：希伯來文 `values-iw`、挪威文 `values-nb`、巴西葡文 `values-pt-rBR`、繁中 `values-zh-rTW`、簡中 `values-zh-rCN`、英文 `values/`。單、雙引號要跳脫。照搬鳴潮擴充後的 `test/l10n/android_locales_config_test.dart`：`locales_config.xml` 列出的每種語言都有字串檔，且字串名稱與英文版一致（`locales_config.xml` 由 9b 帶進）。
 - **Crowdin**：`crowdin.yml` 照鳴潮加一組 `strings.xml`（以 `values-zh-rTW/strings.xml` 為原文、`languages_mapping`、`translation_replace`、`"no": nb` 加引號）。
 
 ## 七、驗收
