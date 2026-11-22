@@ -148,11 +148,16 @@ class _BareZhAsHantDelegate<T> extends LocalizationsDelegate<T> {
 /// （exact / lang+script / lang+country）就回 null 讓它處理；
 /// 否則若是 `zh-Hant-*` 或 Chinese region-only 就介入；否則若 lang-only 可匹配
 /// 也回 null（尊重偏好順序）；都不行才換下一個偏好 locale。
+/// 挪威文以 `no` 提供，系統回的 `nb`（書面挪威語）／`nn`（新挪威語）視同 `no`。
+/// 整份清單都對不上（或清單為空）時回傳英文（支援清單有英文時）。
 Locale? localeListResolution(
   List<Locale>? systemLocales,
   Iterable<Locale> supportedLocales,
 ) {
-  if (systemLocales == null || systemLocales.isEmpty) return null;
+  // Flutter 預設在完全對不上時取 supportedLocales 第一個（依字母排序是 af），改用英文。
+  const fallback = Locale('en');
+  final unmatched = supportedLocales.contains(fallback) ? fallback : null;
+  if (systemLocales == null || systemLocales.isEmpty) return unmatched;
 
   bool hasExact(Locale u) => supportedLocales.any(
     (s) =>
@@ -195,9 +200,14 @@ Locale? localeListResolution(
           : const Locale('zh');
       if (supportedLocales.contains(wanted)) return wanted;
     }
+    // 挪威文以 no 提供（ARB），系統回的是書面挪威語 nb 或新挪威語 nn，語言代碼對不上。
+    if (const {'nb', 'nn'}.contains(user.languageCode) &&
+        supportedLocales.contains(const Locale('no'))) {
+      return const Locale('no');
+    }
     if (hasLang(user)) return null;
   }
-  return null;
+  return unmatched;
 }
 
 /// 將 `localeMetadataProvider` 的結果依 `nativeName` 字典序排序，

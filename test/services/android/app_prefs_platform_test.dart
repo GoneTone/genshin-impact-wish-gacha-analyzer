@@ -74,6 +74,7 @@ void main() {
       Locale('ja'),
       Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
       Locale('pt', 'BR'),
+      Locale('no'),
     ];
 
     test('preference to system tag', () {
@@ -82,6 +83,7 @@ void main() {
       expect(systemLocaleTagOf(const LocaleLanguage('zh-Hans')), 'zh-Hans');
       expect(systemLocaleTagOf(const LocaleLanguage('pt-BR')), 'pt-BR');
       expect(systemLocaleTagOf(const LocaleLanguage('ja')), 'ja');
+      expect(systemLocaleTagOf(const LocaleLanguage('no')), 'nb');
     });
 
     test('system tag to preference', () {
@@ -98,10 +100,15 @@ void main() {
       expect(of('ja-JP'), const LocaleLanguage('ja'));
       expect(of('pt-BR'), const LocaleLanguage('pt-BR'));
       expect(of('en-US'), const LocaleLanguage('en'));
+      expect(of('nb'), const LocaleLanguage('no'));
+      expect(of('nb-NO'), const LocaleLanguage('no'));
+      // 舊版送給系統的是 no。
+      expect(of('no'), const LocaleLanguage('no'));
     });
 
     test('a language the app does not offer maps to nothing', () {
       expect(languagePreferenceOfSystemTag('ko', released), isNull);
+      expect(languagePreferenceOfSystemTag('id', released), isNull);
     });
 
     test('every released locale round-trips through its system tag', () {
