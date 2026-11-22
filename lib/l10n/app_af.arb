@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Lees slegs die wensgeskiedenis-URL uit Genshin Impact\\n• Ontkoppel dadelik ná lees en skakel draadlose ontfouting af as hierdie app dit aangeskakel het\\n• Gee homself toestemming om draadlose ontfouting aan en af te skakel, sodat jy dit nie weer hoef op te stel nie\\n• Jy kan dit enige tyd in Instellings verwyder",
+  "setupWhatBody": "• Lees slegs die wensgeskiedenis-URL uit Genshin Impact\n• Ontkoppel dadelik ná lees en skakel draadlose ontfouting af as hierdie app dit aangeskakel het\n• Gee homself toestemming om draadlose ontfouting aan en af te skakel, sodat jy dit nie weer hoef op te stel nie\n• Jy kan dit enige tyd in Instellings verwyder",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },
@@ -1151,7 +1151,7 @@
   "@setupStepDevOptions": {
     "description": "Pairing guide step 1 title"
   },
-  "setupStepDevOptionsBody": "1. Maak die Meer oor-bladsy in die stelselinstellings oop (byvoorbeeld “Meer oor foon” of “Meer oor tablet”)\\n2. Soek “Bounommer” en tik 7 keer daarop\\n3. Wanneer jy “Jy is nou ’n ontwikkelaar” sien, kom terug na hierdie app",
+  "setupStepDevOptionsBody": "1. Maak die Meer oor-bladsy in die stelselinstellings oop (byvoorbeeld “Meer oor foon” of “Meer oor tablet”)\n2. Soek “Bounommer” en tik 7 keer daarop\n3. Wanneer jy “Jy is nou ’n ontwikkelaar” sien, kom terug na hierdie app",
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
@@ -1191,11 +1191,11 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. Tik op die knoppie hieronder om Draadlose ontfouting oop te maak\\n2. Skakel “Gebruik draadlose ontfouting” aan en tik op “Gebruik saambindkode om toestel saam te bind”\\n3. Swiep van die bokant van die skerm af en voer in hierdie app se kennisgewing die 6-syfer-saambindkode in wat op die saambindskerm van Draadlose ontfouting gewys word",
+  "setupStepPairBody": "1. Tik op die knoppie hieronder om Draadlose ontfouting oop te maak\n2. Skakel “Gebruik draadlose ontfouting” aan en tik op “Gebruik saambindkode om toestel saam te bind”\n3. Swiep van die bokant van die skerm af en voer in hierdie app se kennisgewing die 6-syfer-saambindkode in wat op die saambindskerm van Draadlose ontfouting gewys word",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },
-  "setupWaitingCode": "Wag dat jy die saambindkode in die kennisgewing invoer...\\nVoer dit in terwyl die saambindskerm van Draadlose ontfouting nog oop is.",
+  "setupWaitingCode": "Wag dat jy die saambindkode in die kennisgewing invoer...\nVoer dit in terwyl die saambindskerm van Draadlose ontfouting nog oop is.",
   "@setupWaitingCode": {
     "description": "Pairing guide while waiting for the code. Keep the line break."
   },
@@ -1219,7 +1219,7 @@
   "@setupGrantHowTitle": {
     "description": "Card title for how to enable the extra option"
   },
-  "setupGrantHowBody": "1. Maak Ontwikkelaaropsies oop\\n2. Soek die skakelaar wat met USB-ontfoutingsekuriteit of toestemmingmonitering verband hou en skakel dit aan, byvoorbeeld:\\n• Xiaomi: “USB-ontfouting (Sekuriteitinstellings)”\\n• OPPO / realme: “Skakel toestemmingmonitering af”\\n3. Maak seker draadlose ontfouting is aan, kom dan terug en tik op Probeer weer",
+  "setupGrantHowBody": "1. Maak Ontwikkelaaropsies oop\n2. Soek die skakelaar wat met USB-ontfoutingsekuriteit of toestemmingmonitering verband hou en skakel dit aan, byvoorbeeld:\n• Xiaomi: “USB-ontfouting (Sekuriteitinstellings)”\n• OPPO / realme: “Skakel toestemmingmonitering af”\n3. Maak seker draadlose ontfouting is aan, kom dan terug en tik op Probeer weer",
   "@setupGrantHowBody": {
     "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
   },

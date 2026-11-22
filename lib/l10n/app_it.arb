@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Legge solo l'URL della Cronologia desideri da Genshin Impact\\n• Si disconnette subito dopo la lettura e disattiva il debug wireless se lo ha attivato questa app\\n• Si concede da sola l'autorizzazione per attivare e disattivare il debug wireless, così non devi configurarlo di nuovo\\n• Puoi rimuoverla in qualsiasi momento dalle Impostazioni",
+  "setupWhatBody": "• Legge solo l'URL della Cronologia desideri da Genshin Impact\n• Si disconnette subito dopo la lettura e disattiva il debug wireless se lo ha attivato questa app\n• Si concede da sola l'autorizzazione per attivare e disattivare il debug wireless, così non devi configurarlo di nuovo\n• Puoi rimuoverla in qualsiasi momento dalle Impostazioni",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },

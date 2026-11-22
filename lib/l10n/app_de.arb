@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Liest nur die URL des Gebetsverlaufs aus Genshin Impact\\n• Trennt die Verbindung direkt nach dem Lesen und deaktiviert Debugging über WLAN, falls diese App es aktiviert hat\\n• Erteilt sich selbst die Berechtigung, Debugging über WLAN ein- und auszuschalten, damit du es nicht erneut einrichten musst\\n• Du kannst das jederzeit in den Einstellungen entfernen",
+  "setupWhatBody": "• Liest nur die URL des Gebetsverlaufs aus Genshin Impact\n• Trennt die Verbindung direkt nach dem Lesen und deaktiviert Debugging über WLAN, falls diese App es aktiviert hat\n• Erteilt sich selbst die Berechtigung, Debugging über WLAN ein- und auszuschalten, damit du es nicht erneut einrichten musst\n• Du kannst das jederzeit in den Einstellungen entfernen",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },
@@ -1151,7 +1151,7 @@
   "@setupStepDevOptions": {
     "description": "Pairing guide step 1 title"
   },
-  "setupStepDevOptionsBody": "1. Öffne in den Systemeinstellungen die Info-Seite (z. B. „Über das Telefon“ oder „Über das Tablet“)\\n2. Suche „Build-Nummer“ und tippe 7-mal darauf\\n3. Wenn „Du bist jetzt Entwickler!“ erscheint, kehre zu dieser App zurück",
+  "setupStepDevOptionsBody": "1. Öffne in den Systemeinstellungen die Info-Seite (z. B. „Über das Telefon“ oder „Über das Tablet“)\n2. Suche „Build-Nummer“ und tippe 7-mal darauf\n3. Wenn „Du bist jetzt Entwickler!“ erscheint, kehre zu dieser App zurück",
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
@@ -1191,11 +1191,11 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. Tippe unten auf die Schaltfläche, um „Debugging über WLAN“ zu öffnen\\n2. Aktiviere „Debugging über WLAN verwenden“ und tippe auf „Gerät über einen Kopplungscode koppeln“\\n3. Wische vom oberen Bildschirmrand nach unten und gib in der Benachrichtigung dieser App den 6-stelligen Kopplungscode ein, der auf dem Kopplungsbildschirm von „Debugging über WLAN“ angezeigt wird",
+  "setupStepPairBody": "1. Tippe unten auf die Schaltfläche, um „Debugging über WLAN“ zu öffnen\n2. Aktiviere „Debugging über WLAN verwenden“ und tippe auf „Gerät über einen Kopplungscode koppeln“\n3. Wische vom oberen Bildschirmrand nach unten und gib in der Benachrichtigung dieser App den 6-stelligen Kopplungscode ein, der auf dem Kopplungsbildschirm von „Debugging über WLAN“ angezeigt wird",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },
-  "setupWaitingCode": "Warte auf die Eingabe des Kopplungscodes in der Benachrichtigung...\\nGib ihn ein, solange der Kopplungsbildschirm unter „Debugging über WLAN“ noch geöffnet ist.",
+  "setupWaitingCode": "Warte auf die Eingabe des Kopplungscodes in der Benachrichtigung...\nGib ihn ein, solange der Kopplungsbildschirm unter „Debugging über WLAN“ noch geöffnet ist.",
   "@setupWaitingCode": {
     "description": "Pairing guide while waiting for the code. Keep the line break."
   },
@@ -1219,7 +1219,7 @@
   "@setupGrantHowTitle": {
     "description": "Card title for how to enable the extra option"
   },
-  "setupGrantHowBody": "1. Öffne die Entwickleroptionen\\n2. Suche den Schalter für USB-Debugging-Sicherheit oder Berechtigungsüberwachung und aktiviere ihn, zum Beispiel:\\n• Xiaomi: „USB-Debugging (Sicherheitseinstellungen)“\\n• OPPO / realme: „Berechtigungsüberwachung deaktivieren“\\n3. Stelle sicher, dass Debugging über WLAN aktiviert ist, kehre dann zurück und tippe auf „Erneut versuchen“",
+  "setupGrantHowBody": "1. Öffne die Entwickleroptionen\n2. Suche den Schalter für USB-Debugging-Sicherheit oder Berechtigungsüberwachung und aktiviere ihn, zum Beispiel:\n• Xiaomi: „USB-Debugging (Sicherheitseinstellungen)“\n• OPPO / realme: „Berechtigungsüberwachung deaktivieren“\n3. Stelle sicher, dass Debugging über WLAN aktiviert ist, kehre dann zurück und tippe auf „Erneut versuchen“",
   "@setupGrantHowBody": {
     "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
   },

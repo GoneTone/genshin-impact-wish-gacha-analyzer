@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Lê apenas o URL do Histórico de Orações do Genshin Impact\\n• Desliga-se logo após a leitura e desativa a depuração sem fios se foi esta aplicação que a ativou\\n• Concede a si própria a permissão para ativar e desativar a depuração sem fios, para que não tenha de a configurar novamente\\n• Pode remover isto a qualquer momento nas Definições",
+  "setupWhatBody": "• Lê apenas o URL do Histórico de Orações do Genshin Impact\n• Desliga-se logo após a leitura e desativa a depuração sem fios se foi esta aplicação que a ativou\n• Concede a si própria a permissão para ativar e desativar a depuração sem fios, para que não tenha de a configurar novamente\n• Pode remover isto a qualquer momento nas Definições",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },

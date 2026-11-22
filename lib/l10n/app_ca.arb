@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Només llegeix l'URL de Wish History de Genshin Impact\\n• Es desconnecta just després de llegir i desactiva la depuració sense fil si l'havia activat aquesta aplicació\\n• Es concedeix a si mateixa el permís per activar i desactivar la depuració sense fil, de manera que no l'hagis de tornar a configurar\\n• Ho pots eliminar en qualsevol moment a Configuració",
+  "setupWhatBody": "• Només llegeix l'URL de Wish History de Genshin Impact\n• Es desconnecta just després de llegir i desactiva la depuració sense fil si l'havia activat aquesta aplicació\n• Es concedeix a si mateixa el permís per activar i desactivar la depuració sense fil, de manera que no l'hagis de tornar a configurar\n• Ho pots eliminar en qualsevol moment a Configuració",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },

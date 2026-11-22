@@ -1123,7 +1123,7 @@
   "@setupWhatTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhatBody": "• Leest alleen de wensgeschiedenis-URL uit Genshin Impact\\n• Verbreekt de verbinding direct na het lezen en zet draadloze foutopsporing uit als deze app het heeft aangezet\\n• Geeft zichzelf toestemming om draadloze foutopsporing aan en uit te zetten, zodat je het niet opnieuw hoeft in te stellen\\n• Je kunt dit op elk moment verwijderen in Instellingen",
+  "setupWhatBody": "• Leest alleen de wensgeschiedenis-URL uit Genshin Impact\n• Verbreekt de verbinding direct na het lezen en zet draadloze foutopsporing uit als deze app het heeft aangezet\n• Geeft zichzelf toestemming om draadloze foutopsporing aan en uit te zetten, zodat je het niet opnieuw hoeft in te stellen\n• Je kunt dit op elk moment verwijderen in Instellingen",
   "@setupWhatBody": {
     "description": "Disclosure page bullet list. Keep the line breaks."
   },
@@ -1151,7 +1151,7 @@
   "@setupStepDevOptions": {
     "description": "Pairing guide step 1 title"
   },
-  "setupStepDevOptionsBody": "1. Open de pagina Over in de systeeminstellingen (bijvoorbeeld \"Over de telefoon\" of \"Over de tablet\")\\n2. Zoek \"Buildnummer\" en tik er 7 keer op\\n3. Zie je \"Je bent nu ontwikkelaar\", ga dan terug naar deze app",
+  "setupStepDevOptionsBody": "1. Open de pagina Over in de systeeminstellingen (bijvoorbeeld \"Over de telefoon\" of \"Over de tablet\")\n2. Zoek \"Buildnummer\" en tik er 7 keer op\n3. Zie je \"Je bent nu ontwikkelaar\", ga dan terug naar deze app",
   "@setupStepDevOptionsBody": {
     "description": "Pairing guide step 1 instructions. Keep the line breaks."
   },
@@ -1191,11 +1191,11 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. Tik op de knop hieronder om Draadloze foutopsporing te openen\\n2. Zet \"Draadloze foutopsporing gebruiken\" aan en tik op \"Apparaat koppelen met koppelingscode\"\\n3. Veeg vanaf de bovenkant van het scherm omlaag en voer in de melding van deze app de 6-cijferige koppelingscode in die op het koppelingsscherm van Draadloze foutopsporing wordt getoond",
+  "setupStepPairBody": "1. Tik op de knop hieronder om Draadloze foutopsporing te openen\n2. Zet \"Draadloze foutopsporing gebruiken\" aan en tik op \"Apparaat koppelen met koppelingscode\"\n3. Veeg vanaf de bovenkant van het scherm omlaag en voer in de melding van deze app de 6-cijferige koppelingscode in die op het koppelingsscherm van Draadloze foutopsporing wordt getoond",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },
-  "setupWaitingCode": "Wachten tot je de koppelingscode in de melding invoert...\\nVoer de code in terwijl het koppelingsscherm van Draadloze foutopsporing nog open is.",
+  "setupWaitingCode": "Wachten tot je de koppelingscode in de melding invoert...\nVoer de code in terwijl het koppelingsscherm van Draadloze foutopsporing nog open is.",
   "@setupWaitingCode": {
     "description": "Pairing guide while waiting for the code. Keep the line break."
   },
@@ -1219,7 +1219,7 @@
   "@setupGrantHowTitle": {
     "description": "Card title for how to enable the extra option"
   },
-  "setupGrantHowBody": "1. Open Ontwikkelaarsopties\\n2. Zoek de schakelaar voor USB-foutopsporingsbeveiliging of rechtenbewaking en zet die aan, bijvoorbeeld:\\n• Xiaomi: \"USB-foutopsporing (Beveiligingsinstellingen)\"\\n• OPPO / realme: \"Rechtenbewaking uitschakelen\"\\n3. Zorg dat draadloze foutopsporing aan staat, kom dan terug en tik op Opnieuw proberen",
+  "setupGrantHowBody": "1. Open Ontwikkelaarsopties\n2. Zoek de schakelaar voor USB-foutopsporingsbeveiliging of rechtenbewaking en zet die aan, bijvoorbeeld:\n• Xiaomi: \"USB-foutopsporing (Beveiligingsinstellingen)\"\n• OPPO / realme: \"Rechtenbewaking uitschakelen\"\n3. Zorg dat draadloze foutopsporing aan staat, kom dan terug en tik op Opnieuw proberen",
   "@setupGrantHowBody": {
     "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
   },
