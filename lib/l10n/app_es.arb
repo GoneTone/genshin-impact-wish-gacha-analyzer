@@ -203,7 +203,7 @@
       }
     }
   },
-  "progressPageStatus": "Página {page}, {count} registros añadidos",
+  "progressPageStatus": "Página {page}, {count, plural, =1{1 registro añadido} other{{count} registros añadidos}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -231,7 +231,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "Datos de {count} objetos actualizados",
+  "progressDoneItemDataSummary": "{count, plural, =1{Datos de 1 objeto actualizados} other{Datos de {count} objetos actualizados}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -240,7 +240,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "Descargadas {count} imágenes de objetos faltantes",
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{Descargada 1 imagen de objeto faltante} other{Descargadas {count} imágenes de objetos faltantes}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -249,7 +249,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "Se limpiaron datos de idioma obsoletos de {count} objetos",
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Se limpiaron datos de idioma obsoletos de 1 objeto} other{Se limpiaron datos de idioma obsoletos de {count} objetos}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -471,7 +471,7 @@
       }
     }
   },
-  "pityDistance": "{n} deseos hasta el próximo pity",
+  "pityDistance": "{n, plural, =1{1 deseo hasta el próximo pity} other{{n} deseos hasta el próximo pity}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -479,7 +479,7 @@
       }
     }
   },
-  "pityClose": "¡Casi en pity! Quedan {n} deseos",
+  "pityClose": "¡Casi en pity! {n, plural, =1{Queda 1 deseo} other{Quedan {n} deseos}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -513,7 +513,7 @@
       }
     }
   },
-  "timelineSinceLast": "{n} deseos",
+  "timelineSinceLast": "{n, plural, =1{1 deseo} other{{n} deseos}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -522,7 +522,7 @@
     }
   },
   "timelineNowLabel": "Ahora",
-  "timelineNowPulls": "{n} deseos realizados",
+  "timelineNowPulls": "{n, plural, =1{1 deseo realizado} other{{n} deseos realizados}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n} deseos desde el último {star}",
+  "timelineNowSinceLast": "{n, plural, =1{1 deseo desde el último {star}} other{{n} deseos desde el último {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n} deseos desde el último {star} (todos los banners)",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 deseo desde el último {star} (todos los banners)} other{{n} deseos desde el último {star} (todos los banners)}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -565,7 +565,7 @@
   },
   "timelineScrollLeft": "Desplazar a la izquierda",
   "timelineScrollRight": "Desplazar a la derecha",
-  "timelineLoadMore": "Cargar más ({n} restantes)",
+  "timelineLoadMore": "{n, plural, =1{Cargar más (1 restante)} other{Cargar más ({n} restantes)}}",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -589,7 +589,7 @@
   "pagerLast": "Última página",
   "pagerJumpTitle": "Ir a la página",
   "pagerJumpLabel": "Página ({min}–{max})",
-  "pagerJumpCurrent": "Página actual: {page} · {total} registros",
+  "pagerJumpCurrent": "Página actual: {page} · {total, plural, =1{1 registro} other{{total} registros}}",
   "pagerJumpGo": "Ir",
   "pagerJumpInvalid": "Introduce una página de {min} a {max}",
   "settingsClearActive": "Borrar datos de la cuenta actual",
@@ -741,7 +741,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmar importación",
-  "settingsImportConfirmIntro": "Se van a importar {accounts} cuenta(s) ({records} registro(s) en total):",
+  "settingsImportConfirmIntro": "Se van a importar {accounts, plural, =1{1 cuenta} other{{accounts} cuentas}} ({records, plural, =1{1 registro} other{{records} registros}} en total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -762,7 +762,7 @@
       }
     }
   },
-  "settingsImportSuccess": "Se han importado correctamente {accounts} cuenta(s) ({records} registro(s))",
+  "settingsImportSuccess": "{accounts, plural, =1{Se ha importado correctamente 1 cuenta} other{Se han importado correctamente {accounts} cuentas}} ({records, plural, =1{1 registro} other{{records} registros}})",
   "@settingsImportSuccess": {
     "placeholders": {
       "accounts": {
@@ -858,7 +858,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Cantidad de ítems de mayor rareza por banner",
-  "bannerTopRarityPullsSinceLast": "{n} deseos desde el último {star}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 deseo desde el último {star}} other{{n} deseos desde el último {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {

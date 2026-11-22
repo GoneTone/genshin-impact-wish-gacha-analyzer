@@ -53,7 +53,7 @@
     }
   },
   "relativeNow": "Just now",
-  "relativeSecondsAgo": "{count} seconds ago",
+  "relativeSecondsAgo": "{count, plural, =1{1 second ago} other{{count} seconds ago}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -61,7 +61,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count} minutes ago",
+  "relativeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -69,7 +69,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count} hours ago",
+  "relativeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -77,7 +77,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count} days ago",
+  "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -85,7 +85,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count} months ago",
+  "relativeMonthsAgo": "{count, plural, =1{1 month ago} other{{count} months ago}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -93,7 +93,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count} years ago",
+  "relativeYearsAgo": "{count, plural, =1{1 year ago} other{{count} years ago}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -203,7 +203,7 @@
       }
     }
   },
-  "progressPageStatus": "Page {page}, {count} new records so far",
+  "progressPageStatus": "Page {page}, {count, plural, =1{1 new record} other{{count} new records}} so far",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -214,7 +214,7 @@
       }
     }
   },
-  "progressDoneSummary": "Added {count} new records",
+  "progressDoneSummary": "{count, plural, =1{Added 1 new record} other{Added {count} new records}}",
   "@progressDoneSummary": {
     "placeholders": {
       "count": {
@@ -231,7 +231,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "Updated data for {count} items",
+  "progressDoneItemDataSummary": "{count, plural, =1{Updated data for 1 item} other{Updated data for {count} items}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -240,7 +240,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "Backfilled {count} item images",
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{Backfilled 1 item image} other{Backfilled {count} item images}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -249,7 +249,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "Cleaned up stale-language data for {count} items",
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Cleaned up stale-language data for 1 item} other{Cleaned up stale-language data for {count} items}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -471,7 +471,7 @@
       }
     }
   },
-  "pityDistance": "{n} pulls until guaranteed",
+  "pityDistance": "{n, plural, =1{1 pull until guaranteed} other{{n} pulls until guaranteed}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -479,7 +479,7 @@
       }
     }
   },
-  "pityClose": "Close to guaranteed! {n} pulls left",
+  "pityClose": "Close to guaranteed! {n, plural, =1{1 pull left} other{{n} pulls left}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -513,7 +513,7 @@
       }
     }
   },
-  "timelineSinceLast": "{n} pulls",
+  "timelineSinceLast": "{n, plural, =1{1 pull} other{{n} pulls}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -522,7 +522,7 @@
     }
   },
   "timelineNowLabel": "Now",
-  "timelineNowPulls": "{n} pulls",
+  "timelineNowPulls": "{n, plural, =1{1 pull} other{{n} pulls}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n} pulls since last {star}",
+  "timelineNowSinceLast": "{n, plural, =1{1 pull since last {star}} other{{n} pulls since last {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n} pulls since last {star} across banners",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 pull since last {star} across banners} other{{n} pulls since last {star} across banners}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -589,7 +589,7 @@
   "pagerLast": "Last",
   "pagerJumpTitle": "Go to page",
   "pagerJumpLabel": "Page ({min}–{max})",
-  "pagerJumpCurrent": "Currently on page {page} · {total} records",
+  "pagerJumpCurrent": "Currently on page {page} · {total, plural, =1{1 record} other{{total} records}}",
   "pagerJumpGo": "Go",
   "pagerJumpInvalid": "Enter a page from {min}–{max}",
   "settingsClearActive": "Clear current account data",
@@ -741,7 +741,7 @@
     }
   },
   "settingsImportConfirmTitle": "Import confirmation",
-  "settingsImportConfirmIntro": "About to import {accounts} accounts ({records} records total):",
+  "settingsImportConfirmIntro": "About to import {accounts, plural, =1{1 account} other{{accounts} accounts}} ({records, plural, =1{1 record} other{{records} records}} total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -762,7 +762,7 @@
       }
     }
   },
-  "settingsImportSuccess": "Successfully imported {accounts} accounts ({records} records)",
+  "settingsImportSuccess": "Successfully imported {accounts, plural, =1{1 account} other{{accounts} accounts}} ({records, plural, =1{1 record} other{{records} records}})",
   "@settingsImportSuccess": {
     "placeholders": {
       "accounts": {
@@ -804,7 +804,7 @@
   "settingsImportSelectTitle": "Select accounts to import",
   "settingsImportMergeBadge": "Merge",
   "accountsPickerSelectAll": "Select all",
-  "accountRecordCount": "{n} records",
+  "accountRecordCount": "{n, plural, =1{1 record} other{{n} records}}",
   "@accountRecordCount": {
     "placeholders": {
       "n": {
@@ -858,7 +858,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Highest rarity count per banner",
-  "bannerTopRarityPullsSinceLast": "{n} pulls since last {star}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 pull since last {star}} other{{n} pulls since last {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {

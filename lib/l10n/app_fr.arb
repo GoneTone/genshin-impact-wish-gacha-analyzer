@@ -53,7 +53,7 @@
     }
   },
   "relativeNow": "À l'instant",
-  "relativeSecondsAgo": "{count, plural, =1{Il y a 1 seconde} other{Il y a {count} secondes}}",
+  "relativeSecondsAgo": "{count, plural, one{Il y a {count} seconde} other{Il y a {count} secondes}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -61,7 +61,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
+  "relativeMinutesAgo": "{count, plural, one{Il y a {count} minute} other{Il y a {count} minutes}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -69,7 +69,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
+  "relativeHoursAgo": "{count, plural, one{Il y a {count} heure} other{Il y a {count} heures}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -77,7 +77,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
+  "relativeDaysAgo": "{count, plural, one{Il y a {count} jour} other{Il y a {count} jours}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -85,7 +85,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
+  "relativeMonthsAgo": "{count, plural, one{Il y a {count} mois} other{Il y a {count} mois}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -93,7 +93,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
+  "relativeYearsAgo": "{count, plural, one{Il y a {count} an} other{Il y a {count} ans}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -203,7 +203,7 @@
       }
     }
   },
-  "progressPageStatus": "{count, plural, =1{Page {page}, 1 enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
+  "progressPageStatus": "{count, plural, one{Page {page}, {count} enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -214,7 +214,7 @@
       }
     }
   },
-  "progressDoneSummary": "{count, plural, =1{1 enregistrement ajouté} other{{count} enregistrements ajoutés}}",
+  "progressDoneSummary": "{count, plural, one{{count} enregistrement ajouté} other{{count} enregistrements ajoutés}}",
   "@progressDoneSummary": {
     "placeholders": {
       "count": {
@@ -222,7 +222,7 @@
       }
     }
   },
-  "progressDoneImagesSummary": "{count, plural, =1{{count} image d'objet téléchargée} other{{count} images d'objets téléchargées}}",
+  "progressDoneImagesSummary": "{count, plural, one{{count} image d'objet téléchargée} other{{count} images d'objets téléchargées}}",
   "@progressDoneImagesSummary": {
     "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
@@ -231,7 +231,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "Données de {count} objets mises à jour",
+  "progressDoneItemDataSummary": "{count, plural, one{Données de {count} objet mises à jour} other{Données de {count} objets mises à jour}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -240,7 +240,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "{count} images d'objets manquantes téléchargées",
+  "progressDoneItemDataImagesSummary": "{count, plural, one{{count} image d'objet manquante téléchargée} other{{count} images d'objets manquantes téléchargées}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -249,7 +249,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "Données de langue obsolètes nettoyées pour {count} objets",
+  "progressDoneItemDataPrunedSummary": "{count, plural, one{Données de langue obsolètes nettoyées pour {count} objet} other{Données de langue obsolètes nettoyées pour {count} objets}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -266,7 +266,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 compte importé} other{{accounts} comptes importés}} : {added} nouveaux, {duplicate} déjà présents",
+  "progressDoneImportSummary": "{accounts, plural, one{{accounts} compte importé} other{{accounts} comptes importés}} : {added} nouveaux, {duplicate} déjà présents",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
@@ -471,7 +471,7 @@
       }
     }
   },
-  "pityDistance": "{n, plural, =1{1 tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
+  "pityDistance": "{n, plural, one{{n} tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -479,7 +479,7 @@
       }
     }
   },
-  "pityClose": "{n, plural, =1{Pity imminent ! 1 tirage restant} other{Pity imminent ! {n} tirages restants}}",
+  "pityClose": "{n, plural, one{Pity imminent ! {n} tirage restant} other{Pity imminent ! {n} tirages restants}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -513,7 +513,7 @@
       }
     }
   },
-  "timelineSinceLast": "{n, plural, =1{1 tirage} other{{n} tirages}}",
+  "timelineSinceLast": "{n, plural, one{{n} tirage} other{{n} tirages}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -522,7 +522,7 @@
     }
   },
   "timelineNowLabel": "Maintenant",
-  "timelineNowPulls": "{n, plural, =1{1 tirage effectué} other{{n} tirages effectués}}",
+  "timelineNowPulls": "{n, plural, one{{n} tirage effectué} other{{n} tirages effectués}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
+  "timelineNowSinceLast": "{n, plural, one{{n} tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, =1{1 tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
+  "timelineNowSinceCrossPool": "{n, plural, one{{n} tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -565,7 +565,7 @@
   },
   "timelineScrollLeft": "Défiler vers la gauche",
   "timelineScrollRight": "Défiler vers la droite",
-  "timelineLoadMore": "{n, plural, =1{Charger plus (1 restant)} other{Charger plus ({n} restants)}}",
+  "timelineLoadMore": "{n, plural, one{Charger plus ({n} restant)} other{Charger plus ({n} restants)}}",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -589,7 +589,7 @@
   "pagerLast": "Dernière page",
   "pagerJumpTitle": "Aller à la page",
   "pagerJumpLabel": "Page ({min}–{max})",
-  "pagerJumpCurrent": "Page actuelle : {page} · {total} enregistrements",
+  "pagerJumpCurrent": "Page actuelle : {page} · {total, plural, one{{total} enregistrement} other{{total} enregistrements}}",
   "pagerJumpGo": "Aller",
   "pagerJumpInvalid": "Saisissez une page de {min} à {max}",
   "settingsClearActive": "Effacer les données du compte actuel",
@@ -741,7 +741,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmation d'importation",
-  "settingsImportConfirmIntro": "Sur le point d'importer {accounts} compte(s) ({records} enregistrement(s) au total) :",
+  "settingsImportConfirmIntro": "Sur le point d'importer {accounts, plural, one{{accounts} compte} other{{accounts} comptes}} ({records, plural, one{{records} enregistrement} other{{records} enregistrements}} au total) :",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -762,7 +762,7 @@
       }
     }
   },
-  "settingsImportSuccess": "{accounts} compte(s) importé(s) avec succès ({records} enregistrement(s))",
+  "settingsImportSuccess": "{accounts, plural, one{{accounts} compte importé} other{{accounts} comptes importés}} avec succès ({records, plural, one{{records} enregistrement} other{{records} enregistrements}})",
   "@settingsImportSuccess": {
     "placeholders": {
       "accounts": {
@@ -804,7 +804,7 @@
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportMergeBadge": "Fusionner",
   "accountsPickerSelectAll": "Tout sélectionner",
-  "accountRecordCount": "{n, plural, =1{1 enregistrement} other{{n} enregistrements}}",
+  "accountRecordCount": "{n, plural, one{{n} enregistrement} other{{n} enregistrements}}",
   "@accountRecordCount": {
     "placeholders": {
       "n": {
@@ -858,7 +858,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Nombre d'objets de rareté maximale par vœu",
-  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {
