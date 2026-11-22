@@ -234,6 +234,56 @@ void main() {
     expect(tester.getCenter(anyFakeNativeView).dx, 400);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
+  testWidgets('捲到按需建構範圍外再捲回來：兩則都不重新載入、不釋放', (tester) async {
+    // 每段 300 筆有 30 個 5★，五星一覽與時間軸夠長，頂端與底端各自只建構到一則廣告。
+    setUpContainer(
+      banners: {
+        '301': _records(300),
+        '1000': _records(300, pool: '1000'),
+      },
+    );
+    await pumpPage(tester, size: const Size(360, 600));
+    final position = tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position;
+    final gacha = loader.loads.firstWhere(
+      (a) => a.placement == NativeAdPlacement.overviewGacha,
+    );
+    expect(find.byKey(gacha.key, skipOffstage: false), findsOneWidget);
+    expect(
+      fakeNativeViewOf(NativeAdPlacement.overviewOdes, skipOffstage: false),
+      findsNothing,
+    );
+    // 載入在頁面層級，與廣告 view 有沒有被建構無關；兩則進頁就各載入一次。
+    expect(loader.loads, hasLength(2));
+
+    final odes = loader.loads.firstWhere(
+      (a) => a.placement == NativeAdPlacement.overviewOdes,
+    );
+    // 往下捲到頌願廣告進入建構範圍；此時祈願廣告必須已離開範圍（被捲出但沒釋放）。
+    while (find.byKey(odes.key, skipOffstage: false).evaluate().isEmpty) {
+      expect(position.pixels, lessThan(position.maxScrollExtent));
+      position.jumpTo(
+        (position.pixels + 100).clamp(0, position.maxScrollExtent),
+      );
+      await tester.pump();
+    }
+    await tester.pump();
+    expect(find.byKey(gacha.key, skipOffstage: false), findsNothing);
+    expect(gacha.disposed, isFalse);
+
+    // 回到頂端：頌願廣告離開範圍、祈願廣告回來。
+    position.jumpTo(0);
+    await tester.pump();
+    await tester.pump();
+    expect(find.byKey(odes.key, skipOffstage: false), findsNothing);
+    expect(odes.disposed, isFalse);
+    expect(find.byKey(gacha.key, skipOffstage: false), findsOneWidget);
+    expect(gacha.disposed, isFalse);
+    expect(loader.calls(NativeAdPlacement.overviewGacha), 1);
+    expect(loader.calls(NativeAdPlacement.overviewOdes), 1);
+  });
+
   testWidgets('內容寬度不足 320 時不載入、不多間距', (tester) async {
     setUpContainer();
     // 手機頁邊距 m：340 − 24 = 316。
