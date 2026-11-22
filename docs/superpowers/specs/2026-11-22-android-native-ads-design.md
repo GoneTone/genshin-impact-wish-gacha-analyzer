@@ -142,7 +142,7 @@
 - 沒有橫幅、沒有發版 CI 的 ads defines 步驟（子專案 7）。
 - 錯誤 log 照兩個 repo 2026-11-22 統一後的寫法（`'msg', e, st`）。
 
-**寫隱私權政策時發現的移植缺漏（使用者 2026-11-22 決定要補，另外處理）**
-- 原神沒有鳴潮的 `backup_rules`／`data_extraction_rules`，加密的配對金鑰會被 Android 系統備份（還原後無法使用）。
-- Windows 解除安裝不會移除根憑證與 `ca` 資料夾（鳴潮會）；政策已照實寫並附手動移除步驟。
+**寫隱私權政策時發現的移植缺漏（使用者 2026-11-22 決定要補，同日補上）**
+- 原神沒有鳴潮的 `backup_rules`／`data_extraction_rules`，加密的配對金鑰會被 Android 系統備份（還原後無法使用）。已照鳴潮 `8fcb816` 補上，merged manifest 確認有 `fullBackupContent`、`dataExtractionRules`。
+- Windows 解除安裝不會移除根憑證與 `ca` 資料夾（鳴潮會）。已照鳴潮 `2ddf09c`、`cbdf912` 在 `installer.iss` 加上 `RemoveCaArtifacts`（不論是否刪除資料都執行，certutil 確認視窗可拒絕），`ca.rs` 補同步提醒；Inno Setup 編譯成功，未實際安裝／解除安裝。隱私權政策改成照鳴潮的寫法，拿掉手動移除步驟。
 - 原神還沒有 Google Play App 內更新，隱私權政策等子專案 7 再補。

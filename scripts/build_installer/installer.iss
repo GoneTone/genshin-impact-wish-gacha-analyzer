@@ -223,6 +223,28 @@ begin
   end;
 end;
 
+// 移除 App 產生的根憑證與其私鑰資料夾。不論使用者是否選擇刪除資料都執行：
+// 私鑰留在磁碟上、憑證又仍被信任，等於留下一張可偽造任何網站身分的憑證。
+// 憑證名稱與資料夾路徑須與 rust/src/ca.rs 的 EXPECTED_CN、ca_dir() 一致。
+// 刪除「目前使用者」根憑證存放區時 Windows 會跳出確認視窗；退出碼一律忽略（憑證不存在、使用者按「否」皆屬正常）。
+// 不可用 SW_HIDE：那個確認視窗是 certutil 第一個顯示的視窗，會套用啟動時的隱藏設定，
+// 使用者看不到、解除安裝就會一直等。先刪憑證再刪私鑰，即使使用者拒絕刪憑證，私鑰也已不在。
+procedure RemoveCaArtifacts;
+var
+  ResultCode: Integer;
+  CaParentDir: String;
+begin
+  Exec(ExpandConstant('{sys}\certutil.exe'),
+    '-user -delstore Root "Genshin Impact Wish Gacha Analyzer Root CA"', '',
+    SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode);
+  Log('uninstall: certutil -delstore Root exit code ' + IntToStr(ResultCode));
+  CaParentDir := ExpandConstant('{userappdata}\genshin_impact_wish_gacha_analyzer');
+  if not DelTree(CaParentDir + '\ca', True, True, True) then
+    Log('uninstall: DelTree failed for ' + CaParentDir + '\ca');
+  // 上層資料夾只放 ca；空了才移除，RemoveDir 遇到非空資料夾會直接失敗。
+  RemoveDir(CaParentDir);
+end;
+
 // 解除安裝流程：usUninstall 階段詢問使用者是否同時移除使用者資料，
 // usPostUninstall 階段依旗標執行 DelTree（主程式檔已被卸載，避免 file lock）。
 // silent 模式（/VERYSILENT、/SILENT）下 MsgBox 自動回傳預設按鈕值 = IDNO，
@@ -244,6 +266,7 @@ begin
       end;
     usPostUninstall:
       begin
+        RemoveCaArtifacts;
         if ShouldRemoveUserData then
         begin
           if not DelTree(UserDataDir, True, True, True) then

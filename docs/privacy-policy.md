@@ -20,8 +20,8 @@
 
 以上資料存在你的裝置上，在 App 內刪除帳號會一併刪除該帳號的卡池記錄與保存的網址。
 
-- **Android 版**：解除安裝 App 會刪除裝置上的資料。Android 的系統備份可能會把 App 資料（卡池記錄、設定）備份到你自己的 Google 帳號，是否備份由你裝置上的備份設定決定；重新安裝或換新裝置時，系統可能會還原這份備份。加密保存的憑證（例如無線偵錯的配對金鑰）是用綁定這台裝置的金鑰加密，還原後無法使用，需要重新配對。
-- **Windows 版**：資料存在 `%APPDATA%\tw.reh\genshin_impact_wish_gacha_analyzer`。解除安裝時會詢問是否一併刪除，預設保留；保留的話可以之後自行刪除這個資料夾。本機產生的根憑證與它的私密金鑰另外存在 `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca`，解除安裝**不會**自動移除，移除方式見下方「刪除你的資料」。
+- **Android 版**：解除安裝 App 會刪除裝置上的資料。Android 的系統備份可能會把 App 資料（卡池記錄、設定）備份到你自己的 Google 帳號，是否備份由你裝置上的備份設定決定；重新安裝或換新裝置時，系統可能會還原這份備份。加密保存的憑證（例如無線偵錯的配對金鑰）不會備份，還原後需要重新配對。
+- **Windows 版**：資料存在 `%APPDATA%\tw.reh\genshin_impact_wish_gacha_analyzer`。解除安裝時會詢問是否一併刪除，預設保留；保留的話可以之後自行刪除這個資料夾。解除安裝時一定會嘗試移除本機產生的根憑證（Windows 會跳出一次確認視窗，按「是」才會刪除）並刪除它的私密金鑰資料夾 `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca`，不受上述「是否刪除資料」的選擇影響。
 
 ### 會連線的對象
 
@@ -70,9 +70,8 @@ Android 版會在部分有內容的頁面中，於內容之間穿插 Google AdMo
 
 1. **刪除單一帳號的資料**：在 App 的「設定」→「帳號管理」，點該 UID 右邊的 ⋮ →「移除」，輸入 UID 確認後按「刪除」。有開雲端同步的話，勾選「同時從雲端同步資料移除此帳號」會在下次同步時一併刪除雲端硬碟中這個帳號的資料。
 2. **刪除裝置上的所有資料**：解除安裝 App（Windows 版解除安裝時選擇一併刪除資料）。也可以在「設定」→「資料管理」按「清除所有資料」刪除所有帳號的卡池記錄、在「設定」→「Logs 偵錯」按「清除所有 logs」刪除執行記錄、在「設定」→「圖片快取」按「清除詳情圖快取」刪除物品詳情圖片。
-3. **移除 Windows 版的根憑證**：按 Win＋R 執行 `certmgr.msc`，在「受信任的根憑證授權單位」→「憑證」中刪除「Genshin Impact Wish Gacha Analyzer Root CA」，再刪除資料夾 `%APPDATA%\genshin_impact_wish_gacha_analyzer`。
-4. **刪除雲端硬碟上的所有同步資料**：在電腦上開啟 Google 雲端硬碟網頁版 →「設定」→「管理應用程式」，找到本 App →「選項」→「刪除隱藏的應用程式資料」。之後可以到 Google 帳號的「安全性」→「第三方應用程式和服務」移除本 App 的存取權。
-5. **廣告資料（只限 Android 版）**：AdMob 收集的資料由 Google 依其隱私權政策處理與保留，開發者無法刪除；你可以在 Android 系統設定重設或刪除廣告 ID。
+3. **刪除雲端硬碟上的所有同步資料**：在電腦上開啟 Google 雲端硬碟網頁版 →「設定」→「管理應用程式」，找到本 App →「選項」→「刪除隱藏的應用程式資料」。之後可以到 Google 帳號的「安全性」→「第三方應用程式和服務」移除本 App 的存取權。
+4. **廣告資料（只限 Android 版）**：AdMob 收集的資料由 Google 依其隱私權政策處理與保留，開發者無法刪除；你可以在 Android 系統設定重設或刪除廣告 ID。
 
 以上步驟會刪除對應資料，開發者沒有另外保留任何副本。Android 系統備份到你 Google 帳號中的副本，由你在 Google 帳號中自行管理。
 
@@ -98,8 +97,8 @@ This app is an unofficial fan-made tool and is not affiliated with HoYoverse. Th
 
 This data is stored on your device. Deleting an account in the app removes that account's records and its saved URL.
 
-- **Android**: uninstalling the app removes the data on the device. Android's system backup may back up the app data (wish history, settings) to your own Google account, depending on your device's backup setting, and may restore it when you reinstall or set up a new device. Encrypted credentials (such as the wireless debugging pairing key) are encrypted with a key bound to this device, so they cannot be used after a restore and you need to pair again.
-- **Windows**: the data is stored in `%APPDATA%\tw.reh\genshin_impact_wish_gacha_analyzer`. The uninstaller asks whether to delete it and keeps it by default; you can delete that folder yourself later. The locally generated root certificate and its private key are stored separately in `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca` and are **not** removed by the uninstaller; see "Deleting your data" below for how to remove them.
+- **Android**: uninstalling the app removes the data on the device. Android's system backup may back up the app data (wish history, settings) to your own Google account, depending on your device's backup setting, and may restore it when you reinstall or set up a new device. Encrypted credentials (such as the wireless debugging pairing key) are not backed up; after a restore you need to pair again.
+- **Windows**: the data is stored in `%APPDATA%\tw.reh\genshin_impact_wish_gacha_analyzer`. The uninstaller asks whether to delete it and keeps it by default; you can delete that folder yourself later. Uninstalling always tries to remove the locally generated root certificate (Windows asks you to confirm once; it is deleted only if you choose Yes) and deletes its private key folder `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca`, whatever you choose about the data.
 
 ### Services the app connects to
 
@@ -148,9 +147,8 @@ The developer of Wish Analyzer for Genshin (祈願卡池分析 for 原神) runs 
 
 1. **Delete one account's data**: in the app, go to Settings → Account management, tap ⋮ next to the UID → Remove, type the UID to confirm and tap Delete. If cloud sync is on, checking "Also remove this account from cloud sync data" also deletes that account's data from your Google Drive at the next sync.
 2. **Delete all data on the device**: uninstall the app (on Windows, choose to delete the data when uninstalling). You can also use Settings → Data management → Clear all data to delete every account's records, Settings → Debug logs → Clear all logs to delete the logs, and Settings → Image cache → Clear detail images to delete the item detail images.
-3. **Remove the Windows root certificate**: press Win+R and run `certmgr.msc`, delete "Genshin Impact Wish Gacha Analyzer Root CA" under Trusted Root Certification Authorities → Certificates, then delete the folder `%APPDATA%\genshin_impact_wish_gacha_analyzer`.
-4. **Delete all synced data in Google Drive**: open Google Drive on the web on a computer → Settings → Manage apps, find this app → Options → Delete hidden app data. You can then remove the app's access under Security → Third-party apps & services in your Google Account.
-5. **Ad data (Android only)**: data collected by AdMob is processed and retained by Google under its own privacy policy; the developer cannot delete it. You can reset or delete your advertising ID in Android's system settings.
+3. **Delete all synced data in Google Drive**: open Google Drive on the web on a computer → Settings → Manage apps, find this app → Options → Delete hidden app data. You can then remove the app's access under Security → Third-party apps & services in your Google Account.
+4. **Ad data (Android only)**: data collected by AdMob is processed and retained by Google under its own privacy policy; the developer cannot delete it. You can reset or delete your advertising ID in Android's system settings.
 
 These steps delete the data; the developer keeps no other copy. Copies backed up to your Google account by Android's system backup are managed by you in your Google account.
 
