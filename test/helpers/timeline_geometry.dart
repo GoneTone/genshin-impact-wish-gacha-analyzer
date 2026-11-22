@@ -17,13 +17,16 @@ List<(String, Rect)> timelineGeometry(
               find.descendant(of: exclude, matching: find.byType(RichText)),
             )
             .toSet();
-  bool hasLeftBorder(Widget w) {
+  bool hasStartBorder(Widget w) {
     if (w is! Container || w.decoration is! BoxDecoration) return false;
     final decoration = w.decoration! as BoxDecoration;
     final border = decoration.border;
     return decoration.shape == BoxShape.rectangle &&
-        border is Border &&
-        border.left != BorderSide.none;
+        switch (border) {
+          Border(:final left) => left != BorderSide.none,
+          BorderDirectional(:final start) => start != BorderSide.none,
+          _ => false,
+        };
   }
 
   return [
@@ -47,7 +50,7 @@ List<(String, Rect)> timelineGeometry(
     for (final e in tester.elementList(
       find.descendant(
         of: root,
-        matching: find.byWidgetPredicate(hasLeftBorder),
+        matching: find.byWidgetPredicate(hasStartBorder),
       ),
     ))
       ('border', rectOf(e)),

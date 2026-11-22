@@ -192,8 +192,15 @@ class AccountTriggerLabel extends StatelessWidget {
             ),
           ConstrainedBox(
             constraints: BoxConstraints(maxWidth: uidMax),
+            // UID（尤其遮罩後的 701••••••）固定由左往右，否則由右往左的語言會排成
+            // ••••••701；此時括號前的空格改放後面，才會落在別名與 UID 之間。
             child: Text(
-              hasAlias ? ' ($shown)' : shown,
+              hasAlias
+                  ? (Directionality.of(context) == TextDirection.rtl
+                        ? '($shown) '
+                        : ' ($shown)')
+                  : shown,
+              textDirection: TextDirection.ltr,
               maxLines: 1,
               softWrap: false,
               overflow: TextOverflow.ellipsis,
@@ -300,6 +307,7 @@ class AccountMenuLabel extends StatelessWidget {
               Flexible(
                 child: Text(
                   primary,
+                  textDirection: hasAlias ? null : TextDirection.ltr,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -314,6 +322,7 @@ class AccountMenuLabel extends StatelessWidget {
           if (hasAlias)
             Text(
               shownUid,
+              textDirection: TextDirection.ltr,
               style: TextStyle(fontSize: 12, color: tokens.textMuted),
             ),
         ],

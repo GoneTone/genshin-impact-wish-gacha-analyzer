@@ -177,7 +177,7 @@ class _BannerRow extends StatelessWidget {
           child: Text(
             name,
             style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.end,
           ),
         ),
         const SizedBox(width: AppSpacing.s),
@@ -220,7 +220,7 @@ class _Bar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: FractionallySizedBox(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           widthFactor: ratio.clamp(0.0, 1.0),
           heightFactor: 1.0,
           child: Container(

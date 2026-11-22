@@ -275,8 +275,8 @@ class _TimelineVerticalState extends State<TimelineVertical>
           Stack(
             children: [
               // 背景軸線
-              Positioned(
-                left: _railLeft,
+              PositionedDirectional(
+                start: _railLeft,
                 top: 0,
                 bottom: 0,
                 width: _railWidth,
@@ -406,11 +406,14 @@ class _EntryRow extends StatelessWidget {
             width: _monthColumnWidth,
             child: showMonthTag
                 ? Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.s, top: 4),
+                    padding: const EdgeInsetsDirectional.only(
+                      end: AppSpacing.s,
+                      top: 4,
+                    ),
                     child: Text(
                       l.timelineMonthLabel(year, month),
                       maxLines: 1,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.end,
                       style: TextStyle(
                         color: tokens.textSecondary,
                         fontSize: 11,

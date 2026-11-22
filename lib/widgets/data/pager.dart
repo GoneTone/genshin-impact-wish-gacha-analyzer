@@ -66,6 +66,8 @@ class Pager extends StatelessWidget {
             onPressed: totalPages > 1 ? () => _jump(context) : null,
             child: Text(
               '${page + 1} / $totalPages',
+              // 由右往左的語言會把「1 / 81」排成「81 / 1」。
+              textDirection: TextDirection.ltr,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

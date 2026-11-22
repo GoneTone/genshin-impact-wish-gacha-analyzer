@@ -123,7 +123,7 @@ void main() {
               child: SizedBox(
                 width: 100,
                 height: 100,
-                child: ScrollEdgeFade(side: ScrollSide.left),
+                child: ScrollEdgeFade(side: ScrollSide.start),
               ),
             ),
           ),
@@ -151,7 +151,7 @@ void main() {
               body: SizedBox(
                 width: 100,
                 height: 100,
-                child: ScrollEdgeFade(side: ScrollSide.left),
+                child: ScrollEdgeFade(side: ScrollSide.start),
               ),
             ),
           ),

@@ -94,7 +94,7 @@ class DistributionLegend extends StatelessWidget {
           width: countWidth,
           child: Text(
             '${e.count}',
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.end,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: tokens.textPrimary,
               fontFeatures: kTabularFigures,
@@ -106,7 +106,7 @@ class DistributionLegend extends StatelessWidget {
           width: rateWidth,
           child: Text(
             '${(e.rate * 100).toStringAsFixed(2)}%',
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.end,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: tokens.textMuted,
               fontFeatures: kTabularFigures,

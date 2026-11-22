@@ -24,11 +24,11 @@ extension ScrollAffordanceScroll on ScrollController {
 
 /// 捲動可及性元件的方向。
 enum ScrollSide {
-  /// 左側：fade 從左往右漸隱。
-  left,
+  /// 起始側（由左往右時為左、由右往左時為右）：fade 從起始側往內漸隱。
+  start,
 
-  /// 右側：fade 從右往左漸隱。
-  right,
+  /// 結束側（由左往右時為右、由右往左時為左）：fade 從結束側往內漸隱。
+  end,
 
   /// 底部：fade 從下往上漸隱。
   bottom,
@@ -56,8 +56,14 @@ class ScrollEdgeFade extends StatelessWidget {
               theme.dialogTheme.backgroundColor ??
               theme.colorScheme.surfaceContainerHigh;
     final (begin, end) = switch (side) {
-      ScrollSide.left => (Alignment.centerLeft, Alignment.centerRight),
-      ScrollSide.right => (Alignment.centerRight, Alignment.centerLeft),
+      ScrollSide.start => (
+        AlignmentDirectional.centerStart,
+        AlignmentDirectional.centerEnd,
+      ),
+      ScrollSide.end => (
+        AlignmentDirectional.centerEnd,
+        AlignmentDirectional.centerStart,
+      ),
       ScrollSide.bottom => (Alignment.bottomCenter, Alignment.topCenter),
     };
     return DecoratedBox(

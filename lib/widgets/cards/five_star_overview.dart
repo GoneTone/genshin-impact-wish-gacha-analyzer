@@ -166,8 +166,8 @@ class _FiveStarChip extends StatelessWidget {
               circular: true,
             ),
           ),
-          Positioned(
-            right: -2,
+          PositionedDirectional(
+            end: -2,
             bottom: -2,
             child: Container(
               constraints: const BoxConstraints(minWidth: _badgeSize),
@@ -195,10 +195,10 @@ class _FiveStarChip extends StatelessWidget {
       ),
     );
 
-    // 徽章以 right/bottom: -2 微微外溢 SizedBox；靠右下 padding 把溢出量收進
+    // 徽章以 end/bottom: -2 微微外溢 SizedBox；靠右下 padding 把溢出量收進
     // chip 自身的 box，避免放進會裁切的容器時邊角被切掉。
     final chip = Padding(
-      padding: const EdgeInsets.only(right: 2, bottom: 2),
+      padding: const EdgeInsetsDirectional.only(end: 2, bottom: 2),
       child: stack,
     );
 

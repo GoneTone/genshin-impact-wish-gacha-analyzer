@@ -420,9 +420,9 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                 ),
               ),
             ),
-            Positioned(
+            PositionedDirectional(
               top: AppSpacing.s,
-              right: AppSpacing.s,
+              end: AppSpacing.s,
               child: _buildImageMenu(context, current),
             ),
           ],
@@ -667,20 +667,24 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
                   // 單行/多行首行對齊。兩欄時標題區改放在內容區，同樣適用。
                   child: DefaultTextStyle.merge(
                     style: const TextStyle(height: 1.0),
-                    child: AppHtml(
-                      data: desc,
-                      style: {
-                        'body': Style(
-                          fontSize: FontSize(
-                            theme.textTheme.bodyMedium?.fontSize ?? 14,
+                    // HoYoWiki 說明文字固定由左往右，避免由右往左介面下句末標點跑到行首。
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: AppHtml(
+                        data: desc,
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize(
+                              theme.textTheme.bodyMedium?.fontSize ?? 14,
+                            ),
+                            lineHeight: LineHeight.number(1.2),
+                            color: tokens.textSecondary,
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
                           ),
-                          lineHeight: LineHeight.number(1.2),
-                          color: tokens.textSecondary,
-                          margin: Margins.zero,
-                          padding: HtmlPaddings.zero,
-                        ),
-                        'p': Style(margin: Margins.zero),
-                      },
+                          'p': Style(margin: Margins.zero),
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -730,12 +734,15 @@ class _GachaItemDetailDialogState extends ConsumerState<GachaItemDetailDialog> {
         // 顯式收緊段落 margin：flutter_html 預設 `<p>` 上下 1em margin，
         // 在 imgDescHtml 「<p>標題</p><p>內文</p>」結構下會有 ~25-30px
         // 空白；官方頁面只有 ~6-8px。body margin/padding 歸零避免額外間距。
-        : AppHtml(
-            data: current.descHtml,
-            style: {
-              'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
-              'p': Style(margin: Margins.symmetric(vertical: 4)),
-            },
+        : Directionality(
+            textDirection: TextDirection.ltr,
+            child: AppHtml(
+              data: current.descHtml,
+              style: {
+                'body': Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+                'p': Style(margin: Margins.symmetric(vertical: 4)),
+              },
+            ),
           );
     // hasImage 為 true 時 Column 撐到 parent 給的 maxHeight，配合
     // Expanded(image) 吸收剩餘空間 → 切 chip 時即使 imgDesc 區 0px ↔ 105px
@@ -927,7 +934,7 @@ class _ScrollHintBoxState extends State<_ScrollHintBox> {
               child: SingleChildScrollView(
                 controller: _controller,
                 // 右側讓出捲軸位置，thumb 不壓在文字上。
-                padding: const EdgeInsets.only(right: AppSpacing.m),
+                padding: const EdgeInsetsDirectional.only(end: AppSpacing.m),
                 child: widget.child,
               ),
             ),

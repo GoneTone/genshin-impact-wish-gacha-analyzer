@@ -40,7 +40,7 @@ class StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: tokens.surfaceCard,
         border: accent != null
-            ? Border(left: BorderSide(color: accent!, width: 3))
+            ? BorderDirectional(start: BorderSide(color: accent!, width: 3))
             : Border.all(color: tokens.borderSubtle),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),

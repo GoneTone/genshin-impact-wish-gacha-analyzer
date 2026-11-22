@@ -261,17 +261,17 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
             ),
             // 左 fade + 左箭頭
             if (_hasLeft) ...[
-              Positioned(
-                left: 0,
+              PositionedDirectional(
+                start: 0,
                 top: 0,
                 bottom: 0,
                 width: _edgeFadeWidth,
                 child: const IgnorePointer(
-                  child: ScrollEdgeFade(side: ScrollSide.left),
+                  child: ScrollEdgeFade(side: ScrollSide.start),
                 ),
               ),
-              Positioned(
-                left: 4,
+              PositionedDirectional(
+                start: 4,
                 top: 0,
                 bottom: -overflow,
                 child: Center(
@@ -286,17 +286,17 @@ class _TimelineHorizontalState extends State<TimelineHorizontal>
             ],
             // 右 fade + 右箭頭
             if (_hasRight) ...[
-              Positioned(
-                right: 0,
+              PositionedDirectional(
+                end: 0,
                 top: 0,
                 bottom: 0,
                 width: _edgeFadeWidth,
                 child: const IgnorePointer(
-                  child: ScrollEdgeFade(side: ScrollSide.right),
+                  child: ScrollEdgeFade(side: ScrollSide.end),
                 ),
               ),
-              Positioned(
-                right: 4,
+              PositionedDirectional(
+                end: 4,
                 top: 0,
                 bottom: -overflow,
                 child: Center(
@@ -374,7 +374,9 @@ class _EntryColumn extends StatelessWidget {
         width: _colWidth,
         decoration: showMonthDivider
             ? BoxDecoration(
-                border: Border(left: BorderSide(color: tokens.borderEmphasis)),
+                border: BorderDirectional(
+                  start: BorderSide(color: tokens.borderEmphasis),
+                ),
               )
             : null,
         child: Column(

@@ -415,9 +415,9 @@ class _ZoomableImageOverlayState extends ConsumerState<ZoomableImageOverlay> {
           ),
         ),
         // 右上角按鈕列 [⋮][🔍][✕] — 永遠最上層。
-        Positioned(
+        PositionedDirectional(
           top: 16,
-          right: 16,
+          end: 16,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

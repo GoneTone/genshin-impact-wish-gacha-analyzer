@@ -101,7 +101,7 @@ class _PityCardState extends State<PityCard>
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: tokens.surfaceCard,
-        border: Border(left: BorderSide(color: accent, width: 3)),
+        border: BorderDirectional(start: BorderSide(color: accent, width: 3)),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Column(
@@ -112,6 +112,8 @@ class _PityCardState extends State<PityCard>
           const SizedBox(height: AppSpacing.xs),
           Text(
             l.pityCurrent(p.current, p.threshold),
+            // 由右往左的語言會把「5 / 80」排成「80 / 5」。
+            textDirection: TextDirection.ltr,
             style: TextStyle(
               fontSize: AppFontSize.display,
               fontWeight: FontWeight.w800,
@@ -194,7 +196,7 @@ class _ProgressBar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: FractionallySizedBox(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           widthFactor: progress.clamp(0.0, 1.0),
           heightFactor: 1.0,
           child: Container(

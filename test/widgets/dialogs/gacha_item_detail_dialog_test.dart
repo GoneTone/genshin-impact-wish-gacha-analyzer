@@ -216,12 +216,17 @@ void main() {
     });
   });
 
-  Future<void> pumpDialog(WidgetTester tester, GachaRecord record) async {
+  Future<void> pumpDialog(
+    WidgetTester tester,
+    GachaRecord record, {
+    Locale? locale,
+  }) async {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
           theme: buildDarkTheme(),
+          locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SizedBox()),
@@ -367,6 +372,39 @@ void main() {
       await pumpDialog(tester, _rec(name: 'X', gachaType: '301'));
       expect(find.byType(Html), findsOneWidget);
       expect(find.textContaining('Hello desc'), findsOneWidget);
+    });
+
+    testWidgets('由右往左的介面語言下，HoYoWiki 說明文字仍由左往右排', (tester) async {
+      final notifier = container.read(hoyowikiIndexProvider.notifier);
+      await seedIndex(
+        tester,
+        notifier,
+        name: 'X',
+        id: 'x1',
+        fetched: const HoYoWikiEntryFetched(
+          iconUrl: 'https://cdn.hoyolab.com/x_icon.png',
+          page: HoYoWikiPageData(
+            gallery: null,
+            desc: '<p>Hello desc.</p>',
+            tags: [],
+          ),
+        ),
+      );
+      await tester.runAsync(() async {
+        await _touchFile(tempDir, 'x1_icon.png');
+      });
+      await pumpDialog(
+        tester,
+        _rec(name: 'X', gachaType: '301'),
+        locale: const Locale('ar'),
+      );
+      final html = find.byType(Html);
+      expect(html, findsOneWidget);
+      expect(Directionality.of(tester.element(html)), TextDirection.ltr);
+      expect(
+        Directionality.of(tester.element(find.byType(AppDialog))),
+        TextDirection.rtl,
+      );
     });
 
     testWidgets('tags 3 個 → Wrap 內 3 個 Chip 顯示 label 文字', (tester) async {

@@ -154,7 +154,7 @@ class _UnlinkedView extends ConsumerWidget {
           _AwaitingConsentRow(l: l)
         else
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: FilledButton.icon(
               onPressed: () => _linkWithLocalizedPage(context, ref),
               icon: const Icon(Icons.link, size: 18),

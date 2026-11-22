@@ -92,7 +92,7 @@ class AccountManagement extends ConsumerWidget {
         const Divider(),
         const SizedBox(height: AppSpacing.s),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: FilledButton.icon(
             onPressed: () => notifier.forceRecaptureAndUpdate(),
             icon: const Icon(Icons.person_add_alt, size: 18),
@@ -260,6 +260,8 @@ class _Row extends StatelessWidget {
                   children: [
                     Text(
                       displayUid(uid, mask: maskUid),
+                      // 遮罩後的 UID 在由右往左的語言會排成 ••••••701。
+                      textDirection: TextDirection.ltr,
                       style: TextStyle(
                         color: tokens.textPrimary,
                         fontWeight: FontWeight.w600,
