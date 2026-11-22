@@ -17,6 +17,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/android_app_prefs_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
@@ -168,6 +169,14 @@ class MainApp extends ConsumerStatefulWidget {
 class _MainAppState extends ConsumerState<MainApp> {
   /// 快取 router 實例，避免每次 build（主題 / 語言切換）時重建並重設到 initialLocation。
   late final GoRouter _router = buildAppRouter();
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      unawaited(ref.read(androidAppPrefsSyncProvider).start());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

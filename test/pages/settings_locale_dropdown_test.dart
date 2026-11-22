@@ -80,6 +80,36 @@ void main() {
     if (await tempDir.exists()) await tempDir.delete(recursive: true);
   });
 
+  // Android 系統設定「應用程式語言」改了會同步回 App 設定，設定頁開著時選單也要跟著變。
+  testWidgets('language dropdown follows a change made outside the page', (
+    tester,
+  ) async {
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(tempDir);
+    });
+    addTearDown(container.dispose);
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    final dropdown = find.byType(DropdownButtonFormField<LanguagePreference>);
+    expect(
+      find.descendant(of: dropdown, matching: find.text('Follow system')),
+      findsOneWidget,
+    );
+
+    await tester.runAsync(
+      () => container
+          .read(settingsProvider.notifier)
+          .setLocale(const LocaleLanguage('ja')),
+    );
+    await tester.pump();
+
+    expect(
+      find.descendant(of: dropdown, matching: find.text('日本語')),
+      findsOneWidget,
+    );
+  });
+
   /// 收合時只建構已選的那項：全部語言名稱都排版會讓打開設定頁卡一下（要載入多種文字的字型）。
   Future<void> expectOnlySelectedLabel<T>(
     WidgetTester tester, {

@@ -5,15 +5,19 @@ import io.flutter.embedding.engine.FlutterEngine
 
 class MainActivity : FlutterActivity() {
     private var logAccess: LogAccessChannel? = null
+    private var appPrefs: AppPrefsChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         logAccess = LogAccessChannel(this, flutterEngine.dartExecutor.binaryMessenger)
+        appPrefs = AppPrefsChannel(this, flutterEngine.dartExecutor.binaryMessenger)
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         logAccess?.detach()
         logAccess = null
+        appPrefs?.detach()
+        appPrefs = null
         super.cleanUpFlutterEngine(flutterEngine)
     }
 

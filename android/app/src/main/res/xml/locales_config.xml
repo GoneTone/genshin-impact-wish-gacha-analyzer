@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 系統設定「應用程式語言」可選的語言（Android 13+）。只列 App 已開放的語言，
+     由 test/l10n/android_locales_config_test.dart 檢查與 App 一致；繁中寫 zh-Hant。 -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="zh-Hant" />
+    <locale android:name="zh-Hans" />
+    <locale android:name="en" />
+    <locale android:name="ja" />
+    <locale android:name="es" />
+    <locale android:name="fr" />
+    <locale android:name="pt-BR" />
+    <locale android:name="th" />
+    <locale android:name="vi" />
+</locale-config>
