@@ -79,10 +79,12 @@ LanguagePreference? languagePreferenceOfSystemTag(
   final resolved =
       localeListResolution([requested], released) ??
       basicLocaleListResolution([requested], released);
-  // 舊版送給系統的挪威文是 no，系統端可能還存著，所以 App 端與系統端兩種寫法都認。
+  // 舊版送給系統的挪威文是 no，系統端可能還存著，所以 App 端與系統端兩種寫法都認；新挪威語 nn 視同 nb。
   final code = resolved.languageCode;
-  if (requested.languageCode != code &&
-      requested.languageCode != _systemLanguageCodes[code]) {
+  final requestedCode = requested.languageCode == 'nn'
+      ? 'nb'
+      : requested.languageCode;
+  if (requestedCode != code && requestedCode != _systemLanguageCodes[code]) {
     return null;
   }
   return LocaleLanguage(resolved.toLanguageTag());

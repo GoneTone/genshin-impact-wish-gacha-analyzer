@@ -102,6 +102,7 @@ void main() {
       expect(of('en-US'), const LocaleLanguage('en'));
       expect(of('nb'), const LocaleLanguage('no'));
       expect(of('nb-NO'), const LocaleLanguage('no'));
+      expect(of('nn'), const LocaleLanguage('no'));
       // 舊版送給系統的是 no。
       expect(of('no'), const LocaleLanguage('no'));
     });
