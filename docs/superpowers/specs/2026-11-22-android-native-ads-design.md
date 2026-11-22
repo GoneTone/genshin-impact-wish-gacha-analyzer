@@ -1,6 +1,6 @@
 # Android 原生廣告（子專案 10）— 設計 spec
 
-- 狀態：待使用者核准
+- 狀態：已核准（2026-11-22）
 - 日期：2026-11-22
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 10；順序 8 → 9 → 12 → 10 → 11 → 7 → 13）
 - 對應鳴潮版：`wuthering-waves-convene-gacha-analyzer` 的 `2026-11-09-android-banner-ads-design.md`（同意流程、SDK 初始化、ID 注入等基礎建設）與 `2026-11-10-android-native-ads-design.md`（原生廣告），移植筆記第 50 節（「十四、廣告（Android）」整節，含「原生廣告」小節）
