@@ -1,6 +1,6 @@
 # 多國語言補齊與術語表（子專案 11）— 設計 spec
 
-- 狀態：已核准（使用者 2026-11-22；子專案 9b 已完成）
+- 狀態：已完成（2026-11-22；驗收結果見附錄）
 - 日期：2026-11-22
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 11 與「子專案 11 的術語表」段落；順序 8 → 9 → 12 → 10 → 11 → 7 → 13）
 - 對應鳴潮版：移植筆記第 49 節（`docs/Android移植筆記.md` 第 700～738 行），commit 見第二節
@@ -104,7 +104,18 @@
 
 ## 附錄：驗收結果
 
-（實作完成後填寫。）
+2026-11-22，commit `7c918b2`～`1cf32cf`。
+
+- **自動化**：`fvm flutter analyze` 無問題；`fvm flutter test` 全數通過（+2312）；release APK 建置成功（aapt2 接受全部 `strings.xml`）。31 個 ARB 都通過檢查腳本（key、佔位符與 ICU 參數、翻譯者欄位、`@@locale`、遊戲沒出的語言無中日文、複數類別、遊戲有出的非英文語言 `kind*`／`gachaType*` 不等於英文、不含字面 `\n`）。
+- **術語表來源**：祈願取自 `e20190909gacha-v3` 頁的 `bundle_*.js` 與 mi18n 專案 `m20240201hy47qinta8`；頌願取自頌願頁 bundle 寫死的 mi18n 專案 `m20250904hy2dmxqebk`（`https://webstatic.hoyoverse.com/admin/mi18n/hk4e_cn/m20250904hy2dmxqebk/m20250904hy2dmxqebk-<語言>.json`，`hk4e_global` 底下是空檔），使用者在遊戲裡重開頌願頁後從 Windows 遊戲的網頁快取找到。新增欄位逐字照官方；既有 9 欄有 4 處與官方 bundle 寫法不同（en「Standard Wish」、pt 兩個活動祈願、fr 武器活動祈願），依「既有 9 欄不改」維持。
+- **模擬器（wuwa_api37，Android 17，debug 版）**：
+  - 阿拉伯文：卡片彩色邊條在右、圖例文字在右數值在左、「0 / 90」「0 / 10」維持由左往右、五星頭像數量徽章在左下、記錄列表鏡像；側欄卡池名稱為英文。
+  - 德文：側欄用官方用語（Gebet、Wunsch、Figur、Waffe）；設定頁長字串排版正常。驗收時發現德、荷、南非語引導頁 5 個字串與義、加泰隆尼亞、葡萄牙文 1 個字串把換行寫成字面 `\n`（畫面直接顯示），已修正（`1cf32cf`）並加 `arb_newline_test` 鎖住，重建後確認換行正常。
+  - 韓文：介面為韓文。挪威文 `nb`：系統端設 `nb` 後 App 顯示挪威文，log `adopted from system tag=nb pref=LocaleLanguage(no)`。
+  - 印尼文：系統端設 `id` 時 App 記一筆 `not offered` 警告並保留原本語言（9b 的設計）。「整份系統語言都不支援時顯示英文」在模擬器上不易重現（Android 會把系統語言接在 App 語言後面），與鳴潮結論相同，由 `locale_metadata_test` 鎖住。
+  - 啟動器名稱：`aapt dump badging` 列出 85 個 `application-label-*`，抽查 ar、de、iw、ko、nb、pt、pt-BR、uk、zh-TW 都對應各語言 ARB 的 `appName`。配對通知需走完開發人員選項等步驟才會出現，未在模擬器實看，由 `android_locales_config_test` 與 release 建置確認字串檔齊全。
+  - 測完還原：App 語言未設定（App 同步回「跟隨系統」）、系統淺色；log 沒有 SEVERE。
+- **Windows（debug 版）**：備份整個 `%APPDATA%\tw.reh\genshin_impact_wish_gacha_analyzer` 後，把 `flutter.pref.locale` 從 `system` 改成 `ar` 啟動，只截圖不操作：視窗標題為阿拉伯文、側欄在右、垂直時間軸的軸線與圓點同在右側、卡片邊條在右、遮罩 UID 順序正常。驗完用 PID 關閉並還原 `shared_preferences.json`（值回到 `system`），log 沒有警告。
 
 ### 鳴潮後續文案修正
 
