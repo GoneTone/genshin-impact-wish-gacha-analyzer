@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:image/image.dart' as img;
 
-/// 從單一主檔產生 app icon 的各尺寸 UI 資產、Windows 多解析度 `.ico` 與 Android 各密度 mipmap。
+/// 從單一主檔產生 app icon 的各尺寸 UI 資產、Windows 多解析度 `.ico`、Android 各密度 mipmap 與 Android 11 以下的啟動畫面圖示。
 ///
 /// 用法：`dart run tool/generate_app_icons.dart`
 /// 來源：`tool/app_icon_source.png`（白底滿版方圖，建議 512×512 以上，避免放大失真）。
@@ -59,6 +60,32 @@ void main() {
       ..writeAsBytesSync(img.encodePng(_resize(source, entry.value)));
     stdout.writeln('✓ $path  ${entry.value}x${entry.value}');
   }
+
+  // Android 12 以下的啟動畫面中央圖示（12 以上由系統拿啟動器圖示畫成圓形，不讀這張）。
+  // 裁成圓形與 12 以上一致；flutter_native_splash 以 4x 解讀，640px＝160dp。
+  // 換圖後要再跑 `dart run flutter_native_splash:create`。
+  const splashIconPath = 'assets/splash/icon.png';
+  File(splashIconPath)
+    ..createSync(recursive: true)
+    ..writeAsBytesSync(img.encodePng(_circle(_resize(source, 640))));
+  stdout.writeln('✓ $splashIconPath  640x640');
+}
+
+/// 把正方形 [square] 裁成內切圓，圓外透明，邊緣 1px 反鋸齒。
+img.Image _circle(img.Image square) {
+  final size = square.width;
+  final r = size / 2;
+  final out = img.Image(width: size, height: size, numChannels: 4);
+  for (var y = 0; y < size; y++) {
+    for (var x = 0; x < size; x++) {
+      final dx = x + 0.5 - r;
+      final dy = y + 0.5 - r;
+      final alpha = (r - math.sqrt(dx * dx + dy * dy)).clamp(0.0, 1.0);
+      final p = square.getPixel(x, y);
+      out.setPixelRgba(x, y, p.r, p.g, p.b, (alpha * 255).round());
+    }
+  }
+  return out;
 }
 
 /// 將來源縮放成 `size`×`size` 正方形，使用 average 內插取得較佳的縮小品質。

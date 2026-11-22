@@ -1,0 +1,22 @@
+# Android 啟動畫面設定；改完執行 `dart run flutter_native_splash:create` 重新產生原生檔。
+# 圖檔來源：assets/splash/icon.png 由 tool/generate_app_icons.dart 產生，
+# branding*.png 由 tool/generate_splash_branding.py 產生。
+# 背景色對應 lib/theme/tokens.dart 的 surfaceBackground（淺色／深色）。
+flutter_native_splash:
+  ios: false
+  web: false
+
+  # Android 11 以下
+  color: "#FAFBFD"
+  color_dark: "#0C1220"
+  image: assets/splash/icon.png
+  branding: assets/splash/branding.png
+  branding_dark: assets/splash/branding_dark.png
+  branding_bottom_padding: 24
+
+  # Android 12 以上：中央圖示沿用啟動器的自適應圖示。
+  android_12:
+    color: "#FAFBFD"
+    color_dark: "#0C1220"
+    branding: assets/splash/branding.png
+    branding_dark: assets/splash/branding_dark.png
