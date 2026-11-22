@@ -182,7 +182,7 @@
   "progressFetching": "Lekérés...",
   "progressDone": "A frissítés befejeződött",
   "progressFailed": "Sikertelen",
-  "progressOpenGameHint": "Nyissa meg: Genshin Impact → Wish → History",
+  "progressOpenGameHint": "Nyissa meg: Genshin → Wishes → History",
   "progressFallbackHint": "(A korábbi kívánságelőzmények URL-je lejárt, újra le kell kérni)",
   "progressNotDetectedLink": "Megnyitotta a Wish History oldalt, de semmi sem történik?",
   "progressCaptureUnavailableHint": "Nem sikerült elindítani a lehallgatót (lehet, hogy a tanúsítványt elutasították, vagy a port foglalt), ezért az észlelés csak a játék webes gyorsítótárára támaszkodik. Nyissa meg a Wish History oldalt a játékban.",

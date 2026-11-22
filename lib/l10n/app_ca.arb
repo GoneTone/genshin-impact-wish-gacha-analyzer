@@ -182,7 +182,7 @@
   "progressFetching": "S'està obtenint...",
   "progressDone": "Actualització completada",
   "progressFailed": "Error",
-  "progressOpenGameHint": "Obre Genshin → Wish → History",
+  "progressOpenGameHint": "Obre Genshin → Wishes → History",
   "progressFallbackHint": "(L'URL anterior de Wish History ha caducat i s'ha de tornar a obtenir)",
   "progressNotDetectedLink": "Has obert Wish History i no passa res?",
   "progressCaptureUnavailableHint": "No s'ha pogut iniciar l'interceptor (potser s'ha rebutjat el certificat o el port està en ús), de manera que la detecció només recorre a la memòria cau web del joc. Obre la pàgina Wish History al joc.",

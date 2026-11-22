@@ -182,7 +182,7 @@
   "progressFetching": "Λήψη...",
   "progressDone": "Η ενημέρωση ολοκληρώθηκε",
   "progressFailed": "Απέτυχε",
-  "progressOpenGameHint": "Ανοίξτε Genshin Impact → Wish → History",
+  "progressOpenGameHint": "Ανοίξτε Genshin → Wishes → History",
   "progressFallbackHint": "(Η προηγούμενη διεύθυνση URL του ιστορικού ευχών έληξε και πρέπει να ληφθεί ξανά)",
   "progressNotDetectedLink": "Ανοίξατε το Wish History αλλά δεν συμβαίνει τίποτα;",
   "progressCaptureUnavailableHint": "Δεν ήταν δυνατή η εκκίνηση του προγράμματος αναχαίτισης (ίσως το πιστοποιητικό απορρίφθηκε ή η θύρα χρησιμοποιείται), οπότε η ανίχνευση βασίζεται μόνο στην προσωρινή μνήμη ιστού του παιχνιδιού. Ανοίξτε τη σελίδα Wish History στο παιχνίδι.",

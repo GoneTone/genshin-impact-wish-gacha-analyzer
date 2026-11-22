@@ -18,6 +18,6 @@ void main() {
         }
       }
     }
-    expect(offenders, isEmpty, reason: '字面 \n 應改成真正換行');
+    expect(offenders, isEmpty, reason: r'字面 \n 應改成真正換行');
   });
 }

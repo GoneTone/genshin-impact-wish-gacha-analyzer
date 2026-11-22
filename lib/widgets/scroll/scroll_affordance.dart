@@ -37,7 +37,7 @@ enum ScrollSide {
 /// 邊緣漸隱遮罩，用於提示使用者該方向仍可捲動。
 ///
 /// 漸層自背景色（不透明）漸隱到透明：在 dialog 內用 dialog 的底色，其他地方用
-/// [GachaTokens.surfaceCard]（卡片底色）。寬高由外層 [Positioned] 決定，此元件本身不設尺寸。
+/// [GachaTokens.surfaceCard]（卡片底色）。寬高由外層 [PositionedDirectional] 決定，此元件本身不設尺寸。
 class ScrollEdgeFade extends StatelessWidget {
   /// 建立 [ScrollEdgeFade]。
   const ScrollEdgeFade({super.key, required this.side});

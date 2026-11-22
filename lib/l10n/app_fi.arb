@@ -182,7 +182,7 @@
   "progressFetching": "Haetaan...",
   "progressDone": "Päivitys valmis",
   "progressFailed": "Epäonnistui",
-  "progressOpenGameHint": "Avaa Genshin Impact → Wish → History",
+  "progressOpenGameHint": "Avaa Genshin → Wishes → History",
   "progressFallbackHint": "(Edellinen toivomushistorian URL-osoite on vanhentunut, ja se täytyy hakea uudelleen)",
   "progressNotDetectedLink": "Avasitko Wish History -sivun, mutta mitään ei tapahdu?",
   "progressCaptureUnavailableHint": "Sieppaajaa ei voitu käynnistää (varmenne on ehkä hylätty tai portti on käytössä), joten tunnistus käyttää vain pelin verkkovälimuistia. Avaa Wish History -sivu pelissä.",
@@ -1191,7 +1191,7 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. Avaa Langaton virheenkorjaus alla olevalla painikkeella\n2. Ota käyttöön ”Käytä langatonta virheenkorjausta” ja napauta ”Muodosta laitepari laiteparikoodilla”\n3. Pyyhkäise alas näytön yläreunasta ja syötä tämän sovelluksen ilmoitukseen 6-numeroinen laiteparikoodi, joka näkyy langattoman virheenkorjauksen laiteparinäytöllä",
+  "setupStepPairBody": "1. Avaa Langaton virheenkorjaus alla olevalla painikkeella\n2. Ota käyttöön ”Käytä langatonta virheenkorjausta” ja napauta ”Yhdistä laite laiteparikoodilla”\n3. Pyyhkäise alas näytön yläreunasta ja syötä tämän sovelluksen ilmoitukseen 6-numeroinen laiteparikoodi, joka näkyy langattoman virheenkorjauksen laiteparinäytöllä",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },

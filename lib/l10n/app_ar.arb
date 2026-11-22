@@ -182,7 +182,7 @@
   "progressFetching": "جارٍ الجلب...",
   "progressDone": "اكتمل التحديث",
   "progressFailed": "فشل",
-  "progressOpenGameHint": "افتح Genshin ← Wishes ← History",
+  "progressOpenGameHint": "افتح Genshin → Wishes → History",
   "progressFallbackHint": "(انتهت صلاحية رابط Wish History السابق ويجب الحصول عليه مجددًا)",
   "progressNotDetectedLink": "فتحت Wish History ولم يحدث شيء؟",
   "progressCaptureUnavailableHint": "تعذّر تشغيل أداة الاعتراض (ربما رُفضت الشهادة أو المنفذ قيد الاستخدام)، لذا يقتصر الاكتشاف على ذاكرة الويب المؤقتة للعبة. يُرجى فتح صفحة Wish History في اللعبة.",
@@ -1081,7 +1081,7 @@
   "manualUrlWarning": "يحتوي الرابط على بيانات اعتماد حسابك. لا تشاركه علنًا. تنتهي صلاحيته بعد فترة.",
   "manualUrlSubmit": "موافق",
   "progressWaitingLog": "في انتظار فتحك صفحة Wish History في اللعبة...",
-  "progressOpenGameHintAndroid": "افتح Genshin Impact ← Wish ← History",
+  "progressOpenGameHintAndroid": "افتح Genshin Impact → Wish → History",
   "progressCheckingLogAccess": "جارٍ التحضير لقراءة سجل اللعبة...",
   "progressLogUnavailableTitle": "تعذّر الحصول على رابط Wish History تلقائيًا",
   "logUnavailableNotPaired": "لم يتم إعداد قراءة سجل اللعبة بعد. بعد إعداد لمرة واحدة، ستتم قراءته تلقائيًا عند كل تحديث.",
@@ -1191,7 +1191,7 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. اضغط على الزر أدناه لفتح تصحيح الأخطاء اللاسلكي\n2. فعّل «استخدام تصحيح الأخطاء اللاسلكي» واضغط «إقران الجهاز باستخدام رمز إقران»\n3. اسحب من أعلى الشاشة لأسفل، وفي إشعار هذا التطبيق أدخل رمز الإقران المكوّن من 6 أرقام الظاهر في شاشة الإقران ضمن تصحيح الأخطاء اللاسلكي",
+  "setupStepPairBody": "1. اضغط على الزر أدناه لفتح تصحيح الأخطاء اللاسلكي\n2. فعّل «استخدام تصحيح الأخطاء اللاسلكي» واضغط «إقران الجهاز باستخدام رمز الإقران»\n3. اسحب من أعلى الشاشة لأسفل، وفي إشعار هذا التطبيق أدخل رمز الإقران المكوّن من 6 أرقام الظاهر في شاشة الإقران ضمن تصحيح الأخطاء اللاسلكي",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },

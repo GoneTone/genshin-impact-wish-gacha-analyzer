@@ -398,7 +398,7 @@
   "settingsGameDirNone": "Spielordner nicht gefunden",
   "actionClearGameDir": "Zurücksetzen",
   "settingsCloudSync": "Cloud-Synchronisierung",
-  "cloudSyncIntro": "Verknüpfe dein Google-Konto, um Gacha-Einträge automatisch in deinem Google Drive zu sichern und mehrere Geräte synchron zu halten.",
+  "cloudSyncIntro": "Verknüpfe dein Google-Konto, um Gebetseinträge automatisch in deinem Google Drive zu sichern und mehrere Geräte synchron zu halten.",
   "cloudSyncUnconfigured": "In diesem Build sind keine Google-OAuth-Zugangsdaten hinterlegt, daher ist die Cloud-Synchronisierung nicht verfügbar.",
   "cloudSyncLink": "Google-Konto verknüpfen",
   "cloudSyncAwaitingConsent": "Browser geöffnet. Bitte schließe die Autorisierung im Browser ab...",
@@ -616,7 +616,7 @@
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
   },
-  "settingsRefetchHoyoWikiImagesEmpty": "Noch keine Gacha-Einträge, nichts neu zu laden",
+  "settingsRefetchHoyoWikiImagesEmpty": "Noch keine Gebetseinträge, nichts neu zu laden",
   "@settingsRefetchHoyoWikiImagesEmpty": {
     "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
@@ -644,7 +644,7 @@
   "@settingsRefreshItemDataTitle": {
     "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
   },
-  "settingsRefreshItemDataEmpty": "Noch keine Gacha-Einträge, nichts zu aktualisieren",
+  "settingsRefreshItemDataEmpty": "Noch keine Gebetseinträge, nichts zu aktualisieren",
   "@settingsRefreshItemDataEmpty": {
     "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
   },

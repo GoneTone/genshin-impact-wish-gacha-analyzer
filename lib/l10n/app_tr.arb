@@ -1191,7 +1191,7 @@
   "@setupStepPair": {
     "description": "Pairing guide step 3 title"
   },
-  "setupStepPairBody": "1. Kablosuz hata ayıklamayı açmak için aşağıdaki düğmeye dokunun\n2. \"Kablosuz hata ayıklamayı kullan\"ı açın ve \"Cihazı eşleme koduyla eşle\"ye dokunun\n3. Ekranın üstünden aşağı kaydırın ve Kablosuz hata ayıklama eşleme ekranında gösterilen 6 haneli eşleme kodunu bu uygulamanın bildirimine girin",
+  "setupStepPairBody": "1. Kablosuz hata ayıklamayı açmak için aşağıdaki düğmeye dokunun\n2. \"Kablosuz hata ayıklamayı kullan\"ı açın ve \"Eşleme kodu ile cihaz eşle\"ye dokunun\n3. Ekranın üstünden aşağı kaydırın ve Kablosuz hata ayıklama eşleme ekranında gösterilen 6 haneli eşleme kodunu bu uygulamanın bildirimine girin",
   "@setupStepPairBody": {
     "description": "Pairing guide step 3 instructions. Keep the line breaks."
   },

@@ -398,7 +398,7 @@
   "settingsGameDirNone": "Cartella del gioco non trovata",
   "actionClearGameDir": "Rimuovi",
   "settingsCloudSync": "Sincronizzazione cloud",
-  "cloudSyncIntro": "Collega il tuo account Google per eseguire automaticamente il backup dei record gacha su Google Drive e mantenere sincronizzati più dispositivi.",
+  "cloudSyncIntro": "Collega il tuo account Google per eseguire automaticamente il backup dei record dei Desideri su Google Drive e mantenere sincronizzati più dispositivi.",
   "cloudSyncUnconfigured": "Questa build non ha credenziali Google OAuth configurate; la sincronizzazione cloud non è disponibile.",
   "cloudSyncLink": "Collega account Google",
   "cloudSyncAwaitingConsent": "Browser aperto. Completa l'autorizzazione nel browser...",
@@ -616,7 +616,7 @@
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
   },
-  "settingsRefetchHoyoWikiImagesEmpty": "Ancora nessun record gacha, niente da recuperare di nuovo",
+  "settingsRefetchHoyoWikiImagesEmpty": "Ancora nessun record dei Desideri, niente da recuperare di nuovo",
   "@settingsRefetchHoyoWikiImagesEmpty": {
     "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
@@ -644,7 +644,7 @@
   "@settingsRefreshItemDataTitle": {
     "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
   },
-  "settingsRefreshItemDataEmpty": "Ancora nessun record gacha — niente da aggiornare",
+  "settingsRefreshItemDataEmpty": "Ancora nessun record dei Desideri — niente da aggiornare",
   "@settingsRefreshItemDataEmpty": {
     "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
   },
