@@ -144,6 +144,12 @@ void main() {
     await tester.tap(dropdown);
     await tester.pumpAndSettle();
     expect(find.text(other), findsWidgets);
+    // 語言多了之後選單會超出視窗，目標項目可能還沒建構，先捲到看得見。
+    await tester.scrollUntilVisible(
+      find.text(pick),
+      100,
+      scrollable: find.byType(Scrollable).last,
+    );
     await tester.tap(find.text(pick).last);
     await tester.pumpAndSettle();
 

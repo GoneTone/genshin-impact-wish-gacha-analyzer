@@ -1,5 +1,997 @@
 {
   "@@locale": "ca",
+  "localeNativeName": "Català",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Traducció: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Analitzador de Wish Gacha de Genshin Impact",
+  "actionUpdate": "Actualitza",
+  "actionCancel": "Cancel·la",
+  "actionClose": "Tanca",
+  "actionPrevPage": "Anterior",
+  "actionNextPage": "Següent",
+  "actionOpenFolder": "Obre la carpeta",
+  "navOverview": "Resum",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Standard",
+  "navBeginner": "Novice",
+  "navSettings": "Configuració",
+  "navContributors": "Col·laboradors",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Odes",
+  "footerNotSynced": "Sense sincronitzar",
+  "footerLastUpdated": "Última actualització: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Ara mateix",
+  "relativeSecondsAgo": "{count, plural, =1{fa {count} segon} other{fa {count} segons}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{fa {count} minut} other{fa {count} minuts}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{fa {count} hora} other{fa {count} hores}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{fa {count} dia} other{fa {count} dies}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{fa {count} mes} other{fa {count} mesos}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, =1{fa {count} any} other{fa {count} anys}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Canvia de compte",
+  "uidNotSynced": "Sense sincronitzar",
+  "uidActiveSuffix": " (actiu)",
+  "emptyNoSyncTitle": "Encara no s'han sincronitzat dades",
+  "emptyNoSyncMessage": "Toca {icon} a la part superior dreta per començar",
+  "emptyNoRecords": "No hi ha registres en aquest bàner",
+  "emptyNoFilterMatch": "Cap registre no coincideix amb el filtre actual",
+  "emptyNoOdesRecords": "Encara no hi ha registres d'Odes",
+  "emptyNoGachaRecords": "Encara no hi ha registres de Wish",
+  "statsTotal": "Total de tirades",
+  "statsRankCount": "Nombre de {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% del total",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Distribució per raresa",
+  "statsItemTypeDistribution": "Distribució per tipus",
+  "statsNoData": "No hi ha dades",
+  "kindUnknown": "Desconegut",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Hora",
+  "tableName": "Nom",
+  "tableKind": "Tipus",
+  "tableRarity": "Raresa",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Total",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Ordre: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Ordre: predeterminat",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Ordena per",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Tirades des de l'últim {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Descendent",
+  "sortDirectionAsc": "Ascendent",
+  "sortHintClickToSort": "Fes clic per ordenar",
+  "progressPreparing": "S'està preparant...",
+  "progressPreparingHint": "S'està preparant l'origen de dades...",
+  "progressConvertingHint": "S'està convertint l'idioma de les dades, espera...",
+  "progressWaiting": "Esperant la captura...",
+  "progressFetching": "S'està obtenint...",
+  "progressDone": "Actualització completada",
+  "progressFailed": "Error",
+  "progressOpenGameHint": "Obre Genshin → Wish → History",
+  "progressFallbackHint": "(L'URL anterior de Wish History ha caducat i s'ha de tornar a obtenir)",
+  "progressNotDetectedLink": "Has obert Wish History i no passa res?",
+  "progressCaptureUnavailableHint": "No s'ha pogut iniciar l'interceptor (potser s'ha rebutjat el certificat o el port està en ús), de manera que la detecció només recorre a la memòria cau web del joc. Obre la pàgina Wish History al joc.",
+  "progressCaptureUnavailableNoGameDirHint": "No s'ha pogut iniciar l'interceptor (potser s'ha rebutjat el certificat o el port està en ús) i tampoc no s'ha trobat la carpeta del joc. Prem «Tria la carpeta del joc» a sota per definir-la manualment.",
+  "gameDirHelpTitle": "Wish History no detectat",
+  "gameDirHelpNotFound": "No s'ha pogut trobar la carpeta de Genshin Impact. Quan triïs la carpeta del joc, aquesta eina també podrà obtenir l'URL de Wish History de la memòria cau web del joc.",
+  "gameDirHelpFound": "Carpeta del joc en ús: {path}. Si no és la còpia del joc a la qual jugues, torna a triar.",
+  "@gameDirHelpFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Carpeta del joc definida. Torna al joc i obre Wish History una vegada més.",
+  "gameDirInvalid": "No s'ha trobat Genshin Impact en aquesta carpeta. Tria la carpeta «Genshin Impact game».",
+  "actionChooseGameDir": "Tria la carpeta del joc",
+  "actionRechooseGameDir": "Torna a triar",
+  "progressFetchingBanner": "S'està obtenint: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Pàgina {page}, de moment {count, plural, =1{1 registre nou} other{{count} registres nous}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{S'ha afegit {count} registre nou} other{S'han afegit {count} registres nous}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, =1{S'ha baixat {count} imatge d'objecte} other{S'han baixat {count} imatges d'objectes}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, =1{S'han actualitzat les dades d'1 element} other{S'han actualitzat les dades de {count} elements}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{S'ha recuperat 1 imatge d'element} other{S'han recuperat {count} imatges d'elements}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{S'han netejat les dades d'idiomes obsolets d'1 element} other{S'han netejat les dades d'idiomes obsolets de {count} elements}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Error parcial: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{S'ha importat {accounts} compte} other{S'han importat {accounts} comptes}}: nous: {added}, ja existents: {duplicate}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Error parcial d'importació: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Cercant dades d'elements {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Obtenint detalls d'elements {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Baixant imatges d'elements {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "L'autenticació continua caducant; torna a iniciar la sessió al joc",
+  "errorRateLimited": "Massa sol·licituds; torna-ho a provar més tard",
+  "errorServer": "Error del servidor: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Aquest compte encara no té registres de Wish",
+  "pageOverviewTitle": "Resum (tots els bàners)",
+  "pageOverviewGachaSection": "Resum de Wish",
+  "pageOverviewOdesSection": "Resum d'Odes",
+  "pageBannerRecordList": "Llista de registres",
+  "rarityOverviewTitle": "Resum de {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Configuració",
+  "settingsAppearance": "Aparença",
+  "settingsThemeSystem": "Segons el sistema",
+  "settingsThemeDark": "Fosc",
+  "settingsThemeLight": "Clar",
+  "settingsLanguage": "Idioma",
+  "settingsLocaleSystem": "Segons el sistema",
+  "settingsDataLanguage": "Idioma de les dades",
+  "settingsDataLanguageDesc": "Unifica l'idioma de visualització de les dades de l'historial de gacha, independentment de l'idioma de la interfície de l'aplicació. Un cop definit, en actualitzar o importar dades es converteixen automàticament a aquest idioma. Els registres d'Odes i els elements sense dades corresponents conserven l'idioma original.",
+  "settingsDataLanguageUnset": "No definit (sense conversió)",
+  "settingsDataLanguageUnify": "Converteix ara l'idioma de les dades",
+  "settingsDataLanguageUnifying": "S'està convertint...",
+  "settingsDataLanguageUnifyDone": "S'han convertit {converted}; {unresolved} no s'han pogut convertir.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "La conversió ha fallat, les dades no han canviat. Comprova la xarxa i torna-ho a provar.",
+  "settingsDataManagement": "Gestió de dades",
+  "settingsGameDir": "Carpeta del joc",
+  "settingsGameDirAuto": "Detectada automàticament: {path}",
+  "@settingsGameDirAuto": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Definida manualment: {path}",
+  "@settingsGameDirManual": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "No s'ha trobat la carpeta del joc",
+  "actionClearGameDir": "Esborra",
+  "settingsCloudSync": "Sincronització al núvol",
+  "cloudSyncIntro": "Vincula el teu compte de Google per fer còpies de seguretat automàtiques dels registres de gacha al teu Google Drive i mantenir sincronitzats diversos dispositius.",
+  "cloudSyncUnconfigured": "Aquesta compilació no té credencials de Google OAuth configurades; la sincronització al núvol no està disponible.",
+  "cloudSyncLink": "Vincula el compte de Google",
+  "cloudSyncAwaitingConsent": "S'ha obert el navegador. Completa l'autorització al navegador...",
+  "cloudSyncAwaitingConsentAndroid": "Completa l'autorització a la finestra de Google...",
+  "cloudSyncLinkedAs": "Vinculat: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Sincronització automàtica",
+  "cloudSyncAutoToggleHint": "Es sincronitza automàticament en obrir l'aplicació i després de canvis a les dades; si està desactivada, pots continuar sincronitzant manualment.",
+  "cloudSyncNow": "Sincronitza ara",
+  "cloudSyncUnlink": "Desvincula",
+  "cloudSyncUnlinkConfirmTitle": "Desvinculació",
+  "cloudSyncUnlinkConfirmBody": "La sincronització s'aturarà. Es conserven tant les dades locals com la còpia de seguretat al núvol.",
+  "cloudSyncLastSynced": "Última sincronització: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Encara no s'ha sincronitzat",
+  "cloudSyncErrorNetwork": "Ha fallat la sincronització: problema de xarxa. Es tornarà a provar automàticament.",
+  "cloudSyncErrorBusy": "Sincronització ajornada: hi ha una actualització o importació en curs. Es tornarà a provar automàticament.",
+  "cloudSyncErrorSchemaTooNew": "S'ha omès la sincronització: les dades del núvol les ha creat una versió més nova de l'aplicació. Actualitza primer l'aplicació.",
+  "cloudSyncErrorAuthFailed": "Ha fallat l'autorització. Torna-ho a provar.",
+  "cloudSyncErrorScopeMissing": "L'autorització no incloïa l'accés a Google Drive. Torna a vincular el compte i marca la casella de les dades de Drive a la pàgina de consentiment de Google.",
+  "cloudSyncReauthRequired": "L'autorització ha caducat. Torna a vincular el compte de Google.",
+  "cloudSyncRemoveFromCloud": "Suprimeix també aquest compte de les dades sincronitzades al núvol",
+  "cloudSyncPostAuthTitle": "Autorització completada",
+  "cloudSyncPostAuthBody": "Ja pots tancar aquesta pestanya i tornar a l'aplicació.",
+  "cloudSyncPostAuthScopeMissingTitle": "Falta el permís de Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "No s'ha marcat la casella de les dades de Google Drive. Torna a l'aplicació, vincula el compte de nou i marca aquest permís.",
+  "settingsAccountManagement": "Gestió de comptes",
+  "settingsPrivacySectionTitle": "Privadesa",
+  "settingsMaskUidInUi": "Amaga l'UID a la interfície",
+  "settingsMaskUidInUiHint": "Si està activat, els UID de la interfície i de la llista de comptes mostren els 3 primers dígits i amaguen la resta (p. ex. 123•••••). Útil per fer streaming o compartir la pantalla. No afecta les imatges per compartir, els fitxers exportats ni el diàleg de confirmació de supressió.",
+  "settingsAdPrivacyOptions": "Opcions de privadesa dels anuncis",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Canvia si consents a veure anuncis personalitzats.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Quant a",
+  "settingsAboutVersion": "Versió {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Versions per a altres jocs",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "En el futur potser s'admetran més jocs...",
+  "contributorsTitle": "Col·laboradors",
+  "contributorsSubtitle": "Moltes gràcies a tots els col·laboradors que han contribuït al desenvolupament d'aquest programari!",
+  "contributorsProjectLeader": "Moderador del projecte",
+  "contributorsTesters": "Provadors",
+  "contributorsGithubContributors": "Col·laboradors de GitHub",
+  "contributorsTranslationReviewer": "Revisors de la traducció",
+  "contributorsTranslatedLanguages": "Idiomes disponibles",
+  "contributorsHelpTranslate": "No està disponible en el teu idioma? Ajuda'ns a traduir-lo!",
+  "contributorsProjectLicense": "Llicència del projecte",
+  "pityRank": "Pity de {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, =1{{n} tirada fins a la garantia} other{{n} tirades fins a la garantia}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Gairebé a la garantia! {n, plural, =1{Falta 1 tirada} other{Falten {n} tirades}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Garantit aviat",
+  "pityNoMainRarity": "Encara cap {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Finalitzat",
+  "pityAverageInterval": "Mitjana: {n} tirades",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "No hi ha registres de {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{{n} tirada} other{{n} tirades}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Ara",
+  "timelineNowPulls": "{n, plural, =1{{n} tirada} other{{n} tirades}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, =1{{n} tirada des de l'últim {star}} other{{n} tirades des de l'últim {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, =1{{n} tirada des de l'últim {star} entre bàners} other{{n} tirades des de l'últim {star} entre bàners}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Desplaça a l'esquerra",
+  "timelineScrollRight": "Desplaça a la dreta",
+  "timelineLoadMore": "{n, plural, =1{Carrega'n més (en queda 1)} other{Carrega'n més (en queden {n})}}",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Totes les rareses",
+  "filterRarityRankOnly": "Només {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Tots els tipus",
+  "filterSearchHint": "Cerca per nom...",
+  "filterClear": "Esborra els filtres",
+  "pagerFirst": "Primera",
+  "pagerLast": "Última",
+  "pagerJumpTitle": "Ves a la pàgina",
+  "pagerJumpLabel": "Pàgina ({min}–{max})",
+  "pagerJumpCurrent": "Ets a la pàgina {page} · {total, plural, =1{1 registre} other{{total} registres}}",
+  "pagerJumpGo": "Ves-hi",
+  "pagerJumpInvalid": "Introdueix una pàgina entre {min} i {max}",
+  "settingsClearActive": "Esborra les dades del compte actual",
+  "settingsClearAll": "Esborra totes les dades",
+  "settingsRefetchHoyoWikiImagesTitle": "Força una nova obtenció de les imatges dels elements",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Encara no hi ha registres de gacha, no hi ha res per tornar a obtenir",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Força una nova obtenció de les imatges dels elements",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "S'esborrarà tota la memòria cau local d'imatges d'elements i es tornaran a baixar les icones de HoYoWiki. Les imatges de detall dels elements es baixaran a demanda la propera vegada que obris l'element. Segons el nombre d'elements, pot trigar diversos minuts d'ample de banda i de temps.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Inicia la nova obtenció",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Dades dels elements",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Torna a obtenir de HoYoWiki els detalls més recents dels elements (descripcions, llistes d'imatges, etc.) i conserva les imatges ja baixades. Les imatges noves es baixen quan obres els detalls de l'element.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Actualitza les dades dels elements",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Encara no hi ha registres de gacha — no hi ha res per actualitzar",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Vols actualitzar les dades dels objectes?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Es contactarà amb HoYoWiki per tornar a obtenir els detalls de tots els elements, cosa que pot trigar segons quants elements tinguis. Les imatges ja baixades es conserven i no s'esborraran.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Inicia l'actualització",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Memòria cau d'imatges",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Total",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Icones",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Imatges de detall",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "S'està calculant...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "No s'ha pogut llegir la mida de la memòria cau",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "No s'han pogut esborrar les imatges de detall",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Esborra les imatges de detall",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Vols esborrar les imatges de detall?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "S'eliminaran uns {size} d'imatges de detall dels objectes; es conserva la memòria cau d'icones. Es tornaran a baixar la propera vegada que obris el detall d'un objecte.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Esborra",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Exporta les dades",
+  "settingsImportData": "Importa dades",
+  "shareImageButton": "Genera una imatge per compartir",
+  "shareImageDialogTitle": "Opcions de la imatge per compartir",
+  "shareImageThemeLabel": "Tema",
+  "shareImageThemeDark": "Fosc",
+  "shareImageThemeLight": "Clar",
+  "shareImageShowFullUid": "Mostra l'UID complet a la imatge",
+  "shareImageShowFullUidHint": "Si està desactivat, només es mostren els 3 primers dígits i la resta s'amaga amb •",
+  "shareImageUpdatedAt": "Actualitzat: {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "S'ha copiat al porta-retalls",
+  "shareImageFailed": "No s'ha pogut generar la imatge per compartir",
+  "shareImageActionCopy": "Copia la imatge",
+  "shareImageActionSave": "Desa la imatge",
+  "shareImageCopyFailed": "No s'ha pogut copiar al porta-retalls",
+  "shareImageGenerating": "S'està generant la imatge per compartir...",
+  "shareImageSaved": "S'ha desat: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Exportació completada",
+  "exportDialogFailedTitle": "Error d'exportació",
+  "settingsExportFailed": "Ha fallat l'exportació: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "S'ha exportat a {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Confirmació d'importació",
+  "settingsImportConfirmIntro": "Estàs a punt d'importar {accounts, plural, =1{1 compte} other{{accounts} comptes}} ({records, plural, =1{1 registre} other{{records} registres}} en total):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Els comptes següents es combinaran amb les dades locals; no s'eliminarà cap registre existent:",
+  "settingsImportConfirmNoConflict": "No hi ha conflictes de dades.",
+  "settingsImportConfirmPreserveFooter": "Es conservaran els altres comptes existents ({uids}).",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts, plural, =1{S'ha importat 1 compte} other{S'han importat {accounts} comptes}} correctament ({records, plural, =1{1 registre} other{{records} registres}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "S'han importat {success}/{total} comptes; han fallat: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Ha fallat la importació: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "El format del fitxer no és vàlid o el fitxer està malmès",
+  "importReasonUnsupportedVersion": "Aquest fitxer l'ha exportat una versió més recent de l'aplicació. Actualitza l'aplicació abans d'importar.",
+  "importReasonUnreadable": "No s'ha pogut llegir el fitxer",
+  "exportReasonWriteFailed": "No s'ha pogut escriure el fitxer. Comprova la ubicació i els permisos",
+  "importReasonForeignApp": "Aquest fitxer no l'ha exportat l'aplicació",
+  "settingsExportSelectTitle": "Tria els comptes que vols exportar",
+  "settingsImportSelectTitle": "Tria els comptes que vols importar",
+  "settingsImportMergeBadge": "Combinació",
+  "accountsPickerSelectAll": "Selecciona-ho tot",
+  "accountRecordCount": "{n, plural, =1{{n} registre} other{{n} registres}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Confirmació",
+  "confirmClearActiveBody": "S'eliminaran definitivament tots els registres de Wish de l'UID {uid}. Escriu l'UID per confirmar:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "S'eliminaran definitivament els registres de Wish de tots els comptes. Escriu DELETE per confirmar:",
+  "confirmDelete": "Suprimeix",
+  "confirmImport": "Importa",
+  "confirmExport": "Exporta",
+  "confirmContinue": "Continua",
+  "accountListEmpty": "Encara no hi ha comptes",
+  "accountLastUpdated": "Última actualització: {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Actiu",
+  "accountSetActive": "Defineix com a actiu",
+  "accountRemove": "Elimina",
+  "accountAdd": "Afegeix un compte",
+  "accountAliasLabel": "Àlies",
+  "accountAliasHint": "Un nom fàcil de recordar per a aquest compte",
+  "accountAliasNone": "Sense àlies",
+  "accountActionEditAlias": "Edita l'àlies",
+  "accountEditAliasTitle": "Edita l'àlies",
+  "accountDragHandleTooltip": "Arrossega per reordenar",
+  "loadingBootstrap": "S'està carregant...",
+  "timelineTopRarityTitle": "Cronologia de {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Recompte de la raresa més alta per bàner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{{n} tirada des de l'últim {star}} other{{n} tirades des de l'últim {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Nova versió disponible: {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Publicada el {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Baixa",
+  "updateButtonSkip": "Omet aquesta versió",
+  "updateButtonLater": "Més tard",
+  "updateCheckButton": "Cerca actualitzacions",
+  "updateChecking": "S'està comprovant...",
+  "updateAlreadyLatest": "Tens la versió més recent",
+  "updateCheckFailed": "Ha fallat la comprovació d'actualitzacions: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "No s'ha pogut connectar. Comprova la xarxa",
+  "updateErrorTimeout": "S'ha esgotat el temps de la sol·licitud",
+  "updateErrorRateLimited": "S'ha esgotat la quota de l'API de GitHub. Torna-ho a provar més tard",
+  "updateErrorServer": "Error del servidor (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Format de resposta inesperat",
+  "currentReleaseTitle": "Notes de la versió actual",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "No s'han trobat les notes de la versió {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Mostra a GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Ves a la pàgina de GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Mostra les notes de la versió",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "No s'ha pogut esborrar la memòria cau d'imatges d'elements: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Registres de depuració",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Si tens problemes, exporta els registres per ajudar els desenvolupadors a investigar-los.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Informa d'un problema",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Exporta els registres",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Obre la carpeta de registres",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Esborra tots els registres",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "S'han exportat els registres: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Ha fallat l'exportació dels registres: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "S'eliminaran permanentment tots els fitxers de logs/. Exporta'ls primer si els necessites per informar d'errors. Escriu CLEAR per confirmar-ho.",
   "galleryCardLabel": "Carta",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +999,283 @@
   "galleryIconLabel": "Icona",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Anterior",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Següent",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Desplaça avall",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Mostra a HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "No s'ha pogut carregar la imatge",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Torna-ho a provar",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Tanca la previsualització de la imatge",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Copia la imatge",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Desa la imatge",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Amplia",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Redueix",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Torna a obtenir la imatge",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Imatge copiada al porta-retalls",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "No s'ha pogut copiar la imatge",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "No s'ha pogut desar la imatge",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Desada a {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Amb sort",
+  "luckTierAverage": "Normal",
+  "luckTierUnlucky": "Sense sort",
+  "manualUrlEntry": "Introdueix manualment l'URL de Wish History",
+  "manualUrlTitle": "Introdueix manualment l'URL de Wish History",
+  "manualUrlHint": "Si ja has obtingut l'URL de Wish History d'una altra manera (per exemple, amb una eina a l'ordinador), el pots enganxar aquí. També funciona enganxar-hi tot el text; l'aplicació troba l'URL automàticament.",
+  "manualUrlFieldHint": "Enganxa l'URL...",
+  "manualUrlPaste": "Enganxa del porta-retalls",
+  "manualUrlNotFound": "No s'ha trobat cap URL de Wish History. Comprova el que has enganxat.",
+  "manualUrlWarning": "L'URL conté les credencials del teu compte. No el comparteixis públicament. Caduca al cap d'una estona.",
+  "manualUrlSubmit": "D'acord",
+  "progressWaitingLog": "Esperant que obris la pàgina Wish History al joc...",
+  "progressOpenGameHintAndroid": "Obre Genshin Impact → Wish → History",
+  "progressCheckingLogAccess": "Preparant la lectura del registre del joc...",
+  "progressLogUnavailableTitle": "No es pot obtenir automàticament l'URL de Wish History",
+  "logUnavailableNotPaired": "La lectura del registre del joc encara no està configurada. Després d'una configuració única, cada actualització el llegeix automàticament.",
+  "logUnavailableNoWifi": "La depuració sense fil només funciona amb Wi‑Fi. Connecta't a una xarxa Wi‑Fi i torna; l'aplicació continuarà automàticament. També pots introduir l'URL manualment.",
+  "logRootDeniedHint": "S'ha detectat root, però aquesta aplicació no té accés root. Per llegir amb root, permet aquesta aplicació al gestor de root (per exemple, la llista de Superusuari de Magisk) i torna; l'aplicació ho tornarà a provar automàticament.",
+  "logUnavailableAdbFailed": "No s'ha pogut connectar a la depuració sense fil. Potser la vinculació ha caducat; torna a vincular el dispositiu.",
+  "logUnavailableWirelessOff": "El dispositiu no permet que aquesta aplicació activi la depuració sense fil. Activa-la a la pàgina Depuració sense fil i torna; l'aplicació continuarà automàticament.",
+  "logUnavailableNetworkNotAllowed": "Aquesta xarxa Wi‑Fi encara no està permesa per a la depuració sense fil. Toca Permet a l'avís del sistema (marca «Permet sempre en aquesta xarxa» perquè no t'ho torni a preguntar) i l'aplicació continuarà automàticament. Si has tancat l'avís, toca Torna-ho a provar.",
+  "logUnavailableUnsupported": "Aquest dispositiu no pot llegir automàticament l'URL de Wish History (requereix Android 11 o posterior, o root). Introdueix-lo manualment.",
+  "logUnavailableGameNotInstalled": "Genshin Impact no està instal·lat en aquest dispositiu. Un cop instal·lat, torna aquí i es detectarà automàticament.",
+  "actionOpenGame": "Obre Genshin Impact",
+  "actionOpenWirelessDebugging": "Obre Depuració sense fil",
+  "progressLogConnectionLost": "S'ha perdut la connexió de depuració sense fil; s'està tornant a connectar... Si no es recupera, comprova la Wi‑Fi o introdueix l'URL manualment.",
+  "progressWirelessLeftOnHint": "La depuració sense fil continua activada. Pots desactivar-la a la configuració del sistema.",
+  "progressCredentialReady": "S'ha obtingut l'URL de Wish History. L'obtenció del teu Wish History comença quan tornis a aquesta aplicació.",
+  "actionRedetectGame": "Torna a comprovar",
+  "updateOpenPlayStore": "Obre Google Play",
+  "actionSetupLogAccess": "Configura",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Torna a vincular",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Llegeix el registre del sistema",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Per què cal?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android no permet que les aplicacions llegeixin els registres del sistema d'altres aplicacions. Aquesta aplicació utilitza la funció integrada de depuració sense fil per llegir l'URL de Wish History de Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Què fa aquesta aplicació",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Només llegeix l'URL de Wish History de Genshin Impact\\n• Es desconnecta just després de llegir i desactiva la depuració sense fil si l'havia activat aquesta aplicació\\n• Es concedeix a si mateixa el permís per activar i desactivar la depuració sense fil, de manera que no l'hagis de tornar a configurar\\n• Ho pots eliminar en qualsevol moment a Configuració",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requisits",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 o posterior, Wi‑Fi i notificacions permeses",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Comença la configuració",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Introdueix l'URL manualment",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Vincula la depuració sense fil",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Activa les opcions per a desenvolupadors",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Obre la pàgina d'informació a la Configuració del sistema (per exemple, «Informació del telèfon» o «Informació de la tauleta»)\n2. Cerca «Número de compilació» i toca'l 7 vegades\n3. Quan vegis «Ara ets desenvolupador», torna a aquesta aplicació",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Les opcions per a desenvolupadors encara estan desactivades. Si en tocar «Número de compilació» el sistema t'ha dit que no calia fer res més (per exemple, «Ja ets desenvolupador»), l'interruptor principal de les opcions per a desenvolupadors està desactivat. Obre les opcions per a desenvolupadors, activa l'interruptor de la part superior i torna a aquesta aplicació.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Obre la pàgina d'informació",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Les opcions per a desenvolupadors estan activades",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Permet les notificacions",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Introduiràs el codi de vinculació en una notificació, així que permet que aquesta aplicació mostri notificacions.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Permet les notificacions",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Obre la configuració de notificacions",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notificacions permeses",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Vincula",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Toca el botó de sota per obrir Depuració sense fil\n2. Activa «Utilitza la depuració sense fil» i toca «Vincula el dispositiu amb un codi de vinculació»\n3. Llisca cap avall des de la part superior de la pantalla i, a la notificació d'aquesta aplicació, introdueix el codi de vinculació de 6 dígits que es mostra a la pantalla de vinculació de Depuració sense fil",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "S'està esperant que introdueixis el codi de vinculació a la notificació...\nIntrodueix-lo mentre la pantalla de vinculació de Depuració sense fil encara estigui oberta.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Torna a obrir Depuració sense fil",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "S'està vinculant...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Vinculat; falta un pas",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "El dispositiu té una restricció de seguretat addicional. Activa una opció més perquè aquesta aplicació pugui activar i desactivar automàticament la depuració sense fil.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Com s'activa",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Obre les opcions per a desenvolupadors\n2. Cerca l'interruptor relacionat amb la seguretat de la depuració per USB o la supervisió de permisos i activa'l, per exemple:\n• Xiaomi: «Depuració per USB (Configuració de seguretat)»\n• OPPO / realme: «Desactiva la supervisió de permisos»\n3. Comprova que la depuració sense fil estigui activada, torna i toca Torna-ho a provar",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Obre les opcions per a desenvolupadors",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Torna-ho a provar",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Omet (activa tu mateix la depuració sense fil a cada actualització)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Tot a punt",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "A partir d'ara, Actualitza llegeix el registre automàticament. No cal cap més configuració.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Quan toquis Actualitza, activa la depuració sense fil quan se't demani.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "S'està tornant i s'inicia l'actualització...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Accés al registre del joc",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Depuració sense fil",
+  "logAccessMethodNone": "Sense configurar",
+  "settingsPairingStatus": "Vinculació",
+  "settingsPaired": "Vinculat",
+  "settingsPairedManual": "Vinculat (activa manualment la depuració sense fil)",
+  "settingsRetryGrant": "Torna a provar el permís",
+  "settingsSetupLogAccess": "Configura",
+  "settingsUnpair": "Elimina la vinculació",
+  "settingsUnpairConfirmTitle": "Vols eliminar la vinculació?",
+  "settingsUnpairConfirmBody": "S'esborrarà la clau de vinculació d'aquesta aplicació i es retirarà el permís d'aquesta aplicació per activar o desactivar la depuració sense fil. Hauràs de tornar a vincular-lo per fer servir la depuració sense fil més endavant.",
+  "settingsUnpairDone": "S'ha eliminat la vinculació",
+  "settingsUnpairDoneBody": "S'ha esborrat la clau de vinculació d'aquesta aplicació i s'ha retirat el permís per activar i desactivar la depuració sense fil.",
+  "settingsUnpairUnreachableTitle": "S'ha esborrat la clau de vinculació",
+  "settingsUnpairUnreachableBody": "S'ha esborrat la clau de vinculació d'aquesta aplicació, però aquesta vegada no s'ha pogut connectar a la depuració sense fil, així que el permís per activar-la i desactivar-la no s'ha retirat.",
+  "settingsUnpairUnreachableRevokeHint": "Aquesta aplicació no fa servir aquest permís mentre no està vinculada. Per retirar-lo del tot, connecta't a una xarxa Wi‑Fi, torna a vincular-la i desvincula-la una altra vegada.",
+  "settingsUnpairLeftover": "La llista Depuració sense fil → Dispositius vinculats del sistema continuarà mostrant «{name}». Ja no es pot connectar, així que el pots deixar; per eliminar-lo, toca'l i esborra'l.",
+  "settingsUnpairLeftoverAlso": "La llista Depuració sense fil → Dispositius vinculats del sistema també mostra «{name}»; toca'l per esborrar-lo.",
+  "settingsLogAccessMethod": "Mètode",
+  "actionShare": "Comparteix",
+  "shareFailed": "No s'ha pogut compartir",
+  "dialogSaveAsTitle": "Desa com a",
+  "dialogOpenTitle": "Obre",
+  "dialogSelectFolderTitle": "Tria una carpeta",
+  "actionSave": "Desa",
+  "settingsLogsShare": "Comparteix els registres"
 }

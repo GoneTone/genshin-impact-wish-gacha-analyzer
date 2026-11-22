@@ -1,5 +1,997 @@
 {
   "@@locale": "hu",
+  "localeNativeName": "Magyar",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "localeTranslatorLabel": "Fordító: {translator}",
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Frissítés",
+  "actionCancel": "Mégse",
+  "actionClose": "Bezárás",
+  "actionPrevPage": "Előző",
+  "actionNextPage": "Következő",
+  "actionOpenFolder": "Mappa megnyitása",
+  "navOverview": "Áttekintés",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Standard",
+  "navBeginner": "Novice",
+  "navSettings": "Beállítások",
+  "navContributors": "Közreműködők",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Odes",
+  "footerNotSynced": "Nincs szinkronizálva",
+  "footerLastUpdated": "Utolsó frissítés: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Épp most",
+  "relativeSecondsAgo": "{count} másodperce",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count} perce",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count} órája",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count} napja",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count} hónapja",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count} éve",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Fiókváltás",
+  "uidNotSynced": "Nincs szinkronizálva",
+  "uidActiveSuffix": " (aktív)",
+  "emptyNoSyncTitle": "Még nincs szinkronizált adat",
+  "emptyNoSyncMessage": "A kezdéshez nyomja meg a jobb felső sarokban lévő {icon} ikont",
+  "emptyNoRecords": "Ehhez a bannerhez nincsenek rekordok",
+  "emptyNoFilterMatch": "Egy rekord sem felel meg a szűrőnek",
+  "emptyNoOdesRecords": "Még nincsenek Odes-előzmények",
+  "emptyNoGachaRecords": "Még nincsenek kívánságelőzmények",
+  "statsTotal": "Összes húzás",
+  "statsRankCount": "{star} darabszám",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "Az összes {rate}%-a",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Ritkaság szerinti eloszlás",
+  "statsItemTypeDistribution": "Típus szerinti eloszlás",
+  "statsNoData": "Nincs adat",
+  "kindUnknown": "Ismeretlen",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Idő",
+  "tableName": "Név",
+  "tableKind": "Típus",
+  "tableRarity": "Ritkaság",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Összesen",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Rendezés: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Rendezés: alapértelmezett",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Rendezés",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Húzások az utolsó {star} óta",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Csökkenő",
+  "sortDirectionAsc": "Növekvő",
+  "sortHintClickToSort": "Kattintson a rendezéshez",
+  "progressPreparing": "Előkészítés...",
+  "progressPreparingHint": "Adatforrás előkészítése...",
+  "progressConvertingHint": "Az adatok nyelvének átalakítása, kis türelmet...",
+  "progressWaiting": "Várakozás a rögzítésre...",
+  "progressFetching": "Lekérés...",
+  "progressDone": "A frissítés befejeződött",
+  "progressFailed": "Sikertelen",
+  "progressOpenGameHint": "Nyissa meg: Genshin Impact → Wish → History",
+  "progressFallbackHint": "(A korábbi kívánságelőzmények URL-je lejárt, újra le kell kérni)",
+  "progressNotDetectedLink": "Megnyitotta a Wish History oldalt, de semmi sem történik?",
+  "progressCaptureUnavailableHint": "Nem sikerült elindítani a lehallgatót (lehet, hogy a tanúsítványt elutasították, vagy a port foglalt), ezért az észlelés csak a játék webes gyorsítótárára támaszkodik. Nyissa meg a Wish History oldalt a játékban.",
+  "progressCaptureUnavailableNoGameDirHint": "Nem sikerült elindítani a lehallgatót (lehet, hogy a tanúsítványt elutasították, vagy a port foglalt), és a játék mappája sem található. Nyomja meg lent a „Játékmappa kiválasztása” gombot a kézi beállításhoz.",
+  "gameDirHelpTitle": "A Wish History oldal nem észlelhető",
+  "gameDirHelpNotFound": "Nem található a Genshin Impact játékmappája. Ha kiválasztja, az eszköz a kívánságelőzmények URL-jét a játék webes gyorsítótárából is meg tudja szerezni.",
+  "gameDirHelpFound": "Használt játékmappa: {path}. Ha ez nem az a példány, amellyel játszik, válasszon újra.",
+  "@gameDirHelpFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "A játékmappa beállítva. Térjen vissza a játékhoz, és nyissa meg még egyszer a Wish History oldalt.",
+  "gameDirInvalid": "Ebben a mappában nem található a Genshin Impact. Válassza ki a „Genshin Impact game” mappát.",
+  "actionChooseGameDir": "Játékmappa kiválasztása",
+  "actionRechooseGameDir": "Újraválasztás",
+  "progressFetchingBanner": "Lekérés: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "{page}. oldal, eddig {count} új rekord",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count} új rekord hozzáadva",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count} tárgykép letöltve",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count} tárgy adatai frissítve",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count} tárgykép utólag letöltve",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count} tárgy régi nyelvű adatai törölve",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Részleges hiba: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts} fiók importálva: {added} új, {duplicate} már megvolt",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Részleges importálási hiba: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Tárgyadatok keresése {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Tárgyrészletek lekérése {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Tárgyképek letöltése {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "A hitelesítés folyamatosan lejár; jelentkezzen be újra a játékba",
+  "errorRateLimited": "Túl sok kérés; próbálja újra később",
+  "errorServer": "Szerverhiba: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Ennek a fióknak még nincsenek kívánságelőzményei",
+  "pageOverviewTitle": "Áttekintés (minden banner)",
+  "pageOverviewGachaSection": "Kívánságok áttekintése",
+  "pageOverviewOdesSection": "Odes áttekintése",
+  "pageBannerRecordList": "Rekordlista",
+  "rarityOverviewTitle": "{star} áttekintés",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Beállítások",
+  "settingsAppearance": "Megjelenés",
+  "settingsThemeSystem": "Rendszerbeállítás követése",
+  "settingsThemeDark": "Sötét",
+  "settingsThemeLight": "Világos",
+  "settingsLanguage": "Nyelv",
+  "settingsLocaleSystem": "Rendszerbeállítás követése",
+  "settingsDataLanguage": "Adatok nyelve",
+  "settingsDataLanguageDesc": "Egységesíti a gacha-előzmények megjelenítési nyelvét, az alkalmazás felületének nyelvétől függetlenül. Beállítás után frissítéskor vagy importáláskor az adatok automatikusan erre a nyelvre lesznek átalakítva. Az Odes-rekordok és a hozzájuk nem található adatú tárgyak megtartják eredeti nyelvüket.",
+  "settingsDataLanguageUnset": "Nincs beállítva (nincs átalakítás)",
+  "settingsDataLanguageUnify": "Adatok nyelvének átalakítása most",
+  "settingsDataLanguageUnifying": "Átalakítás...",
+  "settingsDataLanguageUnifyDone": "Átalakítva: {converted}, nem alakítható át: {unresolved}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Az átalakítás sikertelen, az adatok nem változtak. Ellenőrizze a hálózatot, és próbálja újra.",
+  "settingsDataManagement": "Adatkezelés",
+  "settingsGameDir": "Játékmappa",
+  "settingsGameDirAuto": "Automatikusan észlelve: {path}",
+  "@settingsGameDirAuto": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Kézzel beállítva: {path}",
+  "@settingsGameDirManual": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "A játékmappa nem található",
+  "actionClearGameDir": "Törlés",
+  "settingsCloudSync": "Felhőszinkronizálás",
+  "cloudSyncIntro": "Kapcsolja össze Google-fiókját, hogy a gacha-előzményekről automatikusan biztonsági mentés készüljön a Google Drive-ra, és több eszköz is szinkronban maradjon.",
+  "cloudSyncUnconfigured": "Ebben a buildben nincsenek beállítva Google OAuth hitelesítő adatok; a felhőszinkronizálás nem érhető el.",
+  "cloudSyncLink": "Google-fiók összekapcsolása",
+  "cloudSyncAwaitingConsent": "Megnyílt a böngésző. Fejezze be az engedélyezést a böngészőben...",
+  "cloudSyncAwaitingConsentAndroid": "Fejezze be az engedélyezést a Google-ablakban...",
+  "cloudSyncLinkedAs": "Összekapcsolva: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Automatikus szinkronizálás",
+  "cloudSyncAutoToggleHint": "Automatikusan szinkronizál az alkalmazás indításakor és az adatok változása után; kikapcsolva is elérhető a kézi szinkronizálás.",
+  "cloudSyncNow": "Szinkronizálás most",
+  "cloudSyncUnlink": "Leválasztás",
+  "cloudSyncUnlinkConfirmTitle": "Leválasztja a fiókot?",
+  "cloudSyncUnlinkConfirmBody": "A szinkronizálás leáll. A helyi adatok és a felhőben lévő biztonsági mentés is megmarad.",
+  "cloudSyncLastSynced": "Utolsó szinkronizálás: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Még nem volt szinkronizálás",
+  "cloudSyncErrorNetwork": "Sikertelen szinkronizálás: hálózati probléma. Automatikus újrapróbálás következik.",
+  "cloudSyncErrorBusy": "Szinkronizálás elhalasztva: frissítés vagy importálás van folyamatban. Automatikus újrapróbálás következik.",
+  "cloudSyncErrorSchemaTooNew": "Szinkronizálás kihagyva: a felhőben lévő adatokat az alkalmazás egy újabb verziója hozta létre. Először frissítse az alkalmazást.",
+  "cloudSyncErrorAuthFailed": "Sikertelen engedélyezés. Próbálja újra.",
+  "cloudSyncErrorScopeMissing": "Az engedélyezés nem tartalmazta a Google Drive-hozzáférést. Kapcsolja össze újra a fiókot, és a Google hozzájárulási oldalán jelölje be a Drive-adatok jelölőnégyzetét.",
+  "cloudSyncReauthRequired": "Az engedélyezés lejárt. Kapcsolja össze újra Google-fiókját.",
+  "cloudSyncRemoveFromCloud": "A fiók eltávolítása a felhőszinkronizálási adatokból is",
+  "cloudSyncPostAuthTitle": "Az engedélyezés befejeződött",
+  "cloudSyncPostAuthBody": "Bezárhatja ezt a lapot, és visszatérhet az alkalmazásba.",
+  "cloudSyncPostAuthScopeMissingTitle": "Hiányzó Google Drive-engedély",
+  "cloudSyncPostAuthScopeMissingBody": "A Google Drive-adatok jelölőnégyzete nem volt bejelölve. Térjen vissza az alkalmazásba, kapcsolja össze újra a fiókot, és jelölje be ezt az engedélyt.",
+  "settingsAccountManagement": "Fiókkezelés",
+  "settingsPrivacySectionTitle": "Adatvédelem",
+  "settingsMaskUidInUi": "UID elrejtése a felületen",
+  "settingsMaskUidInUiHint": "Bekapcsolva a felületen és a fióklistában az UID-nek csak az első 3 számjegye látszik, a többi rejtve marad (pl. 123•••••). Streameléshez vagy képernyőmegosztáshoz hasznos. A megosztható képeket, az exportált fájlokat és a törlés megerősítő ablakát nem érinti.",
+  "settingsAdPrivacyOptions": "Hirdetési adatvédelmi beállítások",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Módosítsa, hogy hozzájárul-e a személyre szabott hirdetések megjelenítéséhez.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Névjegy",
+  "settingsAboutVersion": "Verzió: {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Verziók más játékokhoz",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "A jövőben további játékok is jöhetnek...",
+  "contributorsTitle": "Közreműködők",
+  "contributorsSubtitle": "Külön köszönet mindazoknak, akik hozzájárultak a szoftver fejlesztéséhez!",
+  "contributorsProjectLeader": "Projektgazda",
+  "contributorsTesters": "Tesztelők",
+  "contributorsGithubContributors": "GitHub-közreműködők",
+  "contributorsTranslationReviewer": "Fordításlektorok",
+  "contributorsTranslatedLanguages": "Elérhető nyelvek",
+  "contributorsHelpTranslate": "Nem érhető el az Ön nyelvén? Segítsen a fordításban!",
+  "contributorsProjectLicense": "Projektlicenc",
+  "pityRank": "{star} pity",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n} húzás a garanciáig",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Közel a garancia! Még {n} húzás",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Hamarosan garantált",
+  "pityNoMainRarity": "Még nincs {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Lejárt",
+  "pityAverageInterval": "Átlag {n} húzás",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Nincs {star} rekord",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n} húzás",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Most",
+  "timelineNowPulls": "{n} húzás",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n} húzás az utolsó {star} óta",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n} húzás az utolsó {star} óta, bannereken átívelően",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{year} / {month}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Görgetés balra",
+  "timelineScrollRight": "Görgetés jobbra",
+  "timelineLoadMore": "Továbbiak betöltése (még {n})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Minden ritkaság",
+  "filterRarityRankOnly": "Csak {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Minden típus",
+  "filterSearchHint": "Név keresése...",
+  "filterClear": "Szűrők törlése",
+  "pagerFirst": "Első",
+  "pagerLast": "Utolsó",
+  "pagerJumpTitle": "Ugrás oldalra",
+  "pagerJumpLabel": "Oldal ({min}–{max})",
+  "pagerJumpCurrent": "Jelenlegi oldal: {page} · {total} rekord",
+  "pagerJumpGo": "Ugrás",
+  "pagerJumpInvalid": "Adjon meg egy oldalt {min}–{max} között",
+  "settingsClearActive": "A jelenlegi fiók adatainak törlése",
+  "settingsClearAll": "Minden adat törlése",
+  "settingsRefetchHoyoWikiImagesTitle": "Tárgyképek kényszerített újralekérése",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Még nincsenek gacha-előzmények, nincs mit újralekérni",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Tárgyképek kényszerített újralekérése",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Ez törli a tárgyképek teljes helyi gyorsítótárát, és újra letölti az ikonokat a HoYoWiki oldalról. A tárgyak részletes képei igény szerint töltődnek le, amikor legközelebb megnyitja az adott tárgyat. A tárgyak számától függően ez több percnyi sávszélességet és időt igényelhet.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Újralekérés indítása",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Tárgyadatok",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "A tárgyak legfrissebb részleteinek (leírások, képlisták stb.) újralekérése a HoYoWiki oldalról; a már letöltött képek megmaradnak. Az új képek akkor töltődnek le, amikor megnyitja a tárgy részleteit.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Tárgyadatok frissítése",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Még nincsenek gacha-előzmények, nincs mit frissíteni",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Frissíti a tárgyadatokat?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Ez kapcsolatba lép a HoYoWiki oldallal, és újra lekéri az összes tárgy részleteit, ami a tárgyak számától függően eltarthat egy ideig. A már letöltött képek megmaradnak, és nem törlődnek.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Frissítés indítása",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Képgyorsítótár",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Összesen",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikonok",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Részletképek",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Számítás...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "A gyorsítótár mérete nem olvasható be",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Nem sikerült törölni a részletes képeket",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Részletképek törlése",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Törli a részletképeket?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Körülbelül {size} tárgyrészlet-kép törlődik; az ikonok gyorsítótára megmarad. A tárgy részleteinek következő megnyitásakor újra letöltődnek.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Törlés",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Adatok exportálása",
+  "settingsImportData": "Adatok importálása",
+  "shareImageButton": "Megosztható kép készítése",
+  "shareImageDialogTitle": "Megosztható kép beállításai",
+  "shareImageThemeLabel": "Téma",
+  "shareImageThemeDark": "Sötét",
+  "shareImageThemeLight": "Világos",
+  "shareImageShowFullUid": "Teljes UID megjelenítése a képen",
+  "shareImageShowFullUidHint": "Kikapcsolva csak az első 3 számjegy látszik, a többit • jelek takarják",
+  "shareImageUpdatedAt": "Frissítve: {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Vágólapra másolva",
+  "shareImageFailed": "Nem sikerült elkészíteni a megosztható képet",
+  "shareImageActionCopy": "Kép másolása",
+  "shareImageActionSave": "Kép mentése",
+  "shareImageCopyFailed": "Nem sikerült a vágólapra másolni",
+  "shareImageGenerating": "Megosztási kép létrehozása...",
+  "shareImageSaved": "Mentve: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Sikeres exportálás",
+  "exportDialogFailedTitle": "Sikertelen exportálás",
+  "settingsExportFailed": "Sikertelen exportálás: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Exportálva ide: {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Importálás megerősítése",
+  "settingsImportConfirmIntro": "{accounts} fiók importálása következik (összesen {records} rekord):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Az alábbi fiókok egyesülnek a helyi adatokkal; a meglévő rekordok nem törlődnek:",
+  "settingsImportConfirmNoConflict": "Nincs adatütközés.",
+  "settingsImportConfirmPreserveFooter": "A többi meglévő fiók ({uids}) megmarad.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts} fiók sikeresen importálva ({records} rekord)",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Importálva: {success}/{total} fiók; sikertelen: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Sikertelen importálás: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "A fájl formátuma érvénytelen, vagy a fájl sérült",
+  "importReasonUnsupportedVersion": "Ezt a fájlt az alkalmazás újabb verziója exportálta. Importálás előtt frissítse az alkalmazást.",
+  "importReasonUnreadable": "A fájl nem olvasható",
+  "exportReasonWriteFailed": "A fájl nem írható. Ellenőrizze a mentési helyet és az engedélyeket",
+  "importReasonForeignApp": "Ezt a fájlt nem ez az alkalmazás exportálta",
+  "settingsExportSelectTitle": "Exportálandó fiókok kiválasztása",
+  "settingsImportSelectTitle": "Importálandó fiókok kiválasztása",
+  "settingsImportMergeBadge": "Egyesítés",
+  "accountsPickerSelectAll": "Összes kijelölése",
+  "accountRecordCount": "{n} rekord",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Megerősítés",
+  "confirmClearActiveBody": "Ez véglegesen törli a(z) {uid} UID összes kívánságelőzményét. A megerősítéshez írja be az UID-t:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Ez véglegesen törli az összes fiók kívánságelőzményeit. A megerősítéshez írja be a DELETE szót:",
+  "confirmDelete": "Törlés",
+  "confirmImport": "Importálás",
+  "confirmExport": "Exportálás",
+  "confirmContinue": "Folytatás",
+  "accountListEmpty": "Még nincsenek fiókok",
+  "accountLastUpdated": "Utolsó frissítés: {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktív",
+  "accountSetActive": "Beállítás aktívként",
+  "accountRemove": "Eltávolítás",
+  "accountAdd": "Fiók hozzáadása",
+  "accountAliasLabel": "Becenév",
+  "accountAliasHint": "Könnyen felismerhető név ehhez a fiókhoz",
+  "accountAliasNone": "Nincs becenév",
+  "accountActionEditAlias": "Becenév szerkesztése",
+  "accountEditAliasTitle": "Becenév szerkesztése",
+  "accountDragHandleTooltip": "Húzza az átrendezéshez",
+  "loadingBootstrap": "Betöltés...",
+  "timelineTopRarityTitle": "{star} idővonal ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Legmagasabb ritkaság száma bannerenként",
+  "bannerTopRarityPullsSinceLast": "{n} húzás az utolsó {star} óta",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Új verzió érhető el: {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Megjelent: {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Letöltés",
+  "updateButtonSkip": "Verzió kihagyása",
+  "updateButtonLater": "Később",
+  "updateCheckButton": "Frissítések keresése",
+  "updateChecking": "Ellenőrzés...",
+  "updateAlreadyLatest": "A legújabb verziót használja",
+  "updateCheckFailed": "Sikertelen frissítéskeresés: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Nem sikerült csatlakozni, ellenőrizze a hálózatot",
+  "updateErrorTimeout": "A kérés túllépte az időkorlátot",
+  "updateErrorRateLimited": "Elfogyott a GitHub API-kvóta, próbálja újra később",
+  "updateErrorServer": "Szerverhiba (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Váratlan válaszformátum",
+  "currentReleaseTitle": "A jelenlegi verzió kiadási megjegyzései",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Nem találhatók kiadási megjegyzések ehhez a verzióhoz: {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Megtekintés a GitHubon",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Ugrás a GitHub Releases oldalra",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Kiadási megjegyzések",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Nem sikerült törölni a tárgyképek gyorsítótárát: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Hibakeresési naplók",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Ha problémába ütközik, exportálja a naplókat, hogy segítsen a fejlesztőknek a kivizsgálásban.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Probléma jelentése",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Naplók exportálása",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Naplómappa megnyitása",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Összes napló törlése",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Naplók exportálva: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Sikertelen naplóexportálás: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Ez véglegesen törli a logs/ mappa összes fájlját. Ha hibajelentéshez szüksége van rájuk, előbb exportálja őket. A megerősítéshez írja be: CLEAR",
   "galleryCardLabel": "Kártya",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +999,283 @@
   "galleryIconLabel": "Ikon",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Előző",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Következő",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Görgetés lefelé",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Megtekintés a HoYoWiki oldalon",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Nem sikerült betölteni a képet",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Újra",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Képelőnézet bezárása",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kép másolása",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Kép mentése",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Nagyítás",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Kicsinyítés",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Kép újralekérése",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "A kép a vágólapra másolva",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Nem sikerült másolni a képet",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Nem sikerült menteni a képet",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Mentve ide: {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Szerencsés",
+  "luckTierAverage": "Átlagos",
+  "luckTierUnlucky": "Szerencsétlen",
+  "manualUrlEntry": "A kívánságelőzmények URL-jének kézi megadása",
+  "manualUrlTitle": "A kívánságelőzmények URL-jének kézi megadása",
+  "manualUrlHint": "Ha a kívánságelőzmények URL-jét már másképp megszerezte (például egy számítógépes eszközzel), ide beillesztheti. A teljes szöveg beillesztése is működik; az alkalmazás automatikusan megtalálja az URL-t.",
+  "manualUrlFieldHint": "URL beillesztése...",
+  "manualUrlPaste": "Beillesztés a vágólapról",
+  "manualUrlNotFound": "Nem található a kívánságelőzmények URL-je. Ellenőrizze a beillesztett tartalmat.",
+  "manualUrlWarning": "Az URL a fiókja hitelesítő adatait tartalmazza. Ne ossza meg nyilvánosan. Egy idő után lejár.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Várakozás arra, hogy megnyissa a játékban a Wish History oldalt...",
+  "progressOpenGameHintAndroid": "Nyissa meg: Genshin Impact → Wish → History",
+  "progressCheckingLogAccess": "Felkészülés a játéknapló olvasására...",
+  "progressLogUnavailableTitle": "A kívánságelőzmények URL-je nem szerezhető meg automatikusan",
+  "logUnavailableNotPaired": "A játéknapló olvasása még nincs beállítva. Egyszeri beállítás után minden frissítés automatikusan beolvassa.",
+  "logUnavailableNoWifi": "A vezeték nélküli hibakeresés csak Wi‑Fi-n működik. Csatlakozzon Wi‑Fi-hálózathoz, majd térjen vissza; az alkalmazás automatikusan folytatja. Az URL-t kézzel is megadhatja.",
+  "logRootDeniedHint": "Root észlelhető, de ez az alkalmazás nem kapott root-hozzáférést. A roottal történő beolvasáshoz engedélyezze az alkalmazást a rootkezelőben (például a Magisk Superuser listájában), majd térjen vissza; az alkalmazás automatikusan újrapróbálja.",
+  "logUnavailableAdbFailed": "Nem sikerült csatlakozni a vezeték nélküli hibakereséshez. Lehet, hogy a párosítás lejárt; párosítsa újra.",
+  "logUnavailableWirelessOff": "Az eszköze nem engedi, hogy ez az alkalmazás bekapcsolja a vezeték nélküli hibakeresést. Kapcsolja be a Vezeték nélküli hibakeresés oldalon, majd térjen vissza; az alkalmazás automatikusan folytatja.",
+  "logUnavailableNetworkNotAllowed": "Ez a Wi‑Fi-hálózat még nincs engedélyezve a vezeték nélküli hibakereséshez. Koppintson az Engedélyezés gombra a rendszerüzenetben (jelölje be a „Mindig engedélyezés ezen a hálózaton” lehetőséget, hogy ne kérdezzen újra), és az alkalmazás automatikusan folytatja. Ha bezárta az üzenetet, koppintson az Újra gombra.",
+  "logUnavailableUnsupported": "Ez az eszköz nem tudja automatikusan beolvasni a kívánságelőzmények URL-jét (Android 11 vagy újabb, illetve root szükséges). Adja meg kézzel.",
+  "logUnavailableGameNotInstalled": "A Genshin Impact nincs telepítve ezen az eszközön. Telepítés után térjen vissza ide, és automatikusan észleli.",
+  "actionOpenGame": "Genshin Impact megnyitása",
+  "actionOpenWirelessDebugging": "Vezeték nélküli hibakeresés megnyitása",
+  "progressLogConnectionLost": "Megszakadt a kapcsolat a vezeték nélküli hibakereséssel, újracsatlakozás... Ha nem áll helyre, ellenőrizze a Wi‑Fi-t, vagy adja meg kézzel az URL-t.",
+  "progressWirelessLeftOnHint": "A vezeték nélküli hibakeresés még be van kapcsolva. A rendszerbeállításokban kikapcsolhatja.",
+  "progressCredentialReady": "Megvan a kívánságelőzmények URL-je. A kívánságelőzmények lekérése akkor indul, amikor visszatér az alkalmazásba.",
+  "actionRedetectGame": "Újbóli ellenőrzés",
+  "updateOpenPlayStore": "Google Play megnyitása",
+  "actionSetupLogAccess": "Beállítás",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Újrapárosítás",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Rendszernapló olvasása",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Miért van erre szükség?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Az Android nem engedi, hogy az alkalmazások más alkalmazások rendszernaplóit olvassák. Ez az alkalmazás a beépített Vezeték nélküli hibakeresés funkcióval olvassa be a kívánságelőzmények URL-jét a Genshin Impact játékból.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Mit csinál az alkalmazás",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Csak a kívánságelőzmények URL-jét olvassa be a Genshin Impact játékból\n• A beolvasás után azonnal bontja a kapcsolatot, és kikapcsolja a vezeték nélküli hibakeresést, ha azt ez az alkalmazás kapcsolta be\n• Engedélyt ad magának a vezeték nélküli hibakeresés be- és kikapcsolására, így nem kell újra beállítania\n• Ezt bármikor visszavonhatja a Beállításokban",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Követelmények",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 vagy újabb, Wi‑Fi, engedélyezett értesítések",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Beállítás indítása",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Inkább az URL kézi megadása",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Vezeték nélküli hibakeresés párosítása",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Kapcsolja be a Fejlesztői beállításokat",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Nyissa meg a rendszer Beállításaiban az eszköz névjegyoldalát (például „A telefonról” vagy „A táblagépről”)\n2. Keresse meg a „Buildszám” elemet, és koppintson rá 7-szer\n3. Amikor megjelenik az „Ön mostantól fejlesztő” üzenet, térjen vissza ebbe az alkalmazásba",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "A Fejlesztői beállítások továbbra is ki vannak kapcsolva. Ha a „Buildszám” koppintásakor a rendszer azt jelezte, hogy nincs több teendő (például „Ön már fejlesztő”), akkor a Fejlesztői beállítások főkapcsolója ki van kapcsolva. Nyissa meg a Fejlesztői beállításokat, kapcsolja be a legfelső kapcsolót, majd térjen vissza ebbe az alkalmazásba.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Névjegyoldal megnyitása",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. A Fejlesztői beállítások be vannak kapcsolva",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Értesítések engedélyezése",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "A párosítókódot egy értesítésben kell majd megadnia, ezért engedélyezze, hogy az alkalmazás értesítéseket jelenítsen meg.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Értesítések engedélyezése",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Értesítési beállítások megnyitása",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Értesítések engedélyezve",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Párosítás",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Koppintson az alábbi gombra a Vezeték nélküli hibakeresés megnyitásához\n2. Kapcsolja be a „Vezeték nélküli hibakeresés használata” lehetőséget, és koppintson az „Eszköz párosítása párosítókóddal” elemre\n3. Húzza le az ujját a képernyő tetejéről, és az alkalmazás értesítésébe írja be a Vezeték nélküli hibakeresés párosítási képernyőjén látható 6 számjegyű párosítókódot",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Várakozás a párosítókód megadására az értesítésben...\nAdja meg, amíg a Vezeték nélküli hibakeresés párosítási képernyője még nyitva van.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Vezeték nélküli hibakeresés újbóli megnyitása",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Párosítás...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Párosítva, még egy lépés",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Az eszközén további biztonsági korlátozás van érvényben. Kapcsoljon be még egy beállítást, hogy az alkalmazás automatikusan be- és kikapcsolhassa a vezeték nélküli hibakeresést.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "A bekapcsolás módja",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Nyissa meg a Fejlesztői beállításokat\n2. Keresse meg az USB-hibakeresés biztonságához vagy az engedélyfigyeléshez kapcsolódó kapcsolót, és kapcsolja be, például:\n• Xiaomi: „USB-hibakeresés (Biztonsági beállítások)”\n• OPPO / realme: „Engedélyfigyelés kikapcsolása”\n3. Győződjön meg róla, hogy a vezeték nélküli hibakeresés be van kapcsolva, majd térjen vissza, és koppintson az Újra gombra",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Fejlesztői beállítások megnyitása",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Újra",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Kihagyás (a vezeték nélküli hibakeresést minden frissítéskor saját maga kapcsolja be)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Kész",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Mostantól a Frissítés automatikusan beolvassa a naplót. Nincs szükség további beállításra.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Amikor a Frissítés gombra koppint, kérésre kapcsolja be a vezeték nélküli hibakeresést.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Visszatérés és a frissítés indítása...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Hozzáférés a játéknaplóhoz",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Vezeték nélküli hibakeresés",
+  "logAccessMethodNone": "Nincs beállítva",
+  "settingsPairingStatus": "Párosítás",
+  "settingsPaired": "Párosítva",
+  "settingsPairedManual": "Párosítva (a vezeték nélküli hibakeresést kézzel kell bekapcsolni)",
+  "settingsRetryGrant": "Engedély újrapróbálása",
+  "settingsSetupLogAccess": "Beállítás",
+  "settingsUnpair": "Párosítás eltávolítása",
+  "settingsUnpairConfirmTitle": "Eltávolítja a párosítást?",
+  "settingsUnpairConfirmBody": "Ez törli az alkalmazás párosítási kulcsát, és visszavonja az alkalmazás engedélyét a vezeték nélküli hibakeresés kapcsolására. Ha később újra használni szeretné a vezeték nélküli hibakeresést, újra párosítania kell.",
+  "settingsUnpairDone": "Párosítás eltávolítva",
+  "settingsUnpairDoneBody": "Az alkalmazás párosítási kulcsa törölve, és visszavonva az engedélye a vezeték nélküli hibakeresés be- és kikapcsolására.",
+  "settingsUnpairUnreachableTitle": "Párosítási kulcs törölve",
+  "settingsUnpairUnreachableBody": "Az alkalmazás párosítási kulcsa törölve, de ezúttal nem sikerült csatlakozni a vezeték nélküli hibakereséshez, így a be- és kikapcsolására vonatkozó engedély nincs visszavonva.",
+  "settingsUnpairUnreachableRevokeHint": "Párosítás nélkül az alkalmazás nem használja ezt az engedélyt. A teljes visszavonáshoz csatlakozzon Wi‑Fi-hálózathoz, párosítson újra, majd szüntesse meg ismét a párosítást.",
+  "settingsUnpairLeftover": "A rendszer Vezeték nélküli hibakeresés → Párosított eszközök listájában továbbra is megjelenik a(z) „{name}”. Már nem tud csatlakozni, így nyugodtan ott hagyhatja; eltávolításához koppintson rá, és törölje.",
+  "settingsUnpairLeftoverAlso": "A rendszer Vezeték nélküli hibakeresés → Párosított eszközök listájában szintén megjelenik még a(z) „{name}”; koppintson rá a törléséhez.",
+  "settingsLogAccessMethod": "Módszer",
+  "actionShare": "Megosztás",
+  "shareFailed": "Nem sikerült megosztani",
+  "dialogSaveAsTitle": "Mentés másként",
+  "dialogOpenTitle": "Megnyitás",
+  "dialogSelectFolderTitle": "Mappa kiválasztása",
+  "actionSave": "Mentés",
+  "settingsLogsShare": "Naplók megosztása"
 }

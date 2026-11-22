@@ -1,5 +1,997 @@
 {
   "@@locale": "af",
+  "localeNativeName": "Afrikaans",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Vertaling: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Dateer op",
+  "actionCancel": "Kanselleer",
+  "actionClose": "Maak toe",
+  "actionPrevPage": "Vorige",
+  "actionNextPage": "Volgende",
+  "actionOpenFolder": "Maak gids oop",
+  "navOverview": "Oorsig",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Standard",
+  "navBeginner": "Novice",
+  "navSettings": "Instellings",
+  "navContributors": "Bydraers",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Odes",
+  "footerNotSynced": "Nie gesinkroniseer nie",
+  "footerLastUpdated": "Laas bygewerk: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Sopas",
+  "relativeSecondsAgo": "{count, plural, =1{1 sekonde gelede} other{{count} sekondes gelede}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{1 minuut gelede} other{{count} minute gelede}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{1 uur gelede} other{{count} uur gelede}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{1 dag gelede} other{{count} dae gelede}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{1 maand gelede} other{{count} maande gelede}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, =1{1 jaar gelede} other{{count} jaar gelede}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Wissel rekening",
+  "uidNotSynced": "Nie gesinkroniseer nie",
+  "uidActiveSuffix": " (aktief)",
+  "emptyNoSyncTitle": "Nog geen data gesinkroniseer nie",
+  "emptyNoSyncMessage": "Tik op {icon} regs bo om te begin",
+  "emptyNoRecords": "Geen rekords vir hierdie banner nie",
+  "emptyNoFilterMatch": "Geen rekords pas by die huidige filter nie",
+  "emptyNoOdesRecords": "Nog geen rekords vir Odes nie",
+  "emptyNoGachaRecords": "Nog geen wensrekords nie",
+  "statsTotal": "Totale trekke",
+  "statsRankCount": "Aantal {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% van totaal",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Skaarsheidsverdeling",
+  "statsItemTypeDistribution": "Tipeverdeling",
+  "statsNoData": "Geen data nie",
+  "kindUnknown": "Onbekend",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Tyd",
+  "tableName": "Naam",
+  "tableKind": "Tipe",
+  "tableRarity": "Skaarsheid",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Totaal",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Sorteer: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sorteer: verstek",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sorteer volgens",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Trekke sedert die laaste {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Dalend",
+  "sortDirectionAsc": "Stygend",
+  "sortHintClickToSort": "Klik om te sorteer",
+  "progressPreparing": "Berei voor...",
+  "progressPreparingHint": "Berei databron voor...",
+  "progressConvertingHint": "Skakel datataal om, wag asseblief...",
+  "progressWaiting": "Wag vir onderskepping...",
+  "progressFetching": "Haal tans op...",
+  "progressDone": "Opdatering voltooi",
+  "progressFailed": "Misluk",
+  "progressOpenGameHint": "Maak Genshin → Wishes → History oop",
+  "progressFallbackHint": "(Die vorige wensgeskiedenis-URL het verval en moet weer verkry word)",
+  "progressNotDetectedLink": "Wish History oopgemaak, maar niks gebeur nie?",
+  "progressCaptureUnavailableHint": "Kon nie die onderskepper begin nie (die sertifikaat is dalk geweier of die poort is in gebruik), so bespeuring val terug op slegs die speletjie se webkas. Maak die Wish History in die speletjie oop.",
+  "progressCaptureUnavailableNoGameDirHint": "Kon nie die onderskepper begin nie (die sertifikaat is dalk geweier of die poort is in gebruik), en die speletjie-gids is ook nie gevind nie. Klik hieronder op “Kies speletjie-gids” om dit handmatig te stel.",
+  "gameDirHelpTitle": "Wish History nie bespeur nie",
+  "gameDirHelpNotFound": "Kon nie die Genshin Impact-speletjie-gids vind nie. Sodra jy die speletjie-gids kies, kan hierdie hulpmiddel ook die wensgeskiedenis-URL uit die speletjie se webkas haal.",
+  "gameDirHelpFound": "Speletjie-gids wat tans gebruik word: {path}. As dit nie die kopie van die speletjie is wat jy speel nie, kies asseblief weer.",
+  "@gameDirHelpFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Speletjie-gids gestel. Gaan terug na die speletjie en maak die Wish History weer oop.",
+  "gameDirInvalid": "Genshin Impact is nie in hierdie gids gevind nie. Kies asseblief die “Genshin Impact game”-gids.",
+  "actionChooseGameDir": "Kies speletjie-gids",
+  "actionRechooseGameDir": "Kies weer",
+  "progressFetchingBanner": "Haal tans op: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Bladsy {page}, tot dusver {count, plural, =1{1 nuwe rekord} other{{count} nuwe rekords}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{1 nuwe rekord bygevoeg} other{{count} nuwe rekords bygevoeg}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, =1{1 itembeeld afgelaai} other{{count} itembeelde afgelaai}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, =1{Data van 1 item opgedateer} other{Data van {count} items opgedateer}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{1 itembeeld aangevul} other{{count} itembeelde aangevul}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Verouderde taaldata van 1 item opgeruim} other{Verouderde taaldata van {count} items opgeruim}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Gedeeltelik misluk: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{1 rekening ingevoer} other{{accounts} rekeninge ingevoer}}: {added} nuut, {duplicate} reeds teenwoordig",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Invoer gedeeltelik misluk: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Soek itemdata {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Haal itemdetails op {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Laai itembeelde af {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Verifikasie verval aanhoudend; meld asseblief weer by die speletjie aan",
+  "errorRateLimited": "Te veel versoeke; probeer asseblief later weer",
+  "errorServer": "Bedienerfout: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Hierdie rekening het nog geen wensrekords nie",
+  "pageOverviewTitle": "Oorsig (alle banners)",
+  "pageOverviewGachaSection": "Wensoorsig",
+  "pageOverviewOdesSection": "Oorsig van Odes",
+  "pageBannerRecordList": "Rekordlys",
+  "rarityOverviewTitle": "Oorsig {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Instellings",
+  "settingsAppearance": "Voorkoms",
+  "settingsThemeSystem": "Volg stelsel",
+  "settingsThemeDark": "Donker",
+  "settingsThemeLight": "Lig",
+  "settingsLanguage": "Taal",
+  "settingsLocaleSystem": "Volg stelsel",
+  "settingsDataLanguage": "Datataal",
+  "settingsDataLanguageDesc": "Maak die vertoontaal van die gacha-geskiedenisdata eenvormig, onafhanklik van die taal van die appkoppelvlak. Sodra dit gestel is, word opgedateerde of ingevoerde data outomaties na hierdie taal omgeskakel. Rekords van Odes en items sonder passende data behou hul oorspronklike taal.",
+  "settingsDataLanguageUnset": "Nie gestel nie (geen omskakeling)",
+  "settingsDataLanguageUnify": "Skakel datataal nou om",
+  "settingsDataLanguageUnifying": "Skakel om...",
+  "settingsDataLanguageUnifyDone": "{converted} omgeskakel, {unresolved} kon nie omgeskakel word nie.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Omskakeling het misluk, data onveranderd. Kontroleer asseblief jou netwerk en probeer weer.",
+  "settingsDataManagement": "Databestuur",
+  "settingsGameDir": "Speletjie-gids",
+  "settingsGameDirAuto": "Outomaties bespeur: {path}",
+  "@settingsGameDirAuto": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Handmatig gestel: {path}",
+  "@settingsGameDirManual": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Speletjie-gids nie gevind nie",
+  "actionClearGameDir": "Vee uit",
+  "settingsCloudSync": "Wolksinkronisering",
+  "cloudSyncIntro": "Koppel jou Google-rekening om gacha-data outomaties na jou Google Drive te rugsteun en verskeie toestelle gesinkroniseer te hou.",
+  "cloudSyncUnconfigured": "Hierdie bou het geen Google OAuth-bewyse gestel nie; wolksinkronisering is nie beskikbaar nie.",
+  "cloudSyncLink": "Koppel Google-rekening",
+  "cloudSyncAwaitingConsent": "Blaaier oopgemaak. Voltooi asseblief die magtiging in jou blaaier...",
+  "cloudSyncAwaitingConsentAndroid": "Voltooi asseblief die magtiging in die Google-venster...",
+  "cloudSyncLinkedAs": "Gekoppel: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Outomatiese sinkronisering",
+  "cloudSyncAutoToggleHint": "Sinkroniseer outomaties by app-begin en na dataveranderinge; handmatige sinkronisering bly beskikbaar as dit af is.",
+  "cloudSyncNow": "Sinkroniseer nou",
+  "cloudSyncUnlink": "Ontkoppel",
+  "cloudSyncUnlinkConfirmTitle": "Ontkoppel",
+  "cloudSyncUnlinkConfirmBody": "Sinkronisering sal stop. Beide plaaslike data en die wolkrugsteun word behou.",
+  "cloudSyncLastSynced": "Laas gesinkroniseer: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Nog nie gesinkroniseer nie",
+  "cloudSyncErrorNetwork": "Sinkronisering het misluk: netwerkprobleem. Sal outomaties weer probeer.",
+  "cloudSyncErrorBusy": "Sinkronisering uitgestel: ’n opdatering of invoer is aan die gang. Sal outomaties weer probeer.",
+  "cloudSyncErrorSchemaTooNew": "Sinkronisering oorgeslaan: die wolkdata is deur ’n nuwer app-weergawe geskep. Dateer asseblief eers die app op.",
+  "cloudSyncErrorAuthFailed": "Magtiging het misluk. Probeer asseblief weer.",
+  "cloudSyncErrorScopeMissing": "Die magtiging het nie Google Drive-toegang ingesluit nie. Koppel asseblief weer en merk die Drive-data-blokkie op die Google-toestemmingsbladsy.",
+  "cloudSyncReauthRequired": "Magtiging het verval. Koppel asseblief jou Google-rekening weer.",
+  "cloudSyncRemoveFromCloud": "Verwyder hierdie rekening ook uit die wolksinkroniseringsdata",
+  "cloudSyncPostAuthTitle": "Magtiging voltooi",
+  "cloudSyncPostAuthBody": "Jy kan hierdie oortjie toemaak en na die app terugkeer.",
+  "cloudSyncPostAuthScopeMissingTitle": "Google Drive-toestemming ontbreek",
+  "cloudSyncPostAuthScopeMissingBody": "Die Google Drive-data-blokkie is nie gemerk nie. Gaan terug na die app, koppel weer en merk daardie toestemming.",
+  "settingsAccountManagement": "Rekeningbestuur",
+  "settingsPrivacySectionTitle": "Privaatheid",
+  "settingsMaskUidInUi": "Versteek UID in koppelvlak",
+  "settingsMaskUidInUiHint": "Wanneer dit aan is, wys UID’s in die koppelvlak en rekeninglys die eerste 3 syfers en word die res verberg (bv. 123•••••). Handig vir stroming of skermdeling. Deelbeelde, uitgevoerde lêers en die skrapbevestigingsdialoog word nie geraak nie.",
+  "settingsAdPrivacyOptions": "Advertensie-privaatheidopsies",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Verander of jy toestemming gee om gepersonaliseerde advertensies te sien.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Oor",
+  "settingsAboutVersion": "Weergawe {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Weergawes vir ander speletjies",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "Meer speletjies word dalk in die toekoms ondersteun...",
+  "contributorsTitle": "Bydraers",
+  "contributorsSubtitle": "Besondere dank aan die volgende vennote wat tot die ontwikkeling van hierdie sagteware bygedra het!",
+  "contributorsProjectLeader": "Projekmoderator",
+  "contributorsTesters": "Toetsers",
+  "contributorsGithubContributors": "GitHub-bydraers",
+  "contributorsTranslationReviewer": "Vertaalkorrektors",
+  "contributorsTranslatedLanguages": "Beskikbare tale",
+  "contributorsHelpTranslate": "Is jou taal nie beskikbaar nie? Help ons vertaal!",
+  "contributorsProjectLicense": "Projeklisensie",
+  "pityRank": "{star}-pity",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, =1{Nog 1 trek tot gewaarborg} other{Nog {n} trekke tot gewaarborg}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Amper gewaarborg! {n, plural, =1{Nog 1 trek oor} other{Nog {n} trekke oor}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Binnekort gewaarborg",
+  "pityNoMainRarity": "Nog geen {star} nie",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Beëindig",
+  "pityAverageInterval": "Gem. {n} trekke",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Geen {star}-rekords nie",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{1 trek} other{{n} trekke}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Nou",
+  "timelineNowPulls": "{n, plural, =1{1 trek} other{{n} trekke}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, =1{1 trek sedert die laaste {star}} other{{n} trekke sedert die laaste {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 trek sedert die laaste {star} oor banners heen} other{{n} trekke sedert die laaste {star} oor banners heen}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Rol links",
+  "timelineScrollRight": "Rol regs",
+  "timelineLoadMore": "Laai meer ({n} oor)",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Alle skaarsheidsvlakke",
+  "filterRarityRankOnly": "Slegs {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Alle tipes",
+  "filterSearchHint": "Soek naam...",
+  "filterClear": "Maak filters skoon",
+  "pagerFirst": "Eerste",
+  "pagerLast": "Laaste",
+  "pagerJumpTitle": "Gaan na bladsy",
+  "pagerJumpLabel": "Bladsy ({min}–{max})",
+  "pagerJumpCurrent": "Tans op bladsy {page} · {total, plural, =1{1 rekord} other{{total} rekords}}",
+  "pagerJumpGo": "Gaan",
+  "pagerJumpInvalid": "Voer ’n bladsy van {min}–{max} in",
+  "settingsClearActive": "Vee huidige rekening se data uit",
+  "settingsClearAll": "Vee alle data uit",
+  "settingsRefetchHoyoWikiImagesTitle": "Forseer heraflaai van itembeelde",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Nog geen gacha-rekords nie, niks om weer op te haal nie",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Forseer heraflaai van itembeelde",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Dit sal die hele plaaslike itembeeldkas leegmaak en die ikone weer vanaf HoYoWiki aflaai. Itemdetailbeelde word volgende keer wanneer jy die item oopmaak op aanvraag afgelaai. Afhangend van die aantal items kan dit etlike minute en data neem.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Begin heraflaai",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Itemdata",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Haal die nuutste itemdetails (beskrywings, beeldlyste ens.) weer vanaf HoYoWiki op; reeds afgelaaide beelde word behou. Nuwe beelde word afgelaai wanneer jy die item se besonderhede oopmaak.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Dateer itemdata op",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Nog geen gacha-rekords nie, niks om op te dateer nie",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Dateer itemdata op?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Dit sal met HoYoWiki skakel om die besonderhede van alle items weer op te haal. Afhangend van die aantal items kan dit ’n rukkie neem. Reeds afgelaaide beelde word behou en nie uitgevee nie.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Begin opdatering",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Beeldkas",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Totaal",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikone",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Detailbeelde",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Bereken tans...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Kan nie kasgrootte lees nie",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Kon nie detailbeelde uitvee nie",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Vee detailbeelde uit",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Vee detailbeelde uit?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Ongeveer {size} se itemdetailbeelde sal uitgevee word; die ikoonkas word behou. Hulle word weer afgelaai wanneer jy die volgende keer die itemdetails oopmaak.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Vee uit",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Voer data uit",
+  "settingsImportData": "Voer data in",
+  "shareImageButton": "Skep deelbeeld",
+  "shareImageDialogTitle": "Deelbeeld-opsies",
+  "shareImageThemeLabel": "Tema",
+  "shareImageThemeDark": "Donker",
+  "shareImageThemeLight": "Lig",
+  "shareImageShowFullUid": "Wys volledige UID op beeld",
+  "shareImageShowFullUidHint": "Wanneer dit af is, word slegs die eerste 3 syfers gewys en die res met • verberg",
+  "shareImageUpdatedAt": "Opgedateer {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Na knipbord gekopieer",
+  "shareImageFailed": "Kon nie deelbeeld skep nie",
+  "shareImageActionCopy": "Kopieer beeld",
+  "shareImageActionSave": "Stoor beeld",
+  "shareImageCopyFailed": "Kon nie na knipbord kopieer nie",
+  "shareImageGenerating": "Skep tans deelbeeld...",
+  "shareImageSaved": "Gestoor: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Uitvoer suksesvol",
+  "exportDialogFailedTitle": "Uitvoer het misluk",
+  "settingsExportFailed": "Uitvoer het misluk: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Uitgevoer na {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Invoerbevestiging",
+  "settingsImportConfirmIntro": "Op die punt om {accounts, plural, =1{1 rekening} other{{accounts} rekeninge}} in te voer ({records, plural, =1{1 rekord} other{{records} rekords}} altesaam):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Die volgende rekeninge sal met plaaslike data saamgevoeg word; bestaande rekords word nie uitgevee nie:",
+  "settingsImportConfirmNoConflict": "Geen datakonflikte nie.",
+  "settingsImportConfirmPreserveFooter": "Ander bestaande rekeninge ({uids}) sal behou word.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts, plural, =1{1 rekening} other{{accounts} rekeninge}} ({records, plural, =1{1 rekord} other{{records} rekords}}) suksesvol ingevoer",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "{success}/{total} rekeninge ingevoer; misluk: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Invoer het misluk: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Die lêerformaat is ongeldig of die lêer is beskadig",
+  "importReasonUnsupportedVersion": "Hierdie lêer is deur ’n nuwer weergawe van die app uitgevoer. Dateer asseblief die app op voordat jy invoer.",
+  "importReasonUnreadable": "Kan nie die lêer lees nie",
+  "exportReasonWriteFailed": "Kan nie die lêer skryf nie; kontroleer asseblief die stoorplek en toestemmings",
+  "importReasonForeignApp": "Hierdie lêer is nie deur die app uitgevoer nie",
+  "settingsExportSelectTitle": "Kies rekeninge om uit te voer",
+  "settingsImportSelectTitle": "Kies rekeninge om in te voer",
+  "settingsImportMergeBadge": "Voeg saam",
+  "accountsPickerSelectAll": "Kies alles",
+  "accountRecordCount": "{n, plural, =1{1 rekord} other{{n} rekords}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Bevestig",
+  "confirmClearActiveBody": "Dit sal alle wensrekords van UID {uid} permanent uitvee. Tik die UID in om te bevestig:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Dit sal die wensrekords van alle rekeninge permanent uitvee. Tik DELETE in om te bevestig:",
+  "confirmDelete": "Vee uit",
+  "confirmImport": "Voer in",
+  "confirmExport": "Voer uit",
+  "confirmContinue": "Gaan voort",
+  "accountListEmpty": "Nog geen rekeninge nie",
+  "accountLastUpdated": "Laas bygewerk {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktief",
+  "accountSetActive": "Maak aktief",
+  "accountRemove": "Verwyder",
+  "accountAdd": "Voeg rekening by",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "’n Herkenbare naam vir hierdie rekening",
+  "accountAliasNone": "Geen alias gestel nie",
+  "accountActionEditAlias": "Wysig alias",
+  "accountEditAliasTitle": "Wysig alias",
+  "accountDragHandleTooltip": "Sleep om te herrangskik",
+  "loadingBootstrap": "Laai tans...",
+  "timelineTopRarityTitle": "{star}-tydlyn ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Hoogste skaarsheid per banner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 trek sedert die laaste {star}} other{{n} trekke sedert die laaste {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Nuwe weergawe {version} beskikbaar",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Vrygestel op {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Laai af",
+  "updateButtonSkip": "Slaan hierdie weergawe oor",
+  "updateButtonLater": "Later",
+  "updateCheckButton": "Kyk vir opdaterings",
+  "updateChecking": "Kyk tans...",
+  "updateAlreadyLatest": "Jy het die nuutste weergawe",
+  "updateCheckFailed": "Opdateringskontrole het misluk: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Kan nie koppel nie, kontroleer asseblief jou netwerk",
+  "updateErrorTimeout": "Versoek het uitgetel",
+  "updateErrorRateLimited": "GitHub API-kwota uitgeput, probeer asseblief later weer",
+  "updateErrorServer": "Bedienerfout (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Onverwagte antwoordformaat",
+  "currentReleaseTitle": "Vrystellingsnotas van huidige weergawe",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Geen vrystellingsnotas gevind vir {version} nie",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Bekyk op GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Gaan na GitHub Releases-bladsy",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Bekyk vrystellingsnotas",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Kon nie itembeeldkas uitvee nie: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Ontfoutingslogboeke",
+  "@settingsLogs": {},
+  "settingsLogsHint": "As jy probleme ondervind, voer die logboeke uit om ontwikkelaars te help ondersoek.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Rapporteer ’n probleem",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Voer logboeke uit",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Maak logboekgids oop",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Vee alle logboeke uit",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Logboeke uitgevoer: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Logboekuitvoer het misluk: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Dit sal alle lêers in logs/ permanent uitvee. Voer hulle eers uit as jy hulle vir ’n foutverslag nodig het. Tik CLEAR in om te bevestig.",
   "galleryCardLabel": "Kaart",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +999,283 @@
   "galleryIconLabel": "Ikoon",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Vorige",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Volgende",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Rol af",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Bekyk op HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Beeld kon nie laai nie",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Probeer weer",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Maak beeldvoorskou toe",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kopieer beeld",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Stoor beeld",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Zoem in",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Zoem uit",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Haal beeld weer op",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Beeld na knipbord gekopieer",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Kon nie beeld kopieer nie",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Kon nie beeld stoor nie",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Gestoor in {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Gelukkig",
+  "luckTierAverage": "Gemiddeld",
+  "luckTierUnlucky": "Ongelukkig",
+  "manualUrlEntry": "Voer wensgeskiedenis-URL handmatig in",
+  "manualUrlTitle": "Voer wensgeskiedenis-URL handmatig in",
+  "manualUrlHint": "As jy die wensgeskiedenis-URL reeds op ’n ander manier gekry het (byvoorbeeld met ’n hulpmiddel op jou rekenaar), kan jy dit hier plak. Jy mag ook die hele teks plak; die app vind die URL outomaties.",
+  "manualUrlFieldHint": "Plak URL...",
+  "manualUrlPaste": "Plak vanaf knipbord",
+  "manualUrlNotFound": "Geen wensgeskiedenis-URL gevind nie. Kontroleer asseblief wat jy geplak het.",
+  "manualUrlWarning": "Die URL bevat jou rekeningbewyse. Moenie dit openbaar deel nie. Dit verval ná ’n rukkie.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Wag dat jy die Wish History in die speletjie oopmaak...",
+  "progressOpenGameHintAndroid": "Maak Genshin Impact → Wish → History oop",
+  "progressCheckingLogAccess": "Maak gereed om die speletjielogboek te lees...",
+  "progressLogUnavailableTitle": "Kan nie die wensgeskiedenis-URL outomaties kry nie",
+  "logUnavailableNotPaired": "Die lees van die speletjielogboek is nog nie opgestel nie. Ná ’n eenmalige opstelling word dit by elke opdatering outomaties gelees.",
+  "logUnavailableNoWifi": "Draadlose ontfouting werk slegs op Wi‑Fi. Koppel aan Wi‑Fi en kom terug; die app gaan outomaties voort. Jy kan ook die URL handmatig invoer.",
+  "logRootDeniedHint": "Root is gevind, maar hierdie app het nie root-toegang gekry nie. Om met root te lees, laat hierdie app in jou root-bestuurder toe (byvoorbeeld Magisk se Superuser-lys) en kom dan terug; die app probeer outomaties weer.",
+  "logUnavailableAdbFailed": "Kon nie aan draadlose ontfouting koppel nie. Die saambinding het dalk verval; bind asseblief weer saam.",
+  "logUnavailableWirelessOff": "Jou toestel laat nie toe dat hierdie app draadlose ontfouting aanskakel nie. Skakel dit aan op die bladsy Draadlose ontfouting en kom terug; die app gaan outomaties voort.",
+  "logUnavailableNetworkNotAllowed": "Hierdie Wi‑Fi-netwerk is nog nie vir draadlose ontfouting toegelaat nie. Tik op Laat toe in die stelselvraag (merk “Laat altyd toe op hierdie netwerk” sodat dit nie weer vra nie) en die app gaan outomaties voort. As jy die vraag toegemaak het, tik op Probeer weer.",
+  "logUnavailableUnsupported": "Hierdie toestel kan nie die wensgeskiedenis-URL outomaties lees nie (vereis Android 11 of nuwer, of root). Voer dit asseblief handmatig in.",
+  "logUnavailableGameNotInstalled": "Genshin Impact is nie op hierdie toestel geïnstalleer nie. Kom ná installasie hierheen terug en dit sal outomaties bespeur word.",
+  "actionOpenGame": "Maak Genshin Impact oop",
+  "actionOpenWirelessDebugging": "Maak Draadlose ontfouting oop",
+  "progressLogConnectionLost": "Verbinding met draadlose ontfouting verloor, koppel tans weer... As dit nie herstel nie, kontroleer jou Wi‑Fi of voer die URL handmatig in.",
+  "progressWirelessLeftOnHint": "Draadlose ontfouting is nog aan. Jy kan dit in die stelselinstellings afskakel.",
+  "progressCredentialReady": "Wensgeskiedenis-URL gekry. Die haal van jou wensgeskiedenis begin sodra jy na hierdie app terugkeer.",
+  "actionRedetectGame": "Kyk weer",
+  "updateOpenPlayStore": "Maak Google Play oop",
+  "actionSetupLogAccess": "Stel op",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Bind weer saam",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Lees stelsellogboek",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Hoekom is dit nodig?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android laat nie toe dat apps ander apps se stelsellogboeke lees nie. Hierdie app gebruik die ingeboude funksie Draadlose ontfouting om die wensgeskiedenis-URL uit Genshin Impact te lees.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Wat hierdie app doen",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Lees slegs die wensgeskiedenis-URL uit Genshin Impact\\n• Ontkoppel dadelik ná lees en skakel draadlose ontfouting af as hierdie app dit aangeskakel het\\n• Gee homself toestemming om draadlose ontfouting aan en af te skakel, sodat jy dit nie weer hoef op te stel nie\\n• Jy kan dit enige tyd in Instellings verwyder",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Vereistes",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 of nuwer, Wi‑Fi, kennisgewings toegelaat",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Begin opstelling",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Voer eerder die URL handmatig in",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Bind draadlose ontfouting saam",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Skakel Ontwikkelaaropsies aan",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Maak die Meer oor-bladsy in die stelselinstellings oop (byvoorbeeld “Meer oor foon” of “Meer oor tablet”)\\n2. Soek “Bounommer” en tik 7 keer daarop\\n3. Wanneer jy “Jy is nou ’n ontwikkelaar” sien, kom terug na hierdie app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Ontwikkelaaropsies is steeds af. As die stelsel gesê het daar is niks meer om te doen nie toe jy op “Bounommer” getik het (byvoorbeeld “Jy is reeds ’n ontwikkelaar”), is die hoofskakelaar van Ontwikkelaaropsies af. Maak Ontwikkelaaropsies oop, skakel die skakelaar heel bo aan en kom dan terug na hierdie app.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Maak Meer oor-bladsy oop",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Ontwikkelaaropsies is aan",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Laat kennisgewings toe",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Jy sal die saambindkode in ’n kennisgewing invoer, so laat hierdie app toe om kennisgewings te wys.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Laat kennisgewings toe",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Maak kennisgewinginstellings oop",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Kennisgewings toegelaat",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Bind saam",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Tik op die knoppie hieronder om Draadlose ontfouting oop te maak\\n2. Skakel “Gebruik draadlose ontfouting” aan en tik op “Gebruik saambindkode om toestel saam te bind”\\n3. Swiep van die bokant van die skerm af en voer in hierdie app se kennisgewing die 6-syfer-saambindkode in wat op die saambindskerm van Draadlose ontfouting gewys word",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Wag dat jy die saambindkode in die kennisgewing invoer...\\nVoer dit in terwyl die saambindskerm van Draadlose ontfouting nog oop is.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Maak Draadlose ontfouting weer oop",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Bind tans saam...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Saamgebind, nog een stap",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Jou toestel het ’n ekstra sekuriteitsbeperking. Skakel nog een opsie aan sodat hierdie app draadlose ontfouting outomaties kan aan- en afskakel.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Hoe om dit aan te skakel",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Maak Ontwikkelaaropsies oop\\n2. Soek die skakelaar wat met USB-ontfoutingsekuriteit of toestemmingmonitering verband hou en skakel dit aan, byvoorbeeld:\\n• Xiaomi: “USB-ontfouting (Sekuriteitinstellings)”\\n• OPPO / realme: “Skakel toestemmingmonitering af”\\n3. Maak seker draadlose ontfouting is aan, kom dan terug en tik op Probeer weer",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Maak Ontwikkelaaropsies oop",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Probeer weer",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Slaan oor (skakel draadlose ontfouting by elke opdatering self aan)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Gereed",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Van nou af lees Dateer op die logboek outomaties. Geen verdere opstelling nodig nie.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Wanneer jy op Dateer op tik, skakel draadlose ontfouting aan wanneer jy gevra word.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Keer terug en begin die opdatering...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Toegang tot speletjielogboek",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Draadlose ontfouting",
+  "logAccessMethodNone": "Nie opgestel nie",
+  "settingsPairingStatus": "Saambinding",
+  "settingsPaired": "Saamgebind",
+  "settingsPairedManual": "Saamgebind (skakel draadlose ontfouting handmatig aan)",
+  "settingsRetryGrant": "Probeer toestemming weer",
+  "settingsSetupLogAccess": "Stel op",
+  "settingsUnpair": "Verwyder saambinding",
+  "settingsUnpairConfirmTitle": "Verwyder saambinding?",
+  "settingsUnpairConfirmBody": "Dit vee hierdie app se saambindsleutel uit en neem hierdie app se toestemming om draadlose ontfouting aan en af te skakel weg. Jy sal weer moet saambind om draadlose ontfouting later te gebruik.",
+  "settingsUnpairDone": "Saambinding verwyder",
+  "settingsUnpairDoneBody": "Hierdie app se saambindsleutel is uitgevee en sy toestemming om draadlose ontfouting aan en af te skakel is weggeneem.",
+  "settingsUnpairUnreachableTitle": "Saambindsleutel uitgevee",
+  "settingsUnpairUnreachableBody": "Hierdie app se saambindsleutel is uitgevee, maar kon hierdie keer nie aan draadlose ontfouting koppel nie, so die toestemming om draadlose ontfouting aan en af te skakel is nog nie weggeneem nie.",
+  "settingsUnpairUnreachableRevokeHint": "Sonder saambinding gebruik hierdie app nie daardie toestemming nie. Om dit heeltemal weg te neem, koppel aan Wi‑Fi, bind weer saam en verwyder dan weer die saambinding.",
+  "settingsUnpairLeftover": "Die stelsel se lys Draadlose ontfouting → Saamgebinde toestelle sal steeds “{name}” wys. Dit kan nie meer koppel nie, so jy kan dit laat staan; om dit te verwyder, tik daarop en vee dit uit.",
+  "settingsUnpairLeftoverAlso": "Die stelsel se lys Draadlose ontfouting → Saamgebinde toestelle wys ook nog “{name}”; tik daarop om dit uit te vee.",
+  "settingsLogAccessMethod": "Metode",
+  "actionShare": "Deel",
+  "shareFailed": "Kon nie deel nie",
+  "dialogSaveAsTitle": "Stoor as",
+  "dialogOpenTitle": "Maak oop",
+  "dialogSelectFolderTitle": "Kies gids",
+  "actionSave": "Stoor",
+  "settingsLogsShare": "Deel logboeke"
 }

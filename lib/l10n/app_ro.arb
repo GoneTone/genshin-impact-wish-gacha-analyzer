@@ -1,5 +1,997 @@
 {
   "@@locale": "ro",
+  "localeNativeName": "Română",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "localeTranslatorLabel": "Traducere: {translator}",
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Actualizează",
+  "actionCancel": "Anulează",
+  "actionClose": "Închide",
+  "actionPrevPage": "Anterioară",
+  "actionNextPage": "Următoarea",
+  "actionOpenFolder": "Deschide folderul",
+  "navOverview": "Prezentare generală",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Standard",
+  "navBeginner": "Novice",
+  "navSettings": "Setări",
+  "navContributors": "Contribuitori",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Odes",
+  "footerNotSynced": "Nesincronizat",
+  "footerLastUpdated": "Ultima actualizare: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Chiar acum",
+  "relativeSecondsAgo": "{count, plural, one{acum {count} secundă} few{acum {count} secunde} other{acum {count} de secunde}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, one{acum {count} minut} few{acum {count} minute} other{acum {count} de minute}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, one{acum {count} oră} few{acum {count} ore} other{acum {count} de ore}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, one{acum {count} zi} few{acum {count} zile} other{acum {count} de zile}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, one{acum {count} lună} few{acum {count} luni} other{acum {count} de luni}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, one{acum {count} an} few{acum {count} ani} other{acum {count} de ani}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Schimbă contul",
+  "uidNotSynced": "Nesincronizat",
+  "uidActiveSuffix": " (activ)",
+  "emptyNoSyncTitle": "Încă nu s-au sincronizat date",
+  "emptyNoSyncMessage": "Atingeți {icon} din dreapta sus pentru a începe",
+  "emptyNoRecords": "Nu există înregistrări pentru acest banner",
+  "emptyNoFilterMatch": "Nicio înregistrare nu corespunde filtrului curent",
+  "emptyNoOdesRecords": "Încă nu există înregistrări în Odes",
+  "emptyNoGachaRecords": "Încă nu există înregistrări în Wish",
+  "statsTotal": "Total extrageri",
+  "statsRankCount": "Număr {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% din total",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Distribuția rarității",
+  "statsItemTypeDistribution": "Distribuția tipurilor",
+  "statsNoData": "Fără date",
+  "kindUnknown": "Necunoscut",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Timp",
+  "tableName": "Nume",
+  "tableKind": "Tip",
+  "tableRarity": "Raritate",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Total",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Sortare: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sortare: implicită",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sortează după",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Extrageri de la ultimul {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Descrescător",
+  "sortDirectionAsc": "Crescător",
+  "sortHintClickToSort": "Faceți clic pentru a sorta",
+  "progressPreparing": "Se pregătește...",
+  "progressPreparingHint": "Se pregătește sursa de date...",
+  "progressConvertingHint": "Se convertește limba datelor, așteptați...",
+  "progressWaiting": "Se așteaptă captura...",
+  "progressFetching": "Se descarcă...",
+  "progressDone": "Actualizare finalizată",
+  "progressFailed": "Eșuat",
+  "progressOpenGameHint": "Deschideți Genshin → Wishes → History",
+  "progressFallbackHint": "(URL-ul Wish History anterior a expirat și trebuie obținut din nou)",
+  "progressNotDetectedLink": "Ați deschis Wish History, dar nu se întâmplă nimic?",
+  "progressCaptureUnavailableHint": "Nu s-a putut porni captura (certificatul poate fi respins sau portul este ocupat), așa că detectarea folosește doar memoria cache web a jocului. Deschideți pagina Wish History în joc.",
+  "progressCaptureUnavailableNoGameDirHint": "Nu s-a putut porni captura (certificatul poate fi respins sau portul este ocupat), iar folderul jocului nu a fost găsit. Apăsați mai jos „Alege folderul jocului” pentru a-l seta manual.",
+  "gameDirHelpTitle": "Wish History nu a fost detectat",
+  "gameDirHelpNotFound": "Folderul jocului Genshin Impact nu a fost găsit. După ce alegeți folderul jocului, instrumentul poate obține URL-ul Wish History și din memoria cache web a jocului.",
+  "gameDirHelpFound": "Folderul jocului folosit acum: {path}. Dacă nu este copia jocului cu care jucați, alegeți din nou.",
+  "@gameDirHelpFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Folderul jocului a fost setat. Reveniți în joc și deschideți din nou Wish History.",
+  "gameDirInvalid": "Genshin Impact nu a fost găsit în acest folder. Alegeți folderul „Genshin Impact game”.",
+  "actionChooseGameDir": "Alege folderul jocului",
+  "actionRechooseGameDir": "Alege din nou",
+  "progressFetchingBanner": "Se descarcă: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Pagina {page}, până acum {count, plural, one{{count} înregistrare nouă} few{{count} înregistrări noi} other{{count} de înregistrări noi}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, one{A fost adăugată {count} înregistrare nouă} few{Au fost adăugate {count} înregistrări noi} other{Au fost adăugate {count} de înregistrări noi}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, one{A fost descărcată {count} imagine de obiect} few{Au fost descărcate {count} imagini de obiecte} other{Au fost descărcate {count} de imagini de obiecte}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, one{Au fost actualizate datele pentru {count} obiect} few{Au fost actualizate datele pentru {count} obiecte} other{Au fost actualizate datele pentru {count} de obiecte}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, one{A fost completată {count} imagine de obiect} few{Au fost completate {count} imagini de obiecte} other{Au fost completate {count} de imagini de obiecte}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, one{Au fost curățate datele în limba veche pentru {count} obiect} few{Au fost curățate datele în limba veche pentru {count} obiecte} other{Au fost curățate datele în limba veche pentru {count} de obiecte}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Eșec parțial: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, one{Importat {accounts} cont} few{Importate {accounts} conturi} other{Importate {accounts} de conturi}}: noi: {added}, deja existente: {duplicate}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Eșec parțial la import: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Se caută datele obiectelor {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Se descarcă detaliile obiectelor {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Se descarcă imaginile obiectelor {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Autorizarea expiră în continuu; conectați-vă din nou în joc",
+  "errorRateLimited": "Prea multe cereri; reîncercați mai târziu",
+  "errorServer": "Eroare de server: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Acest cont nu are încă înregistrări în Wish",
+  "pageOverviewTitle": "Prezentare generală (toate bannerele)",
+  "pageOverviewGachaSection": "Prezentare generală Wish",
+  "pageOverviewOdesSection": "Prezentare generală Odes",
+  "pageBannerRecordList": "Lista înregistrărilor",
+  "rarityOverviewTitle": "Prezentare generală {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Setări",
+  "settingsAppearance": "Aspect",
+  "settingsThemeSystem": "Conform sistemului",
+  "settingsThemeDark": "Întunecată",
+  "settingsThemeLight": "Luminoasă",
+  "settingsLanguage": "Limbă",
+  "settingsLocaleSystem": "Conform sistemului",
+  "settingsDataLanguage": "Limba datelor",
+  "settingsDataLanguageDesc": "Unifică limba de afișare a datelor din istoricul extragerilor, independent de limba interfeței aplicației. După setare, actualizarea sau importul datelor le convertește automat în această limbă. Înregistrările Odes și obiectele fără date corespunzătoare își păstrează limba originală.",
+  "settingsDataLanguageUnset": "Nesetat (fără conversie)",
+  "settingsDataLanguageUnify": "Convertește acum limba datelor",
+  "settingsDataLanguageUnifying": "Se convertește...",
+  "settingsDataLanguageUnifyDone": "Convertite: {converted}, neconvertite: {unresolved}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Conversia a eșuat, datele sunt neschimbate. Verificați rețeaua și încercați din nou.",
+  "settingsDataManagement": "Gestionarea datelor",
+  "settingsGameDir": "Folderul jocului",
+  "settingsGameDirAuto": "Detectat automat: {path}",
+  "@settingsGameDirAuto": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Setat manual: {path}",
+  "@settingsGameDirManual": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Folderul jocului nu a fost găsit",
+  "actionClearGameDir": "Șterge",
+  "settingsCloudSync": "Sincronizare în cloud",
+  "cloudSyncIntro": "Asociați contul Google pentru a face automat copii de rezervă ale înregistrărilor în Google Drive și pentru a sincroniza mai multe dispozitive.",
+  "cloudSyncUnconfigured": "Această versiune nu are datele de autentificare Google OAuth configurate; sincronizarea în cloud nu este disponibilă.",
+  "cloudSyncLink": "Asociază contul Google",
+  "cloudSyncAwaitingConsent": "Browserul a fost deschis. Finalizați autorizarea în browser...",
+  "cloudSyncAwaitingConsentAndroid": "Finalizați autorizarea în fereastra Google...",
+  "cloudSyncLinkedAs": "Asociat: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Sincronizare automată",
+  "cloudSyncAutoToggleHint": "Sincronizează automat la pornirea aplicației și după modificarea datelor; sincronizarea manuală rămâne disponibilă când este dezactivată.",
+  "cloudSyncNow": "Sincronizează acum",
+  "cloudSyncUnlink": "Dezasociază",
+  "cloudSyncUnlinkConfirmTitle": "Dezasociază",
+  "cloudSyncUnlinkConfirmBody": "Sincronizarea se va opri. Datele locale și copia de rezervă din cloud sunt păstrate.",
+  "cloudSyncLastSynced": "Ultima sincronizare: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Încă nesincronizat",
+  "cloudSyncErrorNetwork": "Sincronizarea a eșuat: problemă de rețea. Va fi reîncercată automat.",
+  "cloudSyncErrorBusy": "Sincronizare amânată: o actualizare sau un import este în desfășurare. Va fi reîncercată automat.",
+  "cloudSyncErrorSchemaTooNew": "Sincronizare omisă: datele din cloud au fost create de o versiune mai nouă a aplicației. Actualizați mai întâi aplicația.",
+  "cloudSyncErrorAuthFailed": "Autorizarea a eșuat. Încercați din nou.",
+  "cloudSyncErrorScopeMissing": "Autorizarea nu a inclus accesul la Google Drive. Asociați din nou contul și bifați caseta pentru datele Drive în pagina de consimțământ Google.",
+  "cloudSyncReauthRequired": "Autorizarea a expirat. Asociați din nou contul Google.",
+  "cloudSyncRemoveFromCloud": "Elimină acest cont și din datele de sincronizare din cloud",
+  "cloudSyncPostAuthTitle": "Autorizare finalizată",
+  "cloudSyncPostAuthBody": "Puteți închide această filă și reveni în aplicație.",
+  "cloudSyncPostAuthScopeMissingTitle": "Lipsește permisiunea Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "Caseta pentru datele Google Drive nu a fost bifată. Reveniți în aplicație, asociați din nou contul și bifați această permisiune.",
+  "settingsAccountManagement": "Gestionarea conturilor",
+  "settingsPrivacySectionTitle": "Confidențialitate",
+  "settingsMaskUidInUi": "Maschează UID-ul în interfață",
+  "settingsMaskUidInUiHint": "Când este activat, UID-urile din interfață și din lista de conturi arată primele 3 cifre, iar restul este mascat (ex. 123•••••). Util la streaming sau la partajarea ecranului. Nu afectează imaginile de partajare, fișierele exportate și fereastra de confirmare a ștergerii.",
+  "settingsAdPrivacyOptions": "Opțiuni de confidențialitate pentru reclame",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Schimbați consimțământul pentru afișarea reclamelor personalizate.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Despre",
+  "settingsAboutVersion": "Versiunea {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Versiuni pentru alte jocuri",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "În viitor ar putea fi adăugate și alte jocuri...",
+  "contributorsTitle": "Contribuitori",
+  "contributorsSubtitle": "Mulțumiri speciale partenerilor de mai jos, care au contribuit la dezvoltarea acestui software!",
+  "contributorsProjectLeader": "Moderator de proiect",
+  "contributorsTesters": "Testeri",
+  "contributorsGithubContributors": "Contribuitori GitHub",
+  "contributorsTranslationReviewer": "Corectori ai traducerilor",
+  "contributorsTranslatedLanguages": "Limbi disponibile",
+  "contributorsHelpTranslate": "Limba dvs. lipsește? Ajutați-ne să o traducem!",
+  "contributorsProjectLicense": "Licența proiectului",
+  "pityRank": "Pity {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, one{{n} extragere până la garantat} few{{n} extrageri până la garantat} other{{n} de extrageri până la garantat}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Aproape de garantat! Mai rămân: {n, plural, one{{n} extragere} few{{n} extrageri} other{{n} de extrageri}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Garantat în curând",
+  "pityNoMainRarity": "Încă niciun {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Încheiat",
+  "pityAverageInterval": "Medie {n} extrageri",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Nicio înregistrare {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, one{{n} extragere} few{{n} extrageri} other{{n} de extrageri}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Acum",
+  "timelineNowPulls": "{n, plural, one{{n} extragere} few{{n} extrageri} other{{n} de extrageri}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, one{{n} extragere de la ultimul {star}} few{{n} extrageri de la ultimul {star}} other{{n} de extrageri de la ultimul {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, one{{n} extragere de la ultimul {star} între bannere} few{{n} extrageri de la ultimul {star} între bannere} other{{n} de extrageri de la ultimul {star} între bannere}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Derulează la stânga",
+  "timelineScrollRight": "Derulează la dreapta",
+  "timelineLoadMore": "Încarcă mai multe (au mai rămas {n})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Toate raritățile",
+  "filterRarityRankOnly": "Doar {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Toate tipurile",
+  "filterSearchHint": "Caută după nume...",
+  "filterClear": "Șterge filtrele",
+  "pagerFirst": "Prima",
+  "pagerLast": "Ultima",
+  "pagerJumpTitle": "Mergi la pagina",
+  "pagerJumpLabel": "Pagina ({min}–{max})",
+  "pagerJumpCurrent": "Pagina curentă: {page} · {total, plural, one{{total} înregistrare} few{{total} înregistrări} other{{total} de înregistrări}}",
+  "pagerJumpGo": "Mergi",
+  "pagerJumpInvalid": "Introduceți o pagină între {min} și {max}",
+  "settingsClearActive": "Șterge datele contului curent",
+  "settingsClearAll": "Șterge toate datele",
+  "settingsRefetchHoyoWikiImagesTitle": "Forțează redescărcarea imaginilor obiectelor",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Încă nu există înregistrări, nu este nimic de redescărcat",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Forțează redescărcarea imaginilor obiectelor",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Aceasta va șterge toată memoria cache locală a imaginilor obiectelor și va redescărca pictogramele din HoYoWiki. Imaginile de detaliu ale obiectelor se vor descărca la cerere, la următoarea deschidere a obiectului. În funcție de numărul de obiecte, poate dura câteva minute și poate consuma date.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Începe redescărcarea",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Datele obiectelor",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Redescarcă din HoYoWiki cele mai recente detalii ale obiectelor (descrieri, liste de imagini etc.), păstrând imaginile deja descărcate. Imaginile noi se descarcă la deschiderea detaliilor obiectului.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Actualizează datele obiectelor",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Încă nu există înregistrări — nu este nimic de actualizat",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Actualizați datele obiectelor?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Aplicația se va conecta la HoYoWiki pentru a redescărca detaliile fiecărui obiect, ceea ce poate dura o vreme, în funcție de numărul de obiecte. Imaginile deja descărcate sunt păstrate și nu vor fi șterse.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Începe actualizarea",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Memoria cache a imaginilor",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Total",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Pictograme",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Imagini de detaliu",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Se calculează...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Nu s-a putut citi dimensiunea memoriei cache",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Nu s-au putut șterge imaginile de detaliu",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Șterge imaginile de detaliu",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Ștergeți imaginile de detaliu?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Vor fi șterse aproximativ {size} de imagini de detaliu ale obiectelor; memoria cache a pictogramelor este păstrată. Se vor descărca din nou la următoarea deschidere a detaliilor obiectului.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Șterge",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Exportă datele",
+  "settingsImportData": "Importă datele",
+  "shareImageButton": "Generează imaginea de partajare",
+  "shareImageDialogTitle": "Opțiuni pentru imaginea de partajare",
+  "shareImageThemeLabel": "Temă",
+  "shareImageThemeDark": "Întunecată",
+  "shareImageThemeLight": "Luminoasă",
+  "shareImageShowFullUid": "Afișează UID-ul complet în imagine",
+  "shareImageShowFullUidHint": "Când este dezactivat, se afișează doar primele 3 cifre, iar restul este mascat cu •",
+  "shareImageUpdatedAt": "Actualizat {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Copiat în clipboard",
+  "shareImageFailed": "Nu s-a putut genera imaginea de partajare",
+  "shareImageActionCopy": "Copiază imaginea",
+  "shareImageActionSave": "Salvează imaginea",
+  "shareImageCopyFailed": "Nu s-a putut copia în clipboard",
+  "shareImageGenerating": "Se generează imaginea de partajare...",
+  "shareImageSaved": "Salvat: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Export reușit",
+  "exportDialogFailedTitle": "Export eșuat",
+  "settingsExportFailed": "Export eșuat: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Exportat în {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Confirmarea importului",
+  "settingsImportConfirmIntro": "Urmează să importați: {accounts, plural, one{{accounts} cont} few{{accounts} conturi} other{{accounts} de conturi}} (în total {records, plural, one{{records} înregistrare} few{{records} înregistrări} other{{records} de înregistrări}}):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Următoarele conturi vor fi îmbinate cu datele locale; înregistrările existente nu vor fi șterse:",
+  "settingsImportConfirmNoConflict": "Nu există conflicte de date.",
+  "settingsImportConfirmPreserveFooter": "Celelalte conturi existente ({uids}) vor fi păstrate.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "Importat cu succes: {accounts, plural, one{{accounts} cont} few{{accounts} conturi} other{{accounts} de conturi}} ({records, plural, one{{records} înregistrare} few{{records} înregistrări} other{{records} de înregistrări}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Importate {success}/{total} conturi; eșuate: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Import eșuat: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Formatul fișierului este invalid sau fișierul este corupt",
+  "importReasonUnsupportedVersion": "Acest fișier a fost exportat de o versiune mai nouă a aplicației. Actualizați aplicația înainte de import.",
+  "importReasonUnreadable": "Fișierul nu poate fi citit",
+  "exportReasonWriteFailed": "Fișierul nu poate fi scris, verificați locația de salvare și permisiunile",
+  "importReasonForeignApp": "Acest fișier nu a fost exportat de aplicație",
+  "settingsExportSelectTitle": "Selectați conturile de exportat",
+  "settingsImportSelectTitle": "Selectați conturile de importat",
+  "settingsImportMergeBadge": "Îmbină",
+  "accountsPickerSelectAll": "Selectează tot",
+  "accountRecordCount": "{n, plural, one{{n} înregistrare} few{{n} înregistrări} other{{n} de înregistrări}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Confirmare",
+  "confirmClearActiveBody": "Aceasta va șterge definitiv toate înregistrările Wish pentru UID {uid}. Introduceți UID-ul pentru confirmare:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Aceasta va șterge definitiv înregistrările Wish ale tuturor conturilor. Introduceți DELETE pentru confirmare:",
+  "confirmDelete": "Șterge",
+  "confirmImport": "Importă",
+  "confirmExport": "Exportă",
+  "confirmContinue": "Continuă",
+  "accountListEmpty": "Încă nu există conturi",
+  "accountLastUpdated": "Ultima actualizare {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Activ",
+  "accountSetActive": "Setează ca activ",
+  "accountRemove": "Elimină",
+  "accountAdd": "Adaugă cont",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "Un nume prietenos pentru acest cont",
+  "accountAliasNone": "Niciun alias setat",
+  "accountActionEditAlias": "Editează aliasul",
+  "accountEditAliasTitle": "Editează aliasul",
+  "accountDragHandleTooltip": "Trageți pentru a reordona",
+  "loadingBootstrap": "Se încarcă...",
+  "timelineTopRarityTitle": "Cronologie {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Numărul de obiecte cu cea mai mare raritate pe banner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} extragere de la ultimul {star}} few{{n} extrageri de la ultimul {star}} other{{n} de extrageri de la ultimul {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Este disponibilă versiunea nouă {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Lansată pe {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Descarcă",
+  "updateButtonSkip": "Omite această versiune",
+  "updateButtonLater": "Mai târziu",
+  "updateCheckButton": "Caută actualizări",
+  "updateChecking": "Se verifică...",
+  "updateAlreadyLatest": "Aveți ultima versiune",
+  "updateCheckFailed": "Verificarea actualizărilor a eșuat: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Nu se poate conecta, verificați rețeaua",
+  "updateErrorTimeout": "Cererea a expirat",
+  "updateErrorRateLimited": "Cota API GitHub a fost epuizată, reîncercați mai târziu",
+  "updateErrorServer": "Eroare de server (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Format de răspuns neașteptat",
+  "currentReleaseTitle": "Note despre versiunea curentă",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Nu s-au găsit note pentru versiunea {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Vezi pe GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Mergi la pagina de versiuni GitHub",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Vezi notele versiunii",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Nu s-a putut șterge memoria cache a imaginilor obiectelor: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Jurnale de depanare",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Dacă întâmpinați probleme, exportați jurnalele pentru a-i ajuta pe dezvoltatori să investigheze.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Raportează o problemă",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Exportă jurnalele",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Deschide folderul de jurnale",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Șterge toate jurnalele",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Jurnale exportate: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Exportul jurnalelor a eșuat: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Aceasta va șterge definitiv toate fișierele din logs/. Exportați-le mai întâi dacă aveți nevoie de ele pentru raportarea erorilor. Introduceți CLEAR pentru confirmare.",
   "galleryCardLabel": "Card",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +999,283 @@
   "galleryIconLabel": "Pictogramă",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Anterioară",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Următoarea",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Derulează în jos",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Vezi pe HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Imaginea nu s-a putut încărca",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Reîncearcă",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Închide previzualizarea imaginii",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Copiază imaginea",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Salvează imaginea",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Mărește",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Micșorează",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Redescarcă imaginea",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Imaginea a fost copiată în clipboard",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Imaginea nu s-a putut copia",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Imaginea nu s-a putut salva",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Salvată în {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Norocos",
+  "luckTierAverage": "Mediu",
+  "luckTierUnlucky": "Ghinionist",
+  "manualUrlEntry": "Introdu manual URL-ul Wish History",
+  "manualUrlTitle": "Introdu manual URL-ul Wish History",
+  "manualUrlHint": "Dacă ați obținut URL-ul Wish History în alt mod (de exemplu cu un instrument pe computer), îl puteți lipi aici. Puteți lipi și tot textul; aplicația găsește singură URL-ul.",
+  "manualUrlFieldHint": "Lipiți URL-ul...",
+  "manualUrlPaste": "Lipește din clipboard",
+  "manualUrlNotFound": "Nu s-a găsit niciun URL Wish History. Verificați ce ați lipit.",
+  "manualUrlWarning": "URL-ul conține datele de autentificare ale contului dvs. Nu îl partajați public. Expiră după un timp.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Se așteaptă să deschideți în joc pagina Wish History...",
+  "progressOpenGameHintAndroid": "Deschideți Genshin Impact → Wish → History",
+  "progressCheckingLogAccess": "Se pregătește citirea jurnalului jocului...",
+  "progressLogUnavailableTitle": "URL-ul Wish History nu poate fi obținut automat",
+  "logUnavailableNotPaired": "Citirea jurnalului jocului nu este încă configurată. După o configurare unică, fiecare actualizare îl citește automat.",
+  "logUnavailableNoWifi": "Remedierea erorilor wireless funcționează doar prin Wi-Fi. Conectați-vă la Wi-Fi și reveniți; aplicația continuă automat. Puteți și să introduceți URL-ul manual.",
+  "logRootDeniedHint": "Root a fost găsit, dar aplicației nu i s-a acordat acces root. Pentru a citi prin root, permiteți aplicația în managerul root (de exemplu în lista Superuser din Magisk), apoi reveniți; aplicația reîncearcă automat.",
+  "logUnavailableAdbFailed": "Nu s-a putut conecta la remedierea erorilor wireless. Asocierea poate să fi expirat; asociați din nou.",
+  "logUnavailableWirelessOff": "Dispozitivul dvs. nu permite acestei aplicații să pornească remedierea erorilor wireless. Porniți-o în pagina Remedierea erorilor wireless și reveniți; aplicația continuă automat.",
+  "logUnavailableNetworkNotAllowed": "Această rețea Wi-Fi nu este încă permisă pentru remedierea erorilor wireless. Atingeți „Permite” în mesajul sistemului (bifați „Permite întotdeauna în această rețea” ca să nu mai întrebe) și aplicația continuă automat. Dacă ați închis mesajul, atingeți „Reîncearcă”.",
+  "logUnavailableUnsupported": "Acest dispozitiv nu poate citi automat URL-ul Wish History (necesită Android 11 sau mai nou, ori root). Introduceți-l manual.",
+  "logUnavailableGameNotInstalled": "Genshin Impact nu este instalat pe acest dispozitiv. După instalare, reveniți aici și va fi detectat automat.",
+  "actionOpenGame": "Deschide Genshin Impact",
+  "actionOpenWirelessDebugging": "Deschide Remedierea erorilor wireless",
+  "progressLogConnectionLost": "Conexiunea de remediere a erorilor wireless s-a pierdut, se reconectează... Dacă nu revine, verificați Wi-Fi sau introduceți URL-ul manual.",
+  "progressWirelessLeftOnHint": "Remedierea erorilor wireless este încă pornită. O puteți opri din setările sistemului.",
+  "progressCredentialReady": "URL-ul Wish History a fost obținut. Descărcarea Wish History începe când reveniți în această aplicație.",
+  "actionRedetectGame": "Verifică din nou",
+  "updateOpenPlayStore": "Deschide Google Play",
+  "actionSetupLogAccess": "Configurează",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Asociază din nou",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Citirea jurnalului de sistem",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "De ce este necesar?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android nu permite aplicațiilor să citească jurnalele de sistem ale altor aplicații. Această aplicație folosește funcția încorporată Remedierea erorilor wireless pentru a citi URL-ul Wish History din Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Ce face această aplicație",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Citește doar URL-ul Wish History din Genshin Impact\n• Se deconectează imediat după citire și oprește remedierea erorilor wireless dacă a pornit-o aplicația\n• Își acordă permisiunea de a porni și opri remedierea erorilor wireless, astfel încât să nu fie nevoie să o configurați din nou\n• Puteți elimina oricând această configurare în Setări",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Cerințe",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 sau mai nou, Wi-Fi, notificări permise",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Începe configurarea",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Introdu manual URL-ul",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Asocierea remedierii erorilor wireless",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Activați Opțiuni dezvoltator",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Deschideți în setările sistemului pagina cu informații despre dispozitiv (de exemplu „Despre telefon” sau „Despre tabletă”)\n2. Găsiți „Număr build” și atingeți-l de 7 ori\n3. Când vedeți „Acum sunteți dezvoltator”, reveniți în această aplicație",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Opțiunile dezvoltator sunt încă dezactivate. Dacă sistemul a spus că nu mai e nimic de făcut când ați atins „Număr build” (de exemplu „Nu este nevoie, sunteți deja dezvoltator”), comutatorul principal Opțiuni dezvoltator este oprit. Deschideți Opțiuni dezvoltator, porniți comutatorul de sus și reveniți în această aplicație.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Deschide pagina cu informații despre dispozitiv",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Opțiunile dezvoltator sunt activate",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Permiteți notificările",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Veți introduce codul de asociere într-o notificare, așa că permiteți aplicației să afișeze notificări.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Permite notificările",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Deschide setările de notificări",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notificări permise",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Asociați",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Atingeți butonul de mai jos pentru a deschide Remedierea erorilor wireless\n2. Porniți „Remedierea erorilor wireless” și atingeți „Asociază dispozitivul folosind codul de conectare”\n3. Glisați în jos din partea de sus a ecranului și, în notificarea acestei aplicații, introduceți codul de 6 cifre afișat pe ecranul de asociere din Remedierea erorilor wireless",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Se așteaptă introducerea codului de asociere în notificare...\nIntroduceți-l cât timp ecranul de asociere din Remedierea erorilor wireless este deschis.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Deschide din nou Remedierea erorilor wireless",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Se asociază...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Asociat, mai e un pas",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Dispozitivul dvs. are o restricție de securitate suplimentară. Activați încă o opțiune pentru ca această aplicație să poată porni și opri automat remedierea erorilor wireless.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Cum se activează",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Deschideți Opțiuni dezvoltator\n2. Găsiți comutatorul legat de securitatea depanării prin USB sau de monitorizarea permisiunilor și porniți-l, de exemplu:\n• Xiaomi: „Depanare USB (Setări de securitate)”\n• OPPO / realme: „Dezactivează monitorizarea permisiunilor”\n3. Asigurați-vă că remedierea erorilor wireless este pornită, reveniți și atingeți „Reîncearcă”",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Deschide Opțiuni dezvoltator",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Reîncearcă",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Omite (porniți singur remedierea erorilor wireless la fiecare actualizare)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Totul este gata",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "De acum, actualizarea citește automat jurnalul. Nu mai este nevoie de nicio configurare.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Când atingeți „Actualizează”, porniți remedierea erorilor wireless când vi se cere.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Se revine și se pornește actualizarea...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Acces la jurnalul jocului",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Remedierea erorilor wireless",
+  "logAccessMethodNone": "Neconfigurat",
+  "settingsPairingStatus": "Asociere",
+  "settingsPaired": "Asociat",
+  "settingsPairedManual": "Asociat (porniți manual remedierea erorilor wireless)",
+  "settingsRetryGrant": "Reîncearcă acordarea permisiunii",
+  "settingsSetupLogAccess": "Configurează",
+  "settingsUnpair": "Elimină asocierea",
+  "settingsUnpairConfirmTitle": "Eliminați asocierea?",
+  "settingsUnpairConfirmBody": "Aceasta șterge cheia de asociere a aplicației și îi retrage permisiunea de a comuta remedierea erorilor wireless. Va trebui să asociați din nou pentru a folosi ulterior remedierea erorilor wireless.",
+  "settingsUnpairDone": "Asocierea a fost eliminată",
+  "settingsUnpairDoneBody": "Cheia de asociere a aplicației a fost ștearsă și i-a fost retrasă permisiunea de a porni și opri remedierea erorilor wireless.",
+  "settingsUnpairUnreachableTitle": "Cheia de asociere a fost ștearsă",
+  "settingsUnpairUnreachableBody": "Cheia de asociere a aplicației a fost ștearsă, dar de data aceasta nu s-a putut conecta la remedierea erorilor wireless, așa că permisiunea de a porni și opri remedierea erorilor wireless nu a fost retrasă.",
+  "settingsUnpairUnreachableRevokeHint": "Cât timp nu este asociată, aplicația nu folosește această permisiune. Pentru a o elimina complet, conectați-vă la Wi-Fi, asociați din nou, apoi eliminați asocierea încă o dată.",
+  "settingsUnpairLeftover": "În lista de sistem Remedierea erorilor wireless → Dispozitive asociate va apărea în continuare „{name}”. Nu se mai poate conecta, deci îl puteți lăsa; pentru a-l elimina, atingeți-l și ștergeți-l.",
+  "settingsUnpairLeftoverAlso": "În lista de sistem Remedierea erorilor wireless → Dispozitive asociate apare în continuare și „{name}”; atingeți-l pentru a-l șterge.",
+  "settingsLogAccessMethod": "Metodă",
+  "actionShare": "Partajează",
+  "shareFailed": "Nu s-a putut partaja",
+  "dialogSaveAsTitle": "Salvează ca",
+  "dialogOpenTitle": "Deschide",
+  "dialogSelectFolderTitle": "Selectează folderul",
+  "actionSave": "Salvează",
+  "settingsLogsShare": "Partajează jurnalele"
 }
