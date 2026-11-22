@@ -54,7 +54,7 @@ Android 版會在部分有內容的頁面中，於內容之間穿插 Google AdMo
 按下「更新資料」後，App 會同時用兩種方式等你在遊戲內開啟「祈願記錄」頁面，先取得網址的那一種為準；你也可以改為手動貼上網址。
 
 - **讀取遊戲的網頁快取**：找出遊戲資料夾（依序參考你在設定指定的資料夾、遊戲的 `output_log.txt`、Windows 登錄檔中的安裝路徑與常見安裝路徑），再讀取遊戲資料夾內 `GenshinImpact_Data\webCaches` 的網頁快取，找出新出現的祈願記錄網址。
-- **本機攔截**：在你的電腦上啟動一個只聽本機（`127.0.0.1`）的攔截程式，暫時把目前使用者的系統代理設定指向它，並在目前使用者的根憑證存放區安裝一張在本機產生的根憑證（第一次安裝時 Windows 會跳出一次確認視窗）。攔截期間經過系統代理的網路流量會由這個本機程式轉送；它只讀取遊戲對 HoYoverse 祈願記錄 API 送出的那一條請求來取得網址，其餘流量不記錄、不修改，原樣轉送。
+- **本機攔截**：在你的電腦上啟動一個只聽本機（`127.0.0.1`）的攔截程式，暫時把目前使用者的系統代理設定指向它，並在目前使用者的根憑證存放區安裝一張在本機產生的根憑證（第一次安裝時 Windows 會跳出一次確認視窗）。攔截期間經過系統代理的網路流量會由這個本機程式轉送；它只讀取遊戲對 HoYoverse 祈願記錄 API 送出的那一條請求來取得網址，其餘流量不記錄、不修改，原樣轉送。攔截期間經過系統代理的 HTTPS 連線會在你的電腦上先解密、再重新加密後轉送；解密後的內容不會被儲存或上傳。
 
 - 除了上述 `output_log.txt` 與網頁快取之外不讀取其他遊戲檔案，不修改任何遊戲檔案，也不讀取遊戲記憶體。
 - 攔截只在更新期間進行，取得網址或取消後立即停止並還原原本的系統代理設定；若 App 意外結束而留下代理設定，下次啟動時會自動清除。
@@ -132,7 +132,7 @@ The Android version shows Google AdMob native ads between the content of some pa
 When you click "Update", the app waits in two ways at once for you to open the Wish History page in the game, and uses whichever gets the URL first. You can also paste the URL manually instead.
 
 - **Reading the game's web cache**: the app finds the game folder (checking, in order, the folder you set in Settings, the game's `output_log.txt`, the install paths in the Windows registry and common install paths), then reads the web cache under `GenshinImpact_Data\webCaches` in the game folder to find a newly added wish history URL.
-- **Local interception**: the app starts an interception helper on your computer that listens only locally (`127.0.0.1`), temporarily points the current user's system proxy setting at it, and installs a root certificate generated on your computer into the current user's root certificate store (Windows asks you to confirm once, the first time). During interception, network traffic that goes through the system proxy is relayed by this local helper; it reads only the one request the game sends to the HoYoverse wish history API to get the URL, and all other traffic is relayed untouched, without being recorded or modified.
+- **Local interception**: the app starts an interception helper on your computer that listens only locally (`127.0.0.1`), temporarily points the current user's system proxy setting at it, and installs a root certificate generated on your computer into the current user's root certificate store (Windows asks you to confirm once, the first time). During interception, network traffic that goes through the system proxy is relayed by this local helper; it reads only the one request the game sends to the HoYoverse wish history API to get the URL, and all other traffic is relayed untouched, without being recorded or modified. During interception, HTTPS connections that go through the system proxy are decrypted on your computer and re-encrypted before being forwarded; the decrypted content is never saved or uploaded.
 
 - Apart from that `output_log.txt` and the web cache it reads no game files, it never modifies game files or reads game memory.
 - Interception runs only during an update; it stops and restores your original system proxy setting as soon as the URL is found or you cancel. If the app exits unexpectedly and leaves the proxy setting behind, it is cleared automatically the next time the app starts.

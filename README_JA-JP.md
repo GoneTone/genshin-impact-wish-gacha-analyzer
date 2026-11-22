@@ -119,7 +119,7 @@ flutter run -d windows
    }
    ```
 
-3. 実行時にこのファイルを渡します（JetBrains IDE では同梱の「main.dart (cloud sync)」実行構成が使えます。`build_release.ps1` はパッケージ時に自動検出します）：
+3. 実行時にこのファイルを渡します（JetBrains IDE では同梱の「main.dart (cloud sync + ads)」実行構成が使えます（後述の `secrets/ads_defines.json` も渡すため、両方のファイルが必要です）。`build_release.ps1` はパッケージ時に自動検出します）：
 
    ```bash
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
@@ -130,6 +130,24 @@ flutter run -d windows
    ```bash
    flutter run -d <デバイス ID> --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
+
+### 広告 ID（任意、Android）
+
+Android のネイティブ広告の AdMob ID もビルド時に注入し、ソースコードには書きません。自分のビルドで本番広告を配信するには、プロジェクトルートに `secrets/ads_defines.json` を作成し（git 管理外）、クラウド同期の設定ファイルと一緒に渡します：
+
+```json
+{
+  "ADMOB_APP_ID": "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy",
+  "ADMOB_NATIVE_UNIT_ID": "ca-app-pub-xxxxxxxxxxxxxxxx/wwwwwwwwww"
+}
+```
+
+```bash
+flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json --dart-define-from-file=secrets/ads_defines.json
+```
+
+このファイルがない場合や release 以外のビルドでは、Google 公式のテスト広告 ID を使い、テスト広告のみ表示されます。
+
 
 ### Rust ↔ Dart のブリッジコード生成
 

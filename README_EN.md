@@ -119,7 +119,7 @@ To enable it in your own build:
    }
    ```
 
-3. Pass the file when running (JetBrains IDEs can use the bundled "main.dart (cloud sync)" run configuration; `build_release.ps1` picks the file up automatically when packaging):
+3. Pass the file when running (JetBrains IDEs can use the bundled "main.dart (cloud sync + ads)" run configuration, which also passes `secrets/ads_defines.json` below, so both files must exist; `build_release.ps1` picks the file up automatically when packaging):
 
    ```bash
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
@@ -130,6 +130,24 @@ To enable it in your own build:
    ```bash
    flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
+
+### Ad IDs (optional, Android)
+
+The AdMob IDs for the Android native ads are also injected at build time and never committed. To serve real ads in your own build, create `secrets/ads_defines.json` at the project root (git-ignored) and pass it together with the cloud sync file:
+
+```json
+{
+  "ADMOB_APP_ID": "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy",
+  "ADMOB_NATIVE_UNIT_ID": "ca-app-pub-xxxxxxxxxxxxxxxx/wwwwwwwwww"
+}
+```
+
+```bash
+flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json --dart-define-from-file=secrets/ads_defines.json
+```
+
+Without this file, or in any non-release build, Google's official test ad IDs are used and only test ads are shown.
+
 
 ### Rust ↔ Dart bridge code generation
 

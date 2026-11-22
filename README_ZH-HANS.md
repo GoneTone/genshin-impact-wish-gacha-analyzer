@@ -119,7 +119,7 @@ flutter run -d windows
    }
    ```
 
-3. 运行时带入该文件（JetBrains IDE 可直接选内置的「main.dart (cloud sync)」运行配置；`build_release.ps1` 打包时会自动检测）：
+3. 运行时带入该文件（JetBrains IDE 可直接选内置的「main.dart (cloud sync + ads)」运行配置（会一并带入下方的 `secrets/ads_defines.json`，两个文件都要存在）；`build_release.ps1` 打包时会自动检测）：
 
    ```bash
    flutter run -d windows --dart-define-from-file=secrets/cloud_sync_defines.json
@@ -130,6 +130,24 @@ flutter run -d windows
    ```bash
    flutter run -d <设备 ID> --dart-define-from-file=secrets/cloud_sync_defines.json
    ```
+
+### 广告 ID（选用，Android）
+
+Android 原生广告的 AdMob ID 同样在构建时注入，不写进源代码。要在自己的构建投放正式广告，在项目根目录创建 `secrets/ads_defines.json`（已被 git 忽略），并和云端同步配置文件一起带入：
+
+```json
+{
+  "ADMOB_APP_ID": "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy",
+  "ADMOB_NATIVE_UNIT_ID": "ca-app-pub-xxxxxxxxxxxxxxxx/wwwwwwwwww"
+}
+```
+
+```bash
+flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json --dart-define-from-file=secrets/ads_defines.json
+```
+
+没有这个文件、或非 release 构建时，一律使用 Google 官方测试广告 ID，只会显示测试广告。
+
 
 ### Rust ↔ Dart 桥接代码生成
 
