@@ -19,4 +19,14 @@
 
 ## 附錄：驗收結果
 
-（實作完成後填寫。）
+2026-11-22，commit `a968657`、`c1f585d`。
+
+- **自動化**：`fvm flutter analyze` 無問題；`fvm flutter test` 全數通過（+2144）。
+- **模擬器（wuwa_api37，Android 17，debug 版）**：
+  - App 內把語言改成日本語：`cmd locale get-app-locales` 變成 `[ja]`，log 出現 `app locale pushed tag=ja applied=true`。
+  - 系統端設成 `zh-Hant-TW`：開著的設定頁即時換成繁中，語言選單顯示「繁體中文」。
+  - 系統端清空：App 回到「跟隨系統」，log 出現 `pref=SystemLanguage`。
+  - 系統深色、App 選淺色，冷啟動錄影逐格看亮度：桌面（深）→淺色啟動畫面（含品牌文字）→淺色 App，中間沒有閃深色。
+  - 系統淺色、App 選深色：桌面→深色啟動畫面→深色 App，中間沒有閃亮。
+  - 測完還原：系統淺色、App 外觀跟隨系統、App 語言未設定；log 沒有 WARNING 或 SEVERE。
+- **Windows（debug 版）**：啟動正常，log 沒有 `app.prefs` 相關訊息，也沒有警告；雲端同步判定已一致，沒有上傳。
