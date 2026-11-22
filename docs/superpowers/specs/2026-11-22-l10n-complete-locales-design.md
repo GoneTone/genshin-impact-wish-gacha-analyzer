@@ -105,3 +105,12 @@
 ## 附錄：驗收結果
 
 （實作完成後填寫。）
+
+### 鳴潮後續文案修正
+
+- `337ce7d`（網址與遊戲 log 的說法）：**部分適用**。原神的 Android 設定流程與手動輸入網址等字串早已是修正後的說法（`setupWhatBody`、`setupNeedTitle`、`setupStepPairBody`、`settingsUnpairConfirmBody`、`progressCredentialReady`、手動輸入網址相關標題皆已就緒），不用動。仍是舊說法而已修正的：`progressWaitingLog`、`progressCaptureUnavailableHint`、`gameDirHelpNotFound`（「祈願記錄」被當成要輸入或讀取的內容，改為「在遊戲中開啟祈願歷史記錄頁」「取得祈願記錄網址」），以及 zh／zh_Hans 的 `logUnavailableNotPaired`、`settingsLogAccess`、`setupTitle`、`setupWhyBody`（「遊戲記錄」「系統記錄」改為「遊戲 log」「系統 log」，原神讀的是 logcat 而非檔案，所以不加「檔」）、`logUnavailableUnsupported`（「手動輸入」補成「手動輸入網址」）。既有 8 種語言中，en、ja 等原本就用「log」的不必改 log 用詞，只改上述意思有變的字串。`gameDirInvalid` 原神本來就說找不到原神，不適用。
+- `6b0978e`（確認讀取方式改為說明讀取遊戲 log）：**不適用**，被 `307a45e` 取代，且原神已是「正在準備讀取…」。
+- `307a45e`（每次更新的步驟改成「準備讀取」）：**適用，但原神已經是這個說法**（`progressCheckingLogAccess` 已為「正在準備讀取遊戲記錄...」），只需把「遊戲記錄」改為「遊戲 log」，已併入 `337ce7d` 的修改。
+- `08bb4ab`（用「裝置」取代「手機」、不寫死商店清單）：**不適用**，原神 `logUnavailableGameNotInstalled` 已是「這台裝置上找不到原神…」且無商店清單；`logChooseGameVersion` 在原神不存在。
+- `8dbb5e9`（台灣用語「飛航模式」）：**不適用**，原神 zh 沒有「飛行模式」或「飛航模式」相關字串（`manualCredentialHelpAndroid` 在原神不存在）。
+- `a53f4f0`（把 `progressCheckingLogAccess` 翻成所有語言）：**不適用於本任務**，原神這個 key 已在 8 種語言有翻譯，其餘 22 種空殼語言留給 Task 5。

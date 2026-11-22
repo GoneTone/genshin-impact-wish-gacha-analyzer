@@ -158,13 +158,13 @@
   "progressFallbackHint": "（先前的祈願記錄網址已失效，需重新取得）",
   "progressNotDetectedLink": "已經開啟祈願歷史記錄，卻一直沒有反應？",
   "@progressNotDetectedLink": {"description": "Link on the waiting dialog for users whose opened wish history is not being detected."},
-  "progressCaptureUnavailableHint": "無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請開啟祈願歷史記錄。",
+  "progressCaptureUnavailableHint": "無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），改為只從遊戲網頁快取偵測。請在遊戲中開啟祈願歷史記錄頁。",
   "@progressCaptureUnavailableHint": {"description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."},
   "progressCaptureUnavailableNoGameDirHint": "無法啟動攔截程式（可能是憑證被拒絕或連接埠被佔用），也找不到遊戲資料夾。請按下方「選擇遊戲資料夾」手動指定。",
   "@progressCaptureUnavailableNoGameDirHint": {"description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."},
   "gameDirHelpTitle": "偵測不到祈願歷史記錄",
   "@gameDirHelpTitle": {"description": "Title of the game folder help dialog."},
-  "gameDirHelpNotFound": "找不到原神的遊戲資料夾。選擇遊戲資料夾後，本工具也能改從遊戲網頁快取讀取祈願歷史記錄。",
+  "gameDirHelpNotFound": "找不到原神的遊戲資料夾。選擇遊戲資料夾後，本工具也能改從遊戲網頁快取取得祈願記錄網址。",
   "@gameDirHelpNotFound": {"description": "Help dialog text when no game folder could be located."},
   "gameDirHelpFound": "目前讀取的遊戲資料夾：{path}。如果不是你正在玩的那份遊戲，請重新選擇。",
   "@gameDirHelpFound": {"description": "Help dialog text showing the game folder currently in use.", "placeholders": {"path": {"type": "String"}}},
@@ -900,15 +900,15 @@
   "@manualUrlWarning": {"description": "Security warning at the bottom of the manual URL input dialog"},
   "manualUrlSubmit": "確定",
   "@manualUrlSubmit": {"description": "Confirm button of the manual wish history URL input dialog"},
-  "progressWaitingLog": "等待祈願記錄...",
+  "progressWaitingLog": "等待在遊戲中開啟祈願歷史記錄頁...",
   "@progressWaitingLog": {"description": "Android waiting dialog title while watching the system log for the wish history URL"},
   "progressOpenGameHintAndroid": "請開啟原神 → 祈願 → 歷史記錄",
   "@progressOpenGameHintAndroid": {"description": "Android waiting dialog hint telling the player where to open the wish history in the game"},
-  "progressCheckingLogAccess": "正在準備讀取遊戲記錄...",
+  "progressCheckingLogAccess": "正在準備讀取遊戲 log...",
   "@progressCheckingLogAccess": {"description": "Android waiting dialog title while deciding how to read the system log"},
   "progressLogUnavailableTitle": "無法自動取得祈願記錄網址",
   "@progressLogUnavailableTitle": {"description": "Android waiting dialog title when the URL cannot be read automatically"},
-  "logUnavailableNotPaired": "尚未設定讀取遊戲記錄的方式。設定一次之後，每次更新都會自動讀取。",
+  "logUnavailableNotPaired": "尚未設定讀取遊戲 log 的方式。設定一次之後，每次更新都會自動讀取。",
   "@logUnavailableNotPaired": {"description": "Reason shown when wireless debugging has not been paired yet"},
   "logUnavailableNoWifi": "無線偵錯只能在連上 Wi‑Fi 時使用。連上 Wi‑Fi 後回到本 App 就會自動繼續，也可以改用手動輸入網址。",
   "@logUnavailableNoWifi": {"description": "Reason shown when the device is not on Wi-Fi"},
@@ -920,7 +920,7 @@
   "@logUnavailableWirelessOff": {"description": "Reason shown when the app cannot turn on wireless debugging itself"},
   "logUnavailableNetworkNotAllowed": "這個 Wi‑Fi 還沒允許無線偵錯。請在系統視窗按「允許」（勾選「一律允許透過這個網路執行」之後就不會再問），就會自動繼續。如果已經關掉視窗，請按「重試」。",
   "@logUnavailableNetworkNotAllowed": {"description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"},
-  "logUnavailableUnsupported": "這台裝置無法自動讀取祈願記錄網址（需要 Android 11 以上，或已 root），請改用手動輸入。",
+  "logUnavailableUnsupported": "這台裝置無法自動讀取祈願記錄網址（需要 Android 11 以上，或已 root），請改用手動輸入網址。",
   "@logUnavailableUnsupported": {"description": "Reason shown when this device cannot read the URL automatically"},
   "logUnavailableGameNotInstalled": "這台裝置上找不到原神，裝好後回到這裡會自動重新偵測。",
   "@logUnavailableGameNotInstalled": {"description": "Reason shown when Genshin Impact is not installed on the device"},
@@ -946,7 +946,7 @@
   "@actionRepair": {
     "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
   },
-  "setupTitle": "讀取系統記錄",
+  "setupTitle": "讀取系統 log",
   "@setupTitle": {
     "description": "App bar title of the log access setup disclosure page"
   },
@@ -954,7 +954,7 @@
   "@setupWhyTitle": {
     "description": "Disclosure page card title"
   },
-  "setupWhyBody": "Android 不允許 App 直接讀取其他 App 的系統記錄。本 App 會透過系統內建的「無線偵錯」，讀取原神的祈願記錄網址。",
+  "setupWhyBody": "Android 不允許 App 直接讀取其他 App 的系統 log。本 App 會透過系統內建的「無線偵錯」，讀取原神的祈願記錄網址。",
   "@setupWhyBody": {
     "description": "Disclosure page: why the app needs wireless debugging"
   },
@@ -1090,7 +1090,7 @@
   "@setupDoneReturning": {
     "description": "Shown just before returning and starting the update"
   },
-  "settingsLogAccess": "讀取遊戲記錄",
+  "settingsLogAccess": "讀取遊戲 log",
   "@settingsLogAccess": {
     "description": "Settings section title (Android only) for how the app reads the game log"
   },
