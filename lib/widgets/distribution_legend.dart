@@ -146,8 +146,8 @@ class DistributionLegend extends StatelessWidget {
 /// 一行放得下就排同一行並垂直置中；放不下時數字換到名稱下一行，但仍靠結束側，
 /// 讓各列數字右緣對齊。不用 LayoutBuilder 是因為橫向圓餅卡外層有 IntrinsicHeight，
 /// 會向圖例查詢 intrinsic 尺寸；OverflowBar 換行時無法只讓數字靠右。
-/// 只供 [DistributionLegend] 使用；公開僅為了讓測試能直接給它緊約束高度。
-@visibleForTesting
+/// 數字本身比整列還寬時（例如長的「計算中」字串）會在整列寬度內折行，不會溢出。
+/// 除了 [DistributionLegend]，設定頁「圖片快取用量」的「名稱｜大小」列也用它。
 class CompactLegendRow extends MultiChildRenderObjectWidget {
   /// 建立 [CompactLegendRow]，[name] 與 [numbers] 依序成為兩個 child。
   CompactLegendRow({super.key, required Widget name, required Widget numbers})

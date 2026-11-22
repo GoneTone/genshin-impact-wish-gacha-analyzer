@@ -965,14 +965,12 @@ void main() {
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   }
 
-  for (final locale in [
-    const Locale('en'),
-    const Locale('ja'),
-    const Locale('fr'),
-  ]) {
+  // 每種語言都跑一次：德文、芬蘭文、俄文等字串比英文長，最容易擠爆手機版面。
+  for (final locale in AppLocalizations.supportedLocales) {
     for (final (name, page) in [
       ('overview', const OverviewPage() as Widget),
       ('banner', const BannerPage(gachaType: '301')),
+      ('settings', const SettingsPage()),
     ]) {
       testWidgets('$name at 1.3x text scale in $locale does not overflow', (
         tester,
@@ -980,7 +978,7 @@ void main() {
         tester.platformDispatcher.textScaleFactorTestValue = 1.3;
         addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
         await pump(tester, const Size(360, 800), page, locale: locale);
-        if (name == 'overview') {
+        if (name != 'banner') {
           await scrollToEnd(tester);
         } else {
           // 表格與 Pager 在畫面外、按需才建構，首屏不會有任何溢出。

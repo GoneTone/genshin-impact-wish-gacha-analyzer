@@ -46,6 +46,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/game_dir_picker.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/other_game_versions.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -1133,11 +1134,10 @@ class _UsageRows extends StatelessWidget {
     );
     Widget row(String label, String value, TextStyle? style) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: style)),
-          Text(value, style: style),
-        ],
+      // 數值放不下時換到下一行並靠右，長語言＋大字級下的「計算中」也不會擠出右緣。
+      child: CompactLegendRow(
+        name: Text(label, style: style),
+        numbers: Text(value, style: style, textAlign: TextAlign.end),
       ),
     );
     return Column(
