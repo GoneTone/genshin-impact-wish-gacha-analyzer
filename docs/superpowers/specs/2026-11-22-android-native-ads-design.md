@@ -1,6 +1,6 @@
 # Android 原生廣告（子專案 10）— 設計 spec
 
-- 狀態：已核准（2026-11-22）
+- 狀態：已完成（2026-11-22）
 - 日期：2026-11-22
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 10；順序 8 → 9 → 12 → 10 → 11 → 7 → 13）
 - 對應鳴潮版：`wuthering-waves-convene-gacha-analyzer` 的 `2026-11-09-android-banner-ads-design.md`（同意流程、SDK 初始化、ID 注入等基礎建設）與 `2026-11-10-android-native-ads-design.md`（原生廣告），移植筆記第 50 節（「十四、廣告（Android）」整節，含「原生廣告」小節）
@@ -113,4 +113,36 @@
 
 ## 附錄：驗收結果
 
-（實作完成後填寫。）
+（2026-11-22）
+
+**實作**：`e649c76`～`fb5a50c`（Task 1～7、Task 6 修正一輪、整體審查修正波）。每個任務都經過審查；整體審查提出 2 個 Important（隱私權政策補「攔截期間 HTTPS 在本機解密」、四份 README 的執行設定改名與廣告 ID 開發說明）與 5 個 Minor，全部修正。
+
+**模擬器 debug（wuwa_api37，Android 17，測試廣告）**
+- 四個位置都在預期的地方，AdMob native ad validator 顯示「No implementation issues found」。
+- 800…（沒有頌願記錄）：只載入 `overviewGacha`，頌願區段顯示空狀態、沒有廣告。切到 801…（有頌願）：只多載入 `overviewOdes`，祈願那則沒有重新載入；切回 800…：只有 `native disposed placement=overviewOdes`。
+- 祈願廣告捲出按需建構範圍再捲回來：沒有 `AdWidget is already in the Widget tree`，也沒有紅框。
+- 淺色切深色：log 依序 `native disposed` 再 `native loaded`，深色樣式正確。
+- 卡池頁（武器活動）：`bannerMid` 在 5★ 時間軸正上方；`bannerList` 在第 10、11 筆之間，和列表在同一個外框，上下有分隔線。
+- 驗收時誤觸驗證器或測試廣告開啟了 Chrome，按返回即回到 App（測試廣告，無影響）。
+
+**模擬器 release（正式 ID，與 AAB 相同的兩個 defines 檔）**
+- `build/app/outputs/mapping/release/seeds.txt` 有 `WorkDatabase_Impl()`；release merged manifest 有 `NATIVE_AD_DEBUGGER_ENABLED=false`，App ID 是正式值，SDK 帶入 `AD_ID` 權限（子專案 7 填資料安全表單時要用）。
+- `libapp.so` 含正式原生單元 ID、不含測試單元 ID。
+- 覆蓋安裝後啟動正常，`logcat -b crash` 為空；正式 ID 在模擬器拿到測試影片廣告（模擬器自動算測試裝置），驗證器沒有彈出。
+
+**Windows（debug，801… 帳號，測前備份資料夾）**
+- `flutter build windows` 成功，新增的 `google_mobile_ads`、`webview_flutter*` 沒有造成外掛註冊錯誤。
+- 綜合頁、武器（空卡池）、常駐（三欄＋表格）、頌願活動、設定頁都沒有廣告、沒有多出的間距；設定頁「隱私」區塊只有遮蔽 UID 開關。
+- 這次啟動的 App log 沒有任何 `[ads]`，也沒有 warning／severe。
+
+**沒有實測的部分**：翻頁到不足 10 筆的最後一頁、斷網、手機橫向、長螢幕兩則同框（單元測試涵蓋前三項）；歐盟同意表單與「廣告隱私權選項」的實際表單（模擬器不在 EEA）；手機實機。
+
+**和鳴潮第 50 節刻意不同的地方**
+- 綜合頁分成祈願、頌願兩個位置（`overviewGacha`、`overviewOdes`），各自依區段是否有記錄載入（使用者 2026-11-22 選 B）。
+- 沒有橫幅、沒有發版 CI 的 ads defines 步驟（子專案 7）。
+- 錯誤 log 照兩個 repo 2026-11-22 統一後的寫法（`'msg', e, st`）。
+
+**寫隱私權政策時發現的移植缺漏（使用者 2026-11-22 決定要補，另外處理）**
+- 原神沒有鳴潮的 `backup_rules`／`data_extraction_rules`，加密的配對金鑰會被 Android 系統備份（還原後無法使用）。
+- Windows 解除安裝不會移除根憑證與 `ca` 資料夾（鳴潮會）；政策已照實寫並附手動移除步驟。
+- 原神還沒有 Google Play App 內更新，隱私權政策等子專案 7 再補。
