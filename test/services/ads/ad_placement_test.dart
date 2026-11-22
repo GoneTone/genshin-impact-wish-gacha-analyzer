@@ -149,6 +149,15 @@ void main() {
       expect(sections(onlyOdes), (false, true));
     });
 
+    test('只有 2000（常駐頌願）有記錄：祈願段 false、頌願段 true', () {
+      final onlyStandardOdes = _state(
+        banners: {
+          '2000': [_r('2000')],
+        },
+      );
+      expect(sections(onlyStandardOdes), (false, true));
+    });
+
     test('兩者都有記錄時皆為 true', () {
       expect(sections(both), (true, true));
     });

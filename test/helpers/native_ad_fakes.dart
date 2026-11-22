@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/ads/native_ad.dart';
 
 /// 原生廣告頁面測試的帳號。
@@ -34,6 +36,12 @@ class FixedGachaRepository extends GachaRepository {
     },
     isBootstrapping: bootstrapping,
   );
+}
+
+/// 永遠回傳空 index、不讀磁碟的 HoYoWiki index 替身，避免頁面測試出現載入失敗的警告。
+class EmptyHoYoWikiIndex extends HoYoWikiIndexNotifier {
+  @override
+  HoYoWikiIndex build() => const HoYoWikiIndex.empty();
 }
 
 /// 不碰原生 SDK、可由測試切換「可請求廣告」的廣告控制器替身。

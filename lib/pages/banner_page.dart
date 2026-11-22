@@ -11,12 +11,16 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_pity.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_row.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/ads/ad_placement.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/ads/native_ad.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/pity_card.dart';
@@ -36,6 +40,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/width_layout_builder.dart';
 
 /// 單一 banner 的詳細統計頁，顯示保底進度、圖表、記錄列表。
 class BannerPage extends ConsumerStatefulWidget {
@@ -54,8 +59,42 @@ class _BannerPageState extends ConsumerState<BannerPage> {
   /// 「記錄列表」標題的 key，換頁後捲回它。
   final _recordsTitleKey = GlobalKey();
 
+  /// 這次停留已要求過的原生廣告位置；要求過就一直監聽，停留期間每個位置最多載入一次。
+  final _requestedAds = <NativeAdPlacement>{};
+
   /// 對應卡池字串（[BannerPage.gachaType]）。
   String get gachaType => widget.gachaType;
+
+  @override
+  void didUpdateWidget(covariant BannerPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 路由切換卡池時沿用同一個 State，要當成新的停留。
+    if (oldWidget.gachaType != gachaType) _requestedAds.clear();
+  }
+
+  /// [adsAllowed] 時監聽 [placement] 的原生廣告：[wanted] 第一次成立後這次停留都持續監聽；回傳已載入且 [fits] 時可顯示的廣告。
+  LoadedNative? _nativeAd(
+    WidgetRef ref,
+    NativeAdPlacement placement, {
+    required bool adsAllowed,
+    required bool wanted,
+    required bool fits,
+    required Brightness brightness,
+  }) {
+    if (!adsAllowed) return null;
+    if (wanted) _requestedAds.add(placement);
+    if (!_requestedAds.contains(placement)) return null;
+    final ad = ref
+        .watch(
+          nativeAdProvider((
+            placement: placement,
+            scope: gachaType,
+            brightness: brightness,
+          )),
+        )
+        .value;
+    return fits ? ad : null;
+  }
 
   /// 記錄換頁後把「記錄列表」標題捲到可視區頂端。
   ///
@@ -164,7 +203,12 @@ class _BannerPageState extends ConsumerState<BannerPage> {
     // 按需建構：畫面外的區塊不建構、不繪製、不產生語意，捲動時只重算看得到的部分。
     void cycleSort(SortColumn col) =>
         ref.read(recordFilterProvider(gachaType).notifier).cycleSort(col);
-    return CustomScrollView(
+
+    /// 整頁內容；[midAd]／[listAd] 為已載入可顯示的位置 3／位置 1 廣告。
+    Widget content(
+      LoadedNative? midAd,
+      LoadedNative? listAd,
+    ) => CustomScrollView(
       scrollCacheExtent: pageScrollCacheExtent(),
       slivers: [
         SliverPadding(
@@ -304,7 +348,13 @@ class _BannerPageState extends ConsumerState<BannerPage> {
                         stats: stats,
                         layout: layout,
                       );
-                      return Wrap(
+                      final adBlock = midAd == null
+                          ? null
+                          : NativeAdBlock(
+                              ad: midAd,
+                              placement: NativeAdPlacement.bannerMid,
+                            );
+                      final row = Wrap(
                         spacing: AppSpacing.m,
                         runSpacing: AppSpacing.m,
                         children: [
@@ -335,6 +385,9 @@ class _BannerPageState extends ConsumerState<BannerPage> {
                                 ),
                               ),
                             ),
+                          // 時間軸獨佔一列時，廣告放在它上方；三欄時時間軸和圓餅同列，廣告改放整列下方。
+                          if (adBlock != null && !wide)
+                            SizedBox(width: c.maxWidth, child: adBlock),
                           // 除了電腦版三欄同列需與圓餅卡等高，時間軸都獨佔一列：撐滿寬、高度依內容。
                           SizedBox(
                             width: wide ? tileWidth : c.maxWidth,
@@ -359,6 +412,15 @@ class _BannerPageState extends ConsumerState<BannerPage> {
                               ),
                             ),
                           ),
+                        ],
+                      );
+                      if (adBlock == null || !wide) return row;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          row,
+                          const SizedBox(height: AppSpacing.m),
+                          adBlock,
                         ],
                       );
                     },
@@ -425,6 +487,12 @@ class _BannerPageState extends ConsumerState<BannerPage> {
                     // 卡片模式的排序按鈕放在上方篩選列。
                     showSortButton: false,
                     onPageChanged: (_) => _scrollToRecordsTitle(),
+                    midListAd: listAd == null
+                        ? null
+                        : NativeAdBlock(
+                            ad: listAd,
+                            placement: NativeAdPlacement.bannerList,
+                          ),
                   ),
                 ],
               ),
@@ -432,6 +500,45 @@ class _BannerPageState extends ConsumerState<BannerPage> {
           ),
         ),
       ],
+    );
+
+    final adsAllowed =
+        ref.watch(isAndroidProvider) &&
+        ref.watch(adsProvider.select((s) => s.canRequestAds)) &&
+        ref.watch(
+          gachaRepositoryProvider.select(
+            (g) => pageHasAdContent(path: '/banner/$gachaType', gacha: g),
+          ),
+        );
+    final brightness = Theme.of(context).brightness;
+    return WidthLayoutBuilder(
+      builder: (context, width) {
+        final contentWidth = width - pagePadding * 2;
+        final midFits = contentWidth >= kNativeMinWidth;
+        final listFits = midFits && recordListUsesCards(context, contentWidth);
+        // 廣告在頁面層級監聽：放進按需建構的子項，捲出畫面就會被釋放、捲回來又重新載入；
+        // 寬度要等版面才知道，LayoutBuilder 裡不能用 State 的 ref.watch，改由 Consumer 監聽。
+        return Consumer(
+          builder: (context, adsRef, _) => content(
+            _nativeAd(
+              adsRef,
+              NativeAdPlacement.bannerMid,
+              adsAllowed: adsAllowed,
+              wanted: midFits,
+              fits: midFits,
+              brightness: brightness,
+            ),
+            _nativeAd(
+              adsRef,
+              NativeAdPlacement.bannerList,
+              adsAllowed: adsAllowed,
+              wanted: listFits && sorted.length > kMidListAdAfter,
+              fits: listFits,
+              brightness: brightness,
+            ),
+          ),
+        );
+      },
     );
   }
 

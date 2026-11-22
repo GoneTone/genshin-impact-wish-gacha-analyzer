@@ -18,6 +18,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_palette.dart';
 bool recordListUsesCards(BuildContext context, double width) =>
     isCompactLayout(context) || width < kCompactBreakpoint;
 
+/// [SortableTable.midListAd] 插在當頁第幾筆之後。
+const kMidListAdAfter = 10;
+
 /// 可排序的祈願記錄表格，含分頁功能。
 class SortableTable extends StatefulWidget {
   /// 建立 [SortableTable]。
@@ -29,6 +32,7 @@ class SortableTable extends StatefulWidget {
     required this.onSortColumnTapped,
     this.showSortButton = true,
     this.onPageChanged,
+    this.midListAd,
   });
 
   /// 已 filter / sort 完的 rows;元件本身不做篩選排序。
@@ -49,6 +53,9 @@ class SortableTable extends StatefulWidget {
 
   /// 頁碼實際改變後的回呼，參數為新頁碼（0-based）；停留在同一頁不會觸發。
   final ValueChanged<int>? onPageChanged;
+
+  /// 卡片模式且當頁超過 [kMidListAdAfter] 筆時，在同一個外框內插在第 [kMidListAdAfter] 筆之後的廣告列；`null` 時不插入。
+  final Widget? midListAd;
 
   @override
   State<SortableTable> createState() => _SortableTableState();
@@ -111,6 +118,29 @@ class _SortableTableState extends State<SortableTable>
     final end = (start + _pageSize).clamp(0, widget.rows.length);
     final slice = widget.rows.sublist(start, end);
 
+    /// 卡片列外框。
+    Widget frame(Widget child) => Container(
+      decoration: BoxDecoration(
+        color: tokens.surfaceCard,
+        border: Border.all(color: tokens.borderSubtle),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: child,
+    );
+
+    /// slice 第 [from] 到 [to] 筆的卡片列；斑馬紋沿用整頁的奇偶。
+    Widget cards(int from, int to) => Column(
+      children: [
+        for (var i = from; i < to; i++)
+          _RecordCard(
+            row: slice[i],
+            isStripe: i.isOdd,
+            mainRank: widget.mainRank,
+          ),
+      ],
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,24 +157,26 @@ class _SortableTableState extends State<SortableTable>
               ),
               const SizedBox(height: AppSpacing.s),
             ],
-            Container(
-              decoration: BoxDecoration(
-                color: tokens.surfaceCard,
-                border: Border.all(color: tokens.borderSubtle),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                children: [
-                  for (var i = 0; i < slice.length; i++)
-                    _RecordCard(
-                      row: slice[i],
-                      isStripe: i.isOdd,
-                      mainRank: widget.mainRank,
+            if (widget.midListAd != null && slice.length > kMidListAdAfter)
+              frame(
+                Column(
+                  children: [
+                    cards(0, kMidListAdAfter),
+                    Divider(height: 1, color: tokens.borderSubtle),
+                    // 廣告上下緊鄰可點的記錄卡：留足內距並加分隔線，降低誤觸。
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.m,
+                      ),
+                      child: widget.midListAd!,
                     ),
-                ],
-              ),
-            ),
+                    Divider(height: 1, color: tokens.borderSubtle),
+                    cards(kMidListAdAfter, slice.length),
+                  ],
+                ),
+              )
+            else
+              frame(cards(0, slice.length)),
           ] else
             Container(
               decoration: BoxDecoration(
