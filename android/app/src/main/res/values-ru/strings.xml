@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Анализатор молитв Genshin Impact</string>
+    <string name="pairing_channel">Подключение для отладки по Wi-Fi</string>
+    <string name="pairing_searching_title">Поиск службы сопряжения</string>
+    <string name="pairing_searching_text">В разделе «Отладка по Wi-Fi» нажмите «Подключить устройство с помощью кода подключения»</string>
+    <string name="pairing_found_title">Введите код сопряжения</string>
+    <string name="pairing_found_text">Введите 6-значный код, показанный на экране сопряжения</string>
+    <string name="pairing_input_label">Код сопряжения</string>
+    <string name="pairing_action_pair">Подключить</string>
+    <string name="pairing_action_stop">Остановить</string>
+    <string name="pairing_in_progress">Подключение...</string>
+    <string name="pairing_success_title">Подключение выполнено</string>
+    <string name="pairing_success_text">Нажмите, чтобы вернуться в приложение</string>
+    <string name="pairing_failed_text">Не удалось подключиться. Проверьте код и введите его ещё раз</string>
+    <string name="pairing_no_app_text">Не удалось подключиться. Вернитесь в приложение и повторите попытку</string>
+    <string name="pairing_timeout_title">Время ожидания подключения истекло</string>
+    <string name="pairing_timeout_text">Нажмите, чтобы начать заново</string>
+</resources>

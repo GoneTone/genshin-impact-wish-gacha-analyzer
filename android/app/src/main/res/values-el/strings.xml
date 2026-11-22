@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Σύζευξη ασύρματου εντοπισμού σφαλμάτων</string>
+    <string name="pairing_searching_title">Αναζήτηση υπηρεσίας σύζευξης</string>
+    <string name="pairing_searching_text">Στον Ασύρματο εντοπισμό σφαλμάτων, πατήστε «Σύζευξη συσκευής με κωδικό σύζευξης»</string>
+    <string name="pairing_found_title">Εισαγάγετε τον κωδικό σύζευξης</string>
+    <string name="pairing_found_text">Πληκτρολογήστε τον 6ψήφιο κωδικό που εμφανίζεται στην οθόνη σύζευξης</string>
+    <string name="pairing_input_label">Κωδικός σύζευξης</string>
+    <string name="pairing_action_pair">Σύζευξη</string>
+    <string name="pairing_action_stop">Διακοπή</string>
+    <string name="pairing_in_progress">Σύζευξη...</string>
+    <string name="pairing_success_title">Η σύζευξη ολοκληρώθηκε</string>
+    <string name="pairing_success_text">Πατήστε εδώ για επιστροφή στην εφαρμογή</string>
+    <string name="pairing_failed_text">Η σύζευξη απέτυχε. Ελέγξτε τον κωδικό και εισαγάγετέ τον ξανά</string>
+    <string name="pairing_no_app_text">Η σύζευξη απέτυχε. Επιστρέψτε στην εφαρμογή και δοκιμάστε ξανά</string>
+    <string name="pairing_timeout_title">Λήξη χρονικού ορίου σύζευξης</string>
+    <string name="pairing_timeout_text">Πατήστε εδώ για να ξεκινήσετε ξανά</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Koppeling voor draadloze foutopsporing</string>
+    <string name="pairing_searching_title">Koppelingsservice zoeken</string>
+    <string name="pairing_searching_text">Tik in Draadloze foutopsporing op \"Apparaat koppelen met koppelingscode\"</string>
+    <string name="pairing_found_title">Voer de koppelingscode in</string>
+    <string name="pairing_found_text">Typ de 6-cijferige code die op het koppelingsscherm wordt getoond</string>
+    <string name="pairing_input_label">Koppelingscode</string>
+    <string name="pairing_action_pair">Koppelen</string>
+    <string name="pairing_action_stop">Stoppen</string>
+    <string name="pairing_in_progress">Koppelen...</string>
+    <string name="pairing_success_title">Koppelen gelukt</string>
+    <string name="pairing_success_text">Tik hier om terug te gaan naar de app</string>
+    <string name="pairing_failed_text">Koppelen mislukt. Controleer de code en voer deze opnieuw in</string>
+    <string name="pairing_no_app_text">Koppelen mislukt. Ga terug naar de app en probeer het opnieuw</string>
+    <string name="pairing_timeout_title">Time-out bij koppelen</string>
+    <string name="pairing_timeout_text">Tik hier om opnieuw te beginnen</string>
+</resources>

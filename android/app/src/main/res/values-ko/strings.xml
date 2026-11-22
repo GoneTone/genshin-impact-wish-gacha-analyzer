@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">원신 기원 분석기</string>
+    <string name="pairing_channel">무선 디버깅 페어링</string>
+    <string name="pairing_searching_title">페어링 서비스를 찾는 중</string>
+    <string name="pairing_searching_text">무선 디버깅에서 “페어링 코드로 기기 페어링”을 누르세요</string>
+    <string name="pairing_found_title">페어링 코드를 입력하세요</string>
+    <string name="pairing_found_text">페어링 화면에 표시된 6자리 코드를 입력하세요</string>
+    <string name="pairing_input_label">페어링 코드</string>
+    <string name="pairing_action_pair">페어링</string>
+    <string name="pairing_action_stop">중지</string>
+    <string name="pairing_in_progress">페어링 중...</string>
+    <string name="pairing_success_title">페어링 성공</string>
+    <string name="pairing_success_text">여기를 눌러 앱으로 돌아가기</string>
+    <string name="pairing_failed_text">페어링에 실패했습니다. 코드를 확인하고 다시 입력하세요</string>
+    <string name="pairing_no_app_text">페어링에 실패했습니다. 앱으로 돌아가서 다시 시도하세요</string>
+    <string name="pairing_timeout_title">페어링 시간 초과</string>
+    <string name="pairing_timeout_text">여기를 눌러 다시 시작</string>
+</resources>

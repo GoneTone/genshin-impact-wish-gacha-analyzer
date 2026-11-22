@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Parkoppling för trådlös felsökning</string>
+    <string name="pairing_searching_title">Söker efter parkopplingstjänsten</string>
+    <string name="pairing_searching_text">Tryck på \"Parkoppla enheten med en parkopplingskod\" i Trådlös felsökning</string>
+    <string name="pairing_found_title">Ange kopplingskoden</string>
+    <string name="pairing_found_text">Skriv den 6-siffriga koden som visas på parkopplingsskärmen</string>
+    <string name="pairing_input_label">Kopplingskod</string>
+    <string name="pairing_action_pair">Parkoppla</string>
+    <string name="pairing_action_stop">Stoppa</string>
+    <string name="pairing_in_progress">Parkopplar...</string>
+    <string name="pairing_success_title">Parkopplingen lyckades</string>
+    <string name="pairing_success_text">Tryck här för att gå tillbaka till appen</string>
+    <string name="pairing_failed_text">Parkopplingen misslyckades. Kontrollera koden och ange den igen</string>
+    <string name="pairing_no_app_text">Parkopplingen misslyckades. Gå tillbaka till appen och försök igen</string>
+    <string name="pairing_timeout_title">Tidsgränsen för parkoppling har överskridits</string>
+    <string name="pairing_timeout_text">Tryck här för att börja om</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Tilkobling for trådløs feilsøking</string>
+    <string name="pairing_searching_title">Ser etter tilkoblingstjenesten</string>
+    <string name="pairing_searching_text">Trykk på «Koble til enheten med en tilkoblingskode» i Trådløs feilsøking</string>
+    <string name="pairing_found_title">Skriv inn tilkoblingskoden</string>
+    <string name="pairing_found_text">Skriv inn den sekssifrede koden som vises på tilkoblingsskjermen</string>
+    <string name="pairing_input_label">Tilkoblingskode</string>
+    <string name="pairing_action_pair">Koble til</string>
+    <string name="pairing_action_stop">Stopp</string>
+    <string name="pairing_in_progress">Kobler til...</string>
+    <string name="pairing_success_title">Tilkoblingen var vellykket</string>
+    <string name="pairing_success_text">Trykk her for å gå tilbake til appen</string>
+    <string name="pairing_failed_text">Tilkoblingen mislyktes. Kontroller koden og skriv den inn på nytt</string>
+    <string name="pairing_no_app_text">Tilkoblingen mislyktes. Gå tilbake til appen og prøv igjen</string>
+    <string name="pairing_timeout_title">Tidsavbrudd for tilkoblingen</string>
+    <string name="pairing_timeout_text">Trykk her for å starte på nytt</string>
+</resources>

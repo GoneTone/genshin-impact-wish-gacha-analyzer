@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Párování bezdrátového ladění</string>
+    <string name="pairing_searching_title">Hledání služby párování</string>
+    <string name="pairing_searching_text">V Bezdrátovém ladění klepněte na „Párovat zařízení pomocí párovacího kódu“</string>
+    <string name="pairing_found_title">Zadejte párovací kód</string>
+    <string name="pairing_found_text">Zadejte 6místný kód zobrazený na obrazovce párování</string>
+    <string name="pairing_input_label">Párovací kód</string>
+    <string name="pairing_action_pair">Spárovat</string>
+    <string name="pairing_action_stop">Zastavit</string>
+    <string name="pairing_in_progress">Párování...</string>
+    <string name="pairing_success_title">Párování proběhlo úspěšně</string>
+    <string name="pairing_success_text">Klepnutím se vrátíte do aplikace</string>
+    <string name="pairing_failed_text">Párování se nezdařilo. Zkontrolujte kód a zadejte ho znovu</string>
+    <string name="pairing_no_app_text">Párování se nezdařilo. Vraťte se do aplikace a zkuste to znovu</string>
+    <string name="pairing_timeout_title">Časový limit párování vypršel</string>
+    <string name="pairing_timeout_text">Klepnutím začnete znovu</string>
+</resources>

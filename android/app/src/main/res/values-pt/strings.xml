@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Analisador de Orações de Genshin Impact</string>
+    <string name="pairing_channel">Sincronização da depuração sem fios</string>
+    <string name="pairing_searching_title">A procurar o serviço de sincronização</string>
+    <string name="pairing_searching_text">Em Depuração sem fios, toque em \"Sincronize dispositivo com código de sincronização\"</string>
+    <string name="pairing_found_title">Introduza o código de sincronização</string>
+    <string name="pairing_found_text">Introduza o código de 6 dígitos apresentado no ecrã de sincronização</string>
+    <string name="pairing_input_label">Código de sincronização</string>
+    <string name="pairing_action_pair">Sincronizar</string>
+    <string name="pairing_action_stop">Parar</string>
+    <string name="pairing_in_progress">A sincronizar...</string>
+    <string name="pairing_success_title">Sincronização concluída</string>
+    <string name="pairing_success_text">Toque aqui para voltar à aplicação</string>
+    <string name="pairing_failed_text">A sincronização falhou. Verifique o código e introduza-o novamente</string>
+    <string name="pairing_no_app_text">A sincronização falhou. Volte à aplicação e tente novamente</string>
+    <string name="pairing_timeout_title">A sincronização excedeu o tempo limite</string>
+    <string name="pairing_timeout_text">Toque aqui para recomeçar</string>
+</resources>

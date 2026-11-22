@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Analitzador de Wish Gacha de Genshin Impact</string>
+    <string name="pairing_channel">Vinculació de la depuració sense fil</string>
+    <string name="pairing_searching_title">S\'està cercant el servei de vinculació</string>
+    <string name="pairing_searching_text">A Depuració sense fil, toca «Vincula el dispositiu amb un codi de vinculació»</string>
+    <string name="pairing_found_title">Introdueix el codi de vinculació</string>
+    <string name="pairing_found_text">Escriu el codi de 6 dígits que es mostra a la pantalla de vinculació</string>
+    <string name="pairing_input_label">Codi de vinculació</string>
+    <string name="pairing_action_pair">Vincula</string>
+    <string name="pairing_action_stop">Atura</string>
+    <string name="pairing_in_progress">S\'està vinculant...</string>
+    <string name="pairing_success_title">La vinculació s\'ha completat</string>
+    <string name="pairing_success_text">Toca aquí per tornar a l\'aplicació</string>
+    <string name="pairing_failed_text">La vinculació ha fallat. Comprova el codi i torna\'l a introduir</string>
+    <string name="pairing_no_app_text">La vinculació ha fallat. Torna a l\'aplicació i torna-ho a provar</string>
+    <string name="pairing_timeout_title">S\'ha esgotat el temps de vinculació</string>
+    <string name="pairing_timeout_text">Toca aquí per tornar a començar</string>
+</resources>
