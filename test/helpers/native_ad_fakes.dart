@@ -25,7 +25,14 @@ class FixedGachaRepository extends GachaRepository {
   final bool bootstrapping;
 
   @override
-  GachaState build() => GachaState(
+  GachaState build() => _stateOf(banners);
+
+  /// 以 [banners] 取代目前帳號的記錄，模擬切換帳號。
+  void setBanners(Map<String, List<GachaRecord>> banners) =>
+      state = _stateOf(banners);
+
+  /// 以 [banners] 組出狀態。
+  GachaState _stateOf(Map<String, List<GachaRecord>> banners) => GachaState(
     activeUid: fakeNativeAdUid,
     byUid: {
       fakeNativeAdUid: BannerStorage(
