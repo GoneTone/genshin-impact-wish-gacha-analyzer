@@ -122,8 +122,8 @@ class AndroidCloudAuth implements CloudAuth {
   Future<void> _bestEffort(String label, Future<void> Function() step) async {
     try {
       await step();
-    } catch (e) {
-      _log.warning('android $label failed (ignored): $e');
+    } catch (e, st) {
+      _log.warning('android $label failed (ignored)', e, st);
     }
   }
 }

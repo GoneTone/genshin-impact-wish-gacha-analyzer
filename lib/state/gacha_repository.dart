@@ -427,9 +427,9 @@ class GachaRepository extends Notifier<GachaState> {
           backstop.future.then((u) => (u, false)),
         ]);
         captureFinished = !fromCache;
-      } catch (e) {
+      } catch (e, st) {
         // 攔截出錯（例如根憑證被拒絕、18080 埠被佔用）不判定失敗，改為只等快取。
-        _webCacheLog.warning('capture failed', e);
+        _webCacheLog.warning('capture failed', e, st);
         captureFinished = true;
         if (await _canWaitCacheOnly(watchStart, backstop)) {
           (url, fromCache) = await _waitCacheOnly(
@@ -690,7 +690,9 @@ class GachaRepository extends Notifier<GachaState> {
   void _queueAndroidTeardown(Future<void> teardown, String what) {
     final chained = Future.wait<void>([
       ?_androidTeardown,
-      teardown.catchError((Object e) => _androidLog.warning('$what failed', e)),
+      teardown.catchError(
+        (Object e, StackTrace st) => _androidLog.warning('$what failed', e, st),
+      ),
     ]);
     _androidTeardown = chained;
     unawaited(
@@ -724,8 +726,8 @@ class GachaRepository extends Notifier<GachaState> {
   ) async {
     try {
       await (await starting)?.cancel();
-    } catch (e) {
-      _androidLog.warning('logcat watch stop failed', e);
+    } catch (e, st) {
+      _androidLog.warning('logcat watch stop failed', e, st);
     }
     final leftOn = await ready.release();
     // 連上時可能順便補回授權，設定頁的配對狀態要重讀。
@@ -763,8 +765,8 @@ class GachaRepository extends Notifier<GachaState> {
         return;
       } on TimeoutException {
         _webCacheLog.info('capture still running after grace, cancelling');
-      } catch (e) {
-        _webCacheLog.warning('capture teardown error after cache win', e);
+      } catch (e, st) {
+        _webCacheLog.warning('capture teardown error after cache win', e, st);
         return;
       }
     }
@@ -775,8 +777,8 @@ class GachaRepository extends Notifier<GachaState> {
     ]) {
       try {
         await Future.any([step(), backstop.future]);
-      } catch (e) {
-        _webCacheLog.warning('capture teardown error after cache win', e);
+      } catch (e, st) {
+        _webCacheLog.warning('capture teardown error after cache win', e, st);
       }
     }
   }
@@ -805,8 +807,8 @@ class GachaRepository extends Notifier<GachaState> {
         session.cancel(),
         backstop.future,
       ]).timeout(_cancelTeardownTimeout);
-    } catch (e) {
-      _webCacheLog.warning('failed capture stop', e);
+    } catch (e, st) {
+      _webCacheLog.warning('failed capture stop', e, st);
       if (e is TimeoutException) unawaited(_bestEffortStaleProxyCleanup());
     }
     _webCacheLog.info(
@@ -852,9 +854,9 @@ class GachaRepository extends Notifier<GachaState> {
         }),
       );
       _syncCacheOnlyNotice();
-    } catch (e) {
+    } catch (e, st) {
       // FileSystemException 的字串會帶原始路徑，只記型別。
-      _webCacheLog.warning('web cache watch start failed', e);
+      _webCacheLog.warning('web cache watch start failed', e, st);
     }
   }
 
@@ -879,8 +881,8 @@ class GachaRepository extends Notifier<GachaState> {
     _webCacheSession = null;
     try {
       await watch?.cancel();
-    } catch (e) {
-      _webCacheLog.warning('web cache watch stop failed', e);
+    } catch (e, st) {
+      _webCacheLog.warning('web cache watch stop failed', e, st);
     }
   }
 
@@ -956,8 +958,8 @@ class GachaRepository extends Notifier<GachaState> {
         rethrow;
       } on http.ClientException {
         rethrow;
-      } catch (e) {
-        _log.warning('banner=${t.nameKey} failed: $e');
+      } catch (e, st) {
+        _log.warning('banner=${t.nameKey} failed', e, st);
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);
       }
@@ -1947,8 +1949,8 @@ class GachaRepository extends Notifier<GachaState> {
                 entryTodo.add((id: hit.id, lang: pair.$2));
               }
             }
-          } catch (e) {
-            _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
+          } catch (e, st) {
+            _log.warning('hoyowiki search failed name=${pair.$1}', e, st);
           }
           if (!ref.mounted) return;
           doneSearch++;
@@ -1994,9 +1996,11 @@ class GachaRepository extends Notifier<GachaState> {
             // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
             final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
-          } catch (e) {
+          } catch (e, st) {
             _log.warning(
-              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} err=$e',
+              'hoyowiki entry failed id=${pair.id} lang=${pair.lang}',
+              e,
+              st,
             );
           }
           if (!ref.mounted) return;
@@ -2039,9 +2043,11 @@ class GachaRepository extends Notifier<GachaState> {
               indexNotifier.bumpCacheRevision();
               downloaded++;
             }
-          } catch (e) {
+          } catch (e, st) {
             _log.warning(
-              'hoyowiki download failed url=${sanitizeUrl(item.url)} err=$e',
+              'hoyowiki download failed url=${sanitizeUrl(item.url)}',
+              e,
+              st,
             );
           }
           if (!ref.mounted) return;

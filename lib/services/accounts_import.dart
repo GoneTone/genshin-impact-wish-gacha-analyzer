@@ -33,8 +33,8 @@ AccountsBundle importAccounts(String text) {
   Object? raw;
   try {
     raw = jsonDecode(text);
-  } catch (e) {
-    _log.warning('import failed: invalid JSON ($e)');
+  } catch (e, st) {
+    _log.warning('import failed: invalid JSON', e, st);
     throw const FormatException('Invalid JSON');
   }
   if (raw is! Map<String, dynamic>) {

@@ -107,8 +107,8 @@ class GameDirLocator {
         } finally {
           root.close();
         }
-      } on Exception catch (e) {
-        _log.warning('registry enumerate failed hive=${hive.name}', e);
+      } on Exception catch (e, st) {
+        _log.warning('registry enumerate failed hive=${hive.name}', e, st);
       }
     }
     return paths;
@@ -126,8 +126,8 @@ class GameDirLocator {
       } finally {
         key.close();
       }
-    } on Exception catch (e) {
-      _log.warning('registry value read failed hive=${hive.name}', e);
+    } on Exception catch (e, st) {
+      _log.warning('registry value read failed hive=${hive.name}', e, st);
     }
     return null;
   }
@@ -142,8 +142,8 @@ class GameDirLocator {
     try {
       if (!await file.exists()) return null;
       return await file.readAsString();
-    } on Exception catch (e) {
-      _log.warning('output_log read failed', e);
+    } on Exception catch (e, st) {
+      _log.warning('output_log read failed', e, st);
       return null;
     }
   }
@@ -203,8 +203,8 @@ class GameDirLocator {
       final content = await _readOutputLog();
       final dir = content == null ? null : gameDirFromOutputLog(content);
       return [?dir];
-    } catch (e) {
-      _log.warning('output_log read failed', e);
+    } catch (e, st) {
+      _log.warning('output_log read failed', e, st);
       return const [];
     }
   }
@@ -213,8 +213,8 @@ class GameDirLocator {
   Future<List<String>> _safeRegistry() async {
     try {
       return await _readInstallPaths();
-    } catch (e) {
-      _log.warning('registry read failed', e);
+    } catch (e, st) {
+      _log.warning('registry read failed', e, st);
       return const [];
     }
   }

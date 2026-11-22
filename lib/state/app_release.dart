@@ -78,12 +78,12 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
         currentVersion: currentVersion,
         client: client,
       );
-    } on ReleaseCheckError catch (e) {
+    } on ReleaseCheckError catch (e, st) {
       if (manual) {
-        Logger('release').warning('release check failed (manual): $e');
+        Logger('release').warning('release check failed (manual)', e, st);
         state = ReleaseCheckFailed(_localizeError(e));
       } else {
-        Logger('release').warning('release check failed (silent): $e');
+        Logger('release').warning('release check failed (silent)', e, st);
         state = const ReleaseIdle();
       }
       return;

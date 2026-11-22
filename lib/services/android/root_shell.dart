@@ -123,8 +123,8 @@ class RootShell {
       _log.info('root verify ok=$ok');
       if (!ok) _detach()?.kill();
       return ok;
-    } catch (e) {
-      _log.info('root verify failed', e);
+    } catch (e, st) {
+      _log.info('root verify failed', e, st);
       _detach()?.kill();
       return false;
     }

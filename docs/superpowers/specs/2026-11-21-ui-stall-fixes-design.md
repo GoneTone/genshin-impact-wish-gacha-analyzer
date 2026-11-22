@@ -65,6 +65,7 @@
 - **Android 移植留下的只記型別寫法**（`error=${e.runtimeType}`，例如 adb、遊戲資料夾偵測、logcat）：也統一改成傳例外物件。只有讀取／解析 adb 金鑰與配對這四處維持只記型別，因為例外訊息可能夾帶私鑰內容或配對碼，統一遮罩擋不住。
 - **已知限制**：例外訊息若夾帶檔案內容片段（例如 `jsonDecode` 的 `FormatException`），統一遮罩擋不住。訊息裡自己組的 uid 仍然要經過 `sanitizeUid`。
 - **鳴潮**：同樣改。
+- **錯誤的記錄方式統一（2026-11-22 補，使用者選 B）**：寫子專案 10 計畫時發現，兩個 repo 還並存三種寫法：`'msg', e, st`、`'msg: $e'`（錯誤串進訊息、沒有 stack trace）、`'msg: $e', e, st`（錯誤印兩次）。另外約 25 處只傳 `e`、沒有 `st`。全部改成 `'msg', e, st`（原神 35 處、鳴潮 47 處），CLAUDE.md 規則改成「例外一律寫成 `warning('...', e, st)`，不要把 `$e` 串進訊息」。`${e.message}`、`code=${e.code}` 這類診斷欄位、adb 金鑰與配對的只記型別、`throw FormatException('...: $e')` 不在範圍內。鳴潮在分支 `refactor/log-error-objects`。
 
 **鳴潮的提交方式（使用者 2026-11-22 決定）**：上面四項鳴潮修正都放在鳴潮分支 `fix/cloud-sync-follow-ups`，做完後開 PR，不直接進 master。
 

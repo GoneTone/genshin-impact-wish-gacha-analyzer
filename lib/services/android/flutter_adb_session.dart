@@ -40,7 +40,7 @@ Future<T> guardAdbZone<T>(Future<T> Function() body) {
     } catch (e, st) {
       if (!result.isCompleted) result.completeError(e, st);
     }
-  }, (e, _) => _log.info('adb socket error', e));
+  }, (e, st) => _log.info('adb socket error', e, st));
   return result.future;
 }
 
@@ -90,8 +90,8 @@ class FlutterAdbSession implements AdbSession {
 Future<void> _disconnect(AdbConnection connection) async {
   try {
     await connection.disconnect().timeout(_closeTimeout);
-  } catch (e) {
-    _log.info('adb disconnect failed', e);
+  } catch (e, st) {
+    _log.info('adb disconnect failed', e, st);
   }
 }
 
@@ -103,8 +103,8 @@ Future<AdbSession?> connectFlutterAdb(AdbCrypto crypto, int port) =>
         if (await connection.connect().timeout(_connectTimeout)) {
           return FlutterAdbSession(connection);
         }
-      } catch (e) {
-        _log.info('adb connect error port=$port', e);
+      } catch (e, st) {
+        _log.info('adb connect error port=$port', e, st);
       }
       await _disconnect(connection);
       return null;
