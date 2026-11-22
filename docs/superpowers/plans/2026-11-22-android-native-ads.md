@@ -19,7 +19,7 @@
 - 只新增 `google_mobile_ads: ^9.2.0` 一個依賴。不改 `rust/`、`rust_builder/`。
 - **Windows 行為不可改變**：非 Android 不呼叫任何廣告 SDK、不監聽 `nativeAdProvider`、版面與設定頁和改動前完全相同。
 - 正式 ID 只在 release 且有注入值時使用；其餘一律官方測試 ID：原生單元 `ca-app-pub-3940256099942544/2247696110`、App `ca-app-pub-3940256099942544~3347511713`。`secrets/` 不可讀取或印出。
-- log 用 `Logger('ads')`、英文、帶 `placement=<name>` 與錯誤碼。例外照原神 2026-11-22 統一的寫法傳給 Logger：`_log.severe('native load threw placement=$placement', e, st)`，**訊息裡不要再串 `: $e`**（鳴潮 `ads.dart`、`native_ad.dart` 的 `': $e'` 四處都改掉）。
+- log 用 `Logger('ads')`、英文、帶 `placement=<name>` 與錯誤碼。例外一律寫成 `_log.severe('native load threw placement=$placement', e, st)`，不要把 `$e` 串進訊息（2026-11-22 兩個 repo 已統一，見 CLAUDE.md；鳴潮分支 `refactor/log-error-objects` 已把廣告的四處改好，以那個版本為底）。
 - 所有宣告（含 private）一行 `///` dartdoc；`//` 只寫 WHY；註解中文全形標點。
 - ARB 從 `app_zh.arb` 起手，只加到已有實際翻譯的語系檔（目前行數遠多於 11 行的：`zh`、`zh_Hans`、`en`、`es`、`fr`、`ja`、`pt_BR`、`th`，以及其他同樣有實際翻譯的檔），不碰只有 11 行的空殼；改完跑 `fvm flutter gen-l10n`。
 - 每次 commit 前：`fvm dart format lib/ test/`、`fvm flutter analyze`（`No issues found!`）、`fvm flutter test`（輸出必須含 `All tests passed!`，看實際的最後一行）。commit 英文 conventional commits，結尾 `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`；**`git commit` 用 PowerShell 執行**（不可跳過 GPG 簽章）。分支 `feat/android`，不開新分支、不 push。
@@ -89,7 +89,7 @@
 
 - [ ] **Step 1: 照搬鳴潮 `test/state/ads_test.dart` 全部案例**，以及 `test/pages/app_shell_ads_test.dart` 的 `starts the ads flow on Android only`、`never starts the ads flow off Android` 兩個。該檔另外三個（`phone portrait has only the status bar at the bottom`、`tablet keeps the status bar above the keyboard`、`snack bars keep the default behavior`）是橫幅拿掉後留下的外殼版面測試，原神沒有橫幅，**不搬**。外殼的測試骨架改用原神既有外殼測試的寫法（找 `test/pages/` 裡建 `AppShell` 的 helper）。
 - [ ] **Step 2: 跑這兩個測試檔**，預期 FAIL。
-- [ ] **Step 3: 實作**：兩個檔照鳴潮 `master`；log 依 Global Constraints 改成不串 `: $e`（`'ads consent failed'`、`'ads start failed'`、`'privacy options failed'`）。`maxAdContentRating` T 與 `_sdkInit ??=` 的寫法照搬。
+- [ ] **Step 3: 實作**：兩個檔照鳴潮 `master`；log 照鳴潮統一後的寫法（`'ads consent failed', e, st` 等）。`maxAdContentRating` T 與 `_sdkInit ??=` 的寫法照搬。
 - [ ] **Step 4: 驗證**：兩個測試檔 PASS，全套 `All tests passed!`。
 - [ ] **Step 5: Commit** `feat(ads): run the ad consent flow and initialize the SDK on Android`
 
