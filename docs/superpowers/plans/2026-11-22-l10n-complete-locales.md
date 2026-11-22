@@ -18,7 +18,7 @@
 - 遊戲沒出的語言：`af`、`ar`、`ca`、`cs`、`da`、`el`、`fi`、`he`、`hu`、`nl`、`no`、`pl`、`ro`、`sr`、`sv`、`uk`。卡池名稱與短名、側欄祈願／頌願區塊標題、物品類型、句子裡提到的遊戲選單與頁面用英文官方名稱；App 自己的敘述與標籤照常翻譯；需要詞尾變化時改寫句子，不把詞尾黏在英文名稱後面。
 - 翻譯者欄位 `localeTranslator`：`zh`、`zh_Hans` 空白；其他語言固定 `<a href="https://claude.com/claude-code">Claude Code</a>`。`@@locale` 不帶地區碼以外的寫法照現有檔（例如 `pt_BR`）。
 - 省略號一律半形 `...`（含 CJK）。中日文與英數字之間空一格。CJK 文字用全形標點。
-- 複數：只有單複數兩類且 `one` 不含 0 的語言用 `=1{}`（en、de、es、pt、pt_BR、it、ca、nl、af、da、sv、no、fi、el、hu）；法文用 `one{}`（0 和 1 都算單數）；`ru`、`uk`、`sr`、`pl`、`cs`、`ro`、`ar`、`he` 照 CLDR 用 `one`／`two`／`few`／`many`，不可改成 `=1`；`zh`、`zh_Hans`、`ja`、`ko`、`th`、`vi`、`tr` 沒有單複數之分，不用 plural。型別是 `String` 的佔位符不能用 plural。標籤寫法（「紀錄：3」）與單複數同形的字不用改。
+- 複數：只有單複數兩類且 `one` 不含 0 的語言用 `=1{}`（en、de、es、it、ca、nl、af、da、sv、no、fi、el、hu）；`pt`、`pt_BR` 的 `one` 含 0：`=1{}` 分支內不得寫字面 1，要用佔位符（例如 `=1{{count} registo novo}`）；法文用 `one{}`（0 和 1 都算單數）；`ru`、`uk`、`sr`、`pl`、`cs`、`ro`、`ar`、`he` 照 CLDR 用 `one`／`two`／`few`／`many`，不可改成 `=1`；`zh`、`zh_Hans`、`ja`、`ko`、`th`、`vi`、`tr` 沒有單複數之分，不用 plural。型別是 `String` 的佔位符不能用 plural。標籤寫法（「紀錄：3」）與單複數同形的字不用改。
 - Android 原生字串資料夾：希伯來文 `values-iw`、挪威文 `values-nb`、巴西葡文 `values-pt-rBR`、葡萄牙文 `values-pt`、繁中 `values-zh-rTW`、簡中 `values-zh-rCN`、英文 `values/`；單、雙引號加反斜線跳脫。
 - 送給系統的挪威文代碼是 `nb`；從系統讀回時 `nb`、`nn`、`no` 都對到 App 的 `no`。
 - Windows 版面與行為不得改變（RTL 修正只影響由右往左的語言）。

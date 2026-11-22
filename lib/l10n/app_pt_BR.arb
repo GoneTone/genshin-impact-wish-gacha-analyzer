@@ -53,7 +53,7 @@
     }
   },
   "relativeNow": "Agora",
-  "relativeSecondsAgo": "{count, plural, =1{Há 1 segundo} other{Há {count} segundos}}",
+  "relativeSecondsAgo": "{count, plural, =1{Há {count} segundo} other{Há {count} segundos}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -61,7 +61,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count, plural, =1{Há 1 minuto} other{Há {count} minutos}}",
+  "relativeMinutesAgo": "{count, plural, =1{Há {count} minuto} other{Há {count} minutos}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -69,7 +69,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count, plural, =1{Há 1 hora} other{Há {count} horas}}",
+  "relativeHoursAgo": "{count, plural, =1{Há {count} hora} other{Há {count} horas}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -77,7 +77,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count, plural, =1{Há 1 dia} other{Há {count} dias}}",
+  "relativeDaysAgo": "{count, plural, =1{Há {count} dia} other{Há {count} dias}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -85,7 +85,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count, plural, =1{Há 1 mês} other{Há {count} meses}}",
+  "relativeMonthsAgo": "{count, plural, =1{Há {count} mês} other{Há {count} meses}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -93,7 +93,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count, plural, =1{Há 1 ano} other{Há {count} anos}}",
+  "relativeYearsAgo": "{count, plural, =1{Há {count} ano} other{Há {count} anos}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -203,7 +203,7 @@
       }
     }
   },
-  "progressPageStatus": "Página {page}, {count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "progressPageStatus": "Página {page}, {count, plural, =1{{count} registro adicionado} other{{count} registros adicionados}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -214,7 +214,7 @@
       }
     }
   },
-  "progressDoneSummary": "{count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "progressDoneSummary": "{count, plural, =1{{count} registro adicionado} other{{count} registros adicionados}}",
   "@progressDoneSummary": {
     "placeholders": {
       "count": {
@@ -231,7 +231,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "{count, plural, =1{Dados de 1 item atualizados} other{Dados de {count} itens atualizados}}",
+  "progressDoneItemDataSummary": "{count, plural, =1{Dados de {count} item atualizados} other{Dados de {count} itens atualizados}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -240,7 +240,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "{count, plural, =1{1 imagem de item ausente baixada} other{{count} imagens de itens ausentes baixadas}}",
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{{count} imagem de item ausente baixada} other{{count} imagens de itens ausentes baixadas}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -249,7 +249,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Dados de idioma obsoletos removidos de 1 item} other{Dados de idioma obsoletos removidos de {count} itens}}",
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Dados de idioma obsoletos removidos de {count} item} other{Dados de idioma obsoletos removidos de {count} itens}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -266,7 +266,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
+  "progressDoneImportSummary": "{accounts, plural, =1{{accounts} conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
@@ -471,7 +471,7 @@
       }
     }
   },
-  "pityDistance": "{n, plural, =1{Falta 1 oração para o próximo pity} other{Faltam {n} orações para o próximo pity}}",
+  "pityDistance": "{n, plural, =1{Falta {n} oração para o próximo pity} other{Faltam {n} orações para o próximo pity}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -479,7 +479,7 @@
       }
     }
   },
-  "pityClose": "Pity próximo! {n, plural, =1{Falta 1 oração} other{Faltam {n} orações}}",
+  "pityClose": "Pity próximo! {n, plural, =1{Falta {n} oração} other{Faltam {n} orações}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -513,7 +513,7 @@
       }
     }
   },
-  "timelineSinceLast": "{n, plural, =1{1 oração} other{{n} orações}}",
+  "timelineSinceLast": "{n, plural, =1{{n} oração} other{{n} orações}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -522,7 +522,7 @@
     }
   },
   "timelineNowLabel": "Agora",
-  "timelineNowPulls": "{n, plural, =1{1 oração acumulada} other{{n} orações acumuladas}}",
+  "timelineNowPulls": "{n, plural, =1{{n} oração acumulada} other{{n} orações acumuladas}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -530,7 +530,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "timelineNowSinceLast": "{n, plural, =1{{n} oração desde o último {star}} other{{n} orações desde o último {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -541,7 +541,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, =1{1 oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
+  "timelineNowSinceCrossPool": "{n, plural, =1{{n} oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -565,7 +565,7 @@
   },
   "timelineScrollLeft": "Rolar para a esquerda",
   "timelineScrollRight": "Rolar para a direita",
-  "timelineLoadMore": "Carregar mais ({n, plural, =1{1 restante} other{{n} restantes}})",
+  "timelineLoadMore": "Carregar mais ({n, plural, =1{{n} restante} other{{n} restantes}})",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -589,7 +589,7 @@
   "pagerLast": "Última página",
   "pagerJumpTitle": "Ir para a página",
   "pagerJumpLabel": "Página ({min}–{max})",
-  "pagerJumpCurrent": "Página atual: {page} · {total, plural, =1{1 registro} other{{total} registros}}",
+  "pagerJumpCurrent": "Página atual: {page} · {total, plural, =1{{total} registro} other{{total} registros}}",
   "pagerJumpGo": "Ir",
   "pagerJumpInvalid": "Digite uma página de {min} a {max}",
   "settingsClearActive": "Limpar dados da conta atual",
@@ -741,7 +741,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmação de importação",
-  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
+  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{{accounts} conta} other{{accounts} contas}} ({records, plural, =1{{records} registro} other{{records} registros}} no total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -762,7 +762,7 @@
       }
     }
   },
-  "settingsImportSuccess": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{1 registro} other{{records} registros}})",
+  "settingsImportSuccess": "{accounts, plural, =1{{accounts} conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{{records} registro} other{{records} registros}})",
   "@settingsImportSuccess": {
     "placeholders": {
       "accounts": {
@@ -804,7 +804,7 @@
   "settingsImportSelectTitle": "Selecionar contas para importar",
   "settingsImportMergeBadge": "Mesclar",
   "accountsPickerSelectAll": "Selecionar tudo",
-  "accountRecordCount": "{n, plural, =1{1 registro} other{{n} registros}}",
+  "accountRecordCount": "{n, plural, =1{{n} registro} other{{n} registros}}",
   "@accountRecordCount": {
     "placeholders": {
       "n": {
@@ -858,7 +858,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Contagem de itens de maior raridade por banner",
-  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{{n} oração desde o último {star}} other{{n} orações desde o último {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {

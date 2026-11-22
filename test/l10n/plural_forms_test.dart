@@ -79,6 +79,16 @@ void main() {
     expect(l.accountRecordCount(2), '2 enregistrements');
   });
 
+  test('pt、pt_BR 的 0 落在 one 分支，仍要顯示 0 而不是字面 1', () {
+    for (final locale in ['pt', 'pt_BR']) {
+      final l = _l(locale);
+      expect(l.accountRecordCount(0), startsWith('0 '), reason: locale);
+      expect(l.progressDoneSummary(0), contains('0'), reason: locale);
+      expect(l.progressDoneSummary(0), isNot(contains('1')), reason: locale);
+      expect(l.timelineSinceLast(0), startsWith('0 '), reason: locale);
+    }
+  });
+
   test('ru 依 one／few／many 變化：21 與 1 同形，2 與 5 不同形', () {
     final l = _l('ru');
     for (final entry in _probes.entries) {
