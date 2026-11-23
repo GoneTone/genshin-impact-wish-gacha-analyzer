@@ -1,9 +1,17 @@
 import java.util.Base64
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// 上傳金鑰設定（git-ignored）。不存在時 release 退回 debug 金鑰，讓開發者照常 `flutter run --release`；
+// CI 會在建置前從 secrets 寫入這個檔案，缺 secrets 時由 workflow 直接失敗。
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) keystorePropertiesFile.inputStream().use { load(it) }
 }
 
 // Flutter 把所有 --dart-define／--dart-define-from-file 展開成以逗號分隔、每段 base64 的 KEY=VALUE，放進 dart-defines 屬性。
@@ -42,14 +50,28 @@ android {
         manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                // storeFile 可為絕對路徑或相對於 android/ 的路徑。
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             if (injectedAdmobAppId.isNotEmpty()) {
                 manifestPlaceholders["admobAppId"] = injectedAdmobAppId
             }
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
