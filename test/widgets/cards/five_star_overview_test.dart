@@ -81,6 +81,32 @@ void main() {
     expect(find.text('1'), findsOneWidget); // B 抽到 1 次
   });
 
+  testWidgets('次數徽章在結束側：由左往右在右下、由右往左在左下', (tester) async {
+    final c = await _container(tester);
+    final items = buildFiveStarCollection([
+      _r('1', 'A', DateTime(2025, 1, 1)),
+    ], index: emptyIndex);
+    for (final direction in TextDirection.values) {
+      await tester.pumpWidget(
+        _wrap(
+          c,
+          Directionality(
+            textDirection: direction,
+            child: FiveStarOverview(items: items),
+          ),
+        ),
+      );
+      await tester.pump();
+      final badgeX = tester.getCenter(find.text('1')).dx;
+      final iconX = tester.getCenter(find.byType(GachaItemIcon)).dx;
+      expect(
+        badgeX > iconX,
+        direction == TextDirection.ltr,
+        reason: '$direction',
+      );
+    }
+  });
+
   testWidgets('interactive=false → 不掛 GachaItemTapTarget', (tester) async {
     final c = await _container(tester);
     final items = buildFiveStarCollection([
