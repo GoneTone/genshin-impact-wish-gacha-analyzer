@@ -947,7 +947,7 @@
   "actionRedetectGame": "重新偵測",
   "@actionRedetectGame": {"description": "Button that checks again whether Genshin Impact is installed"},
   "updateOpenPlayStore": "前往 Google Play",
-  "@updateOpenPlayStore": {"description": "Button that opens the Genshin Impact page on Google Play"},
+  "@updateOpenPlayStore": {"description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"},
   "actionSetupLogAccess": "設定讀取方式",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"

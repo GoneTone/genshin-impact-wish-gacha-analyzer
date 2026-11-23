@@ -42,12 +42,14 @@ class ReleaseNotesContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.s),
-                RelativeTimeText(
-                  time: release.publishedAt,
-                  templateBuilder: l.updateReleasedAt,
-                  useDateOnly: true,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: tokens.textMuted,
+                Flexible(
+                  child: RelativeTimeText(
+                    time: release.publishedAt,
+                    templateBuilder: l.updateReleasedAt,
+                    useDateOnly: true,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: tokens.textMuted,
+                    ),
                   ),
                 ),
               ],

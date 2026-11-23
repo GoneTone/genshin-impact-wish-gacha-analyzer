@@ -14,6 +14,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/play_update.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/play_update_download.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 http.Response _ok(List<Map<String, dynamic>> body) =>
@@ -516,6 +517,64 @@ void main() {
       );
     });
 
+    test('relaunch with the update already downloaded → restart prompt only, '
+        'manual re-check opens the dialog', () async {
+      final logs = <String>[];
+      final sub = Logger.root.onRecord.listen((r) => logs.add(r.message));
+      addTearDown(sub.cancel);
+      final gateway = _FakePlayGateway(
+        info: _inProgress(InstallStatus.downloaded),
+      );
+      final container = _androidContainer(
+        gateway: gateway,
+        client: _githubThree(),
+      );
+      await container.read(settingsProvider.notifier).waitForLoad();
+      final notifier = container.read(appReleaseProvider.notifier);
+
+      await notifier.check(manual: false);
+      expect(
+        container.read(playUpdateDownloadProvider),
+        PlayDownloadPhase.downloaded,
+      );
+      expect(container.read(appReleaseProvider), isA<ReleaseIdle>());
+      expect(
+        logs,
+        contains(
+          'play update check: available=true code=1090099 tag=v1.9.0 '
+          'flexibleAllowed=false installStatus=downloaded',
+        ),
+      );
+
+      await notifier.check(manual: true);
+      expect(container.read(appReleaseProvider), isA<ReleaseAvailable>());
+      expect(gateway.downloads, 0);
+    });
+
+    test('relaunch while the download is in progress → downloading, no new '
+        'flow, not reported as up to date', () async {
+      for (final status in [InstallStatus.pending, InstallStatus.downloading]) {
+        final gateway = _FakePlayGateway(info: _inProgress(status));
+        final container = _androidContainer(
+          gateway: gateway,
+          client: _githubThree(),
+        );
+        await container.read(settingsProvider.notifier).waitForLoad();
+        final notifier = container.read(appReleaseProvider.notifier);
+
+        await notifier.check(manual: false);
+        expect(
+          container.read(playUpdateDownloadProvider),
+          PlayDownloadPhase.downloading,
+        );
+        expect(container.read(appReleaseProvider), isA<ReleaseIdle>());
+
+        await notifier.check(manual: true);
+        expect(container.read(appReleaseProvider), isA<ReleaseAvailable>());
+        expect(gateway.downloads, 0);
+      }
+    });
+
     test(
       'developer-triggered update in progress is not "up to date"',
       () async {
@@ -528,6 +587,10 @@ void main() {
         await container.read(appReleaseProvider.notifier).check(manual: true);
 
         expect(container.read(appReleaseProvider), isA<ReleaseAvailable>());
+        expect(
+          container.read(playUpdateDownloadProvider),
+          PlayDownloadPhase.idle,
+        );
       },
     );
 

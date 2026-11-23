@@ -8,6 +8,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/android_version_code
 import 'package:genshin_impact_wish_gacha_analyzer/services/app_release_checker.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/play_update.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/play_update_download.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/services/app_release_checker.dart'
@@ -145,6 +146,22 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
       'flexibleAllowed=${info.flexibleAllowed} '
       'installStatus=${info.installStatus.name}',
     );
+    final download = ref.read(playUpdateDownloadProvider.notifier);
+    final wasDownloaded =
+        ref.read(playUpdateDownloadProvider) == PlayDownloadPhase.downloaded;
+    download.syncWithPlay(info);
+    // 剛同步成已下載時，常駐的「重新啟動」SnackBar 就是提示，不再多跳一個 dialog。
+    if (info.downloaded && !wasDownloaded) {
+      log.info('play update already downloaded, showing restart prompt');
+      state = const ReleaseIdle();
+      return;
+    }
+    // 之前已開始下載，自動檢查不用再問一次；手動檢查照常顯示新版。
+    if (info.downloading && !manual) {
+      log.info('play update download already in progress');
+      state = const ReleaseIdle();
+      return;
+    }
     if (!info.available) {
       state = manual ? const ReleaseUpToDate() : const ReleaseIdle();
       return;

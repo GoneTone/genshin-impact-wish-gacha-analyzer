@@ -16,11 +16,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/pages/app_shell.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/play_update_download.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
+
+import '../helpers/fake_url_launcher.dart';
 
 /// 已有一個帳號、記錄 update 呼叫次數的 repository 替身。
 class _Repo extends GachaRepository {
@@ -50,6 +53,18 @@ class _Release extends AppReleaseNotifier {
   Future<void> check({required bool manual}) async {}
 }
 
+/// 可手動切換階段、記錄 install 呼叫的下載替身。
+class _Download extends PlayUpdateDownloadNotifier {
+  /// install 被呼叫的次數。
+  int installs = 0;
+
+  /// 直接把狀態設為 [phase]。
+  void setPhase(PlayDownloadPhase phase) => state = phase;
+
+  @override
+  Future<void> install() async => installs++;
+}
+
 /// 不啟動同步的雲端同步替身。
 class _Sync extends CloudSyncNotifier {
   @override
@@ -59,6 +74,7 @@ class _Sync extends CloudSyncNotifier {
 void main() {
   late _Repo repo;
   late ProviderContainer container;
+  late _Download download;
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -80,12 +96,14 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = textScale;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     repo = _Repo();
+    download = _Download();
     container = ProviderContainer(
       overrides: [
         appVersionProvider.overrideWithValue('1.8.1'),
         gachaRepositoryProvider.overrideWith(() => repo),
         appReleaseProvider.overrideWith(_Release.new),
         cloudSyncProvider.overrideWith(_Sync.new),
+        playUpdateDownloadProvider.overrideWith(() => download),
       ],
     );
     addTearDown(container.dispose);
@@ -133,6 +151,52 @@ void main() {
       tester.element(find.byType(AppShell)),
     ).openAppDrawerTooltip,
   );
+
+  testWidgets('downloaded update shows a persistent restart snackbar', (
+    tester,
+  ) async {
+    final l = await pump(tester, const Size(360, 800));
+    expect(find.text(l.updateDownloadedMessage), findsNothing);
+    download.setPhase(PlayDownloadPhase.downloaded);
+    await tester.pump();
+    await tester.pump(const Duration(minutes: 5));
+    expect(find.text(l.updateDownloadedMessage), findsOneWidget);
+    await tester.tap(find.text(l.updateRestartAction));
+    expect(download.installs, 1);
+    final bar = tester.widget<SnackBar>(find.byType(SnackBar));
+    expect(bar.persist, isTrue);
+  });
+
+  for (final locale in AppLocalizations.supportedLocales) {
+    for (final scale in const [1.0, 1.3]) {
+      testWidgets('in-app update failure offers Google Play; denial stays '
+          'silent ($locale x$scale)', (tester) async {
+        final launcher = installFakeUrlLauncher();
+        final l = await pump(
+          tester,
+          const Size(320, 640),
+          locale: locale,
+          textScale: scale,
+        );
+        download.setPhase(PlayDownloadPhase.downloading);
+        await tester.pump();
+        download.setPhase(PlayDownloadPhase.idle);
+        await tester.pumpAndSettle();
+        expect(find.byType(SnackBar), findsNothing);
+
+        download.setPhase(PlayDownloadPhase.failed);
+        await tester.pumpAndSettle();
+        expect(find.text(l.updateInAppUnavailable), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await tester.tap(find.text(l.updateOpenPlayStore));
+        await tester.pumpAndSettle();
+        expect(launcher.launched, [
+          'https://play.google.com/store/apps/details?id=tw.reh.genshin.gacha',
+        ]);
+        expect(find.text(l.updateInAppUnavailable), findsNothing);
+      });
+    }
+  }
 
   testWidgets('phone portrait uses a drawer instead of the rail', (
     tester,

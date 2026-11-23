@@ -13,13 +13,20 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/play_update_download.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
+
+/// 本 App 的 Google Play 商店頁。
+final _playStoreUri = Uri.parse(
+  'https://play.google.com/store/apps/details?id=tw.reh.genshin.gacha',
+);
 
 /// 頂層 shell，包含 AppBar、側欄 rail（手機排版改為抽屜）、底部狀態列。
 ///
@@ -129,7 +136,8 @@ class _AppShellState extends ConsumerState<AppShell> {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (_) => NewVersionDialog(releases: next.releases),
+          builder: (_) =>
+              NewVersionDialog(releases: next.releases, playTag: next.playTag),
         ).whenComplete(() {
           _releaseDialogOpen = false;
         });
@@ -137,6 +145,60 @@ class _AppShellState extends ConsumerState<AppShell> {
     });
 
     final l = AppLocalizations.of(context)!;
+    ref.listen<PlayDownloadPhase>(playUpdateDownloadProvider, (prev, next) {
+      if (next == PlayDownloadPhase.failed) {
+        final messenger = ScaffoldMessenger.of(context);
+        final theme = Theme.of(context);
+        messenger.showSnackBar(
+          SnackBar(
+            persist: false,
+            // SnackBarAction 的按鈕文字不會換行，窄螢幕或放大字體時會溢出；
+            // 改把按鈕放進內容，讓它受 SnackBar 寬度約束而換行。
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(l.updateInAppUnavailable),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor:
+                          theme.snackBarTheme.actionTextColor ??
+                          theme.colorScheme.inversePrimary,
+                    ),
+                    onPressed: () {
+                      messenger.hideCurrentSnackBar(
+                        reason: SnackBarClosedReason.action,
+                      );
+                      openExternalUrl(_playStoreUri);
+                    },
+                    child: Text(
+                      l.updateOpenPlayStore,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        return;
+      }
+      if (next != PlayDownloadPhase.downloaded) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l.updateDownloadedMessage),
+          persist: true,
+          action: SnackBarAction(
+            label: l.updateRestartAction,
+            onPressed: () =>
+                ref.read(playUpdateDownloadProvider.notifier).install(),
+          ),
+        ),
+      );
+    });
+
     final tokens = Theme.of(context).gacha;
     final location = GoRouterState.of(context).uri.path;
     final phoneOrientation = phoneOrientationOf(context);
