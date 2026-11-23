@@ -133,3 +133,12 @@
 - 英文常駐祈願：Standard Wish → Permanent Wish；側欄短名 `navStandard` 跟著改成 Permanent。照英文欄的 16 種遊戲沒出的語言一併修改。常駐頌願的官方英文是 Standard Ode，不受影響。
 - 法文武器活動祈願：Vœux événements d'armes → Vœux événements d'arme。
 - 葡文（`pt`、`pt_BR`）角色活動祈願：Oração de Evento de Personagem → Oração do Evento do Personagem；武器活動祈願：Oração de Evento de Arma → Oração do Evento de Arma。
+
+### 驗收後修正：分享圖由右往左
+
+驗收時分享圖仍固定由左往右，使用者 2026-11-23 指示原神與鳴潮都要處理：
+
+- 離屏渲染的 `Localizations` 用 `DefaultWidgetsLocalizations`，會再包一層固定由左往右的 `Directionality`，所以書寫方向改在 `Localizations` 底下依語言（`Bidi.isRtlLanguage`）設定。
+- `LeftDrivenEqualHeight` 依方向鏡像，阿拉伯文、希伯來文時圓餅在右、時間軸在左。
+- 標頭的 GitHub 網址與 UID 固定由左往右；更新時間以 U+2066／U+2069 隔離，阿拉伯文句子裡的日期才不會被重排成「日-月-年」。
+- 鳴潮同時補上五星一覽次數徽章跟著方向走（原神子專案 11 已改），兩邊都加了測試。
