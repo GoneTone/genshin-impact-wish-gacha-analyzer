@@ -42,7 +42,7 @@
   "navOdesEvent": "Evento",
   "navOdesStandard": "Permanente",
   "navSectionGacha": "Orar",
-  "navSectionOdes": "Odes",
+  "navSectionOdes": "Ode",
   "footerNotSynced": "Não sincronizado",
   "footerLastUpdated": "Última atualização: {time}",
   "@footerLastUpdated": {
@@ -336,7 +336,7 @@
   "errorNoRecords": "Esta conta não possui registros de Oração",
   "pageOverviewTitle": "Dados gerais (total de todos os banners)",
   "pageOverviewGachaSection": "Resumo de Orações",
-  "pageOverviewOdesSection": "Resumo de Odes",
+  "pageOverviewOdesSection": "Resumo de Ode",
   "pageBannerRecordList": "Lista de registros",
   "rarityOverviewTitle": "Visão geral de {star}",
   "@rarityOverviewTitle": {

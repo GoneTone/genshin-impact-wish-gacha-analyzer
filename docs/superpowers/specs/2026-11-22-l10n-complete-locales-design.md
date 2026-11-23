@@ -128,11 +128,12 @@
 
 ### 驗收後修正：既有欄位改依官方
 
-使用者 2026-11-23 指示「要依官方為準，更新術語表」，推翻上面「既有 9 欄不改動」的做法。術語表與 ARB 依官方祈願頁 bundle 修正 4 處：
+使用者 2026-11-23 指示「要依官方為準，更新術語表」，推翻上面「既有 9 欄不改動」的做法。術語表與 ARB 依官方語系檔修正下列 5 處：
 
 - 英文常駐祈願：Standard Wish → Permanent Wish；側欄短名 `navStandard` 跟著改成 Permanent。照英文欄的 16 種遊戲沒出的語言一併修改。常駐頌願的官方英文是 Standard Ode，不受影響。
 - 法文武器活動祈願：Vœux événements d'armes → Vœux événements d'arme。
 - 葡文（`pt`、`pt_BR`）角色活動祈願：Oração de Evento de Personagem → Oração do Evento do Personagem；武器活動祈願：Oração de Evento de Arma → Oração do Evento de Arma。
+- 頌願（側欄區塊標題與句子裡的名稱）：英文 Odes → Ode、西文 Odas → Oda、葡文 Odes → Ode，照官方「頌願類型」去掉「類型」；照英文欄的 16 種語言一併修改，法文官方本來就是 odes，不動。
 
 ### 驗收後修正：分享圖由右往左
 

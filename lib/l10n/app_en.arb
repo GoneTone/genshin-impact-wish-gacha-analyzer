@@ -42,7 +42,7 @@
   "navOdesEvent": "Event",
   "navOdesStandard": "Standard",
   "navSectionGacha": "Wish",
-  "navSectionOdes": "Odes",
+  "navSectionOdes": "Ode",
   "footerNotSynced": "Not synced",
   "footerLastUpdated": "Last updated: {time}",
   "@footerLastUpdated": {
@@ -108,7 +108,7 @@
   "emptyNoSyncMessage": "Tap {icon} in the top right to start",
   "emptyNoRecords": "No records for this banner",
   "emptyNoFilterMatch": "No records match the current filter",
-  "emptyNoOdesRecords": "No Odes records yet",
+  "emptyNoOdesRecords": "No Ode records yet",
   "emptyNoGachaRecords": "No Wish records yet",
   "statsTotal": "Total pulls",
   "statsRankCount": "{star} Count",
@@ -336,7 +336,7 @@
   "errorNoRecords": "This account has no Wish records yet",
   "pageOverviewTitle": "Overview (all banners)",
   "pageOverviewGachaSection": "Wish Overview",
-  "pageOverviewOdesSection": "Odes Overview",
+  "pageOverviewOdesSection": "Ode Overview",
   "pageBannerRecordList": "Record list",
   "rarityOverviewTitle": "{star} Overview",
   "@rarityOverviewTitle": {
