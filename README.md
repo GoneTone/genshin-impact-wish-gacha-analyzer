@@ -12,7 +12,7 @@ Android 版不攔截連線，改為讀取系統 log，從中找出原神開啟�
 
 第一次按下「更新資料」會加載您完整的卡池歷史，這可能需要一些時間，完成後會將資料存放在您的裝置內，這樣下次開啟軟體就不用再花時間等待資料加載。之後想取得新資料按一下「更新資料」即可，軟體會記住先前取得的網址，能用就直接用、不用每次重新取得；如果網址過期，軟體會請您再到遊戲開一次卡池歷史頁面以重新取得網址。
 
-請放心：本軟體不會竄改任何遊戲檔案，也不會讀取或竄改遊戲記憶體與遊戲傳輸的資料。Windows 版只會在 WebView 開啟卡池歷史頁面時攔下那一條請求網址，另外也會讀取遊戲的 log 與網頁快取來找出網址；Android 版只會從系統 log 讀取原神的祈願記錄網址。所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
+請放心：本軟體不會竄改任何遊戲檔案，也不會讀取或竄改遊戲記憶體。Windows 版只會攔下 WebView 開啟卡池歷史頁面時的那一條請求網址，以及從遊戲的 log 找出遊戲資料夾、從網頁快取找出網址；Android 版只會從系統 log 讀取原神的祈願記錄網址。所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
 
 文章：
 - 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
@@ -62,7 +62,7 @@ Android 版不攔截連線，改為讀取系統 log，從中找出原神開啟�
 - 自動合併新舊資料，不覆蓋過去記錄，不會因為官方歷史記錄過時而消失
 - 總抽數及 5★ / 4★ / 3★ / 2★ 件數與占比統計
 - 5★ 與 4★ 雙保底進度條（常駐頌願為 4★ 與 3★），並顯示距離保底剩餘抽數
-- 5★ / 4★ 平均出貨抽數統計（各卡池與整體）
+- 5★ / 4★ 平均出貨抽數統計（各卡池與整體；常駐頌願為 4★ 與 3★）
 - 各卡池 5★ 時間軸（常駐頌願為 4★）
 - 5★ 總覽：橫向陳列抽到過的所有不重複 5★，每個附累計次數徽章、可點開詳情；各卡池頁、綜合數據頁與分享圖皆會顯示
 - 各卡池最高稀有度件數比較長條圖
@@ -114,7 +114,7 @@ Rust 會在 `flutter run` / `flutter build` 時由 `rust_builder/` 的 cargokit 
 
 ```bash
 flutter run -d windows        # Windows
-flutter run -d <device id>    # Android 實機或模擬器（ID 用 flutter devices 查）
+flutter run -d <裝置 ID>      # Android 實機或模擬器（ID 用 flutter devices 查）
 ```
 
 ### 雲端同步憑證（選用）
@@ -157,7 +157,7 @@ Android 原生廣告的 AdMob ID 同樣在建置時注入，不寫進原始碼�
 ```
 
 ```bash
-flutter run -d <device id> --dart-define-from-file=secrets/cloud_sync_defines.json --dart-define-from-file=secrets/ads_defines.json
+flutter run -d <裝置 ID> --dart-define-from-file=secrets/cloud_sync_defines.json --dart-define-from-file=secrets/ads_defines.json
 ```
 
 沒有這個檔案、或非 release 建置時，一律使用 Google 官方測試廣告 ID，只會顯示測試廣告。

@@ -12,7 +12,7 @@ The Android version doesn't intercept network traffic; instead it reads the syst
 
 The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously obtained URL and reuses it as long as it's still valid, so you don't have to obtain it again every time. If the URL has expired, the utility will ask you to open the wish history page in the game again to get a new one.
 
-Rest assured: this utility does not modify any game file, and does not read or modify game memory or in-game network traffic. On Windows it only intercepts the wish history page request that the in-game WebView itself makes, and also reads the game's log and web cache to find the URL; on Android it only reads Genshin Impact's Wish History URL from the system log. So there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
+Rest assured: this utility does not modify any game file, and does not read or modify game memory. On Windows it only intercepts the one wish history page request that the in-game WebView makes, reads the game's log to locate the game folder, and reads the game's web cache to find the URL; on Android it only reads Genshin Impact's Wish History URL from the system log. So there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
 - 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
@@ -62,7 +62,7 @@ The utility may trigger anti-virus software during installation and execution. T
 - Incremental updates merge new records without overwriting old ones, so entries that fall off the official history won't disappear
 - Total pulls and 5★ / 4★ / 3★ / 2★ counts with their share of the total
 - Dual pity progress (5★ and 4★; 4★ and 3★ for Standard Ode) showing remaining pulls until pity
-- Average pulls per 5★ / 4★ hit (per-banner and overall)
+- Average pulls per 5★ / 4★ hit (per-banner and overall; 4★ and 3★ for Standard Ode)
 - Per-gacha 5★ timeline (4★ for Standard Ode)
 - 5★ overview: every distinct 5★ you've pulled laid out in a row, each with a cumulative count badge and clickable for details — shown on each banner page, the overview page, and the share image
 - Bar chart comparing each gacha's highest-rarity counts
