@@ -940,11 +940,13 @@ class _ScrollHintBoxState extends State<_ScrollHintBox> {
             ),
           ),
           if (_hasMore) ...[
+            // 往下多伸 1px（超出部分由 Stack 裁掉）：底邊落在半個像素上時，漸層的
+            // 抗鋸齒邊只蓋到一部分，捲動內容的硬邊裁切卻畫滿那一列，會漏出一條細線。
             const Positioned(
               left: 0,
               right: 0,
-              bottom: 0,
-              height: _fadeHeight,
+              bottom: -1,
+              height: _fadeHeight + 1,
               child: IgnorePointer(
                 child: ScrollEdgeFade(side: ScrollSide.bottom),
               ),
