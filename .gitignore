@@ -70,3 +70,6 @@ app.*.map.json
 
 # Local build-time secrets (dart-define-from-file inputs; CI writes its own from repo secrets)
 /secrets/
+
+# Non-public Play listing material (setup steps, store text, data safety, review notes, store icon); the privacy policy must be public and lives in docs/privacy-policy.md
+/private/

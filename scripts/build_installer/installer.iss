@@ -18,13 +18,23 @@
   #define MyAppVersion "0.0.0"
 #endif
 
+; 檔案版本資源只接受純數字（n.n.n.n），預覽版（例如 1.9.0-rc.22）要去掉 -rc.N；
+; 完整版本字串放在文字版本欄位，安裝程式與控制台顯示的仍是 MyAppVersion。
+#if Pos("-", MyAppVersion) > 0
+  #define MyAppNumericVersion Copy(MyAppVersion, 1, Pos("-", MyAppVersion) - 1)
+#else
+  #define MyAppNumericVersion MyAppVersion
+#endif
+
 [Setup]
 AppId={{#MyAppId}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
-VersionInfoVersion={#MyAppVersion}
-VersionInfoProductVersion={#MyAppVersion}
+VersionInfoVersion={#MyAppNumericVersion}
+VersionInfoProductVersion={#MyAppNumericVersion}
+VersionInfoTextVersion={#MyAppVersion}
+VersionInfoProductTextVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppCopyright=Copyright (C) 2020-{#GetDateTimeString('yyyy','','')} {#MyAppPublisher}
