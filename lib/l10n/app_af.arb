@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Laai af",
+  "updateButtonUpdate": "Werk by",
+  "updateNotesUnavailable": "Vrystellingsnotas is tans nie beskikbaar nie. Sien Google Play vir besonderhede.",
+  "updateDownloadingMessage": "Laai die bywerking af...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Die bywerking is afgelaai",
+  "updateRestartAction": "Herbegin",
+  "updateInAppUnavailable": "Kan nie nou in die app bywerk nie. Werk asseblief deur Google Play by.",
   "updateButtonSkip": "Slaan hierdie weergawe oor",
   "updateButtonLater": "Later",
   "updateCheckButton": "Kyk vir opdaterings",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Onverwagte antwoordformaat",
+  "updateErrorPlay": "Kon nie Google Play bereik nie, of hierdie kopie is nie vanaf Google Play geïnstalleer nie",
   "currentReleaseTitle": "Vrystellingsnotas van huidige weergawe",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

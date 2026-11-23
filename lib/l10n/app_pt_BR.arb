@@ -886,6 +886,15 @@
     }
   },
   "updateButtonDownload": "Baixar",
+  "updateButtonUpdate": "Atualizar",
+  "updateNotesUnavailable": "As notas da versão não estão disponíveis no momento. Veja os detalhes no Google Play.",
+  "updateDownloadingMessage": "Baixando a atualização...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "A atualização foi baixada",
+  "updateRestartAction": "Reiniciar",
+  "updateInAppUnavailable": "Não é possível atualizar pelo app agora. Atualize pelo Google Play.",
   "updateButtonSkip": "Pular esta versão",
   "updateButtonLater": "Lembrar depois",
   "updateCheckButton": "Verificar atualizações",
@@ -911,6 +920,7 @@
     }
   },
   "updateErrorFormat": "Formato de resposta inválido",
+  "updateErrorPlay": "Não foi possível acessar o Google Play, ou esta cópia não foi instalada pelo Google Play",
   "currentReleaseTitle": "Notas da versão atual",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

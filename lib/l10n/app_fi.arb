@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Lataa",
+  "updateButtonUpdate": "Päivitä",
+  "updateNotesUnavailable": "Julkaisutiedot eivät ole juuri nyt saatavilla. Katso lisätiedot Google Playsta.",
+  "updateDownloadingMessage": "Ladataan päivitystä...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Päivitys on ladattu",
+  "updateRestartAction": "Käynnistä uudelleen",
+  "updateInAppUnavailable": "Sovelluksen sisäinen päivitys ei ole juuri nyt mahdollinen. Päivitä Google Playn kautta.",
   "updateButtonSkip": "Ohita tämä versio",
   "updateButtonLater": "Myöhemmin",
   "updateCheckButton": "Tarkista päivitykset",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Odottamaton vastausmuoto",
+  "updateErrorPlay": "Google Playhin ei saatu yhteyttä, tai tätä kopiota ei ole asennettu Google Playsta",
   "currentReleaseTitle": "Nykyisen version julkaisutiedot",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

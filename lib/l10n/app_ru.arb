@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Скачать",
+  "updateButtonUpdate": "Обновить",
+  "updateNotesUnavailable": "Список изменений сейчас недоступен. Подробности смотрите в Google Play.",
+  "updateDownloadingMessage": "Загрузка обновления...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Обновление загружено",
+  "updateRestartAction": "Перезапустить",
+  "updateInAppUnavailable": "Сейчас нельзя обновиться внутри приложения. Обновите его через Google Play.",
   "updateButtonSkip": "Пропустить эту версию",
   "updateButtonLater": "Позже",
   "updateCheckButton": "Проверить обновления",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Неожиданный формат ответа",
+  "updateErrorPlay": "Не удалось связаться с Google Play, или приложение установлено не из Google Play",
   "currentReleaseTitle": "Изменения в текущей версии",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

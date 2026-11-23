@@ -883,6 +883,15 @@
     }
   },
   "updateButtonDownload": "前往下载",
+  "updateButtonUpdate": "更新",
+  "updateNotesUnavailable": "目前无法获取更新内容，详情请见 Google Play。",
+  "updateDownloadingMessage": "正在下载新版本...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "新版本已下载完成",
+  "updateRestartAction": "重新启动",
+  "updateInAppUnavailable": "目前无法在 App 内更新，请到 Google Play 更新。",
   "updateButtonSkip": "跳过此版本",
   "updateButtonLater": "稍后再说",
   "updateCheckButton": "检查更新",
@@ -908,6 +917,7 @@
     }
   },
   "updateErrorFormat": "响应格式异常",
+  "updateErrorPlay": "无法连接到 Google Play，或此版本不是从 Google Play 安装",
   "currentReleaseTitle": "当前版本的更新内容",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

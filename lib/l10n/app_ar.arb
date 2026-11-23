@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "تنزيل",
+  "updateButtonUpdate": "تحديث",
+  "updateNotesUnavailable": "ملاحظات الإصدار غير متاحة حاليًا. راجع Google Play للتفاصيل.",
+  "updateDownloadingMessage": "جارٍ تنزيل التحديث...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "تم تنزيل التحديث",
+  "updateRestartAction": "إعادة التشغيل",
+  "updateInAppUnavailable": "لا يمكن التحديث من داخل التطبيق حاليًا. يُرجى التحديث من Google Play.",
   "updateButtonSkip": "تخطي هذا الإصدار",
   "updateButtonLater": "لاحقًا",
   "updateCheckButton": "التحقق من التحديثات",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "تنسيق استجابة غير متوقع",
+  "updateErrorPlay": "تعذّر الوصول إلى Google Play، أو أن هذه النسخة لم تُثبَّت من Google Play",
   "currentReleaseTitle": "ملاحظات الإصدار الحالي",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

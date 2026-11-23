@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Baixa",
+  "updateButtonUpdate": "Actualitza",
+  "updateNotesUnavailable": "Les notes de la versió no estan disponibles ara mateix. Consulta Google Play per a més detalls.",
+  "updateDownloadingMessage": "S'està baixant l'actualització...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "S'ha baixat l'actualització",
+  "updateRestartAction": "Reinicia",
+  "updateInAppUnavailable": "Ara mateix no es pot actualitzar des de l'aplicació. Actualitza-la des de Google Play.",
   "updateButtonSkip": "Omet aquesta versió",
   "updateButtonLater": "Més tard",
   "updateCheckButton": "Cerca actualitzacions",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Format de resposta inesperat",
+  "updateErrorPlay": "No s'ha pogut accedir a Google Play, o aquesta còpia no s'ha instal·lat des de Google Play",
   "currentReleaseTitle": "Notes de la versió actual",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

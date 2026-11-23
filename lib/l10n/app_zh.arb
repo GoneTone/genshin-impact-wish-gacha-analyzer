@@ -719,6 +719,15 @@
     "placeholders": { "date": { "type": "String" } }
   },
   "updateButtonDownload": "前往下載",
+  "updateButtonUpdate": "更新",
+  "updateNotesUnavailable": "目前無法取得更新內容，詳情請見 Google Play。",
+  "updateDownloadingMessage": "正在下載新版本...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "新版本已下載完成",
+  "updateRestartAction": "重新啟動",
+  "updateInAppUnavailable": "目前無法在 App 內更新，請到 Google Play 更新。",
   "updateButtonSkip": "跳過此版本",
   "updateButtonLater": "稍後再說",
   "updateCheckButton": "檢查更新",
@@ -736,6 +745,7 @@
     "placeholders": { "status": { "type": "String" } }
   },
   "updateErrorFormat": "回應格式異常",
+  "updateErrorPlay": "無法連線到 Google Play，或此版本不是從 Google Play 安裝",
   "currentReleaseTitle": "目前版本的更新內容",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

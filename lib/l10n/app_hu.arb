@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Letöltés",
+  "updateButtonUpdate": "Frissítés",
+  "updateNotesUnavailable": "A kiadási megjegyzések jelenleg nem érhetők el. A részletekért lásd a Google Playt.",
+  "updateDownloadingMessage": "A frissítés letöltése...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "A frissítés letöltődött",
+  "updateRestartAction": "Újraindítás",
+  "updateInAppUnavailable": "Az alkalmazáson belüli frissítés most nem lehetséges. Frissítsen a Google Playen keresztül.",
   "updateButtonSkip": "Verzió kihagyása",
   "updateButtonLater": "Később",
   "updateCheckButton": "Frissítések keresése",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Váratlan válaszformátum",
+  "updateErrorPlay": "A Google Play nem érhető el, vagy ezt a példányt nem a Google Playről telepítették",
   "currentReleaseTitle": "A jelenlegi verzió kiadási megjegyzései",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

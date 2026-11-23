@@ -886,6 +886,15 @@
     }
   },
   "updateButtonDownload": "ダウンロードへ",
+  "updateButtonUpdate": "アップデート",
+  "updateNotesUnavailable": "現在アップデート内容を取得できません。詳しくは Google Play をご覧ください。",
+  "updateDownloadingMessage": "アップデートをダウンロードしています...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "アップデートのダウンロードが完了しました",
+  "updateRestartAction": "再起動",
+  "updateInAppUnavailable": "現在アプリ内でアップデートできません。Google Play からアップデートしてください。",
   "updateButtonSkip": "このバージョンをスキップ",
   "updateButtonLater": "後で",
   "updateCheckButton": "更新を確認",
@@ -911,6 +920,7 @@
     }
   },
   "updateErrorFormat": "応答フォーマットが異常です",
+  "updateErrorPlay": "Google Play に接続できないか、このアプリは Google Play からインストールされていません",
   "currentReleaseTitle": "現在のバージョンの更新内容",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

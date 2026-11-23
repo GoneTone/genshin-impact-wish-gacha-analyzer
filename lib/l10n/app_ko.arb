@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "다운로드",
+  "updateButtonUpdate": "업데이트",
+  "updateNotesUnavailable": "지금은 릴리스 노트를 불러올 수 없습니다. 자세한 내용은 Google Play에서 확인하세요.",
+  "updateDownloadingMessage": "업데이트를 다운로드하는 중...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "업데이트를 다운로드했습니다",
+  "updateRestartAction": "다시 시작",
+  "updateInAppUnavailable": "지금은 앱에서 업데이트할 수 없습니다. Google Play에서 업데이트해 주세요.",
   "updateButtonSkip": "이 버전 건너뛰기",
   "updateButtonLater": "나중에",
   "updateCheckButton": "업데이트 확인",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "예상하지 못한 응답 형식입니다",
+  "updateErrorPlay": "Google Play에 연결할 수 없거나, Google Play에서 설치한 앱이 아닙니다",
   "currentReleaseTitle": "현재 버전 릴리스 노트",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

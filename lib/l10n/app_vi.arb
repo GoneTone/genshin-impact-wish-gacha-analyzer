@@ -886,6 +886,15 @@
     }
   },
   "updateButtonDownload": "Tải về",
+  "updateButtonUpdate": "Cập nhật",
+  "updateNotesUnavailable": "Hiện không thể hiển thị ghi chú phát hành. Xem chi tiết trên Google Play.",
+  "updateDownloadingMessage": "Đang tải bản cập nhật...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Đã tải xong bản cập nhật",
+  "updateRestartAction": "Khởi động lại",
+  "updateInAppUnavailable": "Hiện không thể cập nhật trong ứng dụng. Vui lòng cập nhật từ Google Play.",
   "updateButtonSkip": "Bỏ qua phiên bản này",
   "updateButtonLater": "Để sau",
   "updateCheckButton": "Kiểm tra cập nhật",
@@ -911,6 +920,7 @@
     }
   },
   "updateErrorFormat": "Định dạng phản hồi bất thường",
+  "updateErrorPlay": "Không kết nối được Google Play, hoặc bản này không được cài từ Google Play",
   "currentReleaseTitle": "Ghi chú phát hành phiên bản hiện tại",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

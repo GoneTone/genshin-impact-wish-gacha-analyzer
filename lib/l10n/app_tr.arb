@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "İndir",
+  "updateButtonUpdate": "Güncelle",
+  "updateNotesUnavailable": "Sürüm notları şu anda kullanılamıyor. Ayrıntılar için Google Play'e bakın.",
+  "updateDownloadingMessage": "Güncelleme indiriliyor...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Güncelleme indirildi",
+  "updateRestartAction": "Yeniden başlat",
+  "updateInAppUnavailable": "Şu anda uygulama içinden güncellenemiyor. Lütfen Google Play üzerinden güncelleyin.",
   "updateButtonSkip": "Bu sürümü atla",
   "updateButtonLater": "Daha sonra",
   "updateCheckButton": "Güncellemeleri denetle",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Beklenmeyen yanıt biçimi",
+  "updateErrorPlay": "Google Play'e ulaşılamadı veya bu kopya Google Play'den yüklenmemiş",
   "currentReleaseTitle": "Geçerli sürüm notları",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

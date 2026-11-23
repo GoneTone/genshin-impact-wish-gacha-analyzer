@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Λήψη",
+  "updateButtonUpdate": "Ενημέρωση",
+  "updateNotesUnavailable": "Οι σημειώσεις έκδοσης δεν είναι διαθέσιμες αυτή τη στιγμή. Δείτε λεπτομέρειες στο Google Play.",
+  "updateDownloadingMessage": "Λήψη ενημέρωσης...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Η ενημέρωση λήφθηκε",
+  "updateRestartAction": "Επανεκκίνηση",
+  "updateInAppUnavailable": "Δεν είναι δυνατή η ενημέρωση μέσα από την εφαρμογή αυτή τη στιγμή. Ενημερώστε από το Google Play.",
   "updateButtonSkip": "Παράλειψη αυτής της έκδοσης",
   "updateButtonLater": "Αργότερα",
   "updateCheckButton": "Έλεγχος για ενημερώσεις",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Μη αναμενόμενη μορφή απόκρισης",
+  "updateErrorPlay": "Δεν ήταν δυνατή η σύνδεση με το Google Play ή αυτό το αντίγραφο δεν εγκαταστάθηκε από το Google Play",
   "currentReleaseTitle": "Σημειώσεις τρέχουσας έκδοσης",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

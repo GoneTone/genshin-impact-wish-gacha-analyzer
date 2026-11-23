@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Downloaden",
+  "updateButtonUpdate": "Bijwerken",
+  "updateNotesUnavailable": "Release-opmerkingen zijn nu niet beschikbaar. Zie Google Play voor details.",
+  "updateDownloadingMessage": "Update downloaden...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "De update is gedownload",
+  "updateRestartAction": "Opnieuw starten",
+  "updateInAppUnavailable": "Bijwerken in de app is nu niet mogelijk. Werk bij via Google Play.",
   "updateButtonSkip": "Deze versie overslaan",
   "updateButtonLater": "Later",
   "updateCheckButton": "Controleren op updates",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Onverwacht antwoordformaat",
+  "updateErrorPlay": "Kan Google Play niet bereiken, of deze app is niet via Google Play geïnstalleerd",
   "currentReleaseTitle": "Release-opmerkingen van de huidige versie",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Descarcă",
+  "updateButtonUpdate": "Actualizează",
+  "updateNotesUnavailable": "Notele de lansare nu sunt disponibile momentan. Consultați Google Play pentru detalii.",
+  "updateDownloadingMessage": "Se descarcă actualizarea...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Actualizarea a fost descărcată",
+  "updateRestartAction": "Repornește",
+  "updateInAppUnavailable": "Actualizarea din aplicație nu este posibilă momentan. Actualizați din Google Play.",
   "updateButtonSkip": "Omite această versiune",
   "updateButtonLater": "Mai târziu",
   "updateCheckButton": "Caută actualizări",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Format de răspuns neașteptat",
+  "updateErrorPlay": "Google Play nu a putut fi accesat sau această copie nu a fost instalată din Google Play",
   "currentReleaseTitle": "Note despre versiunea curentă",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

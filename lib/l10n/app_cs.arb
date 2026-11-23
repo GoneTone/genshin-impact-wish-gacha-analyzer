@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Stáhnout",
+  "updateButtonUpdate": "Aktualizovat",
+  "updateNotesUnavailable": "Poznámky k verzi teď nejsou k dispozici. Podrobnosti najdete na Google Play.",
+  "updateDownloadingMessage": "Stahuje se aktualizace...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Aktualizace byla stažena",
+  "updateRestartAction": "Restartovat",
+  "updateInAppUnavailable": "Aktualizace v aplikaci teď není možná. Aktualizujte prosím přes Google Play.",
   "updateButtonSkip": "Přeskočit tuto verzi",
   "updateButtonLater": "Později",
   "updateCheckButton": "Zkontrolovat aktualizace",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Neočekávaný formát odpovědi",
+  "updateErrorPlay": "Nelze se spojit s Google Play, nebo tato kopie nebyla nainstalována z Google Play",
   "currentReleaseTitle": "Poznámky k aktuálnímu vydání",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

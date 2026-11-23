@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Last ned",
+  "updateButtonUpdate": "Oppdater",
+  "updateNotesUnavailable": "Versjonsmerknadene er ikke tilgjengelige akkurat nå. Se Google Play for detaljer.",
+  "updateDownloadingMessage": "Laster ned oppdateringen...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Oppdateringen er lastet ned",
+  "updateRestartAction": "Start på nytt",
+  "updateInAppUnavailable": "Kan ikke oppdatere i appen akkurat nå. Oppdater via Google Play.",
   "updateButtonSkip": "Hopp over denne versjonen",
   "updateButtonLater": "Senere",
   "updateCheckButton": "Se etter oppdateringer",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Uventet svarformat",
+  "updateErrorPlay": "Kunne ikke nå Google Play, eller denne kopien ble ikke installert fra Google Play",
   "currentReleaseTitle": "Versjonsmerknader for denne versjonen",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

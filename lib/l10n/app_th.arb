@@ -886,6 +886,15 @@
     }
   },
   "updateButtonDownload": "ดาวน์โหลด",
+  "updateButtonUpdate": "อัปเดต",
+  "updateNotesUnavailable": "ไม่สามารถแสดงบันทึกประจำรุ่นได้ในขณะนี้ ดูรายละเอียดได้ที่ Google Play",
+  "updateDownloadingMessage": "กำลังดาวน์โหลดอัปเดต...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "ดาวน์โหลดอัปเดตแล้ว",
+  "updateRestartAction": "รีสตาร์ท",
+  "updateInAppUnavailable": "อัปเดตในแอปไม่ได้ในขณะนี้ โปรดอัปเดตจาก Google Play",
   "updateButtonSkip": "ข้ามเวอร์ชันนี้",
   "updateButtonLater": "ภายหลัง",
   "updateCheckButton": "ตรวจสอบอัพเดท",
@@ -911,6 +920,7 @@
     }
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
+  "updateErrorPlay": "เชื่อมต่อ Google Play ไม่ได้ หรือแอปนี้ไม่ได้ติดตั้งจาก Google Play",
   "currentReleaseTitle": "บันทึกการอัปเดตเวอร์ชันปัจจุบัน",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

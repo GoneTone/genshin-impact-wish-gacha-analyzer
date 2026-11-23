@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "הורדה",
+  "updateButtonUpdate": "עדכון",
+  "updateNotesUnavailable": "הערות הגרסה אינן זמינות כרגע. לפרטים ראו ב-Google Play.",
+  "updateDownloadingMessage": "מוריד את העדכון...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "העדכון הורד",
+  "updateRestartAction": "הפעלה מחדש",
+  "updateInAppUnavailable": "לא ניתן לעדכן מתוך האפליקציה כרגע. עדכנו דרך Google Play.",
   "updateButtonSkip": "דילוג על הגרסה הזו",
   "updateButtonLater": "אחר כך",
   "updateCheckButton": "בדיקת עדכונים",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "פורמט תגובה לא צפוי",
+  "updateErrorPlay": "לא ניתן להתחבר ל-Google Play, או שהעותק הזה לא הותקן מ-Google Play",
   "currentReleaseTitle": "הערות הגרסה הנוכחית",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."

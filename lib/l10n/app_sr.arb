@@ -904,6 +904,15 @@
     }
   },
   "updateButtonDownload": "Преузми",
+  "updateButtonUpdate": "Ажурирај",
+  "updateNotesUnavailable": "Белешке о издању тренутно нису доступне. Детаље потражите на Google Play-у.",
+  "updateDownloadingMessage": "Преузимање ажурирања...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Ажурирање је преузето",
+  "updateRestartAction": "Поново покрени",
+  "updateInAppUnavailable": "Ажурирање у апликацији тренутно није могуће. Ажурирајте преко Google Play-а.",
   "updateButtonSkip": "Прескочи ову верзију",
   "updateButtonLater": "Касније",
   "updateCheckButton": "Провери ажурирања",
@@ -929,6 +938,7 @@
     }
   },
   "updateErrorFormat": "Неочекиван формат одговора",
+  "updateErrorPlay": "Повезивање са Google Play-ом није успело или ова копија није инсталирана са Google Play-а",
   "currentReleaseTitle": "Белешке о тренутном издању",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
