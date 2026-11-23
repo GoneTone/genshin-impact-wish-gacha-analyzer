@@ -46,10 +46,14 @@ jobs:
       - name: Parse tag
         id: version
         shell: pwsh
+        env:
+          TAG: ${{ inputs.tag }}
         run: |
-          $tag = "${{ inputs.tag }}"
-          if ($tag -notmatch '^v(\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?)$') {
-            throw "tag '$tag' does not match vX.Y.Z[-prerelease]"
+          $tag = $env:TAG
+          # 與 lib/services/android_version_code.dart 同一套格式（大小寫敏感），不合格就在建置前失敗；
+          # MAJOR 上限 2099 只由 Android 建置檢查。
+          if ($tag -cnotmatch '^v([1-9]\d*\.(?:0|[1-9]\d?)\.(?:0|[1-9]\d?)(?:-rc\.(?:[1-9]|[1-8]\d|9[0-8]))?)$') {
+            throw "tag '$tag' does not match vX.Y.Z or vX.Y.Z-rc.N (N = 1-98)"
           }
           $semver = $Matches[1]
           $sha = (git rev-parse HEAD).Trim()
@@ -383,9 +387,11 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          PRERELEASE: ${{ inputs.prerelease }}
         run: |
-          $tag = "${{ inputs.tag }}"
-          # inputs.prerelease 是 workflow_dispatch boolean，interpolation 後一律是字串 "true"/"false"，故用字串比較
+          $tag = $env:TAG
+          # inputs.prerelease 是 workflow_dispatch boolean，傳進環境變數後是字串 "true"/"false"，故用字串比較
           # --json/--jq 同時偵測 release 是否存在並取得 draft 狀態，順帶把 view 的 stdout 收進變數不污染 log
           $isDraft = gh release view "$tag" --json isDraft --jq '.isDraft' 2>$null
           if ($LASTEXITCODE -eq 0) {
@@ -398,7 +404,7 @@ jobs:
           } else {
             Write-Host "Creating draft release '$tag' targeting $env:RELEASE_SHA"
             $createArgs = @("$tag", "$env:INSTALLER_PATH", "--draft", "--title", "$tag", "--generate-notes", "--target", "$env:RELEASE_SHA")
-            if ("${{ inputs.prerelease }}" -eq "true") { $createArgs += "--prerelease" }
+            if ($env:PRERELEASE -eq "true") { $createArgs += "--prerelease" }
             gh release create @createArgs
 
             # 在自動產生的 What's Changed 上下用 `---` 包夾，並於底部附上固定文案
@@ -419,7 +425,8 @@ jobs:
 
       # === D. Upload to Play ========================================
       - name: Upload to Play internal track
-        uses: r0adkll/upload-google-play@v1
+        # 這一步拿得到 Play 服務帳戶金鑰，釘在 commit 上，避免 tag 被改指向別的程式碼。
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: tw.reh.genshin.gacha
@@ -432,11 +439,13 @@ jobs:
       # === E. Step summary ==========================================
       - name: Write step summary
         shell: pwsh
+        env:
+          TAG: ${{ inputs.tag }}
         run: |
           $exe = $env:INSTALLER_PATH
           $aab = "artifacts/android/app-release.aab"
           @"
-          ## Release ${{ inputs.tag }}
+          ## Release $env:TAG
 
           - **Release commit**: ``$env:RELEASE_SHA``
           - **Pubspec version**: $env:PUBSPEC_VERSION
