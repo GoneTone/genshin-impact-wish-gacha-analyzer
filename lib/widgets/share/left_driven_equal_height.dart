@@ -7,14 +7,20 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 ///
 /// 右欄超出 H 的部分由右欄自身（TimelineVertical 的 fillHeight 分支）clip，
 /// 本元件不負責裁切。寬度依固定 flex 11:9 + [AppSpacing.l] 間距切分。
-/// [children] 必須恰為兩個：index 0 = 左、index 1 = 右。
+/// [children] 必須恰為兩個：index 0 = 左、index 1 = 右；由右往左語言時左右對調。
 class LeftDrivenEqualHeight extends MultiChildRenderObjectWidget {
   /// 建立 [LeftDrivenEqualHeight]。
   const LeftDrivenEqualHeight({super.key, required super.children});
 
   @override
   RenderObject createRenderObject(BuildContext context) =>
-      _RenderLeftDrivenEqualHeight();
+      _RenderLeftDrivenEqualHeight(Directionality.of(context));
+
+  @override
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    (renderObject as _RenderLeftDrivenEqualHeight).textDirection =
+        Directionality.of(context);
+  }
 }
 
 /// [LeftDrivenEqualHeight] 的 parent data，儲存各 child 的位移。
@@ -25,6 +31,9 @@ class _RenderLeftDrivenEqualHeight extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, _LDParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, _LDParentData> {
+  /// 建立 [_RenderLeftDrivenEqualHeight]。
+  _RenderLeftDrivenEqualHeight(this._textDirection);
+
   /// 左欄寬度 flex 份數（11:9 = 左 55%，右 45%）。
   static const double _leftFlex = 11;
 
@@ -33,6 +42,19 @@ class _RenderLeftDrivenEqualHeight extends RenderBox
 
   /// 兩欄間距。
   static const double _gap = AppSpacing.l;
+
+  /// 決定起始側；RTL 時 index 0 排在右邊。
+  TextDirection get textDirection => _textDirection;
+
+  /// [textDirection] 的儲存欄位。
+  TextDirection _textDirection;
+
+  /// 更新 [textDirection]，改變時重新 layout。
+  set textDirection(TextDirection value) {
+    if (value == _textDirection) return;
+    _textDirection = value;
+    markNeedsLayout();
+  }
 
   @override
   void setupParentData(RenderBox child) {
@@ -68,8 +90,15 @@ class _RenderLeftDrivenEqualHeight extends RenderBox
       parentUsesSize: true,
     );
 
-    (left.parentData! as _LDParentData).offset = Offset.zero;
-    (right.parentData! as _LDParentData).offset = Offset(leftW + _gap, 0);
+    final rtl = textDirection == TextDirection.rtl;
+    (left.parentData! as _LDParentData).offset = Offset(
+      rtl ? maxW - leftW : 0,
+      0,
+    );
+    (right.parentData! as _LDParentData).offset = Offset(
+      rtl ? 0 : leftW + _gap,
+      0,
+    );
 
     size = Size(maxW, leftH);
   }

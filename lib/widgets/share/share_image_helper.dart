@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -42,16 +43,20 @@ Widget buildShareRenderTree({
 }) {
   return UncontrolledProviderScope(
     container: container,
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: Localizations(
-        locale: locale,
-        delegates: const [
-          AppLocalizations.delegate,
-          DefaultMaterialLocalizations.delegate,
-          DefaultWidgetsLocalizations.delegate,
-          DefaultCupertinoLocalizations.delegate,
-        ],
+    child: Localizations(
+      locale: locale,
+      delegates: const [
+        AppLocalizations.delegate,
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+      // DefaultWidgetsLocalizations 固定由左往右，Localizations 會以它再包一層
+      // Directionality，所以書寫方向要在這層底下依語言重設。
+      child: Directionality(
+        textDirection: Bidi.isRtlLanguage(locale.languageCode)
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: MediaQuery(
           data: const MediaQueryData(),
           child: Theme(

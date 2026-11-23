@@ -13,6 +13,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/left_driven_equal_height.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 
@@ -53,8 +54,9 @@ List<GachaRecord> _crossMonthFives(int count) => [
 Future<void> _pump(
   WidgetTester t,
   Widget card,
-  ProviderContainer container,
-) async {
+  ProviderContainer container, {
+  Locale locale = const Locale('zh'),
+}) async {
   await t.pumpWidget(
     UncontrolledProviderScope(
       container: container,
@@ -62,7 +64,7 @@ Future<void> _pump(
         theme: buildDarkTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('zh'),
+        locale: locale,
         home: Scaffold(
           body: SingleChildScrollView(
             child: SizedBox(width: 1200, child: card),
@@ -339,6 +341,41 @@ void main() {
 
     expect(find.byType(TimelineVertical), findsNWidgets(2));
     expect(find.byType(LeftDrivenEqualHeight), findsNWidgets(2));
+  });
+
+  testWidgets('由右往左語言整張鏡像：圓餅在右、時間軸在左，icon 在右', (t) async {
+    for (final (locale, rtl) in [
+      (const Locale('zh'), false),
+      (const Locale('ar'), true),
+    ]) {
+      final l = await AppLocalizations.delegate.load(locale);
+      final card = ShareCard.banner(
+        l: l,
+        appVersion: '1.0.0',
+        appIcon: await _img(),
+        options: const ShareImageOptions(),
+        uid: '800123456',
+        updatedAt: DateTime(2026, 5, 18, 14, 30),
+        title: l.gachaTypeCharacter,
+        records: [_r('301', 5, '那維萊特'), _r('301', 4, '菲謝爾')],
+        targetRank: 5,
+        index: const HoYoWikiIndex.empty(),
+      );
+      await _pump(t, card, container, locale: locale);
+      expect(t.takeException(), isNull, reason: '$locale');
+
+      final pieX = t.getCenter(find.byType(RarityPie)).dx;
+      final timelineX = t.getCenter(find.byType(TimelineVertical)).dx;
+      final iconX = t.getCenter(find.byType(RawImage)).dx;
+      final uidX = t.getCenter(find.textContaining('UID')).dx;
+      expect(pieX > timelineX, rtl, reason: '$locale 圓餅與時間軸');
+      expect(iconX > uidX, rtl, reason: '$locale icon 與 UID');
+      // 網址與 UID 固定由左往右，遮蔽用的圓點不會被重排到數字前面。
+      for (final text in ['UID 800••••••', 'https://']) {
+        final widget = t.widget<Text>(find.textContaining(text));
+        expect(widget.textDirection, TextDirection.ltr, reason: text);
+      }
+    }
   });
 
   testWidgets('綜合模式：祈願 + 頌願兩段，showFullUid', (t) async {
