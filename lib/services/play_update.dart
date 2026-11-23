@@ -134,3 +134,22 @@ class InAppUpdatePlayGateway implements PlayUpdateGateway {
 final playUpdateGatewayProvider = Provider<PlayUpdateGateway>(
   (ref) => InAppUpdatePlayGateway(),
 );
+
+/// 彈性更新的下載進度（位元組）；[total] 還不知道時為 0。
+typedef PlayDownloadProgress = ({int bytes, int total});
+
+/// Play 回報的下載進度（Android 原生 `PlayUpdateProgressChannel`）；只在下載中才有事件，測試 override。
+///
+/// `in_app_update` 只轉出安裝狀態、沒有位元組數，所以另開 channel 向 Play 拿。
+final playDownloadProgressProvider =
+    StreamProvider.autoDispose<PlayDownloadProgress>(
+      (ref) => const EventChannel('tw.reh.genshin.gacha/play_update_progress')
+          .receiveBroadcastStream()
+          .map((event) {
+            final m = event as Map<Object?, Object?>;
+            return (
+              bytes: (m['bytes']! as num).toInt(),
+              total: (m['total']! as num).toInt(),
+            );
+          }),
+    );

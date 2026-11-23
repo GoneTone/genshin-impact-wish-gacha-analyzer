@@ -6,11 +6,14 @@ import io.flutter.embedding.engine.FlutterEngine
 class MainActivity : FlutterActivity() {
     private var logAccess: LogAccessChannel? = null
     private var appPrefs: AppPrefsChannel? = null
+    private var playUpdateProgress: PlayUpdateProgressChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         logAccess = LogAccessChannel(this, flutterEngine.dartExecutor.binaryMessenger)
         appPrefs = AppPrefsChannel(this, flutterEngine.dartExecutor.binaryMessenger)
+        playUpdateProgress =
+            PlayUpdateProgressChannel(this, flutterEngine.dartExecutor.binaryMessenger)
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
@@ -18,6 +21,8 @@ class MainActivity : FlutterActivity() {
         logAccess = null
         appPrefs?.detach()
         appPrefs = null
+        playUpdateProgress?.detach()
+        playUpdateProgress = null
         super.cleanUpFlutterEngine(flutterEngine)
     }
 

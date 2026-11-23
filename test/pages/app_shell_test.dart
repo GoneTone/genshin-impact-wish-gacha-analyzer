@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/team_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/app_shell.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/play_update.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
@@ -75,6 +78,7 @@ void main() {
   late _Repo repo;
   late ProviderContainer container;
   late _Download download;
+  late StreamController<PlayDownloadProgress> progress;
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -97,6 +101,8 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     repo = _Repo();
     download = _Download();
+    progress = StreamController<PlayDownloadProgress>.broadcast();
+    addTearDown(progress.close);
     container = ProviderContainer(
       overrides: [
         appVersionProvider.overrideWithValue('1.8.1'),
@@ -104,6 +110,7 @@ void main() {
         appReleaseProvider.overrideWith(_Release.new),
         cloudSyncProvider.overrideWith(_Sync.new),
         playUpdateDownloadProvider.overrideWith(() => download),
+        playDownloadProgressProvider.overrideWith((ref) => progress.stream),
       ],
     );
     addTearDown(container.dispose);
@@ -165,6 +172,36 @@ void main() {
     expect(download.installs, 1);
     final bar = tester.widget<SnackBar>(find.byType(SnackBar));
     expect(bar.persist, isTrue);
+  });
+
+  testWidgets('downloading update shows progress until it is downloaded', (
+    tester,
+  ) async {
+    // Play 在背景下載；沒有提示時，從確認視窗回來後畫面像是什麼都沒發生。
+    final l = await pump(tester, const Size(360, 800));
+    download.setPhase(PlayDownloadPhase.downloading);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text(l.updateDownloadingMessage), findsOneWidget);
+    // 總大小未知時是不確定進度條、沒有百分比。
+    expect(
+      tester
+          .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+          .value,
+      isNull,
+    );
+
+    progress.add((bytes: 5 * 1024 * 1024, total: 11 * 1024 * 1024));
+    await tester.pump();
+    expect(find.text('45%'), findsOneWidget);
+    expect(find.text('5.0 MB / 11.0 MB'), findsOneWidget);
+    await tester.pump(const Duration(minutes: 5));
+    expect(find.text(l.updateDownloadingMessage), findsOneWidget);
+
+    download.setPhase(PlayDownloadPhase.downloaded);
+    await tester.pumpAndSettle();
+    expect(find.text(l.updateDownloadingMessage), findsNothing);
+    expect(find.text(l.updateDownloadedMessage), findsOneWidget);
   });
 
   for (final locale in AppLocalizations.supportedLocales) {

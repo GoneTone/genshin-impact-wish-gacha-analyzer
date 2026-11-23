@@ -19,6 +19,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/new_version_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/play_download_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/team_links_bar.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/uid_indicator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/update_progress_dialog.dart';
@@ -50,6 +51,9 @@ class _AppShellState extends ConsumerState<AppShell> {
 
   /// 新版本通知 dialog 是否已開啟。
   bool _releaseDialogOpen = false;
+
+  /// 「正在下載新版本」的 SnackBar；離開下載中時只關掉它，不動其他提示。
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _downloadingBar;
 
   /// 用來在返回鍵時關閉抽屜。
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -146,6 +150,14 @@ class _AppShellState extends ConsumerState<AppShell> {
 
     final l = AppLocalizations.of(context)!;
     ref.listen<PlayDownloadPhase>(playUpdateDownloadProvider, (prev, next) {
+      // Play 在背景下載，沒有這條提示的話，從確認視窗回來後畫面像是什麼都沒發生。
+      if (next == PlayDownloadPhase.downloading) {
+        _downloadingBar ??= ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: PlayDownloadProgressBar(), persist: true),
+        )..closed.whenComplete(() => _downloadingBar = null);
+        return;
+      }
+      _downloadingBar?.close();
       if (next == PlayDownloadPhase.failed) {
         final messenger = ScaffoldMessenger.of(context);
         final theme = Theme.of(context);

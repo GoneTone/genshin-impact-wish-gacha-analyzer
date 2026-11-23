@@ -63,3 +63,8 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // 下載進度監聽（PlayUpdateProgressChannel）；版本對齊 in_app_update 用的 app-update。
+    implementation("com.google.android.play:app-update:2.1.0")
+}
