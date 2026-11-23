@@ -125,3 +125,11 @@
 - `08bb4ab`（用「裝置」取代「手機」、不寫死商店清單）：**不適用**，原神 `logUnavailableGameNotInstalled` 已是「這台裝置上找不到原神…」且無商店清單；`logChooseGameVersion` 在原神不存在。
 - `8dbb5e9`（台灣用語「飛航模式」）：**不適用**，原神 zh 沒有「飛行模式」或「飛航模式」相關字串（`manualCredentialHelpAndroid` 在原神不存在）。
 - `a53f4f0`（把 `progressCheckingLogAccess` 翻成所有語言）：**不適用於本任務**，原神這個 key 已在 8 種語言有翻譯，其餘 22 種空殼語言留給 Task 5。
+
+### 驗收後修正：既有欄位改依官方
+
+使用者 2026-11-23 指示「要依官方為準，更新術語表」，推翻上面「既有 9 欄不改動」的做法。術語表與 ARB 依官方祈願頁 bundle 修正 4 處：
+
+- 英文常駐祈願：Standard Wish → Permanent Wish；側欄短名 `navStandard` 跟著改成 Permanent。照英文欄的 16 種遊戲沒出的語言一併修改。常駐頌願的官方英文是 Standard Ode，不受影響。
+- 法文武器活動祈願：Vœux événements d'armes → Vœux événements d'arme。
+- 葡文（`pt`、`pt_BR`）角色活動祈願：Oração de Evento de Personagem → Oração do Evento do Personagem；武器活動祈願：Oração de Evento de Arma → Oração do Evento de Arma。

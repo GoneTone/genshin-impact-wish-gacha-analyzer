@@ -1078,8 +1078,8 @@ void main() {
         ('11 / 2025', const Rect.fromLTRB(17.0, 337.0, 89.0, 353.0)),
         ('魈', const Rect.fromLTRB(131.0, 335.0, 145.25, 355.0)),
         (
-          '11/30 · Standard Wish · 90 pulls',
-          const Rect.fromLTRB(131.0, 357.0, 523.0, 374.0),
+          '11/30 · Permanent Wish · 90 pulls',
+          const Rect.fromLTRB(131.0, 357.0, 535.25, 374.0),
         ),
         ('刻晴', const Rect.fromLTRB(131.0, 388.0, 159.5, 408.0)),
         (
