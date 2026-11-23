@@ -12,7 +12,7 @@ The Android version doesn't intercept network traffic; instead it reads the syst
 
 The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously obtained URL and reuses it as long as it's still valid, so you don't have to obtain it again every time. If the URL has expired, the utility will ask you to open the wish history page in the game again to get a new one.
 
-Rest assured: this utility does not modify any game file, and does not read or modify game memory or in-game network traffic. On Windows it only intercepts the wish history page request that the in-game WebView itself makes, and reads the game's web cache to find the same URL; on Android it only reads Genshin Impact's Wish History URL from the system log. So there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
+Rest assured: this utility does not modify any game file, and does not read or modify game memory or in-game network traffic. On Windows it only intercepts the wish history page request that the in-game WebView itself makes, and also reads the game's log and web cache to find the URL; on Android it only reads Genshin Impact's Wish History URL from the system log. So there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
 - 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
