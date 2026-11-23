@@ -452,6 +452,7 @@
   "contributorsTranslatedLanguages": "Ngôn ngữ đã dịch",
   "contributorsHelpTranslate": "Không có ngôn ngữ của bạn? Hãy giúp chúng tôi dịch!",
   "contributorsProjectLicense": "Giấy phép dự án",
+  "contributorsOpenSourceLicenses": "Giấy phép nguồn mở",
   "pityRank": "Bảo hiểm {star}",
   "@pityRank": {
     "placeholders": {

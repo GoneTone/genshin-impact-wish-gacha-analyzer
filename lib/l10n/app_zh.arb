@@ -361,6 +361,7 @@
   "contributorsTranslatedLanguages": "已翻譯語言",
   "contributorsHelpTranslate": "沒有您的語言嗎？協助我們翻譯！",
   "contributorsProjectLicense": "專案授權",
+  "contributorsOpenSourceLicenses": "開放原始碼授權",
 
   "pityRank": "{star} 保底",
   "@pityRank": {

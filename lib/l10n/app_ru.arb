@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Доступные языки",
   "contributorsHelpTranslate": "Нет вашего языка? Помогите нам с переводом!",
   "contributorsProjectLicense": "Лицензия проекта",
+  "contributorsOpenSourceLicenses": "Лицензии открытого ПО",
   "pityRank": "Гарант {star}",
   "@pityRank": {
     "placeholders": {

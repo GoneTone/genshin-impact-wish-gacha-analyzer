@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "지원 언어",
   "contributorsHelpTranslate": "원하는 언어가 없나요? 번역에 참여해 주세요!",
   "contributorsProjectLicense": "프로젝트 라이선스",
+  "contributorsOpenSourceLicenses": "오픈소스 라이선스",
   "pityRank": "{star} 천장",
   "@pityRank": {
     "placeholders": {

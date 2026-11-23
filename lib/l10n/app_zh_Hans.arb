@@ -449,6 +449,7 @@
   "contributorsTranslatedLanguages": "已翻译语言",
   "contributorsHelpTranslate": "没有您的语言吗？帮助我们翻译！",
   "contributorsProjectLicense": "项目许可证",
+  "contributorsOpenSourceLicenses": "开源许可证",
   "pityRank": "{star} 保底",
   "@pityRank": {
     "placeholders": {

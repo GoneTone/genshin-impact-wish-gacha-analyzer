@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "اللغات المتاحة",
   "contributorsHelpTranslate": "لغتك غير متاحة؟ ساعدنا في الترجمة!",
   "contributorsProjectLicense": "ترخيص المشروع",
+  "contributorsOpenSourceLicenses": "تراخيص البرامج مفتوحة المصدر",
   "pityRank": "ضمان {star}",
   "@pityRank": {
     "placeholders": {

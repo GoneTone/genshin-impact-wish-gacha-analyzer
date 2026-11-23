@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/contributors_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 
-Widget _wrap(Widget child) => ProviderScope(
-  child: MaterialApp(
-    theme: buildDarkTheme(),
-    locale: const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: Scaffold(body: child),
-  ),
-);
+Widget _wrap(Widget child, {List<Override> overrides = const []}) =>
+    ProviderScope(
+      overrides: overrides,
+      child: MaterialApp(
+        theme: buildDarkTheme(),
+        locale: const Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hant',
+        ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(body: child),
+      ),
+    );
 
 void main() {
+  testWidgets('專案授權下方有「開放原始碼授權」按鈕，按下開啟授權頁並顯示版本', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        const ContributorsPage(),
+        overrides: [appVersionProvider.overrideWithValue('9.8.7')],
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('開放原始碼授權'));
+    await tester.tap(find.text('開放原始碼授權'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LicensePage), findsOneWidget);
+    expect(find.text('9.8.7'), findsOneWidget);
+  });
+
   testWidgets('PageHeader 顯示 contributorsTitle', (tester) async {
     await tester.pumpWidget(_wrap(const ContributorsPage()));
     await tester.pumpAndSettle();

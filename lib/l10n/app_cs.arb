@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Dostupné jazyky",
   "contributorsHelpTranslate": "Chybí váš jazyk? Pomozte nám s překladem!",
   "contributorsProjectLicense": "Licence projektu",
+  "contributorsOpenSourceLicenses": "Licence open source",
   "pityRank": "Pity {star}",
   "@pityRank": {
     "placeholders": {

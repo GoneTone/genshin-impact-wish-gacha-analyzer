@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Mevcut diller",
   "contributorsHelpTranslate": "Dilinizde mevcut değil mi? Çeviriye yardım edin!",
   "contributorsProjectLicense": "Proje Lisansı",
+  "contributorsOpenSourceLicenses": "Açık kaynak lisansları",
   "pityRank": "{star} garantisi",
   "@pityRank": {
     "placeholders": {

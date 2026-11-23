@@ -452,6 +452,7 @@
   "contributorsTranslatedLanguages": "Idiomas traduzidos",
   "contributorsHelpTranslate": "Não encontrou seu idioma? Ajude-nos a traduzir!",
   "contributorsProjectLicense": "Licença do projeto",
+  "contributorsOpenSourceLicenses": "Licenças de código aberto",
   "pityRank": "Pity de {star}",
   "@pityRank": {
     "placeholders": {

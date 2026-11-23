@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Limbi disponibile",
   "contributorsHelpTranslate": "Limba dvs. lipsește? Ajutați-ne să o traducem!",
   "contributorsProjectLicense": "Licența proiectului",
+  "contributorsOpenSourceLicenses": "Licențe open source",
   "pityRank": "Pity {star}",
   "@pityRank": {
     "placeholders": {

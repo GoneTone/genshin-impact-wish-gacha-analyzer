@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Saatavilla olevat kielet",
   "contributorsHelpTranslate": "Eikö kieltäsi löydy? Auta meitä kääntämään!",
   "contributorsProjectLicense": "Projektin lisenssi",
+  "contributorsOpenSourceLicenses": "Avoimen lähdekoodin lisenssit",
   "pityRank": "{star}-pity",
   "@pityRank": {
     "placeholders": {

@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "שפות זמינות",
   "contributorsHelpTranslate": "השפה שלכם לא זמינה? עזרו לנו לתרגם!",
   "contributorsProjectLicense": "רישיון הפרויקט",
+  "contributorsOpenSourceLicenses": "רישיונות קוד פתוח",
   "pityRank": "פיטי {star}",
   "@pityRank": {
     "placeholders": {

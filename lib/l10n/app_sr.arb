@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Доступни језици",
   "contributorsHelpTranslate": "Нема вашег језика? Помозите нам да преведемо!",
   "contributorsProjectLicense": "Лиценца пројекта",
+  "contributorsOpenSourceLicenses": "Лиценце отвореног кода",
   "pityRank": "Гаранција {star}",
   "@pityRank": {
     "placeholders": {

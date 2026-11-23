@@ -470,6 +470,7 @@
   "contributorsTranslatedLanguages": "Elérhető nyelvek",
   "contributorsHelpTranslate": "Nem érhető el az Ön nyelvén? Segítsen a fordításban!",
   "contributorsProjectLicense": "Projektlicenc",
+  "contributorsOpenSourceLicenses": "Nyílt forráskódú licencek",
   "pityRank": "{star} pity",
   "@pityRank": {
     "placeholders": {

@@ -452,6 +452,7 @@
   "contributorsTranslatedLanguages": "ภาษาที่แปล",
   "contributorsHelpTranslate": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
   "contributorsProjectLicense": "ใบอนุญาตโปรเจค",
+  "contributorsOpenSourceLicenses": "สัญญาอนุญาตโอเพนซอร์ส",
   "pityRank": "{star} pity",
   "@pityRank": {
     "placeholders": {
