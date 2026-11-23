@@ -61,9 +61,9 @@ The utility may trigger anti-virus software during installation and execution. T
 - Multi-account (UID) management: custom aliases, drag-to-reorder, one-click switching
 - Incremental updates merge new records without overwriting old ones, so entries that fall off the official history won't disappear
 - Total pulls and 5★ / 4★ / 3★ / 2★ counts with their share of the total
-- Dual pity progress (5★ and 4★) showing remaining pulls until pity
+- Dual pity progress (5★ and 4★; 4★ and 3★ for Standard Ode) showing remaining pulls until pity
 - Average pulls per 5★ / 4★ hit (per-banner and overall)
-- Per-gacha 5★ timeline
+- Per-gacha 5★ timeline (4★ for Standard Ode)
 - 5★ overview: every distinct 5★ you've pulled laid out in a row, each with a cumulative count badge and clickable for details — shown on each banner page, the overview page, and the share image
 - Bar chart comparing each gacha's highest-rarity counts
 - Rarity distribution pie chart
