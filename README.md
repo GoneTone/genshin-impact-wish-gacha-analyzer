@@ -4,13 +4,15 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-我開發了一套用來分析祈願卡池歷史記錄的軟體，一開啟各種數據清清楚楚，不用再手動計算啦！
+一套用來分析祈願卡池歷史記錄的軟體，支援 Windows 與 Android，一開啟各種數據清清楚楚，不用再手動計算啦！
 
-本軟體原理是按下「更新資料」後會在本機啟動一個只跑在您電腦上的代理伺服器，並自動安裝一張本機產生的根憑證，藉此攔截原神 WebView 對 miHoYo 卡池歷史 API 的請求，所以要在按下更新後再到遊戲內開啟卡池歷史記錄才能攔到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
+Windows 版的原理是按下「更新資料」後會在本機啟動一個只跑在您電腦上的代理伺服器，並自動安裝一張本機產生的根憑證，藉此攔截原神 WebView 對 miHoYo 卡池歷史 API 的請求，所以要在按下更新後再到遊戲內開啟卡池歷史記錄才能攔到，取得網址後拆解參數，參數會用於 miHoYo 原神相關的 API。
 
-第一次按下「更新資料」會加載您完整的卡池歷史，這可能需要一些時間，完成後會將資料存放在您的電腦內，這樣下次開啟軟體就不用再花時間等待資料加載。之後想取得新資料按一下「更新資料」即可，軟體會記住先前攔到的網址，能用就直接用、不用每次重新攔截；如果網址過期，軟體會請您再到遊戲開一次卡池歷史頁面以重新取得網址。
+Android 版不攔截連線，改為讀取系統 log，從中找出原神開啟卡池歷史頁面時留下的網址。Android 不允許 App 直接讀取其他 App 的系統 log，所以會依裝置狀況使用 root 或系統內建的「無線偵錯」（Android 11 以上）來讀取，兩種都無法使用時可以改用手動輸入祈願記錄網址。使用無線偵錯時讀完就會中斷連線，如果無線偵錯是本 App 打開的，也會一併關閉。
 
-請放心：本軟體不會讀取或竄改任何遊戲檔案、記憶體與遊戲傳輸的資料，只會在 WebView 開啟卡池歷史頁面時攔下那一條請求網址，所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
+第一次按下「更新資料」會加載您完整的卡池歷史，這可能需要一些時間，完成後會將資料存放在您的裝置內，這樣下次開啟軟體就不用再花時間等待資料加載。之後想取得新資料按一下「更新資料」即可，軟體會記住先前取得的網址，能用就直接用、不用每次重新取得；如果網址過期，軟體會請您再到遊戲開一次卡池歷史頁面以重新取得網址。
+
+請放心：本軟體不會竄改任何遊戲檔案，也不會讀取或竄改遊戲記憶體與遊戲傳輸的資料。Windows 版只會在 WebView 開啟卡池歷史頁面時攔下那一條請求網址，並讀取遊戲的網頁快取來找出同一個網址；Android 版只會從系統 log 讀取原神的祈願記錄網址。所以不會有被封鎖帳號的風險。如果有被封號，請思考您是不是其他原因被封鎖，不要怪罪我們。
 
 文章：
 - 巴哈姆特：<https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
@@ -36,14 +38,24 @@
 
 ## 使用方式
 
+### Windows
+
 1. 啟動原神，先別開啟卡池歷史頁面。
 2. 開啟本軟體並按下「更新資料」，軟體會在背景啟動本機代理伺服器並等候攔截。
 3. 切回遊戲，到「祈願 → 歷史記錄」開啟卡池歷史頁面。
 4. 軟體攔到網址後會自動關閉代理、還原系統代理設定並開始抓取資料；之後想再更新只要重複步驟 2，網址未過期就會直接套用。
 
+### Android
+
+1. 第一次按下「更新資料」時，有 root 的裝置會直接用 root 讀取；其他裝置 App 會引導你設定系統內建的「無線偵錯」，依畫面指示配對一次（需要 Android 11 以上、連上 Wi‑Fi、允許通知），之後 App 會自己開關無線偵錯（部分裝置有額外的安全性限制，可能要每次手動開啟）。
+2. 按下「更新資料」後切到遊戲，到「祈願 → 歷史記錄」開啟卡池歷史頁面。
+3. App 從系統 log 找到網址後，回到 App 就會自動開始抓取資料。
+4. 無法自動讀取時（例如沒有 root 且是 Android 10 以下，或沒有連上 Wi‑Fi），可以改用手動輸入祈願記錄網址。
+
 ## 功能與特色
 
-- 自動攔截原神 WebView 對 miHoYo 卡池歷史 API（透過本機代理伺服器與自簽根憑證），不需手動貼網址
+- 支援 Windows 與 Android
+- 自動取得祈願記錄網址，不需手動貼網址：Windows 版攔截原神 WebView 對 miHoYo 卡池歷史 API 的請求（透過本機代理伺服器與自簽根憑證）；Android 版讀取系統 log（root 或無線偵錯）
 - 支援國際服 (暫不支援中國服)
 - 涵蓋 7 種卡池：角色活動祈願、武器活動祈願、集錄祈願、常駐祈願、新手祈願、活動頌願、常駐頌願
 - 多帳號 (UID) 管理：自訂別名、拖曳排序、一鍵切換
@@ -56,16 +68,17 @@
 - 各卡池最高稀有度件數比較長條圖
 - 稀有度分布圓餅圖
 - 類型分布圓餅圖
-- 歷史記錄表格：多欄排序、模糊搜尋、稀有度與物品類型篩選、分頁
+- 歷史記錄表格：多欄排序、關鍵字搜尋（依名稱）、稀有度與物品類型篩選、分頁
 - 自動補上角色 / 武器的圖示與資料（來源：[HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)）：表格與時間軸都附圖示；點擊物品可查看官方插圖、描述與標籤，並一鍵跳轉 HoYoWiki
-- 一鍵生成分享圖（可選深色 / 淺色主題、UID 全顯或只留前三碼遮罩），自動存檔並複製到剪貼簿
+- 一鍵生成分享圖（可選深色 / 淺色主題、UID 全顯或只留前三碼遮罩），可複製到剪貼簿或另存為 PNG 檔，Android 版也能直接透過系統分享
 - 帳號資料匯出 / 匯入 JSON
-- 雲端同步：連結您自己的 Google 帳號後，卡池記錄自動備份到您的 Google 雲端硬碟，並在多台電腦間雙向同步；刪除帳號時可勾選一併從雲端移除
+- 雲端同步：連結您自己的 Google 帳號後，卡池記錄自動備份到您的 Google 雲端硬碟，並在多台裝置間雙向同步；刪除帳號時可勾選一併從雲端移除
 - 深色 / 淺色主題切換
 - 多國語言（[協助翻譯](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)）
 - 可在設定開啟介面 UID 遮罩（只顯示前三碼），保護隱私
-- 啟動時自動檢查新版本，也可在設定頁手動觸發
+- 啟動時自動檢查新版本，也可在設定頁手動觸發（Android 版透過 Google Play 更新）
 - 所有資料預設留在本機、不上傳；雲端同步為選擇性功能，啟用後也只會備份到您自己的 Google 雲端硬碟
+- Android 版會顯示 AdMob 原生廣告（需要同意的地區會先徵求同意）；Windows 版沒有廣告
 
 ## 截圖
 
@@ -82,7 +95,7 @@
 
 ### 前置需求
 
-- 目前僅支援 Windows
+- Windows 版要在 Windows 上建置；Android 版另需 [Android Studio](https://developer.android.com/studio)（Android SDK）
 - [Flutter SDK](https://docs.flutter.dev/install)（最新穩定版）
 - [Rust toolchain](https://rustup.rs/)（stable）
 - 執行 `flutter doctor`，依提示補齊缺少的工具
@@ -100,7 +113,8 @@ Rust 會在 `flutter run` / `flutter build` 時由 `rust_builder/` 的 cargokit 
 ### 開發模式執行
 
 ```bash
-flutter run -d windows
+flutter run -d windows        # Windows
+flutter run -d <device id>    # Android 實機或模擬器（ID 用 flutter devices 查）
 ```
 
 ### 雲端同步憑證（選用）
@@ -167,11 +181,24 @@ flutter_rust_bridge_codegen generate
 
 ### 編譯生產版
 
+Windows：
+
 ```bash
 flutter build windows --release
 ```
 
 輸出：`build\windows\x64\runner\Release\`
+
+Android：
+
+```bash
+flutter build apk --release        # 直接安裝用的 APK
+flutter build appbundle --release  # 上傳 Google Play 用的 AAB
+```
+
+輸出：`build/app/outputs/flutter-apk/app-release.apk`、`build/app/outputs/bundle/release/app-release.aab`
+
+要用自己的金鑰簽署，在 `android/key.properties`（已被 git 忽略）填入 `storeFile`、`storePassword`、`keyAlias`、`keyPassword`；沒有這個檔案時會用 debug 金鑰簽署。
 
 ### 執行測試
 

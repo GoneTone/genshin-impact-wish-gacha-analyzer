@@ -4,13 +4,15 @@
 
 [![Crowdin](https://badges.crowdin.net/genshin-impact-wish-gacha-analyzer/localized.svg)](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer)
 
-I have developed a utility for analyzing gacha history, where all data and numbers are well-organized in a convenient manner.
+A wish history analyzer for Windows and Android, with all data and numbers well-organized in a convenient manner.
 
-When you press *Update*, the utility starts a local proxy server (running only on your computer) and automatically installs a locally generated root certificate, so it can intercept Genshin Impact's WebView request to the miHoYo wish history API. You therefore need to open the wish history page in the game *after* pressing *Update*, so the request can be captured. The captured URL is parsed and the resulting parameters are used to call miHoYo's API.
+On Windows, when you press *Update*, the utility starts a local proxy server (running only on your computer) and automatically installs a locally generated root certificate, so it can intercept Genshin Impact's WebView request to the miHoYo wish history API. You therefore need to open the wish history page in the game *after* pressing *Update*, so the request can be captured. The captured URL is parsed and the resulting parameters are used to call miHoYo's API.
 
-The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously captured URL and reuses it as long as it's still valid, so you don't have to repeat the capture every time. If the captured URL has expired, the utility will ask you to open the wish history page in the game again to re-capture.
+The Android version doesn't intercept network traffic; instead it reads the system log and finds the URL that Genshin Impact leaves there when it opens the wish history page. Android doesn't let apps read other apps' system logs directly, so depending on the device it reads the log via root or the system's built-in *Wireless debugging* (Android 11 or later); if neither is available, you can enter the Wish History URL manually. When using Wireless debugging, it disconnects as soon as it's done reading, and if the app turned Wireless debugging on, it turns it back off.
 
-Rest assured: this utility does not read or modify any game file, game memory, or in-game network traffic. It only intercepts the wish history page request that the in-game WebView itself makes, so there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
+The first time you press *Update*, the utility loads your full gacha history, which may take a while. The data is then stored locally so you don't have to wait again on the next launch. To pull new records, just press *Update*: the utility remembers the previously obtained URL and reuses it as long as it's still valid, so you don't have to obtain it again every time. If the URL has expired, the utility will ask you to open the wish history page in the game again to get a new one.
+
+Rest assured: this utility does not modify any game file, and does not read or modify game memory or in-game network traffic. On Windows it only intercepts the wish history page request that the in-game WebView itself makes, and reads the game's web cache to find the same URL; on Android it only reads Genshin Impact's Wish History URL from the system log. So there is no risk of being banned for using it. If you have been banned, it was likely for a different reason. Please do not blame us, thanks.
 
 Posts:
 - 巴哈姆特 (Bahamut): <https://forum.gamer.com.tw/C.php?bsn=36730&snA=11990>
@@ -36,14 +38,24 @@ The utility may trigger anti-virus software during installation and execution. T
 
 ## How to Use
 
+### Windows
+
 1. Launch Genshin Impact (don't open the wish history page yet).
 2. Open this utility and press *Update*. The utility will start a local proxy server in the background and wait for the request.
 3. Switch back to the game and open *Wish → History* to view the wish history page.
 4. Once captured, the utility automatically shuts down the proxy, restores your system proxy settings, and starts fetching your data. To update again later, just repeat step 2 — the captured URL will be reused if still valid.
 
+### Android
+
+1. The first time you press *Update*, rooted devices read the log via root directly; on other devices the app walks you through setting up the system's built-in *Wireless debugging*: pair once by following the on-screen steps (requires Android 11 or later, Wi‑Fi, and notifications allowed), and from then on the app turns Wireless debugging on and off by itself (devices with extra security restrictions may need you to turn it on manually each time).
+2. After pressing *Update*, switch to the game and open *Wish → History* to view the wish history page.
+3. Once the app finds the URL in the system log, it starts fetching your data automatically when you return to the app.
+4. If automatic reading isn't available (for example, an unrooted device on Android 10 or earlier, or when you're not on Wi‑Fi), you can enter the Wish History URL manually instead.
+
 ## Features
 
-- Auto-intercepts the in-game WebView's request to the miHoYo wish history API via a local proxy and a self-signed root certificate — no need to paste URLs by hand
+- Runs on Windows and Android
+- Gets the Wish History URL automatically — no need to paste URLs by hand: on Windows it intercepts the in-game WebView's request to the miHoYo wish history API via a local proxy and a self-signed root certificate; on Android it reads the system log (via root or Wireless debugging)
 - Supports the Global server (CN server not supported yet)
 - Covers all 7 gacha types: Character Event Wish, Weapon Event Wish, Chronicled Wish, Permanent Wish, Novice Wishes, Event Ode, Standard Ode
 - Multi-account (UID) management: custom aliases, drag-to-reorder, one-click switching
@@ -56,16 +68,17 @@ The utility may trigger anti-virus software during installation and execution. T
 - Bar chart comparing each gacha's highest-rarity counts
 - Rarity distribution pie chart
 - Item type distribution pie chart
-- Wish history table: multi-column sort, fuzzy search, rarity and item-type filters, pagination
+- Wish history table: multi-column sort, keyword search (by name), rarity and item-type filters, pagination
 - Auto-fetched character / weapon icons and details (from [HoYoWiki](https://wiki.hoyolab.com/pc/genshin/home)): shown in the history table and timelines; click an item to view official artwork, description, and tags — with a one-click jump to HoYoWiki
-- Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), auto-saved and copied to the clipboard
+- Generate a share image in one click (dark / light theme, full UID or first-3-digits mask), then copy it to the clipboard or save it as a PNG file; on Android you can also share it directly through the system share sheet
 - Export / Import accounts as JSON
-- Cloud sync: link your own Google account to automatically back up gacha records to your Google Drive and keep multiple computers in sync; deleting an account can optionally remove it from the cloud data too
+- Cloud sync: link your own Google account to automatically back up gacha records to your Google Drive and keep multiple devices in sync; deleting an account can optionally remove it from the cloud data too
 - Dark / Light theme toggle
 - Multi-language ([help us translate](https://crowdin.com/project/genshin-impact-wish-gacha-analyzer))
 - Optional UID masking in the UI (first 3 digits only) for added privacy
-- Automatic update check on launch, with a manual trigger in Settings
+- Automatic update check on launch, with a manual trigger in Settings (the Android version updates through Google Play)
 - All data stays on your machine by default — nothing is uploaded; cloud sync is opt-in and backs up only to your own Google Drive
+- The Android version shows AdMob native ads (consent is requested first in regions that require it); the Windows version has no ads
 
 ## Screenshot
 
@@ -82,7 +95,7 @@ The utility may trigger anti-virus software during installation and execution. T
 
 ### Prerequisites
 
-- Windows only for now
+- Build the Windows version on Windows; the Android version also needs [Android Studio](https://developer.android.com/studio) (Android SDK)
 - [Flutter SDK](https://docs.flutter.dev/install) (latest stable)
 - [Rust toolchain](https://rustup.rs/) (stable)
 - Run `flutter doctor` and install anything it flags as missing
@@ -100,7 +113,8 @@ Rust is compiled automatically by `rust_builder/`'s cargokit during `flutter run
 ### Run in development mode
 
 ```bash
-flutter run -d windows
+flutter run -d windows        # Windows
+flutter run -d <device id>    # Android device or emulator (find the ID with flutter devices)
 ```
 
 ### Cloud sync credentials (optional)
@@ -167,11 +181,24 @@ Generated files live in `lib/src/rust/`.
 
 ### Build for release
 
+Windows:
+
 ```bash
 flutter build windows --release
 ```
 
 Output: `build\windows\x64\runner\Release\`
+
+Android:
+
+```bash
+flutter build apk --release        # APK for direct install
+flutter build appbundle --release  # AAB for Google Play upload
+```
+
+Output: `build/app/outputs/flutter-apk/app-release.apk`, `build/app/outputs/bundle/release/app-release.aab`
+
+To sign with your own key, fill in `storeFile`, `storePassword`, `keyAlias` and `keyPassword` in `android/key.properties` (git-ignored); without that file the build is signed with the debug key.
 
 ### Run tests
 
