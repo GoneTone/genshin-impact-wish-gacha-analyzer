@@ -1,0 +1,62 @@
+# 子專案 13：授權頁、README 與主題圖片（設計）
+
+狀態：設計中（2026-11-23）
+
+## 目的
+
+Android 移植的最後一個子專案。比照鳴潮移植筆記第 55、56 節（授權頁、README），以及鳴潮的 `tool/generate_feature_graphic.py`，補齊上架與公開說明需要的部分。
+
+全部在 `feat/android` 上做，這個子專案完成後**還不開 PR**：內部測試版用這個分支在本機建置；發布後，同一個分支補上截圖，再開 PR。
+
+## 範圍
+
+### 這次做
+
+1. **授權頁**：貢獻者頁「專案授權」區塊下方加一顆「開放原始碼授權」按鈕（`contributorsOpenSourceLicenses`，31 種語言，翻譯照鳴潮），按下去開 Flutter 內建的 `showLicensePage`。
+   - 傳 `useRootNavigator: true`。
+   - 版本用 `appVersionProvider`。
+   - 圖示自己包 `Padding`。
+   - 實作逐字對照鳴潮。
+2. **README 文字（四種語言：`README.md`、`README_EN.md`、`README_JA-JP.md`、`README_ZH-HANS.md`）**：照鳴潮筆記第 56 節「一定要改的」和「容易漏掉的寫法」改。
+   - 用詞照該語言 ARB 的官方用語。
+   - 功能列表要對照現在的畫面逐條檢查。
+   - Android 段落這次先不放圖。
+3. **主題圖片**：移植 `tool/generate_feature_graphic.py`，輸出 `docs/images/play-store/feature-graphic-<語言>.png`，共四張（1024×500）。
+   - 版面、字型、配色與檔名語言碼（`en`、`zh-TW`、`ja`、`zh-CN`）照鳴潮。
+   - 文字和商店標題（`private/play-store/listing.md`）一致：
+
+     | 語言 | 名稱 | for | 標語 |
+     |---|---|---|---|
+     | en | Wish Analyzer | for Genshin | Wish stats · Pity tracking · 5★ timeline |
+     | zh-TW | 祈願卡池分析 | for 原神 | 祈願記錄統計・保底進度・5★ 時間軸 |
+     | ja | 祈願分析 | for 原神 | 祈願履歴の統計・天井の進捗・★5 タイムライン |
+     | zh-CN | 祈愿卡池分析 | for 原神 | 祈愿记录统计・保底进度・5★ 时间轴 |
+
+   - 網址列：`github.com/GoneTone/genshin-impact-wish-gacha-analyzer`。
+
+### 內部測試發布後再做（同一個分支、開 PR 前）
+
+- 移植 `tool/capture_store_screenshots.py`，拍商店截圖：四種語言 × 四種裝置（手機、7 吋、10 吋、Chromebook）。用哪個帳號的資料，到時候再決定。
+- README 的 Android 段落放手機和 10 吋截圖。
+- Windows 截圖搬到 `docs/images/<語言>/windows/`，順序和商店截圖一致，並補拍「等待開啟記錄頁」。
+
+### 商店頁上線後再做
+
+- README「下載軟體」段的下載徽章與商標聲明、標題上方的主題圖片、Release 頁尾的下載段。
+- `docs/release.md` 的徽章／`{{INSTALLER_URL}}` 那句改回鳴潮原文。
+
+### 不做
+
+- **Android 原生套件和 Rust crate 的授權**：照鳴潮第 55 節，不加 `oss-licenses-plugin`。
+- **WinDivert 授權**：原神沒有用 WinDivert。
+- **MSVC `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS`**：鳴潮加它是因為 `flutter_inappwebview_windows`，原神沒有這個外掛。第一次 CI 發版出現 STL1011 錯誤再補。
+- **Crowdin**：`crowdin.yml` 已經有 `strings.xml` 那組設定。既有翻譯要在合併後用 CLI 補匯入，屆時和本機改過的卡池名一起處理。
+
+## 驗收
+
+- 授權頁：
+  - 有 widget 測試，確認按鈕存在，按下後打開 `LicensePage`。
+  - Windows 和 Android 都要看過畫面，確認授權頁蓋住整個畫面。
+  - `fvm flutter analyze`、`fvm flutter test` 全綠。
+- README：四種語言的段落結構一致，沒有留下只適用電腦版的句子（照第 56 節逐條核對）。
+- 主題圖片：四張都是 1024×500、RGB；文字沒有超出邊界，也沒有缺字（豆腐字）。
