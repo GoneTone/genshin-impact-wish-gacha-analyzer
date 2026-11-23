@@ -376,7 +376,8 @@ class _ShareHeader extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              l.shareImageUpdatedAt(ts),
+              // 隔離成由左往右，阿拉伯文句子裡的日期才不會被重排成「日-月-年」。
+              l.shareImageUpdatedAt('\u2066$ts\u2069'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: tokens.textMuted,
               ),

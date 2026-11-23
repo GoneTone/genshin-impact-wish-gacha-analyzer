@@ -371,6 +371,12 @@ void main() {
       expect(pieX > timelineX, rtl, reason: '$locale 圓餅與時間軸');
       expect(iconX > uidX, rtl, reason: '$locale icon 與 UID');
       // 網址與 UID 固定由左往右，遮蔽用的圓點不會被重排到數字前面。
+      // 更新時間以 LRI…PDI 隔離，阿拉伯文裡日期不會被重排。
+      expect(
+        find.textContaining('\u20662026-05-18 14:30\u2069'),
+        findsOneWidget,
+        reason: '$locale',
+      );
       for (final text in ['UID 800••••••', 'https://']) {
         final widget = t.widget<Text>(find.textContaining(text));
         expect(widget.textDirection, TextDirection.ltr, reason: text);
