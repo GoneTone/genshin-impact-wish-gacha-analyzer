@@ -1,6 +1,6 @@
 # Play 上架與更新（子專案 7）— 設計 spec
 
-- 狀態：設計中
+- 狀態：實作完成，待上架驗收
 - 日期：2026-11-23
 - 上層文件：`2026-11-17-android-support-roadmap-design.md`（第三節子專案 7；順序 … → 11 → 7 → 13）
 - 對應鳴潮版：`wuthering-waves-convene-gacha-analyzer` 的 `2026-11-06-play-release-design.md`，移植筆記第 34～40 節（「十、Play 上架與更新」整節），以及路線圖第四節列的合併後 CI commit
@@ -176,3 +176,44 @@ Google Cloud 的 Android OAuth 用戶端一筆只能填一個 SHA-1。在雲端�
 - `generate_app_icons.dart` 自適應前景的縮放比例（依遮罩預覽）。
 - 鳴潮檔案套到原神時，遇到原神結構不同（例如 `app_shell.dart` 已有子專案 9b、10 的改動）怎麼合，原則是行為和鳴潮一致。
 - `private/play-store/` 內文的具體字句（遵守 4.6 的事實與字數上限）。
+
+---
+
+## 附錄：實作結果
+
+### Commit 對照（feat/android）
+
+| Task | Commit |
+|---|---|
+| 1 版本與上傳驗證 | `8270733` |
+| 2 Play 更新服務 | `3ed8dfc` |
+| 3 彈性更新流程與重啟提示 | `fd9b683` |
+| 4 下載進度顯示 | `9067332` |
+| 5 圖示（含自適應圖示） | `f336dc6` |
+| 6 簽章、發版 CI、安裝檔與文件 | `04013b6`、`0330af0` |
+| 7 `private/play-store/` 上架素材 | 無 commit（git 忽略） |
+| 8 實跑與交接 | 本附錄所在 commit |
+
+### 實作時才決定的值
+
+- 自適應圖示前景縮放比例 2/3（與鳴潮相同），背景色 `#131E30`。預覽圖確認圓環留在 72dp 可見範圍內，只有左下角的裝飾星芒會被圓形遮罩裁掉。
+
+### 已驗證
+
+- actionlint 實際跑過，`.github/workflows/*.yml` 無任何輸出（本機沒有 shellcheck，`run:` 腳本未經 shellcheck）。
+- ISCC 實際跑過：新版 `installer.iss` 以 `1.9.0-rc.1` 編譯成功（`FileVersionRaw` 為 `1.9.0.0`，文字版本保留 `-rc.1`）；對照組舊版 `installer.iss` 以同樣參數編譯失敗（`VersionInfoVersion` 無效），證明修正有效。打包的是本機既有的 Windows Release 建置，只驗證版本欄位邏輯。
+- 沒有 `android/key.properties` 時，release APK 可用 debug 簽章後備建置成功。
+- 模擬器（Medium_Phone_API_36.0）實跑 release APK：啟動後 `adb logcat -b crash` 無任何輸出，停在首頁；設定頁按「檢查更新」顯示 `updateErrorPlay` 的訊息（非 Play 安裝的預期結果）。
+- 格式化、`flutter analyze`、`flutter test` 全綠。
+
+### 與鳴潮不同的裁決
+
+- `docs/release.md` 拿掉「下載徽章／`{{INSTALLER_URL}}`」那句，等子專案 13 加徽章時再恢復鳴潮原文；`release.yml` 仍逐字保留鳴潮的 Replace 步驟（目前不作用）。
+- 沿用既有的 `updateOpenPlayStore` 鍵（「前往 Google Play」）給 App 自身的更新失敗提示，並放寬其 `@description` 同時涵蓋兩種用途，文字不變。
+- 320dp 寬度的版面測試擴大到全部 31 個語系（計畫要求）。
+- `docs/privacy-policy.md` 的設定項目名稱對齊 ARB `settingsLogAccess`（「讀取遊戲 log」）。
+
+### 尚待使用者處理
+
+- 第五節步驟 1～3：產生上傳金鑰、在 Play Console 建立 App、第一次手動上傳 `-rc.1`。
+- 第六節「實機與手動」各項：實機驗收（內部測試軌道安裝、彈性更新流程、雲端同步授權）、合併後的 `release.yml` 實跑。這些都要等使用者同意才會操作手機。
