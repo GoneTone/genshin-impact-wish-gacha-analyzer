@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_remote.dart';
@@ -127,7 +128,7 @@ Future<CloudSyncOutcome> runSyncRound({
   return CloudSyncSuccess(uploadedFingerprint: localFingerprint);
 }
 
-/// 在背景比對兩份 bundle JSON，回傳可跳過合併的帳號 UID：內容（不看別名）相同，且本機已有別名或雲端沒有別名。
+/// 在背景比對兩份 bundle JSON，回傳可跳過合併的帳號 UID：內容（不看別名與其修改時間）相同，且依 [incomingAliasWins] 雲端別名不會勝出。
 Future<Set<String>> _identicalAccountsInBackground(
   String remoteJson,
   String localJson,
@@ -138,18 +139,25 @@ Future<Set<String>> _identicalAccountsInBackground(
             as List<dynamic>)
       (a as Map<String, dynamic>)['uid'] as String: a,
   };
-  String content(Map<String, dynamic> a) =>
-      jsonEncode(Map<String, dynamic>.from(a)..remove('alias'));
-  bool hasAlias(Map<String, dynamic> a) =>
-      ((a['alias'] as String?)?.trim().isNotEmpty ?? false);
+  String content(Map<String, dynamic> a) => jsonEncode(
+    Map<String, dynamic>.from(a)
+      ..remove('alias')
+      ..remove('alias_updated_at'),
+  );
+  bool remoteAliasWins(Map<String, dynamic> l, Map<String, dynamic> r) =>
+      incomingAliasWins(
+        localAlias: l['alias'] as String?,
+        localUpdatedAt: parseAliasUpdatedAt(l['alias_updated_at']),
+        incomingAlias: r['alias'] as String?,
+        incomingUpdatedAt: parseAliasUpdatedAt(r['alias_updated_at']),
+      );
   final remote = byUid(remoteJson);
   final local = byUid(localJson);
   return {
     for (final MapEntry(:key, :value) in remote.entries)
-      // 別名規則同 _runImport：本機沒有別名而雲端有時，雲端別名要靠合併帶進來。
+      // 別名規則同 _runImport：雲端別名（含較新的清空）會勝出時，要靠合併帶進來。
       if (local[key] case final l?
-          when content(l) == content(value) &&
-              (hasAlias(l) || !hasAlias(value)))
+          when content(l) == content(value) && !remoteAliasWins(l, value))
         key,
   };
 });

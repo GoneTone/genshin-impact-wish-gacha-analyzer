@@ -30,6 +30,7 @@ String _bundleJson({
   List<String> uids = const ['800000001'],
   int? schema,
   Map<String, String> aliases = const {},
+  Map<String, String> aliasTimes = const {},
 }) => jsonEncode({
   'schema_version': schema ?? AccountsBundle.currentSchemaVersion,
   'app': accountsBundleAppId,
@@ -43,6 +44,7 @@ String _bundleJson({
         'last_updated': '2026-07-01T00:00:00.000Z',
         'banners': {'301': <Object>[]},
         if (aliases.containsKey(uid)) 'alias': aliases[uid],
+        if (aliasTimes.containsKey(uid)) 'alias_updated_at': aliasTimes[uid],
       },
   ],
 });
@@ -186,6 +188,72 @@ void main() {
         clearPendingRemovals: (_) async {},
       );
       expect(applied, isFalse);
+    });
+
+    group('別名修改時間（其餘相同）', () {
+      const t1 = '2026-11-24T01:00:00.000Z';
+      const t2 = '2026-11-24T02:00:00.000Z';
+
+      /// 跑一輪同步，回傳雲端帳號是否被送進合併。
+      Future<bool> merged({
+        required String remoteJson,
+        required String localJson,
+      }) async {
+        var applied = false;
+        await runSyncRound(
+          remote: _FakeRemote(content: remoteJson),
+          pendingRemovals: const [],
+          applyRemote: (_) async => applied = true,
+          exportLocal: () async => localJson,
+          clearPendingRemovals: (_) async {},
+        );
+        return applied;
+      }
+
+      test('雲端較新的清空 → 送進合併', () async {
+        expect(
+          await merged(
+            remoteJson: _bundleJson(aliasTimes: {'800000001': t2}),
+            localJson: _bundleJson(
+              aliases: {'800000001': '本機名'},
+              aliasTimes: {'800000001': t1},
+            ),
+          ),
+          isTrue,
+        );
+      });
+
+      test('雲端較新的修改 → 送進合併', () async {
+        expect(
+          await merged(
+            remoteJson: _bundleJson(
+              aliases: {'800000001': '雲端名'},
+              aliasTimes: {'800000001': t2},
+            ),
+            localJson: _bundleJson(
+              aliases: {'800000001': '本機名'},
+              aliasTimes: {'800000001': t1},
+            ),
+          ),
+          isTrue,
+        );
+      });
+
+      test('本機較新 → 跳過合併', () async {
+        expect(
+          await merged(
+            remoteJson: _bundleJson(
+              aliases: {'800000001': '雲端名'},
+              aliasTimes: {'800000001': t1},
+            ),
+            localJson: _bundleJson(
+              aliases: {'800000001': '本機名'},
+              aliasTimes: {'800000001': t2},
+            ),
+          ),
+          isFalse,
+        );
+      });
     });
 
     test('合併前本機就與雲端相同 → 不合併也不上傳', () async {
