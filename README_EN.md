@@ -1,3 +1,5 @@
+![Wish Analyzer for Genshin](docs/images/play-store/feature-graphic-en.png)
+
 # 原神祈願卡池分析 Genshin Impact Wish Gacha Analyzer
 
 [繁體中文](README.md) | [简体中文](README_ZH-HANS.md) | English | [日本語](README_JA-JP.md)

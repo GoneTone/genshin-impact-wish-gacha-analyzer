@@ -1,3 +1,5 @@
+![祈願分析 for 原神](docs/images/play-store/feature-graphic-ja.png)
+
 # 原神祈願分析ツール Genshin Impact Wish Gacha Analyzer
 
 [繁體中文](README.md) | [简体中文](README_ZH-HANS.md) | [English](README_EN.md) | 日本語
