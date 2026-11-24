@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/adb_shell_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/flutter_adb_session.dart';
@@ -74,6 +75,9 @@ class _Ops extends AdbPairingOps {
   bool grantWorks = true;
   bool reachable = true;
   bool pairThrows = false;
+
+  /// `pm grant` 回傳的輸出。
+  String grantOutput = '';
   final commands = <String>[];
   final pairs = <(int, String)>[];
 
@@ -111,7 +115,12 @@ class _Session implements AdbSession {
     if (command == grantWriteSecureSettingsCommand && ops.grantWorks) {
       ops.platform.wss = true;
     }
-    return Uint8List.fromList(utf8.encode(command == 'id' ? 'uid=2000' : ''));
+    final out = switch (command) {
+      'id' => 'uid=2000',
+      grantWriteSecureSettingsCommand => ops.grantOutput,
+      _ => '',
+    };
+    return Uint8List.fromList(utf8.encode(out));
   }
 
   @override
@@ -214,6 +223,34 @@ void main() {
     await ctl().openWirelessDebugging();
     await platform.handler!(1, '111111');
     expect(phase(), PairingPhase.grantFailed);
+  });
+
+  test('logs the pm grant output on one line so rejections are diagnosable', () async {
+    ops
+      ..grantWorks = false
+      ..grantOutput =
+          "Exception occurred while executing 'grant':\n"
+          'java.lang.SecurityException: grantRuntimePermission: Neither user 2000 '
+          'nor current process has android.permission.GRANT_RUNTIME_PERMISSIONS.\n';
+    final records = <LogRecord>[];
+    final sub = Logger('capture.pairing').onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+    await ctl().startSetup();
+    await ctl().openWirelessDebugging();
+    await platform.handler!(1, '111111');
+    expect(
+      records.map((r) => r.message),
+      contains(
+        "grant command output=\"Exception occurred while executing 'grant': "
+        'java.lang.SecurityException: grantRuntimePermission: Neither user 2000 '
+        'nor current process has android.permission.GRANT_RUNTIME_PERMISSIONS."',
+      ),
+    );
+  });
+
+  test('pmOutputForLog caps long output', () {
+    final out = pmOutputForLog(utf8.encode('x' * 500));
+    expect(out, '${'x' * 300}...');
   });
 
   test('wrong code returns ok=false without leaking the code', () async {

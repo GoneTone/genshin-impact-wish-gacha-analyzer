@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
@@ -102,6 +103,15 @@ const _appPackage = 'tw.reh.genshin.gacha';
 /// 授權自己開關無線偵錯的指令。
 const grantWriteSecureSettingsCommand =
     'pm grant $_appPackage android.permission.WRITE_SECURE_SETTINGS';
+
+/// 把 `pm grant` 的輸出壓成一行並截短，寫進 log 用；被系統拒絕時通常是一段 `SecurityException`。
+String pmOutputForLog(List<int> out) {
+  final text = utf8
+      .decode(out, allowMalformed: true)
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+  return text.length <= 300 ? text : '${text.substring(0, 300)}...';
+}
 
 /// 收回 [grantWriteSecureSettingsCommand] 的指令。
 const revokeWriteSecureSettingsCommand =
@@ -357,9 +367,10 @@ class LogAccessResolver {
     }
     if (!await platform.hasWriteSecureSettings()) {
       try {
-        await client.exec(grantWriteSecureSettingsCommand);
+        final out = await client.exec(grantWriteSecureSettingsCommand);
         _log.info(
-          'write secure settings granted=${await platform.hasWriteSecureSettings()}',
+          'write secure settings granted=${await platform.hasWriteSecureSettings()} '
+          'output="${pmOutputForLog(out)}"',
         );
       } on AdbShellException catch (e) {
         _log.warning('write secure settings grant failed: ${e.message}');

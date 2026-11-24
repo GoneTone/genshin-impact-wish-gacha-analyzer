@@ -226,7 +226,8 @@ class AdbPairingController extends Notifier<AdbPairingState> {
     try {
       final ports = await _resolver.discoverConnectPorts();
       if (await client.connectAny(ports)) {
-        await client.exec(grantWriteSecureSettingsCommand);
+        final out = await client.exec(grantWriteSecureSettingsCommand);
+        _log.info('grant command output="${pmOutputForLog(out)}"');
       } else {
         _log.warning('grant: could not connect ports=${ports.length}');
       }
