@@ -82,14 +82,43 @@ Android 版不拦截连接，改为读取系统 log，从中找出原神打开�
 
 ## 截图
 
-![综合数据页](docs/images/zh-Hans/1.png)
-![角色活动祈愿页](docs/images/zh-Hans/2.png)
-![武器活动祈愿页](docs/images/zh-Hans/3.png)
-![活动颂愿页](docs/images/zh-Hans/4.png)
-![设置页](docs/images/zh-Hans/5.png)
-![分享图生成设置](docs/images/zh-Hans/6.png)
-![分享图](docs/images/zh-Hans/7.png)
-![物品详情显示](docs/images/zh-Hans/8.png)
+### Windows
+
+![综合数据页](docs/images/zh-Hans/windows/1.png)
+![角色活动祈愿页](docs/images/zh-Hans/windows/2.png)
+![武器活动祈愿页](docs/images/zh-Hans/windows/3.png)
+![活动颂愿页](docs/images/zh-Hans/windows/4.png)
+![物品详情显示](docs/images/zh-Hans/windows/5.png)
+![分享图生成设置](docs/images/zh-Hans/windows/6.png)
+![分享图](docs/images/zh-Hans/windows/7.png)
+![等待在游戏中打开祈愿历史记录页](docs/images/zh-Hans/windows/8.png)
+![设置页](docs/images/zh-Hans/windows/9.png)
+
+### Android 手机
+
+<p>
+<img src="docs/images/play-store/screenshots/zh-CN/phone/1.png" alt="综合数据页" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/2.png" alt="角色活动祈愿页" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/3.png" alt="5★ 时间轴与 5★ 一览" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/4.png" alt="武器活动祈愿页" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/5.png" alt="物品详情显示" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/6.png" alt="分享图生成设置" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/7.png" alt="等待在游戏中打开祈愿历史记录页" width="24%">
+<img src="docs/images/play-store/screenshots/zh-CN/phone/8.png" alt="设置页" width="24%">
+</p>
+
+### Android 平板
+
+<p>
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/1.png" alt="综合数据页" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/2.png" alt="角色活动祈愿页" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/3.png" alt="5★ 时间轴与 5★ 一览" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/4.png" alt="武器活动祈愿页" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/5.png" alt="物品详情显示" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/6.png" alt="分享图生成设置" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/7.png" alt="等待在游戏中打开祈愿历史记录页" width="49%">
+<img src="docs/images/play-store/screenshots/zh-CN/tablet-10/8.png" alt="设置页" width="49%">
+</p>
 
 ## 开发
 

@@ -82,14 +82,43 @@ Android 版は通信を傍受せず、システムログを読み取って、原
 
 ## スクリーンショット
 
-![総合データページ](docs/images/ja-JP/1.png)
-![イベント祈願・キャラクターページ](docs/images/ja-JP/2.png)
-![イベント祈願・武器ページ](docs/images/ja-JP/3.png)
-![イベント星願ページ](docs/images/ja-JP/4.png)
-![設定ページ](docs/images/ja-JP/5.png)
-![シェア画像の生成設定](docs/images/ja-JP/6.png)
-![シェア画像](docs/images/ja-JP/7.png)
-![アイテム詳細の表示](docs/images/ja-JP/8.png)
+### Windows
+
+![総合データページ](docs/images/ja-JP/windows/1.png)
+![イベント祈願・キャラクターページ](docs/images/ja-JP/windows/2.png)
+![イベント祈願・武器ページ](docs/images/ja-JP/windows/3.png)
+![イベント星願ページ](docs/images/ja-JP/windows/4.png)
+![アイテム詳細の表示](docs/images/ja-JP/windows/5.png)
+![シェア画像の生成設定](docs/images/ja-JP/windows/6.png)
+![シェア画像](docs/images/ja-JP/windows/7.png)
+![ゲームで祈願履歴ページが開かれるのを待機](docs/images/ja-JP/windows/8.png)
+![設定ページ](docs/images/ja-JP/windows/9.png)
+
+### Android スマートフォン
+
+<p>
+<img src="docs/images/play-store/screenshots/ja/phone/1.png" alt="総合データページ" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/2.png" alt="イベント祈願・キャラクターページ" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/3.png" alt="★5 タイムラインと ★5 一覧" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/4.png" alt="イベント祈願・武器ページ" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/5.png" alt="アイテム詳細の表示" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/6.png" alt="シェア画像の生成設定" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/7.png" alt="ゲームで祈願履歴ページが開かれるのを待機" width="24%">
+<img src="docs/images/play-store/screenshots/ja/phone/8.png" alt="設定ページ" width="24%">
+</p>
+
+### Android タブレット
+
+<p>
+<img src="docs/images/play-store/screenshots/ja/tablet-10/1.png" alt="総合データページ" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/2.png" alt="イベント祈願・キャラクターページ" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/3.png" alt="★5 タイムラインと ★5 一覧" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/4.png" alt="イベント祈願・武器ページ" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/5.png" alt="アイテム詳細の表示" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/6.png" alt="シェア画像の生成設定" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/7.png" alt="ゲームで祈願履歴ページが開かれるのを待機" width="49%">
+<img src="docs/images/play-store/screenshots/ja/tablet-10/8.png" alt="設定ページ" width="49%">
+</p>
 
 ## 開発
 

@@ -82,14 +82,43 @@ Android 版不攔截連線，改為讀取系統 log，從中找出原神開啟�
 
 ## 截圖
 
-![綜合數據頁](docs/images/zh-Hant/1.png)
-![角色活動祈願頁](docs/images/zh-Hant/2.png)
-![武器活動祈願頁](docs/images/zh-Hant/3.png)
-![活動頌願頁](docs/images/zh-Hant/4.png)
-![設定頁](docs/images/zh-Hant/5.png)
-![分享圖生成設定](docs/images/zh-Hant/6.png)
-![分享圖](docs/images/zh-Hant/7.png)
-![物品詳情顯示](docs/images/zh-Hant/8.png)
+### Windows
+
+![綜合數據頁](docs/images/zh-Hant/windows/1.png)
+![角色活動祈願頁](docs/images/zh-Hant/windows/2.png)
+![武器活動祈願頁](docs/images/zh-Hant/windows/3.png)
+![活動頌願頁](docs/images/zh-Hant/windows/4.png)
+![物品詳情顯示](docs/images/zh-Hant/windows/5.png)
+![分享圖生成設定](docs/images/zh-Hant/windows/6.png)
+![分享圖](docs/images/zh-Hant/windows/7.png)
+![等待在遊戲中開啟祈願歷史記錄頁](docs/images/zh-Hant/windows/8.png)
+![設定頁](docs/images/zh-Hant/windows/9.png)
+
+### Android 手機
+
+<p>
+<img src="docs/images/play-store/screenshots/zh-TW/phone/1.png" alt="綜合數據頁" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/2.png" alt="角色活動祈願頁" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/3.png" alt="5★ 時間軸與 5★ 一覽" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/4.png" alt="武器活動祈願頁" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/5.png" alt="物品詳情顯示" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/6.png" alt="分享圖生成設定" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/7.png" alt="等待在遊戲中開啟祈願歷史記錄頁" width="24%">
+<img src="docs/images/play-store/screenshots/zh-TW/phone/8.png" alt="設定頁" width="24%">
+</p>
+
+### Android 平板
+
+<p>
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/1.png" alt="綜合數據頁" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/2.png" alt="角色活動祈願頁" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/3.png" alt="5★ 時間軸與 5★ 一覽" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/4.png" alt="武器活動祈願頁" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/5.png" alt="物品詳情顯示" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/6.png" alt="分享圖生成設定" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/7.png" alt="等待在遊戲中開啟祈願歷史記錄頁" width="49%">
+<img src="docs/images/play-store/screenshots/zh-TW/tablet-10/8.png" alt="設定頁" width="49%">
+</p>
 
 ## 開發
 
