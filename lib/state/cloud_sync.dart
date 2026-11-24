@@ -491,6 +491,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
       uidOrder: settings.uidOrder,
       uidAliases: settings.uidAliases,
+      uidAliasUpdatedAt: settings.uidAliasUpdatedAt,
       lastActiveUid: gacha.activeUid,
       appVersion: ref.read(appVersionProvider),
       now: DateTime.now(),

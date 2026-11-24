@@ -628,6 +628,8 @@ class _DataManagement extends ConsumerWidget {
         recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
         uidOrder: filteredOrder,
         uidAliases: filteredAliases,
+        // 只會輸出 byUid 裡的帳號，不必另外過濾。
+        uidAliasUpdatedAt: settings.uidAliasUpdatedAt,
         lastActiveUid: lastActive,
         appVersion: appVersion,
         now: now,

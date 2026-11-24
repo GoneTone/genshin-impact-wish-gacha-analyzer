@@ -15,6 +15,7 @@ String exportAccounts({
   required Map<String, BannerStorage> byUid,
   required List<String> uidOrder,
   required Map<String, String> uidAliases,
+  required Map<String, DateTime> uidAliasUpdatedAt,
   required String? lastActiveUid,
   required String appVersion,
   required DateTime now,
@@ -27,7 +28,11 @@ String exportAccounts({
 
   final accounts = [
     for (final uid in ordered)
-      ExportedAccount(data: byUid[uid]!, alias: uidAliases[uid]),
+      ExportedAccount(
+        data: byUid[uid]!,
+        alias: uidAliases[uid],
+        aliasUpdatedAt: uidAliasUpdatedAt[uid],
+      ),
   ];
 
   final bundle = AccountsBundle(
@@ -51,6 +56,7 @@ Future<String> exportAccountsInBackground({
   required File Function(String uid) recordsFileOf,
   required List<String> uidOrder,
   required Map<String, String> uidAliases,
+  required Map<String, DateTime> uidAliasUpdatedAt,
   required String? lastActiveUid,
   required String appVersion,
   required DateTime now,
@@ -59,6 +65,7 @@ Future<String> exportAccountsInBackground({
   recordsFileOf: recordsFileOf,
   uidOrder: uidOrder,
   uidAliases: uidAliases,
+  uidAliasUpdatedAt: uidAliasUpdatedAt,
   lastActiveUid: lastActiveUid,
   appVersion: appVersion,
   now: now,
@@ -71,6 +78,7 @@ Future<Uint8List> exportAccountsBytesInBackground({
   required File Function(String uid) recordsFileOf,
   required List<String> uidOrder,
   required Map<String, String> uidAliases,
+  required Map<String, DateTime> uidAliasUpdatedAt,
   required String? lastActiveUid,
   required String appVersion,
   required DateTime now,
@@ -79,6 +87,7 @@ Future<Uint8List> exportAccountsBytesInBackground({
   recordsFileOf: recordsFileOf,
   uidOrder: uidOrder,
   uidAliases: uidAliases,
+  uidAliasUpdatedAt: uidAliasUpdatedAt,
   lastActiveUid: lastActiveUid,
   appVersion: appVersion,
   now: now,
@@ -97,6 +106,7 @@ Future<T> _exportInBackground<T>({
   required File Function(String uid) recordsFileOf,
   required List<String> uidOrder,
   required Map<String, String> uidAliases,
+  required Map<String, DateTime> uidAliasUpdatedAt,
   required String? lastActiveUid,
   required String appVersion,
   required DateTime now,
@@ -123,6 +133,7 @@ Future<T> _exportInBackground<T>({
         byUid: loaded,
         uidOrder: uidOrder,
         uidAliases: uidAliases,
+        uidAliasUpdatedAt: uidAliasUpdatedAt,
         lastActiveUid: lastActiveUid,
         appVersion: appVersion,
         now: now,

@@ -1,3 +1,4 @@
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 
@@ -18,10 +19,10 @@ class UnsupportedSchemaVersionException implements Exception {
   String toString() => 'UnsupportedSchemaVersionException(version: $version)';
 }
 
-/// 單一匯出帳號：包含祈願資料與選填別名。
+/// 單一匯出帳號：包含祈願資料、選填別名與別名修改時間。
 class ExportedAccount {
   /// 建立 [ExportedAccount]。
-  const ExportedAccount({required this.data, this.alias});
+  const ExportedAccount({required this.data, this.alias, this.aliasUpdatedAt});
 
   /// 帳號的祈願存檔資料。
   final BannerStorage data;
@@ -29,10 +30,18 @@ class ExportedAccount {
   /// 使用者自定義別名（選填）。
   final String? alias;
 
-  /// 序列化為 JSON，alias 為空時省略該欄位。
+  /// 別名最後修改（含清空）的時間（UTC）；null 代表沒有記錄（舊版留下的資料）。
+  final DateTime? aliasUpdatedAt;
+
+  /// 序列化為 JSON：alias 為空時省略；有修改時間就寫，沒有別名時代表已清空。
   Map<String, dynamic> toJson() {
     final a = alias;
-    return {...data.toJson(), if (a != null && a.isNotEmpty) 'alias': a};
+    final t = aliasUpdatedAt;
+    return {
+      ...data.toJson(),
+      if (a != null && a.isNotEmpty) 'alias': a,
+      if (t != null) 'alias_updated_at': t.toUtc().toIso8601String(),
+    };
   }
 
   /// 從 JSON 還原 [ExportedAccount]，alias 空白視同無別名。
@@ -41,7 +50,11 @@ class ExportedAccount {
     final alias = (rawAlias is String && rawAlias.trim().isNotEmpty)
         ? rawAlias.trim()
         : null;
-    return ExportedAccount(data: BannerStorage.fromJson(json), alias: alias);
+    return ExportedAccount(
+      data: BannerStorage.fromJson(json),
+      alias: alias,
+      aliasUpdatedAt: parseAliasUpdatedAt(json['alias_updated_at']),
+    );
   }
 }
 
