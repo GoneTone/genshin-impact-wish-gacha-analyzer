@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
 
 /// 應用程式的外觀主題設定。
@@ -80,6 +81,7 @@ class AppSettings {
     required this.locale,
     this.lastActiveUid,
     this.uidAliases = const {},
+    this.uidAliasUpdatedAt = const {},
     this.uidOrder = const [],
     this.skippedReleaseTag,
     this.maskUidInUi = false,
@@ -104,6 +106,9 @@ class AppSettings {
 
   /// UID 別名對應，key = uid。
   final Map<String, String> uidAliases;
+
+  /// 各 UID 別名最後修改（含清空）的時間（UTC），key = uid；同步與匯入合併時較新的勝出。
+  final Map<String, DateTime> uidAliasUpdatedAt;
 
   /// 使用者自訂的 UID 顯示順序。
   final List<String> uidOrder;
@@ -152,6 +157,7 @@ class AppSettings {
     String? lastActiveUid,
     bool clearLastActiveUid = false,
     Map<String, String>? uidAliases,
+    Map<String, DateTime>? uidAliasUpdatedAt,
     List<String>? uidOrder,
     String? skippedReleaseTag,
     bool clearSkippedReleaseTag = false,
@@ -176,6 +182,7 @@ class AppSettings {
         ? null
         : (lastActiveUid ?? this.lastActiveUid),
     uidAliases: uidAliases ?? this.uidAliases,
+    uidAliasUpdatedAt: uidAliasUpdatedAt ?? this.uidAliasUpdatedAt,
     uidOrder: uidOrder ?? this.uidOrder,
     skippedReleaseTag: clearSkippedReleaseTag
         ? null
@@ -216,6 +223,7 @@ abstract final class SettingsStorage {
 
   /// SharedPreferences key：UID 別名 JSON。
   static const _kUidAliases = 'pref.uidAliases';
+  static const _kUidAliasUpdatedAt = 'pref.uidAliasUpdatedAt';
 
   /// SharedPreferences key：UID 排序 JSON。
   static const _kUidOrder = 'pref.uidOrder';
@@ -256,6 +264,7 @@ abstract final class SettingsStorage {
       locale: _parseLocale(prefs.getString(_kLocale)),
       lastActiveUid: prefs.getString(_kLastActiveUid),
       uidAliases: _parseAliases(prefs.getString(_kUidAliases)),
+      uidAliasUpdatedAt: _parseAliasTimes(prefs.getString(_kUidAliasUpdatedAt)),
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
       maskUidInUi: prefs.getBool(_kMaskUidInUi) ?? false,
@@ -287,6 +296,13 @@ abstract final class SettingsStorage {
       await prefs.setString(_kLastActiveUid, s.lastActiveUid!);
     }
     await prefs.setString(_kUidAliases, jsonEncode(s.uidAliases));
+    await prefs.setString(
+      _kUidAliasUpdatedAt,
+      jsonEncode({
+        for (final MapEntry(:key, :value) in s.uidAliasUpdatedAt.entries)
+          key: value.toUtc().toIso8601String(),
+      }),
+    );
     await prefs.setString(_kUidOrder, jsonEncode(s.uidOrder));
     if (s.skippedReleaseTag == null) {
       await prefs.remove(_kSkippedReleaseTag);
@@ -358,6 +374,22 @@ abstract final class SettingsStorage {
       return decoded.map((k, v) => MapEntry(k.toString(), v.toString()));
     } catch (e, st) {
       _log.warning('uidAliases corrupt, resetting to empty', e, st);
+      return const {};
+    }
+  }
+
+  /// 解析別名修改時間 JSON；整體格式錯誤時 log 警告並回傳空 map，單筆無法解析就略過。
+  static Map<String, DateTime> _parseAliasTimes(String? raw) {
+    if (raw == null || raw.isEmpty) return const {};
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return const {};
+      return {
+        for (final MapEntry(:key, :value) in decoded.entries)
+          key.toString(): ?parseAliasUpdatedAt(value),
+      };
+    } catch (e, st) {
+      _log.warning('uidAliasUpdatedAt corrupt, resetting to empty', e, st);
       return const {};
     }
   }
