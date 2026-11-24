@@ -1,6 +1,6 @@
 # 別名同步：較新的修改勝出（設計）
 
-狀態：實作完成，兩台裝置實測待使用者同意（2026-11-24）
+狀態：實作完成，兩台裝置實測通過（2026-11-24）
 
 ## 目的
 
@@ -113,7 +113,21 @@
 - `fvm flutter analyze`：No issues found!
 - `fvm flutter test`：2440 個全部通過（新增 19 個）。
 - 獨立審查：沒有 Critical／Important。舊資料升級後匯出內容與指紋都不變，不會多上傳一次；兩台都升級的裝置不會互相覆寫。
-- 兩台裝置連同一個雲端帳號的實測：待使用者同意後再做。
+- 兩台裝置連同一個雲端帳號的實測（使用者 2026-11-24 同意）：見下一節。
+
+### 兩台裝置實測
+
+Windows release 版（1080003）與模擬器 `wuwa_api37` 的 debug 版（1080003），連結同一個 Google 帳號。用使用者帳號 801… 的別名「我的帳號」測。測前備份了 Windows 資料夾與模擬器 App 的資料。
+
+| 案例 | 操作 | 另一邊同步後 | log |
+|---|---|---|---|
+| 升級 | 兩邊都是沒有時間的舊別名 | Windows `already in sync (merge and upload skipped)`；模擬器合併雲端帳號，不上傳 | 沒有 `import aliases` |
+| 修改 | Windows 改成「TestA」 | 模擬器由「我的帳號」變「TestA」 | 模擬器 `import aliases: taken=1 cleared=0` |
+| 清空 | 模擬器清空 | Windows 變成「未設定別名」 | Windows `import aliases: taken=0 cleared=1` |
+| 改回 | 模擬器改回「我的帳號」 | Windows 變回「我的帳號」 | Windows `import aliases: taken=1 cleared=0` |
+
+- 「修改」在舊規則下會失敗（模擬器已有別名會保留本機的），「清空」就是 2026-11-24 遇到的問題。
+- 測完模擬器在 App 裡中斷雲端連結（測前就沒有連結），並關機。Windows 的別名回到原狀，自動同步維持開啟。
 
 ### 已知的小問題（未處理）
 
