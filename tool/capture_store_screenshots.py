@@ -242,7 +242,8 @@ class Shooter:
         time.sleep(4)
         restart_app()
         dismiss_validator()
-        frac = 0.37 if device == 'phone' else 0.2
+        # 手機也讓時間軸卡片緊接在標題列下方，下面的 5★ 一覽才完整（原神 5★ 一覽有三列）
+        frac = 0.2
         shots = {}
 
         def snap(k):
