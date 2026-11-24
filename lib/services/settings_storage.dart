@@ -223,6 +223,8 @@ abstract final class SettingsStorage {
 
   /// SharedPreferences key：UID 別名 JSON。
   static const _kUidAliases = 'pref.uidAliases';
+
+  /// SharedPreferences key：UID 別名修改時間 JSON。
   static const _kUidAliasUpdatedAt = 'pref.uidAliasUpdatedAt';
 
   /// SharedPreferences key：UID 排序 JSON。
