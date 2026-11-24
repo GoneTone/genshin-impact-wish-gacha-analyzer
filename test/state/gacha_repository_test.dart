@@ -1280,6 +1280,103 @@ void main() {
     },
   );
 
+  group('importAccounts: 別名依修改時間合併', () {
+    final t1 = DateTime.utc(2026, 11, 24, 1);
+    final t2 = DateTime.utc(2026, 11, 24, 2);
+
+    /// 建立本機已有帳號 100000001（別名與修改時間由參數決定）的 container，匯入 [incoming] 後回傳設定。
+    Future<AppSettings> importWith({
+      required Map<String, Object> localPrefs,
+      required ExportedAccount incoming,
+    }) async {
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+      SharedPreferences.setMockInitialValues(localPrefs);
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(
+            AccountsBundle(
+              exportedAt: DateTime.utc(2026, 11, 24),
+              appVersion: 'x',
+              lastActiveUid: null,
+              accounts: [incoming],
+            ),
+          );
+      return container.read(settingsProvider);
+    }
+
+    ExportedAccount account({String? alias, DateTime? at}) => ExportedAccount(
+      data: BannerStorage(
+        uid: '100000001',
+        lastUpdated: DateTime.utc(2026, 5, 12),
+        banners: const {'301': []},
+      ),
+      alias: alias,
+      aliasUpdatedAt: at,
+    );
+
+    test('匯入方較新的清空 → 移除本機別名並採用其時間', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+          'pref.uidAliasUpdatedAt': jsonEncode({
+            '100000001': t1.toIso8601String(),
+          }),
+        },
+        incoming: account(at: t2),
+      );
+      expect(s.uidAliases.containsKey('100000001'), isFalse);
+      expect(s.uidAliasUpdatedAt['100000001'], t2);
+    });
+
+    test('本機較新 → 保留本機別名與時間', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+          'pref.uidAliasUpdatedAt': jsonEncode({
+            '100000001': t2.toIso8601String(),
+          }),
+        },
+        incoming: account(alias: '乙', at: t1),
+      );
+      expect(s.uidAliases['100000001'], '甲');
+      expect(s.uidAliasUpdatedAt['100000001'], t2);
+    });
+
+    test('本機舊別名沒有時間、匯入方有 → 採用匯入方', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+        },
+        incoming: account(alias: '乙', at: t1),
+      );
+      expect(s.uidAliases['100000001'], '乙');
+      expect(s.uidAliasUpdatedAt['100000001'], t1);
+    });
+  });
+
   test('importAccounts: uidOrder keeps local order, appends new UIDs', () async {
     final storage = GachaStorage(tempDir);
     for (final uid in ['100000001', '100000003', '100000004']) {

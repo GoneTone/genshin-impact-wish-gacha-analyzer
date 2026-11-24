@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
@@ -1521,14 +1522,33 @@ class GachaRepository extends Notifier<GachaState> {
 
     final currentSettings = ref.read(settingsProvider);
     final mergedAliases = Map<String, String>.from(currentSettings.uidAliases);
+    final mergedAliasTimes = Map<String, DateTime>.from(
+      currentSettings.uidAliasUpdatedAt,
+    );
+    var aliasesTaken = 0;
+    var aliasesCleared = 0;
     for (final account in bundle.accounts) {
       final uid = account.data.uid;
       if (failed.contains(uid)) continue;
-      if (mergedAliases.containsKey(uid)) continue; // 本機已有別名 → 保留
-      final a = account.alias?.trim();
-      if (a != null && a.isNotEmpty) {
-        mergedAliases[uid] = a;
+      final incomingAlias = account.alias?.trim();
+      if (!incomingAliasWins(
+        localAlias: mergedAliases[uid],
+        localUpdatedAt: mergedAliasTimes[uid],
+        incomingAlias: incomingAlias,
+        incomingUpdatedAt: account.aliasUpdatedAt,
+      )) {
+        continue;
       }
+      if (incomingAlias != null && incomingAlias.isNotEmpty) {
+        if (mergedAliases[uid] != incomingAlias) aliasesTaken++;
+        mergedAliases[uid] = incomingAlias;
+      } else if (mergedAliases.remove(uid) != null) {
+        aliasesCleared++;
+      }
+      if (account.aliasUpdatedAt case final t?) mergedAliasTimes[uid] = t;
+    }
+    if (aliasesTaken > 0 || aliasesCleared > 0) {
+      _log.info('import aliases: taken=$aliasesTaken cleared=$aliasesCleared');
     }
 
     final localOrder = currentSettings.uidOrder;
@@ -1552,7 +1572,7 @@ class GachaRepository extends Notifier<GachaState> {
 
     await settingsNotifier.applyImportedPreferences(
       aliases: mergedAliases,
-      aliasUpdatedAt: currentSettings.uidAliasUpdatedAt,
+      aliasUpdatedAt: mergedAliasTimes,
       uidOrder: newOrder,
       lastActiveUid: newActive,
     );
