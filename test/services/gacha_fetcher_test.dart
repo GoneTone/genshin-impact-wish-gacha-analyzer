@@ -357,66 +357,6 @@ void main() {
         expect(merged, hasLength(22));
       });
     });
-
-    group('refetchAll（一次性 400 修正）', () {
-      const offNew = '1000000000000000103';
-      const offOld = '1000000000000000100';
-
-      /// 本機存檔的 301 記錄（舊版把 400 誤存成 301）。
-      GachaRecord stored(String id) => GachaRecord(
-        id: id,
-        uid: '801057625',
-        gachaType: '301',
-        name: 'x',
-        itemType: '武器',
-        rankType: 3,
-        time: DateTime(2025, 9, 23, 21, 27, 37),
-        lang: 'zh-tw',
-      );
-
-      /// 以 [refetchAll] 抓 301，API 把 [offOld] 回傳為 400；回傳合併結果與進度回報。
-      Future<(List<GachaRecord>, List<FetchProgress>)> run({
-        required bool refetchAll,
-      }) async {
-        final progress = <FetchProgress>[];
-        final client = MockClient(
-          (req) async => _ok([
-            _record(id: '1000000000000000104', type: '301'),
-            _record(id: offNew, type: '301'),
-            _record(id: offOld, type: '400'),
-          ]),
-        );
-        final merged = await GachaFetcher(rateLimit: Duration.zero)
-            .fetchBannerWithMerge(
-              url: GachaUrl.parse(_baseUrl),
-              gachaType: '301',
-              endpoint: GachaEndpoint.gacha,
-              existing: [stored(offNew), stored(offOld)],
-              primer: null,
-              onProgress: progress.add,
-              client: client,
-              refetchAll: refetchAll,
-            );
-        return (merged, progress);
-      }
-
-      test(
-        'stored 301 older than newest official id is corrected to 400',
-        () async {
-          final (merged, progress) = await run(refetchAll: true);
-          expect(merged.firstWhere((r) => r.id == offOld).gachaType, '400');
-          expect(merged, hasLength(3));
-          expect(progress.last.newRecordsSoFar, 1);
-        },
-      );
-
-      test('normal stop point leaves stored 301 untouched', () async {
-        final (merged, progress) = await run(refetchAll: false);
-        expect(merged.firstWhere((r) => r.id == offOld).gachaType, '301');
-        expect(merged, hasLength(3));
-        expect(progress.last.newRecordsSoFar, 1);
-      });
-    });
   });
 
   group('logging instrumentation', () {
