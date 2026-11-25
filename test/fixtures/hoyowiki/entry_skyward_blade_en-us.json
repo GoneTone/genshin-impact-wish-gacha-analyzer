@@ -1,0 +1,86 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "page": {
+      "id": "1954",
+      "name": "Skyward Blade",
+      "icon_url": "https://bbs.hoyolab.com/hoyowiki/picture/weapon/天空之刃.png",
+      "filter_values": {
+        "weapon_property": {
+          "values": [
+            "Energy Recharge"
+          ],
+          "value_types": [
+            {
+              "id": "217",
+              "value": "Energy Recharge",
+              "mi18n_key": "filter_217",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "weapon_property",
+            "text": "Secondary Attributes",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_property",
+            "is_multi_select": false,
+            "id": "2",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "weapon_rarity": {
+          "values": [
+            "5-Star"
+          ],
+          "value_types": [
+            {
+              "id": "671",
+              "value": "5-Star",
+              "mi18n_key": "filter_671",
+              "icon": "",
+              "enum_string": "5"
+            }
+          ],
+          "key": {
+            "key": "weapon_rarity",
+            "text": "Quality",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_rarity",
+            "is_multi_select": false,
+            "id": "4",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "weapon_type": {
+          "values": [
+            "Sword"
+          ],
+          "value_types": [
+            {
+              "id": "403",
+              "value": "Sword",
+              "mi18n_key": "filter_403",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "weapon_type",
+            "text": "Weapons",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_type",
+            "is_multi_select": false,
+            "id": "3",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        }
+      },
+      "modules": []
+    }
+  }
+}

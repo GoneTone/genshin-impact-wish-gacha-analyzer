@@ -1,0 +1,36 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "list": [
+      {
+        "entry_page_id": "1954",
+        "name": "Skyward Blade",
+        "menu": {
+          "id": "3",
+          "name": "Equipment",
+          "sub_menus": [
+            {
+              "id": "4",
+              "name": "Weapons"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "3865",
+        "name": "Skyward Blade",
+        "menu": {
+          "id": "16",
+          "name": "Genius Invokation TCG",
+          "sub_menus": [
+            {
+              "id": "18",
+              "name": "Action Cards"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

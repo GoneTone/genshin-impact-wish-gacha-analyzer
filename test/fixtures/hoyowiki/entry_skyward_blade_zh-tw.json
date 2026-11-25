@@ -1,0 +1,86 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "page": {
+      "id": "1954",
+      "name": "天空之刃",
+      "icon_url": "https://bbs.hoyolab.com/hoyowiki/picture/weapon/天空之刃.png",
+      "filter_values": {
+        "weapon_type": {
+          "values": [
+            "單手劍"
+          ],
+          "value_types": [
+            {
+              "id": "403",
+              "value": "單手劍",
+              "mi18n_key": "filter_403",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "weapon_type",
+            "text": "武器",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_type",
+            "is_multi_select": false,
+            "id": "3",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "weapon_property": {
+          "values": [
+            "元素充能效率"
+          ],
+          "value_types": [
+            {
+              "id": "217",
+              "value": "元素充能效率",
+              "mi18n_key": "filter_217",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "weapon_property",
+            "text": "副屬性",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_property",
+            "is_multi_select": false,
+            "id": "2",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "weapon_rarity": {
+          "values": [
+            "五星"
+          ],
+          "value_types": [
+            {
+              "id": "671",
+              "value": "五星",
+              "mi18n_key": "filter_671",
+              "icon": "",
+              "enum_string": "5"
+            }
+          ],
+          "key": {
+            "key": "weapon_rarity",
+            "text": "品質",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_weapon_rarity",
+            "is_multi_select": false,
+            "id": "4",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        }
+      },
+      "modules": []
+    }
+  }
+}
