@@ -802,6 +802,95 @@
   "importReasonUnreadable": "Không thể đọc tệp",
   "exportReasonWriteFailed": "Không thể ghi tệp, vui lòng kiểm tra vị trí lưu và quyền truy cập",
   "importReasonForeignApp": "Tệp này không phải bản sao lưu được xuất từ ứng dụng này",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Nhập từ nền tảng khác",
+  "platformPickerTitle": "Chọn nền tảng nguồn",
+  "importReasonNotPlatformFile": "Tệp này không phải tệp xuất hợp lệ của {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export và các công cụ khác · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Nhập vào tài khoản nào?",
+  "importTargetAccountBody": "Tệp xuất của paimon.moe không có UID. Hãy chọn tài khoản sở hữu các bản ghi này.",
+  "importTargetAccountOtherUid": "UID khác",
+  "importTargetAccountUidHint": "Nhập UID",
+  "importTargetAccountRecordCount": "Đã có {count} bản ghi trên thiết bị này",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Tệp này dùng phiên bản UIGF mới hơn ({version}) và chưa được hỗ trợ. Hãy cập nhật ứng dụng hoặc xuất bằng v4 trong công cụ gốc",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Tệp có loại cầu nguyện không được hỗ trợ ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Không thể bổ sung dữ liệu vật phẩm ({item}). Vui lòng kiểm tra kết nối mạng và thử lại",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Trong khoảng {from}–{to} cả hai bên đều có bản ghi, nhưng không lượt nào trong {groups} lượt cầu nguyện khớp với bản ghi chính thức trên thiết bị này. Có thể bạn đã chọn sai tài khoản hoặc tệp dùng múi giờ khác.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Trong khoảng {from}–{to} cả hai bên đều có bản ghi, nhưng chỉ {matched} trong {groups} lượt cầu nguyện khớp với bản ghi chính thức trên thiết bị này. Có thể bạn đã chọn sai tài khoản hoặc tệp dùng múi giờ khác.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Vẫn nhập",
+  "importResolvingItems": "Đang bổ sung dữ liệu vật phẩm...",
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
   "settingsImportMergeBadge": "Hợp nhất",

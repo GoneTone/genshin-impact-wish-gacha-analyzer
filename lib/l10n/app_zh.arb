@@ -656,6 +656,57 @@
   "importReasonUnreadable": "無法讀取檔案",
   "exportReasonWriteFailed": "無法寫入檔案，請確認儲存位置與權限",
   "importReasonForeignApp": "此檔案不是由本軟體匯出的備份",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "從其他平台匯入",
+  "platformPickerTitle": "選擇匯入來源平台",
+  "importReasonNotPlatformFile": "此檔案不是有效的 {platform} 匯出檔",
+  "@importReasonNotPlatformFile": {
+    "placeholders": { "platform": { "type": "String" } }
+  },
+  "platformUigfSubtitle": "genshin-wish-export 等工具・JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe・Excel",
+  "importTargetAccountTitle": "匯入到哪個帳號？",
+  "importTargetAccountBody": "paimon.moe 的匯出檔沒有 UID，請選擇這些記錄屬於哪個帳號。",
+  "importTargetAccountOtherUid": "其他 UID",
+  "importTargetAccountUidHint": "輸入 UID",
+  "importTargetAccountRecordCount": "本機已有 {count} 筆記錄",
+  "@importTargetAccountRecordCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "importReasonUigfVersionTooNew": "這個檔案的 UIGF 版本（{version}）較新，目前還不支援。請更新 App，或在原工具改用 v4 匯出",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+  "importReasonUnknownGachaType": "檔案裡有不支援的卡池類型（{types}）",
+  "@importReasonUnknownGachaType": {
+    "placeholders": { "types": { "type": "String" } }
+  },
+  "importReasonItemUnresolved": "無法補齊物品資料（{item}），請確認網路連線後再試",
+  "@importReasonItemUnresolved": {
+    "placeholders": { "item": { "type": "String" } }
+  },
+  "importOverlapWarning": "⚠ {uid}：{from}～{to} 這段期間兩邊都有記錄，但 {groups} 次抽卡沒有一次對得上本機的官方記錄。可能選錯了帳號，或檔案的時區不同。",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": { "type": "String" },
+      "from": { "type": "String" },
+      "to": { "type": "String" },
+      "groups": { "type": "int" }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}：{from}～{to} 這段期間兩邊都有記錄，但 {groups} 次抽卡只有 {matched} 次對得上本機的官方記錄。可能選錯了帳號，或檔案的時區不同。",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": { "type": "String" },
+      "from": { "type": "String" },
+      "to": { "type": "String" },
+      "groups": { "type": "int" },
+      "matched": { "type": "int" }
+    }
+  },
+  "confirmImportAnyway": "仍要匯入",
+  "importResolvingItems": "正在補齊物品資料...",
 
   "settingsExportSelectTitle": "選擇要匯出的帳號",
   "settingsImportSelectTitle": "選擇要匯入的帳號",

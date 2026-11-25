@@ -802,6 +802,95 @@
   "importReasonUnreadable": "ファイルを読み込めません",
   "exportReasonWriteFailed": "ファイルを書き込めません。保存先と権限を確認してください",
   "importReasonForeignApp": "このファイルは本ツールでエクスポートされたバックアップではありません",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "他のプラットフォームからインポート",
+  "platformPickerTitle": "インポート元のプラットフォームを選択",
+  "importReasonNotPlatformFile": "このファイルは有効な {platform} のエクスポートではありません",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export などのツール・JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe・Excel",
+  "importTargetAccountTitle": "どのアカウントにインポートしますか？",
+  "importTargetAccountBody": "paimon.moe のエクスポートファイルには UID が含まれていません。これらの記録が属するアカウントを選択してください。",
+  "importTargetAccountOtherUid": "その他の UID",
+  "importTargetAccountUidHint": "UID を入力",
+  "importTargetAccountRecordCount": "ローカルに {count} 件の記録",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "このファイルの UIGF バージョン（{version}）は新しいため、まだ対応していません。本ツールを更新するか、エクスポート元のツールで v4 形式を選んでエクスポートしてください",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "ファイルに未対応の祈願の種類（{types}）が含まれています",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "アイテムデータ（{item}）を補完できませんでした。ネットワーク接続を確認してから再試行してください",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}：{from}～{to} の期間は両方に記録がありますが、{groups} 回の祈願のうち、ローカルの公式記録と一致するものが 1 つもありません。アカウントの選択を間違えたか、ファイルのタイムゾーンが異なる可能性があります。",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}：{from}～{to} の期間は両方に記録がありますが、{groups} 回の祈願のうち、ローカルの公式記録と一致するのは {matched} 回だけです。アカウントの選択を間違えたか、ファイルのタイムゾーンが異なる可能性があります。",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "それでもインポート",
+  "importResolvingItems": "アイテムデータを補完中...",
   "settingsExportSelectTitle": "エクスポートするアカウントを選択",
   "settingsImportSelectTitle": "インポートするアカウントを選択",
   "settingsImportMergeBadge": "統合",

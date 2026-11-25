@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Fișierul nu poate fi citit",
   "exportReasonWriteFailed": "Fișierul nu poate fi scris, verificați locația de salvare și permisiunile",
   "importReasonForeignApp": "Acest fișier nu a fost exportat de aplicație",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importă de pe alte platforme",
+  "platformPickerTitle": "Selectați platforma sursă",
+  "importReasonNotPlatformFile": "Acest fișier nu este un export {platform} valid",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export și alte instrumente · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "În ce cont importați?",
+  "importTargetAccountBody": "Exporturile paimon.moe nu conțin UID. Alegeți contul căruia îi aparțin aceste înregistrări.",
+  "importTargetAccountOtherUid": "Alt UID",
+  "importTargetAccountUidHint": "Introduceți UID-ul",
+  "importTargetAccountRecordCount": "{count, plural, one{Pe dispozitiv: {count} înregistrare} few{Pe dispozitiv: {count} înregistrări} other{Pe dispozitiv: {count} de înregistrări}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Acest fișier folosește o versiune UIGF mai nouă ({version}), care nu este încă acceptată. Actualizați aplicația sau exportați în format v4 din instrumentul original.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Fișierul conține tipuri de bannere neacceptate ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Datele obiectului ({item}) nu au putut fi completate. Verificați rețeaua și încercați din nou.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: în perioada {from}–{to} ambele părți au înregistrări, dar nicio extragere din această perioadă nu corespunde înregistrărilor oficiale de pe dispozitiv (număr de extrageri: {groups}). Poate ați ales contul greșit sau fișierul folosește alt fus orar.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: în perioada {from}–{to} ambele părți au înregistrări, dar puține extrageri din această perioadă corespund înregistrărilor oficiale de pe dispozitiv ({matched} din {groups}). Poate ați ales contul greșit sau fișierul folosește alt fus orar.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importă oricum",
+  "importResolvingItems": "Se completează datele obiectelor...",
   "settingsExportSelectTitle": "Selectați conturile de exportat",
   "settingsImportSelectTitle": "Selectați conturile de importat",
   "settingsImportMergeBadge": "Îmbină",

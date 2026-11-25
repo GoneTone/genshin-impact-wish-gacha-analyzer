@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Dosya okunamadı",
   "exportReasonWriteFailed": "Dosya yazılamadı, lütfen kayıt konumunu ve izinleri kontrol edin",
   "importReasonForeignApp": "Bu dosya bu uygulama tarafından dışa aktarılmamış",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Diğer platformlardan içe aktar",
+  "platformPickerTitle": "Kaynak platform seçin",
+  "importReasonNotPlatformFile": "Bu dosya geçerli bir {platform} dışa aktarma dosyası değil",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export ve diğer araçlar · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Hangi hesaba aktarılsın?",
+  "importTargetAccountBody": "paimon.moe dışa aktarımlarında UID bulunmaz. Bu kayıtların ait olduğu hesabı seçin.",
+  "importTargetAccountOtherUid": "Başka UID",
+  "importTargetAccountUidHint": "UID girin",
+  "importTargetAccountRecordCount": "Bu cihazda {count} kayıt",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Bu dosya henüz desteklenmeyen daha yeni bir UIGF sürümü ({version}) kullanıyor. Uygulamayı güncelleyin veya özgün araçta v4 olarak dışa aktarın.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Dosyada desteklenmeyen dilek türleri var ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Eşya verileri ({item}) tamamlanamadı. Bağlantınızı kontrol edip tekrar deneyin.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: {from}–{to} döneminde iki tarafta da kayıt var, ancak bu dönemdeki {groups} çekilişin hiçbiri bu cihazdaki resmi kayıtlarla eşleşmiyor. Yanlış hesabı seçmiş olabilirsiniz ya da dosya farklı bir saat dilimi kullanıyor olabilir.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: {from}–{to} döneminde iki tarafta da kayıt var, ancak bu dönemdeki {groups} çekilişten yalnızca {matched} tanesi bu cihazdaki resmi kayıtlarla eşleşiyor. Yanlış hesabı seçmiş olabilirsiniz ya da dosya farklı bir saat dilimi kullanıyor olabilir.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Yine de içe aktar",
+  "importResolvingItems": "Eşya verileri tamamlanıyor...",
   "settingsExportSelectTitle": "Dışa aktarılacak hesapları seçin",
   "settingsImportSelectTitle": "İçe aktarılacak hesapları seçin",
   "settingsImportMergeBadge": "Birleştir",

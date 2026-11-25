@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Kan nie die lêer lees nie",
   "exportReasonWriteFailed": "Kan nie die lêer skryf nie; kontroleer asseblief die stoorplek en toestemmings",
   "importReasonForeignApp": "Hierdie lêer is nie deur die app uitgevoer nie",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Voer in vanaf ander platforms",
+  "platformPickerTitle": "Kies ’n bronplatform",
+  "importReasonNotPlatformFile": "Hierdie lêer is nie ’n geldige {platform}-uitvoer nie",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export en ander gereedskap · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "In watter rekening invoer?",
+  "importTargetAccountBody": "paimon.moe-uitvoere bevat nie ’n UID nie. Kies die rekening waaraan hierdie rekords behoort.",
+  "importTargetAccountOtherUid": "Ander UID",
+  "importTargetAccountUidHint": "Voer UID in",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 rekord op hierdie toestel} other{{count} rekords op hierdie toestel}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Hierdie lêer gebruik ’n nuwer UIGF-weergawe ({version}) wat nog nie ondersteun word nie. Dateer die app op, of voer as v4 uit in die oorspronklike gereedskap.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Die lêer bevat banier-tipes wat nie ondersteun word nie ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Kon nie die itemdata ({item}) aanvul nie. Kontroleer asseblief jou netwerk en probeer weer.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Albei kante het rekords van {from} tot {to}, maar nie een van die {groups} trekke in daardie tydperk stem ooreen met die amptelike rekords op hierdie toestel nie. Jy het dalk die verkeerde rekening gekies, of die lêer gebruik ’n ander tydsone.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Albei kante het rekords van {from} tot {to}, maar die amptelike rekords op hierdie toestel stem net met {matched} van die {groups} trekke in daardie tydperk ooreen. Jy het dalk die verkeerde rekening gekies, of die lêer gebruik ’n ander tydsone.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Voer tog in",
+  "importResolvingItems": "Vul itemdata aan...",
   "settingsExportSelectTitle": "Kies rekeninge om uit te voer",
   "settingsImportSelectTitle": "Kies rekeninge om in te voer",
   "settingsImportMergeBadge": "Voeg saam",

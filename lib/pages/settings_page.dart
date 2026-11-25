@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,7 +21,10 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/import_overlap_check.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/importers/uigf_item_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/platform_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
@@ -46,6 +50,9 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/import_target_account_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/platform_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_progress_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/game_dir_picker.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/other_game_versions.dart';
@@ -543,6 +550,13 @@ class _DataManagement extends ConsumerWidget {
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
         ),
+        OutlinedButton.icon(
+          onPressed: progress != null
+              ? null
+              : () => _importFromPlatform(context, ref),
+          icon: const Icon(Icons.cloud_sync_outlined, size: 18),
+          label: Text(l.settingsImportOtherPlatform),
+        ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
             backgroundColor: Theme.of(context).gacha.stateDanger,
@@ -576,21 +590,7 @@ class _DataManagement extends ConsumerWidget {
     final settings = ref.read(settingsProvider);
     final appVersion = ref.read(appVersionProvider);
 
-    final ordered = mergeUidOrder(
-      knownUids: gacha.byUid.keys,
-      customOrder: settings.uidOrder,
-      lastUpdatedOf: (u) => gacha.byUid[u]!.lastUpdated,
-    );
-
-    final entries = [
-      for (final uid in ordered)
-        AccountPickerEntry(
-          uid: uid,
-          alias: settings.uidAliases[uid],
-          lastUpdated: gacha.byUid[uid]!.lastUpdated,
-          recordCount: gacha.byUid[uid]!.allRecords.length,
-        ),
-    ];
+    final entries = _localAccountEntries(ref);
     final android = ref.read(isAndroidProvider);
     final picked = await showAccountsPickerDialog(
       context: ctx,
@@ -697,7 +697,35 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  /// 匯入帳號資料：讀取 JSON、讓使用者選取帳號與確認後寫入 repository。
+  /// 依帳號排序列出本機所有帳號（別名取自設定），給帳號挑選類對話框用。
+  List<AccountPickerEntry> _localAccountEntries(WidgetRef ref) {
+    final gacha = ref.read(gachaRepositoryProvider);
+    final settings = ref.read(settingsProvider);
+    final ordered = mergeUidOrder(
+      knownUids: gacha.byUid.keys,
+      customOrder: settings.uidOrder,
+      lastUpdatedOf: (u) => gacha.byUid[u]!.lastUpdated,
+    );
+    return [
+      for (final uid in ordered)
+        AccountPickerEntry(
+          uid: uid,
+          alias: settings.uidAliases[uid],
+          lastUpdated: gacha.byUid[uid]!.lastUpdated,
+          recordCount: gacha.byUid[uid]!.allRecords.length,
+        ),
+    ];
+  }
+
+  /// 以 snackbar 顯示「匯入失敗：[reason]」。
+  void _showImportFailed(BuildContext ctx, String reason) {
+    final l = AppLocalizations.of(ctx)!;
+    ScaffoldMessenger.of(
+      ctx,
+    ).showSnackBar(SnackBar(content: Text(l.settingsImportFailed(reason))));
+  }
+
+  /// 匯入本軟體的備份：讀取 JSON、解析後交給共用下游 [_runBundleImport]。
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final String? text;
@@ -709,11 +737,7 @@ class _DataManagement extends ConsumerWidget {
     } catch (e, st) {
       Logger('accounts.io').warning('import: read file failed', e, st);
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonUnreadable)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonUnreadable);
       return;
     }
     if (text == null) return;
@@ -724,35 +748,38 @@ class _DataManagement extends ConsumerWidget {
     } on ForeignBundleException {
       Logger('accounts.io').warning('import failed: foreign bundle');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonForeignApp)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonForeignApp);
       return;
     } on UnsupportedSchemaVersionException catch (e) {
       Logger(
         'accounts.io',
       ).warning('import failed: unsupported schema version ${e.version}');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(
-            l.settingsImportFailed(l.importReasonUnsupportedVersion),
-          ),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonUnsupportedVersion);
       return;
     } on FormatException catch (e) {
       Logger('accounts.io').warning('import failed: ${e.message}');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonInvalidFormat)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonInvalidFormat);
       return;
     }
+
+    if (!ctx.mounted) return;
+    await _runBundleImport(ctx, ref, bundle);
+  }
+
+  /// 拿到（已解析的）[bundle] 後的共用匯入下游：帳號挑選 → 確認 → 寫入＋補圖。
+  /// 由本軟體備份匯入（[_import]）與第三方平台匯入（[_importFromPlatform]）共用。
+  ///
+  /// [checkOverlap] 只有第三方匯入為 true：對本機已有的帳號做重疊檢查（設計文件
+  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」。
+  Future<void> _runBundleImport(
+    BuildContext ctx,
+    WidgetRef ref,
+    AccountsBundle bundle, {
+    bool checkOverlap = false,
+  }) async {
+    final l = AppLocalizations.of(ctx)!;
 
     // Picker：列出檔案內的帳號讓使用者勾選。
     final existing = ref.read(gachaRepositoryProvider).byUid.keys.toSet();
@@ -828,13 +855,17 @@ class _DataManagement extends ConsumerWidget {
       buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
     }
 
+    final warning = checkOverlap
+        ? _overlapWarning(l, ref, filteredBundle)
+        : null;
     final ok = await showConfirmDialog(
       context: ctx,
       title: l.settingsImportConfirmTitle,
       body: buf.toString(),
       cancelLabel: l.actionCancel,
-      confirmLabel: l.confirmImport,
+      confirmLabel: warning == null ? l.confirmImport : l.confirmImportAnyway,
       confirmIcon: Icons.check,
+      warning: warning,
     );
     if (ok != true) return;
     if (!ctx.mounted) return;
@@ -845,6 +876,118 @@ class _DataManagement extends ConsumerWidget {
           .read(gachaRepositoryProvider.notifier)
           .importAccountsAndFetchHoYoWiki(filteredBundle),
     );
+  }
+
+  /// 對 [bundle] 中本機已有的帳號做重疊檢查，回傳每個對不上的帳號一段的提醒文字；
+  /// 都沒問題回 null。
+  String? _overlapWarning(
+    AppLocalizations l,
+    WidgetRef ref,
+    AccountsBundle bundle,
+  ) {
+    final local = ref.read(gachaRepositoryProvider).byUid;
+    // 記錄時間是牆鐘時間（可能標成 UTC），直接格式化、不轉時區。
+    final date = DateFormat('yyyy-MM-dd');
+    final warnings = [
+      for (final a in bundle.accounts)
+        if (local[a.data.uid] case final storage?)
+          if (checkImportOverlap(local: storage, incoming: a.data)
+              case final m?)
+            m.matched == 0
+                ? l.importOverlapWarning(
+                    m.uid,
+                    date.format(m.from),
+                    date.format(m.to),
+                    m.groups,
+                  )
+                : l.importOverlapWarningPartial(
+                    m.uid,
+                    date.format(m.from),
+                    date.format(m.to),
+                    m.groups,
+                    m.matched,
+                  ),
+    ];
+    return warnings.isEmpty ? null : warnings.join('\n\n');
+  }
+
+  /// 從第三方平台匯入：選平台 → 選檔 → 解析（UIGF 需要補資料時顯示進度）→ 匯出檔
+  /// 沒有 UID 時選目標帳號 → 共用下游 [_runBundleImport]（含重疊檢查）。
+  Future<void> _importFromPlatform(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final log = Logger('wish.import.platform');
+    final platform = await showPlatformPickerDialog(context: ctx);
+    if (platform == null || !ctx.mounted) return;
+    log.info('platform import start platform=${platform.id}');
+
+    final Uint8List? bytes;
+    try {
+      bytes = await pickFileBytes(
+        extensions: platform.fileExtensions,
+        dialogTitle: l.dialogOpenTitle,
+      );
+    } catch (e, st) {
+      log.warning(
+        'platform import: unable to read file platform=${platform.id}',
+        e,
+        st,
+      );
+      if (!ctx.mounted) return;
+      _showImportFailed(ctx, l.importReasonUnreadable);
+      return;
+    }
+    if (bytes == null || !ctx.mounted) return;
+
+    final lang = ref.read(dataLanguageProvider);
+    final navigator = Navigator.of(ctx, rootNavigator: true);
+    final resolver = _ProgressItemResolver(
+      UigfItemResolver(
+        client: ref.read(httpClientProvider),
+        hoyowiki: ref.read(hoyowikiFetcherProvider),
+        targetLang: lang != null && isSupportedDataLanguage(lang)
+            ? lang
+            : 'en-us',
+      ),
+      onFirstUse: () =>
+          showBlockingProgressDialog(navigator.context, l.importResolvingItems),
+    );
+    final AccountsBundle parsed;
+    try {
+      parsed = await platform.parse(bytes, resolver: resolver);
+    } on Exception catch (e, st) {
+      log.warning('platform import rejected platform=${platform.id}', e, st);
+      if (!ctx.mounted) return;
+      _showImportFailed(ctx, switch (e) {
+        ForeignBundleException() => l.importReasonNotPlatformFile(
+          platform.displayName(l),
+        ),
+        UigfVersionTooNewException(:final version) =>
+          l.importReasonUigfVersionTooNew(version),
+        UnknownGachaTypeException(:final types) =>
+          l.importReasonUnknownGachaType(types.join(', ')),
+        ItemResolveException(:final item) => l.importReasonItemUnresolved(item),
+        _ => l.importReasonInvalidFormat,
+      });
+      return;
+    } finally {
+      if (resolver.used) navigator.pop();
+    }
+    if (!ctx.mounted) return;
+
+    var bundle = parsed;
+    if (platform.requiresTargetUid) {
+      final uid = await showImportTargetAccountDialog(
+        context: ctx,
+        accounts: _localAccountEntries(ref),
+      );
+      if (uid == null || !ctx.mounted) return;
+      final existing = ref.read(gachaRepositoryProvider).byUid.containsKey(uid);
+      log.info(
+        'platform import target uid=${sanitizeUid(uid)} existing=$existing',
+      );
+      bundle = assignTargetUid(bundle, uid);
+    }
+    await _runBundleImport(ctx, ref, bundle, checkOverlap: true);
   }
 
   /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。
@@ -1547,5 +1690,40 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
         ),
       ],
     );
+  }
+}
+
+/// 第一次需要補資料時先呼叫 [onFirstUse]（顯示進度對話框）的 [ItemResolver] 包裝；
+/// UIGF 檔欄位齊全時不會呼叫 resolver，也就不會閃出對話框。
+class _ProgressItemResolver implements ItemResolver {
+  /// 建立 [_ProgressItemResolver]，實際查詢交給 [_inner]。
+  _ProgressItemResolver(this._inner, {required this.onFirstUse});
+
+  /// 實際查詢名稱與星級的 resolver。
+  final ItemResolver _inner;
+
+  /// 第一次被呼叫時執行一次。
+  final VoidCallback onFirstUse;
+
+  /// 是否已被呼叫過（呼叫端據此關閉進度對話框）。
+  bool used = false;
+
+  /// 第一次呼叫時標記並執行 [onFirstUse]。
+  void _markUsed() {
+    if (used) return;
+    used = true;
+    onFirstUse();
+  }
+
+  @override
+  Future<({String name, String lang})> nameFor(String itemId) {
+    _markUsed();
+    return _inner.nameFor(itemId);
+  }
+
+  @override
+  Future<int> rankFor(String name, String lang) {
+    _markUsed();
+    return _inner.rankFor(name, lang);
   }
 }

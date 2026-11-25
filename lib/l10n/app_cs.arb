@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Soubor nelze přečíst",
   "exportReasonWriteFailed": "Soubor nelze zapsat, zkontrolujte umístění a oprávnění",
   "importReasonForeignApp": "Tento soubor nebyl exportován touto aplikací",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importovat z jiných platforem",
+  "platformPickerTitle": "Vyberte zdrojovou platformu",
+  "importReasonNotPlatformFile": "Tento soubor není platným exportem z {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export a další nástroje · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Do kterého účtu importovat?",
+  "importTargetAccountBody": "Exporty z paimon.moe neobsahují UID. Vyberte účet, ke kterému tyto záznamy patří.",
+  "importTargetAccountOtherUid": "Jiné UID",
+  "importTargetAccountUidHint": "Zadejte UID",
+  "importTargetAccountRecordCount": "{count, plural, one{V zařízení: {count} záznam} few{V zařízení: {count} záznamy} many{V zařízení: {count} záznamu} other{V zařízení: {count} záznamů}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Tento soubor používá novější verzi UIGF ({version}), která zatím není podporována. Aktualizujte aplikaci nebo v původním nástroji exportujte ve verzi v4.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Soubor obsahuje nepodporované typy bannerů ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Nepodařilo se doplnit data předmětu ({item}). Zkontrolujte připojení k síti a zkuste to znovu.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: v období {from}–{to} mají záznamy obě strany, ale žádný tah z tohoto období neodpovídá oficiálním záznamům v zařízení (počet tahů: {groups}). Možná jste vybrali nesprávný účet nebo soubor používá jiné časové pásmo.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: v období {from}–{to} mají záznamy obě strany, ale oficiálním záznamům v zařízení odpovídá jen málo tahů z tohoto období ({matched} z {groups}). Možná jste vybrali nesprávný účet nebo soubor používá jiné časové pásmo.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Přesto importovat",
+  "importResolvingItems": "Doplňování dat předmětů...",
   "settingsExportSelectTitle": "Vyberte účty k exportu",
   "settingsImportSelectTitle": "Vyberte účty k importu",
   "settingsImportMergeBadge": "Sloučit",

@@ -43,6 +43,14 @@ void main() {
       cancelLabel: 'Cancel',
       confirmLabel: 'OK',
     ),
+    'confirm with warning': (ctx) => showConfirmDialog(
+      context: ctx,
+      title: 'Confirm',
+      body: _longBody,
+      cancelLabel: 'Cancel',
+      confirmLabel: 'Import anyway',
+      warning: List.filled(20, 'Records do not match.').join(' '),
+    ),
     'type confirm': (ctx) => showConfirmTypeDialog(
       context: ctx,
       title: 'Confirm',

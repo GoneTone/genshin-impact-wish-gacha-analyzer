@@ -802,6 +802,95 @@
   "importReasonUnreadable": "ไม่สามารถอ่านไฟล์ได้",
   "exportReasonWriteFailed": "ไม่สามารถเขียนไฟล์ได้ กรุณาตรวจสอบตำแหน่งที่บันทึกและสิทธิ์การเข้าถึง",
   "importReasonForeignApp": "ไฟล์นี้ไม่ใช่ข้อมูลสำรองที่ส่งออกจากแอปนี้",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "นำเข้าจากแพลตฟอร์มอื่น",
+  "platformPickerTitle": "เลือกแพลตฟอร์มต้นทาง",
+  "importReasonNotPlatformFile": "ไฟล์นี้ไม่ใช่ไฟล์ส่งออกของ {platform} ที่ถูกต้อง",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export และเครื่องมืออื่น ๆ · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "นำเข้าไปยังบัญชีใด",
+  "importTargetAccountBody": "ไฟล์ส่งออกของ paimon.moe ไม่มี UID กรุณาเลือกบัญชีเจ้าของบันทึกเหล่านี้",
+  "importTargetAccountOtherUid": "UID อื่น",
+  "importTargetAccountUidHint": "ป้อน UID",
+  "importTargetAccountRecordCount": "มี {count} รายการในเครื่องนี้",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "ไฟล์นี้ใช้ UIGF เวอร์ชันใหม่กว่า ({version}) ซึ่งยังไม่รองรับ กรุณาอัปเดตแอป หรือส่งออกเป็น v4 จากเครื่องมือต้นทาง",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "ไฟล์มีประเภทการอธิษฐานที่ไม่รองรับ ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "ไม่สามารถเติมข้อมูลไอเทม ({item}) ได้ กรุณาตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: ช่วง {from} ถึง {to} มีบันทึกทั้งสองฝั่ง แต่การสุ่ม {groups} ครั้งไม่ตรงกับบันทึกทางการในเครื่องนี้เลยสักครั้ง อาจเลือกบัญชีผิด หรือไฟล์ใช้เขตเวลาต่างกัน",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: ช่วง {from} ถึง {to} มีบันทึกทั้งสองฝั่ง แต่การสุ่ม {groups} ครั้งตรงกับบันทึกทางการในเครื่องนี้เพียง {matched} ครั้ง อาจเลือกบัญชีผิด หรือไฟล์ใช้เขตเวลาต่างกัน",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "นำเข้าต่อไป",
+  "importResolvingItems": "กำลังเติมข้อมูลไอเทม...",
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
   "settingsImportMergeBadge": "ผสาน",

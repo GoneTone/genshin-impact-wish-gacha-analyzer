@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Tiedostoa ei voitu lukea",
   "exportReasonWriteFailed": "Tiedostoa ei voitu kirjoittaa. Tarkista tallennussijainti ja käyttöoikeudet",
   "importReasonForeignApp": "Tätä tiedostoa ei ole viety tästä sovelluksesta",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Tuo muilta alustoilta",
+  "platformPickerTitle": "Valitse lähdealusta",
+  "importReasonNotPlatformFile": "Tämä tiedosto ei ole kelvollinen {platform} -vientitiedosto",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export ja muut työkalut · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Mille tilille tuodaan?",
+  "importTargetAccountBody": "paimon.moen viennit eivät sisällä UID:tä. Valitse tili, jolle nämä tapahtumat kuuluvat.",
+  "importTargetAccountOtherUid": "Muu UID",
+  "importTargetAccountUidHint": "Syötä UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 tapahtuma tällä laitteella} other{{count} tapahtumaa tällä laitteella}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Tämä tiedosto käyttää uudempaa UIGF-versiota ({version}), jota ei vielä tueta. Päivitä sovellus tai vie tiedosto alkuperäisessä työkalussa v4-muodossa.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Tiedostossa on tukemattomia bannerityyppejä ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Esineen tietoja ({item}) ei voitu täydentää. Tarkista verkkoyhteytesi ja yritä uudelleen.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Molemmilla puolilla on tapahtumia ajalta {from}–{to}, mutta yksikään jakson vedoista ei vastaa tämän laitteen virallisia tapahtumia (vetoja: {groups}). Olet ehkä valinnut väärän tilin, tai tiedosto käyttää eri aikavyöhykettä.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Molemmilla puolilla on tapahtumia ajalta {from}–{to}, mutta jakson vedoista vain {matched}/{groups} vastaa tämän laitteen virallisia tapahtumia. Olet ehkä valinnut väärän tilin, tai tiedosto käyttää eri aikavyöhykettä.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Tuo silti",
+  "importResolvingItems": "Täydennetään esineiden tietoja...",
   "settingsExportSelectTitle": "Valitse vietävät tilit",
   "settingsImportSelectTitle": "Valitse tuotavat tilit",
   "settingsImportMergeBadge": "Yhdistä",

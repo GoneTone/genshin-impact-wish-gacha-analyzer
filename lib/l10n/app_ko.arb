@@ -820,6 +820,95 @@
   "importReasonUnreadable": "파일을 읽을 수 없습니다",
   "exportReasonWriteFailed": "파일을 쓸 수 없습니다. 저장 위치와 권한을 확인해 주세요",
   "importReasonForeignApp": "이 앱에서 내보낸 파일이 아닙니다",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "다른 플랫폼에서 가져오기",
+  "platformPickerTitle": "가져올 플랫폼 선택",
+  "importReasonNotPlatformFile": "올바른 {platform} 내보내기 파일이 아닙니다",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export 등 도구 · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "어느 계정으로 가져올까요?",
+  "importTargetAccountBody": "paimon.moe 내보내기 파일에는 UID가 없습니다. 이 기록이 속한 계정을 선택해 주세요.",
+  "importTargetAccountOtherUid": "다른 UID",
+  "importTargetAccountUidHint": "UID 입력",
+  "importTargetAccountRecordCount": "로컬에 {count}건 저장됨",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "이 파일의 UIGF 버전({version})은 아직 지원하지 않습니다. 앱을 업데이트하거나 원래 도구에서 v4로 내보내 주세요",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "파일에 지원하지 않는 기원 유형이 있습니다({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "아이템 데이터를 채울 수 없습니다({item}). 네트워크 연결을 확인한 후 다시 시도해 주세요",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: {from}~{to} 기간에 양쪽 모두 기록이 있지만, {groups}회의 뽑기 중 로컬의 공식 기록과 일치하는 것이 하나도 없습니다. 계정을 잘못 선택했거나 파일의 시간대가 다를 수 있습니다.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: {from}~{to} 기간에 양쪽 모두 기록이 있지만, {groups}회의 뽑기 중 로컬의 공식 기록과 일치하는 것은 {matched}회뿐입니다. 계정을 잘못 선택했거나 파일의 시간대가 다를 수 있습니다.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "그래도 가져오기",
+  "importResolvingItems": "아이템 데이터를 채우는 중...",
   "settingsExportSelectTitle": "내보낼 계정 선택",
   "settingsImportSelectTitle": "가져올 계정 선택",
   "settingsImportMergeBadge": "병합",

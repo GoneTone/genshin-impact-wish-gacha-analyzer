@@ -45,11 +45,11 @@ class PaimonMoeImporter implements PlatformImporter {
 
   /// 平台顯示名。
   @override
-  String displayName(AppLocalizations l) => 'paimon.moe';
+  String displayName(AppLocalizations l) => l.platformPaimonMoe;
 
   /// 平台清單列副標。
   @override
-  String? subtitle(AppLocalizations l) => null;
+  String? subtitle(AppLocalizations l) => l.platformPaimonMoeSubtitle;
 
   /// 平台清單列前置 icon。
   @override

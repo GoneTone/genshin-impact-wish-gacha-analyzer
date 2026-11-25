@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Δεν είναι δυνατή η ανάγνωση του αρχείου",
   "exportReasonWriteFailed": "Δεν είναι δυνατή η εγγραφή του αρχείου. Ελέγξτε τη θέση αποθήκευσης και τα δικαιώματα",
   "importReasonForeignApp": "Αυτό το αρχείο δεν εξήχθη από την εφαρμογή",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Εισαγωγή από άλλες πλατφόρμες",
+  "platformPickerTitle": "Επιλέξτε πλατφόρμα προέλευσης",
+  "importReasonNotPlatformFile": "Αυτό το αρχείο δεν είναι έγκυρη εξαγωγή του {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export και άλλα εργαλεία · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Σε ποιον λογαριασμό να γίνει η εισαγωγή;",
+  "importTargetAccountBody": "Οι εξαγωγές του paimon.moe δεν περιέχουν UID. Επιλέξτε τον λογαριασμό στον οποίο ανήκουν αυτές οι εγγραφές.",
+  "importTargetAccountOtherUid": "Άλλο UID",
+  "importTargetAccountUidHint": "Εισαγάγετε UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 εγγραφή σε αυτή τη συσκευή} other{{count} εγγραφές σε αυτή τη συσκευή}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Αυτό το αρχείο χρησιμοποιεί νεότερη έκδοση UIGF ({version}) που δεν υποστηρίζεται ακόμη. Ενημερώστε την εφαρμογή ή κάντε εξαγωγή σε v4 από το αρχικό εργαλείο.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Το αρχείο περιέχει μη υποστηριζόμενους τύπους banner ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Δεν ήταν δυνατή η συμπλήρωση των δεδομένων του αντικειμένου ({item}). Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Και οι δύο πλευρές έχουν εγγραφές από {from} έως {to}, αλλά κανένα από τα {groups} τραβήγματα αυτής της περιόδου δεν ταιριάζει με τις επίσημες εγγραφές σε αυτή τη συσκευή. Ίσως επιλέξατε λάθος λογαριασμό ή το αρχείο χρησιμοποιεί διαφορετική ζώνη ώρας.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Και οι δύο πλευρές έχουν εγγραφές από {from} έως {to}, αλλά οι επίσημες εγγραφές σε αυτή τη συσκευή ταιριάζουν μόνο με {matched} από τα {groups} τραβήγματα αυτής της περιόδου. Ίσως επιλέξατε λάθος λογαριασμό ή το αρχείο χρησιμοποιεί διαφορετική ζώνη ώρας.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Εισαγωγή ούτως ή άλλως",
+  "importResolvingItems": "Συμπλήρωση δεδομένων αντικειμένων...",
   "settingsExportSelectTitle": "Επιλέξτε λογαριασμούς για εξαγωγή",
   "settingsImportSelectTitle": "Επιλέξτε λογαριασμούς για εισαγωγή",
   "settingsImportMergeBadge": "Συγχώνευση",

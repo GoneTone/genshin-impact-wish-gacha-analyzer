@@ -82,11 +82,11 @@ class UigfImporter implements PlatformImporter {
 
   /// 平台顯示名。
   @override
-  String displayName(AppLocalizations l) => 'UIGF';
+  String displayName(AppLocalizations l) => l.platformUigf;
 
   /// 平台清單列副標。
   @override
-  String? subtitle(AppLocalizations l) => null;
+  String? subtitle(AppLocalizations l) => l.platformUigfSubtitle;
 
   /// 平台清單列前置 icon。
   @override

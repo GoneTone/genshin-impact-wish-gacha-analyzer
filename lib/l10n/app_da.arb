@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Filen kan ikke læses",
   "exportReasonWriteFailed": "Filen kunne ikke skrives. Tjek placeringen og tilladelserne",
   "importReasonForeignApp": "Denne fil er ikke eksporteret fra denne app",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importér fra andre platforme",
+  "platformPickerTitle": "Vælg en kildeplatform",
+  "importReasonNotPlatformFile": "Denne fil er ikke en gyldig eksport fra {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export og andre værktøjer · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Hvilken konto skal der importeres til?",
+  "importTargetAccountBody": "Eksporter fra paimon.moe indeholder ikke noget UID. Vælg den konto, disse poster hører til.",
+  "importTargetAccountOtherUid": "Andet UID",
+  "importTargetAccountUidHint": "Angiv UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 post på denne enhed} other{{count} poster på denne enhed}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Denne fil bruger en nyere UIGF-version ({version}), som endnu ikke understøttes. Opdater appen, eller eksportér som v4 i det oprindelige værktøj.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Filen indeholder bannertyper, der ikke understøttes ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Genstandsdata ({item}) kunne ikke udfyldes. Tjek din forbindelse, og prøv igen.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Begge sider har poster fra {from} til {to}, men ingen af de {groups} pulls i perioden matcher de officielle poster på denne enhed. Du har måske valgt den forkerte konto, eller filen bruger en anden tidszone.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Begge sider har poster fra {from} til {to}, men de officielle poster på denne enhed matcher kun {matched} af de {groups} pulls i perioden. Du har måske valgt den forkerte konto, eller filen bruger en anden tidszone.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importér alligevel",
+  "importResolvingItems": "Udfylder genstandsdata...",
   "settingsExportSelectTitle": "Vælg konti, der skal eksporteres",
   "settingsImportSelectTitle": "Vælg konti, der skal importeres",
   "settingsImportMergeBadge": "Flet",

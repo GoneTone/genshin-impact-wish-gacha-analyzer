@@ -820,6 +820,95 @@
   "importReasonUnreadable": "A fájl nem olvasható",
   "exportReasonWriteFailed": "A fájl nem írható. Ellenőrizze a mentési helyet és az engedélyeket",
   "importReasonForeignApp": "Ezt a fájlt nem ez az alkalmazás exportálta",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importálás más platformokról",
+  "platformPickerTitle": "Válassza ki a forrásplatformot",
+  "importReasonNotPlatformFile": "Ez a fájl nem érvényes {platform} exportfájl",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export és más eszközök · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Melyik fiókba importáljuk?",
+  "importTargetAccountBody": "A paimon.moe exportjai nem tartalmaznak UID-t. Válassza ki, melyik fiókhoz tartoznak ezek a rekordok.",
+  "importTargetAccountOtherUid": "Másik UID",
+  "importTargetAccountUidHint": "Adja meg az UID-t",
+  "importTargetAccountRecordCount": "{count} rekord ezen az eszközön",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Ez a fájl újabb UIGF-verziót ({version}) használ, amely még nem támogatott. Frissítse az alkalmazást, vagy exportáljon v4 formátumban az eredeti eszközben.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "A fájl nem támogatott bannertípusokat tartalmaz ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Nem sikerült kiegészíteni a tárgy adatait ({item}). Ellenőrizze a hálózatot, és próbálja újra.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: A(z) {from}–{to} időszakban mindkét oldalon vannak rekordok, de az időszak {groups} húzása közül egy sem egyezik az eszközön lévő hivatalos rekordokkal. Lehet, hogy rossz fiókot választott, vagy a fájl más időzónát használ.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: A(z) {from}–{to} időszakban mindkét oldalon vannak rekordok, de az időszak {groups} húzása közül csak {matched} egyezik az eszközön lévő hivatalos rekordokkal. Lehet, hogy rossz fiókot választott, vagy a fájl más időzónát használ.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importálás mégis",
+  "importResolvingItems": "Tárgyadatok kiegészítése...",
   "settingsExportSelectTitle": "Exportálandó fiókok kiválasztása",
   "settingsImportSelectTitle": "Importálandó fiókok kiválasztása",
   "settingsImportMergeBadge": "Egyesítés",

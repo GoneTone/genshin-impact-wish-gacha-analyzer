@@ -820,6 +820,95 @@
   "importReasonUnreadable": "تعذّرت قراءة الملف",
   "exportReasonWriteFailed": "تعذّرت كتابة الملف، يُرجى التحقق من موقع الحفظ والأذونات",
   "importReasonForeignApp": "لم يتم تصدير هذا الملف بواسطة هذا التطبيق",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "استيراد من منصات أخرى",
+  "platformPickerTitle": "اختر المنصة المصدر",
+  "importReasonNotPlatformFile": "هذا الملف ليس ملف تصدير صالحًا من {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export وأدوات أخرى · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "إلى أي حساب تريد الاستيراد؟",
+  "importTargetAccountBody": "ملفات التصدير من paimon.moe لا تتضمن UID. اختر الحساب الذي تنتمي إليه هذه السجلات.",
+  "importTargetAccountOtherUid": "UID آخر",
+  "importTargetAccountUidHint": "أدخل UID",
+  "importTargetAccountRecordCount": "{count, plural, zero{لا توجد سجلات على هذا الجهاز} one{سجل واحد على هذا الجهاز} two{سجلان على هذا الجهاز} few{{count} سجلات على هذا الجهاز} many{{count} سجلًا على هذا الجهاز} other{{count} سجل على هذا الجهاز}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "يستخدم هذا الملف إصدار UIGF أحدث ({version}) غير مدعوم بعد. حدّث التطبيق أو صدّر بصيغة v4 من الأداة الأصلية.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "يحتوي الملف على أنواع لافتات غير مدعومة ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "تعذّر استكمال بيانات العنصر ({item}). تحقّق من اتصالك وحاول مجددًا.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: توجد سجلات لدى الطرفين في الفترة {from}–{to}، لكن لا تتطابق أي سحبة من تلك الفترة مع السجلات الرسمية على هذا الجهاز (عدد السحبات: {groups}). ربما اخترت الحساب الخطأ، أو أن الملف يستخدم منطقة زمنية مختلفة.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: توجد سجلات لدى الطرفين في الفترة {from}–{to}، لكن عددًا قليلًا فقط من سحبات تلك الفترة يتطابق مع السجلات الرسمية على هذا الجهاز ({matched} من {groups}). ربما اخترت الحساب الخطأ، أو أن الملف يستخدم منطقة زمنية مختلفة.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "استيراد على أي حال",
+  "importResolvingItems": "جارٍ استكمال بيانات العناصر...",
   "settingsExportSelectTitle": "اختر الحسابات المراد تصديرها",
   "settingsImportSelectTitle": "اختر الحسابات المراد استيرادها",
   "settingsImportMergeBadge": "دمج",

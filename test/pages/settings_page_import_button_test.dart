@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -12,16 +13,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/pages/settings_page.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import '../helpers/no_game_dir.dart';
 import '../helpers/wait_until.dart';
 
@@ -36,9 +41,11 @@ class _NullCapture implements GachaCapture {
 Future<ProviderContainer> _setupContainer({
   required GachaStorage storage,
   required Directory tempDir,
+  http.Client? httpClient,
 }) async {
   final container = ProviderContainer(
     overrides: [
+      if (httpClient != null) httpClientProvider.overrideWithValue(httpClient),
       gachaStorageProvider.overrideWithValue(storage),
       noGameDirOverride,
       gachaCaptureProvider.overrideWithValue(_NullCapture()),
@@ -253,4 +260,189 @@ void main() {
     expect(find.byType(SnackBar), findsNothing);
     expect(find.byType(Dialog), findsNothing);
   });
+
+  for (final busy in [false, true]) {
+    testWidgets('other platform import button enabled: ${!busy}', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      late ProviderContainer container;
+      await tester.runAsync(() async {
+        container = await _setupContainer(
+          storage: GachaStorage(tempDir),
+          tempDir: tempDir,
+        );
+      });
+      addTearDown(container.dispose);
+      if (busy) {
+        container
+            .read(gachaRepositoryProvider.notifier)
+            .debugSetProgress(const Preparing());
+      }
+
+      await tester.pumpWidget(_wrap(container));
+      await tester.pump();
+
+      final btn = find.widgetWithText(OutlinedButton, '從其他平台匯入');
+      expect(btn, findsOneWidget);
+      expect(tester.widget<OutlinedButton>(btn).onPressed == null, busy);
+    });
+  }
+
+  /// 點「從其他平台匯入」、選 [platform]，選檔回傳 [bytes]；[httpClient] 給補資料用。
+  Future<(ProviderContainer, List<String>?)> importFromPlatform(
+    WidgetTester tester,
+    String platform,
+    Uint8List bytes, {
+    http.Client? httpClient,
+  }) async {
+    SharedPreferences.setMockInitialValues({});
+    late ProviderContainer container;
+    await tester.runAsync(() async {
+      container = await _setupContainer(
+        storage: GachaStorage(tempDir),
+        tempDir: tempDir,
+        httpClient: httpClient,
+      );
+    });
+    addTearDown(container.dispose);
+    List<String>? extensions;
+    fileOpenDialog = (ext, title) async {
+      extensions = ext;
+      openTitle = title;
+      return bytes;
+    };
+
+    await tester.pumpWidget(_wrap(container));
+    await tester.pump();
+    final btn = find.widgetWithText(OutlinedButton, '從其他平台匯入');
+    await tester.ensureVisible(btn);
+    await tester.tap(btn);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(platform));
+    await tester.pump();
+    await tester.pump();
+    return (container, extensions);
+  }
+
+  testWidgets('a foreign file picked for UIGF shows the not platform message', (
+    tester,
+  ) async {
+    final (_, extensions) = await importFromPlatform(
+      tester,
+      'UIGF',
+      Uint8List.fromList(utf8.encode('{"app":"other"}')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(extensions, ['json']);
+    expect(find.text('匯入失敗：此檔案不是有效的 UIGF 匯出檔'), findsOneWidget);
+  });
+
+  testWidgets(
+    'a UIGF file whose names cannot be resolved shows the resolving dialog '
+    'then the unresolved message',
+    (tester) async {
+      final gate = Completer<http.Response>();
+      final file = jsonEncode({
+        'info': {'uid': '100000001', 'uigf_version': 'v3.0'},
+        'list': [
+          {
+            'gacha_type': '200',
+            'item_id': '11101',
+            'count': '1',
+            'time': '2025-01-01 10:00:00',
+            'item_type': '武器',
+            'rank_type': '3',
+            'id': '1735696800000000001',
+            'uigf_gacha_type': '200',
+          },
+        ],
+      });
+      await importFromPlatform(
+        tester,
+        'UIGF',
+        Uint8List.fromList(utf8.encode(file)),
+        httpClient: MockClient((_) => gate.future),
+      );
+
+      // 進度條一直在動，不能 pumpAndSettle；等平台選單關閉動畫跑完。
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('正在補齊物品資料...'), findsOneWidget);
+      expect(find.byType(AppDialogCloseButton), findsNothing);
+
+      gate.complete(http.Response('', 500));
+      await tester.pumpAndSettle();
+
+      expect(find.text('正在補齊物品資料...'), findsNothing);
+      expect(find.byType(Dialog), findsNothing);
+      expect(find.text('匯入失敗：無法補齊物品資料（11101），請確認網路連線後再試'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'a UIGF file that barely matches local official records warns in the '
+    'confirm dialog',
+    (tester) async {
+      await tester.runAsync(
+        () => GachaStorage(tempDir).save(
+          BannerStorage(
+            uid: '100000001',
+            lastUpdated: DateTime.utc(2025, 2, 1),
+            banners: {
+              '200': [
+                for (var d = 12; d >= 1; d--)
+                  GachaRecord(
+                    id: '17356968000000000${d.toString().padLeft(2, '0')}',
+                    uid: '100000001',
+                    gachaType: '200',
+                    name: '冷刃',
+                    itemType: '武器',
+                    rankType: 3,
+                    time: DateTime(2025, 1, d, 10),
+                    lang: 'zh-tw',
+                  ),
+              ],
+            },
+          ),
+        ),
+      );
+      final file = jsonEncode({
+        'info': {'uid': '100000001', 'lang': 'zh-tw', 'uigf_version': 'v3.0'},
+        'list': [
+          for (var d = 1; d <= 12; d++)
+            {
+              'gacha_type': '200',
+              'count': '1',
+              'time': '2025-01-${d.toString().padLeft(2, '0')} 11:00:00',
+              'name': '冷刃',
+              'item_type': '武器',
+              'rank_type': '3',
+              'id': '',
+              'uigf_gacha_type': '200',
+            },
+        ],
+      });
+      await importFromPlatform(
+        tester,
+        'UIGF',
+        Uint8List.fromList(utf8.encode(file)),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, '繼續'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          '⚠ 100000001：2025-01-01～2025-01-12 這段期間兩邊都有記錄，但 11 次抽卡'
+          '沒有一次對得上本機的官方記錄。可能選錯了帳號，或檔案的時區不同。',
+        ),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(FilledButton, '仍要匯入'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(TextButton, '取消'));
+      await tester.pumpAndSettle();
+    },
+  );
 }

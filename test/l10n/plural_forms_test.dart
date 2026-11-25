@@ -9,6 +9,8 @@ final Map<String, String Function(AppLocalizations l, int n)> _probes = {
   'pityDistance': (l, n) => l.pityDistance(n),
   'timelineSinceLast': (l, n) => l.timelineSinceLast(n),
   'accountRecordCount': (l, n) => l.accountRecordCount(n),
+  'importTargetAccountRecordCount': (l, n) =>
+      l.importTargetAccountRecordCount(n),
   'settingsImportConfirmIntro': (l, n) => l.settingsImportConfirmIntro(n, n),
   'pagerJumpCurrent': (l, n) => l.pagerJumpCurrent(7, n),
 };

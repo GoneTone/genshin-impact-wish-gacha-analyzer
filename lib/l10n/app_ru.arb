@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Не удалось прочитать файл",
   "exportReasonWriteFailed": "Не удалось записать файл. Проверьте место сохранения и права доступа",
   "importReasonForeignApp": "Этот файл экспортирован не этим приложением",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Импорт с других платформ",
+  "platformPickerTitle": "Выберите платформу-источник",
+  "importReasonNotPlatformFile": "Этот файл не является корректным экспортом {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export и другие инструменты · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "В какой аккаунт импортировать?",
+  "importTargetAccountBody": "В экспорте paimon.moe нет UID. Выберите аккаунт, к которому относятся эти записи.",
+  "importTargetAccountOtherUid": "Другой UID",
+  "importTargetAccountUidHint": "Введите UID",
+  "importTargetAccountRecordCount": "{count, plural, one{На устройстве {count} запись} few{На устройстве {count} записи} many{На устройстве {count} записей} other{На устройстве {count} записи}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Этот файл использует более новую версию UIGF ({version}), которая пока не поддерживается. Обновите приложение или экспортируйте в формате v4 в исходном инструменте.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "В файле есть неподдерживаемые типы молитв ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Не удалось дополнить данные предмета ({item}). Проверьте подключение и попробуйте снова.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: за период {from}–{to} записи есть с обеих сторон, но ни одна крутка этого периода не совпала с официальными записями на устройстве (всего круток: {groups}). Возможно, выбран не тот аккаунт или в файле другой часовой пояс.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: за период {from}–{to} записи есть с обеих сторон, но с официальными записями на устройстве совпало мало круток этого периода ({matched} из {groups}). Возможно, выбран не тот аккаунт или в файле другой часовой пояс.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Всё равно импортировать",
+  "importResolvingItems": "Дополнение данных предметов...",
   "settingsExportSelectTitle": "Выберите аккаунты для экспорта",
   "settingsImportSelectTitle": "Выберите аккаунты для импорта",
   "settingsImportMergeBadge": "Объединение",

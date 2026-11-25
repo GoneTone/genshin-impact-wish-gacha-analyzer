@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Die Datei kann nicht gelesen werden",
   "exportReasonWriteFailed": "Die Datei kann nicht geschrieben werden. Bitte prüfe Speicherort und Berechtigungen",
   "importReasonForeignApp": "Diese Datei wurde nicht von dieser App exportiert",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Von anderen Plattformen importieren",
+  "platformPickerTitle": "Quellplattform wählen",
+  "importReasonNotPlatformFile": "Diese Datei ist kein gültiger {platform}-Export",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export und andere Tools · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "In welches Konto importieren?",
+  "importTargetAccountBody": "paimon.moe-Exporte enthalten keine UID. Wähle das Konto, zu dem diese Einträge gehören.",
+  "importTargetAccountOtherUid": "Andere UID",
+  "importTargetAccountUidHint": "UID eingeben",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 Eintrag auf diesem Gerät} other{{count} Einträge auf diesem Gerät}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Diese Datei nutzt eine neuere UIGF-Version ({version}), die noch nicht unterstützt wird. Aktualisiere die App oder exportiere im ursprünglichen Tool als v4.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Die Datei enthält nicht unterstützte Gebetskategorien ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Gegenstandsdaten ({item}) konnten nicht ergänzt werden. Prüfe deine Netzwerkverbindung und versuche es erneut.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Von {from} bis {to} gibt es auf beiden Seiten Einträge, aber keine der {groups} Ziehungen in diesem Zeitraum stimmt mit den offiziellen Einträgen auf diesem Gerät überein. Möglicherweise wurde das falsche Konto gewählt oder die Datei verwendet eine andere Zeitzone.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Von {from} bis {to} gibt es auf beiden Seiten Einträge, aber die offiziellen Einträge auf diesem Gerät decken sich nur mit {matched} der {groups} Ziehungen in diesem Zeitraum. Möglicherweise wurde das falsche Konto gewählt oder die Datei verwendet eine andere Zeitzone.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Trotzdem importieren",
+  "importResolvingItems": "Gegenstandsdaten werden ergänzt...",
   "settingsExportSelectTitle": "Konten für den Export wählen",
   "settingsImportSelectTitle": "Konten für den Import wählen",
   "settingsImportMergeBadge": "Zusammenführen",

@@ -820,6 +820,95 @@
   "importReasonUnreadable": "No s'ha pogut llegir el fitxer",
   "exportReasonWriteFailed": "No s'ha pogut escriure el fitxer. Comprova la ubicació i els permisos",
   "importReasonForeignApp": "Aquest fitxer no l'ha exportat l'aplicació",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importa des d'altres plataformes",
+  "platformPickerTitle": "Tria la plataforma d'origen",
+  "importReasonNotPlatformFile": "Aquest fitxer no és una exportació vàlida de {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export i altres eines · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "A quin compte vols importar?",
+  "importTargetAccountBody": "Les exportacions de paimon.moe no inclouen l'UID. Tria el compte al qual pertanyen aquests registres.",
+  "importTargetAccountOtherUid": "Un altre UID",
+  "importTargetAccountUidHint": "Introdueix l'UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{{count} registre en aquest dispositiu} other{{count} registres en aquest dispositiu}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Aquest fitxer fa servir una versió d'UIGF més nova ({version}) que encara no és compatible. Actualitza l'aplicació o exporta en v4 des de l'eina original.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "El fitxer conté tipus de bàner no compatibles ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "No s'han pogut completar les dades de l'element ({item}). Comprova la xarxa i torna-ho a provar.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: totes dues bandes tenen registres entre el {from} i el {to}, però cap de les {groups} tirades d'aquest període coincideix amb els registres oficials d'aquest dispositiu. Potser has triat el compte equivocat o el fitxer fa servir una altra zona horària.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: totes dues bandes tenen registres entre el {from} i el {to}, però els registres oficials d'aquest dispositiu només coincideixen amb {matched} de les {groups} tirades d'aquest període. Potser has triat el compte equivocat o el fitxer fa servir una altra zona horària.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importa igualment",
+  "importResolvingItems": "S'estan completant les dades dels elements...",
   "settingsExportSelectTitle": "Tria els comptes que vols exportar",
   "settingsImportSelectTitle": "Tria els comptes que vols importar",
   "settingsImportMergeBadge": "Combinació",

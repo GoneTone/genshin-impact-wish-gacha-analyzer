@@ -820,6 +820,95 @@
   "importReasonUnreadable": "לא ניתן לקרוא את הקובץ",
   "exportReasonWriteFailed": "לא ניתן לכתוב את הקובץ. בדקו את מיקום השמירה ואת ההרשאות",
   "importReasonForeignApp": "הקובץ הזה לא יוצא מהאפליקציה הזו",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "ייבוא מפלטפורמות אחרות",
+  "platformPickerTitle": "בחירת פלטפורמת מקור",
+  "importReasonNotPlatformFile": "הקובץ הזה אינו קובץ ייצוא תקין של {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export וכלים נוספים · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "לאיזה חשבון לייבא?",
+  "importTargetAccountBody": "קובצי הייצוא של paimon.moe לא כוללים UID. בחרו את החשבון שאליו שייכות הרשומות האלה.",
+  "importTargetAccountOtherUid": "UID אחר",
+  "importTargetAccountUidHint": "הזינו UID",
+  "importTargetAccountRecordCount": "{count, plural, one{רשומה אחת במכשיר הזה} two{שתי רשומות במכשיר הזה} other{{count} רשומות במכשיר הזה}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "הקובץ הזה משתמש בגרסת UIGF חדשה יותר ({version}) שעדיין לא נתמכת. עדכנו את האפליקציה או ייצאו בגרסה v4 בכלי המקורי.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "הקובץ מכיל סוגי באנרים שאינם נתמכים ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "לא ניתן להשלים את נתוני הפריט ({item}). בדקו את החיבור ונסו שוב.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: בתקופה {from}–{to} יש רשומות בשני הצדדים, אבל אף משיכה מהתקופה הזו לא תואמת לרשומות הרשמיות במכשיר (מספר משיכות: {groups}). ייתכן שנבחר החשבון הלא נכון, או שהקובץ משתמש באזור זמן אחר.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: בתקופה {from}–{to} יש רשומות בשני הצדדים, אבל רק מעט משיכות מהתקופה הזו תואמות לרשומות הרשמיות במכשיר ({matched} מתוך {groups}). ייתכן שנבחר החשבון הלא נכון, או שהקובץ משתמש באזור זמן אחר.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "לייבא בכל זאת",
+  "importResolvingItems": "משלים את נתוני הפריטים...",
   "settingsExportSelectTitle": "בחירת חשבונות לייצוא",
   "settingsImportSelectTitle": "בחירת חשבונות לייבוא",
   "settingsImportMergeBadge": "מיזוג",

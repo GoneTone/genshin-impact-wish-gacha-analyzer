@@ -802,6 +802,95 @@
   "importReasonUnreadable": "Impossible de lire le fichier",
   "exportReasonWriteFailed": "Impossible d'écrire le fichier, veuillez vérifier l'emplacement d'enregistrement et les autorisations",
   "importReasonForeignApp": "Ce fichier n'a pas été exporté par cette application",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Importer depuis d'autres plateformes",
+  "platformPickerTitle": "Choisir une plateforme source",
+  "importReasonNotPlatformFile": "Ce fichier n'est pas une exportation {platform} valide",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export et autres outils · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Importer dans quel compte ?",
+  "importTargetAccountBody": "Les exportations paimon.moe ne contiennent pas d'UID. Choisissez le compte auquel appartiennent ces enregistrements.",
+  "importTargetAccountOtherUid": "Autre UID",
+  "importTargetAccountUidHint": "Saisir l'UID",
+  "importTargetAccountRecordCount": "{count, plural, one{{count} enregistrement sur cet appareil} other{{count} enregistrements sur cet appareil}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Ce fichier utilise une version UIGF plus récente ({version}) qui n'est pas encore prise en charge. Mettez à jour l'application ou exportez en v4 depuis l'outil d'origine.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Le fichier contient des types de vœux non pris en charge ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Impossible de compléter les données de l'objet ({item}). Vérifiez votre connexion et réessayez.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid} : les deux côtés ont des enregistrements du {from} au {to}, mais aucun des {groups} tirages de cette période ne correspond aux enregistrements officiels de cet appareil. Vous avez peut-être choisi le mauvais compte, ou le fichier utilise un autre fuseau horaire.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid} : les deux côtés ont des enregistrements du {from} au {to}, mais les enregistrements officiels de cet appareil ne correspondent qu'à {matched} des {groups} tirages de cette période. Vous avez peut-être choisi le mauvais compte, ou le fichier utilise un autre fuseau horaire.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importer quand même",
+  "importResolvingItems": "Complétion des données des objets...",
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportMergeBadge": "Fusionner",

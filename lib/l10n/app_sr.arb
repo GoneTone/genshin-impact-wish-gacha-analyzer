@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Није могуће прочитати датотеку",
   "exportReasonWriteFailed": "Није могуће уписати датотеку, проверите локацију чувања и дозволе",
   "importReasonForeignApp": "Ову датотеку није извезла ова апликација",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Увези са других платформи",
+  "platformPickerTitle": "Изаберите изворну платформу",
+  "importReasonNotPlatformFile": "Ова датотека није исправан извоз из {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export и други алати · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "У који налог увести?",
+  "importTargetAccountBody": "Извози из paimon.moe не садрже UID. Изаберите налог коме припадају ови записи.",
+  "importTargetAccountOtherUid": "Други UID",
+  "importTargetAccountUidHint": "Унесите UID",
+  "importTargetAccountRecordCount": "{count, plural, one{На уређају: {count} запис} few{На уређају: {count} записа} other{На уређају: {count} записа}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Ова датотека користи новију верзију UIGF ({version}) која још није подржана. Ажурирајте апликацију или у изворном алату извезите у верзији v4.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Датотека садржи неподржане типове банера ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Није могуће допунити податке о предмету ({item}). Проверите везу и покушајте поново.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: у периоду {from}–{to} обе стране имају записе, али ниједно извлачење из тог периода се не поклапа са званичним записима на уређају (број извлачења: {groups}). Можда сте изабрали погрешан налог или датотека користи другу временску зону.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: у периоду {from}–{to} обе стране имају записе, али се са званичним записима на уређају поклапа мало извлачења из тог периода ({matched} од {groups}). Можда сте изабрали погрешан налог или датотека користи другу временску зону.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Ипак увези",
+  "importResolvingItems": "Допуњавање података о предметима...",
   "settingsExportSelectTitle": "Изаберите налоге за извоз",
   "settingsImportSelectTitle": "Изаберите налоге за увоз",
   "settingsImportMergeBadge": "Спајање",

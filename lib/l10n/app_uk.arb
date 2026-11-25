@@ -820,6 +820,95 @@
   "importReasonUnreadable": "Не вдалося прочитати файл",
   "exportReasonWriteFailed": "Не вдалося записати файл. Перевірте місце збереження та права доступу",
   "importReasonForeignApp": "Цей файл експортовано не цим застосунком",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "paimon.moe",
+  "settingsImportOtherPlatform": "Імпорт з інших платформ",
+  "platformPickerTitle": "Виберіть платформу-джерело",
+  "importReasonNotPlatformFile": "Цей файл не є коректним експортом {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export та інші інструменти · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "До якого акаунта імпортувати?",
+  "importTargetAccountBody": "В експорті paimon.moe немає UID. Виберіть акаунт, якому належать ці записи.",
+  "importTargetAccountOtherUid": "Інший UID",
+  "importTargetAccountUidHint": "Введіть UID",
+  "importTargetAccountRecordCount": "{count, plural, one{На пристрої {count} запис} few{На пристрої {count} записи} many{На пристрої {count} записів} other{На пристрої {count} запису}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Цей файл використовує новішу версію UIGF ({version}), яка поки не підтримується. Оновіть застосунок або експортуйте у форматі v4 у вихідному інструменті.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "У файлі є непідтримувані типи банерів ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Не вдалося доповнити дані предмета ({item}). Перевірте підключення і спробуйте знову.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: за період {from}–{to} записи є з обох боків, але жодна крутка цього періоду не збіглася з офіційними записами на пристрої (усього круток: {groups}). Можливо, вибрано не той акаунт або у файлі інший часовий пояс.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: за період {from}–{to} записи є з обох боків, але з офіційними записами на пристрої збіглося мало круток цього періоду ({matched} з {groups}). Можливо, вибрано не той акаунт або у файлі інший часовий пояс.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Все одно імпортувати",
+  "importResolvingItems": "Доповнення даних предметів...",
   "settingsExportSelectTitle": "Виберіть акаунти для експорту",
   "settingsImportSelectTitle": "Виберіть акаунти для імпорту",
   "settingsImportMergeBadge": "Об’єднання",
