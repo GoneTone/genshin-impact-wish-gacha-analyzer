@@ -127,8 +127,12 @@ AccountsBundle assignTargetUid(AccountsBundle bundle, String uid) =>
       ],
     );
 
-/// 把 [bundle] 每個帳號的「最後更新」設為 [at]；第三方匯入在使用者按下「匯入」
-/// 時呼叫，讓時間落在寫入的那一刻，而不是讀檔的時候。
+/// 第三方匯入在使用者按下「匯入」時呼叫：檔案沒有可靠匯出時間的帳號，把「最後更新」
+/// 從解析當下改成 [at]；取自檔案匯出時間的帳號維持不變。
+///
+/// 依賴 importer 的約定：[AccountsBundle.exportedAt] 是解析當下，沒有匯出時間的帳號
+/// `lastUpdated` 也放同一個值，匯出時間則一定早於它，所以「不早於 exportedAt」就是
+/// 沒有匯出時間。
 AccountsBundle stampLastUpdated(AccountsBundle bundle, DateTime at) =>
     AccountsBundle(
       exportedAt: bundle.exportedAt,
@@ -136,11 +140,13 @@ AccountsBundle stampLastUpdated(AccountsBundle bundle, DateTime at) =>
       lastActiveUid: bundle.lastActiveUid,
       accounts: [
         for (final a in bundle.accounts)
-          ExportedAccount(
-            data: a.data.copyWith(lastUpdated: at),
-            alias: a.alias,
-            aliasUpdatedAt: a.aliasUpdatedAt,
-          ),
+          a.data.lastUpdated.isBefore(bundle.exportedAt)
+              ? a
+              : ExportedAccount(
+                  data: a.data.copyWith(lastUpdated: at),
+                  alias: a.alias,
+                  aliasUpdatedAt: a.aliasUpdatedAt,
+                ),
       ],
     );
 

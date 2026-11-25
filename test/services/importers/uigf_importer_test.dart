@@ -108,14 +108,44 @@ void main() {
     expect(kPlatformImporters[1], isA<PaimonMoeImporter>());
   });
 
-  test('lastUpdated is the import moment, not the export time', () async {
-    final before = DateTime.now().toUtc();
-    final bundle = await importer.parse(fixture('v3_0.json'));
-    final after = DateTime.now().toUtc();
-    final t = bundle.accounts.single.data.lastUpdated;
-    expect(t.isUtc, isTrue);
-    expect(t.isBefore(before), isFalse);
-    expect(t.isAfter(after), isFalse);
+  group('lastUpdated', () {
+    /// 解析只有一筆記錄、`export_timestamp` 為 [ts] 的 v4 檔，回傳唯一帳號的時間。
+    Future<DateTime> lastUpdatedFor(Object? ts) async => (await importer.parse(
+      v4([rec()], exportTimestamp: ts),
+    )).accounts.single.data.lastUpdated;
+
+    test('uses export_timestamp (number or string)', () async {
+      final expected = DateTime.utc(2025, 6, 1, 4);
+      expect(await lastUpdatedFor(1748750400), expected);
+      expect(await lastUpdatedFor('1748750400'), expected);
+    });
+
+    test('export time is kept by stampLastUpdated', () async {
+      final bundle = await importer.parse(v4([rec()]));
+      final stamped = stampLastUpdated(bundle, DateTime.utc(2030));
+      expect(
+        stamped.accounts.single.data.lastUpdated,
+        DateTime.utc(2025, 6, 1, 4),
+      );
+    });
+
+    test('missing, invalid or future export time falls back to now', () async {
+      for (final ts in [null, 'abc', 0, -5, 99999999999999]) {
+        final before = DateTime.now().toUtc();
+        final bundle = await importer.parse(v4([rec()], exportTimestamp: ts));
+        final after = DateTime.now().toUtc();
+        final t = bundle.accounts.single.data.lastUpdated;
+        expect(t.isUtc, isTrue, reason: '$ts');
+        expect(t.isBefore(before), isFalse, reason: '$ts');
+        expect(t.isAfter(after), isFalse, reason: '$ts');
+        final stamped = stampLastUpdated(bundle, DateTime.utc(2030));
+        expect(
+          stamped.accounts.single.data.lastUpdated,
+          DateTime.utc(2030),
+          reason: '$ts is stamped at confirm time',
+        );
+      }
+    });
   });
 
   test('v3.0 single account', () async {

@@ -159,8 +159,15 @@ class UigfImporter implements PlatformImporter {
     for (final r in records) {
       (byUid[r.uid] ??= []).add(r);
     }
-    // 「最後更新」與抓官方資料一致，記錄資料在這台裝置更新的時刻。
+    // 「最後更新」代表資料新到什麼時候，與本軟體備份匯入一致：有匯出時間就用它；
+    // 沒有就先放解析當下，使用者確認匯入時由 stampLastUpdated 換成匯入的時刻。
     final now = DateTime.now().toUtc();
+    final exported = _exportTime(info['export_timestamp'], now);
+    final lastUpdated = exported ?? now;
+    _log.info(
+      'uigf import export time: raw=${info['export_timestamp']} '
+      'used=${exported?.toIso8601String() ?? 'none'}',
+    );
     final accounts = <ExportedAccount>[];
     for (final MapEntry(key: uid, value: list) in byUid.entries) {
       // 替代 id 的序號只看卡池與秒，不分 UID，所以要逐帳號產生。
@@ -196,7 +203,11 @@ class UigfImporter implements PlatformImporter {
       );
       accounts.add(
         ExportedAccount(
-          data: BannerStorage(uid: uid, lastUpdated: now, banners: banners),
+          data: BannerStorage(
+            uid: uid,
+            lastUpdated: lastUpdated,
+            banners: banners,
+          ),
         ),
       );
     }
@@ -211,6 +222,19 @@ class UigfImporter implements PlatformImporter {
       lastActiveUid: null,
       accounts: accounts,
     );
+  }
+
+  /// 解析 `info.export_timestamp`（Unix 秒，數字或數字字串）；缺少或不合法回 null，
+  /// 晚於 [now] 時回 [now]（不顯示未來時間）。
+  static DateTime? _exportTime(Object? value, DateTime now) {
+    final seconds = switch (value) {
+      num() => value.toInt(),
+      String() => int.tryParse(value.trim()),
+      _ => null,
+    };
+    if (seconds == null || seconds <= 0) return null;
+    if (seconds * 1000 >= now.millisecondsSinceEpoch) return now;
+    return DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true);
   }
 
   /// v2／v3：整份 `list` 是一個區塊，記錄的 `uid`／`lang` 優先於 `info` 的。

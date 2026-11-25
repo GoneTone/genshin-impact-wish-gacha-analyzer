@@ -125,8 +125,8 @@ class PaimonMoeImporter implements PlatformImporter {
       'range=$range',
     );
 
-    // 「最後更新」與抓官方資料一致，記錄資料在這台裝置更新的時刻；
-    // 匯出檔的 Export Date 是匯出者瀏覽器的當地時間，沒有時區，不採用。
+    // 匯出檔的 Export Date 是匯出者瀏覽器的當地時間，沒有時區，不採用；「最後更新」
+    // 先放解析當下，使用者確認匯入時由 stampLastUpdated 換成匯入的時刻。
     final now = DateTime.now().toUtc();
     return AccountsBundle(
       exportedAt: now,

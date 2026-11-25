@@ -772,8 +772,8 @@ class _DataManagement extends ConsumerWidget {
   /// 由本軟體備份匯入（[_import]）與第三方平台匯入（[_importFromPlatform]）共用。
   ///
   /// [fromPlatform] 只有第三方匯入為 true：對本機已有的帳號做重疊檢查（設計文件
-  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」；確認後把「最後更新」
-  /// 設為按下匯入的時刻。
+  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」；確認後把沒有匯出時間
+  /// 的帳號「最後更新」設為按下匯入的時刻（[stampLastUpdated]）。
   Future<void> _runBundleImport(
     BuildContext ctx,
     WidgetRef ref,
