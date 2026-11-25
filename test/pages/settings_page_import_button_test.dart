@@ -28,6 +28,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import '../helpers/no_game_dir.dart';
+import '../helpers/xlsx_fixture.dart';
 import '../helpers/wait_until.dart';
 
 /// 空 [GachaCapture] 替身，避免測試啟動真實 MITM session。
@@ -441,6 +442,67 @@ void main() {
       );
       expect(find.widgetWithText(FilledButton, '仍要匯入'), findsOneWidget);
 
+      await tester.tap(find.widgetWithText(TextButton, '取消'));
+      await tester.pumpAndSettle();
+    },
+  );
+
+  testWidgets(
+    'a paimon.moe file goes to the chosen local account and merges into it',
+    (tester) async {
+      await tester.runAsync(
+        () => GachaStorage(tempDir).save(
+          BannerStorage(
+            uid: '100000001',
+            lastUpdated: DateTime.utc(2025, 2, 1),
+            banners: {
+              '200': [
+                GachaRecord(
+                  id: '1735696800000000001',
+                  uid: '100000001',
+                  gachaType: '200',
+                  name: '冷刃',
+                  itemType: '武器',
+                  rankType: 3,
+                  time: DateTime(2025, 1, 1, 10),
+                  lang: 'zh-tw',
+                ),
+              ],
+            },
+          ),
+        ),
+      );
+      final (_, extensions) = await importFromPlatform(
+        tester,
+        'paimon.moe',
+        buildPaimonXlsx({
+          'Standard': [
+            paimonRow('Weapon', 'Cool Steel', '2025-01-02 10:00:00', 3),
+          ],
+        }),
+      );
+      await tester.pumpAndSettle();
+      expect(extensions, ['xlsx']);
+
+      expect(find.text('匯入到哪個帳號？'), findsOneWidget);
+      await tester.tap(find.widgetWithText(FilledButton, '繼續'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('選擇要匯入的帳號'), findsOneWidget);
+      final inDialog = find.byType(Dialog);
+      expect(
+        find.descendant(of: inDialog, matching: find.text('100000001')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: inDialog, matching: find.text('合併')),
+        findsOneWidget,
+      );
+      await tester.tap(find.widgetWithText(FilledButton, '繼續'));
+      await tester.pumpAndSettle();
+
+      expect(find.widgetWithText(FilledButton, '匯入'), findsOneWidget);
+      expect(find.textContaining('⚠'), findsNothing);
       await tester.tap(find.widgetWithText(TextButton, '取消'));
       await tester.pumpAndSettle();
     },
