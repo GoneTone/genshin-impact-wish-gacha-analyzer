@@ -90,15 +90,21 @@ class PaimonMoeImporter implements PlatformImporter {
       throw const ForeignBundleException();
     }
 
+    final unknown = {
+      for (final name in sheets.keys)
+        if (!_ignoredSheets.contains(name) &&
+            !_sheetGachaTypes.containsKey(name))
+          name,
+    };
+    if (unknown.isNotEmpty) {
+      _log.warning('paimon_moe import: unknown sheets sheets=$unknown');
+      throw UnknownGachaTypeException(unknown);
+    }
+
     final records = <GachaRecord>[];
     for (final MapEntry(key: name, value: sheet) in sheets.entries) {
       if (_ignoredSheets.contains(name)) continue;
-      final gachaType = _sheetGachaTypes[name];
-      if (gachaType == null) {
-        _log.warning('paimon_moe import: unknown sheet sheet="$name"');
-        throw UnknownGachaTypeException({name});
-      }
-      records.addAll(_parseSheet(name, gachaType, sheet.rows));
+      records.addAll(_parseSheet(name, _sheetGachaTypes[name]!, sheet.rows));
     }
 
     final withIds = assignSubstituteIdsOrReject('paimon_moe', records);

@@ -265,11 +265,73 @@ void main() {
     },
   );
 
-  test('duplicate official ids in one account are kept once', () async {
-    final banners = onlyBanners(
-      await importer.parse(v4([rec(name: 'A'), rec(name: 'B')])),
+  test('duplicate official ids are kept once per banner key only', () async {
+    const dupId = '1735696800000000001';
+    final bytes = encode({
+      'info': {'version': 'v4.2'},
+      'hk4e': [
+        {
+          'uid': '100000001',
+          'timezone': 8,
+          'lang': 'zh-tw',
+          'list': [
+            rec(name: 'A'),
+            rec(name: 'B'),
+            rec(name: 'C', gachaType: '302'),
+            rec(name: 'D', gachaType: '301'),
+            rec(name: 'E', gachaType: '400'),
+          ],
+        },
+      ],
+      'hk4e_ugc': [
+        {
+          'uid': '100000001',
+          'timezone': 8,
+          'list': [
+            {
+              'id': dupId,
+              'schedule_id': '20',
+              'item_type': '裝扮部件',
+              'item_id': '260109',
+              'item_name': 'F',
+              'rank_type': '3',
+              'time': '2025-01-01 10:00:00',
+              'op_gacha_type': '20021',
+            },
+          ],
+        },
+      ],
+    });
+    final banners = onlyBanners(await importer.parse(bytes));
+    expect(
+      {for (final e in banners.entries) e.key: e.value.map((r) => r.name)},
+      {
+        '200': ['A'],
+        '302': ['C'],
+        '301': ['D'],
+        '2000': ['F'],
+      },
     );
-    expect(banners['200']!.map((r) => r.name), ['A']);
+  });
+
+  test('UTF-8 BOM is accepted', () async {
+    final bytes = Uint8List.fromList([
+      0xEF,
+      0xBB,
+      0xBF,
+      ...v4([rec()]),
+    ]);
+    expect(onlyBanners(await importer.parse(bytes))['200'], hasLength(1));
+  });
+
+  test('time in a DST spring-forward gap is accepted as-is', () async {
+    // 美東 2025-03-09 02:00～03:00 不存在；本地 round-trip 會在該時區誤判為非法時間。
+    const text = '2025-03-09 02:30:00';
+    expect(parseImportTime(text), DateTime.parse('2025-03-09T02:30:00'));
+    final record = onlyBanners(
+      await importer.parse(v4([rec(time: text)])),
+    )['200']!.single;
+    expect(record.time, DateTime.parse('2025-03-09T02:30:00'));
   });
 
   test('minor version newer than known still parses', () async {

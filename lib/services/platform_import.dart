@@ -146,8 +146,9 @@ DateTime? parseImportTime(String text) {
   final [y, mo, d, h, mi, s] = [
     for (var g = 1; g <= 6; g++) int.parse(m.group(g)!),
   ];
-  final t = DateTime(y, mo, d, h, mi, s);
-  // DateTime 會把 13 月、25 時之類的值進位成合法日期，要擋下來。
+  // DateTime 會把 13 月、25 時之類的值進位成合法日期，要擋下來；用 UTC 檢查，
+  // 本地時間落在日光節約跳過的那一小時時才不會被誤判。
+  final t = DateTime.utc(y, mo, d, h, mi, s);
   final valid =
       t.year == y &&
       t.month == mo &&
@@ -155,7 +156,7 @@ DateTime? parseImportTime(String text) {
       t.hour == h &&
       t.minute == mi &&
       t.second == s;
-  return valid ? t : null;
+  return valid ? DateTime(y, mo, d, h, mi, s) : null;
 }
 
 /// 對 [records]（來源順序）呼叫 [assignSubstituteIds]；同一卡池、同一秒的替代記錄

@@ -114,7 +114,7 @@ class UigfImporter implements PlatformImporter {
     final Object? raw;
     try {
       final text = utf8.decode(bytes);
-      raw = jsonDecode(text.startsWith('﻿') ? text.substring(1) : text);
+      raw = jsonDecode(text.startsWith('\uFEFF') ? text.substring(1) : text);
     } on FormatException catch (e, st) {
       _log.warning('uigf import: not valid UTF-8 JSON', e, st);
       throw const FormatException('Invalid JSON');
@@ -162,23 +162,26 @@ class UigfImporter implements PlatformImporter {
     final now = DateTime.now().toUtc();
     final accounts = <ExportedAccount>[];
     for (final MapEntry(key: uid, value: list) in byUid.entries) {
-      // 新帳號匯入時不經過合併，檔案內重複的官方 id 要在這裡去掉（保留第一筆）。
-      final seen = <String>{};
-      final unique = [
-        for (final r in list)
-          if (!isOfficialId(r.id) || seen.add(r.id)) r,
-      ];
-      if (unique.length != list.length) {
-        _log.warning(
-          'uigf import: dropped duplicate official ids uid=${sanitizeUid(uid)} '
-          'count=${list.length - unique.length}',
-        );
-      }
       // 替代 id 的序號只看卡池與秒，不分 UID，所以要逐帳號產生。
-      final withIds = assignSubstituteIdsOrReject('uigf', unique);
+      final withIds = assignSubstituteIdsOrReject('uigf', list);
       final banners = <String, List<GachaRecord>>{};
+      // 新帳號匯入時不經過合併，同一卡池內重複的官方 id 要在這裡去掉（保留第一筆）；
+      // 範圍與 mergeBannerRecords 相同，不跨卡池（祈願與頌願互不影響）。
+      final seen = <(String, String)>{};
+      final dropped = <String, int>{};
       for (final r in withIds) {
-        (banners[bannerKeyFor(r.gachaType)] ??= []).add(r);
+        final key = bannerKeyFor(r.gachaType);
+        if (isOfficialId(r.id) && !seen.add((key, r.id))) {
+          dropped.update(key, (n) => n + 1, ifAbsent: () => 1);
+          continue;
+        }
+        (banners[key] ??= []).add(r);
+      }
+      if (dropped.isNotEmpty) {
+        _log.warning(
+          'uigf import: dropped duplicate official ids '
+          'uid=${sanitizeUid(uid)} banners=$dropped',
+        );
       }
       for (final b in banners.values) {
         b.sort(compareRecordsNewestFirst);
@@ -315,7 +318,9 @@ class UigfImporter implements PlatformImporter {
         }
         final name = _str(item[src.odes ? 'item_name' : 'name']);
         final itemId = _str(item['item_id']);
-        // 頌願照 App 抓官方的方式存：名稱與星級是規範必填，缺 lang 就留空，不找 resolver 補。
+        // UIGF v4.2 的 hk4e_ugc 記錄 schema 把 item_name、rank_type 列為必填，缺了就拒絕；
+        // lang 只在帳號層級且選填，沒有就存空字串、不找 resolver 補（頌願不做語言轉換，
+        // 之後抓官方資料時會用網址的 lang 回填）。
         final String? lang;
         if (src.odes) {
           if (name == null) _reject(where, 'missing item_name');

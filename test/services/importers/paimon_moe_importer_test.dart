@@ -246,9 +246,13 @@ void main() {
     }
   });
 
-  test('unknown banner sheet throws UnknownGachaTypeException', () async {
+  test('unknown banner sheets throw one UnknownGachaTypeException', () async {
     final bytes = buildPaimonXlsx({
+      'Standard': [paimonRow('Weapon', 'Cool Steel', 'not a time', 3)],
       'Mystery Wish': [
+        paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
+      ],
+      'Another Wish': [
         paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
       ],
     });
@@ -257,6 +261,7 @@ void main() {
       throwsA(
         isA<UnknownGachaTypeException>().having((e) => e.types, 'types', {
           'Mystery Wish',
+          'Another Wish',
         }),
       ),
     );
