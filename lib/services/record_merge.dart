@@ -61,7 +61,7 @@ List<GachaRecord> assignSubstituteIds(List<GachaRecord> recordsInSourceOrder) {
 ///
 /// 與替代 `id` 用同一組欄位，且不受 `isUtc` 影響：同一個牆鐘秒不論是 UTC 或本地
 /// `DateTime`，都視為同一秒。
-int _wallClockSecond(DateTime time) =>
+int wallClockSecond(DateTime time) =>
     ((((time.year * 100 + time.month) * 100 + time.day) * 100 + time.hour) *
                 100 +
             time.minute) *
@@ -70,14 +70,14 @@ int _wallClockSecond(DateTime time) =>
 
 /// 卡池內的排序：`time` 由新到舊（依牆鐘秒），同一秒依 `id` 由大到小。
 int compareRecordsNewestFirst(GachaRecord a, GachaRecord b) {
-  final byTime = _wallClockSecond(b.time).compareTo(_wallClockSecond(a.time));
+  final byTime = wallClockSecond(b.time).compareTo(wallClockSecond(a.time));
   return byTime != 0 ? byTime : b.id.compareTo(a.id);
 }
 
 /// 合併同一卡池 key 的本機 [local] 與傳入 [incoming] 記錄，依
 /// [compareRecordsNewestFirst] 排序後回傳。
 ///
-/// 以「同一秒」（牆鐘秒，見 [_wallClockSecond]）為單位比對（設計文件〈五〉）：
+/// 以「同一秒」（牆鐘秒，見 [wallClockSecond]）為單位比對（設計文件〈五〉）：
 /// 1. 這一秒有官方記錄 → 兩邊官方記錄依 `id` 聯集（同 `id` 保留本機，必要時回填
 ///    `lang`、把 `301` 修正為 `400`），這一秒的替代記錄全部捨棄。
 /// 2. 兩邊都只有替代記錄 → 取筆數較多的一組，同筆數用與來源順序無關的規則挑一組。
@@ -91,14 +91,14 @@ List<GachaRecord> mergeBannerRecords(
   final incomingSubs = <int, List<GachaRecord>>{};
   for (final r in local) {
     if (isSubstituteId(r.id)) {
-      (localSubs[_wallClockSecond(r.time)] ??= []).add(r);
+      (localSubs[wallClockSecond(r.time)] ??= []).add(r);
     } else {
       officialById[r.id] = r;
     }
   }
   for (final r in incoming) {
     if (isSubstituteId(r.id)) {
-      (incomingSubs[_wallClockSecond(r.time)] ??= []).add(r);
+      (incomingSubs[wallClockSecond(r.time)] ??= []).add(r);
       continue;
     }
     final existing = officialById[r.id];
@@ -120,7 +120,7 @@ List<GachaRecord> mergeBannerRecords(
   final officialCountByTime = <int, int>{};
   for (final r in officialById.values) {
     officialCountByTime.update(
-      _wallClockSecond(r.time),
+      wallClockSecond(r.time),
       (n) => n + 1,
       ifAbsent: () => 1,
     );
