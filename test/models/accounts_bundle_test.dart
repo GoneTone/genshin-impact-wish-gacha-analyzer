@@ -55,7 +55,7 @@ void main() {
     },
   );
 
-  test('schema_version > currentSchemaVersion throws '
+  test('schema_version > maxReadableSchemaVersion throws '
       'UnsupportedSchemaVersionException', () {
     final json = {
       'schema_version': 999,
@@ -175,5 +175,46 @@ void main() {
       accounts: const [],
     );
     expect(bundle.toJson()['app'], accountsBundleAppId);
+  });
+
+  AccountsBundle bundleWith(String recordId) => AccountsBundle(
+    exportedAt: DateTime.utc(2026, 6, 9),
+    appVersion: '1.0.0',
+    lastActiveUid: null,
+    accounts: [
+      ExportedAccount(
+        data: BannerStorage(
+          uid: 'A',
+          lastUpdated: DateTime.utc(2026),
+          banners: {
+            '301': [_r(recordId, uid: 'A')],
+          },
+        ),
+      ),
+    ],
+  );
+
+  test('bundle without substitute records writes version 1', () {
+    expect(bundleWith('1700000000000000001').toJson()['schema_version'], 1);
+  });
+
+  test('bundle with a substitute record writes version 2', () {
+    expect(bundleWith('0000000001').toJson()['schema_version'], 2);
+  });
+
+  test('reader accepts 1 and 2, rejects 3', () {
+    Map<String, dynamic> v(int n) => {'schema_version': n, 'accounts': []};
+    expect(AccountsBundle.fromJson(v(1)).accounts, isEmpty);
+    expect(AccountsBundle.fromJson(v(2)).accounts, isEmpty);
+    expect(
+      () => AccountsBundle.fromJson(v(3)),
+      throwsA(isA<UnsupportedSchemaVersionException>()),
+    );
+  });
+
+  test('reader with max 1 rejects bundle containing substitute records', () {
+    const oldReaderMax = 1;
+    final version = bundleWith('0000000001').toJson()['schema_version'] as int;
+    expect(version > oldReaderMax, isTrue);
   });
 }

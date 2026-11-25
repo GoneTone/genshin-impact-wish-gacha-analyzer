@@ -79,7 +79,7 @@ AccountsBundle _bundle(
 }) => AccountsBundle.fromJson(
   jsonDecode(
         jsonEncode({
-          'schema_version': AccountsBundle.currentSchemaVersion,
+          'schema_version': 1,
           'app': accountsBundleAppId,
           'exported_at': '2026-07-06T00:00:00.000Z',
           'app_version': '1.6.0',

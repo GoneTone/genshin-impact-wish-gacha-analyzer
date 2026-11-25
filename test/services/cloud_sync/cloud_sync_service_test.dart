@@ -32,7 +32,7 @@ String _bundleJson({
   Map<String, String> aliases = const {},
   Map<String, String> aliasTimes = const {},
 }) => jsonEncode({
-  'schema_version': schema ?? AccountsBundle.currentSchemaVersion,
+  'schema_version': schema ?? 1,
   'app': accountsBundleAppId,
   'exported_at': '2026-07-06T00:00:00.000Z',
   'app_version': '1.6.0',
@@ -348,7 +348,9 @@ void main() {
 
     test('雲端 schema 過新 → 跳過整輪：不合併、不上傳、不清 pendingRemovals', () async {
       final remote = _FakeRemote(
-        content: _bundleJson(schema: AccountsBundle.currentSchemaVersion + 1),
+        content: _bundleJson(
+          schema: AccountsBundle.maxReadableSchemaVersion + 1,
+        ),
       );
       var applied = false;
       var cleared = false;

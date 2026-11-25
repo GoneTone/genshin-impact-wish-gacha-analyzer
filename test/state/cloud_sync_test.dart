@@ -37,7 +37,7 @@ import '../helpers/wait_until.dart';
 
 /// 產生雲端側 bundle JSON；[withRecord] 為 true 時帶一筆 301 五星記錄。
 String _cloudBundleJson(String uid, {bool withRecord = false}) => jsonEncode({
-  'schema_version': AccountsBundle.currentSchemaVersion,
+  'schema_version': 1,
   'app': accountsBundleAppId,
   'exported_at': '2026-07-06T00:00:00.000Z',
   'app_version': '1.6.0',
@@ -272,7 +272,7 @@ void main() {
   test('雲端 schema 過新 → error(schemaTooNew)、不上傳', () async {
     final map =
         jsonDecode(_cloudBundleJson('800000001')) as Map<String, dynamic>;
-    map['schema_version'] = AccountsBundle.currentSchemaVersion + 1;
+    map['schema_version'] = AccountsBundle.maxReadableSchemaVersion + 1;
     remote.content = jsonEncode(map);
     final container = await makeContainer();
 
