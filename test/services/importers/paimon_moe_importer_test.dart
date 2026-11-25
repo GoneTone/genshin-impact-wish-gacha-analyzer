@@ -320,6 +320,26 @@ void main() {
     expect(assigned.schemaVersion, 2);
   });
 
+  test('stampLastUpdated sets every account and keeps records', () async {
+    final bundle = assignTargetUid(
+      await importer.parse(
+        buildPaimonXlsx({
+          'Standard': [
+            paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
+          ],
+        }),
+      ),
+      '812345678',
+    );
+    final at = DateTime.utc(2026, 11, 25, 12);
+    final stamped = stampLastUpdated(bundle, at);
+    final storage = stamped.accounts.single.data;
+    expect(storage.lastUpdated, at);
+    expect(storage.uid, '812345678');
+    expect(storage.banners, bundle.accounts.single.data.banners);
+    expect(stamped.lastActiveUid, '812345678');
+  });
+
   test('isValidUid', () {
     expect(isValidUid('812345678'), isTrue);
     expect(isValidUid('1812345678'), isTrue);

@@ -771,13 +771,14 @@ class _DataManagement extends ConsumerWidget {
   /// 拿到（已解析的）[bundle] 後的共用匯入下游：帳號挑選 → 確認 → 寫入＋補圖。
   /// 由本軟體備份匯入（[_import]）與第三方平台匯入（[_importFromPlatform]）共用。
   ///
-  /// [checkOverlap] 只有第三方匯入為 true：對本機已有的帳號做重疊檢查（設計文件
-  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」。
+  /// [fromPlatform] 只有第三方匯入為 true：對本機已有的帳號做重疊檢查（設計文件
+  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」；確認後把「最後更新」
+  /// 設為按下匯入的時刻。
   Future<void> _runBundleImport(
     BuildContext ctx,
     WidgetRef ref,
     AccountsBundle bundle, {
-    bool checkOverlap = false,
+    bool fromPlatform = false,
   }) async {
     final l = AppLocalizations.of(ctx)!;
 
@@ -855,7 +856,7 @@ class _DataManagement extends ConsumerWidget {
       buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
     }
 
-    final warning = checkOverlap
+    final warning = fromPlatform
         ? _overlapWarning(l, ref, filteredBundle)
         : null;
     final ok = await showConfirmDialog(
@@ -874,7 +875,11 @@ class _DataManagement extends ConsumerWidget {
     unawaited(
       ref
           .read(gachaRepositoryProvider.notifier)
-          .importAccountsAndFetchHoYoWiki(filteredBundle),
+          .importAccountsAndFetchHoYoWiki(
+            fromPlatform
+                ? stampLastUpdated(filteredBundle, DateTime.now().toUtc())
+                : filteredBundle,
+          ),
     );
   }
 
@@ -997,7 +1002,7 @@ class _DataManagement extends ConsumerWidget {
       );
       bundle = assignTargetUid(bundle, uid);
     }
-    await _runBundleImport(ctx, ref, bundle, checkOverlap: true);
+    await _runBundleImport(ctx, ref, bundle, fromPlatform: true);
   }
 
   /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。

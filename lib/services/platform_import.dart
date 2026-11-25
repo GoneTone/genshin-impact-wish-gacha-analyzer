@@ -127,6 +127,23 @@ AccountsBundle assignTargetUid(AccountsBundle bundle, String uid) =>
       ],
     );
 
+/// 把 [bundle] 每個帳號的「最後更新」設為 [at]；第三方匯入在使用者按下「匯入」
+/// 時呼叫，讓時間落在寫入的那一刻，而不是讀檔的時候。
+AccountsBundle stampLastUpdated(AccountsBundle bundle, DateTime at) =>
+    AccountsBundle(
+      exportedAt: bundle.exportedAt,
+      appVersion: bundle.appVersion,
+      lastActiveUid: bundle.lastActiveUid,
+      accounts: [
+        for (final a in bundle.accounts)
+          ExportedAccount(
+            data: a.data.copyWith(lastUpdated: at),
+            alias: a.alias,
+            aliasUpdatedAt: a.aliasUpdatedAt,
+          ),
+      ],
+    );
+
 /// UID 格式檢查：9～10 位數字。
 final _uidPattern = RegExp(r'^\d{9,10}$');
 
