@@ -110,12 +110,27 @@ class PaimonMoeImporter implements PlatformImporter {
     try {
       withIds = assignSubstituteIds(records);
     } on ArgumentError catch (e, st) {
+      final perSecond = <(String, DateTime), int>{};
+      for (final r in records) {
+        perSecond.update(
+          (bannerKeyFor(r.gachaType), r.time),
+          (n) => n + 1,
+          ifAbsent: () => 1,
+        );
+      }
+      final (banner, time) = perSecond.entries
+          .firstWhere((e) => e.value > 100)
+          .key;
+      final sheet = _sheetGachaTypes.entries
+          .firstWhere((e) => e.value == banner)
+          .key;
       _log.warning(
-        'paimon_moe import: more than 100 rows in one second',
+        'paimon_moe import: more than 100 rows in one second '
+        'sheet="$sheet" banner=$banner time=$time',
         e,
         st,
       );
-      throw const FormatException('More than 100 records in one second');
+      throw FormatException('Sheet $sheet has more than 100 records at $time');
     }
 
     final banners = <String, List<GachaRecord>>{};
@@ -221,8 +236,6 @@ class PaimonMoeImporter implements PlatformImporter {
   /// 文字或數值儲存格轉成去頭尾空白的字串；空儲存格回 null。
   static String? _text(CellValue? v) => switch (v) {
     null => null,
-    TextCellValue() => v.value.toString().trim(),
-    IntCellValue() => '${v.value}',
     _ => v.toString().trim(),
   };
 
@@ -244,6 +257,9 @@ class PaimonMoeImporter implements PlatformImporter {
     switch (v) {
       case DateTimeCellValue():
         return DateTime(v.year, v.month, v.day, v.hour, v.minute, v.second);
+      // excel_community 把整數序列值（剛好 00:00:00）讀成 DateCellValue，即使格式含時間。
+      case DateCellValue():
+        return DateTime(v.year, v.month, v.day);
       case TextCellValue():
         final m = _timePattern.firstMatch(v.value.toString().trim());
         if (m == null) return null;

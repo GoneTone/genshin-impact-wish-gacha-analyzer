@@ -133,6 +133,15 @@ void main() {
     });
   });
 
+  test('midnight excel date cell keeps the whole timestamp', () async {
+    final banners = await parseBanners({
+      'Standard': [paimonRow('Weapon', 'Midnight', DateTime(2025, 12, 1), 3)],
+    });
+    final record = banners['200']!.single;
+    expect(record.time, DateTime(2025, 12, 1));
+    expect(record.toStorageJson()['time'], '2025-12-01 00:00:00');
+  });
+
   test('columns located by header name not position', () async {
     final bytes = buildXlsx({
       'Standard': [
