@@ -173,18 +173,7 @@ Future<void> generateAndShareImage({
   // 預載 + 離屏渲染期間顯示不可關閉的「生成中」進度視窗；closeProgress 可重複
   // 呼叫，渲染一完成（早於存檔系統視窗／複製結果通知）即關閉，catch 與 finally
   // 再各呼叫一次當保險，確保任何路徑都不會卡住進度視窗。
-  var progressOpen = false;
-
-  /// 進度視窗仍開著且 context 還掛著時關閉它。
-  void closeProgress() {
-    if (progressOpen && context.mounted) {
-      Navigator.of(context, rootNavigator: true).pop();
-      progressOpen = false;
-    }
-  }
-
-  showShareProgressDialog(context);
-  progressOpen = true;
+  final closeProgress = showShareProgressDialog(context);
 
   ui.Image? icon;
   Map<String, ui.Image>? preloaded;

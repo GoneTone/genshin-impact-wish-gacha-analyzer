@@ -939,7 +939,6 @@ class _DataManagement extends ConsumerWidget {
     if (bytes == null || !ctx.mounted) return;
 
     final lang = ref.read(dataLanguageProvider);
-    final navigator = Navigator.of(ctx, rootNavigator: true);
     final resolver = _ProgressItemResolver(
       UigfItemResolver(
         client: ref.read(httpClientProvider),
@@ -948,31 +947,42 @@ class _DataManagement extends ConsumerWidget {
             ? lang
             : 'en-us',
       ),
-      onFirstUse: () =>
-          showBlockingProgressDialog(navigator.context, l.importResolvingItems),
+      open: () => ctx.mounted
+          ? showBlockingProgressDialog(ctx, l.importResolvingItems)
+          : null,
     );
-    final AccountsBundle parsed;
+    AccountsBundle? parsed;
+    String? reason;
     try {
       parsed = await platform.parse(bytes, resolver: resolver);
-    } on Exception catch (e, st) {
-      log.warning('platform import rejected platform=${platform.id}', e, st);
-      if (!ctx.mounted) return;
-      _showImportFailed(ctx, switch (e) {
-        ForeignBundleException() => l.importReasonNotPlatformFile(
-          platform.displayName(l),
-        ),
-        UigfVersionTooNewException(:final version) =>
-          l.importReasonUigfVersionTooNew(version),
-        UnknownGachaTypeException(:final types) =>
-          l.importReasonUnknownGachaType(types.join(', ')),
-        ItemResolveException(:final item) => l.importReasonItemUnresolved(item),
-        _ => l.importReasonInvalidFormat,
-      });
-      return;
+    } on ForeignBundleException catch (e, st) {
+      log.warning(
+        'platform import: foreign file platform=${platform.id}',
+        e,
+        st,
+      );
+      reason = l.importReasonNotPlatformFile(platform.displayName(l));
+    } on UigfVersionTooNewException catch (e, st) {
+      log.warning('platform import: uigf version too new', e, st);
+      reason = l.importReasonUigfVersionTooNew(e.version);
+    } on UnknownGachaTypeException catch (e, st) {
+      log.warning('platform import: unknown gacha types', e, st);
+      reason = l.importReasonUnknownGachaType(e.types.join(', '));
+    } on ItemResolveException catch (e, st) {
+      log.warning('platform import: item unresolved', e, st);
+      reason = l.importReasonItemUnresolved(e.item);
+    } catch (e, st) {
+      // FormatException 以外的非預期錯誤也要讓使用者看到失敗訊息。
+      log.warning('platform import failed platform=${platform.id}', e, st);
+      reason = l.importReasonInvalidFormat;
     } finally {
-      if (resolver.used) navigator.pop();
+      resolver.close();
     }
     if (!ctx.mounted) return;
+    if (parsed == null) {
+      _showImportFailed(ctx, reason ?? l.importReasonInvalidFormat);
+      return;
+    }
 
     var bundle = parsed;
     if (platform.requiresTargetUid) {
@@ -1693,27 +1703,33 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
   }
 }
 
-/// 第一次需要補資料時先呼叫 [onFirstUse]（顯示進度對話框）的 [ItemResolver] 包裝；
+/// 第一次需要補資料時才呼叫 [open]（顯示進度對話框）的 [ItemResolver] 包裝；
 /// UIGF 檔欄位齊全時不會呼叫 resolver，也就不會閃出對話框。
 class _ProgressItemResolver implements ItemResolver {
   /// 建立 [_ProgressItemResolver]，實際查詢交給 [_inner]。
-  _ProgressItemResolver(this._inner, {required this.onFirstUse});
+  _ProgressItemResolver(this._inner, {required this.open});
 
   /// 實際查詢名稱與星級的 resolver。
   final ItemResolver _inner;
 
-  /// 第一次被呼叫時執行一次。
-  final VoidCallback onFirstUse;
+  /// 開啟進度對話框並回傳關閉它的函式；無法開啟時回 null。
+  final CloseProgressDialog? Function() open;
 
-  /// 是否已被呼叫過（呼叫端據此關閉進度對話框）。
-  bool used = false;
+  /// 是否已開過進度對話框。
+  bool _opened = false;
 
-  /// 第一次呼叫時標記並執行 [onFirstUse]。
+  /// 關閉進度對話框的函式；尚未開啟時為 null。
+  CloseProgressDialog? _close;
+
+  /// 第一次呼叫時開啟進度對話框。
   void _markUsed() {
-    if (used) return;
-    used = true;
-    onFirstUse();
+    if (_opened) return;
+    _opened = true;
+    _close = open();
   }
+
+  /// 關閉進度對話框（若有開啟）；可重複呼叫。
+  void close() => _close?.call();
 
   @override
   Future<({String name, String lang})> nameFor(String itemId) {

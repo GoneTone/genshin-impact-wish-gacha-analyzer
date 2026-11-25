@@ -82,6 +82,23 @@ Widget _wrap(ProviderContainer container) => UncontrolledProviderScope(
   ),
 );
 
+/// 一筆只有 `item_id`、缺名稱的 UIGF v3 檔，匯入時一定要向 resolver 補名稱。
+final _unresolvableUigf = jsonEncode({
+  'info': {'uid': '100000001', 'uigf_version': 'v3.0'},
+  'list': [
+    {
+      'gacha_type': '200',
+      'item_id': '11101',
+      'count': '1',
+      'time': '2025-01-01 10:00:00',
+      'item_type': '武器',
+      'rank_type': '3',
+      'id': '1735696800000000001',
+      'uigf_gacha_type': '200',
+    },
+  ],
+});
+
 /// 最近一次選檔對話框收到的標題。
 String? openTitle;
 
@@ -345,25 +362,10 @@ void main() {
     'then the unresolved message',
     (tester) async {
       final gate = Completer<http.Response>();
-      final file = jsonEncode({
-        'info': {'uid': '100000001', 'uigf_version': 'v3.0'},
-        'list': [
-          {
-            'gacha_type': '200',
-            'item_id': '11101',
-            'count': '1',
-            'time': '2025-01-01 10:00:00',
-            'item_type': '武器',
-            'rank_type': '3',
-            'id': '1735696800000000001',
-            'uigf_gacha_type': '200',
-          },
-        ],
-      });
       await importFromPlatform(
         tester,
         'UIGF',
-        Uint8List.fromList(utf8.encode(file)),
+        Uint8List.fromList(utf8.encode(_unresolvableUigf)),
         httpClient: MockClient((_) => gate.future),
       );
 
@@ -507,4 +509,73 @@ void main() {
       await tester.pumpAndSettle();
     },
   );
+
+  testWidgets(
+    'a dialog opened above the resolving dialog stays after resolving ends',
+    (tester) async {
+      final gate = Completer<http.Response>();
+      await importFromPlatform(
+        tester,
+        'UIGF',
+        Uint8List.fromList(utf8.encode(_unresolvableUigf)),
+        httpClient: MockClient((_) => gate.future),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('正在補齊物品資料...'), findsOneWidget);
+
+      // 模擬補資料期間自動跳出的對話框（例如新版本提示）。
+      unawaited(
+        showDialog<void>(
+          context: tester.element(find.byType(SettingsPage)),
+          builder: (_) => const AlertDialog(content: Text('new version')),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+
+      gate.complete(http.Response('', 500));
+      await tester.pumpAndSettle();
+
+      expect(find.text('正在補齊物品資料...'), findsNothing);
+      expect(find.text('new version'), findsOneWidget);
+    },
+  );
+
+  for (final (name, file, message) in [
+    (
+      'a newer UIGF version',
+      '{"info":{"uigf_version":"v5.0"},"hk4e":[]}',
+      '匯入失敗：這個檔案的 UIGF 版本（v5.0）較新，目前還不支援。請更新 App，或在原工具改用 v4 匯出',
+    ),
+    (
+      'an unknown gacha type',
+      jsonEncode({
+        'info': {'uid': '100000001', 'lang': 'zh-tw', 'uigf_version': 'v3.0'},
+        'list': [
+          {
+            'gacha_type': '999',
+            'count': '1',
+            'time': '2025-01-01 10:00:00',
+            'name': '冷刃',
+            'item_type': '武器',
+            'rank_type': '3',
+            'id': '1735696800000000001',
+            'uigf_gacha_type': '999',
+          },
+        ],
+      }),
+      '匯入失敗：檔案裡有不支援的卡池類型（999）',
+    ),
+    ('invalid JSON', '{ not json', '匯入失敗：檔案格式不正確或已損毀'),
+  ]) {
+    testWidgets('UIGF import with $name shows its message', (tester) async {
+      await importFromPlatform(
+        tester,
+        'UIGF',
+        Uint8List.fromList(utf8.encode(file)),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(message), findsOneWidget);
+      expect(find.byType(Dialog), findsNothing);
+    });
+  }
 }

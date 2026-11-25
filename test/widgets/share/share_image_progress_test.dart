@@ -27,6 +27,12 @@ class _DialogCounter extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is PopupRoute) open--;
   }
+
+  // 進度視窗以 removeRoute 關閉（只移除自己的 route），走的是 didRemove。
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route is PopupRoute) open--;
+  }
 }
 
 /// 以真實 event loop 推進非同步工作（icon 解碼、離屏渲染），直到 [done] 成立。
