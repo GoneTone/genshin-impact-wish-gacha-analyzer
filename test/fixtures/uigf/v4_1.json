@@ -1,0 +1,77 @@
+{
+  "info": {
+    "export_timestamp": 1748750400,
+    "export_app": "fixture-exporter",
+    "export_app_version": "v1.0.0",
+    "version": "v4.1"
+  },
+  "hk4e": [
+    {
+      "uid": "100000001",
+      "timezone": 8,
+      "lang": "zh-tw",
+      "list": [
+        {
+          "uigf_gacha_type": "200",
+          "gacha_type": "200",
+          "item_id": "11301",
+          "count": "1",
+          "time": "2025-01-01 10:00:00",
+          "name": "冷刃",
+          "item_type": "武器",
+          "rank_type": "3",
+          "id": "1735696800000000001"
+        }
+      ]
+    },
+    {
+      "uid": 100000002,
+      "timezone": 8,
+      "lang": "en-us",
+      "list": [
+        {
+          "uigf_gacha_type": "302",
+          "gacha_type": "302",
+          "item_id": "15302",
+          "count": "1",
+          "time": "2025-02-01 10:00:00",
+          "name": "Slingshot",
+          "item_type": "Weapon",
+          "rank_type": "3",
+          "id": "1738375200000000001"
+        },
+        {
+          "uigf_gacha_type": "500",
+          "gacha_type": "500",
+          "item_id": "1032",
+          "count": "1",
+          "time": "2025-02-02 10:00:00",
+          "name": "Bennett",
+          "item_type": "Character",
+          "rank_type": "4",
+          "id": "1738461600000000001"
+        }
+      ]
+    }
+  ],
+  "hkrpg": [
+    {
+      "uid": "100000009",
+      "timezone": 8,
+      "lang": "en-us",
+      "list": [
+        {
+          "gacha_id": "1001",
+          "gacha_type": "11",
+          "item_id": "1001",
+          "count": "1",
+          "time": "2025-01-01 10:00:00",
+          "name": "March 7th",
+          "item_type": "Character",
+          "rank_type": "4",
+          "id": "1735696800000000009"
+        }
+      ]
+    }
+  ]
+}

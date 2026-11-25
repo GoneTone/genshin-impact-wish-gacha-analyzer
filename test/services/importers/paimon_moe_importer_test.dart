@@ -246,13 +246,20 @@ void main() {
     }
   });
 
-  test('unknown banner sheet throws FormatException', () async {
+  test('unknown banner sheet throws UnknownGachaTypeException', () async {
     final bytes = buildPaimonXlsx({
       'Mystery Wish': [
         paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
       ],
     });
-    await expectLater(importer.parse(bytes), throwsFormatException);
+    await expectLater(
+      importer.parse(bytes),
+      throwsA(
+        isA<UnknownGachaTypeException>().having((e) => e.types, 'types', {
+          'Mystery Wish',
+        }),
+      ),
+    );
   });
 
   test('more than 100 rows in one second throws FormatException', () async {

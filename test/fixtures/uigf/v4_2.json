@@ -1,0 +1,103 @@
+{
+  "info": {
+    "export_timestamp": 1748750400,
+    "export_app": "fixture-exporter",
+    "export_app_version": "v1.0.0",
+    "version": "v4.2"
+  },
+  "hk4e": [
+    {
+      "uid": "100000001",
+      "timezone": 8,
+      "lang": "zh-tw",
+      "list": [
+        {
+          "uigf_gacha_type": "200",
+          "gacha_type": "200",
+          "item_id": "11301",
+          "count": "1",
+          "time": "2025-01-01 10:00:00",
+          "name": "冷刃",
+          "item_type": "武器",
+          "rank_type": "3",
+          "id": "1735696800000000001"
+        }
+      ]
+    }
+  ],
+  "hk4e_ugc": [
+    {
+      "uid": "100000001",
+      "timezone": 8,
+      "lang": "zh-tw",
+      "list": [
+        {
+          "id": "1761109800000000001",
+          "schedule_id": "18",
+          "item_type": "裝扮形錄",
+          "item_id": "270857",
+          "item_name": "部件形錄·「典雅半身裙·葉綠」",
+          "rank_type": "2",
+          "time": "2025-10-22 13:07:45",
+          "op_gacha_type": "1000"
+        },
+        {
+          "id": "1761217800000000001",
+          "schedule_id": "20",
+          "item_type": "裝扮部件",
+          "item_id": "260109",
+          "item_name": "女性裝扮·「熾烈長袖衫」",
+          "rank_type": "3",
+          "time": "2025-10-23 19:52:08",
+          "op_gacha_type": "20021"
+        },
+        {
+          "id": "1761217800000000002",
+          "schedule_id": "20",
+          "item_type": "裝扮套裝",
+          "item_id": "265044",
+          "item_name": "女性裝扮·「燭影狂歡夜」",
+          "rank_type": "5",
+          "time": "2025-10-23 19:52:09",
+          "op_gacha_type": "20011"
+        },
+        {
+          "id": "1761217800000000003",
+          "schedule_id": "20",
+          "item_type": "裝扮部件",
+          "item_id": "260109",
+          "item_name": "女性裝扮·「熾烈長袖衫」",
+          "rank_type": "3",
+          "time": "2025-10-23 19:52:10",
+          "op_gacha_type": "2000"
+        }
+      ]
+    },
+    {
+      "uid": "100000002",
+      "timezone": 8,
+      "list": [
+        {
+          "id": "1761217800000000101",
+          "schedule_id": "20",
+          "item_type": "装扮部件",
+          "item_id": "260109",
+          "item_name": "女性装扮·「炽烈长袖衫」",
+          "rank_type": "3",
+          "time": "2025-10-23 19:52:08",
+          "op_gacha_type": "20022"
+        },
+        {
+          "id": "1761217800000000102",
+          "schedule_id": "20",
+          "item_type": "装扮形录",
+          "item_id": "275016",
+          "item_name": "套装形录·「异想街区」",
+          "rank_type": "4",
+          "time": "2025-10-23 19:52:09",
+          "op_gacha_type": "20012"
+        }
+      ]
+    }
+  ]
+}

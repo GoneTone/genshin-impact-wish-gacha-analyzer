@@ -1,18 +1,26 @@
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/importers/paimon_moe_importer.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/importers/uigf_importer.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
+
+/// Logger 實例（第三方平台匯入）。
+final _log = Logger('wish.import.platform');
 
 /// 補齊匯入記錄缺少的名稱與星級（例如 UIGF 選填欄位不存在時），需要網路的部分
 /// 由實作負責，方便測試時注入假資料。
 abstract interface class ItemResolver {
-  /// 依 [itemId] 回傳 [lang]（App 語言代碼，如 `zh-tw`）的名稱；查無丟
-  /// [ItemResolveException]。
-  Future<String> nameFor(String itemId, String lang);
+  /// 依 [itemId] 回傳名稱與該名稱的語言（App 語言代碼，如 `zh-tw`；目標語言由
+  /// 實作決定）；查無丟 [ItemResolveException]。
+  Future<({String name, String lang})> nameFor(String itemId);
 
   /// 依 [name] 與 [lang] 回傳 1～5 星；查無丟 [ItemResolveException]。
   Future<int> rankFor(String name, String lang);
@@ -31,6 +39,30 @@ class ItemResolveException implements Exception {
 
   @override
   String toString() => 'ItemResolveException($reason: $item)';
+}
+
+/// UIGF 檔的主版本號比支援的（v4）新時拋出。
+class UigfVersionTooNewException implements Exception {
+  /// 建立 [UigfVersionTooNewException]。
+  const UigfVersionTooNewException(this.version);
+
+  /// 檔案宣告的版本字串（如 `v5.0`）。
+  final String version;
+
+  @override
+  String toString() => 'UigfVersionTooNewException($version)';
+}
+
+/// 匯入檔含有不認得的卡池類型（或 paimon.moe 分頁）時拋出；整份拒絕。
+class UnknownGachaTypeException implements Exception {
+  /// 建立 [UnknownGachaTypeException]。
+  const UnknownGachaTypeException(this.types);
+
+  /// 檔案中所有不認得的卡池類型（或分頁名）。
+  final Set<String> types;
+
+  @override
+  String toString() => 'UnknownGachaTypeException($types)';
 }
 
 /// 第三方平台匯入器：把該平台的匯出檔轉成本軟體的 [AccountsBundle]，之後接回
@@ -65,7 +97,10 @@ abstract interface class PlatformImporter {
 }
 
 /// 已支援的第三方平台清單。新增平台時在此追加。
-const List<PlatformImporter> kPlatformImporters = [PaimonMoeImporter()];
+const List<PlatformImporter> kPlatformImporters = [
+  UigfImporter(),
+  PaimonMoeImporter(),
+];
 
 /// 把 [bundle] 每個帳號的 UID 與每筆記錄的 `uid` 改成 [uid]，作用中 UID 也設為
 /// [uid]（用於 [PlatformImporter.requiresTargetUid] 的平台）。
@@ -97,3 +132,59 @@ final _uidPattern = RegExp(r'^\d{9,10}$');
 
 /// [uid] 是否符合原神 UID 格式（9～10 位數字）。
 bool isValidUid(String uid) => _uidPattern.hasMatch(uid);
+
+/// 匯入檔時間字串格式 `yyyy-MM-dd HH:mm:ss`。
+final _importTimePattern = RegExp(
+  r'^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$',
+);
+
+/// 把 `yyyy-MM-dd HH:mm:ss` 的 [text] 原樣解析為本地 [DateTime]，不做時區換算；
+/// 格式不符或日期不存在（如 13 月、25 時）回 null。
+DateTime? parseImportTime(String text) {
+  final m = _importTimePattern.firstMatch(text);
+  if (m == null) return null;
+  final [y, mo, d, h, mi, s] = [
+    for (var g = 1; g <= 6; g++) int.parse(m.group(g)!),
+  ];
+  final t = DateTime(y, mo, d, h, mi, s);
+  // DateTime 會把 13 月、25 時之類的值進位成合法日期，要擋下來。
+  final valid =
+      t.year == y &&
+      t.month == mo &&
+      t.day == d &&
+      t.hour == h &&
+      t.minute == mi &&
+      t.second == s;
+  return valid ? t : null;
+}
+
+/// 對 [records]（來源順序）呼叫 [assignSubstituteIds]；同一卡池、同一秒的替代記錄
+/// 超過 100 筆（序號用完）時記 log 並丟 [FormatException]。[platform] 寫進 log。
+List<GachaRecord> assignSubstituteIdsOrReject(
+  String platform,
+  List<GachaRecord> records,
+) {
+  try {
+    return assignSubstituteIds(records);
+  } on ArgumentError catch (e, st) {
+    final perSecond = <(String, DateTime), int>{};
+    for (final r in records) {
+      if (isOfficialId(r.id)) continue;
+      perSecond.update(
+        (bannerKeyFor(r.gachaType), r.time),
+        (n) => n + 1,
+        ifAbsent: () => 1,
+      );
+    }
+    final (banner, time) = perSecond.entries
+        .firstWhere((e) => e.value > 100)
+        .key;
+    _log.warning(
+      '$platform import: more than 100 substitute records in one second '
+      'banner=$banner time=$time',
+      e,
+      st,
+    );
+    throw FormatException('Banner $banner has more than 100 records at $time');
+  }
+}

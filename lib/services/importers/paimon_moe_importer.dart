@@ -31,11 +31,6 @@ const _sheetGachaTypes = {
 /// 不含祈願記錄、直接略過的分頁。
 const _ignoredSheets = {'Banner List', 'Information'};
 
-/// `Time` 文字儲存格格式 `yyyy-MM-dd HH:mm:ss`。
-final _timePattern = RegExp(
-  r'^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$',
-);
-
 /// paimon.moe（paimon.moe）Wish History 的 Excel 匯出檔匯入器。
 ///
 /// 檔案沒有 UID 也沒有官方 `id`：產出一個 UID 為空字串的帳號（由呼叫端以
@@ -101,37 +96,12 @@ class PaimonMoeImporter implements PlatformImporter {
       final gachaType = _sheetGachaTypes[name];
       if (gachaType == null) {
         _log.warning('paimon_moe import: unknown sheet sheet="$name"');
-        throw FormatException('Unknown sheet: $name');
+        throw UnknownGachaTypeException({name});
       }
       records.addAll(_parseSheet(name, gachaType, sheet.rows));
     }
 
-    final List<GachaRecord> withIds;
-    try {
-      withIds = assignSubstituteIds(records);
-    } on ArgumentError catch (e, st) {
-      final perSecond = <(String, DateTime), int>{};
-      for (final r in records) {
-        perSecond.update(
-          (bannerKeyFor(r.gachaType), r.time),
-          (n) => n + 1,
-          ifAbsent: () => 1,
-        );
-      }
-      final (banner, time) = perSecond.entries
-          .firstWhere((e) => e.value > 100)
-          .key;
-      final sheet = _sheetGachaTypes.entries
-          .firstWhere((e) => e.value == banner)
-          .key;
-      _log.warning(
-        'paimon_moe import: more than 100 rows in one second '
-        'sheet="$sheet" banner=$banner time=$time',
-        e,
-        st,
-      );
-      throw FormatException('Sheet $sheet has more than 100 records at $time');
-    }
+    final withIds = assignSubstituteIdsOrReject('paimon_moe', records);
 
     final banners = <String, List<GachaRecord>>{};
     for (final r in withIds) {
@@ -261,21 +231,7 @@ class PaimonMoeImporter implements PlatformImporter {
       case DateCellValue():
         return DateTime(v.year, v.month, v.day);
       case TextCellValue():
-        final m = _timePattern.firstMatch(v.value.toString().trim());
-        if (m == null) return null;
-        final [y, mo, d, h, mi, s] = [
-          for (var g = 1; g <= 6; g++) int.parse(m.group(g)!),
-        ];
-        final t = DateTime(y, mo, d, h, mi, s);
-        // DateTime 會把 13 月、25 時之類的值進位成合法日期，要擋下來。
-        final valid =
-            t.year == y &&
-            t.month == mo &&
-            t.day == d &&
-            t.hour == h &&
-            t.minute == mi &&
-            t.second == s;
-        return valid ? t : null;
+        return parseImportTime(v.value.toString().trim());
       default:
         return null;
     }

@@ -1,0 +1,57 @@
+{
+  "info": {
+    "uid": "100000001",
+    "lang": "zh-tw",
+    "export_time": "2025-06-01 12:00:00",
+    "export_timestamp": 1748750400,
+    "export_app": "fixture-exporter",
+    "export_app_version": "v1.0.0",
+    "uigf_version": "v3.0"
+  },
+  "list": [
+    {
+      "gacha_type": "200",
+      "item_id": "",
+      "count": "1",
+      "time": "2025-01-01 10:00:00",
+      "name": "冷刃",
+      "item_type": "武器",
+      "rank_type": "3",
+      "id": "1735696800000000001",
+      "uigf_gacha_type": "200"
+    },
+    {
+      "gacha_type": "301",
+      "item_id": "",
+      "count": "1",
+      "time": "2025-01-02 10:00:00",
+      "name": "彈弓",
+      "item_type": "武器",
+      "rank_type": "3",
+      "id": "1735783200000000001",
+      "uigf_gacha_type": "301"
+    },
+    {
+      "gacha_type": "400",
+      "item_id": "",
+      "count": "1",
+      "time": "2025-01-02 10:00:00",
+      "name": "班尼特",
+      "item_type": "角色",
+      "rank_type": "4",
+      "id": "1735783200000000002",
+      "uigf_gacha_type": "301"
+    },
+    {
+      "gacha_type": "301",
+      "item_id": "",
+      "count": "1",
+      "time": "2025-01-03 10:00:00",
+      "name": "黎明神劍",
+      "item_type": "武器",
+      "rank_type": "3",
+      "id": "1735869600000000001",
+      "uigf_gacha_type": "301"
+    }
+  ]
+}
