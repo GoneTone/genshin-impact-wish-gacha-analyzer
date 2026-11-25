@@ -55,14 +55,16 @@ void main() {
   Uint8List encode(Object json) =>
       Uint8List.fromList(utf8.encode(jsonEncode(json)));
 
-  /// 組一份 v4 檔，`hk4e` 只有一個 UID 100000001、語言 zh-tw 的帳號。
+  /// 組一份 v4 檔，`hk4e` 只有一個 UID 100000001、語言 zh-tw 的帳號；
+  /// [exportTimestamp] 為 null 時不寫 `export_timestamp`。
   Uint8List v4(
     List<Map<String, Object?>> list, {
     String version = 'v4.2',
     String? lang = 'zh-tw',
+    Object? exportTimestamp = 1748750400,
   }) => encode({
     'info': {
-      'export_timestamp': 1748750400,
+      'export_timestamp': ?exportTimestamp,
       'export_app': 'fixture-exporter',
       'export_app_version': 'v1.0.0',
       'version': version,
@@ -104,6 +106,34 @@ void main() {
     expect(importer.requiresTargetUid, isFalse);
     expect(kPlatformImporters.first, isA<UigfImporter>());
     expect(kPlatformImporters[1], isA<PaimonMoeImporter>());
+  });
+
+  group('lastUpdated uses the export time, not the import moment', () {
+    /// `export_timestamp` 1748750400 對應的時間。
+    final exported = DateTime.utc(2025, 6, 1, 4);
+
+    test('fixture int timestamp', () async {
+      final bundle = await importer.parse(fixture('v3_0.json'));
+      expect(bundle.accounts.single.data.lastUpdated, exported);
+    });
+
+    test('string timestamp', () async {
+      final bundle = await importer.parse(
+        v4([rec()], exportTimestamp: '1748750400'),
+      );
+      expect(bundle.accounts.single.data.lastUpdated, exported);
+    });
+
+    test('missing or unparsable timestamp falls back to 1970', () async {
+      for (final ts in [null, 'soon']) {
+        final bundle = await importer.parse(v4([rec()], exportTimestamp: ts));
+        expect(
+          bundle.accounts.single.data.lastUpdated,
+          DateTime.utc(1970),
+          reason: '$ts',
+        );
+      }
+    });
   });
 
   test('v3.0 single account', () async {

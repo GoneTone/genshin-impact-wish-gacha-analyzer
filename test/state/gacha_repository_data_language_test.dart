@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/lang_catalog_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
@@ -107,9 +109,9 @@ Future<ProviderContainer> _bootstrap({
 GachaLanguageConverter _fakeConverter() =>
     GachaLanguageConverter(ensureCatalog: _ensureCatalog);
 
-// update 路徑（_runUpdate）的 dataLanguage seeding 因需真實 MITM 捕獲，無法在單元
-// 測試穩定觸發；故以 import／unify 路徑作等價驗證（兩者共用 _convertAccountToDataLanguage
-// 與 _seedLangFromData，與 update 路徑同一段邏輯）。
+// update 路徑以預存的快取網址跳過捕獲（見「第三方替代記錄不播種」測試）；其餘
+// seeding 以 import／unify 路徑驗證（共用 _convertAccountToDataLanguage 與
+// _seedLangFromData）。
 //
 // unify 結尾的 best-effort HoYoWiki pre-warm 會走既有 _fetchHoYoWiki，沿用 _bootstrap
 // 注入的 _noopHoYoWikiClient（所有端點回 404），故不會打真實網路。
@@ -466,6 +468,93 @@ void main() {
         ],
       ),
     );
+
+    expect(container.read(dataLanguageProvider), 'zh-tw');
+  });
+
+  test('第三方替代記錄不播種：匯入 paimon（en-us）後抓官方 zh-tw → 播種為 zh-tw', () async {
+    final tempDir = await Directory.systemTemp.createTemp('gacha_lang_sub_');
+    addTearDown(() async {
+      if (await tempDir.exists()) await tempDir.delete(recursive: true);
+    });
+    SharedPreferences.setMockInitialValues({});
+    const uid = '100000001';
+    final storage = GachaStorage(tempDir);
+    final apiClient = MockClient((req) async {
+      if (!req.url.path.endsWith('GachaLog')) return http.Response('', 404);
+      final list = req.url.queryParameters['gacha_type'] == '301'
+          ? [
+              {
+                'uid': uid,
+                'gacha_type': '301',
+                'item_id': '',
+                'count': '1',
+                'time': '2026-05-20 10:00:00',
+                'name': '胡桃',
+                'lang': 'zh-tw',
+                'item_type': '角色',
+                'rank_type': '5',
+                'id': '1000000000000000100',
+              },
+            ]
+          : const <Map<String, dynamic>>[];
+      return http.Response(
+        jsonEncode({
+          'retcode': 0,
+          'message': 'OK',
+          'data': {'list': list, 'page': '1', 'size': '20', 'total': '0'},
+        }),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
+    final container = await _bootstrap(
+      tempDir: tempDir,
+      converter: _fakeConverter(),
+      apiClient: apiClient,
+      storage: storage,
+    );
+    addTearDown(container.dispose);
+    final notifier = container.read(gachaRepositoryProvider.notifier);
+
+    final paimonTime = DateTime(2026, 5, 24, 12);
+    await notifier.debugImportOnly(
+      AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 25),
+        appVersion: '',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: uid,
+              lastUpdated: DateTime.utc(2026, 5, 25),
+              banners: {
+                '301': [
+                  GachaRecord(
+                    id: substituteId(paimonTime, 0),
+                    uid: uid,
+                    gachaType: '301',
+                    name: 'Hu Tao',
+                    itemType: 'Character',
+                    rankType: 5,
+                    time: paimonTime,
+                    lang: 'en-us',
+                  ),
+                ],
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+    expect(container.read(dataLanguageProvider), isNull);
+
+    await storage.saveCapturedUrl(
+      uid,
+      'https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog'
+      '?authkey=fakekey&lang=zh-tw&gacha_type=301&page=1&size=20&end_id=0',
+    );
+    await notifier.update();
 
     expect(container.read(dataLanguageProvider), 'zh-tw');
   });

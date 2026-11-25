@@ -1806,13 +1806,14 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// 取 [data] 中非頌願、有語言的「最新」一筆 record 的 lang（供 seeding）；無則 null。
+  /// 取 [data] 中非頌願、有語言的「最新」一筆官方 record 的 lang（供 seeding）；
+  /// 無則 null。第三方匯入的替代記錄語言是匯出工具決定的，不拿來播種。
   String? _seedLangFromData(BannerStorage data) {
     GachaRecord? latest;
     for (final e in data.banners.entries) {
       if (!convertibleGachaTypes.contains(e.key)) continue;
       for (final r in e.value) {
-        if (r.lang.isEmpty) continue;
+        if (r.lang.isEmpty || isSubstituteId(r.id)) continue;
         if (latest == null || compareRecordsNewestFirst(r, latest) < 0) {
           latest = r;
         }

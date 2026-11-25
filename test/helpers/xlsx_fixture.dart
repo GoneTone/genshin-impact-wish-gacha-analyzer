@@ -38,16 +38,19 @@ Uint8List buildXlsx(Map<String, List<List<Object?>>> sheets) {
 }
 
 /// 產生 paimon.moe 格式的 xlsx：[banners] 為卡池分頁名 → 資料列（不含標題列，
-/// 標題列自動帶 [paimonHeader]），並附上 `Information` 分頁。
+/// 標題列自動帶 [paimonHeader]），並附上 `Information` 分頁；[exportDate] 不為
+/// null 時加上 `Export Date` 列。
 Uint8List buildPaimonXlsx(
   Map<String, List<List<Object?>>> banners, {
   String marker = paimonMarker,
+  Object? exportDate,
 }) => buildXlsx({
   for (final MapEntry(key: name, value: rows) in banners.entries)
     name: [paimonHeader, ...rows],
   'Information': [
     [marker],
     ['Version', 4],
+    if (exportDate != null) ['Export Date', exportDate],
   ],
 });
 
