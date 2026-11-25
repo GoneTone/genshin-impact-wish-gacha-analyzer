@@ -176,6 +176,25 @@ void main() {
     expect(container.read(settingsProvider).uidAliasUpdatedAt, isEmpty);
   });
 
+  test('markRepaired400 持久化，移除帳號與清除全部時一併清掉', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+
+    await notifier.markRepaired400('A');
+    await notifier.markRepaired400('A');
+    await notifier.markRepaired400('B');
+    expect(container.read(settingsProvider).repaired400Uids, ['A', 'B']);
+    expect((await SettingsStorage.load()).repaired400Uids, ['A', 'B']);
+
+    await notifier.removeUidFromSettings('A');
+    expect(container.read(settingsProvider).repaired400Uids, ['B']);
+
+    await notifier.clearAllUidPreferences();
+    expect((await SettingsStorage.load()).repaired400Uids, isEmpty);
+  });
+
   test('removeUidFromSettings 同時清 alias 與 order，不動 lastActiveUid', () async {
     SharedPreferences.setMockInitialValues({
       'pref.lastActiveUid': 'A',

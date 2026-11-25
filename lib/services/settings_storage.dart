@@ -93,6 +93,7 @@ class AppSettings {
     this.cloudPendingRemovals = const [],
     this.gameDir,
     this.logAccessMethod,
+    this.repaired400Uids = const [],
   });
 
   /// 外觀主題。
@@ -143,6 +144,9 @@ class AppSettings {
   /// Android 上次成功取得系統記錄的方式（僅存本機，不參與雲端同步）；null 代表尚無。
   final LogAccessMethod? logAccessMethod;
 
+  /// 已完成一次性 `400` 修正抓取的 UID（僅存本機，不參與匯出與雲端同步）。
+  final List<String> repaired400Uids;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -175,6 +179,7 @@ class AppSettings {
     bool clearGameDir = false,
     LogAccessMethod? logAccessMethod,
     bool clearLogAccessMethod = false,
+    List<String>? repaired400Uids,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -204,6 +209,7 @@ class AppSettings {
     logAccessMethod: clearLogAccessMethod
         ? null
         : (logAccessMethod ?? this.logAccessMethod),
+    repaired400Uids: repaired400Uids ?? this.repaired400Uids,
   );
 }
 
@@ -257,6 +263,9 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：Android 讀取系統記錄的方式（僅本機）。
   static const _kLogAccessMethod = 'pref.logAccessMethod';
 
+  /// SharedPreferences key：已完成 `400` 修正抓取的 UID 清單 JSON（僅本機）。
+  static const _kRepaired400Uids = 'pref.repaired400Uids';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -284,6 +293,7 @@ abstract final class SettingsStorage {
       logAccessMethod: LogAccessMethod.fromName(
         prefs.getString(_kLogAccessMethod),
       ),
+      repaired400Uids: _parseOrder(prefs.getString(_kRepaired400Uids)),
     );
   }
 
@@ -345,6 +355,7 @@ abstract final class SettingsStorage {
     } else {
       await prefs.setString(_kLogAccessMethod, s.logAccessMethod!.name);
     }
+    await prefs.setString(_kRepaired400Uids, jsonEncode(s.repaired400Uids));
   }
 
   /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。

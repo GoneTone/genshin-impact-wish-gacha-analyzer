@@ -134,7 +134,14 @@ class SettingsNotifier extends Notifier<AppSettings> {
     Logger('app.settings').info('logAccessMethod=${method?.name}');
   }
 
-  /// 從 aliases、別名修改時間與 uidOrder 中移除指定 UID 並持久化。
+  /// 記錄 [uid] 已完成一次性 `400` 修正抓取並持久化（已記錄則略過）。
+  Future<void> markRepaired400(String uid) async {
+    if (state.repaired400Uids.contains(uid)) return;
+    state = state.copyWith(repaired400Uids: [...state.repaired400Uids, uid]);
+    await SettingsStorage.save(state);
+  }
+
+  /// 從 aliases、別名修改時間、uidOrder 與 `400` 修正記錄中移除指定 UID 並持久化。
   Future<void> removeUidFromSettings(String uid) async {
     final aliases = Map<String, String>.from(state.uidAliases)..remove(uid);
     final times = Map<String, DateTime>.from(state.uidAliasUpdatedAt)
@@ -144,17 +151,20 @@ class SettingsNotifier extends Notifier<AppSettings> {
       uidAliases: aliases,
       uidAliasUpdatedAt: times,
       uidOrder: order,
+      repaired400Uids: state.repaired400Uids.where((u) => u != uid).toList(),
     );
     await SettingsStorage.save(state);
   }
 
-  /// 清除所有 UID 相關偏好（aliases、別名修改時間、uidOrder、lastActiveUid）並持久化。
+  /// 清除所有 UID 相關偏好（aliases、別名修改時間、uidOrder、lastActiveUid、
+  /// `400` 修正記錄）並持久化。
   Future<void> clearAllUidPreferences() async {
     state = state.copyWith(
       clearLastActiveUid: true,
       uidAliases: const {},
       uidAliasUpdatedAt: const {},
       uidOrder: const [],
+      repaired400Uids: const [],
     );
     await SettingsStorage.save(state);
   }

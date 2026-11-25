@@ -926,12 +926,23 @@ class GachaRepository extends Notifier<GachaState> {
     final mergedBanners = <String, List<GachaRecord>>{};
     final failed = <String>[];
     var totalNew = 0;
+    // 一次性修正（設計文件〈十八〉）：舊版把 400 存成 301，停止點之前的記錄抓不回來，
+    // 這個 UID 第一次抓 301 時抓到 API 盡頭，讓同 id 記錄經合併改正。
+    final needs400Repair = !ref
+        .read(settingsProvider)
+        .repaired400Uids
+        .contains(uid);
+    var repaired400 = false;
 
     for (final t in gachaTypes) {
       final endpoint = switch (t.category) {
         GachaCategory.gacha => GachaEndpoint.gacha,
         GachaCategory.odes => GachaEndpoint.odes,
       };
+      final refetchAll = needs400Repair && t.gachaType == '301';
+      if (refetchAll) {
+        _log.info('400 repair refetch start uid=${sanitizeUid(uid)}');
+      }
       try {
         final merged = await fetcher.fetchBannerWithMerge(
           url: gachaUrl,
@@ -940,6 +951,7 @@ class GachaRepository extends Notifier<GachaState> {
           existing: existing.banners[t.gachaType] ?? const [],
           primer: probe.primerPages[t.gachaType],
           client: client,
+          refetchAll: refetchAll,
           onProgress: (p) {
             if (!ref.mounted) return;
             state = state.copyWith(
@@ -957,6 +969,7 @@ class GachaRepository extends Notifier<GachaState> {
             merged.length - (existing.banners[t.gachaType]?.length ?? 0);
         totalNew += newCount < 0 ? 0 : newCount;
         mergedBanners[t.gachaType] = merged;
+        if (refetchAll) repaired400 = true;
       } on AuthExpiredException {
         rethrow;
       } on http.ClientException {
@@ -980,6 +993,12 @@ class GachaRepository extends Notifier<GachaState> {
     if (!ref.mounted) return;
     await storage.saveCapturedUrl(uid, url);
     if (!ref.mounted) return;
+    // 修正結果寫檔後才記旗標，避免中途失敗留下「已修正」卻沒存到的狀態。
+    if (repaired400) {
+      await ref.read(settingsProvider.notifier).markRepaired400(uid);
+      if (!ref.mounted) return;
+      _log.info('400 repair done uid=${sanitizeUid(uid)}');
+    }
 
     final newByUid = Map<String, BannerStorage>.from(state.byUid)
       ..[uid] = newData;

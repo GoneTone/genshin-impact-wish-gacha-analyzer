@@ -154,6 +154,9 @@ class GachaFetcher {
 
   /// 對指定 banner 走完分頁 + merge：existing 是該 banner 的舊 desc list
   /// primer 若不為 null 則作為第一頁（避免 UID 探測重抓）
+  ///
+  /// [refetchAll] 為 true 時忽略停止點、抓到 API 盡頭，讓已存記錄經合併套用
+  /// 同 `id` 的修正（一次性把誤存成 `301` 的記錄改正為 `400`，設計文件〈十八〉）。
   Future<List<GachaRecord>> fetchBannerWithMerge({
     required GachaUrl url,
     required String gachaType,
@@ -162,12 +165,18 @@ class GachaFetcher {
     required FetchedPage? primer,
     required void Function(FetchProgress) onProgress,
     required http.Client client,
+    bool refetchAll = false,
   }) async {
     // 替代記錄的 id 以 0 開頭，不能當停止點；取最新一筆官方記錄
     final existingMaxId =
         existing.map((r) => r.id).where(isOfficialId).firstOrNull ?? '0';
-    _log.info('banner=$gachaType start, existing=${existing.length}');
+    final stopId = refetchAll ? '0' : existingMaxId;
+    _log.info(
+      'banner=$gachaType start, existing=${existing.length} '
+      'refetchAll=$refetchAll',
+    );
     final fresh = <GachaRecord>[];
+    var newCount = 0;
     var endId = '0';
     var isFirstPage = true;
     var pageIndex = 1;
@@ -189,21 +198,21 @@ class GachaFetcher {
 
       if (page.isEmpty) break;
 
-      // 從頭往後吃直到碰到 existingMaxId 或頁尾
+      // 從頭往後吃直到碰到停止點或頁尾；進度只算比既有官方記錄新的
       var hitOld = false;
       for (final r in page.records) {
-        if (_idGreater(r.id, existingMaxId)) {
-          fresh.add(r);
-        } else {
+        if (!_idGreater(r.id, stopId)) {
           hitOld = true;
           break;
         }
+        fresh.add(r);
+        if (_idGreater(r.id, existingMaxId)) newCount++;
       }
       onProgress(
         FetchProgress(
           gachaType: gachaType,
           pageIndex: pageIndex,
-          newRecordsSoFar: fresh.length,
+          newRecordsSoFar: newCount,
         ),
       );
 
@@ -240,7 +249,20 @@ class GachaFetcher {
         );
       }
     }
-    return mergeBannerRecords(normalizedExisting, fresh);
+    final merged = mergeBannerRecords(normalizedExisting, fresh);
+    if (refetchAll) {
+      final stored301 = {
+        for (final r in existing)
+          if (r.gachaType == '301') r.id,
+      };
+      final corrected = merged
+          .where((r) => r.gachaType == '400' && stored301.contains(r.id))
+          .length;
+      _log.info(
+        'banner=$gachaType refetchAll corrected 301->400 records=$corrected',
+      );
+    }
+    return merged;
   }
 
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序
