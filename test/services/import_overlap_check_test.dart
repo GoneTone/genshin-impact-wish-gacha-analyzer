@@ -76,8 +76,8 @@ void main() {
           i < match ? _t(i) : _t(i).add(const Duration(seconds: 30)),
         ),
     ];
-    // 本機多放一筆讓範圍涵蓋整段傳入資料
-    final local = _storage([..._groups(30)]);
+    // 本機 30 組比傳入多，重疊期間就是整段傳入資料的時間範圍
+    final local = _storage(_groups(30));
     final a = checkImportOverlap(local: local, incoming: _storage(mix(10, 1)));
     expect((a!.groups, a.matched), (10, 1));
     expect(
@@ -98,6 +98,31 @@ void main() {
       incoming: _storage(incoming),
     );
     expect(r?.matched, 0);
+  });
+
+  test('substitute incoming matching local official groups returns null', () {
+    final incoming = [
+      for (var i = 0; i < 12; i++) _rec(i, _t(i), official: false),
+    ];
+    expect(
+      checkImportOverlap(
+        local: _storage(_groups(12)),
+        incoming: _storage(incoming),
+      ),
+      isNull,
+    );
+  });
+
+  test('substitute incoming from another account warns', () {
+    final incoming = [
+      for (var i = 0; i < 12; i++)
+        _rec(i, _t(i).add(const Duration(seconds: 30)), official: false),
+    ];
+    final w = checkImportOverlap(
+      local: _storage(_groups(13)),
+      incoming: _storage(incoming),
+    )!;
+    expect((w.groups, w.matched), (12, 0));
   });
 
   test('no local official records returns null', () {

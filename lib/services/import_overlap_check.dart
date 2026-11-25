@@ -12,6 +12,9 @@ final _log = Logger('wish.import.platform');
 /// 至少要有幾組重疊期間內的傳入組數才會提醒。
 const _minGroups = 10;
 
+/// 對上的組數不超過傳入組數的幾分之一時提醒（`M * 10 <= N`）。
+const _mismatchRatio = 10;
+
 /// 匯入資料與本機官方記錄在重疊期間幾乎對不上的警告（可能選錯帳號）。
 class OverlapMismatch {
   /// 建立 [OverlapMismatch]。
@@ -55,7 +58,8 @@ Map<(String, int), int> _groupCounts(Iterable<GachaRecord> records) {
 /// 檢查 [incoming] 與 [local] 的官方記錄在重疊期間是否幾乎對不上（設計文件〈九〉）。
 ///
 /// 重疊期間為兩邊時間範圍的交集；N 為期間內的傳入組數，M 為其中能對到本機官方
-/// 同「卡池＋秒」且筆數相同者。`N >= 10 && M * 10 <= N` 才回傳 [OverlapMismatch]。
+/// 同「卡池＋秒」且筆數相同者。`N >= _minGroups && M * _mismatchRatio <= N` 才回傳
+/// [OverlapMismatch]。
 OverlapMismatch? checkImportOverlap({
   required BannerStorage local,
   required BannerStorage incoming,
@@ -66,9 +70,12 @@ OverlapMismatch? checkImportOverlap({
   final incomingAll = incoming.allRecords;
   if (localOfficial.isEmpty || incomingAll.isEmpty) return null;
 
+  /// [rs] 中牆鐘秒最早的時間。
   DateTime minOf(List<GachaRecord> rs) => rs
       .map((r) => r.time)
       .reduce((a, b) => wallClockSecond(a) <= wallClockSecond(b) ? a : b);
+
+  /// [rs] 中牆鐘秒最晚的時間。
   DateTime maxOf(List<GachaRecord> rs) => rs
       .map((r) => r.time)
       .reduce((a, b) => wallClockSecond(a) >= wallClockSecond(b) ? a : b);
@@ -96,7 +103,7 @@ OverlapMismatch? checkImportOverlap({
     if (localGroups[key] == value) matched++;
   }
 
-  final warn = groups >= _minGroups && matched * 10 <= groups;
+  final warn = groups >= _minGroups && matched * _mismatchRatio <= groups;
   _log.info(
     'import overlap check uid=${sanitizeUid(local.uid)} '
     'groups=$groups matched=$matched warn=$warn',
