@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 
 /// 認證過期（retcode -100 / -101）。
 class AuthExpiredException implements Exception {
@@ -162,7 +163,9 @@ class GachaFetcher {
     required void Function(FetchProgress) onProgress,
     required http.Client client,
   }) async {
-    final existingMaxId = existing.isEmpty ? '0' : existing.first.id;
+    // 替代記錄的 id 以 0 開頭，不能當停止點；取最新一筆官方記錄
+    final existingMaxId =
+        existing.map((r) => r.id).where(isOfficialId).firstOrNull ?? '0';
     _log.info('banner=$gachaType start, existing=${existing.length}');
     final fresh = <GachaRecord>[];
     var endId = '0';
@@ -237,7 +240,7 @@ class GachaFetcher {
         );
       }
     }
-    return [...fresh, ...normalizedExisting];
+    return mergeBannerRecords(normalizedExisting, fresh);
   }
 
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序

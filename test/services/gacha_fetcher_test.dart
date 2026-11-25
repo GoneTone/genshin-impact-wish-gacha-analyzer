@@ -258,6 +258,103 @@ void main() {
       );
       expect(merged.first.lang, '');
     });
+
+    group('替代記錄（第三方匯入）', () {
+      const offNew = '1000000000000000003';
+      const offOld = '1000000000000000001';
+
+      GachaRecord sub(String id, DateTime time) => GachaRecord(
+        id: id,
+        uid: '801057625',
+        gachaType: '301',
+        name: 'x',
+        itemType: '武器',
+        rankType: 3,
+        time: time,
+        lang: 'zh-tw',
+      );
+
+      GachaRecord official(String id, DateTime time) =>
+          sub(id, time).copyWith(lang: 'zh-tw');
+
+      Map<String, dynamic> api(String id, String time) =>
+          _record(id: id, type: '301')..['time'] = time;
+
+      Future<(List<GachaRecord>, List<String>)> run(
+        List<GachaRecord> existing,
+        Map<String, List<Map<String, dynamic>>> pagesByEndId,
+      ) async {
+        final endIds = <String>[];
+        final client = MockClient((req) async {
+          final endId = req.url.queryParameters['end_id']!;
+          endIds.add(endId);
+          return _ok(pagesByEndId[endId] ?? const []);
+        });
+        final merged = await GachaFetcher(rateLimit: Duration.zero)
+            .fetchBannerWithMerge(
+              url: GachaUrl.parse(_baseUrl),
+              gachaType: '301',
+              endpoint: GachaEndpoint.gacha,
+              existing: existing,
+              primer: null,
+              onProgress: (_) {},
+              client: client,
+            );
+        return (merged, endIds);
+      }
+
+      test('stop point skips substitute records', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+          official(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+        ];
+        // 滿頁迫使繼續翻頁；若以替代記錄當停止點，第一頁就會停
+        final page1 = [
+          for (var i = 0; i < 20; i++)
+            api(
+              '10000000000000001${(50 - i).toString().padLeft(2, '0')}',
+              '2025-10-02 10:00:00',
+            ),
+        ];
+        final (merged, endIds) = await run(existing, {
+          '0': page1,
+          page1.last['id'] as String: [api(offOld, '2025-09-23 21:27:37')],
+        });
+        expect(endIds, ['0', page1.last['id']]);
+        expect(merged.where((r) => r.id == offOld), hasLength(1));
+      });
+
+      test('substitute newer than newest official is replaced by fetched '
+          'official in the same second', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+          sub('0202509300900000000', DateTime(2025, 9, 30, 9)),
+          official(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+        ];
+        final (merged, _) = await run(existing, {
+          '0': [
+            api(offNew, '2025-10-01 12:00:00'),
+            api(offOld, '2025-09-23 21:27:37'),
+          ],
+        });
+        expect(merged.map((r) => r.id), [
+          offNew,
+          '0202509300900000000',
+          offOld,
+        ]);
+      });
+
+      test('existing with only substitutes fetches to api end', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+        ];
+        final (merged, endIds) = await run(existing, {
+          '0': [api(offNew, '2025-10-02 10:00:00')],
+        });
+        expect(endIds, ['0']);
+        expect(merged.map((r) => r.id), [offNew, '0202510011200000000']);
+      });
+    });
   });
 
   group('logging instrumentation', () {

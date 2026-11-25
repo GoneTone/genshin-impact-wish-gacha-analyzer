@@ -955,7 +955,7 @@ class GachaRepository extends Notifier<GachaState> {
         if (!ref.mounted) return;
         final newCount =
             merged.length - (existing.banners[t.gachaType]?.length ?? 0);
-        totalNew += newCount;
+        totalNew += newCount < 0 ? 0 : newCount;
         mergedBanners[t.gachaType] = merged;
       } on AuthExpiredException {
         rethrow;
