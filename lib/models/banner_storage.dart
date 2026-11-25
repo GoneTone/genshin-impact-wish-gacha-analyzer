@@ -1,4 +1,5 @@
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 
 /// 單一 UID 的全卡池祈願存檔。
 class BannerStorage {
@@ -15,7 +16,7 @@ class BannerStorage {
   /// 最後更新時間（UTC）。
   final DateTime lastUpdated;
 
-  /// gacha_type → 該卡池紀錄（依 id 降序）。
+  /// gacha_type → 該卡池紀錄（依 [compareRecordsNewestFirst]：時間新→舊，同時間依 id 大→小）。
   final Map<String, List<GachaRecord>> banners;
 
   /// 從本地存檔 JSON 還原 [BannerStorage]。
@@ -59,14 +60,13 @@ class BannerStorage {
 
   /// 將 [incoming]（同一 UID 的另一份存檔）合併進本份，回傳新的 [BannerStorage]。
   ///
-  /// 逐 banner 依 [GachaRecord.id] union 去重後降序排序；本機既有記錄一律保留，
-  /// 同 id 時保留本機那筆（若本機 lang 為空、[incoming] 非空則回填 lang）。
-  /// [lastUpdated] 取兩者較新者。
+  /// 逐 banner 交給 [mergeBannerRecords]（以同一秒為單位比對官方與替代記錄，
+  /// 本機官方記錄一律保留）；[lastUpdated] 取兩者較新者。
   BannerStorage mergeWith(BannerStorage incoming) {
     final keys = {...banners.keys, ...incoming.banners.keys};
     final mergedBanners = <String, List<GachaRecord>>{
       for (final key in keys)
-        key: _mergeRecordsById(
+        key: mergeBannerRecords(
           banners[key] ?? const [],
           incoming.banners[key] ?? const [],
         ),
@@ -75,34 +75,6 @@ class BannerStorage {
         ? incoming.lastUpdated
         : lastUpdated;
     return BannerStorage(uid: uid, lastUpdated: newer, banners: mergedBanners);
-  }
-
-  /// 合併兩條同 banner 的記錄：依 id union 去重（同 id 保留 [local]，必要時以
-  /// [incoming] 的非空 lang 回填）→ 依 id 降序排序（id 等長 19 碼，字典序＝數值序）。
-  static List<GachaRecord> _mergeRecordsById(
-    List<GachaRecord> local,
-    List<GachaRecord> incoming,
-  ) {
-    final byId = <String, GachaRecord>{};
-    for (final r in local) {
-      byId[r.id] = r;
-    }
-    for (final r in incoming) {
-      final existing = byId[r.id];
-      if (existing == null) {
-        byId[r.id] = r;
-      } else if ((existing.lang.isEmpty && r.lang.isNotEmpty) ||
-          (existing.gachaType == '301' && r.gachaType == '400')) {
-        // 舊版把 API 回傳的 400 誤存成 301，這裡以傳入的 400 修正。
-        byId[r.id] = existing.copyWith(
-          lang: existing.lang.isEmpty && r.lang.isNotEmpty ? r.lang : null,
-          gachaType: existing.gachaType == '301' && r.gachaType == '400'
-              ? '400'
-              : null,
-        );
-      }
-    }
-    return byId.values.toList()..sort((a, b) => b.id.compareTo(a.id));
   }
 
   /// 與 [other] 的內容（uid、更新時間、各卡池每筆記錄的所有欄位）是否完全相同。

@@ -12,6 +12,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_cli
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
@@ -1618,7 +1619,8 @@ void main() {
         name: 'x',
         itemType: '武器',
         rankType: 3,
-        time: DateTime.utc(2025, 1, 1),
+        // 存檔讀回的時間是本地時間；與傳入記錄同為本地時間，才是同一秒。
+        time: DateTime(2025, 1, 1),
         lang: 'zh-tw',
       );
 
@@ -1680,6 +1682,86 @@ void main() {
           .map((r) => r.id)
           .toList();
       expect(merged, ['3', '2', '1']); // 本機 id 3 沒被丟、降序
+    },
+  );
+
+  test(
+    'importAccounts: official replacing more substitutes never counts negative',
+    () async {
+      final t = DateTime(2025, 12, 1, 4, 6, 48);
+      GachaRecord rec(String id) => GachaRecord(
+        id: id,
+        uid: '100000001',
+        gachaType: '301',
+        name: 'x',
+        itemType: '武器',
+        rankType: 3,
+        time: t,
+        lang: 'zh-tw',
+      );
+
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: {
+            '301': [
+              for (var seq = 0; seq < 3; seq++) rec(substituteId(t, seq)),
+            ],
+          },
+        ),
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+
+      final bundle = AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: '100000001',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: {
+                '301': [rec('1733000000000000000')],
+              },
+            ),
+          ),
+        ],
+      );
+
+      final result = await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(bundle);
+
+      expect(result.addedRecords, 0);
+      expect(result.duplicateRecords, 1);
+      expect(
+        container
+            .read(gachaRepositoryProvider)
+            .byUid['100000001']!
+            .banners['301']!
+            .single
+            .id,
+        '1733000000000000000',
+      );
     },
   );
 

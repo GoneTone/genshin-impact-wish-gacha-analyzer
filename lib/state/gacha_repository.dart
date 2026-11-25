@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
@@ -1509,10 +1511,13 @@ class GachaRepository extends Notifier<GachaState> {
             failedUids: failed,
           );
         }
-        final added =
-            toSave.allRecords.length - (localBefore?.allRecords.length ?? 0);
+        // 官方記錄取代同秒替代記錄時總筆數可能變少，兩個計數都不能為負。
+        final added = math.max(
+          0,
+          toSave.allRecords.length - (localBefore?.allRecords.length ?? 0),
+        );
         addedRecords += added;
-        duplicateRecords += incoming.allRecords.length - added;
+        duplicateRecords += math.max(0, incoming.allRecords.length - added);
         newByUid[incoming.uid] = toSave;
         successCount++;
       } catch (_) {
@@ -1789,7 +1794,9 @@ class GachaRepository extends Notifier<GachaState> {
       if (!convertibleGachaTypes.contains(e.key)) continue;
       for (final r in e.value) {
         if (r.lang.isEmpty) continue;
-        if (latest == null || r.id.compareTo(latest.id) > 0) latest = r;
+        if (latest == null || compareRecordsNewestFirst(r, latest) < 0) {
+          latest = r;
+        }
       }
     }
     return latest?.lang;

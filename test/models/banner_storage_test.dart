@@ -1,17 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 
-GachaRecord _r(String id, {String lang = 'zh-tw'}) => GachaRecord(
-  id: id,
-  uid: '100000001',
-  gachaType: '301',
-  name: 'x',
-  itemType: '武器',
-  rankType: 3,
-  time: DateTime.utc(2025, 1, 1),
-  lang: lang,
-);
+GachaRecord _r(String id, {String lang = 'zh-tw', DateTime? time}) =>
+    GachaRecord(
+      id: id,
+      uid: '100000001',
+      gachaType: '301',
+      name: 'x',
+      itemType: '武器',
+      rankType: 3,
+      time: time ?? DateTime.utc(2025, 1, 1),
+      lang: lang,
+    );
 
 BannerStorage _s(
   Map<String, List<GachaRecord>> banners, {
@@ -54,6 +56,37 @@ void main() {
     });
     final merged = local.mergeWith(incoming);
     expect(merged.banners['301']!.single.gachaType, '400');
+  });
+
+  test('same id: lang backfill and 301 to 400 correction apply together', () {
+    final local = _s({
+      '301': [_r('1', lang: '')],
+    });
+    final incoming = _s({
+      '301': [_r('1', lang: 'en-us').copyWith(gachaType: '400')],
+    });
+    final merged = local.mergeWith(incoming).banners['301']!.single;
+    expect(merged.lang, 'en-us');
+    expect(merged.gachaType, '400');
+  });
+
+  test('substitutes: official replaces same second, fills other seconds', () {
+    final t1 = DateTime(2025, 12, 1, 4, 6, 48);
+    final t2 = DateTime(2025, 12, 2, 4, 6, 48);
+    GachaRecord sub(DateTime t, int seq) => _r(substituteId(t, seq), time: t);
+    final local = _s({
+      '301': [_r('1733000000000000000', time: t1)],
+    });
+    final incoming = _s({
+      '301': [sub(t2, 1), sub(t2, 0), sub(t1, 1), sub(t1, 0)],
+    }, lastUpdated: DateTime.utc(2026, 5, 12));
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.map((r) => r.id).toList(), [
+      substituteId(t2, 1),
+      substituteId(t2, 0),
+      '1733000000000000000',
+    ]);
+    expect(merged.lastUpdated, DateTime.utc(2026, 5, 12));
   });
 
   test('banner keys are unioned', () {
