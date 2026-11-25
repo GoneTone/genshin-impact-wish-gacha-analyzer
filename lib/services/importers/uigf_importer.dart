@@ -198,7 +198,7 @@ class UigfImporter implements PlatformImporter {
         ExportedAccount(
           data: BannerStorage(
             uid: uid,
-            lastUpdated: exportedAt,
+            lastUpdated: exportedAt ?? times.last.toUtc(),
             banners: banners,
           ),
         ),
@@ -218,15 +218,15 @@ class UigfImporter implements PlatformImporter {
   }
 
   /// `info.export_timestamp`（秒，數字或數字字串）轉成 UTC 時間；缺少或無法解析時
-  /// 回 1970，讓合併時保留本機的最後更新時間。
-  static DateTime _exportTime(Object? raw) {
+  /// 回 null，由呼叫端改用帳號最新一筆記錄的時間。
+  static DateTime? _exportTime(Object? raw) {
     final seconds = switch (raw) {
       int v => v,
       String v => int.tryParse(v.trim()),
       _ => null,
     };
     return seconds == null
-        ? DateTime.utc(1970)
+        ? null
         : DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true);
   }
 

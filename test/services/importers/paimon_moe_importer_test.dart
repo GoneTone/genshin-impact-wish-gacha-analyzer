@@ -124,10 +124,14 @@ void main() {
       expect(await lastUpdated(DateTime(2025, 6, 1, 12, 34, 56)), expected);
     });
 
-    test('missing or unparsable Export Date falls back to 1970', () async {
-      expect(await lastUpdated(null), DateTime.utc(1970));
-      expect(await lastUpdated('yesterday'), DateTime.utc(1970));
-    });
+    test(
+      'missing or unparsable Export Date falls back to the newest record',
+      () async {
+        final newest = DateTime(2025, 1, 1, 10).toUtc();
+        expect(await lastUpdated(null), newest);
+        expect(await lastUpdated('yesterday'), newest);
+      },
+    );
   });
 
   test('records sorted newest first', () async {

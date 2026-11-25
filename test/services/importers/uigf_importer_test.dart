@@ -124,16 +124,24 @@ void main() {
       expect(bundle.accounts.single.data.lastUpdated, exported);
     });
 
-    test('missing or unparsable timestamp falls back to 1970', () async {
-      for (final ts in [null, 'soon']) {
-        final bundle = await importer.parse(v4([rec()], exportTimestamp: ts));
-        expect(
-          bundle.accounts.single.data.lastUpdated,
-          DateTime.utc(1970),
-          reason: '$ts',
-        );
-      }
-    });
+    test(
+      'missing or unparsable timestamp falls back to the newest record',
+      () async {
+        for (final ts in [null, 'soon']) {
+          final bundle = await importer.parse(
+            v4([
+              rec(id: '1735696800000000001', time: '2025-01-01 10:00:00'),
+              rec(id: '1735783200000000001', time: '2025-01-02 10:00:00'),
+            ], exportTimestamp: ts),
+          );
+          expect(
+            bundle.accounts.single.data.lastUpdated,
+            DateTime(2025, 1, 2, 10).toUtc(),
+            reason: '$ts',
+          );
+        }
+      },
+    );
   });
 
   test('v3.0 single account', () async {

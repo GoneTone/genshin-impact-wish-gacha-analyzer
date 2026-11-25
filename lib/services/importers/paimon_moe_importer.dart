@@ -125,7 +125,8 @@ class PaimonMoeImporter implements PlatformImporter {
       'range=$range',
     );
 
-    // 匯出時間缺少或無法解析時用 1970，讓合併時保留本機的最後更新時間。
+    // 匯出時間缺少或無法解析時，改用最新一筆記錄的時間（資料至少新到那一刻）；
+    // 檔案沒有任何記錄時才用匯入當下。
     final exportDate = info!
         .where((row) => row.length > 1 && _text(row[0]?.value) == 'Export Date')
         .map((row) => _time(row[1]?.value))
@@ -138,7 +139,9 @@ class PaimonMoeImporter implements PlatformImporter {
         ExportedAccount(
           data: BannerStorage(
             uid: '',
-            lastUpdated: exportDate?.toUtc() ?? DateTime.utc(1970),
+            lastUpdated:
+                exportDate?.toUtc() ??
+                (times.isEmpty ? DateTime.now().toUtc() : times.last.toUtc()),
             banners: banners,
           ),
         ),
