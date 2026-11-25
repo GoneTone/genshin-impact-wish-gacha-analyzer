@@ -260,8 +260,8 @@ void main() {
     });
 
     group('替代記錄（第三方匯入）', () {
-      const offNew = '1000000000000000003';
-      const offOld = '1000000000000000001';
+      const offNew = '1000000000000000103';
+      const offOld = '1000000000000000100';
 
       GachaRecord sub(String id, DateTime time) => GachaRecord(
         id: id,
@@ -274,11 +274,14 @@ void main() {
         lang: 'zh-tw',
       );
 
-      GachaRecord official(String id, DateTime time) =>
-          sub(id, time).copyWith(lang: 'zh-tw');
-
       Map<String, dynamic> api(String id, String time) =>
           _record(id: id, type: '301')..['time'] = time;
+
+      /// 產生 [count] 筆由 [from] 遞減的官方 id 回應。
+      List<Map<String, dynamic>> apiPage(int from, int count, String time) => [
+        for (var i = 0; i < count; i++)
+          api('1000000000000000${(from - i).toString().padLeft(3, '0')}', time),
+      ];
 
       Future<(List<GachaRecord>, List<String>)> run(
         List<GachaRecord> existing,
@@ -306,19 +309,16 @@ void main() {
       test('stop point skips substitute records', () async {
         final existing = [
           sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
-          official(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+          sub(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
         ];
-        // 滿頁迫使繼續翻頁；若以替代記錄當停止點，第一頁就會停
-        final page1 = [
-          for (var i = 0; i < 20; i++)
-            api(
-              '10000000000000001${(50 - i).toString().padLeft(2, '0')}',
-              '2025-10-02 10:00:00',
-            ),
-        ];
+        // 替代 id 以 0 開頭，比任何官方 id 都小；若誤當停止點，永遠不會停而繼續翻到
+        // 第 3 頁。正確停止點是 offOld，第 2 頁碰到它就停。
+        final page1 = apiPage(150, 20, '2025-10-02 10:00:00');
+        final page2 = apiPage(100, 20, '2025-09-23 21:27:37');
         final (merged, endIds) = await run(existing, {
           '0': page1,
-          page1.last['id'] as String: [api(offOld, '2025-09-23 21:27:37')],
+          page1.last['id'] as String: page2,
+          page2.last['id'] as String: apiPage(80, 1, '2025-09-01 10:00:00'),
         });
         expect(endIds, ['0', page1.last['id']]);
         expect(merged.where((r) => r.id == offOld), hasLength(1));
@@ -329,7 +329,7 @@ void main() {
         final existing = [
           sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
           sub('0202509300900000000', DateTime(2025, 9, 30, 9)),
-          official(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+          sub(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
         ];
         final (merged, _) = await run(existing, {
           '0': [
@@ -348,11 +348,13 @@ void main() {
         final existing = [
           sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
         ];
+        final page1 = apiPage(150, 20, '2025-10-02 10:00:00');
         final (merged, endIds) = await run(existing, {
-          '0': [api(offNew, '2025-10-02 10:00:00')],
+          '0': page1,
+          page1.last['id'] as String: apiPage(130, 1, '2025-10-01 10:00:00'),
         });
-        expect(endIds, ['0']);
-        expect(merged.map((r) => r.id), [offNew, '0202510011200000000']);
+        expect(endIds, ['0', page1.last['id']]);
+        expect(merged, hasLength(22));
       });
     });
   });
