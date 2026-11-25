@@ -72,6 +72,45 @@ void main() {
       );
     });
 
+    test('wish page keeps api gacha_type 400', () async {
+      final mock = MockClient(
+        (req) async =>
+            _ok([_record(id: '2', type: '400'), _record(id: '1', type: '301')]),
+      );
+      final page = await GachaFetcher(rateLimit: Duration.zero).fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha),
+        mock,
+      );
+      expect(page.records.map((r) => r.gachaType), ['400', '301']);
+    });
+
+    test('odes page still overrides with queried 1000/2000', () async {
+      final mock = MockClient(
+        (req) async => _ok([
+          {
+            'uid': '801057625',
+            'op_gacha_type': '20021',
+            'item_id': '265044',
+            'count': '1',
+            'time': '2025-10-24 01:51:25',
+            'item_name': 'x',
+            'item_type': '裝扮套裝',
+            'rank_type': '5',
+            'id': '99',
+          },
+        ]),
+      );
+      final page = await GachaFetcher(rateLimit: Duration.zero).fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '2000', endId: '0', endpoint: GachaEndpoint.odes),
+        mock,
+      );
+      expect(page.records.single.gachaType, '2000');
+    });
+
     test('頌願回傳無 lang 時，以 URL 的 lang 補上', () async {
       final mock = MockClient(
         (req) async => _ok([

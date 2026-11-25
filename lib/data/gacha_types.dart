@@ -52,6 +52,7 @@ class GachaType {
   /// 將 [nameKey] 對應到目前語言的顯示字串。
   String resolveName(AppLocalizations l) => switch (nameKey) {
     'gachaTypeCharacter' => l.gachaTypeCharacter,
+    'gachaTypeCharacter2' => l.gachaTypeCharacter2,
     'gachaTypeWeapon' => l.gachaTypeWeapon,
     'gachaTypeChronicled' => l.gachaTypeChronicled,
     'gachaTypeStandard' => l.gachaTypeStandard,
@@ -137,19 +138,33 @@ final Set<String> convertibleGachaTypes = {
     if (t.category == GachaCategory.gacha) t.gachaType,
 };
 
+/// 第二個角色活動祈願（API gacha_type 400）：不在 [gachaTypes]，因為它沒有獨立
+/// 的查詢與側欄頁，記錄併在 301 池，只用來標示名稱與保底。
+const _characterEvent2 = GachaType(
+  gachaType: '400',
+  nameKey: 'gachaTypeCharacter2',
+  category: GachaCategory.gacha,
+  pities: [_pityFive90, _pityFour10],
+);
+
+/// 回傳 [gachaType] 所屬的卡池頁 key：400 併入 301，其餘原樣。
+String bannerKeyFor(String gachaType) => gachaType == '400' ? '301' : gachaType;
+
 /// 依 [gachaType] 字串查 [GachaType]；查無時回傳帶預設保底（5★90／4★10、
 /// 一般祈願分類）的 fallback。沿用 timeline 既有的未知卡池保底假設。
 GachaType gachaTypeFor(String gachaType) => gachaTypes.firstWhere(
   (t) => t.gachaType == gachaType,
-  orElse: () => GachaType(
-    gachaType: gachaType,
-    nameKey: gachaType,
-    category: GachaCategory.gacha,
-    pities: const [
-      PityRule(rank: 5, threshold: 90),
-      PityRule(rank: 4, threshold: 10),
-    ],
-  ),
+  orElse: () => gachaType == '400'
+      ? _characterEvent2
+      : GachaType(
+          gachaType: gachaType,
+          nameKey: gachaType,
+          category: GachaCategory.gacha,
+          pities: const [
+            PityRule(rank: 5, threshold: 90),
+            PityRule(rank: 4, threshold: 10),
+          ],
+        ),
 );
 
 /// 查 [gachaType] 池中 [rank] 的保底門檻；該池無對應 [rank] 規則時，回傳主保底

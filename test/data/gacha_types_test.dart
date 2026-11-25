@@ -8,6 +8,15 @@ void main() {
     expect(convertibleGachaTypes.contains('1000'), isFalse);
   });
 
+  test('400 resolves to character event wish-2 with character pity', () {
+    expect(gachaTypeFor('400').nameKey, 'gachaTypeCharacter2');
+    expect(pityThresholdFor('400', 5), 90);
+    expect(pityThresholdFor('400', 4), 10);
+    expect(gachaTypes.any((t) => t.gachaType == '400'), isFalse);
+    expect(bannerKeyFor('400'), '301');
+    expect(bannerKeyFor('302'), '302');
+  });
+
   group('gachaTypes registry', () {
     test('每個 type 至少有一條 pity rule', () {
       for (final t in gachaTypes) {

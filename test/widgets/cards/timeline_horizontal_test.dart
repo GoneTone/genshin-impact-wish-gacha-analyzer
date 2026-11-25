@@ -6,12 +6,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_horizontal.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_node.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
@@ -63,6 +65,26 @@ Widget _wrap(Widget Function(BuildContext ctx) build) => MaterialApp(
 );
 
 void main() {
+  testWidgets('400 entries count toward character event legend', (
+    tester,
+  ) async {
+    await pumpTimelineHorizontal(tester, entries: const [], targetRank: 5);
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineHorizontal)),
+    )!;
+    final rows = bannerDistributionEntries(
+      [
+        _e('A', '301', 10, DateTime(2026, 6, 1)),
+        _e('B', '301', 10, DateTime(2026, 5, 1)),
+        _e('C', '400', 10, DateTime(2026, 4, 1)),
+      ],
+      BannerColors.of(Brightness.dark),
+      l,
+    );
+    expect(rows.firstWhere((e) => e.name == l.gachaTypeCharacter).count, 3);
+    expect(rows.length, gachaTypes.length);
+  });
+
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await pumpTimelineHorizontal(tester, entries: const [], targetRank: 5);
     final l = AppLocalizations.of(

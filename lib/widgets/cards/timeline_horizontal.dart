@@ -52,7 +52,8 @@ List<DistributionEntry> bannerDistributionEntries(
 ) {
   final countByGachaType = <String, int>{};
   for (final e in entries) {
-    countByGachaType[e.gachaType] = (countByGachaType[e.gachaType] ?? 0) + 1;
+    final key = bannerKeyFor(e.gachaType);
+    countByGachaType[key] = (countByGachaType[key] ?? 0) + 1;
   }
   final total = entries.length;
   return [

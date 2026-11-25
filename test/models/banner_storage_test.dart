@@ -34,6 +34,28 @@ void main() {
     expect(merged.banners['301']!.map((r) => r.id).toList(), ['3', '2', '1']);
   });
 
+  test('incoming 400 corrects local 301 with same id', () {
+    final local = _s({
+      '301': [_r('1')],
+    });
+    final incoming = _s({
+      '301': [_r('1').copyWith(gachaType: '400')],
+    });
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.single.gachaType, '400');
+  });
+
+  test('local 400 is not downgraded by incoming 301', () {
+    final local = _s({
+      '301': [_r('1').copyWith(gachaType: '400')],
+    });
+    final incoming = _s({
+      '301': [_r('1')],
+    });
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.single.gachaType, '400');
+  });
+
   test('banner keys are unioned', () {
     final local = _s({
       '301': [_r('1')],

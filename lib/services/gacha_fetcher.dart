@@ -105,6 +105,7 @@ class GachaFetcher {
   Future<FetchedPage> fetchPage(Uri url, http.Client client) async {
     final queryGachaType = url.queryParameters['gacha_type'] ?? '';
     final queryLang = url.queryParameters['lang'] ?? '';
+    final isOdes = url.path.endsWith(GachaEndpoint.odes.pathSegment);
     var attempt = 0;
     _log.fine(
       'fetchPage gachaType=$queryGachaType url=${sanitizeUrl(url.toString())}',
@@ -120,7 +121,11 @@ class GachaFetcher {
               .map(
                 (e) => GachaRecord.fromApiJson(
                   e as Map<String, dynamic>,
-                  gachaType: queryGachaType,
+                  // 頌願的 op_gacha_type 是檔期層級 id，必須沿用查詢值；祈願要保留
+                  // API 回傳的類型，才分得出查 301 時一併回傳的 400。
+                  gachaType: isOdes
+                      ? queryGachaType
+                      : (e['gacha_type'] as String? ?? queryGachaType),
                   fallbackLang: queryLang,
                 ),
               )

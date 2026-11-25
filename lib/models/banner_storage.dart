@@ -91,8 +91,15 @@ class BannerStorage {
       final existing = byId[r.id];
       if (existing == null) {
         byId[r.id] = r;
-      } else if (existing.lang.isEmpty && r.lang.isNotEmpty) {
-        byId[r.id] = existing.copyWith(lang: r.lang);
+      } else if ((existing.lang.isEmpty && r.lang.isNotEmpty) ||
+          (existing.gachaType == '301' && r.gachaType == '400')) {
+        // 舊版把 API 回傳的 400 誤存成 301，這裡以傳入的 400 修正。
+        byId[r.id] = existing.copyWith(
+          lang: existing.lang.isEmpty && r.lang.isNotEmpty ? r.lang : null,
+          gachaType: existing.gachaType == '301' && r.gachaType == '400'
+              ? '400'
+              : null,
+        );
       }
     }
     return byId.values.toList()..sort((a, b) => b.id.compareTo(a.id));
