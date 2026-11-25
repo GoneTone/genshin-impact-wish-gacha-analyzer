@@ -28,12 +28,14 @@ class _FakeResolver implements ItemResolver {
   /// [rankFor] 收到的 `'$lang|$name'`（依呼叫順序）。
   final rankCalls = <String>[];
 
+  /// 記錄呼叫並從 [names] 查名稱與語言。
   @override
   Future<({String name, String lang})> nameFor(String itemId) async {
     nameCalls.add(itemId);
     return names[itemId] ?? (throw ItemResolveException('not found', itemId));
   }
 
+  /// 記錄呼叫並從 [ranks] 查星級。
   @override
   Future<int> rankFor(String name, String lang) async {
     rankCalls.add('$lang|$name');
@@ -224,6 +226,52 @@ void main() {
     expect(resolver.rankCalls, isEmpty);
   });
 
+  test(
+    'hk4e_ugc missing item_name or rank_type throws FormatException',
+    () async {
+      /// 一份只有一筆頌願記錄的 v4.2 檔，記錄去掉 [drop] 欄位。
+      Uint8List odesWithout(String drop) => encode({
+        'info': {'version': 'v4.2'},
+        'hk4e_ugc': [
+          {
+            'uid': '100000001',
+            'timezone': 8,
+            'lang': 'zh-tw',
+            'list': [
+              {
+                'id': '1761217800000000001',
+                'schedule_id': '20',
+                'item_type': '裝扮部件',
+                'item_id': '260109',
+                'item_name': '女性裝扮·「熾烈長袖衫」',
+                'rank_type': '3',
+                'time': '2025-10-23 19:52:08',
+                'op_gacha_type': '20021',
+              }..remove(drop),
+            ],
+          },
+        ],
+      });
+      for (final drop in ['item_name', 'rank_type']) {
+        final resolver = _FakeResolver();
+        await expectLater(
+          importer.parse(odesWithout(drop), resolver: resolver),
+          throwsFormatException,
+          reason: drop,
+        );
+        expect(resolver.nameCalls, isEmpty, reason: drop);
+        expect(resolver.rankCalls, isEmpty, reason: drop);
+      }
+    },
+  );
+
+  test('duplicate official ids in one account are kept once', () async {
+    final banners = onlyBanners(
+      await importer.parse(v4([rec(name: 'A'), rec(name: 'B')])),
+    );
+    expect(banners['200']!.map((r) => r.name), ['A']);
+  });
+
   test('minor version newer than known still parses', () async {
     final bundle = await importer.parse(v4([rec()], version: 'v4.9'));
     expect(onlyBanners(bundle)['200'], hasLength(1));
@@ -305,8 +353,13 @@ void main() {
     () async {
       final bytes = v4([
         rec(name: null, itemId: '11301'),
-        rec(name: null, itemId: '11301', time: '2025-01-01 10:00:01'),
-        rec(name: '冷刃', lang: null),
+        rec(
+          id: '1735696800000000002',
+          name: null,
+          itemId: '11301',
+          time: '2025-01-01 10:00:01',
+        ),
+        rec(id: '1735696800000000003', name: '冷刃', lang: null),
       ], lang: null);
       final resolver = _FakeResolver(
         names: {'11301': (name: 'Cool Steel', lang: 'en-us')},
@@ -345,8 +398,14 @@ void main() {
   test('missing rank asks resolver', () async {
     final bytes = v4([
       rec(rank: null),
-      rec(rank: null, time: '2025-01-01 10:00:01'),
-      rec(rank: null, name: null, itemId: '1032', itemType: '角色'),
+      rec(id: '1735696800000000002', rank: null, time: '2025-01-01 10:00:01'),
+      rec(
+        id: '1735696800000000003',
+        rank: null,
+        name: null,
+        itemId: '1032',
+        itemType: '角色',
+      ),
     ]);
     final resolver = _FakeResolver(
       names: {'1032': (name: 'Bennett', lang: 'en-us')},
@@ -357,8 +416,8 @@ void main() {
     );
     expect(banners['200']!.map((r) => (r.name, r.rankType)), [
       ('冷刃', 3),
-      ('冷刃', 3),
       ('Bennett', 4),
+      ('冷刃', 3),
     ]);
     expect(resolver.rankCalls, ['zh-tw|冷刃', 'en-us|Bennett']);
 

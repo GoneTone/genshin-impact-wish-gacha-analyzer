@@ -30,12 +30,11 @@ const _wishGachaTypes = {'100', '200', '301', '302', '400', '500'};
 /// 存的查詢值 `1000`／`2000` 一致，見 `GachaRecord.fromApiJson`）。
 ///
 /// UIGF v4.2 規範（https://uigf.org/zh/standards/uigf.html，2026-11-25 查閱）只列出
-/// 允許值 `1000`、`2000`、`20011`、`20012`、`20021`、`20022`，沒有對照表；對照依官方
-/// `getBeyondGachaLog` 實際回應：查 `gacha_type=1000`（常駐）回 `op_gacha_type`
-/// `1000`，查 `2000`（活動）回檔期層級的 `20011`～`20022`（本專案
-/// `test/models/gacha_record_test.dart` 的實際回應、lgou2w/HoYo.Gacha
-/// `docs/Beyond.md`），genshin.py `MWBannerType` 與 TeyvatGuide 的 UIGF 匯入也是
-/// 「`1000` 為常駐，其餘為活動」。
+/// 允許值 `1000`、`2000`、`20011`、`20012`、`20021`、`20022`，沒有對照表。實際的
+/// `getBeyondGachaLog` 回應只見過常駐回 `1000`、活動回 `20021`（本專案
+/// `test/models/gacha_record_test.dart`、lgou2w/HoYo.Gacha `docs/Beyond.md`）；
+/// `20011`、`20012`、`20022` 歸為活動，依據是 genshin.py `MWBannerType` 把它們列為
+/// 活動檔期，且 TeyvatGuide、Moonward 都把 `1000` 以外的值併成 `2000`。
 const _odesBannerTypes = {
   '1000': '1000',
   '2000': '2000',
@@ -163,8 +162,20 @@ class UigfImporter implements PlatformImporter {
     final now = DateTime.now().toUtc();
     final accounts = <ExportedAccount>[];
     for (final MapEntry(key: uid, value: list) in byUid.entries) {
+      // 新帳號匯入時不經過合併，檔案內重複的官方 id 要在這裡去掉（保留第一筆）。
+      final seen = <String>{};
+      final unique = [
+        for (final r in list)
+          if (!isOfficialId(r.id) || seen.add(r.id)) r,
+      ];
+      if (unique.length != list.length) {
+        _log.warning(
+          'uigf import: dropped duplicate official ids uid=${sanitizeUid(uid)} '
+          'count=${list.length - unique.length}',
+        );
+      }
       // 替代 id 的序號只看卡池與秒，不分 UID，所以要逐帳號產生。
-      final withIds = assignSubstituteIdsOrReject('uigf', list);
+      final withIds = assignSubstituteIdsOrReject('uigf', unique);
       final banners = <String, List<GachaRecord>>{};
       for (final r in withIds) {
         (banners[bannerKeyFor(r.gachaType)] ??= []).add(r);
