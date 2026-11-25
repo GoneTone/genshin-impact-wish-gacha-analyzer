@@ -233,6 +233,13 @@ void main() {
             sources[p[2]],
           ),
         ),
+      for (final p in perms)
+        _json(
+          mergeBannerRecords(
+            sources[p[0]],
+            mergeBannerRecords(sources[p[1]], sources[p[2]]),
+          ),
+        ),
     ];
     for (final r in results) {
       expect(r, results.first);
@@ -280,6 +287,40 @@ void main() {
   test('substitute newer than official sorts first', () {
     final merged = mergeBannerRecords([_off(0, t1)], [_sub(t2, 0)]);
     expect(_ids(merged), [substituteId(t2, 0), _off(0, t1).id]);
+  });
+
+  test(
+    'UTC and local DateTime of the same wall-clock second form one group',
+    () {
+      final utc = DateTime.utc(2025, 12, 1, 4, 6, 48);
+      final official = [_off(0, t1)];
+      final utcSubs = [_sub(utc, 0), _sub(utc, 1)];
+      for (final merged in [
+        mergeBannerRecords(utcSubs, official),
+        mergeBannerRecords(official, utcSubs),
+      ]) {
+        expect(_ids(merged), _ids(official));
+      }
+      expect(mergeBannerRecords(_subTen(t1), _subTen(utc)).length, 10);
+    },
+  );
+
+  test('mixed UTC and local records sort by wall clock', () {
+    final localLater = _off(1, DateTime(2025, 12, 1, 10));
+    final utcEarlier = _off(0, DateTime.utc(2025, 12, 1, 9));
+    final merged = mergeBannerRecords([utcEarlier], [localLater]);
+    expect(_ids(merged), [localLater.id, utcEarlier.id]);
+    expect(compareRecordsNewestFirst(localLater, utcEarlier), lessThan(0));
+  });
+
+  test('assignSubstituteIds: official in the middle takes no sequence', () {
+    GachaRecord raw(String id) => _sub(t1, 0).copyWith(id: id);
+    final out = assignSubstituteIds([raw(''), raw(_off(0, t1).id), raw('')]);
+    expect(_ids(out), [
+      substituteId(t1, 0),
+      _off(0, t1).id,
+      substituteId(t1, 1),
+    ]);
   });
 
   test('assignSubstituteIds numbers per banner key and second', () {
