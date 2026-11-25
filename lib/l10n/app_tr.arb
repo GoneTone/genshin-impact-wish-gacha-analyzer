@@ -834,9 +834,9 @@
   },
   "platformUigfSubtitle": "genshin-wish-export ve diğer araçlar · JSON",
   "platformPaimonMoeSubtitle": "paimon.moe · Excel",
-  "importTargetAccountTitle": "Hangi hesaba aktarılsın?",
+  "importTargetAccountTitle": "Hangi hesaba içe aktarılsın?",
   "importTargetAccountBody": "paimon.moe dışa aktarımlarında UID bulunmaz. Bu kayıtların ait olduğu hesabı seçin.",
-  "importTargetAccountOtherUid": "Başka UID",
+  "importTargetAccountOtherUid": "Diğer UID",
   "importTargetAccountUidHint": "UID girin",
   "importTargetAccountRecordCount": "Bu cihazda {count} kayıt",
   "@importTargetAccountRecordCount": {

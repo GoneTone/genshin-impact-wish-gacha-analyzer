@@ -846,7 +846,7 @@
       }
     }
   },
-  "importReasonUigfVersionTooNew": "이 파일의 UIGF 버전({version})은 아직 지원하지 않습니다. 앱을 업데이트하거나 원래 도구에서 v4로 내보내 주세요",
+  "importReasonUigfVersionTooNew": "이 파일의 UIGF 버전({version})이 너무 새로워 아직 지원하지 않습니다. 앱을 업데이트하거나 원래 도구에서 v4로 내보내 주세요",
   "@importReasonUigfVersionTooNew": {
     "placeholders": {
       "version": {
@@ -854,7 +854,7 @@
       }
     }
   },
-  "importReasonUnknownGachaType": "파일에 지원하지 않는 기원 유형이 있습니다({types})",
+  "importReasonUnknownGachaType": "파일에 지원하지 않는 기원 유형({types})이 있습니다",
   "@importReasonUnknownGachaType": {
     "placeholders": {
       "types": {
@@ -862,7 +862,7 @@
       }
     }
   },
-  "importReasonItemUnresolved": "아이템 데이터를 채울 수 없습니다({item}). 네트워크 연결을 확인한 후 다시 시도해 주세요",
+  "importReasonItemUnresolved": "아이템 데이터({item})를 채울 수 없습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요",
   "@importReasonItemUnresolved": {
     "placeholders": {
       "item": {

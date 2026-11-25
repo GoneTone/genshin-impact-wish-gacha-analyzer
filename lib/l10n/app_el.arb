@@ -907,7 +907,7 @@
       }
     }
   },
-  "confirmImportAnyway": "Εισαγωγή ούτως ή άλλως",
+  "confirmImportAnyway": "Εισαγωγή παρ' όλα αυτά",
   "importResolvingItems": "Συμπλήρωση δεδομένων αντικειμένων...",
   "settingsExportSelectTitle": "Επιλέξτε λογαριασμούς για εξαγωγή",
   "settingsImportSelectTitle": "Επιλέξτε λογαριασμούς για εισαγωγή",

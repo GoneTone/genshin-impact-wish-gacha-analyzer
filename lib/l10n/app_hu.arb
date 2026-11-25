@@ -907,7 +907,7 @@
       }
     }
   },
-  "confirmImportAnyway": "Importálás mégis",
+  "confirmImportAnyway": "Importálás mindenképp",
   "importResolvingItems": "Tárgyadatok kiegészítése...",
   "settingsExportSelectTitle": "Exportálandó fiókok kiválasztása",
   "settingsImportSelectTitle": "Importálandó fiókok kiválasztása",

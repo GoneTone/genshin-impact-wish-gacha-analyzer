@@ -890,7 +890,7 @@
     }
   },
   "confirmImportAnyway": "Importer quand même",
-  "importResolvingItems": "Complétion des données des objets...",
+  "importResolvingItems": "Finalisation des données des objets...",
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportMergeBadge": "Fusionner",

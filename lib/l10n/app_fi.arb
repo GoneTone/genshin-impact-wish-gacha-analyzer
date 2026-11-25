@@ -835,7 +835,7 @@
   "platformUigfSubtitle": "genshin-wish-export ja muut työkalut · JSON",
   "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "Mille tilille tuodaan?",
-  "importTargetAccountBody": "paimon.moen viennit eivät sisällä UID:tä. Valitse tili, jolle nämä tapahtumat kuuluvat.",
+  "importTargetAccountBody": "paimon.moe:n viennit eivät sisällä UID:tä. Valitse tili, jolle nämä tapahtumat kuuluvat.",
   "importTargetAccountOtherUid": "Muu UID",
   "importTargetAccountUidHint": "Syötä UID",
   "importTargetAccountRecordCount": "{count, plural, =1{1 tapahtuma tällä laitteella} other{{count} tapahtumaa tällä laitteella}}",

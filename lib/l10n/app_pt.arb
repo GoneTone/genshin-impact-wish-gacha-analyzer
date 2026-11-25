@@ -870,7 +870,7 @@
       }
     }
   },
-  "importOverlapWarning": "⚠ {uid}: ambos os lados têm registos entre {from} e {to}, mas nenhuma das {groups} orações desse período corresponde aos registos oficiais deste dispositivo. Pode ter escolhido a conta errada ou o ficheiro usar outro fuso horário.",
+  "importOverlapWarning": "⚠ {uid}: ambos os lados têm registos entre {from} e {to}, mas nenhuma das {groups} orações desse período corresponde aos registos oficiais deste dispositivo. Pode ter escolhido a conta errada, ou o ficheiro pode usar outro fuso horário.",
   "@importOverlapWarning": {
     "placeholders": {
       "uid": {
@@ -887,7 +887,7 @@
       }
     }
   },
-  "importOverlapWarningPartial": "⚠ {uid}: ambos os lados têm registos entre {from} e {to}, mas os registos oficiais deste dispositivo correspondem a apenas {matched} das {groups} orações desse período. Pode ter escolhido a conta errada ou o ficheiro usar outro fuso horário.",
+  "importOverlapWarningPartial": "⚠ {uid}: ambos os lados têm registos entre {from} e {to}, mas os registos oficiais deste dispositivo correspondem a apenas {matched} das {groups} orações desse período. Pode ter escolhido a conta errada, ou o ficheiro pode usar outro fuso horário.",
   "@importOverlapWarningPartial": {
     "placeholders": {
       "uid": {

@@ -889,7 +889,7 @@
       }
     }
   },
-  "confirmImportAnyway": "นำเข้าต่อไป",
+  "confirmImportAnyway": "นำเข้าอยู่ดี",
   "importResolvingItems": "กำลังเติมข้อมูลไอเทม...",
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",

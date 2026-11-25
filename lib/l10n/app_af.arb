@@ -854,7 +854,7 @@
       }
     }
   },
-  "importReasonUnknownGachaType": "Die lêer bevat banier-tipes wat nie ondersteun word nie ({types})",
+  "importReasonUnknownGachaType": "Die lêer bevat bannertipes wat nie ondersteun word nie ({types})",
   "@importReasonUnknownGachaType": {
     "placeholders": {
       "types": {
@@ -908,7 +908,7 @@
     }
   },
   "confirmImportAnyway": "Voer tog in",
-  "importResolvingItems": "Vul itemdata aan...",
+  "importResolvingItems": "Vul tans itemdata aan...",
   "settingsExportSelectTitle": "Kies rekeninge om uit te voer",
   "settingsImportSelectTitle": "Kies rekeninge om in te voer",
   "settingsImportMergeBadge": "Voeg saam",
