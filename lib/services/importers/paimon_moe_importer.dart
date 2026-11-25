@@ -125,25 +125,16 @@ class PaimonMoeImporter implements PlatformImporter {
       'range=$range',
     );
 
-    // 匯出時間缺少或無法解析時，改用最新一筆記錄的時間（資料至少新到那一刻）；
-    // 檔案沒有任何記錄時才用匯入當下。
-    final exportDate = info!
-        .where((row) => row.length > 1 && _text(row[0]?.value) == 'Export Date')
-        .map((row) => _time(row[1]?.value))
-        .firstOrNull;
+    // 「最後更新」與抓官方資料一致，記錄資料在這台裝置更新的時刻；
+    // 匯出檔的 Export Date 是匯出者瀏覽器的當地時間，沒有時區，不採用。
+    final now = DateTime.now().toUtc();
     return AccountsBundle(
-      exportedAt: DateTime.now().toUtc(),
+      exportedAt: now,
       appVersion: '',
       lastActiveUid: null,
       accounts: [
         ExportedAccount(
-          data: BannerStorage(
-            uid: '',
-            lastUpdated:
-                exportDate?.toUtc() ??
-                (times.isEmpty ? DateTime.now().toUtc() : times.last.toUtc()),
-            banners: banners,
-          ),
+          data: BannerStorage(uid: '', lastUpdated: now, banners: banners),
         ),
       ],
     );

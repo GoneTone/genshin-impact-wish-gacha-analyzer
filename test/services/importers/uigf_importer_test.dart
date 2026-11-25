@@ -108,40 +108,14 @@ void main() {
     expect(kPlatformImporters[1], isA<PaimonMoeImporter>());
   });
 
-  group('lastUpdated uses the export time, not the import moment', () {
-    /// `export_timestamp` 1748750400 對應的時間。
-    final exported = DateTime.utc(2025, 6, 1, 4);
-
-    test('fixture int timestamp', () async {
-      final bundle = await importer.parse(fixture('v3_0.json'));
-      expect(bundle.accounts.single.data.lastUpdated, exported);
-    });
-
-    test('string timestamp', () async {
-      final bundle = await importer.parse(
-        v4([rec()], exportTimestamp: '1748750400'),
-      );
-      expect(bundle.accounts.single.data.lastUpdated, exported);
-    });
-
-    test(
-      'missing or unparsable timestamp falls back to the newest record',
-      () async {
-        for (final ts in [null, 'soon']) {
-          final bundle = await importer.parse(
-            v4([
-              rec(id: '1735696800000000001', time: '2025-01-01 10:00:00'),
-              rec(id: '1735783200000000001', time: '2025-01-02 10:00:00'),
-            ], exportTimestamp: ts),
-          );
-          expect(
-            bundle.accounts.single.data.lastUpdated,
-            DateTime(2025, 1, 2, 10).toUtc(),
-            reason: '$ts',
-          );
-        }
-      },
-    );
+  test('lastUpdated is the import moment, not the export time', () async {
+    final before = DateTime.now().toUtc();
+    final bundle = await importer.parse(fixture('v3_0.json'));
+    final after = DateTime.now().toUtc();
+    final t = bundle.accounts.single.data.lastUpdated;
+    expect(t.isUtc, isTrue);
+    expect(t.isBefore(before), isFalse);
+    expect(t.isAfter(after), isFalse);
   });
 
   test('v3.0 single account', () async {

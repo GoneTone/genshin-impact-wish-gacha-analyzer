@@ -159,8 +159,8 @@ class UigfImporter implements PlatformImporter {
     for (final r in records) {
       (byUid[r.uid] ??= []).add(r);
     }
+    // 「最後更新」與抓官方資料一致，記錄資料在這台裝置更新的時刻。
     final now = DateTime.now().toUtc();
-    final exportedAt = _exportTime(info['export_timestamp']);
     final accounts = <ExportedAccount>[];
     for (final MapEntry(key: uid, value: list) in byUid.entries) {
       // 替代 id 的序號只看卡池與秒，不分 UID，所以要逐帳號產生。
@@ -196,11 +196,7 @@ class UigfImporter implements PlatformImporter {
       );
       accounts.add(
         ExportedAccount(
-          data: BannerStorage(
-            uid: uid,
-            lastUpdated: exportedAt ?? times.last.toUtc(),
-            banners: banners,
-          ),
+          data: BannerStorage(uid: uid, lastUpdated: now, banners: banners),
         ),
       );
     }
@@ -215,19 +211,6 @@ class UigfImporter implements PlatformImporter {
       lastActiveUid: null,
       accounts: accounts,
     );
-  }
-
-  /// `info.export_timestamp`（秒，數字或數字字串）轉成 UTC 時間；缺少或無法解析時
-  /// 回 null，由呼叫端改用帳號最新一筆記錄的時間。
-  static DateTime? _exportTime(Object? raw) {
-    final seconds = switch (raw) {
-      int v => v,
-      String v => int.tryParse(v.trim()),
-      _ => null,
-    };
-    return seconds == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true);
   }
 
   /// v2／v3：整份 `list` 是一個區塊，記錄的 `uid`／`lang` 優先於 `info` 的。

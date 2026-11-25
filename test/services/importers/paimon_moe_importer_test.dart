@@ -105,33 +105,20 @@ void main() {
     },
   );
 
-  group('lastUpdated uses Export Date, not the import moment', () {
-    /// 只含一筆標準祈願、`Export Date` 為 [exportDate] 的檔案解析後的 lastUpdated。
-    Future<DateTime> lastUpdated(Object? exportDate) async {
-      final bundle = await importer.parse(
-        buildPaimonXlsx({
-          'Standard': [
-            paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
-          ],
-        }, exportDate: exportDate),
-      );
-      return bundle.accounts.single.data.lastUpdated;
-    }
-
-    test('text and date cells are local time', () async {
-      final expected = DateTime(2025, 6, 1, 12, 34, 56).toUtc();
-      expect(await lastUpdated('2025-06-01 12:34:56'), expected);
-      expect(await lastUpdated(DateTime(2025, 6, 1, 12, 34, 56)), expected);
-    });
-
-    test(
-      'missing or unparsable Export Date falls back to the newest record',
-      () async {
-        final newest = DateTime(2025, 1, 1, 10).toUtc();
-        expect(await lastUpdated(null), newest);
-        expect(await lastUpdated('yesterday'), newest);
-      },
+  test('lastUpdated is the import moment, not Export Date', () async {
+    final before = DateTime.now().toUtc();
+    final bundle = await importer.parse(
+      buildPaimonXlsx({
+        'Standard': [
+          paimonRow('Weapon', 'Cool Steel', '2025-01-01 10:00:00', 3),
+        ],
+      }, exportDate: '2099-01-01 00:00:00'),
     );
+    final after = DateTime.now().toUtc();
+    final t = bundle.accounts.single.data.lastUpdated;
+    expect(t.isUtc, isTrue);
+    expect(t.isBefore(before), isFalse);
+    expect(t.isAfter(after), isFalse);
   });
 
   test('records sorted newest first', () async {
