@@ -833,9 +833,9 @@
     }
   },
   "platformUigfSubtitle": "genshin-wish-export und andere Tools · JSON",
-  "platformPaimonMoeSubtitle": "Paimon.moe · Excel",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "In welches Konto importieren?",
-  "importTargetAccountBody": "Paimon.moe-Exporte enthalten keine UID. Wähle das Konto, zu dem diese Einträge gehören.",
+  "importTargetAccountBody": "paimon.moe-Exporte enthalten keine UID. Wähle das Konto, zu dem diese Einträge gehören.",
   "importTargetAccountOtherUid": "Andere UID",
   "importTargetAccountUidHint": "UID eingeben",
   "importTargetAccountRecordCount": "{count, plural, =1{1 Eintrag auf diesem Gerät} other{{count} Einträge auf diesem Gerät}}",

@@ -53,7 +53,7 @@ void main() {
     expect(find.text('UIGF'), findsOneWidget);
     expect(find.text('genshin-wish-export 等工具・JSON'), findsOneWidget);
     expect(find.text('Paimon.moe'), findsOneWidget);
-    expect(find.text('Paimon.moe・Excel'), findsOneWidget);
+    expect(find.text('paimon.moe・Excel'), findsOneWidget);
 
     await tester.tap(find.text('UIGF'));
     await tester.pumpAndSettle();
@@ -102,7 +102,7 @@ void main() {
       addTearDown(tester.view.reset);
       await _open(tester);
       expect(tester.takeException(), isNull);
-      expect(find.text('Paimon.moe・Excel'), findsOneWidget);
+      expect(find.text('paimon.moe・Excel'), findsOneWidget);
     });
   }
 }

@@ -833,9 +833,9 @@
     }
   },
   "platformUigfSubtitle": "genshin-wish-export és más eszközök · JSON",
-  "platformPaimonMoeSubtitle": "Paimon.moe · Excel",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "Melyik fiókba importáljuk?",
-  "importTargetAccountBody": "A Paimon.moe exportjai nem tartalmaznak UID-t. Válassza ki, melyik fiókhoz tartoznak ezek a rekordok.",
+  "importTargetAccountBody": "A paimon.moe exportjai nem tartalmaznak UID-t. Válassza ki, melyik fiókhoz tartoznak ezek a rekordok.",
   "importTargetAccountOtherUid": "Másik UID",
   "importTargetAccountUidHint": "Adja meg az UID-t",
   "importTargetAccountRecordCount": "{count} rekord ezen az eszközön",
