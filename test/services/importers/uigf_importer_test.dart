@@ -130,7 +130,17 @@ void main() {
     });
 
     test('missing, invalid or future export time falls back to now', () async {
-      for (final ts in [null, 'abc', 0, -5, 99999999999999]) {
+      for (final ts in [
+        null,
+        'abc',
+        0,
+        -5,
+        99999999999999,
+        // 乘 1000 會超出 int64 的值。
+        10000000000000000,
+        '10000000000000000',
+        1e300,
+      ]) {
         final before = DateTime.now().toUtc();
         final bundle = await importer.parse(v4([rec()], exportTimestamp: ts));
         final after = DateTime.now().toUtc();

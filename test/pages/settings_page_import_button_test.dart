@@ -511,6 +511,48 @@ void main() {
   );
 
   testWidgets(
+    'a Paimon.moe import stores the confirm moment as the last update time',
+    (tester) async {
+      final (container, _) = await importFromPlatform(
+        tester,
+        'Paimon.moe',
+        buildPaimonXlsx({
+          'Standard': [
+            paimonRow('Weapon', 'Cool Steel', '2025-01-02 10:00:00', 3),
+          ],
+        }),
+        httpClient: MockClient((_) async => http.Response('', 404)),
+      );
+      await tester.pumpAndSettle();
+      // 本機沒有帳號時只有 UID 輸入框。
+      await tester.enterText(find.byType(TextField), '100000002');
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, '繼續'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, '繼續'));
+      await tester.pumpAndSettle();
+
+      // 解析在這之前就完成了，存下的時間不早於這裡才代表換成了按下匯入的時刻。
+      final beforeConfirm = DateTime.now().toUtc();
+      await tester.tap(find.widgetWithText(FilledButton, '匯入'));
+      BannerStorage? saved;
+      for (var i = 0; i < 20 && saved == null; i++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 100)),
+        );
+        await tester.pump();
+        saved = await tester.runAsync<BannerStorage?>(
+          () => GachaStorage(tempDir).load('100000002'),
+        );
+      }
+      expect(saved, isNotNull);
+      expect(saved!.allRecords, hasLength(1));
+      expect(saved.lastUpdated.isBefore(beforeConfirm), isFalse);
+      container.dispose();
+    },
+  );
+
+  testWidgets(
     'a dialog opened above the resolving dialog stays after resolving ends',
     (tester) async {
       final gate = Completer<http.Response>();

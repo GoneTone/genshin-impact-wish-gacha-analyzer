@@ -232,7 +232,8 @@ class UigfImporter implements PlatformImporter {
       _ => null,
     };
     if (seconds == null || seconds <= 0) return null;
-    if (seconds * 1000 >= now.millisecondsSinceEpoch) return now;
+    // 先用秒比較：極大的值乘 1000 會超出 int64。
+    if (seconds >= now.millisecondsSinceEpoch ~/ 1000) return now;
     return DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true);
   }
 
