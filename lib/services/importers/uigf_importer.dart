@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
@@ -88,9 +87,9 @@ class UigfImporter implements PlatformImporter {
   @override
   String? subtitle(AppLocalizations l) => l.platformUigfSubtitle;
 
-  /// 平台清單列前置 icon。
+  /// 平台清單列前置的平台圖示（UIGF 標誌）。
   @override
-  IconData get icon => Icons.data_object;
+  String get iconAsset => 'assets/platforms/uigf.png';
 
   /// 可接受副檔名。
   @override

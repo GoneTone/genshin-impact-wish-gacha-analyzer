@@ -29,7 +29,7 @@ class _PlatformPickerDialog extends StatelessWidget {
         children: [
           for (final importer in kPlatformImporters)
             ListTile(
-              leading: Icon(importer.icon),
+              leading: Image.asset(importer.iconAsset, width: 32, height: 32),
               title: Text(importer.displayName(l)),
               subtitle: switch (importer.subtitle(l)) {
                 final s? => Text(s),

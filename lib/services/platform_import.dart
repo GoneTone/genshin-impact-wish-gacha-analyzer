@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
@@ -78,8 +77,8 @@ abstract interface class PlatformImporter {
   /// 平台清單列的副標（在地化）；null 表示不顯示。
   String? subtitle(AppLocalizations l);
 
-  /// 平台清單列的前置 icon。
-  IconData get icon;
+  /// 平台清單列前置的平台圖示（asset 路徑）。
+  String get iconAsset;
 
   /// 可接受的副檔名（如 `['xlsx']`）。
   List<String> get fileExtensions;

@@ -62,3 +62,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/banners/
+    - assets/platforms/

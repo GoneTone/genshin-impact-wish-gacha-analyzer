@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -44,15 +45,15 @@ Future<void> _open(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('lists UIGF and paimon.moe and returns UIGF on tap', (
+  testWidgets('lists UIGF and Paimon.moe and returns UIGF on tap', (
     tester,
   ) async {
     await _open(tester);
     expect(find.text('選擇匯入來源平台'), findsOneWidget);
     expect(find.text('UIGF'), findsOneWidget);
     expect(find.text('genshin-wish-export 等工具・JSON'), findsOneWidget);
-    expect(find.text('paimon.moe'), findsOneWidget);
-    expect(find.text('paimon.moe・Excel'), findsOneWidget);
+    expect(find.text('Paimon.moe'), findsOneWidget);
+    expect(find.text('Paimon.moe・Excel'), findsOneWidget);
 
     await tester.tap(find.text('UIGF'));
     await tester.pumpAndSettle();
@@ -61,14 +62,27 @@ void main() {
     expect(_result, isA<UigfImporter>());
   });
 
-  testWidgets('returns paimon.moe on tap', (tester) async {
+  testWidgets('returns Paimon.moe on tap', (tester) async {
     await _open(tester);
 
-    await tester.tap(find.text('paimon.moe'));
+    await tester.tap(find.text('Paimon.moe'));
     await tester.pumpAndSettle();
 
     expect(_completed, isTrue);
     expect(_result, isA<PaimonMoeImporter>());
+  });
+
+  testWidgets('shows each platform icon asset', (tester) async {
+    await _open(tester);
+
+    for (final importer in kPlatformImporters) {
+      expect(
+        find.image(AssetImage(importer.iconAsset)),
+        findsOneWidget,
+        reason: importer.id,
+      );
+      expect(await rootBundle.load(importer.iconAsset), isNotNull);
+    }
   });
 
   testWidgets('cancel returns null', (tester) async {
@@ -88,7 +102,7 @@ void main() {
       addTearDown(tester.view.reset);
       await _open(tester);
       expect(tester.takeException(), isNull);
-      expect(find.text('paimon.moe・Excel'), findsOneWidget);
+      expect(find.text('Paimon.moe・Excel'), findsOneWidget);
     });
   }
 }

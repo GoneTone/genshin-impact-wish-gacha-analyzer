@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:excel_community/excel_community.dart';
-import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
@@ -51,9 +50,9 @@ class PaimonMoeImporter implements PlatformImporter {
   @override
   String? subtitle(AppLocalizations l) => l.platformPaimonMoeSubtitle;
 
-  /// 平台清單列前置 icon。
+  /// 平台清單列前置的平台圖示（Paimon.moe 網站圖示）。
   @override
-  IconData get icon => Icons.table_chart_outlined;
+  String get iconAsset => 'assets/platforms/paimon_moe.png';
 
   /// 可接受副檔名（paimon.moe 匯出為 .xlsx）。
   @override

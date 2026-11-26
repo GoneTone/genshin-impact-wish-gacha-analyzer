@@ -450,7 +450,7 @@ void main() {
   );
 
   testWidgets(
-    'a paimon.moe file goes to the chosen local account and merges into it',
+    'a Paimon.moe file goes to the chosen local account and merges into it',
     (tester) async {
       await tester.runAsync(
         () => GachaStorage(tempDir).save(
@@ -476,7 +476,7 @@ void main() {
       );
       final (_, extensions) = await importFromPlatform(
         tester,
-        'paimon.moe',
+        'Paimon.moe',
         buildPaimonXlsx({
           'Standard': [
             paimonRow('Weapon', 'Cool Steel', '2025-01-02 10:00:00', 3),
