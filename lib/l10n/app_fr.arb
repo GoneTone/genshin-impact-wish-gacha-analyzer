@@ -33,8 +33,7 @@
   "navSettings": "Paramètres",
   "navContributors": "Contribution",
   "gachaTypeCharacter": "Vœux événements de personnage",
-  "gachaTypeCharacter2": "Vœux événements de personnage - 2",
-  "gachaTypeWeapon": "Vœux événements d'arme",
+  "gachaTypeWeapon": "Vœux événements d'armes",
   "gachaTypeChronicled": "Vœux nostalgie",
   "gachaTypeStandard": "Vœux permanents",
   "gachaTypeBeginner": "Vœux des débutants",
@@ -54,7 +53,7 @@
     }
   },
   "relativeNow": "À l'instant",
-  "relativeSecondsAgo": "{count, plural, one{Il y a {count} seconde} other{Il y a {count} secondes}}",
+  "relativeSecondsAgo": "{count, plural, =1{Il y a 1 seconde} other{Il y a {count} secondes}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -62,7 +61,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count, plural, one{Il y a {count} minute} other{Il y a {count} minutes}}",
+  "relativeMinutesAgo": "{count, plural, =1{Il y a 1 minute} other{Il y a {count} minutes}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -70,7 +69,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count, plural, one{Il y a {count} heure} other{Il y a {count} heures}}",
+  "relativeHoursAgo": "{count, plural, =1{Il y a 1 heure} other{Il y a {count} heures}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -78,7 +77,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count, plural, one{Il y a {count} jour} other{Il y a {count} jours}}",
+  "relativeDaysAgo": "{count, plural, =1{Il y a 1 jour} other{Il y a {count} jours}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -86,7 +85,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count, plural, one{Il y a {count} mois} other{Il y a {count} mois}}",
+  "relativeMonthsAgo": "{count, plural, =1{Il y a 1 mois} other{Il y a {count} mois}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -94,7 +93,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count, plural, one{Il y a {count} an} other{Il y a {count} ans}}",
+  "relativeYearsAgo": "{count, plural, =1{Il y a 1 an} other{Il y a {count} ans}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -106,9 +105,6 @@
   "uidNotSynced": "Non synchronisé",
   "uidActiveSuffix": " (actif)",
   "emptyNoSyncTitle": "Aucune donnée synchronisée",
-  "emptyNoSyncMessage": "Appuyez sur {icon} en haut à droite pour commencer",
-  "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
-  "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
   "emptyNoOdesRecords": "Aucun enregistrement d'odes",
   "emptyNoGachaRecords": "Aucun enregistrement de vœux",
   "statsTotal": "Voeux totaux",
@@ -148,23 +144,6 @@
   },
   "tableTotalIndex": "Voeux totaux",
   "tableMainPity": "Pity actuel",
-  "tableSortButton": "Tri : {column}",
-  "@tableSortButton": {
-    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
-    "placeholders": {
-      "column": {
-        "type": "String"
-      }
-    }
-  },
-  "tableSortDefault": "Tri : par défaut",
-  "@tableSortDefault": {
-    "description": "Sort button text when the records are in their default order"
-  },
-  "tableSortSheetTitle": "Trier par",
-  "@tableSortSheetTitle": {
-    "description": "Title of the bottom sheet that picks the sort column"
-  },
   "tableMainPityTooltip": "Tirages depuis le dernier {star}",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -183,19 +162,6 @@
   "progressFetching": "Récupération...",
   "progressDone": "Mise à jour terminée",
   "progressFailed": "Échec",
-  "progressOpenGameHint": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
-  "progressFallbackHint": "(L'URL précédente de l'historique des vœux a expiré, elle doit être obtenue à nouveau)",
-  "progressNotDetectedLink": "Vous avez ouvert l'historique des vœux mais rien ne se passe ?",
-  "progressCaptureUnavailableHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé) ; la détection se fait donc uniquement via le cache web du jeu. Veuillez ouvrir la page de l'historique des vœux dans le jeu.",
-  "progressCaptureUnavailableNoGameDirHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé), et le dossier du jeu est introuvable. Appuyez sur « Choisir le dossier du jeu » ci-dessous pour le définir manuellement.",
-  "gameDirHelpTitle": "Historique des vœux non détecté",
-  "gameDirHelpNotFound": "Le dossier de Genshin Impact est introuvable. Une fois le dossier du jeu choisi, cet outil pourra aussi obtenir l'URL de l'historique des vœux depuis le cache web du jeu.",
-  "gameDirHelpFound": "Dossier du jeu actuellement utilisé : {path}. S'il ne correspond pas à la copie du jeu que vous utilisez, veuillez en choisir un autre.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
-  "gameDirHelpReopen": "Dossier du jeu défini. Retournez dans le jeu et ouvrez à nouveau l'historique des vœux.",
-  "gameDirInvalid": "Genshin Impact est introuvable dans ce dossier. Veuillez choisir le dossier « Genshin Impact game ».",
-  "actionChooseGameDir": "Choisir le dossier du jeu",
-  "actionRechooseGameDir": "Choisir à nouveau",
   "progressFetchingBanner": "Récupération : {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -204,7 +170,7 @@
       }
     }
   },
-  "progressPageStatus": "{count, plural, one{Page {page}, {count} enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
+  "progressPageStatus": "{count, plural, =1{Page {page}, 1 enregistrement ajouté} other{Page {page}, {count} enregistrements ajoutés}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -215,15 +181,7 @@
       }
     }
   },
-  "progressDoneSummary": "{count, plural, one{{count} enregistrement ajouté} other{{count} enregistrements ajoutés}}",
-  "@progressDoneSummary": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressDoneImagesSummary": "{count, plural, one{{count} image d'objet téléchargée} other{{count} images d'objets téléchargées}}",
+  "progressDoneImagesSummary": "{count, plural, =1{{count} image d'objet téléchargée} other{{count} images d'objets téléchargées}}",
   "@progressDoneImagesSummary": {
     "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
     "placeholders": {
@@ -232,7 +190,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "{count, plural, one{Données de {count} objet mises à jour} other{Données de {count} objets mises à jour}}",
+  "progressDoneItemDataSummary": "Données de {count} objets mises à jour",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -241,7 +199,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "{count, plural, one{{count} image d'objet manquante téléchargée} other{{count} images d'objets manquantes téléchargées}}",
+  "progressDoneItemDataImagesSummary": "{count} images d'objets manquantes téléchargées",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -250,7 +208,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "{count, plural, one{Données de langue obsolètes nettoyées pour {count} objet} other{Données de langue obsolètes nettoyées pour {count} objets}}",
+  "progressDoneItemDataPrunedSummary": "Données de langue obsolètes nettoyées pour {count} objets",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -267,7 +225,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, one{{accounts} compte importé} other{{accounts} comptes importés}} : {added} nouveaux, {duplicate} déjà présents",
+  "progressDoneImportSummary": "{accounts, plural, =1{1 compte importé} other{{accounts} comptes importés}} : {added} nouveaux, {duplicate} déjà présents",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
@@ -334,11 +292,9 @@
       }
     }
   },
-  "errorNoRecords": "Ce compte n'a aucun enregistrement de vœux",
   "pageOverviewTitle": "Données globales",
   "pageOverviewGachaSection": "Vue d'ensemble des vœux",
   "pageOverviewOdesSection": "Vue d'ensemble des odes",
-  "pageBannerRecordList": "Liste des enregistrements",
   "rarityOverviewTitle": "Aperçu {star}",
   "@rarityOverviewTitle": {
     "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
@@ -373,19 +329,10 @@
   },
   "settingsDataLanguageUnifyFailed": "Échec de la conversion, les données n'ont pas été modifiées. Veuillez vérifier votre connexion et réessayer.",
   "settingsDataManagement": "Gestion des données",
-  "settingsGameDir": "Dossier du jeu",
-  "settingsGameDirAuto": "Détecté automatiquement : {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
-  "settingsGameDirManual": "Défini manuellement : {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
-  "settingsGameDirNone": "Dossier du jeu introuvable",
-  "actionClearGameDir": "Effacer",
   "settingsCloudSync": "Synchronisation cloud",
-  "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs appareils.",
   "cloudSyncUnconfigured": "Cette version ne contient pas d'identifiants Google OAuth ; la synchronisation cloud est indisponible.",
   "cloudSyncLink": "Associer un compte Google",
   "cloudSyncAwaitingConsent": "Navigateur ouvert. Terminez l'autorisation dans le navigateur...",
-  "cloudSyncAwaitingConsentAndroid": "Veuillez terminer l'autorisation dans la fenêtre Google...",
   "cloudSyncLinkedAs": "Associé : {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -424,14 +371,6 @@
   "settingsPrivacySectionTitle": "Confidentialité",
   "settingsMaskUidInUi": "Masquer l'UID dans l'interface",
   "settingsMaskUidInUiHint": "Lorsqu'activé, les UID dans l'interface et la liste des comptes affichent les 3 premiers chiffres et le reste est masqué (par exemple 123•••••). Utile pour le streaming ou le partage d'écran. Les images de partage, les fichiers exportés et la boîte de dialogue de confirmation de suppression ne sont pas affectés.",
-  "settingsAdPrivacyOptions": "Options de confidentialité des annonces",
-  "@settingsAdPrivacyOptions": {
-    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
-  },
-  "settingsAdPrivacyOptionsHint": "Modifiez votre consentement à l'affichage de publicités personnalisées.",
-  "@settingsAdPrivacyOptionsHint": {
-    "description": "One-line explanation shown above the ad privacy options button."
-  },
   "settingsAbout": "Sur",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {
@@ -453,7 +392,6 @@
   "contributorsTranslatedLanguages": "Langues traduites",
   "contributorsHelpTranslate": "Votre langue n'est pas disponible ? Aidez-nous à traduire !",
   "contributorsProjectLicense": "Licence du projet",
-  "contributorsOpenSourceLicenses": "Licences open source",
   "pityRank": "pity {star}",
   "@pityRank": {
     "placeholders": {
@@ -473,7 +411,7 @@
       }
     }
   },
-  "pityDistance": "{n, plural, one{{n} tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
+  "pityDistance": "{n, plural, =1{1 tirage avant le prochain pity} other{{n} tirages avant le prochain pity}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -481,7 +419,7 @@
       }
     }
   },
-  "pityClose": "{n, plural, one{Pity imminent ! {n} tirage restant} other{Pity imminent ! {n} tirages restants}}",
+  "pityClose": "{n, plural, =1{Pity imminent ! 1 tirage restant} other{Pity imminent ! {n} tirages restants}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -507,15 +445,7 @@
       }
     }
   },
-  "timelineNoRecordsForRank": "Aucun enregistrement {star}",
-  "@timelineNoRecordsForRank": {
-    "placeholders": {
-      "star": {
-        "type": "String"
-      }
-    }
-  },
-  "timelineSinceLast": "{n, plural, one{{n} tirage} other{{n} tirages}}",
+  "timelineSinceLast": "{n, plural, =1{1 tirage} other{{n} tirages}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -524,7 +454,7 @@
     }
   },
   "timelineNowLabel": "Maintenant",
-  "timelineNowPulls": "{n, plural, one{{n} tirage effectué} other{{n} tirages effectués}}",
+  "timelineNowPulls": "{n, plural, =1{1 tirage effectué} other{{n} tirages effectués}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -532,7 +462,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n, plural, one{{n} tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
+  "timelineNowSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -543,7 +473,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, one{{n} tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 tirage depuis le dernier {star}, toutes catégories confondues} other{{n} tirages depuis le dernier {star}, toutes catégories confondues}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -567,7 +497,7 @@
   },
   "timelineScrollLeft": "Défiler vers la gauche",
   "timelineScrollRight": "Défiler vers la droite",
-  "timelineLoadMore": "{n, plural, one{Charger plus ({n} restant)} other{Charger plus ({n} restants)}}",
+  "timelineLoadMore": "{n, plural, =1{Charger plus (1 restant)} other{Charger plus ({n} restants)}}",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -589,20 +519,11 @@
   "filterClear": "Effacer les filtres",
   "pagerFirst": "Première page",
   "pagerLast": "Dernière page",
-  "pagerJumpTitle": "Aller à la page",
-  "pagerJumpLabel": "Page ({min}–{max})",
-  "pagerJumpCurrent": "Page actuelle : {page} · {total, plural, one{{total} enregistrement} other{{total} enregistrements}}",
-  "pagerJumpGo": "Aller",
-  "pagerJumpInvalid": "Saisissez une page de {min} à {max}",
   "settingsClearActive": "Effacer les données du compte actuel",
   "settingsClearAll": "Effacer toutes les données",
   "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
-  },
-  "settingsRefetchHoyoWikiImagesEmpty": "Aucun enregistrement de vœux, rien à retélécharger",
-  "@settingsRefetchHoyoWikiImagesEmpty": {
-    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
   "confirmRefetchHoyoWikiTitle": "Forcer le re-téléchargement des images d'objets",
   "@confirmRefetchHoyoWikiTitle": {
@@ -743,17 +664,6 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmation d'importation",
-  "settingsImportConfirmIntro": "Sur le point d'importer {accounts, plural, one{{accounts} compte} other{{accounts} comptes}} ({records, plural, one{{records} enregistrement} other{{records} enregistrements}} au total) :",
-  "@settingsImportConfirmIntro": {
-    "placeholders": {
-      "accounts": {
-        "type": "int"
-      },
-      "records": {
-        "type": "int"
-      }
-    }
-  },
   "settingsImportConfirmMergeHeader": "Les comptes suivants seront fusionnés avec les données locales ; les enregistrements existants ne seront pas supprimés :",
   "settingsImportConfirmNoConflict": "Aucun conflit de données.",
   "settingsImportConfirmPreserveFooter": "Les autres comptes existants ({uids}) seront conservés.",
@@ -761,17 +671,6 @@
     "placeholders": {
       "uids": {
         "type": "String"
-      }
-    }
-  },
-  "settingsImportSuccess": "{accounts, plural, one{{accounts} compte importé} other{{accounts} comptes importés}} avec succès ({records, plural, one{{records} enregistrement} other{{records} enregistrements}})",
-  "@settingsImportSuccess": {
-    "placeholders": {
-      "accounts": {
-        "type": "int"
-      },
-      "records": {
-        "type": "int"
       }
     }
   },
@@ -802,117 +701,11 @@
   "importReasonUnreadable": "Impossible de lire le fichier",
   "exportReasonWriteFailed": "Impossible d'écrire le fichier, veuillez vérifier l'emplacement d'enregistrement et les autorisations",
   "importReasonForeignApp": "Ce fichier n'a pas été exporté par cette application",
-  "platformUigf": "UIGF",
-  "platformPaimonMoe": "Paimon.moe",
-  "settingsImportOtherPlatform": "Importer depuis d'autres plateformes",
-  "platformPickerTitle": "Choisir une plateforme source",
-  "importReasonNotPlatformFile": "Ce fichier n'est pas une exportation {platform} valide",
-  "@importReasonNotPlatformFile": {
-    "placeholders": {
-      "platform": {
-        "type": "String"
-      }
-    }
-  },
-  "platformUigfSubtitle": "genshin-wish-export et autres outils · JSON",
-  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
-  "importTargetAccountTitle": "Importer dans quel compte ?",
-  "importTargetAccountBody": "Les exportations paimon.moe ne contiennent pas d'UID. Choisissez le compte auquel appartiennent ces enregistrements.",
-  "importTargetAccountOtherUid": "Autre UID",
-  "importTargetAccountUidHint": "Saisir l'UID",
-  "importTargetAccountRecordCount": "{count, plural, one{{count} enregistrement sur cet appareil} other{{count} enregistrements sur cet appareil}}",
-  "@importTargetAccountRecordCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "importReasonUigfVersionTooNew": "Ce fichier utilise une version UIGF plus récente ({version}) qui n'est pas encore prise en charge. Mettez à jour l'application ou exportez en v4 depuis l'outil d'origine.",
-  "@importReasonUigfVersionTooNew": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "importReasonUnknownGachaType": "Le fichier contient des types de vœux non pris en charge ({types})",
-  "@importReasonUnknownGachaType": {
-    "placeholders": {
-      "types": {
-        "type": "String"
-      }
-    }
-  },
-  "importReasonItemUnresolved": "Impossible de compléter les données de l'objet ({item}). Vérifiez votre connexion et réessayez.",
-  "@importReasonItemUnresolved": {
-    "placeholders": {
-      "item": {
-        "type": "String"
-      }
-    }
-  },
-  "importOverlapWarning": "⚠ {uid} : les deux côtés ont des enregistrements du {from} au {to}, mais aucun des {groups} tirages de cette période ne correspond aux enregistrements officiels de cet appareil. Vous avez peut-être choisi le mauvais compte, ou le fichier utilise un autre fuseau horaire.",
-  "@importOverlapWarning": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      },
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      },
-      "groups": {
-        "type": "int"
-      }
-    }
-  },
-  "importOverlapWarningPartial": "⚠ {uid} : les deux côtés ont des enregistrements du {from} au {to}, mais les enregistrements officiels de cet appareil ne correspondent qu'à {matched} des {groups} tirages de cette période. Vous avez peut-être choisi le mauvais compte, ou le fichier utilise un autre fuseau horaire.",
-  "@importOverlapWarningPartial": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      },
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      },
-      "groups": {
-        "type": "int"
-      },
-      "matched": {
-        "type": "int"
-      }
-    }
-  },
-  "confirmImportAnyway": "Importer quand même",
-  "importResolvingItems": "Finalisation des données des objets...",
   "settingsExportSelectTitle": "Sélectionner les comptes à exporter",
   "settingsImportSelectTitle": "Sélectionner les comptes à importer",
   "settingsImportMergeBadge": "Fusionner",
   "accountsPickerSelectAll": "Tout sélectionner",
-  "accountRecordCount": "{n, plural, one{{n} enregistrement} other{{n} enregistrements}}",
-  "@accountRecordCount": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "confirmTitle": "Confirmation",
-  "confirmClearActiveBody": "Ceci supprimera définitivement tous les enregistrements de vœux de l'UID {uid}. Saisissez l'UID pour confirmer :",
-  "@confirmClearActiveBody": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmClearAllBody": "Ceci supprimera définitivement tous les enregistrements de vœux de tous les comptes. Saisissez DELETE pour confirmer :",
   "confirmDelete": "Supprimer",
   "confirmImport": "Importer",
   "confirmExport": "Exporter",
@@ -932,9 +725,6 @@
   "accountAdd": "Ajouter un compte",
   "accountAliasLabel": "Alias",
   "accountAliasHint": "Donnez un nom mémorable à ce compte",
-  "accountAliasNone": "Aucun alias",
-  "accountActionEditAlias": "Modifier l'alias",
-  "accountEditAliasTitle": "Modifier l'alias",
   "accountDragHandleTooltip": "Glisser pour réorganiser",
   "loadingBootstrap": "Chargement...",
   "timelineTopRarityTitle": "Chronologie {star} ({n})",
@@ -949,7 +739,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Nombre d'objets de rareté maximale par vœu",
-  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 tirage depuis le dernier {star}} other{{n} tirages depuis le dernier {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {
@@ -977,15 +767,6 @@
     }
   },
   "updateButtonDownload": "Télécharger",
-  "updateButtonUpdate": "Mettre à jour",
-  "updateNotesUnavailable": "Les notes de version sont indisponibles pour le moment. Consultez Google Play pour plus de détails.",
-  "updateDownloadingMessage": "Téléchargement de la mise à jour...",
-  "@updateDownloadingMessage": {
-    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
-  },
-  "updateDownloadedMessage": "La mise à jour a été téléchargée",
-  "updateRestartAction": "Redémarrer",
-  "updateInAppUnavailable": "Impossible de mettre à jour depuis l'application pour le moment. Veuillez passer par Google Play.",
   "updateButtonSkip": "Ignorer cette version",
   "updateButtonLater": "Plus tard",
   "updateCheckButton": "Vérifier les mises à jour",
@@ -1011,7 +792,6 @@
     }
   },
   "updateErrorFormat": "Format de réponse inattendu",
-  "updateErrorPlay": "Impossible de joindre Google Play, ou cette copie n'a pas été installée depuis Google Play",
   "currentReleaseTitle": "Notes de version actuelles",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -1091,10 +871,6 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
-  "detailScrollDown": "Défiler vers le bas",
-  "@detailScrollDown": {
-    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
-  },
   "actionViewOnHoYoWiki": "Voir sur HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -1154,211 +930,5 @@
   },
   "luckTierLucky": "Chanceux",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Malchanceux",
-  "manualUrlEntry": "Saisir l'URL de l'historique des vœux manuellement",
-  "manualUrlTitle": "Saisir l'URL de l'historique des vœux manuellement",
-  "manualUrlHint": "Si vous avez déjà obtenu l'URL de l'historique des vœux autrement (par exemple avec un outil sur votre ordinateur), vous pouvez la coller ici. Coller tout le texte fonctionne aussi : l'application trouve l'URL automatiquement.",
-  "manualUrlFieldHint": "Coller l'URL...",
-  "manualUrlPaste": "Coller depuis le presse-papiers",
-  "manualUrlNotFound": "Aucune URL de l'historique des vœux trouvée. Vérifiez le contenu collé.",
-  "manualUrlWarning": "L'URL contient les identifiants de votre compte. Ne la partagez pas publiquement. Elle expire au bout d'un certain temps.",
-  "manualUrlSubmit": "OK",
-  "progressWaitingLog": "En attente de l'ouverture de la page de l'historique des vœux dans le jeu...",
-  "progressOpenGameHintAndroid": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
-  "progressCheckingLogAccess": "Préparation de la lecture du journal du jeu...",
-  "progressLogUnavailableTitle": "Impossible d'obtenir automatiquement l'URL de l'historique des vœux",
-  "logUnavailableNotPaired": "La lecture du journal du jeu n'est pas encore configurée. Après une configuration unique, il sera lu automatiquement à chaque mise à jour.",
-  "logUnavailableNoWifi": "Le débogage sans fil ne fonctionne qu'en Wi‑Fi. Connectez-vous à un réseau Wi‑Fi et revenez ; l'application reprendra automatiquement. Vous pouvez aussi saisir l'URL manuellement.",
-  "logRootDeniedHint": "Le root a été détecté, mais l'accès root n'a pas été accordé à cette application. Pour lire via le root, autorisez cette application dans votre gestionnaire root (par exemple la liste Superuser de Magisk), puis revenez ; l'application réessaiera automatiquement.",
-  "logUnavailableAdbFailed": "Impossible de se connecter au débogage sans fil. L'association a peut-être expiré ; veuillez associer à nouveau.",
-  "logUnavailableWirelessOff": "Votre appareil n'autorise pas cette application à activer le débogage sans fil. Activez-le sur la page Débogage sans fil, puis revenez ; l'application reprendra automatiquement.",
-  "logUnavailableNetworkNotAllowed": "Ce réseau Wi‑Fi n'est pas encore autorisé pour le débogage sans fil. Appuyez sur Autoriser dans l'invite du système (cochez « Toujours autoriser sur ce réseau » pour ne plus être sollicité) et l'application reprendra automatiquement. Si vous avez fermé l'invite, appuyez sur Réessayer.",
-  "logUnavailableUnsupported": "Cet appareil ne peut pas lire automatiquement l'URL de l'historique des vœux (Android 11 ou version ultérieure, ou root, requis). Veuillez la saisir manuellement.",
-  "logUnavailableGameNotInstalled": "Genshin Impact est introuvable sur cet appareil. Après l'installation, revenez ici et le jeu sera détecté automatiquement.",
-  "actionOpenGame": "Ouvrir Genshin Impact",
-  "actionOpenWirelessDebugging": "Ouvrir Débogage sans fil",
-  "progressLogConnectionLost": "Connexion au débogage sans fil perdue, reconnexion... Si elle ne se rétablit pas, vérifiez votre Wi‑Fi ou saisissez l'URL manuellement.",
-  "progressWirelessLeftOnHint": "Le débogage sans fil est toujours activé. Vous pouvez le désactiver dans les paramètres du système.",
-  "progressCredentialReady": "URL de l'historique des vœux obtenue. La récupération de votre historique des vœux commencera à votre retour dans cette application.",
-  "actionRedetectGame": "Vérifier à nouveau",
-  "updateOpenPlayStore": "Ouvrir Google Play",
-  "actionSetupLogAccess": "Configurer",
-  "@actionSetupLogAccess": {
-    "description": "Waiting screen button that opens the log access setup page"
-  },
-  "actionRepair": "Associer à nouveau",
-  "@actionRepair": {
-    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
-  },
-  "setupTitle": "Lire le journal système",
-  "@setupTitle": {
-    "description": "App bar title of the log access setup disclosure page"
-  },
-  "setupWhyTitle": "Pourquoi est-ce nécessaire ?",
-  "@setupWhyTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupWhyBody": "Android ne permet pas aux applications de lire directement le journal système d'autres applications. Cette application utilise la fonction intégrée de débogage sans fil pour lire l'URL de l'historique des vœux de Genshin Impact.",
-  "@setupWhyBody": {
-    "description": "Disclosure page: why the app needs wireless debugging"
-  },
-  "setupWhatTitle": "Ce que fait cette application",
-  "@setupWhatTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupWhatBody": "• Lit uniquement l'URL de l'historique des vœux de Genshin Impact\n• Se déconnecte juste après la lecture, et désactive le débogage sans fil si c'est cette application qui l'a activé\n• S'accorde l'autorisation d'activer et de désactiver le débogage sans fil, pour que vous n'ayez pas à refaire la configuration\n• Vous pouvez retirer cette autorisation à tout moment dans les Paramètres",
-  "@setupWhatBody": {
-    "description": "Disclosure page bullet list. Keep the line breaks."
-  },
-  "setupNeedTitle": "Prérequis",
-  "@setupNeedTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupNeedBody": "Android 11 ou version ultérieure, Wi‑Fi, notifications autorisées",
-  "@setupNeedBody": {
-    "description": "Disclosure page requirements"
-  },
-  "setupStart": "Commencer la configuration",
-  "@setupStart": {
-    "description": "Disclosure page primary button"
-  },
-  "setupUseManual": "Saisir l'URL manuellement à la place",
-  "@setupUseManual": {
-    "description": "Disclosure page link to manual input instead"
-  },
-  "setupPairTitle": "Associer le débogage sans fil",
-  "@setupPairTitle": {
-    "description": "App bar title of the pairing guide page"
-  },
-  "setupStepDevOptions": "1. Activer les Options pour les développeurs",
-  "@setupStepDevOptions": {
-    "description": "Pairing guide step 1 title"
-  },
-  "setupStepDevOptionsBody": "1. Ouvrez la page À propos dans les Paramètres du système (par exemple « À propos du téléphone » ou « À propos de la tablette »)\n2. Trouvez « Numéro de build » et appuyez dessus 7 fois\n3. Lorsque « Vous êtes maintenant développeur ! » s'affiche, revenez à cette application",
-  "@setupStepDevOptionsBody": {
-    "description": "Pairing guide step 1 instructions. Keep the line breaks."
-  },
-  "setupDevOptionsUndetected": "Les Options pour les développeurs sont toujours désactivées. Si, en appuyant sur « Numéro de build », le système a indiqué qu'il n'y avait plus rien à faire (par exemple « Vous êtes déjà développeur »), l'interrupteur principal des Options pour les développeurs est désactivé. Ouvrez les Options pour les développeurs, activez l'interrupteur en haut, puis revenez à cette application.",
-  "@setupDevOptionsUndetected": {
-    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
-  },
-  "setupOpenAbout": "Ouvrir la page À propos",
-  "@setupOpenAbout": {
-    "description": "Button that opens the system About page"
-  },
-  "setupStepDevOptionsDone": "1. Options pour les développeurs activées",
-  "@setupStepDevOptionsDone": {
-    "description": "Pairing guide step 1 done"
-  },
-  "setupStepNotifications": "2. Autoriser les notifications",
-  "@setupStepNotifications": {
-    "description": "Pairing guide step 2 title"
-  },
-  "setupStepNotificationsBody": "Vous saisirez le code d'association dans une notification ; autorisez donc cette application à afficher des notifications.",
-  "@setupStepNotificationsBody": {
-    "description": "Pairing guide step 2 explanation"
-  },
-  "setupAllowNotifications": "Autoriser les notifications",
-  "@setupAllowNotifications": {
-    "description": "Button that requests notification permission"
-  },
-  "setupOpenNotificationSettings": "Ouvrir les paramètres de notification",
-  "@setupOpenNotificationSettings": {
-    "description": "Button that opens the app's notification settings after the permission was denied"
-  },
-  "setupStepNotificationsDone": "2. Notifications autorisées",
-  "@setupStepNotificationsDone": {
-    "description": "Pairing guide step 2 done"
-  },
-  "setupStepPair": "3. Associer",
-  "@setupStepPair": {
-    "description": "Pairing guide step 3 title"
-  },
-  "setupStepPairBody": "1. Appuyez sur le bouton ci-dessous pour ouvrir Débogage sans fil\n2. Activez « Utiliser le débogage sans fil » et appuyez sur « Associer l'appareil avec un code d'association »\n3. Balayez l'écran vers le bas depuis le haut et, dans la notification de cette application, saisissez le code d'association à 6 chiffres affiché sur l'écran d'association de Débogage sans fil",
-  "@setupStepPairBody": {
-    "description": "Pairing guide step 3 instructions. Keep the line breaks."
-  },
-  "setupWaitingCode": "En attente de la saisie du code d'association dans la notification...\nSaisissez-le pendant que l'écran d'association du débogage sans fil est encore ouvert.",
-  "@setupWaitingCode": {
-    "description": "Pairing guide while waiting for the code. Keep the line break."
-  },
-  "setupOpenWirelessAgain": "Rouvrir Débogage sans fil",
-  "@setupOpenWirelessAgain": {
-    "description": "Button to open Wireless debugging again while waiting"
-  },
-  "setupPairing": "Association...",
-  "@setupPairing": {
-    "description": "Shown while pairing and granting permission"
-  },
-  "setupGrantFailedTitle": "Associé, encore une étape",
-  "@setupGrantFailedTitle": {
-    "description": "Card title when pairing worked but the permission grant failed"
-  },
-  "setupGrantFailedBody": "Votre appareil applique une restriction de sécurité supplémentaire. Activez une option de plus pour que cette application puisse activer et désactiver automatiquement le débogage sans fil.",
-  "@setupGrantFailedBody": {
-    "description": "Explanation when the permission grant failed"
-  },
-  "setupGrantHowTitle": "Comment l'activer",
-  "@setupGrantHowTitle": {
-    "description": "Card title for how to enable the extra option"
-  },
-  "setupGrantHowBody": "1. Ouvrez les Options pour les développeurs\n2. Trouvez l'option liée à la sécurité du débogage USB ou à la surveillance des autorisations et activez-la, par exemple :\n• Xiaomi : « Débogage USB (paramètres de sécurité) »\n• OPPO / realme : « Désactiver la surveillance des autorisations »\n3. Vérifiez que le débogage sans fil est activé, puis revenez et appuyez sur Réessayer",
-  "@setupGrantHowBody": {
-    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
-  },
-  "setupOpenDeveloperOptions": "Ouvrir les Options pour les développeurs",
-  "@setupOpenDeveloperOptions": {
-    "description": "Button that opens Developer options"
-  },
-  "setupRetry": "Réessayer",
-  "@setupRetry": {
-    "description": "Button to retry granting the permission"
-  },
-  "setupSkipGrant": "Ignorer (activer vous-même le débogage sans fil à chaque mise à jour)",
-  "@setupSkipGrant": {
-    "description": "Link to skip the grant and use manual toggle mode"
-  },
-  "setupDoneTitle": "Tout est prêt",
-  "@setupDoneTitle": {
-    "description": "Title when setup finished"
-  },
-  "setupDoneBody": "Désormais, Mettre à jour lit le journal automatiquement. Aucune autre configuration n'est nécessaire.",
-  "@setupDoneBody": {
-    "description": "Body when setup finished"
-  },
-  "setupDoneManualBody": "Lorsque vous appuyez sur Mettre à jour, activez le débogage sans fil quand cela vous est demandé.",
-  "@setupDoneManualBody": {
-    "description": "Body when setup finished in manual toggle mode"
-  },
-  "setupDoneReturning": "Retour et lancement de la mise à jour...",
-  "@setupDoneReturning": {
-    "description": "Shown just before returning and starting the update"
-  },
-  "settingsLogAccess": "Accès au journal du jeu",
-  "logAccessMethodRoot": "Root",
-  "logAccessMethodWireless": "Débogage sans fil",
-  "logAccessMethodNone": "Non configuré",
-  "settingsPairingStatus": "Association",
-  "settingsPaired": "Associé",
-  "settingsPairedManual": "Associé (activer le débogage sans fil manuellement)",
-  "settingsRetryGrant": "Réessayer l'autorisation",
-  "settingsSetupLogAccess": "Configurer",
-  "settingsUnpair": "Supprimer l'association",
-  "settingsUnpairConfirmTitle": "Supprimer l'association ?",
-  "settingsUnpairConfirmBody": "La clé d'association de cette application sera supprimée et cette application perdra l'autorisation d'activer ou de désactiver le débogage sans fil. Vous devrez associer à nouveau pour utiliser le débogage sans fil plus tard.",
-  "settingsUnpairDone": "Association supprimée",
-  "settingsUnpairDoneBody": "La clé d'association de cette application a été supprimée et son autorisation d'activer ou de désactiver le débogage sans fil a été retirée.",
-  "settingsUnpairUnreachableTitle": "Clé d'association supprimée",
-  "settingsUnpairUnreachableBody": "La clé d'association de cette application a été supprimée, mais la connexion au débogage sans fil a échoué cette fois ; l'autorisation de l'activer ou de le désactiver n'a donc pas été retirée.",
-  "settingsUnpairUnreachableRevokeHint": "Cette application n'utilise pas cette autorisation tant qu'elle n'est pas associée. Pour la retirer complètement, connectez-vous à un réseau Wi‑Fi, associez à nouveau, puis dissociez une nouvelle fois.",
-  "settingsUnpairLeftover": "La liste Débogage sans fil → Appareils associés du système affichera toujours « {name} ». Il ne peut plus se connecter, vous pouvez donc le laisser ; pour le retirer, appuyez dessus puis supprimez-le.",
-  "settingsUnpairLeftoverAlso": "La liste Débogage sans fil → Appareils associés du système affiche aussi toujours « {name} » ; appuyez dessus pour le supprimer.",
-  "settingsLogAccessMethod": "Méthode",
-  "actionShare": "Partager",
-  "shareFailed": "Impossible de partager",
-  "dialogSaveAsTitle": "Enregistrer sous",
-  "dialogOpenTitle": "Ouvrir",
-  "dialogSelectFolderTitle": "Choisir un dossier",
-  "actionSave": "Enregistrer",
-  "settingsLogsShare": "Partager les journaux"
+  "luckTierUnlucky": "Malchanceux"
 }
