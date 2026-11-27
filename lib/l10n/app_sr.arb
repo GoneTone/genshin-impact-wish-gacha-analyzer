@@ -1,5 +1,1174 @@
 {
   "@@locale": "sr",
+  "localeNativeName": "Српски",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Превод: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Анализатор Wish за Genshin Impact",
+  "actionUpdate": "Ажурирај",
+  "actionCancel": "Откажи",
+  "actionClose": "Затвори",
+  "actionPrevPage": "Претходна",
+  "actionNextPage": "Следећа",
+  "actionOpenFolder": "Отвори фасциклу",
+  "navOverview": "Преглед",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Подешавања",
+  "navContributors": "Сарадници",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Није синхронизовано",
+  "footerLastUpdated": "Ажурирано: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Управо сада",
+  "relativeSecondsAgo": "{count, plural, one{пре {count} секунде} few{пре {count} секунде} other{пре {count} секунди}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, one{пре {count} минута} few{пре {count} минута} other{пре {count} минута}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, one{пре {count} сата} few{пре {count} сата} other{пре {count} сати}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, one{пре {count} дана} few{пре {count} дана} other{пре {count} дана}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, one{пре {count} месеца} few{пре {count} месеца} other{пре {count} месеци}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, one{пре {count} године} few{пре {count} године} other{пре {count} година}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Промени налог",
+  "uidNotSynced": "Није синхронизовано",
+  "uidActiveSuffix": " (активан)",
+  "emptyNoSyncTitle": "Подаци још нису преузети",
+  "emptyNoSyncMessage": "Додирните {icon} у горњем десном углу да бисте почели",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "Нема записа за овај банер",
+  "emptyNoFilterMatch": "Нема записа који одговарају филтеру",
+  "emptyNoOdesRecords": "Још нема записа Ode",
+  "emptyNoGachaRecords": "Још нема записа Wish",
+  "statsTotal": "Укупно извлачења",
+  "statsRankCount": "Укупно {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% од укупног броја",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Расподела по реткости",
+  "statsItemTypeDistribution": "Расподела по типу",
+  "statsNoData": "Нема података",
+  "kindUnknown": "Непознато",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Време",
+  "tableName": "Назив",
+  "tableKind": "Тип",
+  "tableRarity": "Реткост",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Укупно",
+  "tableMainPity": "Гаранција",
+  "tableSortButton": "Сортирање: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Сортирање: подразумевано",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Сортирај по",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Извлачења од последњег {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Опадајуће",
+  "sortDirectionAsc": "Растуће",
+  "sortHintClickToSort": "Кликните за сортирање",
+  "progressPreparing": "Припрема...",
+  "progressPreparingHint": "Припрема извора података...",
+  "progressConvertingHint": "Претварање језика података, сачекајте...",
+  "progressWaiting": "Чекање на пресретање...",
+  "progressFetching": "Преузимање...",
+  "progressDone": "Ажурирање је завршено",
+  "progressFailed": "Неуспешно",
+  "progressOpenGameHint": "Отворите Genshin → Wishes → History",
+  "progressFallbackHint": "(Претходни URL за Wish History је истекао и мора поново да се добије)",
+  "progressNotDetectedLink": "Отворили сте Wish History, али ништа се не дешава?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Није успело покретање пресретача (сертификат је можда одбијен или је порт заузет), па се откривање ослања само на веб кеш игре. Отворите страницу Wish History у игри.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Није успело покретање пресретача (сертификат је можда одбијен или је порт заузет), а фасцикла игре није пронађена. Притисните „Изабери фасциклу игре“ испод да је подесите ручно.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Wish History није откривен",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Фасцикла игре Genshin Impact није пронађена. Када је изаберете, апликација може да добије URL за Wish History и из веб кеша игре.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Користи се фасцикла игре: {path}. Ако то није копија игре коју играте, изаберите поново.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Фасцикла игре је сачувана. Вратите се у игру и поново отворите Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "Genshin Impact није пронађен у овој фасцикли. Изаберите фасциклу „Genshin Impact game“.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Изабери фасциклу игре",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Изабери поново",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
+  "progressFetchingBanner": "Преузимање: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Страница {page}, нових записа: {count}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, one{Додат је {count} нови запис} few{Додата су {count} нова записа} other{Додато је {count} нових записа}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, one{Преузета је {count} слика предмета} few{Преузете су {count} слике предмета} other{Преузето је {count} слика предмета}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, one{Ажурирани су подаци за {count} предмет} few{Ажурирани су подаци за {count} предмета} other{Ажурирани су подаци за {count} предмета}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, one{Допуњено {count} слика предмета} few{Допуњено {count} слике предмета} other{Допуњено {count} слика предмета}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, one{Уклоњени су застарели језички подаци за {count} предмет} few{Уклоњени су застарели језички подаци за {count} предмета} other{Уклоњени су застарели језички подаци за {count} предмета}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Делимичан неуспех: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, one{Увезен је {accounts} налог} few{Увезена су {accounts} налога} other{Увезено је {accounts} налога}}: нових {added}, већ постојећих {duplicate}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Делимичан неуспех увоза: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Претрага података о предметима {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Преузимање детаља о предметима {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Преузимање слика предмета {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Овлашћење стално истиче, поново се пријавите у игру",
+  "errorRateLimited": "Превише захтева, покушајте поново касније",
+  "errorServer": "Грешка сервера: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Овај налог још нема записа Wish",
+  "pageOverviewTitle": "Преглед (сви банери)",
+  "pageOverviewGachaSection": "Преглед Wish",
+  "pageOverviewOdesSection": "Преглед Ode",
+  "pageBannerRecordList": "Листа записа",
+  "rarityOverviewTitle": "Преглед {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Подешавања",
+  "settingsAppearance": "Изглед",
+  "settingsThemeSystem": "Прати систем",
+  "settingsThemeDark": "Тамна",
+  "settingsThemeLight": "Светла",
+  "settingsLanguage": "Језик",
+  "settingsLocaleSystem": "Прати систем",
+  "settingsDataLanguage": "Језик података",
+  "settingsDataLanguageDesc": "Уједначите језик приказа историје записа, независно од језика интерфејса апликације. Када се подеси, подаци се при ажурирању или увозу аутоматски претварају на овај језик. Записи Ode и предмети без одговарајућих података задржавају изворни језик.",
+  "settingsDataLanguageUnset": "Није подешено (без претварања)",
+  "settingsDataLanguageUnify": "Претвори језик података сада",
+  "settingsDataLanguageUnifying": "Претварање...",
+  "settingsDataLanguageUnifyDone": "Претворено: {converted}, није могло да се претвори: {unresolved}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Претварање није успело, подаци нису промењени. Проверите везу и покушајте поново.",
+  "settingsDataManagement": "Управљање подацима",
+  "settingsGameDir": "Фасцикла игре",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Аутоматски откривено: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Ручно подешено: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Фасцикла игре није пронађена",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Обриши",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
+  "settingsCloudSync": "Синхронизација у облаку",
+  "cloudSyncIntro": "Повежите Google налог да би се записи аутоматски чували на вашем Google Drive-у и синхронизовали између уређаја.",
+  "cloudSyncUnconfigured": "Ова верзија нема подешене Google OAuth акредитиве, синхронизација у облаку није доступна.",
+  "cloudSyncLink": "Повежи Google налог",
+  "cloudSyncAwaitingConsent": "Прегледач је отворен. Довршите ауторизацију у прегледачу...",
+  "cloudSyncAwaitingConsentAndroid": "Довршите ауторизацију у Google прозору...",
+  "cloudSyncLinkedAs": "Повезано: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Аутоматска синхронизација",
+  "cloudSyncAutoToggleHint": "Синхронизује се аутоматски при покретању апликације и након промене података; када је искључено, ручна синхронизација остаје доступна.",
+  "cloudSyncNow": "Синхронизуј сада",
+  "cloudSyncUnlink": "Прекини повезивање",
+  "cloudSyncUnlinkConfirmTitle": "Прекини повезивање",
+  "cloudSyncUnlinkConfirmBody": "Синхронизација ће престати. Локални подаци и резервна копија у облаку се задржавају.",
+  "cloudSyncLastSynced": "Последња синхронизација: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Још није синхронизовано",
+  "cloudSyncErrorNetwork": "Синхронизација није успела: проблем са мрежом. Биће аутоматски поновљена.",
+  "cloudSyncErrorBusy": "Синхронизација је одложена: у току је ажурирање или увоз. Биће аутоматски поновљена.",
+  "cloudSyncErrorSchemaTooNew": "Синхронизација је прескочена: подаци у облаку су направљени новијом верзијом апликације. Прво ажурирајте апликацију.",
+  "cloudSyncErrorAuthFailed": "Ауторизација није успела. Покушајте поново.",
+  "cloudSyncErrorScopeMissing": "Ауторизација не обухвата приступ Google Drive-у. Поново повежите налог и на Google страници за сагласност означите поље за Drive податке.",
+  "cloudSyncReauthRequired": "Ауторизација је истекла. Поново повежите Google налог.",
+  "cloudSyncRemoveFromCloud": "Уклони овај налог и из података синхронизације у облаку",
+  "cloudSyncPostAuthTitle": "Ауторизација је завршена",
+  "cloudSyncPostAuthBody": "Можете да затворите ову картицу и вратите се у апликацију.",
+  "cloudSyncPostAuthScopeMissingTitle": "Недостаје дозвола за Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "Поље за Google Drive податке није означено. Вратите се у апликацију, поново повежите налог и означите ту дозволу.",
+  "settingsAccountManagement": "Управљање налозима",
+  "settingsPrivacySectionTitle": "Приватност",
+  "settingsMaskUidInUi": "Сакриј UID у интерфејсу",
+  "settingsMaskUidInUiHint": "Када је укључено, UID у интерфејсу и листи налога приказује прве 3 цифре, а остале су сакривене (нпр. 123•••••). Корисно за стримовање или дељење екрана. Не утиче на слике за дељење, извезене датотеке и прозор за потврду брисања.",
+  "settingsAdPrivacyOptions": "Опције приватности огласа",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Промените да ли пристајете на приказивање персонализованих огласа.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "О апликацији",
+  "settingsAboutVersion": "Верзија {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Верзије за друге игре",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "У будућности би могле бити подржане и друге игре...",
+  "contributorsTitle": "Сарадници",
+  "contributorsSubtitle": "Посебна захвалност свима који су допринели развоју ове апликације!",
+  "contributorsProjectLeader": "Руководилац пројекта",
+  "contributorsTesters": "Тестери",
+  "contributorsGithubContributors": "Сарадници на GitHub-у",
+  "contributorsTranslationReviewer": "Лектори превода",
+  "contributorsTranslatedLanguages": "Доступни језици",
+  "contributorsHelpTranslate": "Нема вашег језика? Помозите нам да преведемо!",
+  "contributorsProjectLicense": "Лиценца пројекта",
+  "contributorsOpenSourceLicenses": "Лиценце отвореног кода",
+  "pityRank": "Гаранција {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, one{Још {n} извлачење до гаранције} few{Још {n} извлачења до гаранције} other{Још {n} извлачења до гаранције}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "{n, plural, one{Гаранција је близу! Још {n} извлачење} few{Гаранција је близу! Још {n} извлачења} other{Гаранција је близу! Још {n} извлачења}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Гаранција ускоро",
+  "pityNoMainRarity": "Још нема {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Завршено",
+  "pityAverageInterval": "Просечно {n} извлачења",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Нема записа за {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, one{{n} извлачење} few{{n} извлачења} other{{n} извлачења}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Сада",
+  "timelineNowPulls": "{n, plural, one{{n} извлачење} few{{n} извлачења} other{{n} извлачења}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, one{{n} извлачење од последњег {star}} few{{n} извлачења од последњег {star}} other{{n} извлачења од последњег {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, one{{n} извлачење од последњег {star} у свим банерима} few{{n} извлачења од последњег {star} у свим банерима} other{{n} извлачења од последњег {star} у свим банерима}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Помери улево",
+  "timelineScrollRight": "Помери удесно",
+  "timelineLoadMore": "Учитај још (преостало: {n})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Све реткости",
+  "filterRarityRankOnly": "Само {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Сви типови",
+  "filterSearchHint": "Претражи назив...",
+  "filterClear": "Обриши филтере",
+  "pagerFirst": "Прва",
+  "pagerLast": "Последња",
+  "pagerJumpTitle": "Иди на страницу",
+  "pagerJumpLabel": "Страница ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Тренутно на страници {page} · записа: {total}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Иди",
+  "pagerJumpInvalid": "Унесите страницу од {min} до {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsClearActive": "Обриши податке тренутног налога",
+  "settingsClearAll": "Обриши све податке",
+  "settingsRefetchHoyoWikiImagesTitle": "Принудно поново преузми слике предмета",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Још нема записа, нема шта да се преузима",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Принудно поново преузми слике предмета",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Ово брише сав локални кеш слика предмета и поново преузима иконе са HoYoWiki. Детаљне слике предмета преузимају се по потреби када следећи пут отворите предмет. У зависности од броја предмета, ово може потрајати неколико минута и потрошити доста саобраћаја.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Започни преузимање",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Подаци о предметима",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Поново преузмите са HoYoWiki најновије детаље о предметима (опис, листа слика итд.), уз задржавање већ преузетих слика. Нове слике се преузимају када отворите детаље предмета.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Ажурирај податке о предметима",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Још нема записа, нема шта да се ажурира",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Ажурирати податке о предметима?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Апликација ће се обратити сајту HoYoWiki и поново преузети детаље свих предмета; у зависности од њиховог броја, ово може потрајати. Већ преузете слике се задржавају и неће бити обрисане.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Започни ажурирање",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Кеш слика",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Укупно",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Иконе",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Детаљне слике",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Израчунавање...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Није могуће прочитати величину кеша",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Брисање детаљних слика није успело",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Обриши детаљне слике",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Обрисати детаљне слике?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Биће обрисано око {size} детаљних слика предмета; кеш икона се задржава. Слике ће се поново преузети када следећи пут отворите детаље предмета.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Обриши",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Извези податке",
+  "settingsImportData": "Увези податке",
+  "shareImageButton": "Направи слику за дељење",
+  "shareImageDialogTitle": "Опције слике за дељење",
+  "shareImageThemeLabel": "Тема",
+  "shareImageThemeDark": "Тамна",
+  "shareImageThemeLight": "Светла",
+  "shareImageShowFullUid": "Прикажи цео UID на слици",
+  "shareImageShowFullUidHint": "Када је искључено, приказују се само прве 3 цифре, а остале су сакривене знаком •",
+  "shareImageUpdatedAt": "Ажурирано {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Копирано у привремену меморију",
+  "shareImageFailed": "Прављење слике за дељење није успело",
+  "shareImageActionCopy": "Копирај слику",
+  "shareImageActionSave": "Сачувај слику",
+  "shareImageCopyFailed": "Копирање у привремену меморију није успело",
+  "shareImageGenerating": "Прављење слике...",
+  "shareImageSaved": "Сачувано: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Извоз је успео",
+  "exportDialogFailedTitle": "Извоз није успео",
+  "settingsExportFailed": "Извоз није успео: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Извезено у {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Потврда увоза",
+  "settingsImportConfirmIntro": "За увоз: налога — {accounts}, записа — {records}:",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Следећи налози ће бити спојени са локалним подацима; постојећи записи неће бити обрисани:",
+  "settingsImportConfirmNoConflict": "Нема сукоба података.",
+  "settingsImportConfirmPreserveFooter": "Остали постојећи налози ({uids}) ће бити задржани.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "Увезено: налога — {accounts}, записа — {records}",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Увезено налога: {success} од {total}; није успело: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Увоз није успео: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Формат датотеке је неисправан или је датотека оштећена",
+  "importReasonUnsupportedVersion": "Ову датотеку је извезла новија верзија апликације. Ажурирајте апликацију пре увоза.",
+  "importReasonUnreadable": "Није могуће прочитати датотеку",
+  "exportReasonWriteFailed": "Није могуће уписати датотеку, проверите локацију чувања и дозволе",
+  "importReasonForeignApp": "Ову датотеку није извезла ова апликација",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Увези са других платформи",
+  "platformPickerTitle": "Изаберите изворну платформу",
+  "importReasonNotPlatformFile": "Ова датотека није исправан извоз из {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export и други алати · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "У који налог увести?",
+  "importTargetAccountBody": "Извози из paimon.moe не садрже UID. Изаберите налог коме припадају ови записи.",
+  "importTargetAccountOtherUid": "Други UID",
+  "importTargetAccountUidHint": "Унесите UID",
+  "importTargetAccountRecordCount": "{count, plural, one{На уређају: {count} запис} few{На уређају: {count} записа} other{На уређају: {count} записа}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Ова датотека користи новију верзију UIGF ({version}) која још није подржана. Ажурирајте апликацију или у изворном алату извезите у верзији v4.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Датотека садржи неподржане типове банера ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Није могуће допунити податке о предмету ({item}). Проверите везу и покушајте поново.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: у периоду {from}–{to} обе стране имају записе, али ниједно извлачење из тог периода се не поклапа са званичним записима на уређају (број извлачења: {groups}). Можда сте изабрали погрешан налог или датотека користи другу временску зону.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: у периоду {from}–{to} обе стране имају записе, али се са званичним записима на уређају поклапа мало извлачења из тог периода ({matched} од {groups}). Можда сте изабрали погрешан налог или датотека користи другу временску зону.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Ипак увези",
+  "importResolvingItems": "Допуњавање података о предметима...",
+  "settingsExportSelectTitle": "Изаберите налоге за извоз",
+  "settingsImportSelectTitle": "Изаберите налоге за увоз",
+  "settingsImportMergeBadge": "Спајање",
+  "accountsPickerSelectAll": "Изабери све",
+  "accountRecordCount": "{n, plural, one{{n} запис} few{{n} записа} other{{n} записа}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Потврда",
+  "confirmClearActiveBody": "Ово ће трајно обрисати све записе Wish за UID {uid}. Унесите UID за потврду:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Ово ће трајно обрисати записе Wish свих налога. Унесите DELETE за потврду:",
+  "confirmDelete": "Обриши",
+  "confirmImport": "Увези",
+  "confirmExport": "Извези",
+  "confirmContinue": "Настави",
+  "accountListEmpty": "Још нема налога",
+  "accountLastUpdated": "Ажурирано {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Активан",
+  "accountSetActive": "Постави као активан",
+  "accountRemove": "Уклони",
+  "accountAdd": "Додај налог",
+  "accountAliasLabel": "Надимак",
+  "accountAliasHint": "Препознатљив назив за овај налог",
+  "accountAliasNone": "Надимак није подешен",
+  "accountActionEditAlias": "Измени надимак",
+  "accountEditAliasTitle": "Измени надимак",
+  "accountDragHandleTooltip": "Превуците да промените редослед",
+  "loadingBootstrap": "Учитавање...",
+  "timelineTopRarityTitle": "Временска линија {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Број највише реткости по банеру",
+  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} извлачење од последњег {star}} few{{n} извлачења од последњег {star}} other{{n} извлачења од последњег {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Доступна је нова верзија {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Објављено {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Преузми",
+  "updateButtonUpdate": "Ажурирај",
+  "updateNotesUnavailable": "Белешке о издању тренутно нису доступне. Детаље потражите на Google Play-у.",
+  "updateDownloadingMessage": "Преузимање ажурирања...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Ажурирање је преузето",
+  "updateRestartAction": "Поново покрени",
+  "updateInAppUnavailable": "Ажурирање у апликацији тренутно није могуће. Ажурирајте преко Google Play-а.",
+  "updateButtonSkip": "Прескочи ову верзију",
+  "updateButtonLater": "Касније",
+  "updateCheckButton": "Провери ажурирања",
+  "updateChecking": "Провера...",
+  "updateAlreadyLatest": "Имате најновију верзију",
+  "updateCheckFailed": "Провера ажурирања није успела: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Повезивање није могуће, проверите мрежу",
+  "updateErrorTimeout": "Захтев је истекао",
+  "updateErrorRateLimited": "Квота GitHub API-ја је потрошена, покушајте поново касније",
+  "updateErrorServer": "Грешка сервера (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Неочекиван формат одговора",
+  "updateErrorPlay": "Повезивање са Google Play-ом није успело или ова копија није инсталирана са Google Play-а",
+  "currentReleaseTitle": "Белешке о тренутном издању",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Белешке о издању за {version} нису пронађене",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Прикажи на GitHub-у",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Иди на страницу GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Прикажи белешке о издању",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Брисање кеша слика предмета није успело: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Евиденције за отклањање грешака",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Ако наиђете на проблеме, извезите евиденције да бисте помогли програмерима да их истраже.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Пријави проблем",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Извези евиденције",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Отвори фасциклу евиденција",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Обриши све евиденције",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Евиденције су извезене: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Извоз евиденција није успео: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Ово ће трајно обрисати све датотеке у logs/. Ако су вам потребне за пријаву грешке, прво их извезите. Унесите CLEAR за потврду.",
   "galleryCardLabel": "Card",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +1176,434 @@
   "galleryIconLabel": "Иконица",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Претходно",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Следеће",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Помери надоле",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Отвори на HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Учитавање слике није успело",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Покушај поново",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Затвори преглед слике",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Копирај слику",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Сачувај слику",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Увећај",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Умањи",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Поново преузми слику",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Слика је копирана у привремену меморију",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Копирање слике није успело",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Чување слике није успело",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Сачувано: {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Срећно",
+  "luckTierAverage": "Просечно",
+  "luckTierUnlucky": "Несрећно",
+  "manualUrlEntry": "Ручно унеси URL за Wish History",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Ручни унос URL-а за Wish History",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "Ако сте URL за Wish History већ добили на други начин (на пример помоћу алата на рачунару), налепите га овде. Можете налепити и цео текст: апликација ће сама пронаћи URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Налепите URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Налепи из привремене меморије",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "URL за Wish History није пронађен. Проверите шта сте налепили.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "URL садржи податке за пријаву на ваш налог. Не делите га јавно. Након неког времена престаје да важи.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Чека се да у игри отворите Wish History...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Отворите Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Припрема за читање лога игре...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "URL за Wish History не може аутоматски да се добије",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Читање лога игре још није подешено. Након једнократног подешавања, свако ажурирање ће га читати аутоматски.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Бежично отклањање грешака ради само на Wi‑Fi мрежи. Повежите се на Wi‑Fi и вратите се; апликација ће аутоматски наставити. URL можете унети и ручно.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Root је пронађен, али овој апликацији није одобрен root приступ. Да бисте читали помоћу root-а, дозволите ову апликацију у root менаџеру (на пример, на Superuser листи у Magisk-у), па се вратите; апликација ће аутоматски покушати поново.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Повезивање са бежичним отклањањем грешака није успело. Упаривање је можда истекло; упарите поново.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Уређај не дозвољава овој апликацији да укључи бежично отклањање грешака. Укључите га на страници „Бежично отклањање грешака“ и вратите се; апликација ће аутоматски наставити.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "Ова Wi‑Fi мрежа још није дозвољена за бежично отклањање грешака. Додирните „Дозволи“ у системском упиту (означите „Увек дозволи на овој мрежи“ да више не пита) и апликација ће аутоматски наставити. Ако сте затворили упит, додирните „Покушај поново“.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "Овај уређај не може аутоматски да добије URL за Wish History (потребан је Android 11 или новији, или root). Унесите га ручно.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Genshin Impact није инсталиран на овом уређају. Након инсталације вратите се овде и игра ће бити аутоматски откривена.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Отвори Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Отвори бежично отклањање грешака",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Веза са бежичним отклањањем грешака је прекинута, поновно повезивање... Ако се не опорави, проверите Wi‑Fi или унесите URL ручно.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Бежично отклањање грешака је и даље укључено. Можете га искључити у системским подешавањима.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "URL за Wish History је добијен. Преузимање историје почиње када се вратите у ову апликацију.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Провери поново",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Отвори Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Подеси",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Упари поново",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Читање системског лога",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Зашто је ово потребно?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android не дозвољава апликацијама да читају системске логове других апликација. Ова апликација користи уграђену функцију „Бежично отклањање грешака“ да из игре Genshin Impact добије URL за Wish History.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Шта ова апликација ради",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Чита само URL за Wish History из игре Genshin Impact\n• Одмах након читања прекида везу, а бежично отклањање грешака искључује ако га је ова апликација укључила\n• Сама себи даје дозволу да укључује и искључује бежично отклањање грешака, тако да не морате поново да подешавате\n• Ово можете уклонити у било ком тренутку у подешавањима",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Захтеви",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 или новији, Wi‑Fi, дозвољена обавештења",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Започни подешавање",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Уместо тога унеси URL ручно",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Упаривање бежичног отклањања грешака",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Укључите опције за програмере",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Отворите страницу „О телефону“ у системским подешавањима (или „О таблету“)\n2. Пронађите „Број верзије“ и додирните га 7 пута\n3. Када видите „Сада сте програмер!“, вратите се у ову апликацију",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Опције за програмере су и даље искључене. Ако је систем при додиру „Броја верзије“ рекао да више ништа не треба да урадите (на пример „Већ сте програмер“), главни прекидач опција за програмере је искључен. Отворите опције за програмере, укључите прекидач на врху и вратите се у ову апликацију.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Отвори „О телефону“",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Опције за програмере су укључене",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Дозволите обавештења",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Кôд за упаривање уносите у обавештењу, зато дозволите овој апликацији да приказује обавештења.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Дозволи обавештења",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Отвори подешавања обавештења",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Обавештења су дозвољена",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Упаривање",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Додирните дугме испод да отворите „Бежично отклањање грешака“\n2. Укључите „Користи бежично отклањање грешака“ и додирните „Упарите уређај помоћу кода за упаривање“\n3. Превуците надоле са врха екрана и у обавештењу ове апликације унесите 6-цифрени кôд за упаривање приказан на екрану за упаривање у „Бежичном отклањању грешака“",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Чека се да унесете кôд за упаривање у обавештењу...\nУнесите га док је екран за упаривање у „Бежичном отклањању грешака“ још отворен.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Поново отвори бежично отклањање грешака",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Упаривање...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Упарено, још један корак",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Ваш уређај има додатно безбедносно ограничење. Укључите још једну опцију да би ова апликација могла аутоматски да укључује и искључује бежично отклањање грешака.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Како да је укључите",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Отворите опције за програмере\n2. Пронађите прекидач у вези са безбедношћу USB отклањања грешака или надзором дозвола и укључите га, на пример:\n• Xiaomi: „USB отклањање грешака (безбедносна подешавања)“\n• OPPO / realme: „Онемогући надзор дозвола“\n3. Уверите се да је бежично отклањање грешака укључено, па се вратите и додирните „Покушај поново“",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Отвори опције за програмере",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Покушај поново",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Прескочи (сами укључујте бежично отклањање грешака при сваком ажурирању)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Све је спремно",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Од сада „Ажурирај“ аутоматски чита лог. Додатно подешавање више није потребно.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Када додирнете „Ажурирај“, укључите бежично отклањање грешака када се то затражи.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Враћање и покретање ажурирања...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Приступ логу игре",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Бежично отклањање грешака",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Није подешено",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Упаривање",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Упарено",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Упарено (ручно укључујте бежично отклањање грешака)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Поново затражи дозволу",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Подеси",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Уклони упаривање",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Уклонити упаривање?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "Ово брише кључ за упаривање ове апликације и уклања дозволу ове апликације да укључује и искључује бежично отклањање грешака. Да бисте касније користили бежично отклањање грешака, мораћете поново да упарите уређај.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Упаривање је уклоњено",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Кључ за упаривање ове апликације је обрисан и уклоњена је њена дозвола да укључује и искључује бежично отклањање грешака.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Кључ за упаривање је обрисан",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Кључ за упаривање ове апликације је обрисан, али овај пут повезивање са бежичним отклањањем грешака није успело, па дозвола да га укључује и искључује није уклоњена.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "Док није упарена, ова апликација не користи ту дозволу. Да бисте је потпуно уклонили, повежите се на Wi‑Fi, поново упарите, а затим још једном уклоните упаривање.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "На системској листи „Бежично отклањање грешака“ → „Упарени уређаји“ и даље ће стајати „{name}“. Више не може да се повеже, па га можете оставити; да бисте га уклонили, додирните га и обришите.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "На системској листи „Бежично отклањање грешака“ → „Упарени уређаји“ и даље стоји и „{name}“; додирните га да бисте га обрисали.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Метод",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Дели",
+  "shareFailed": "Дељење није успело",
+  "dialogSaveAsTitle": "Сачувај као",
+  "dialogOpenTitle": "Отвори",
+  "dialogSelectFolderTitle": "Изаберите фасциклу",
+  "actionSave": "Сачувај",
+  "settingsLogsShare": "Дели евиденције"
 }
