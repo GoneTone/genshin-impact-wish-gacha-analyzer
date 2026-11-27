@@ -28,21 +28,22 @@
   "navCharacter": "Character",
   "navWeapon": "Weapon",
   "navChronicled": "Chronicled",
-  "navStandard": "Standard",
+  "navStandard": "Permanent",
   "navBeginner": "Novice",
   "navSettings": "Settings",
   "navContributors": "Contributors",
   "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
   "gachaTypeWeapon": "Weapon Event Wish",
   "gachaTypeChronicled": "Chronicled Wish",
-  "gachaTypeStandard": "Standard Wish",
+  "gachaTypeStandard": "Permanent Wish",
   "gachaTypeBeginner": "Novice Wishes",
   "gachaTypeOdesEvent": "Event Ode",
   "gachaTypeOdesStandard": "Standard Ode",
   "navOdesEvent": "Event",
   "navOdesStandard": "Standard",
   "navSectionGacha": "Wish",
-  "navSectionOdes": "Odes",
+  "navSectionOdes": "Ode",
   "footerNotSynced": "Not synced",
   "footerLastUpdated": "Last updated: {time}",
   "@footerLastUpdated": {
@@ -53,7 +54,7 @@
     }
   },
   "relativeNow": "Just now",
-  "relativeSecondsAgo": "{count} seconds ago",
+  "relativeSecondsAgo": "{count, plural, =1{1 second ago} other{{count} seconds ago}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -61,7 +62,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count} minutes ago",
+  "relativeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -69,7 +70,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count} hours ago",
+  "relativeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -77,7 +78,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count} days ago",
+  "relativeDaysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -85,7 +86,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count} months ago",
+  "relativeMonthsAgo": "{count, plural, =1{1 month ago} other{{count} months ago}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -93,7 +94,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count} years ago",
+  "relativeYearsAgo": "{count, plural, =1{1 year ago} other{{count} years ago}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -105,7 +106,17 @@
   "uidNotSynced": "Not synced",
   "uidActiveSuffix": " (active)",
   "emptyNoSyncTitle": "No data synced yet",
-  "emptyNoOdesRecords": "No Odes records yet",
+  "emptyNoSyncMessage": "Tap {icon} in the top right to start",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "No records for this banner",
+  "emptyNoFilterMatch": "No records match the current filter",
+  "emptyNoOdesRecords": "No Ode records yet",
   "emptyNoGachaRecords": "No Wish records yet",
   "statsTotal": "Total pulls",
   "statsRankCount": "{star} Count",
@@ -144,6 +155,23 @@
   },
   "tableTotalIndex": "Total",
   "tableMainPity": "Pity",
+  "tableSortButton": "Sort: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sort: default",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sort by",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Pulls since the last {star}",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -162,6 +190,53 @@
   "progressFetching": "Fetching…",
   "progressDone": "Update complete",
   "progressFailed": "Failed",
+  "progressOpenGameHint": "Open Genshin → Wishes → History",
+  "progressFallbackHint": "(The previous Wish History URL expired and needs to be obtained again)",
+  "progressNotDetectedLink": "Opened the Wish History but nothing is happening?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), so detection falls back to the game's web cache only. Please open the Wish History page in the game.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), and the game folder was not found either. Press \"Choose game folder\" below to set it manually.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Wish History not detected",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Could not find the Genshin Impact game folder. Once you choose the game folder, this tool can also get the Wish History URL from the game's web cache.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Game folder currently in use: {path}. If this is not the copy of the game you are playing, please choose again.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Game folder set. Please go back to the game and open the Wish History once more.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "Genshin Impact was not found in this folder. Please choose the \"Genshin Impact game\" folder.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Choose game folder",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Choose again",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Fetching: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -170,12 +245,20 @@
       }
     }
   },
-  "progressPageStatus": "Page {page}, {count} new records so far",
+  "progressPageStatus": "Page {page}, {count, plural, =1{1 new record} other{{count} new records}} so far",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
         "type": "int"
       },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{Added 1 new record} other{Added {count} new records}}",
+  "@progressDoneSummary": {
+    "placeholders": {
       "count": {
         "type": "int"
       }
@@ -190,7 +273,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "Updated data for {count} items",
+  "progressDoneItemDataSummary": "{count, plural, =1{Updated data for 1 item} other{Updated data for {count} items}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -199,7 +282,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "Backfilled {count} item images",
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{Backfilled 1 item image} other{Backfilled {count} item images}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -208,7 +291,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "Cleaned up stale-language data for {count} items",
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Cleaned up stale-language data for 1 item} other{Cleaned up stale-language data for {count} items}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -292,9 +375,11 @@
       }
     }
   },
+  "errorNoRecords": "This account has no Wish records yet",
   "pageOverviewTitle": "Overview (all banners)",
   "pageOverviewGachaSection": "Wish Overview",
-  "pageOverviewOdesSection": "Odes Overview",
+  "pageOverviewOdesSection": "Ode Overview",
+  "pageBannerRecordList": "Record list",
   "rarityOverviewTitle": "{star} Overview",
   "@rarityOverviewTitle": {
     "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
@@ -329,10 +414,42 @@
   },
   "settingsDataLanguageUnifyFailed": "Conversion failed, data unchanged. Please check your network and try again.",
   "settingsDataManagement": "Data management",
+  "settingsGameDir": "Game folder",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Auto-detected: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Set manually: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Game folder not found",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Clear",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Cloud sync",
+  "cloudSyncIntro": "Link your Google account to automatically back up gacha records to your Google Drive and keep multiple devices in sync.",
   "cloudSyncUnconfigured": "This build has no Google OAuth credentials configured; cloud sync is unavailable.",
   "cloudSyncLink": "Link Google account",
   "cloudSyncAwaitingConsent": "Browser opened. Please finish authorization in your browser...",
+  "cloudSyncAwaitingConsentAndroid": "Please finish authorization in the Google window...",
   "cloudSyncLinkedAs": "Linked: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -371,6 +488,14 @@
   "settingsPrivacySectionTitle": "Privacy",
   "settingsMaskUidInUi": "Mask UID in interface",
   "settingsMaskUidInUiHint": "When on, UIDs in the interface and account list show the first 3 digits with the rest masked (e.g. 123•••••). Useful for streaming or screen sharing. Share images, exported files, and the delete confirmation dialog are not affected.",
+  "settingsAdPrivacyOptions": "Ad privacy options",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Change whether you consent to seeing personalized ads.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "About",
   "settingsAboutVersion": "Version {version}",
   "@settingsAboutVersion": {
@@ -392,6 +517,7 @@
   "contributorsTranslatedLanguages": "Available languages",
   "contributorsHelpTranslate": "Unavailable in your preferred languages? Help us translate it!",
   "contributorsProjectLicense": "Project License",
+  "contributorsOpenSourceLicenses": "Open source licenses",
   "pityRank": "{star} pity",
   "@pityRank": {
     "placeholders": {
@@ -411,7 +537,7 @@
       }
     }
   },
-  "pityDistance": "{n} pulls until guaranteed",
+  "pityDistance": "{n, plural, =1{1 pull until guaranteed} other{{n} pulls until guaranteed}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -419,7 +545,7 @@
       }
     }
   },
-  "pityClose": "Close to guaranteed! {n} pulls left",
+  "pityClose": "Close to guaranteed! {n, plural, =1{1 pull left} other{{n} pulls left}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -445,7 +571,15 @@
       }
     }
   },
-  "timelineSinceLast": "{n} pulls",
+  "timelineNoRecordsForRank": "No {star} records",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{1 pull} other{{n} pulls}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -454,7 +588,7 @@
     }
   },
   "timelineNowLabel": "Now",
-  "timelineNowPulls": "{n} pulls",
+  "timelineNowPulls": "{n, plural, =1{1 pull} other{{n} pulls}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -462,7 +596,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n} pulls since last {star}",
+  "timelineNowSinceLast": "{n, plural, =1{1 pull since last {star}} other{{n} pulls since last {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -473,7 +607,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n} pulls since last {star} across banners",
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 pull since last {star} across banners} other{{n} pulls since last {star} across banners}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -519,11 +653,50 @@
   "filterClear": "Clear filters",
   "pagerFirst": "First",
   "pagerLast": "Last",
+  "pagerJumpTitle": "Go to page",
+  "pagerJumpLabel": "Page ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Currently on page {page} · {total, plural, =1{1 record} other{{total} records}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Go",
+  "pagerJumpInvalid": "Enter a page from {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
   "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "No gacha records yet, nothing to re-fetch",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
   "confirmRefetchHoyoWikiTitle": "Force re-fetch item images",
   "@confirmRefetchHoyoWikiTitle": {
@@ -664,6 +837,17 @@
     }
   },
   "settingsImportConfirmTitle": "Import confirmation",
+  "settingsImportConfirmIntro": "About to import {accounts, plural, =1{1 account} other{{accounts} accounts}} ({records, plural, =1{1 record} other{{records} records}} total):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
   "settingsImportConfirmMergeHeader": "The following accounts will be merged with local data; existing records won't be deleted:",
   "settingsImportConfirmNoConflict": "No data conflicts.",
   "settingsImportConfirmPreserveFooter": "Other existing accounts ({uids}) will be preserved.",
@@ -671,6 +855,17 @@
     "placeholders": {
       "uids": {
         "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "Successfully imported {accounts, plural, =1{1 account} other{{accounts} accounts}} ({records, plural, =1{1 record} other{{records} records}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
       }
     }
   },
@@ -701,11 +896,117 @@
   "importReasonUnreadable": "Unable to read the file",
   "exportReasonWriteFailed": "Unable to write the file, please check the save location and permissions",
   "importReasonForeignApp": "This file was not exported by the app",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Import from other platforms",
+  "platformPickerTitle": "Select a source platform",
+  "importReasonNotPlatformFile": "This file is not a valid {platform} export",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export and other tools · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Import into which account?",
+  "importTargetAccountBody": "paimon.moe exports don't include a UID. Choose the account these records belong to.",
+  "importTargetAccountOtherUid": "Other UID",
+  "importTargetAccountUidHint": "Enter UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 record on this device} other{{count} records on this device}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "This file uses a newer UIGF version ({version}) that isn't supported yet. Update the app, or export as v4 in the original tool.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "The file contains unsupported banner types ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Couldn't complete the item data ({item}). Check your network connection and try again.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Both sides have records from {from} to {to}, but none of the {groups} pulls in that period match the official records on this device. You may have picked the wrong account, or the file uses a different time zone.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Both sides have records from {from} to {to}, but the official records on this device match only {matched} of the {groups} pulls in that period. You may have picked the wrong account, or the file uses a different time zone.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Import anyway",
+  "importResolvingItems": "Completing item data...",
   "settingsExportSelectTitle": "Select accounts to export",
   "settingsImportSelectTitle": "Select accounts to import",
   "settingsImportMergeBadge": "Merge",
   "accountsPickerSelectAll": "Select all",
+  "accountRecordCount": "{n, plural, =1{1 record} other{{n} records}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "confirmTitle": "Confirm",
+  "confirmClearActiveBody": "This will permanently delete all Wish records for UID {uid}. Type the UID to confirm:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "This will permanently delete every account's Wish records. Type DELETE to confirm:",
   "confirmDelete": "Delete",
   "confirmImport": "Import",
   "confirmExport": "Export",
@@ -725,6 +1026,9 @@
   "accountAdd": "Add account",
   "accountAliasLabel": "Alias",
   "accountAliasHint": "A friendly name for this account",
+  "accountAliasNone": "No alias set",
+  "accountActionEditAlias": "Edit alias",
+  "accountEditAliasTitle": "Edit alias",
   "accountDragHandleTooltip": "Drag to reorder",
   "loadingBootstrap": "Loading…",
   "timelineTopRarityTitle": "{star} Timeline ({n})",
@@ -739,7 +1043,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Highest rarity count per banner",
-  "bannerTopRarityPullsSinceLast": "{n} pulls since last {star}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 pull since last {star}} other{{n} pulls since last {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {
@@ -767,6 +1071,15 @@
     }
   },
   "updateButtonDownload": "Download",
+  "updateButtonUpdate": "Update",
+  "updateNotesUnavailable": "Release notes are unavailable right now. See Google Play for details.",
+  "updateDownloadingMessage": "Downloading the update...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "The update has been downloaded",
+  "updateRestartAction": "Restart",
+  "updateInAppUnavailable": "Can't update in the app right now. Please update from Google Play.",
   "updateButtonSkip": "Skip this version",
   "updateButtonLater": "Later",
   "updateCheckButton": "Check for updates",
@@ -792,6 +1105,7 @@
     }
   },
   "updateErrorFormat": "Unexpected response format",
+  "updateErrorPlay": "Couldn't reach Google Play, or this copy wasn't installed from Google Play",
   "currentReleaseTitle": "Current release notes",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -828,7 +1142,7 @@
   },
   "settingsLogs": "Debug logs",
   "@settingsLogs": {},
-  "settingsLogsHint": "If you run into issues, export the log to help developers investigate.",
+  "settingsLogsHint": "If you run into issues, export the logs to help developers investigate.",
   "@settingsLogsHint": {},
   "settingsLogsReport": "Report an issue",
   "@settingsLogsReport": {},
@@ -870,6 +1184,10 @@
   "galleryNextTab": "Next",
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Scroll down",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
   },
   "actionViewOnHoYoWiki": "View on HoYoWiki",
   "@actionViewOnHoYoWiki": {
@@ -930,5 +1248,362 @@
   },
   "luckTierLucky": "Lucky",
   "luckTierAverage": "Average",
-  "luckTierUnlucky": "Unlucky"
+  "luckTierUnlucky": "Unlucky",
+  "manualUrlEntry": "Enter Wish History URL manually",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Enter Wish History URL Manually",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "If you already got the Wish History URL another way (for example with a tool on your computer), you can paste it here. Pasting the whole text works too; the app finds the URL automatically.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Paste URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Paste from clipboard",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "No Wish History URL found. Please check what you pasted.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "The URL contains your account credentials. Don't share it publicly. It expires after a while.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Waiting for you to open the Wish History page in the game...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Open Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Getting ready to read the game log...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "Can't get the Wish History URL automatically",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Reading the game log isn't set up yet. After a one-time setup, every update reads it automatically.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Wireless debugging only works on Wi‑Fi. Connect to Wi‑Fi and come back; the app continues automatically. You can also enter the URL manually.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Root was found, but this app wasn't granted root access. To read with root, allow this app in your root manager (for example Magisk's Superuser list), then come back; the app retries automatically.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Couldn't connect to wireless debugging. The pairing may have expired; please pair again.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Your device doesn't let this app turn on wireless debugging. Turn it on in the Wireless debugging page and come back; the app continues automatically.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "This Wi‑Fi network isn't allowed for wireless debugging yet. Tap Allow in the system prompt (tick \"Always allow on this network\" so it won't ask again) and the app continues automatically. If you closed the prompt, tap Retry.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "This device can't read the Wish History URL automatically (requires Android 11 or later, or root). Please enter it manually.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Genshin Impact isn't installed on this device. Once it's installed, come back here and it will be detected automatically.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Open Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Open Wireless debugging",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Lost the wireless debugging connection, reconnecting... If it doesn't recover, check your Wi‑Fi or enter the URL manually.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Wireless debugging is still on. You can turn it off in system settings.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "Got the Wish History URL. Fetching your Wish History starts when you return to this app.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Check again",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Open Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Set up",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Pair again",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Read System Log",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Why is this needed?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android doesn't let apps read other apps' system logs. This app uses the built-in Wireless debugging feature to read the Wish History URL from Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "What this app does",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Reads only the Wish History URL from Genshin Impact\n• Disconnects right after reading, and turns wireless debugging off if this app turned it on\n• Grants itself permission to turn wireless debugging on and off, so you don't need to set it up again\n• You can remove this at any time in Settings",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requirements",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 or later, Wi‑Fi, notifications allowed",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Start setup",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Enter the URL manually instead",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Pair Wireless Debugging",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Turn on Developer options",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Open the About page in system Settings (for example \"About phone\" or \"About tablet\")\n2. Find \"Build number\" and tap it 7 times\n3. When you see \"You are now a developer\", come back to this app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Developer options are still off. If the system said there was nothing more to do when you tapped \"Build number\" (for example, \"You are already a developer\"), the main Developer options switch is off. Open Developer options, turn on the switch at the top, then come back to this app.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Open About page",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Developer options are on",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Allow notifications",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "You'll enter the pairing code in a notification, so allow this app to show notifications.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Allow notifications",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Open notification settings",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notifications allowed",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Pair",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Tap the button below to open Wireless debugging\n2. Turn on \"Use wireless debugging\" and tap \"Pair device with pairing code\"\n3. Swipe down from the top of the screen and, in this app's notification, enter the 6-digit pairing code shown on the Wireless debugging pairing screen",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Waiting for you to enter the pairing code in the notification...\nEnter it while the pairing screen in Wireless debugging is still open.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Open Wireless debugging again",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Pairing...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Paired, one more step",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Your device has an extra security restriction. Turn on one more option so this app can turn wireless debugging on and off automatically.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "How to turn it on",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Open Developer options\n2. Find the switch related to USB debugging security or permission monitoring and turn it on, for example:\n• Xiaomi: \"USB debugging (Security settings)\"\n• OPPO / realme: \"Disable permission monitoring\"\n3. Make sure wireless debugging is on, then come back and tap Retry",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Open Developer options",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Retry",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Skip (turn on wireless debugging yourself each update)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "All set",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "From now on, Update reads the log automatically. No more setup needed.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "When you tap Update, turn on wireless debugging when asked.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Returning and starting the update...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Game Log Access",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Wireless debugging",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Not set up",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Pairing",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Paired",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Paired (turn on wireless debugging manually)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Retry permission",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Set up",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Remove pairing",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Remove pairing?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "This deletes this app's pairing key and removes this app's permission to toggle wireless debugging. You'll need to pair again to use wireless debugging later.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Pairing removed",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Deleted this app's pairing key and removed its permission to turn wireless debugging on and off.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Pairing key deleted",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Deleted this app's pairing key, but couldn't connect to wireless debugging this time, so the permission to turn wireless debugging on and off hasn't been removed.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "This app doesn't use that permission while unpaired. To remove it completely, connect to Wi‑Fi, pair again, then unpair once more.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "The system's Wireless debugging → Paired devices list will still show \"{name}\". It can no longer connect, so you can leave it; to remove it, tap it and delete it.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "The system's Wireless debugging → Paired devices list also still shows \"{name}\"; tap it to delete it.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Method",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Share",
+  "shareFailed": "Couldn't share",
+  "dialogSaveAsTitle": "Save as",
+  "dialogOpenTitle": "Open",
+  "dialogSelectFolderTitle": "Select folder",
+  "actionSave": "Save",
+  "settingsLogsShare": "Share logs"
 }
