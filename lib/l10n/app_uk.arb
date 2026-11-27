@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (активний)",
   "emptyNoSyncTitle": "Дані ще не завантажено",
   "emptyNoSyncMessage": "Натисніть {icon} у правому верхньому куті, щоб почати",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "У цьому банері немає записів",
   "emptyNoFilterMatch": "Немає записів, що відповідають фільтру",
   "emptyNoOdesRecords": "Записів Ode ще немає",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Відкрийте Genshin → Wishes → History",
   "progressFallbackHint": "(Попередня URL-адреса Wish History застаріла, її потрібно отримати знову)",
   "progressNotDetectedLink": "Відкрили Wish History, але нічого не відбувається?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Не вдалося запустити перехоплювач (можливо, сертифікат відхилено або порт зайнято), тому пошук іде лише за вебкешем гри. Відкрийте сторінку Wish History у грі.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Не вдалося запустити перехоплювач (можливо, сертифікат відхилено або порт зайнято), а папку гри не знайдено. Натисніть «Вибрати папку гри» нижче, щоб указати її вручну.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History не виявлено",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Не вдалося знайти папку гри Genshin Impact. Якщо її вказати, застосунок зможе отримувати URL-адресу Wish History і з вебкешу гри.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Використовується папка гри: {path}. Якщо це не та копія гри, у яку ви граєте, виберіть папку знову.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Папку гри збережено. Поверніться до гри й ще раз відкрийте Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact не знайдено в цій папці. Виберіть папку «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Вибрати папку гри",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Вибрати знову",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Завантаження: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Не вдалося перетворити, дані не змінено. Перевірте підключення і спробуйте знову.",
   "settingsDataManagement": "Керування даними",
   "settingsGameDir": "Папка гри",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Знайдено автоматично: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Указано вручну: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Папку гри не знайдено",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Скинути",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Хмарна синхронізація",
   "cloudSyncIntro": "Прив’яжіть акаунт Google, щоб записи автоматично зберігалися на Google Drive і синхронізувалися між пристроями.",
   "cloudSyncUnconfigured": "У цій збірці не налаштовано облікові дані Google OAuth, хмарна синхронізація недоступна.",
@@ -609,9 +655,39 @@
   "pagerLast": "Остання",
   "pagerJumpTitle": "Перейти до сторінки",
   "pagerJumpLabel": "Сторінка ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Зараз сторінка {page} · записів: {total}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Перейти",
   "pagerJumpInvalid": "Введіть номер сторінки від {min} до {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Видалити дані поточного акаунта",
   "settingsClearAll": "Видалити всі дані",
   "settingsRefetchHoyoWikiImagesTitle": "Примусово завантажити зображення предметів знову",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Середньо",
   "luckTierUnlucky": "Не пощастило",
   "manualUrlEntry": "Ввести URL-адресу Wish History вручну",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Введення URL-адреси Wish History вручну",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Якщо ви вже отримали URL-адресу Wish History іншим способом (наприклад, за допомогою програми на комп’ютері), вставте її сюди. Можна вставити й увесь текст: застосунок сам знайде URL-адресу.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Вставте URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Вставити з буфера обміну",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "URL-адресу Wish History не знайдено. Перевірте вставлений текст.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL-адреса містить дані для входу у ваш акаунт. Не публікуйте її. Через деякий час вона перестає діяти.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Очікування, поки ви відкриєте Wish History у грі...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Відкрийте Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Підготовка до читання логу гри...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Не вдається автоматично отримати URL-адресу Wish History",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Читання логу гри ще не налаштовано. Після одноразового налаштування він зчитуватиметься автоматично під час кожного оновлення.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Налагодження через Wi‑Fi працює лише в мережі Wi‑Fi. Підключіться до Wi‑Fi і поверніться — застосунок продовжить автоматично. Також можна ввести URL вручну.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root виявлено, але цьому застосунку не надано root-доступ. Щоб читати лог через root, дозвольте застосунок у менеджері root (наприклад, у списку Superuser у Magisk) і поверніться — застосунок повторить спробу автоматично.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Не вдалося підключитися до налагодження через Wi‑Fi. Можливо, підключення застаріло — виконайте його знову.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Пристрій не дозволяє цьому застосунку ввімкнути налагодження через Wi‑Fi. Увімкніть його на сторінці «Налагодження через Wi‑Fi» і поверніться — застосунок продовжить автоматично.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Цю мережу Wi‑Fi ще не дозволено для налагодження через Wi‑Fi. Натисніть «Дозволити» в системному запиті (позначте «Завжди дозволяти в цій мережі», щоб він більше не з’являвся), і застосунок продовжить автоматично. Якщо ви закрили запит, натисніть «Повторити».",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Цей пристрій не може автоматично отримати URL-адресу Wish History (потрібен Android 11 або новіший чи root). Введіть її вручну.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact не встановлено на цьому пристрої. Після встановлення поверніться сюди — гру буде виявлено автоматично.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Відкрити Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Відкрити налагодження через Wi‑Fi",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "З’єднання з налагодженням через Wi‑Fi втрачено, повторне підключення... Якщо воно не відновиться, перевірте Wi‑Fi або введіть URL вручну.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Налагодження через Wi‑Fi досі ввімкнено. Його можна вимкнути в налаштуваннях системи.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL-адресу Wish History отримано. Завантаження історії розпочнеться, коли ви повернетеся до застосунку.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Перевірити знову",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Відкрити Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Налаштувати",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Доступ до логу гри",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Налагодження через Wi‑Fi",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Не налаштовано",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Підключення",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Підключено",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Підключено (налагодження через Wi‑Fi потрібно вмикати вручну)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Повторити надання дозволу",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Налаштувати",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Видалити підключення",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Видалити підключення?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Ключ підключення цього застосунку буде видалено, а в застосунку буде відкликано дозвіл керувати налагодженням через Wi‑Fi. Щоб знову користуватися налагодженням через Wi‑Fi, потрібно буде підключитися заново.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Підключення видалено",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Ключ підключення цього застосунку видалено, і в нього відкликано дозвіл вмикати й вимикати налагодження через Wi‑Fi.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Ключ підключення видалено",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Ключ підключення цього застосунку видалено, але цього разу не вдалося підключитися до налагодження через Wi‑Fi, тому дозвіл вмикати й вимикати його не відкликано.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Без підключення застосунок цим дозволом не користується. Щоб відкликати його повністю, підключіться до Wi‑Fi, знову виконайте підключення, а потім ще раз видаліть його.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "У системному списку «Налагодження через Wi‑Fi» → «Підключені пристрої» і далі буде «{name}». Він більше не може підключитися, тож його можна залишити; щоб видалити, торкніться його й видаліть.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "У системному списку «Налагодження через Wi‑Fi» → «Підключені пристрої» також лишається «{name}»; торкніться його, щоб видалити.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Спосіб",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Поділитися",
   "shareFailed": "Не вдалося поділитися",
   "dialogSaveAsTitle": "Зберегти як",

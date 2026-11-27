@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktief)",
   "emptyNoSyncTitle": "Nog geen data gesinkroniseer nie",
   "emptyNoSyncMessage": "Tik op {icon} regs bo om te begin",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Geen rekords vir hierdie banner nie",
   "emptyNoFilterMatch": "Geen rekords pas by die huidige filter nie",
   "emptyNoOdesRecords": "Nog geen rekords vir Ode nie",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Maak Genshin → Wishes → History oop",
   "progressFallbackHint": "(Die vorige wensgeskiedenis-URL het verval en moet weer verkry word)",
   "progressNotDetectedLink": "Wish History oopgemaak, maar niks gebeur nie?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Kon nie die onderskepper begin nie (die sertifikaat is dalk geweier of die poort is in gebruik), so bespeuring val terug op slegs die speletjie se webkas. Maak die Wish History in die speletjie oop.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Kon nie die onderskepper begin nie (die sertifikaat is dalk geweier of die poort is in gebruik), en die speletjie-gids is ook nie gevind nie. Klik hieronder op “Kies speletjie-gids” om dit handmatig te stel.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History nie bespeur nie",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Kon nie die Genshin Impact-speletjie-gids vind nie. Sodra jy die speletjie-gids kies, kan hierdie hulpmiddel ook die wensgeskiedenis-URL uit die speletjie se webkas haal.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Speletjie-gids wat tans gebruik word: {path}. As dit nie die kopie van die speletjie is wat jy speel nie, kies asseblief weer.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Speletjie-gids gestel. Gaan terug na die speletjie en maak die Wish History weer oop.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact is nie in hierdie gids gevind nie. Kies asseblief die “Genshin Impact game”-gids.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Kies speletjie-gids",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Kies weer",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Haal tans op: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Omskakeling het misluk, data onveranderd. Kontroleer asseblief jou netwerk en probeer weer.",
   "settingsDataManagement": "Databestuur",
   "settingsGameDir": "Speletjie-gids",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Outomaties bespeur: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Handmatig gestel: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Speletjie-gids nie gevind nie",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Vee uit",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Wolksinkronisering",
   "cloudSyncIntro": "Koppel jou Google-rekening om gacha-data outomaties na jou Google Drive te rugsteun en verskeie toestelle gesinkroniseer te hou.",
   "cloudSyncUnconfigured": "Hierdie bou het geen Google OAuth-bewyse gestel nie; wolksinkronisering is nie beskikbaar nie.",
@@ -609,9 +655,39 @@
   "pagerLast": "Laaste",
   "pagerJumpTitle": "Gaan na bladsy",
   "pagerJumpLabel": "Bladsy ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Tans op bladsy {page} · {total, plural, =1{1 rekord} other{{total} rekords}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Gaan",
   "pagerJumpInvalid": "Voer ’n bladsy van {min}–{max} in",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Vee huidige rekening se data uit",
   "settingsClearAll": "Vee alle data uit",
   "settingsRefetchHoyoWikiImagesTitle": "Forseer heraflaai van itembeelde",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Gemiddeld",
   "luckTierUnlucky": "Ongelukkig",
   "manualUrlEntry": "Voer wensgeskiedenis-URL handmatig in",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Voer wensgeskiedenis-URL handmatig in",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "As jy die wensgeskiedenis-URL reeds op ’n ander manier gekry het (byvoorbeeld met ’n hulpmiddel op jou rekenaar), kan jy dit hier plak. Jy mag ook die hele teks plak; die app vind die URL outomaties.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Plak URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Plak vanaf knipbord",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Geen wensgeskiedenis-URL gevind nie. Kontroleer asseblief wat jy geplak het.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "Die URL bevat jou rekeningbewyse. Moenie dit openbaar deel nie. Dit verval ná ’n rukkie.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Wag dat jy die Wish History in die speletjie oopmaak...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Maak Genshin Impact → Wish → History oop",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Maak gereed om die speletjielogboek te lees...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Kan nie die wensgeskiedenis-URL outomaties kry nie",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Die lees van die speletjielogboek is nog nie opgestel nie. Ná ’n eenmalige opstelling word dit by elke opdatering outomaties gelees.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Draadlose ontfouting werk slegs op Wi‑Fi. Koppel aan Wi‑Fi en kom terug; die app gaan outomaties voort. Jy kan ook die URL handmatig invoer.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root is gevind, maar hierdie app het nie root-toegang gekry nie. Om met root te lees, laat hierdie app in jou root-bestuurder toe (byvoorbeeld Magisk se Superuser-lys) en kom dan terug; die app probeer outomaties weer.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Kon nie aan draadlose ontfouting koppel nie. Die saambinding het dalk verval; bind asseblief weer saam.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Jou toestel laat nie toe dat hierdie app draadlose ontfouting aanskakel nie. Skakel dit aan op die bladsy Draadlose ontfouting en kom terug; die app gaan outomaties voort.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Hierdie Wi‑Fi-netwerk is nog nie vir draadlose ontfouting toegelaat nie. Tik op Laat toe in die stelselvraag (merk “Laat altyd toe op hierdie netwerk” sodat dit nie weer vra nie) en die app gaan outomaties voort. As jy die vraag toegemaak het, tik op Probeer weer.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Hierdie toestel kan nie die wensgeskiedenis-URL outomaties lees nie (vereis Android 11 of nuwer, of root). Voer dit asseblief handmatig in.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact is nie op hierdie toestel geïnstalleer nie. Kom ná installasie hierheen terug en dit sal outomaties bespeur word.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Maak Genshin Impact oop",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Maak Draadlose ontfouting oop",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Verbinding met draadlose ontfouting verloor, koppel tans weer... As dit nie herstel nie, kontroleer jou Wi‑Fi of voer die URL handmatig in.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Draadlose ontfouting is nog aan. Jy kan dit in die stelselinstellings afskakel.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Wensgeskiedenis-URL gekry. Die haal van jou wensgeskiedenis begin sodra jy na hierdie app terugkeer.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Kyk weer",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Maak Google Play oop",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Stel op",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Toegang tot speletjielogboek",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Draadlose ontfouting",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Nie opgestel nie",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Saambinding",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Saamgebind",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Saamgebind (skakel draadlose ontfouting handmatig aan)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Probeer toestemming weer",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Stel op",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Verwyder saambinding",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Verwyder saambinding?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Dit vee hierdie app se saambindsleutel uit en neem hierdie app se toestemming om draadlose ontfouting aan en af te skakel weg. Jy sal weer moet saambind om draadlose ontfouting later te gebruik.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Saambinding verwyder",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Hierdie app se saambindsleutel is uitgevee en sy toestemming om draadlose ontfouting aan en af te skakel is weggeneem.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Saambindsleutel uitgevee",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Hierdie app se saambindsleutel is uitgevee, maar kon hierdie keer nie aan draadlose ontfouting koppel nie, so die toestemming om draadlose ontfouting aan en af te skakel is nog nie weggeneem nie.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Sonder saambinding gebruik hierdie app nie daardie toestemming nie. Om dit heeltemal weg te neem, koppel aan Wi‑Fi, bind weer saam en verwyder dan weer die saambinding.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Die stelsel se lys Draadlose ontfouting → Saamgebinde toestelle sal steeds “{name}” wys. Dit kan nie meer koppel nie, so jy kan dit laat staan; om dit te verwyder, tik daarop en vee dit uit.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Die stelsel se lys Draadlose ontfouting → Saamgebinde toestelle wys ook nog “{name}”; tik daarop om dit uit te vee.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metode",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Deel",
   "shareFailed": "Kon nie deel nie",
   "dialogSaveAsTitle": "Stoor as",

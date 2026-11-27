@@ -1,14 +1,14 @@
 {
   "@@locale": "cs",
   "localeNativeName": "Čeština",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Překlad: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Překlad: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktivní)",
   "emptyNoSyncTitle": "Zatím nejsou synchronizována žádná data",
   "emptyNoSyncMessage": "Klepnutím na {icon} vpravo nahoře začněte",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Pro tento banner nejsou žádné záznamy",
   "emptyNoFilterMatch": "Aktuálnímu filtru neodpovídají žádné záznamy",
   "emptyNoOdesRecords": "V Ode zatím nejsou žádné záznamy",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Otevřete Genshin → Wishes → History",
   "progressFallbackHint": "(Předchozí URL Wish History vypršelo a je třeba ho získat znovu)",
   "progressNotDetectedLink": "Otevřeli jste Wish History, ale nic se neděje?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Nepodařilo se spustit zachytávání (certifikát mohl být odmítnut nebo je port obsazený), takže se detekce spoléhá jen na webovou mezipaměť hry. Otevřete ve hře stránku Wish History.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Nepodařilo se spustit zachytávání (certifikát mohl být odmítnut nebo je port obsazený) a nebyla nalezena ani složka hry. Stiskněte níže „Vybrat složku hry“ a nastavte ji ručně.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History nebylo zjištěno",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Složka hry Genshin Impact nebyla nalezena. Po výběru složky hry může nástroj získat URL Wish History také z webové mezipaměti hry.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Aktuálně používaná složka hry: {path}. Pokud to není kopie hry, kterou hrajete, vyberte složku znovu.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Složka hry je nastavena. Vraťte se do hry a otevřete Wish History ještě jednou.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "V této složce nebyl nalezen Genshin Impact. Vyberte složku „Genshin Impact game“.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Vybrat složku hry",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Vybrat znovu",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Stahování: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Převod selhal, data zůstala beze změny. Zkontrolujte připojení k síti a zkuste to znovu.",
   "settingsDataManagement": "Správa dat",
   "settingsGameDir": "Složka hry",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Zjištěno automaticky: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Nastaveno ručně: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Složka hry nebyla nalezena",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Vymazat",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Synchronizace v cloudu",
   "cloudSyncIntro": "Propojte svůj účet Google a záznamy se budou automaticky zálohovat na váš Disk Google a synchronizovat mezi zařízeními.",
   "cloudSyncUnconfigured": "Toto sestavení nemá nastavené přihlašovací údaje Google OAuth; synchronizace v cloudu není dostupná.",
@@ -609,9 +655,39 @@
   "pagerLast": "Poslední",
   "pagerJumpTitle": "Přejít na stránku",
   "pagerJumpLabel": "Stránka ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Aktuální stránka: {page} · {total, plural, one{{total} záznam} few{{total} záznamy} many{{total} záznamu} other{{total} záznamů}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Přejít",
   "pagerJumpInvalid": "Zadejte stránku od {min} do {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Vymazat data aktuálního účtu",
   "settingsClearAll": "Vymazat všechna data",
   "settingsRefetchHoyoWikiImagesTitle": "Vynutit nové stažení obrázků předmětů",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Průměrný",
   "luckTierUnlucky": "Smolař",
   "manualUrlEntry": "Zadat URL Wish History ručně",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Zadat URL Wish History ručně",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Pokud jste URL Wish History získali jiným způsobem (např. nástrojem v počítači), můžete ho sem vložit. Funguje i vložení celého textu; aplikace URL najde sama.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Vložte URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Vložit ze schránky",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "URL Wish History nebylo nalezeno. Zkontrolujte vložený text.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL obsahuje přihlašovací údaje vašeho účtu. Nesdílejte ho veřejně. Po čase vyprší.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Čekání, až ve hře otevřete stránku Wish History...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Otevřete Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Příprava čtení herního protokolu...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "URL Wish History nelze získat automaticky",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Čtení herního protokolu ještě není nastaveno. Po jednorázovém nastavení ho každá aktualizace přečte automaticky.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Bezdrátové ladění funguje jen přes Wi-Fi. Připojte se k Wi-Fi a vraťte se; aplikace bude automaticky pokračovat. URL můžete také zadat ručně.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root byl nalezen, ale této aplikaci nebyl udělen přístup root. Chcete-li číst přes root, povolte aplikaci ve správci root (např. v seznamu Superuser v Magisku) a vraťte se; aplikace to automaticky zkusí znovu.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Nepodařilo se připojit k bezdrátovému ladění. Párování mohlo vypršet; spárujte znovu.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Vaše zařízení této aplikaci nedovoluje zapnout bezdrátové ladění. Zapněte ho na stránce Bezdrátové ladění a vraťte se; aplikace bude automaticky pokračovat.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Tato síť Wi-Fi zatím není pro bezdrátové ladění povolena. Klepněte v systémovém dotazu na „Povolit“ (zaškrtněte „Vždy povolit v této síti“, aby se systém znovu neptal) a aplikace bude automaticky pokračovat. Pokud jste dotaz zavřeli, klepněte na „Zkusit znovu“.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Toto zařízení nemůže URL Wish History přečíst automaticky (vyžaduje Android 11 nebo novější, případně root). Zadejte ho ručně.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact není v tomto zařízení nainstalován. Po instalaci se sem vraťte a hra bude zjištěna automaticky.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Otevřít Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Otevřít Bezdrátové ladění",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Spojení bezdrátového ladění bylo ztraceno, připojuji znovu... Pokud se neobnoví, zkontrolujte Wi-Fi nebo zadejte URL ručně.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Bezdrátové ladění je stále zapnuté. Můžete ho vypnout v nastavení systému.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL Wish History bylo získáno. Stahování Wish History začne po návratu do této aplikace.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Zkontrolovat znovu",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Otevřít Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Nastavit",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Přístup k herním protokolům",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Bezdrátové ladění",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Nenastaveno",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Párování",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Spárováno",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Spárováno (bezdrátové ladění zapínejte ručně)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Zopakovat udělení oprávnění",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Nastavit",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Zrušit párování",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Zrušit párování?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Tím se smaže párovací klíč této aplikace a odebere se její oprávnění přepínat bezdrátové ladění. Chcete-li bezdrátové ladění později použít, budete muset spárovat znovu.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Párování zrušeno",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Párovací klíč této aplikace byl smazán a bylo odebráno její oprávnění zapínat a vypínat bezdrátové ladění.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Párovací klíč smazán",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Párovací klíč této aplikace byl smazán, ale tentokrát se nepodařilo připojit k bezdrátovému ladění, takže oprávnění zapínat a vypínat bezdrátové ladění nebylo odebráno.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Bez párování tato aplikace toto oprávnění nepoužívá. Chcete-li ho odebrat úplně, připojte se k Wi-Fi, spárujte znovu a poté párování zrušte ještě jednou.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "V systémovém seznamu Bezdrátové ladění → Spárovaná zařízení bude stále uvedeno „{name}“. Už se nemůže připojit, takže ho můžete nechat; chcete-li ho odstranit, klepněte na něj a smažte ho.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "V systémovém seznamu Bezdrátové ladění → Spárovaná zařízení je stále uvedeno také „{name}“; klepnutím ho smažete.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metoda",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Sdílet",
   "shareFailed": "Sdílení se nepodařilo",
   "dialogSaveAsTitle": "Uložit jako",

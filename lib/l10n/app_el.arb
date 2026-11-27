@@ -1,14 +1,14 @@
 {
   "@@locale": "el",
   "localeNativeName": "Ελληνικά",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Μετάφραση: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Μετάφραση: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (ενεργός)",
   "emptyNoSyncTitle": "Δεν έχουν συγχρονιστεί δεδομένα ακόμα",
   "emptyNoSyncMessage": "Πατήστε {icon} επάνω δεξιά για να ξεκινήσετε",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Δεν υπάρχουν εγγραφές για αυτό το banner",
   "emptyNoFilterMatch": "Καμία εγγραφή δεν ταιριάζει με το φίλτρο",
   "emptyNoOdesRecords": "Δεν υπάρχει ακόμα ιστορικό Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Ανοίξτε Genshin → Wishes → History",
   "progressFallbackHint": "(Η προηγούμενη διεύθυνση URL του ιστορικού ευχών έληξε και πρέπει να ληφθεί ξανά)",
   "progressNotDetectedLink": "Ανοίξατε το Wish History αλλά δεν συμβαίνει τίποτα;",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Δεν ήταν δυνατή η εκκίνηση του προγράμματος αναχαίτισης (ίσως το πιστοποιητικό απορρίφθηκε ή η θύρα χρησιμοποιείται), οπότε η ανίχνευση βασίζεται μόνο στην προσωρινή μνήμη ιστού του παιχνιδιού. Ανοίξτε τη σελίδα Wish History στο παιχνίδι.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Δεν ήταν δυνατή η εκκίνηση του προγράμματος αναχαίτισης (ίσως το πιστοποιητικό απορρίφθηκε ή η θύρα χρησιμοποιείται) και δεν βρέθηκε ούτε ο φάκελος του παιχνιδιού. Πατήστε «Επιλογή φακέλου παιχνιδιού» παρακάτω για να τον ορίσετε χειροκίνητα.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Η σελίδα Wish History δεν εντοπίστηκε",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Δεν βρέθηκε ο φάκελος του παιχνιδιού Genshin Impact. Μόλις τον επιλέξετε, το εργαλείο μπορεί να λάβει τη διεύθυνση URL του ιστορικού ευχών και από την προσωρινή μνήμη ιστού του παιχνιδιού.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Φάκελος παιχνιδιού σε χρήση: {path}. Αν δεν είναι το αντίγραφο του παιχνιδιού που παίζετε, επιλέξτε ξανά.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Ο φάκελος του παιχνιδιού ορίστηκε. Επιστρέψτε στο παιχνίδι και ανοίξτε ξανά το Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Δεν βρέθηκε το Genshin Impact σε αυτόν τον φάκελο. Επιλέξτε τον φάκελο «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Επιλογή φακέλου παιχνιδιού",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Νέα επιλογή",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Λήψη: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Η μετατροπή απέτυχε, τα δεδομένα δεν άλλαξαν. Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά.",
   "settingsDataManagement": "Διαχείριση δεδομένων",
   "settingsGameDir": "Φάκελος παιχνιδιού",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Αυτόματος εντοπισμός: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Χειροκίνητη ρύθμιση: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Δεν βρέθηκε ο φάκελος του παιχνιδιού",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Απαλοιφή",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Συγχρονισμός στο cloud",
   "cloudSyncIntro": "Συνδέστε τον λογαριασμό σας Google για αυτόματη δημιουργία αντιγράφων ασφαλείας του ιστορικού gacha στο Google Drive και συγχρονισμό μεταξύ πολλών συσκευών.",
   "cloudSyncUnconfigured": "Σε αυτή την έκδοση δεν έχουν ρυθμιστεί διαπιστευτήρια Google OAuth. Ο συγχρονισμός στο cloud δεν είναι διαθέσιμος.",
@@ -609,9 +655,39 @@
   "pagerLast": "Τελευταία",
   "pagerJumpTitle": "Μετάβαση σε σελίδα",
   "pagerJumpLabel": "Σελίδα ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Τρέχουσα σελίδα {page} · {total, plural, =1{1 εγγραφή} other{{total} εγγραφές}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Μετάβαση",
   "pagerJumpInvalid": "Εισαγάγετε σελίδα από {min} έως {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Διαγραφή δεδομένων τρέχοντος λογαριασμού",
   "settingsClearAll": "Διαγραφή όλων των δεδομένων",
   "settingsRefetchHoyoWikiImagesTitle": "Αναγκαστική νέα λήψη εικόνων αντικειμένων",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Μέτριο",
   "luckTierUnlucky": "Άτυχο",
   "manualUrlEntry": "Χειροκίνητη εισαγωγή URL ιστορικού ευχών",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Χειροκίνητη εισαγωγή URL ιστορικού ευχών",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Αν έχετε ήδη λάβει το URL του ιστορικού ευχών με άλλον τρόπο (για παράδειγμα με ένα εργαλείο στον υπολογιστή σας), μπορείτε να το επικολλήσετε εδώ. Λειτουργεί και η επικόλληση ολόκληρου του κειμένου· η εφαρμογή βρίσκει αυτόματα το URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Επικόλληση URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Επικόλληση από το πρόχειρο",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Δεν βρέθηκε URL ιστορικού ευχών. Ελέγξτε το περιεχόμενο που επικολλήσατε.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "Το URL περιέχει τα διαπιστευτήρια του λογαριασμού σας. Μην το μοιράζεστε δημόσια. Λήγει μετά από λίγο.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Αναμονή να ανοίξετε τη σελίδα Wish History στο παιχνίδι...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Ανοίξτε Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Προετοιμασία για ανάγνωση του αρχείου καταγραφής του παιχνιδιού...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Δεν είναι δυνατή η αυτόματη λήψη του URL ιστορικού ευχών",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Η ανάγνωση του αρχείου καταγραφής του παιχνιδιού δεν έχει ρυθμιστεί ακόμα. Μετά από μία εφάπαξ ρύθμιση, κάθε ενημέρωση το διαβάζει αυτόματα.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Ο ασύρματος εντοπισμός σφαλμάτων λειτουργεί μόνο μέσω Wi‑Fi. Συνδεθείτε σε Wi‑Fi και επιστρέψτε. Η εφαρμογή θα συνεχίσει αυτόματα. Μπορείτε επίσης να εισαγάγετε τη διεύθυνση URL χειροκίνητα.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Εντοπίστηκε root, αλλά δεν δόθηκε πρόσβαση root σε αυτή την εφαρμογή. Για ανάγνωση με root, επιτρέψτε την εφαρμογή στη διαχείριση root (π.χ. στη λίστα Superuser του Magisk) και επιστρέψτε. Η εφαρμογή θα δοκιμάσει ξανά αυτόματα.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Δεν ήταν δυνατή η σύνδεση στον ασύρματο εντοπισμό σφαλμάτων. Η σύζευξη ίσως έχει λήξει. Κάντε ξανά σύζευξη.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Η συσκευή σας δεν επιτρέπει σε αυτή την εφαρμογή να ενεργοποιήσει τον ασύρματο εντοπισμό σφαλμάτων. Ενεργοποιήστε τον στη σελίδα Ασύρματος εντοπισμός σφαλμάτων και επιστρέψτε. Η εφαρμογή θα συνεχίσει αυτόματα.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Αυτό το δίκτυο Wi‑Fi δεν επιτρέπεται ακόμα για ασύρματο εντοπισμό σφαλμάτων. Πατήστε Να επιτρέπεται στο μήνυμα του συστήματος (επιλέξτε «Να επιτρέπεται πάντα σε αυτό το δίκτυο» για να μην ερωτηθείτε ξανά) και η εφαρμογή θα συνεχίσει αυτόματα. Αν κλείσατε το μήνυμα, πατήστε Επανάληψη.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Αυτή η συσκευή δεν μπορεί να διαβάσει αυτόματα το URL ιστορικού ευχών (απαιτείται Android 11 ή νεότερο, ή root). Εισαγάγετε το χειροκίνητα.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Το Genshin Impact δεν είναι εγκατεστημένο σε αυτή τη συσκευή. Μόλις εγκατασταθεί, επιστρέψτε εδώ και θα εντοπιστεί αυτόματα.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Άνοιγμα Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Άνοιγμα ασύρματου εντοπισμού σφαλμάτων",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Η σύνδεση με τον ασύρματο εντοπισμό σφαλμάτων χάθηκε, γίνεται επανασύνδεση... Αν δεν αποκατασταθεί, ελέγξτε το Wi‑Fi ή εισαγάγετε τη διεύθυνση URL χειροκίνητα.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Ο ασύρματος εντοπισμός σφαλμάτων είναι ακόμα ενεργός. Μπορείτε να τον απενεργοποιήσετε στις ρυθμίσεις συστήματος.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Βρέθηκε το URL ιστορικού ευχών. Η λήψη του ιστορικού ευχών θα ξεκινήσει όταν επιστρέψετε σε αυτή την εφαρμογή.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Νέος έλεγχος",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Άνοιγμα Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Ρύθμιση",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Πρόσβαση στο αρχείο καταγραφής του παιχνιδιού",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Ασύρματος εντοπισμός σφαλμάτων",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Δεν έχει ρυθμιστεί",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Σύζευξη",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Σε σύζευξη",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Σε σύζευξη (ενεργοποιήστε χειροκίνητα τον ασύρματο εντοπισμό σφαλμάτων)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Νέα προσπάθεια άδειας",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Ρύθμιση",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Κατάργηση σύζευξης",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Κατάργηση σύζευξης;",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Θα διαγραφεί το κλειδί σύζευξης αυτής της εφαρμογής και θα καταργηθεί η άδεια της εφαρμογής να ενεργοποιεί και να απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων. Θα χρειαστεί νέα σύζευξη για να τον χρησιμοποιήσετε αργότερα.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Η σύζευξη καταργήθηκε",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Το κλειδί σύζευξης της εφαρμογής διαγράφηκε και καταργήθηκε η άδειά της να ενεργοποιεί και να απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Το κλειδί σύζευξης διαγράφηκε",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Το κλειδί σύζευξης της εφαρμογής διαγράφηκε, αλλά αυτή τη φορά δεν ήταν δυνατή η σύνδεση στον ασύρματο εντοπισμό σφαλμάτων, οπότε η άδεια ενεργοποίησης και απενεργοποίησής του δεν καταργήθηκε.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Η εφαρμογή δεν χρησιμοποιεί αυτή την άδεια όσο δεν υπάρχει σύζευξη. Για να την καταργήσετε πλήρως, συνδεθείτε σε Wi‑Fi, κάντε ξανά σύζευξη και έπειτα καταργήστε τη σύζευξη ξανά.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Στη λίστα του συστήματος Ασύρματος εντοπισμός σφαλμάτων → Συζευγμένες συσκευές θα εξακολουθεί να εμφανίζεται το «{name}». Δεν μπορεί πλέον να συνδεθεί, οπότε μπορείτε να το αφήσετε· για να το αφαιρέσετε, πατήστε το και διαγράψτε το.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Στη λίστα του συστήματος Ασύρματος εντοπισμός σφαλμάτων → Συζευγμένες συσκευές εμφανίζεται επίσης το «{name}»· πατήστε το για να το διαγράψετε.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Μέθοδος",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Κοινοποίηση",
   "shareFailed": "Η κοινοποίηση απέτυχε",
   "dialogSaveAsTitle": "Αποθήκευση ως",

@@ -1,14 +1,14 @@
 {
   "@@locale": "sv",
   "localeNativeName": "Svenska",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Översättare: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Översättare: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktiv)",
   "emptyNoSyncTitle": "Inga data har synkroniserats än",
   "emptyNoSyncMessage": "Tryck på {icon} uppe till höger för att komma igång",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Inga poster för den här bannern",
   "emptyNoFilterMatch": "Inga poster matchar det aktuella filtret",
   "emptyNoOdesRecords": "Inga Ode-poster än",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Öppna Genshin → Wishes → History",
   "progressFallbackHint": "(Den tidigare URL:en till Wish History har gått ut och måste hämtas på nytt)",
   "progressNotDetectedLink": "Har du öppnat Wish History men inget händer?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Avlyssningen kunde inte startas (certifikatet kan ha avvisats, eller så används porten), så nu söks endast spelets webbcache igenom. Öppna sidan Wish History i spelet.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Avlyssningen kunde inte startas (certifikatet kan ha avvisats, eller så används porten) och spelmappen hittades inte heller. Tryck på \"Välj spelmapp\" nedan för att ange den manuellt.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History hittades inte",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Spelmappen för Genshin Impact hittades inte. När du har valt spelmappen kan verktyget även hämta URL:en till Wish History från spelets webbcache.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Spelmapp som används: {path}. Om det inte är den kopia av spelet du spelar väljer du igen.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Spelmappen är inställd. Gå tillbaka till spelet och öppna Wish History en gång till.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact hittades inte i den här mappen. Välj mappen \"Genshin Impact game\".",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Välj spelmapp",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Välj igen",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Hämtar: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Konverteringen misslyckades; data har inte ändrats. Kontrollera anslutningen och försök igen.",
   "settingsDataManagement": "Datahantering",
   "settingsGameDir": "Spelmapp",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Hittades automatiskt: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Angiven manuellt: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Spelmappen hittades inte",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Rensa",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Molnsynkronisering",
   "cloudSyncIntro": "Länka ditt Google-konto för att automatiskt säkerhetskopiera gacha-poster till din Google Drive och hålla flera enheter synkroniserade.",
   "cloudSyncUnconfigured": "Den här versionen saknar Google OAuth-uppgifter; molnsynkronisering är inte tillgänglig.",
@@ -609,9 +655,39 @@
   "pagerLast": "Sista",
   "pagerJumpTitle": "Gå till sida",
   "pagerJumpLabel": "Sida ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Sida {page} · {total, plural, =1{1 post} other{{total} poster}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Gå",
   "pagerJumpInvalid": "Ange en sida från {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Rensa data för aktuellt konto",
   "settingsClearAll": "Rensa alla data",
   "settingsRefetchHoyoWikiImagesTitle": "Tvinga omhämtning av föremålsbilder",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Genomsnitt",
   "luckTierUnlucky": "Otur",
   "manualUrlEntry": "Ange URL till Wish History manuellt",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Ange URL till Wish History manuellt",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Om du redan har fått URL:en till Wish History på annat sätt (till exempel med ett verktyg på datorn) kan du klistra in den här. Du kan också klistra in hela texten; appen hittar URL:en automatiskt.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Klistra in URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Klistra in från urklipp",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Ingen URL till Wish History hittades. Kontrollera det du klistrade in.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL:en innehåller dina kontouppgifter. Dela den inte offentligt. Den går ut efter en tid.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Väntar på att du öppnar sidan Wish History i spelet...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Öppna Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Förbereder läsning av spelets logg...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "URL:en till Wish History kan inte hämtas automatiskt",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Läsning av spelets logg har inte konfigurerats än. Efter en engångskonfiguration läses den automatiskt vid varje uppdatering.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Trådlös felsökning fungerar bara via Wi‑Fi. Anslut till Wi‑Fi och kom tillbaka; appen fortsätter automatiskt. Du kan också ange URL:en manuellt.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root hittades, men appen har inte fått root-åtkomst. Om du vill läsa med root ger du appen behörighet i din root-hanterare (till exempel Superuser-listan i Magisk) och kommer tillbaka; appen försöker igen automatiskt.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Det gick inte att ansluta till trådlös felsökning. Parkopplingen kan ha gått ut; parkoppla igen.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Din enhet tillåter inte att appen aktiverar trådlös felsökning. Aktivera det på sidan Trådlös felsökning och kom tillbaka; appen fortsätter automatiskt.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Det här Wi‑Fi-nätverket är ännu inte tillåtet för trådlös felsökning. Tryck på Tillåt i systemfrågan (markera \"Tillåt alltid i det här nätverket\" så att du inte tillfrågas igen) så fortsätter appen automatiskt. Om du har stängt frågan trycker du på Försök igen.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Den här enheten kan inte läsa URL:en till Wish History automatiskt (kräver Android 11 eller senare, eller root). Ange den manuellt.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact är inte installerat på den här enheten. Kom tillbaka hit efter installationen så identifieras spelet automatiskt.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Öppna Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Öppna Trådlös felsökning",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Anslutningen till trådlös felsökning bröts, ansluter igen... Om den inte återställs kontrollerar du ditt Wi‑Fi eller anger URL:en manuellt.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Trådlös felsökning är fortfarande på. Du kan stänga av den i systeminställningarna.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL:en till Wish History har tagits emot. Hämtningen av din Wish History startar när du går tillbaka till appen.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Kontrollera igen",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Öppna Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Konfigurera",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Åtkomst till spelets logg",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Trådlös felsökning",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Inte konfigurerad",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Parkoppling",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Parkopplad",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Parkopplad (aktivera trådlös felsökning manuellt)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Försök ge behörighet igen",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Konfigurera",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Ta bort parkoppling",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Ta bort parkoppling?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Detta tar bort appens kopplingsnyckel och appens behörighet att slå på och av trådlös felsökning. Du måste parkoppla igen för att använda trådlös felsökning senare.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Parkopplingen har tagits bort",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Appens parkopplingsnyckel har tagits bort och dess behörighet att slå på och av trådlös felsökning har dragits in.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Parkopplingsnyckeln har tagits bort",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Appens parkopplingsnyckel har tagits bort, men den här gången gick det inte att ansluta till trådlös felsökning, så behörigheten att slå på och av trådlös felsökning har inte dragits in.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Appen använder inte behörigheten så länge den inte är parkopplad. Om du vill dra in den helt ansluter du till wifi, parkopplar igen och tar sedan bort parkopplingen en gång till.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Systemets lista Trådlös felsökning → Parkopplade enheter visar fortfarande \"{name}\". Den kan inte längre ansluta, så du kan låta den vara; tryck på den och radera den om du vill ta bort den.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Systemets lista Trådlös felsökning → Parkopplade enheter visar också fortfarande \"{name}\"; tryck på den för att radera den.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metod",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Dela",
   "shareFailed": "Det gick inte att dela",
   "dialogSaveAsTitle": "Spara som",

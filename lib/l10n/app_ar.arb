@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (نشط)",
   "emptyNoSyncTitle": "لم تتم مزامنة أي بيانات بعد",
   "emptyNoSyncMessage": "اضغط على {icon} في الأعلى للبدء",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "لا توجد سجلات لهذا البانر",
   "emptyNoFilterMatch": "لا توجد سجلات تطابق عامل التصفية الحالي",
   "emptyNoOdesRecords": "لا توجد سجلات Ode بعد",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "افتح Genshin → Wishes → History",
   "progressFallbackHint": "(انتهت صلاحية رابط Wish History السابق ويجب الحصول عليه مجددًا)",
   "progressNotDetectedLink": "فتحت Wish History ولم يحدث شيء؟",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "تعذّر تشغيل أداة الاعتراض (ربما رُفضت الشهادة أو المنفذ قيد الاستخدام)، لذا يقتصر الاكتشاف على ذاكرة الويب المؤقتة للعبة. يُرجى فتح صفحة Wish History في اللعبة.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "تعذّر تشغيل أداة الاعتراض (ربما رُفضت الشهادة أو المنفذ قيد الاستخدام)، ولم يُعثر على مجلد اللعبة أيضًا. اضغط «اختيار مجلد اللعبة» أدناه لتعيينه يدويًا.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "لم يتم اكتشاف Wish History",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "تعذّر العثور على مجلد لعبة Genshin Impact. بعد اختيار مجلد اللعبة، يمكن لهذه الأداة أيضًا الحصول على رابط Wish History من ذاكرة الويب المؤقتة للعبة.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "مجلد اللعبة المستخدم حاليًا: {path}. إذا لم يكن هذا هو النسخة التي تلعبها، فيُرجى الاختيار مجددًا.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "تم تعيين مجلد اللعبة. عُد إلى اللعبة وافتح Wish History مرة أخرى.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "لم يُعثر على Genshin Impact في هذا المجلد. يُرجى اختيار مجلد «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "اختيار مجلد اللعبة",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "إعادة الاختيار",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "جارٍ الجلب: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "فشل التحويل ولم تتغير البيانات. تحقّق من اتصالك وحاول مجددًا.",
   "settingsDataManagement": "إدارة البيانات",
   "settingsGameDir": "مجلد اللعبة",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "مُكتشَف تلقائيًا: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "معيّن يدويًا: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "لم يُعثر على مجلد اللعبة",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "مسح",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "المزامنة السحابية",
   "cloudSyncIntro": "اربط حسابك على Google لنسخ سجلات السحب احتياطيًا إلى Google Drive تلقائيًا ومزامنتها بين أجهزتك.",
   "cloudSyncUnconfigured": "لم تُضبط بيانات اعتماد Google OAuth في هذا الإصدار، لذا فالمزامنة السحابية غير متاحة.",
@@ -609,9 +655,39 @@
   "pagerLast": "الأخيرة",
   "pagerJumpTitle": "الانتقال إلى صفحة",
   "pagerJumpLabel": "الصفحة ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "الصفحة الحالية: {page} · {total, plural, zero{لا توجد سجلات} one{سجل واحد} two{سجلان} few{{total} سجلات} many{{total} سجلًا} other{{total} سجل}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "انتقال",
   "pagerJumpInvalid": "أدخل صفحة من {min} إلى {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "مسح بيانات الحساب الحالي",
   "settingsClearAll": "مسح كل البيانات",
   "settingsRefetchHoyoWikiImagesTitle": "فرض إعادة جلب صور العناصر",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "متوسط",
   "luckTierUnlucky": "سيئ الحظ",
   "manualUrlEntry": "إدخال رابط Wish History يدويًا",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "إدخال رابط Wish History يدويًا",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "إذا حصلت على رابط Wish History بطريقة أخرى (مثلًا باستخدام أداة على حاسوبك)، فيمكنك لصقه هنا. يمكنك أيضًا لصق النص كاملًا؛ إذ يعثر التطبيق على الرابط تلقائيًا.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "الصق الرابط...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "لصق من الحافظة",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "لم يُعثر على رابط Wish History. يُرجى التحقق مما لصقته.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "يحتوي الرابط على بيانات اعتماد حسابك. لا تشاركه علنًا. تنتهي صلاحيته بعد فترة.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "موافق",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "في انتظار فتحك صفحة Wish History في اللعبة...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "افتح Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "جارٍ التحضير لقراءة سجل اللعبة...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "تعذّر الحصول على رابط Wish History تلقائيًا",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "لم يتم إعداد قراءة سجل اللعبة بعد. بعد إعداد لمرة واحدة، ستتم قراءته تلقائيًا عند كل تحديث.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "لا يعمل تصحيح الأخطاء اللاسلكي إلا عبر Wi‑Fi. اتصل بشبكة Wi‑Fi ثم عُد، وسيتابع التطبيق تلقائيًا. يمكنك أيضًا إدخال الرابط يدويًا.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "تم العثور على صلاحية الروت، لكن لم يُمنح هذا التطبيق صلاحية الروت. للقراءة باستخدام الروت، اسمح لهذا التطبيق في مدير الروت (مثل قائمة Superuser في Magisk)، ثم عُد، وسيعيد التطبيق المحاولة تلقائيًا.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "تعذّر الاتصال بتصحيح الأخطاء اللاسلكي. ربما انتهت صلاحية الإقران؛ يُرجى الإقران مجددًا.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "لا يسمح جهازك لهذا التطبيق بتشغيل تصحيح الأخطاء اللاسلكي. شغّله من صفحة تصحيح الأخطاء اللاسلكي ثم عُد، وسيتابع التطبيق تلقائيًا.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "لم يُسمح بعد بشبكة Wi‑Fi هذه لتصحيح الأخطاء اللاسلكي. اضغط «سماح» في مطالبة النظام (حدّد «السماح دائمًا على هذه الشبكة» حتى لا يُطلب منك ذلك مجددًا) وسيتابع التطبيق تلقائيًا. إذا أغلقت المطالبة، فاضغط «إعادة المحاولة».",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "لا يمكن لهذا الجهاز قراءة رابط Wish History تلقائيًا (يتطلب Android 11 أو أحدث، أو صلاحية الروت). يُرجى إدخاله يدويًا.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "لعبة Genshin Impact غير مثبّتة على هذا الجهاز. بعد تثبيتها عُد إلى هنا وسيتم اكتشافها تلقائيًا.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "فتح Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "فتح تصحيح الأخطاء اللاسلكي",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "انقطع الاتصال بتصحيح الأخطاء اللاسلكي، جارٍ إعادة الاتصال... إذا لم يُستعد الاتصال، فتحقق من Wi‑Fi أو أدخل الرابط يدويًا.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "لا يزال تصحيح الأخطاء اللاسلكي قيد التشغيل. يمكنك إيقافه من إعدادات النظام.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "تم الحصول على رابط Wish History. سيبدأ جلب Wish History عند عودتك إلى هذا التطبيق.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "إعادة الفحص",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "فتح Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "إعداد",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "الوصول إلى سجل اللعبة",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "تصحيح الأخطاء اللاسلكي",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "لم يتم الإعداد",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "الإقران",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "مقترن",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "مقترن (شغّل تصحيح الأخطاء اللاسلكي يدويًا)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "إعادة محاولة منح الإذن",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "إعداد",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "إزالة الإقران",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "إزالة الإقران؟",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "سيؤدي هذا إلى حذف مفتاح الإقران الخاص بهذا التطبيق وإزالة إذن هذا التطبيق بتشغيل تصحيح الأخطاء اللاسلكي وإيقافه. ستحتاج إلى الإقران مجددًا لاستخدام تصحيح الأخطاء اللاسلكي لاحقًا.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "تمت إزالة الإقران",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "تم حذف مفتاح الإقران لهذا التطبيق وإزالة إذنه بتشغيل تصحيح الأخطاء اللاسلكي وإيقافه.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "تم حذف مفتاح الإقران",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "تم حذف مفتاح الإقران لهذا التطبيق، لكن تعذّر الاتصال بتصحيح الأخطاء اللاسلكي هذه المرة، لذا لم تتم إزالة إذن تشغيل تصحيح الأخطاء اللاسلكي وإيقافه.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "لا يستخدم هذا التطبيق هذا الإذن أثناء عدم الإقران. لإزالته تمامًا، اتصل بشبكة Wi‑Fi وأقرن مجددًا ثم ألغِ الإقران مرة أخرى.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "ستظل قائمة تصحيح الأخطاء اللاسلكي ← الأجهزة المقترنة في النظام تعرض \"{name}\". لم يعد بإمكانه الاتصال، لذا يمكنك تركه؛ ولإزالته، انقر عليه ثم احذفه.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "تعرض قائمة تصحيح الأخطاء اللاسلكي ← الأجهزة المقترنة في النظام أيضًا \"{name}\"؛ انقر عليه لحذفه.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "الطريقة",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "مشاركة",
   "shareFailed": "تعذّرت المشاركة",
   "dialogSaveAsTitle": "حفظ باسم",

@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (attivo)",
   "emptyNoSyncTitle": "Nessun dato sincronizzato",
   "emptyNoSyncMessage": "Tocca {icon} in alto a destra per iniziare",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Nessun record per questo banner",
   "emptyNoFilterMatch": "Nessun record corrisponde al filtro attuale",
   "emptyNoOdesRecords": "Ancora nessun record delle Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Apri Genshin → Desideri → Cronologia",
   "progressFallbackHint": "(L'URL precedente della Cronologia desideri è scaduto e va ottenuto di nuovo)",
   "progressNotDetectedLink": "Hai aperto la Cronologia desideri ma non succede nulla?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Impossibile avviare l'intercettatore (il certificato potrebbe essere stato rifiutato o la porta è in uso), quindi il rilevamento si limita alla cache web del gioco. Apri la pagina Cronologia desideri nel gioco.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Impossibile avviare l'intercettatore (il certificato potrebbe essere stato rifiutato o la porta è in uso) e non è stata trovata nemmeno la cartella del gioco. Premi «Scegli cartella del gioco» qui sotto per impostarla manualmente.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Cronologia desideri non rilevata",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Impossibile trovare la cartella di Genshin Impact. Dopo aver scelto la cartella del gioco, questo strumento potrà ottenere l'URL della Cronologia desideri anche dalla cache web del gioco.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Cartella del gioco attualmente in uso: {path}. Se non è la copia del gioco a cui stai giocando, scegli di nuovo.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Cartella del gioco impostata. Torna al gioco e apri di nuovo la Cronologia desideri.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact non è stato trovato in questa cartella. Scegli la cartella «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Scegli cartella del gioco",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Scegli di nuovo",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Recupero: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Conversione non riuscita, dati invariati. Controlla la rete e riprova.",
   "settingsDataManagement": "Gestione dati",
   "settingsGameDir": "Cartella del gioco",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Rilevata automaticamente: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Impostata manualmente: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Cartella del gioco non trovata",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Rimuovi",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Sincronizzazione cloud",
   "cloudSyncIntro": "Collega il tuo account Google per eseguire automaticamente il backup dei record dei Desideri su Google Drive e mantenere sincronizzati più dispositivi.",
   "cloudSyncUnconfigured": "Questa build non ha credenziali Google OAuth configurate; la sincronizzazione cloud non è disponibile.",
@@ -609,9 +655,39 @@
   "pagerLast": "Ultima",
   "pagerJumpTitle": "Vai alla pagina",
   "pagerJumpLabel": "Pagina ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Pagina attuale: {page} · {total, plural, =1{1 record} other{{total} record}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Vai",
   "pagerJumpInvalid": "Inserisci una pagina tra {min} e {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Cancella i dati dell'account attuale",
   "settingsClearAll": "Cancella tutti i dati",
   "settingsRefetchHoyoWikiImagesTitle": "Forza nuovo recupero immagini degli oggetti",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Nella media",
   "luckTierUnlucky": "Sfortunato",
   "manualUrlEntry": "Inserisci manualmente l'URL della Cronologia desideri",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Inserisci manualmente l'URL della Cronologia desideri",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Se hai già ottenuto l'URL della Cronologia desideri in un altro modo (ad esempio con uno strumento sul computer), puoi incollarlo qui. Funziona anche incollando l'intero testo: l'app trova l'URL automaticamente.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Incolla URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Incolla dagli appunti",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Nessun URL della Cronologia desideri trovato. Controlla cosa hai incollato.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "L'URL contiene le credenziali del tuo account. Non condividerlo pubblicamente. Scade dopo un po' di tempo.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "In attesa che tu apra la pagina Cronologia desideri nel gioco...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Apri Genshin Impact → Desideri → Cronologia",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Preparazione alla lettura del log del gioco...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Impossibile ottenere automaticamente l'URL della Cronologia desideri",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "La lettura del log del gioco non è ancora configurata. Dopo una configurazione una tantum, ogni aggiornamento la esegue automaticamente.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Il debug wireless funziona solo con il Wi‑Fi. Connettiti a una rete Wi‑Fi e torna qui: l'app proseguirà automaticamente. Puoi anche inserire l'URL manualmente.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "È stato rilevato il root, ma a questa app non è stato concesso l'accesso root. Per leggere tramite root, consenti questa app nel tuo gestore root (ad esempio l'elenco Superuser di Magisk), poi torna qui: l'app riproverà automaticamente.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Impossibile connettersi al debug wireless. L'accoppiamento potrebbe essere scaduto; effettua di nuovo l'accoppiamento.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Il tuo dispositivo non consente a questa app di attivare il debug wireless. Attivalo nella pagina Debug wireless e torna qui: l'app proseguirà automaticamente.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Questa rete Wi‑Fi non è ancora autorizzata per il debug wireless. Tocca Consenti nella richiesta di sistema (seleziona «Consenti sempre su questa rete» per non ricevere più la richiesta) e l'app proseguirà automaticamente. Se hai chiuso la richiesta, tocca Riprova.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Questo dispositivo non può leggere automaticamente l'URL della Cronologia desideri (richiede Android 11 o successivo, oppure root). Inseriscilo manualmente.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact non è installato su questo dispositivo. Una volta installato, torna qui e verrà rilevato automaticamente.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Apri Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Apri Debug wireless",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Connessione al debug wireless persa, riconnessione in corso... Se non si ripristina, controlla il Wi‑Fi o inserisci l'URL manualmente.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Il debug wireless è ancora attivo. Puoi disattivarlo nelle impostazioni di sistema.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL della Cronologia desideri ottenuto. Il recupero della tua Cronologia desideri inizia quando torni in questa app.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Controlla di nuovo",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Apri Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Configura",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Accesso al log del gioco",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Debug wireless",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Non configurato",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Accoppiamento",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Accoppiato",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Accoppiato (attiva il debug wireless manualmente)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Riprova autorizzazione",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Configura",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Rimuovi accoppiamento",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Rimuovere l'accoppiamento?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "La chiave di accoppiamento di questa app verrà eliminata e a questa app verrà revocata l'autorizzazione ad attivare e disattivare il debug wireless. Per usare di nuovo il debug wireless dovrai ripetere l'accoppiamento.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Accoppiamento rimosso",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "La chiave di accoppiamento di questa app è stata eliminata e le è stata revocata l'autorizzazione ad attivare e disattivare il debug wireless.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Chiave di accoppiamento eliminata",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "La chiave di accoppiamento di questa app è stata eliminata, ma questa volta non è stato possibile connettersi al debug wireless, quindi l'autorizzazione ad attivarlo e disattivarlo non è stata revocata.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Finché non è accoppiata, questa app non usa questa autorizzazione. Per revocarla del tutto, connettiti a una rete Wi‑Fi, ripeti l'accoppiamento e poi rimuovilo di nuovo.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Nell'elenco di sistema Debug wireless → Dispositivi accoppiati resterà «{name}». Non può più connettersi, quindi puoi lasciarlo; per rimuoverlo, toccalo ed eliminalo.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Nell'elenco di sistema Debug wireless → Dispositivi accoppiati resta anche «{name}»; toccalo per eliminarlo.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metodo",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Condividi",
   "shareFailed": "Impossibile condividere",
   "dialogSaveAsTitle": "Salva con nome",

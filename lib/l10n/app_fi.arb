@@ -1,14 +1,14 @@
 {
   "@@locale": "fi",
   "localeNativeName": "Suomi",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Kääntäjä: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Kääntäjä: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktiivinen)",
   "emptyNoSyncTitle": "Tietoja ei ole vielä synkronoitu",
   "emptyNoSyncMessage": "Aloita napauttamalla {icon} oikeassa yläkulmassa",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Tällä bannerilla ei ole tapahtumia",
   "emptyNoFilterMatch": "Suodatinta vastaavia tapahtumia ei ole",
   "emptyNoOdesRecords": "Ode-historiaa ei vielä ole",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Avaa Genshin → Wishes → History",
   "progressFallbackHint": "(Edellinen toivomushistorian URL-osoite on vanhentunut, ja se täytyy hakea uudelleen)",
   "progressNotDetectedLink": "Avasitko Wish History -sivun, mutta mitään ei tapahdu?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Sieppaajaa ei voitu käynnistää (varmenne on ehkä hylätty tai portti on käytössä), joten tunnistus käyttää vain pelin verkkovälimuistia. Avaa Wish History -sivu pelissä.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Sieppaajaa ei voitu käynnistää (varmenne on ehkä hylätty tai portti on käytössä), eikä pelikansiota löytynyt. Valitse kansio itse painamalla alta ”Valitse pelikansio”.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History -sivua ei tunnistettu",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Genshin Impact -pelin kansiota ei löytynyt. Kun valitset pelikansion, työkalu voi hakea toivomushistorian URL-osoitteen myös pelin verkkovälimuistista.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Käytössä oleva pelikansio: {path}. Jos tämä ei ole pelaamasi pelin kopio, valitse kansio uudelleen.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Pelikansio on asetettu. Palaa peliin ja avaa sivu Wish History vielä kerran.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Tästä kansiosta ei löytynyt Genshin Impact -peliä. Valitse kansio ”Genshin Impact game”.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Valitse pelikansio",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Valitse uudelleen",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Haetaan: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Muunnos epäonnistui, tietoja ei muutettu. Tarkista verkkoyhteytesi ja yritä uudelleen.",
   "settingsDataManagement": "Tietojen hallinta",
   "settingsGameDir": "Pelikansio",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Tunnistettu automaattisesti: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Asetettu manuaalisesti: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Pelikansiota ei löytynyt",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Tyhjennä",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Pilvisynkronointi",
   "cloudSyncIntro": "Yhdistä Google-tilisi, niin gacha-historia varmuuskopioidaan automaattisesti Google Driveen ja pidetään synkronoituna useilla laitteilla.",
   "cloudSyncUnconfigured": "Tähän versioon ei ole määritetty Google OAuth -tunnuksia, joten pilvisynkronointi ei ole käytettävissä.",
@@ -609,9 +655,39 @@
   "pagerLast": "Viimeinen",
   "pagerJumpTitle": "Siirry sivulle",
   "pagerJumpLabel": "Sivu ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Sivu {page} · {total, plural, =1{1 tapahtuma} other{{total} tapahtumaa}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Siirry",
   "pagerJumpInvalid": "Anna sivu väliltä {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Tyhjennä nykyisen tilin tiedot",
   "settingsClearAll": "Tyhjennä kaikki tiedot",
   "settingsRefetchHoyoWikiImagesTitle": "Pakota esineiden kuvien uudelleenhaku",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Keskiverto",
   "luckTierUnlucky": "Epäonninen",
   "manualUrlEntry": "Syötä toivomushistorian URL-osoite manuaalisesti",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Syötä toivomushistorian URL-osoite manuaalisesti",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Jos olet jo saanut toivomushistorian URL-osoitteen muulla tavalla (esimerkiksi tietokoneen työkalulla), voit liittää sen tähän. Koko tekstin liittäminen toimii myös; sovellus löytää URL-osoitteen automaattisesti.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Liitä URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Liitä leikepöydältä",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Toivomushistorian URL-osoitetta ei löytynyt. Tarkista liittämäsi sisältö.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL-osoite sisältää tilisi tunnistetiedot. Älä jaa sitä julkisesti. Se vanhenee jonkin ajan kuluttua.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Odotetaan, että avaat pelissä Wish History -sivun...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Avaa Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Valmistellaan pelin lokin lukemista...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Toivomushistorian URL-osoitetta ei voi hakea automaattisesti",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Pelin lokin lukemista ei ole vielä määritetty. Kertaluonteisen määrityksen jälkeen jokainen päivitys lukee sen automaattisesti.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Langaton virheenkorjaus toimii vain Wi‑Fi-verkossa. Yhdistä Wi‑Fi-verkkoon ja palaa, niin sovellus jatkaa automaattisesti. Voit myös syöttää URL-osoitteen manuaalisesti.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root löytyi, mutta tälle sovellukselle ei ole myönnetty root-oikeuksia. Jos haluat lukea rootilla, salli sovellus root-hallintasovelluksessa (esimerkiksi Magiskin Superuser-luettelossa) ja palaa sitten. Sovellus yrittää automaattisesti uudelleen.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Langattomaan virheenkorjaukseen ei saatu yhteyttä. Laitepari on ehkä vanhentunut. Muodosta laitepari uudelleen.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Laitteesi ei salli tämän sovelluksen ottaa langatonta virheenkorjausta käyttöön. Ota se käyttöön Langaton virheenkorjaus -sivulla ja palaa, niin sovellus jatkaa automaattisesti.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Tätä Wi‑Fi-verkkoa ei ole vielä sallittu langattomalle virheenkorjaukselle. Napauta järjestelmän kehotteessa Salli (valitse ”Salli aina tässä verkossa”, niin kysymys ei toistu), niin sovellus jatkaa automaattisesti. Jos suljit kehotteen, napauta Yritä uudelleen.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Tämä laite ei pysty lukemaan toivomushistorian URL-osoitetta automaattisesti (vaatii Android 11:n tai uudemman, tai roottauksen). Syötä se manuaalisesti.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact -peliä ei ole asennettu tähän laitteeseen. Kun se on asennettu, palaa tänne, niin se tunnistetaan automaattisesti.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Avaa Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Avaa Langaton virheenkorjaus",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Yhteys langattomaan virheenkorjaukseen katkesi, yhdistetään uudelleen... Jos yhteys ei palaa, tarkista Wi‑Fi tai syötä URL-osoite manuaalisesti.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Langaton virheenkorjaus on yhä päällä. Voit poistaa sen käytöstä järjestelmän asetuksista.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Toivomushistorian URL-osoite löytyi. Toivomushistorian haku alkaa, kun palaat tähän sovellukseen.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Tarkista uudelleen",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Avaa Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Määritä",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Pelin lokin käyttö",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Langaton virheenkorjaus",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Ei määritetty",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Laitepari",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Laitepari muodostettu",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Laitepari muodostettu (ota langaton virheenkorjaus käyttöön manuaalisesti)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Yritä käyttöoikeutta uudelleen",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Määritä",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Poista laitepari",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Poistetaanko laitepari?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Tämä poistaa tämän sovelluksen laitepariavaimen ja peruu sovelluksen oikeuden ottaa langaton virheenkorjaus käyttöön ja poistaa se käytöstä. Langattoman virheenkorjauksen myöhempi käyttö vaatii uuden laiteparin.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Laitepari poistettu",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Sovelluksen laiteparin avain poistettiin ja sen oikeus ottaa langaton virheenkorjaus käyttöön ja poistaa se käytöstä peruttiin.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Laiteparin avain poistettu",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Sovelluksen laiteparin avain poistettiin, mutta langattomaan virheenkorjaukseen ei tällä kertaa saatu yhteyttä, joten oikeutta ottaa se käyttöön ja poistaa käytöstä ei peruttu.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Sovellus ei käytä tätä oikeutta, kun laiteparia ei ole. Jos haluat perua sen kokonaan, yhdistä Wi‑Fi-verkkoon, muodosta laitepari uudelleen ja poista se sitten taas.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Järjestelmän luettelossa Langaton virheenkorjaus → Pariliitetyt laitteet näkyy edelleen ”{name}”. Se ei voi enää muodostaa yhteyttä, joten voit jättää sen; jos haluat poistaa sen, napauta sitä ja poista se.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Järjestelmän luettelossa Langaton virheenkorjaus → Pariliitetyt laitteet näkyy myös edelleen ”{name}”; voit poistaa sen napauttamalla sitä.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Tapa",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Jaa",
   "shareFailed": "Jakaminen epäonnistui",
   "dialogSaveAsTitle": "Tallenna nimellä",

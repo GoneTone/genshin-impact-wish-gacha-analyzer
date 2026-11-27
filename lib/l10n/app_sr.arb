@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (активан)",
   "emptyNoSyncTitle": "Подаци још нису преузети",
   "emptyNoSyncMessage": "Додирните {icon} у горњем десном углу да бисте почели",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Нема записа за овај банер",
   "emptyNoFilterMatch": "Нема записа који одговарају филтеру",
   "emptyNoOdesRecords": "Још нема записа Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Отворите Genshin → Wishes → History",
   "progressFallbackHint": "(Претходни URL за Wish History је истекао и мора поново да се добије)",
   "progressNotDetectedLink": "Отворили сте Wish History, али ништа се не дешава?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Није успело покретање пресретача (сертификат је можда одбијен или је порт заузет), па се откривање ослања само на веб кеш игре. Отворите страницу Wish History у игри.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Није успело покретање пресретача (сертификат је можда одбијен или је порт заузет), а фасцикла игре није пронађена. Притисните „Изабери фасциклу игре“ испод да је подесите ручно.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History није откривен",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Фасцикла игре Genshin Impact није пронађена. Када је изаберете, апликација може да добије URL за Wish History и из веб кеша игре.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Користи се фасцикла игре: {path}. Ако то није копија игре коју играте, изаберите поново.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Фасцикла игре је сачувана. Вратите се у игру и поново отворите Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact није пронађен у овој фасцикли. Изаберите фасциклу „Genshin Impact game“.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Изабери фасциклу игре",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Изабери поново",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Преузимање: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Претварање није успело, подаци нису промењени. Проверите везу и покушајте поново.",
   "settingsDataManagement": "Управљање подацима",
   "settingsGameDir": "Фасцикла игре",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Аутоматски откривено: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Ручно подешено: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Фасцикла игре није пронађена",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Обриши",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Синхронизација у облаку",
   "cloudSyncIntro": "Повежите Google налог да би се записи аутоматски чували на вашем Google Drive-у и синхронизовали између уређаја.",
   "cloudSyncUnconfigured": "Ова верзија нема подешене Google OAuth акредитиве, синхронизација у облаку није доступна.",
@@ -609,9 +655,39 @@
   "pagerLast": "Последња",
   "pagerJumpTitle": "Иди на страницу",
   "pagerJumpLabel": "Страница ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Тренутно на страници {page} · записа: {total}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Иди",
   "pagerJumpInvalid": "Унесите страницу од {min} до {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Обриши податке тренутног налога",
   "settingsClearAll": "Обриши све податке",
   "settingsRefetchHoyoWikiImagesTitle": "Принудно поново преузми слике предмета",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Просечно",
   "luckTierUnlucky": "Несрећно",
   "manualUrlEntry": "Ручно унеси URL за Wish History",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Ручни унос URL-а за Wish History",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Ако сте URL за Wish History већ добили на други начин (на пример помоћу алата на рачунару), налепите га овде. Можете налепити и цео текст: апликација ће сама пронаћи URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Налепите URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Налепи из привремене меморије",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "URL за Wish History није пронађен. Проверите шта сте налепили.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL садржи податке за пријаву на ваш налог. Не делите га јавно. Након неког времена престаје да важи.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Чека се да у игри отворите Wish History...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Отворите Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Припрема за читање лога игре...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "URL за Wish History не може аутоматски да се добије",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Читање лога игре још није подешено. Након једнократног подешавања, свако ажурирање ће га читати аутоматски.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Бежично отклањање грешака ради само на Wi‑Fi мрежи. Повежите се на Wi‑Fi и вратите се; апликација ће аутоматски наставити. URL можете унети и ручно.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root је пронађен, али овој апликацији није одобрен root приступ. Да бисте читали помоћу root-а, дозволите ову апликацију у root менаџеру (на пример, на Superuser листи у Magisk-у), па се вратите; апликација ће аутоматски покушати поново.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Повезивање са бежичним отклањањем грешака није успело. Упаривање је можда истекло; упарите поново.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Уређај не дозвољава овој апликацији да укључи бежично отклањање грешака. Укључите га на страници „Бежично отклањање грешака“ и вратите се; апликација ће аутоматски наставити.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Ова Wi‑Fi мрежа још није дозвољена за бежично отклањање грешака. Додирните „Дозволи“ у системском упиту (означите „Увек дозволи на овој мрежи“ да више не пита) и апликација ће аутоматски наставити. Ако сте затворили упит, додирните „Покушај поново“.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Овај уређај не може аутоматски да добије URL за Wish History (потребан је Android 11 или новији, или root). Унесите га ручно.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact није инсталиран на овом уређају. Након инсталације вратите се овде и игра ће бити аутоматски откривена.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Отвори Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Отвори бежично отклањање грешака",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Веза са бежичним отклањањем грешака је прекинута, поновно повезивање... Ако се не опорави, проверите Wi‑Fi или унесите URL ручно.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Бежично отклањање грешака је и даље укључено. Можете га искључити у системским подешавањима.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL за Wish History је добијен. Преузимање историје почиње када се вратите у ову апликацију.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Провери поново",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Отвори Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Подеси",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Приступ логу игре",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Бежично отклањање грешака",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Није подешено",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Упаривање",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Упарено",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Упарено (ручно укључујте бежично отклањање грешака)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Поново затражи дозволу",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Подеси",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Уклони упаривање",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Уклонити упаривање?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Ово брише кључ за упаривање ове апликације и уклања дозволу ове апликације да укључује и искључује бежично отклањање грешака. Да бисте касније користили бежично отклањање грешака, мораћете поново да упарите уређај.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Упаривање је уклоњено",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Кључ за упаривање ове апликације је обрисан и уклоњена је њена дозвола да укључује и искључује бежично отклањање грешака.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Кључ за упаривање је обрисан",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Кључ за упаривање ове апликације је обрисан, али овај пут повезивање са бежичним отклањањем грешака није успело, па дозвола да га укључује и искључује није уклоњена.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Док није упарена, ова апликација не користи ту дозволу. Да бисте је потпуно уклонили, повежите се на Wi‑Fi, поново упарите, а затим још једном уклоните упаривање.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "На системској листи „Бежично отклањање грешака“ → „Упарени уређаји“ и даље ће стајати „{name}“. Више не може да се повеже, па га можете оставити; да бисте га уклонили, додирните га и обришите.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "На системској листи „Бежично отклањање грешака“ → „Упарени уређаји“ и даље стоји и „{name}“; додирните га да бисте га обрисали.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Метод",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Дели",
   "shareFailed": "Дељење није успело",
   "dialogSaveAsTitle": "Сачувај као",

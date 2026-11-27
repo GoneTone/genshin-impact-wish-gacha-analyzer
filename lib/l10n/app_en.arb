@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (active)",
   "emptyNoSyncTitle": "No data synced yet",
   "emptyNoSyncMessage": "Tap {icon} in the top right to start",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "No records for this banner",
   "emptyNoFilterMatch": "No records match the current filter",
   "emptyNoOdesRecords": "No Ode records yet",
@@ -186,16 +193,50 @@
   "progressOpenGameHint": "Open Genshin → Wishes → History",
   "progressFallbackHint": "(The previous Wish History URL expired and needs to be obtained again)",
   "progressNotDetectedLink": "Opened the Wish History but nothing is happening?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), so detection falls back to the game's web cache only. Please open the Wish History page in the game.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Could not start the interceptor (the certificate may have been rejected or the port is in use), and the game folder was not found either. Press \"Choose game folder\" below to set it manually.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History not detected",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Could not find the Genshin Impact game folder. Once you choose the game folder, this tool can also get the Wish History URL from the game's web cache.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Game folder currently in use: {path}. If this is not the copy of the game you are playing, please choose again.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "gameDirHelpReopen": "Game folder set. Please go back to the game and open the Wish History once more.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact was not found in this folder. Please choose the \"Genshin Impact game\" folder.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Choose game folder",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Choose again",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Fetching: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -374,12 +415,35 @@
   "settingsDataLanguageUnifyFailed": "Conversion failed, data unchanged. Please check your network and try again.",
   "settingsDataManagement": "Data management",
   "settingsGameDir": "Game folder",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Auto-detected: {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirManual": "Set manually: {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirNone": "Game folder not found",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Clear",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Cloud sync",
   "cloudSyncIntro": "Link your Google account to automatically back up gacha records to your Google Drive and keep multiple devices in sync.",
   "cloudSyncUnconfigured": "This build has no Google OAuth credentials configured; cloud sync is unavailable.",
@@ -591,9 +655,39 @@
   "pagerLast": "Last",
   "pagerJumpTitle": "Go to page",
   "pagerJumpLabel": "Page ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Currently on page {page} · {total, plural, =1{1 record} other{{total} records}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Go",
   "pagerJumpInvalid": "Enter a page from {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Clear current account data",
   "settingsClearAll": "Clear all data",
   "settingsRefetchHoyoWikiImagesTitle": "Force re-fetch item images",
@@ -1156,32 +1250,113 @@
   "luckTierAverage": "Average",
   "luckTierUnlucky": "Unlucky",
   "manualUrlEntry": "Enter Wish History URL manually",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Enter Wish History URL Manually",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "If you already got the Wish History URL another way (for example with a tool on your computer), you can paste it here. Pasting the whole text works too; the app finds the URL automatically.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Paste URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Paste from clipboard",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "No Wish History URL found. Please check what you pasted.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "The URL contains your account credentials. Don't share it publicly. It expires after a while.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Waiting for you to open the Wish History page in the game...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Open Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Getting ready to read the game log...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Can't get the Wish History URL automatically",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Reading the game log isn't set up yet. After a one-time setup, every update reads it automatically.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Wireless debugging only works on Wi‑Fi. Connect to Wi‑Fi and come back; the app continues automatically. You can also enter the URL manually.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root was found, but this app wasn't granted root access. To read with root, allow this app in your root manager (for example Magisk's Superuser list), then come back; the app retries automatically.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Couldn't connect to wireless debugging. The pairing may have expired; please pair again.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Your device doesn't let this app turn on wireless debugging. Turn it on in the Wireless debugging page and come back; the app continues automatically.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "This Wi‑Fi network isn't allowed for wireless debugging yet. Tap Allow in the system prompt (tick \"Always allow on this network\" so it won't ask again) and the app continues automatically. If you closed the prompt, tap Retry.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "This device can't read the Wish History URL automatically (requires Android 11 or later, or root). Please enter it manually.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact isn't installed on this device. Once it's installed, come back here and it will be detected automatically.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Open Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Open Wireless debugging",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Lost the wireless debugging connection, reconnecting... If it doesn't recover, check your Wi‑Fi or enter the URL manually.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Wireless debugging is still on. You can turn it off in system settings.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Got the Wish History URL. Fetching your Wish History starts when you return to this app.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Check again",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Open Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Set up",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1335,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Game Log Access",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Wireless debugging",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Not set up",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Pairing",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Paired",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Paired (turn on wireless debugging manually)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Retry permission",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Set up",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Remove pairing",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Remove pairing?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "This deletes this app's pairing key and removes this app's permission to toggle wireless debugging. You'll need to pair again to use wireless debugging later.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Pairing removed",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Deleted this app's pairing key and removed its permission to turn wireless debugging on and off.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Pairing key deleted",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Deleted this app's pairing key, but couldn't connect to wireless debugging this time, so the permission to turn wireless debugging on and off hasn't been removed.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "This app doesn't use that permission while unpaired. To remove it completely, connect to Wi‑Fi, pair again, then unpair once more.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "The system's Wireless debugging → Paired devices list will still show \"{name}\". It can no longer connect, so you can leave it; to remove it, tap it and delete it.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "The system's Wireless debugging → Paired devices list also still shows \"{name}\"; tap it to delete it.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Method",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Share",
   "shareFailed": "Couldn't share",
   "dialogSaveAsTitle": "Save as",

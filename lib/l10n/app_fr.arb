@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (actif)",
   "emptyNoSyncTitle": "Aucune donnée synchronisée",
   "emptyNoSyncMessage": "Appuyez sur {icon} en haut à droite pour commencer",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Aucun enregistrement pour ce type de vœux",
   "emptyNoFilterMatch": "Aucun enregistrement ne correspond aux critères",
   "emptyNoOdesRecords": "Aucun enregistrement d'odes",
@@ -186,16 +193,50 @@
   "progressOpenGameHint": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
   "progressFallbackHint": "(L'URL précédente de l'historique des vœux a expiré, elle doit être obtenue à nouveau)",
   "progressNotDetectedLink": "Vous avez ouvert l'historique des vœux mais rien ne se passe ?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé) ; la détection se fait donc uniquement via le cache web du jeu. Veuillez ouvrir la page de l'historique des vœux dans le jeu.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Impossible de démarrer l'intercepteur (le certificat a peut-être été refusé ou le port est occupé), et le dossier du jeu est introuvable. Appuyez sur « Choisir le dossier du jeu » ci-dessous pour le définir manuellement.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Historique des vœux non détecté",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Le dossier de Genshin Impact est introuvable. Une fois le dossier du jeu choisi, cet outil pourra aussi obtenir l'URL de l'historique des vœux depuis le cache web du jeu.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Dossier du jeu actuellement utilisé : {path}. S'il ne correspond pas à la copie du jeu que vous utilisez, veuillez en choisir un autre.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "gameDirHelpReopen": "Dossier du jeu défini. Retournez dans le jeu et ouvrez à nouveau l'historique des vœux.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact est introuvable dans ce dossier. Veuillez choisir le dossier « Genshin Impact game ».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Choisir le dossier du jeu",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Choisir à nouveau",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Récupération : {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -374,12 +415,35 @@
   "settingsDataLanguageUnifyFailed": "Échec de la conversion, les données n'ont pas été modifiées. Veuillez vérifier votre connexion et réessayer.",
   "settingsDataManagement": "Gestion des données",
   "settingsGameDir": "Dossier du jeu",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Détecté automatiquement : {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirManual": "Défini manuellement : {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirNone": "Dossier du jeu introuvable",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Effacer",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Synchronisation cloud",
   "cloudSyncIntro": "Associez votre compte Google pour sauvegarder automatiquement l'historique des vœux sur votre Google Drive et le synchroniser entre plusieurs appareils.",
   "cloudSyncUnconfigured": "Cette version ne contient pas d'identifiants Google OAuth ; la synchronisation cloud est indisponible.",
@@ -591,9 +655,39 @@
   "pagerLast": "Dernière page",
   "pagerJumpTitle": "Aller à la page",
   "pagerJumpLabel": "Page ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Page actuelle : {page} · {total, plural, one{{total} enregistrement} other{{total} enregistrements}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Aller",
   "pagerJumpInvalid": "Saisissez une page de {min} à {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Effacer les données du compte actuel",
   "settingsClearAll": "Effacer toutes les données",
   "settingsRefetchHoyoWikiImagesTitle": "Forcer le re-téléchargement des images d'objets",
@@ -1156,32 +1250,113 @@
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Malchanceux",
   "manualUrlEntry": "Saisir l'URL de l'historique des vœux manuellement",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Saisir l'URL de l'historique des vœux manuellement",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Si vous avez déjà obtenu l'URL de l'historique des vœux autrement (par exemple avec un outil sur votre ordinateur), vous pouvez la coller ici. Coller tout le texte fonctionne aussi : l'application trouve l'URL automatiquement.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Coller l'URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Coller depuis le presse-papiers",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Aucune URL de l'historique des vœux trouvée. Vérifiez le contenu collé.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "L'URL contient les identifiants de votre compte. Ne la partagez pas publiquement. Elle expire au bout d'un certain temps.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "En attente de l'ouverture de la page de l'historique des vœux dans le jeu...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Veuillez ouvrir Genshin Impact → Vœux → Historique",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Préparation de la lecture du journal du jeu...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Impossible d'obtenir automatiquement l'URL de l'historique des vœux",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "La lecture du journal du jeu n'est pas encore configurée. Après une configuration unique, il sera lu automatiquement à chaque mise à jour.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Le débogage sans fil ne fonctionne qu'en Wi‑Fi. Connectez-vous à un réseau Wi‑Fi et revenez ; l'application reprendra automatiquement. Vous pouvez aussi saisir l'URL manuellement.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Le root a été détecté, mais l'accès root n'a pas été accordé à cette application. Pour lire via le root, autorisez cette application dans votre gestionnaire root (par exemple la liste Superuser de Magisk), puis revenez ; l'application réessaiera automatiquement.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Impossible de se connecter au débogage sans fil. L'association a peut-être expiré ; veuillez associer à nouveau.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Votre appareil n'autorise pas cette application à activer le débogage sans fil. Activez-le sur la page Débogage sans fil, puis revenez ; l'application reprendra automatiquement.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Ce réseau Wi‑Fi n'est pas encore autorisé pour le débogage sans fil. Appuyez sur Autoriser dans l'invite du système (cochez « Toujours autoriser sur ce réseau » pour ne plus être sollicité) et l'application reprendra automatiquement. Si vous avez fermé l'invite, appuyez sur Réessayer.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Cet appareil ne peut pas lire automatiquement l'URL de l'historique des vœux (Android 11 ou version ultérieure, ou root, requis). Veuillez la saisir manuellement.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact est introuvable sur cet appareil. Après l'installation, revenez ici et le jeu sera détecté automatiquement.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Ouvrir Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Ouvrir Débogage sans fil",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Connexion au débogage sans fil perdue, reconnexion... Si elle ne se rétablit pas, vérifiez votre Wi‑Fi ou saisissez l'URL manuellement.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Le débogage sans fil est toujours activé. Vous pouvez le désactiver dans les paramètres du système.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL de l'historique des vœux obtenue. La récupération de votre historique des vœux commencera à votre retour dans cette application.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Vérifier à nouveau",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Ouvrir Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Configurer",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1335,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Accès au journal du jeu",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Débogage sans fil",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Non configuré",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Association",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Associé",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Associé (activer le débogage sans fil manuellement)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Réessayer l'autorisation",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Configurer",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Supprimer l'association",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Supprimer l'association ?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "La clé d'association de cette application sera supprimée et cette application perdra l'autorisation d'activer ou de désactiver le débogage sans fil. Vous devrez associer à nouveau pour utiliser le débogage sans fil plus tard.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Association supprimée",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "La clé d'association de cette application a été supprimée et son autorisation d'activer ou de désactiver le débogage sans fil a été retirée.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Clé d'association supprimée",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "La clé d'association de cette application a été supprimée, mais la connexion au débogage sans fil a échoué cette fois ; l'autorisation de l'activer ou de le désactiver n'a donc pas été retirée.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Cette application n'utilise pas cette autorisation tant qu'elle n'est pas associée. Pour la retirer complètement, connectez-vous à un réseau Wi‑Fi, associez à nouveau, puis dissociez une nouvelle fois.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "La liste Débogage sans fil → Appareils associés du système affichera toujours « {name} ». Il ne peut plus se connecter, vous pouvez donc le laisser ; pour le retirer, appuyez dessus puis supprimez-le.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "La liste Débogage sans fil → Appareils associés du système affiche aussi toujours « {name} » ; appuyez dessus pour le supprimer.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Méthode",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Partager",
   "shareFailed": "Impossible de partager",
   "dialogSaveAsTitle": "Enregistrer sous",

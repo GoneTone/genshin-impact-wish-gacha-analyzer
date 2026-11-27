@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (actiu)",
   "emptyNoSyncTitle": "Encara no s'han sincronitzat dades",
   "emptyNoSyncMessage": "Toca {icon} a la part superior dreta per començar",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "No hi ha registres en aquest bàner",
   "emptyNoFilterMatch": "Cap registre no coincideix amb el filtre actual",
   "emptyNoOdesRecords": "Encara no hi ha registres d'Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Obre Genshin → Wishes → History",
   "progressFallbackHint": "(L'URL anterior de Wish History ha caducat i s'ha de tornar a obtenir)",
   "progressNotDetectedLink": "Has obert Wish History i no passa res?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "No s'ha pogut iniciar l'interceptor (potser s'ha rebutjat el certificat o el port està en ús), de manera que la detecció només recorre a la memòria cau web del joc. Obre la pàgina Wish History al joc.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "No s'ha pogut iniciar l'interceptor (potser s'ha rebutjat el certificat o el port està en ús) i tampoc no s'ha trobat la carpeta del joc. Prem «Tria la carpeta del joc» a sota per definir-la manualment.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History no detectat",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "No s'ha pogut trobar la carpeta de Genshin Impact. Quan triïs la carpeta del joc, aquesta eina també podrà obtenir l'URL de Wish History de la memòria cau web del joc.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Carpeta del joc en ús: {path}. Si no és la còpia del joc a la qual jugues, torna a triar.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Carpeta del joc definida. Torna al joc i obre Wish History una vegada més.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "No s'ha trobat Genshin Impact en aquesta carpeta. Tria la carpeta «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Tria la carpeta del joc",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Torna a triar",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "S'està obtenint: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "La conversió ha fallat, les dades no han canviat. Comprova la xarxa i torna-ho a provar.",
   "settingsDataManagement": "Gestió de dades",
   "settingsGameDir": "Carpeta del joc",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Detectada automàticament: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Definida manualment: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "No s'ha trobat la carpeta del joc",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Esborra",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Sincronització al núvol",
   "cloudSyncIntro": "Vincula el teu compte de Google per fer còpies de seguretat automàtiques dels registres de gacha al teu Google Drive i mantenir sincronitzats diversos dispositius.",
   "cloudSyncUnconfigured": "Aquesta compilació no té credencials de Google OAuth configurades; la sincronització al núvol no està disponible.",
@@ -609,9 +655,39 @@
   "pagerLast": "Última",
   "pagerJumpTitle": "Ves a la pàgina",
   "pagerJumpLabel": "Pàgina ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Ets a la pàgina {page} · {total, plural, =1{1 registre} other{{total} registres}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Ves-hi",
   "pagerJumpInvalid": "Introdueix una pàgina entre {min} i {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Esborra les dades del compte actual",
   "settingsClearAll": "Esborra totes les dades",
   "settingsRefetchHoyoWikiImagesTitle": "Força una nova obtenció de les imatges dels elements",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Sense sort",
   "manualUrlEntry": "Introdueix manualment l'URL de Wish History",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Introdueix manualment l'URL de Wish History",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Si ja has obtingut l'URL de Wish History d'una altra manera (per exemple, amb una eina a l'ordinador), el pots enganxar aquí. També funciona enganxar-hi tot el text; l'aplicació troba l'URL automàticament.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Enganxa l'URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Enganxa del porta-retalls",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "No s'ha trobat cap URL de Wish History. Comprova el que has enganxat.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "L'URL conté les credencials del teu compte. No el comparteixis públicament. Caduca al cap d'una estona.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "D'acord",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Esperant que obris la pàgina Wish History al joc...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Obre Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Preparant la lectura del registre del joc...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "No es pot obtenir automàticament l'URL de Wish History",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "La lectura del registre del joc encara no està configurada. Després d'una configuració única, cada actualització el llegeix automàticament.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "La depuració sense fil només funciona amb Wi‑Fi. Connecta't a una xarxa Wi‑Fi i torna; l'aplicació continuarà automàticament. També pots introduir l'URL manualment.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "S'ha detectat root, però aquesta aplicació no té accés root. Per llegir amb root, permet aquesta aplicació al gestor de root (per exemple, la llista de Superusuari de Magisk) i torna; l'aplicació ho tornarà a provar automàticament.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "No s'ha pogut connectar a la depuració sense fil. Potser la vinculació ha caducat; torna a vincular el dispositiu.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "El dispositiu no permet que aquesta aplicació activi la depuració sense fil. Activa-la a la pàgina Depuració sense fil i torna; l'aplicació continuarà automàticament.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Aquesta xarxa Wi‑Fi encara no està permesa per a la depuració sense fil. Toca Permet a l'avís del sistema (marca «Permet sempre en aquesta xarxa» perquè no t'ho torni a preguntar) i l'aplicació continuarà automàticament. Si has tancat l'avís, toca Torna-ho a provar.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Aquest dispositiu no pot llegir automàticament l'URL de Wish History (requereix Android 11 o posterior, o root). Introdueix-lo manualment.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact no està instal·lat en aquest dispositiu. Un cop instal·lat, torna aquí i es detectarà automàticament.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Obre Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Obre Depuració sense fil",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "S'ha perdut la connexió de depuració sense fil; s'està tornant a connectar... Si no es recupera, comprova la Wi‑Fi o introdueix l'URL manualment.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "La depuració sense fil continua activada. Pots desactivar-la a la configuració del sistema.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "S'ha obtingut l'URL de Wish History. L'obtenció del teu Wish History comença quan tornis a aquesta aplicació.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Torna a comprovar",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Obre Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Configura",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Accés al registre del joc",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Depuració sense fil",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Sense configurar",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Vinculació",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Vinculat",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Vinculat (activa manualment la depuració sense fil)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Torna a provar el permís",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Configura",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Elimina la vinculació",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Vols eliminar la vinculació?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "S'esborrarà la clau de vinculació d'aquesta aplicació i es retirarà el permís d'aquesta aplicació per activar o desactivar la depuració sense fil. Hauràs de tornar a vincular-lo per fer servir la depuració sense fil més endavant.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "S'ha eliminat la vinculació",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "S'ha esborrat la clau de vinculació d'aquesta aplicació i s'ha retirat el permís per activar i desactivar la depuració sense fil.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "S'ha esborrat la clau de vinculació",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "S'ha esborrat la clau de vinculació d'aquesta aplicació, però aquesta vegada no s'ha pogut connectar a la depuració sense fil, així que el permís per activar-la i desactivar-la no s'ha retirat.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Aquesta aplicació no fa servir aquest permís mentre no està vinculada. Per retirar-lo del tot, connecta't a una xarxa Wi‑Fi, torna a vincular-la i desvincula-la una altra vegada.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "La llista Depuració sense fil → Dispositius vinculats del sistema continuarà mostrant «{name}». Ja no es pot connectar, així que el pots deixar; per eliminar-lo, toca'l i esborra'l.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "La llista Depuració sense fil → Dispositius vinculats del sistema també mostra «{name}»; toca'l per esborrar-lo.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Mètode",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Comparteix",
   "shareFailed": "No s'ha pogut compartir",
   "dialogSaveAsTitle": "Desa com a",

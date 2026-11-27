@@ -1,14 +1,14 @@
 {
   "@@locale": "da",
   "localeNativeName": "Dansk",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Oversætter: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Oversætter: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktiv)",
   "emptyNoSyncTitle": "Ingen data synkroniseret endnu",
   "emptyNoSyncMessage": "Tryk på {icon} øverst til højre for at komme i gang",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Ingen poster for dette banner",
   "emptyNoFilterMatch": "Ingen poster matcher det aktuelle filter",
   "emptyNoOdesRecords": "Ingen Ode-poster endnu",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Åbn Genshin → Wishes → History",
   "progressFallbackHint": "(Den tidligere URL til Wish History er udløbet og skal hentes igen)",
   "progressNotDetectedLink": "Har du åbnet Wish History, men der sker ingenting?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Opsnapperen kunne ikke startes (certifikatet er muligvis blevet afvist, eller porten er i brug), så der nu kun søges i spillets webcache. Åbn siden Wish History i spillet.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Opsnapperen kunne ikke startes (certifikatet er muligvis blevet afvist, eller porten er i brug), og spilmappen blev heller ikke fundet. Tryk på \"Vælg spilmappe\" nedenfor for at angive den manuelt.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History blev ikke registreret",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Spilmappen til Genshin Impact blev ikke fundet. Når du har valgt spilmappen, kan værktøjet også hente URL'en til Wish History fra spillets webcache.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Spilmappe i brug: {path}. Hvis det ikke er den kopi af spillet, du spiller, skal du vælge igen.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Spilmappen er angivet. Gå tilbage til spillet, og åbn Wish History én gang til.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact blev ikke fundet i denne mappe. Vælg mappen \"Genshin Impact game\".",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Vælg spilmappe",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Vælg igen",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Henter: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Konverteringen mislykkedes; data er uændrede. Tjek din forbindelse, og prøv igen.",
   "settingsDataManagement": "Datahåndtering",
   "settingsGameDir": "Spilmappe",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Fundet automatisk: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Angivet manuelt: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Spilmappe ikke fundet",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Ryd",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Cloudsynkronisering",
   "cloudSyncIntro": "Tilknyt din Google-konto for automatisk at sikkerhedskopiere gacha-poster til dit Google Drive og holde flere enheder synkroniseret.",
   "cloudSyncUnconfigured": "Denne build har ingen Google OAuth-loginoplysninger; cloudsynkronisering er ikke tilgængelig.",
@@ -609,9 +655,39 @@
   "pagerLast": "Sidste",
   "pagerJumpTitle": "Gå til side",
   "pagerJumpLabel": "Side ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Side {page} · {total, plural, =1{1 post} other{{total} poster}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Gå",
   "pagerJumpInvalid": "Angiv en side fra {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Ryd data for aktuel konto",
   "settingsClearAll": "Ryd alle data",
   "settingsRefetchHoyoWikiImagesTitle": "Gennemtving ny hentning af genstandsbilleder",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Gennemsnitlig",
   "luckTierUnlucky": "Uheldig",
   "manualUrlEntry": "Angiv URL til Wish History manuelt",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Angiv URL til Wish History manuelt",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Hvis du allerede har fået URL'en til Wish History på anden vis (for eksempel med et værktøj på din computer), kan du indsætte den her. Du kan også indsætte hele teksten; appen finder URL'en automatisk.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Indsæt URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Indsæt fra udklipsholder",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Der blev ikke fundet nogen URL til Wish History. Kontrollér det, du har indsat.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL'en indeholder dine kontooplysninger. Del den ikke offentligt. Den udløber efter et stykke tid.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Venter på, at du åbner siden Wish History i spillet...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Åbn Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Gør klar til at læse spillets log...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "URL'en til Wish History kan ikke hentes automatisk",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Læsning af spillets log er ikke konfigureret endnu. Efter en engangsopsætning læses den automatisk ved hver opdatering.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Trådløs fejlretning virker kun via Wi‑Fi. Opret forbindelse til Wi‑Fi, og kom tilbage; appen fortsætter automatisk. Du kan også angive URL'en manuelt.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root blev fundet, men appen har ikke fået root-adgang. Hvis du vil læse med root, skal du give appen tilladelse i din root-administrator (fx Superuser-listen i Magisk) og komme tilbage; appen prøver igen automatisk.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Kunne ikke oprette forbindelse til trådløs fejlretning. Parringen er muligvis udløbet; par igen.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Din enhed tillader ikke, at appen slår trådløs fejlretning til. Slå det til på siden Trådløs fejlretning, og kom tilbage; appen fortsætter automatisk.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Dette Wi‑Fi-netværk er endnu ikke tilladt til trådløs fejlretning. Tryk på Tillad i systemprompten (sæt flueben ved \"Tillad altid på dette netværk\", så du ikke bliver spurgt igen), og appen fortsætter automatisk. Hvis du har lukket prompten, skal du trykke på Prøv igen.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Denne enhed kan ikke læse URL'en til Wish History automatisk (kræver Android 11 eller nyere, eller root). Angiv den manuelt.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact er ikke installeret på denne enhed. Kom tilbage hertil efter installationen, så registreres spillet automatisk.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Åbn Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Åbn Trådløs fejlretning",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Forbindelsen til trådløs fejlretning blev afbrudt. Opretter forbindelse igen... Hvis det ikke lykkes, skal du tjekke dit Wi‑Fi eller angive URL'en manuelt.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Trådløs fejlretning er stadig slået til. Du kan slå det fra i systemindstillingerne.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL'en til Wish History er modtaget. Hentningen af din Wish History starter, når du vender tilbage til appen.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Tjek igen",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Åbn Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Konfigurer",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Adgang til spillets log",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Trådløs fejlretning",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Ikke konfigureret",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Parring",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Parret",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Parret (slå trådløs fejlretning til manuelt)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Prøv tilladelse igen",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Konfigurer",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Fjern parring",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Fjern parring?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Dette sletter appens parringsnøgle og fjerner appens tilladelse til at slå trådløs fejlretning til og fra. Du skal parre igen for at bruge trådløs fejlretning senere.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Parring fjernet",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Appens parringsnøgle er slettet, og dens tilladelse til at slå trådløs fejlretning til og fra er fjernet.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Parringsnøgle slettet",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Appens parringsnøgle er slettet, men der kunne ikke oprettes forbindelse til trådløs fejlretning denne gang, så tilladelsen til at slå trådløs fejlretning til og fra er ikke fjernet.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Appen bruger ikke tilladelsen, mens den ikke er parret. Hvis du vil fjerne den helt, skal du oprette forbindelse til Wi‑Fi, parre igen og derefter fjerne parringen igen.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Systemets liste Trådløs fejlretning → Parrede enheder vil stadig vise \"{name}\". Den kan ikke længere oprette forbindelse, så du kan lade den være; tryk på den for at slette den, hvis du vil fjerne den.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Systemets liste Trådløs fejlretning → Parrede enheder viser også stadig \"{name}\"; tryk på den for at slette den.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metode",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Del",
   "shareFailed": "Kunne ikke dele",
   "dialogSaveAsTitle": "Gem som",

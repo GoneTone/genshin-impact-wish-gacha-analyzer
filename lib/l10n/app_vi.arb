@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (đang dùng)",
   "emptyNoSyncTitle": "Chưa đồng bộ dữ liệu nào",
   "emptyNoSyncMessage": "Nhấn {icon} ở góc trên bên phải để bắt đầu",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Banner này chưa có bản ghi",
   "emptyNoFilterMatch": "Không tìm thấy bản ghi phù hợp với điều kiện",
   "emptyNoOdesRecords": "Chưa có bản ghi Ca Tụng",
@@ -186,16 +193,50 @@
   "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
   "progressFallbackHint": "(URL Lịch Sử Cầu Nguyện trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
   "progressNotDetectedLink": "Đã mở Lịch Sử Cầu Nguyện nhưng không có phản hồi?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), nên chỉ phát hiện từ bộ nhớ đệm web của game. Vui lòng mở trang Lịch Sử Cầu Nguyện trong game.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), và cũng không tìm thấy thư mục game. Hãy nhấn \"Chọn thư mục game\" bên dưới để chỉ định thủ công.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Không phát hiện Lịch Sử Cầu Nguyện",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Không tìm thấy thư mục game Genshin Impact. Sau khi chọn thư mục game, công cụ này cũng có thể lấy URL Lịch Sử Cầu Nguyện từ bộ nhớ đệm web của game.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Thư mục game đang dùng: {path}. Nếu đây không phải bản game bạn đang chơi, vui lòng chọn lại.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "gameDirHelpReopen": "Đã đặt thư mục game. Hãy quay lại game và mở Lịch Sử Cầu Nguyện thêm một lần nữa.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Không tìm thấy Genshin Impact trong thư mục này. Vui lòng chọn thư mục \"Genshin Impact game\".",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Chọn thư mục game",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Chọn lại",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Đang tải: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -374,12 +415,35 @@
   "settingsDataLanguageUnifyFailed": "Chuyển đổi thất bại, dữ liệu không thay đổi. Vui lòng kiểm tra mạng và thử lại.",
   "settingsDataManagement": "Quản Lý Dữ Liệu",
   "settingsGameDir": "Thư mục game",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Tự động phát hiện: {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirManual": "Đặt thủ công: {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirNone": "Không tìm thấy thư mục game",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Xóa",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Đồng bộ đám mây",
   "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều thiết bị.",
   "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
@@ -591,9 +655,39 @@
   "pagerLast": "Trang cuối",
   "pagerJumpTitle": "Đến trang",
   "pagerJumpLabel": "Trang ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Đang ở trang {page} · {total} bản ghi",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Đi",
   "pagerJumpInvalid": "Nhập số trang từ {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Xóa dữ liệu tài khoản hiện tại",
   "settingsClearAll": "Xóa tất cả dữ liệu",
   "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
@@ -1156,32 +1250,113 @@
   "luckTierAverage": "Bình thường",
   "luckTierUnlucky": "Kém may",
   "manualUrlEntry": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Nếu bạn đã lấy URL Lịch Sử Cầu Nguyện bằng cách khác (ví dụ công cụ trên máy tính), hãy dán vào đây. Dán cả đoạn văn bản cũng được, ứng dụng sẽ tự tìm URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Dán URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Dán từ bộ nhớ tạm",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Không tìm thấy URL Lịch Sử Cầu Nguyện. Vui lòng kiểm tra nội dung đã dán.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL chứa thông tin xác thực tài khoản của bạn. Đừng chia sẻ công khai. URL sẽ hết hạn sau một thời gian.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Đang chờ bạn mở trang Lịch Sử Cầu Nguyện trong game...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Đang chuẩn bị đọc nhật ký của game...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Không thể tự động lấy URL Lịch Sử Cầu Nguyện",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Chưa thiết lập đọc nhật ký của game. Chỉ cần thiết lập một lần, sau đó mỗi lần cập nhật sẽ tự động đọc.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Gỡ lỗi không dây chỉ hoạt động qua Wi‑Fi. Hãy kết nối Wi‑Fi rồi quay lại, ứng dụng sẽ tự động tiếp tục. Bạn cũng có thể nhập URL thủ công.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Đã phát hiện root nhưng ứng dụng này chưa được cấp quyền root. Để đọc bằng root, hãy cho phép ứng dụng này trong trình quản lý root (ví dụ danh sách Superuser của Magisk), rồi quay lại; ứng dụng sẽ tự động thử lại.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Không kết nối được gỡ lỗi không dây. Việc ghép nối có thể đã hết hạn, vui lòng ghép nối lại.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Thiết bị của bạn không cho phép ứng dụng này bật gỡ lỗi không dây. Hãy bật trong trang Gỡ lỗi không dây rồi quay lại, ứng dụng sẽ tự động tiếp tục.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Mạng Wi‑Fi này chưa được phép dùng gỡ lỗi không dây. Nhấn Cho phép trong hộp thoại hệ thống (đánh dấu “Luôn cho phép trên mạng này” để không bị hỏi lại) và ứng dụng sẽ tự động tiếp tục. Nếu bạn đã đóng hộp thoại, hãy nhấn Thử lại.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Thiết bị này không thể tự động đọc URL Lịch Sử Cầu Nguyện (cần Android 11 trở lên hoặc đã root). Vui lòng nhập thủ công.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Không tìm thấy Genshin Impact trên thiết bị này. Cài đặt xong hãy quay lại đây, ứng dụng sẽ tự động phát hiện.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Mở Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Mở Gỡ lỗi không dây",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Mất kết nối gỡ lỗi không dây, đang kết nối lại... Nếu không khôi phục được, hãy kiểm tra Wi‑Fi hoặc nhập URL thủ công.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Gỡ lỗi không dây vẫn đang bật. Bạn có thể tắt trong cài đặt hệ thống.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Đã lấy được URL Lịch Sử Cầu Nguyện. Việc tải Lịch Sử Cầu Nguyện sẽ bắt đầu khi bạn quay lại ứng dụng này.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Kiểm tra lại",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Mở Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Thiết lập",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1335,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Truy cập nhật ký game",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Gỡ lỗi không dây",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Chưa thiết lập",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Ghép nối",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Đã ghép nối",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Đã ghép nối (tự bật gỡ lỗi không dây)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Thử cấp quyền lại",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Thiết lập",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Gỡ ghép nối",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Gỡ ghép nối?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Thao tác này sẽ xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây của ứng dụng. Sau này muốn dùng gỡ lỗi không dây, bạn sẽ cần ghép nối lại.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Đã gỡ ghép nối",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Đã xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Đã xóa khóa ghép nối",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Đã xóa khóa ghép nối của ứng dụng này, nhưng lần này không kết nối được gỡ lỗi không dây nên chưa thu hồi được quyền bật/tắt gỡ lỗi không dây.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Khi chưa ghép nối, ứng dụng này không dùng quyền đó. Muốn thu hồi hoàn toàn, hãy kết nối Wi‑Fi, ghép nối lại rồi gỡ ghép nối thêm một lần nữa.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống vẫn sẽ hiển thị \"{name}\". Mục này không thể kết nối được nữa nên bạn có thể để nguyên; muốn xóa thì nhấn vào và xóa.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống cũng vẫn hiển thị \"{name}\"; nhấn vào để xóa.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Phương thức",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Chia sẻ",
   "shareFailed": "Không chia sẻ được",
   "dialogSaveAsTitle": "Lưu thành",

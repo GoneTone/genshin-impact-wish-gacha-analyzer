@@ -1,14 +1,14 @@
 {
   "@@locale": "pl",
   "localeNativeName": "Polski",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Tłumaczenie: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Tłumaczenie: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktywne)",
   "emptyNoSyncTitle": "Nie zsynchronizowano jeszcze żadnych danych",
   "emptyNoSyncMessage": "Dotknij {icon} w prawym górnym rogu, aby zacząć",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Brak rekordów dla tego banera",
   "emptyNoFilterMatch": "Brak rekordów pasujących do bieżącego filtra",
   "emptyNoOdesRecords": "Brak rekordów w Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Otwórz Genshin → Wishes → History",
   "progressFallbackHint": "(Poprzedni adres URL Wish History wygasł i trzeba go uzyskać ponownie)",
   "progressNotDetectedLink": "Otwarto Wish History, ale nic się nie dzieje?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Nie udało się uruchomić przechwytywania (certyfikat mógł zostać odrzucony lub port jest zajęty), więc wykrywanie korzysta wyłącznie z pamięci podręcznej stron gry. Otwórz w grze stronę Wish History.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Nie udało się uruchomić przechwytywania (certyfikat mógł zostać odrzucony lub port jest zajęty), a folderu gry też nie znaleziono. Naciśnij poniżej „Wybierz folder gry”, aby ustawić go ręcznie.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Nie wykryto Wish History",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Nie znaleziono folderu gry Genshin Impact. Po wskazaniu folderu gry narzędzie będzie mogło też pobrać adres URL Wish History z pamięci podręcznej stron gry.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Aktualnie używany folder gry: {path}. Jeśli to nie jest kopia gry, w którą grasz, wybierz folder ponownie.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Folder gry ustawiony. Wróć do gry i otwórz Wish History jeszcze raz.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Nie znaleziono Genshin Impact w tym folderze. Wybierz folder „Genshin Impact game”.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Wybierz folder gry",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Wybierz ponownie",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Pobieranie: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Konwersja nie powiodła się, dane bez zmian. Sprawdź połączenie z siecią i spróbuj ponownie.",
   "settingsDataManagement": "Zarządzanie danymi",
   "settingsGameDir": "Folder gry",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Wykryty automatycznie: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Ustawiony ręcznie: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Nie znaleziono folderu gry",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Wyczyść",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Synchronizacja w chmurze",
   "cloudSyncIntro": "Połącz konto Google, aby automatycznie tworzyć kopię zapasową rekordów na Dysku Google i synchronizować wiele urządzeń.",
   "cloudSyncUnconfigured": "Ta wersja nie ma skonfigurowanych danych uwierzytelniających Google OAuth; synchronizacja w chmurze jest niedostępna.",
@@ -609,9 +655,39 @@
   "pagerLast": "Ostatnia",
   "pagerJumpTitle": "Przejdź do strony",
   "pagerJumpLabel": "Strona ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Bieżąca strona: {page} · {total, plural, one{{total} rekord} few{{total} rekordy} many{{total} rekordów} other{{total} rekordu}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Przejdź",
   "pagerJumpInvalid": "Podaj stronę od {min} do {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Wyczyść dane bieżącego konta",
   "settingsClearAll": "Wyczyść wszystkie dane",
   "settingsRefetchHoyoWikiImagesTitle": "Wymuś ponowne pobranie obrazów przedmiotów",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Przeciętnie",
   "luckTierUnlucky": "Pech",
   "manualUrlEntry": "Wpisz adres URL Wish History ręcznie",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Wpisz adres URL Wish History ręcznie",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Jeśli adres URL Wish History uzyskałeś w inny sposób (np. narzędziem na komputerze), możesz go tu wkleić. Możesz też wkleić cały tekst; aplikacja sama znajdzie adres.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Wklej adres URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Wklej ze schowka",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Nie znaleziono adresu URL Wish History. Sprawdź wklejoną treść.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "Adres URL zawiera dane uwierzytelniające Twojego konta. Nie udostępniaj go publicznie. Po pewnym czasie wygasa.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Oczekiwanie na otwarcie strony Wish History w grze...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Otwórz Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Przygotowywanie do odczytu logu gry...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Nie można automatycznie uzyskać adresu URL Wish History",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Odczyt logu gry nie jest jeszcze skonfigurowany. Po jednorazowej konfiguracji każda aktualizacja odczyta go automatycznie.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Debugowanie bezprzewodowe działa tylko przez Wi-Fi. Połącz się z Wi-Fi i wróć; aplikacja będzie kontynuować automatycznie. Możesz też wpisać adres URL ręcznie.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Wykryto root, ale ta aplikacja nie otrzymała dostępu root. Aby czytać przez root, zezwól tej aplikacji w menedżerze root (np. na liście Superuser w Magisk), a potem wróć; aplikacja spróbuje ponownie automatycznie.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Nie udało się połączyć z debugowaniem bezprzewodowym. Parowanie mogło wygasnąć; sparuj ponownie.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Twoje urządzenie nie pozwala tej aplikacji włączyć debugowania bezprzewodowego. Włącz je na stronie Debugowanie bezprzewodowe i wróć; aplikacja będzie kontynuować automatycznie.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Ta sieć Wi-Fi nie jest jeszcze dozwolona dla debugowania bezprzewodowego. Dotknij „Zezwól” w komunikacie systemowym (zaznacz „Zawsze zezwalaj w tej sieci”, aby nie pytał ponownie), a aplikacja będzie kontynuować automatycznie. Jeśli zamknąłeś komunikat, dotknij „Spróbuj ponownie”.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "To urządzenie nie może automatycznie odczytać adresu URL Wish History (wymaga Androida 11 lub nowszego albo roota). Wpisz go ręcznie.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact nie jest zainstalowany na tym urządzeniu. Po instalacji wróć tutaj, a gra zostanie wykryta automatycznie.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Otwórz Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Otwórz Debugowanie bezprzewodowe",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Utracono połączenie debugowania bezprzewodowego, ponowne łączenie... Jeśli nie wróci, sprawdź Wi-Fi lub wpisz adres URL ręcznie.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Debugowanie bezprzewodowe jest nadal włączone. Możesz je wyłączyć w ustawieniach systemu.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Uzyskano adres URL Wish History. Pobieranie Wish History rozpocznie się po powrocie do tej aplikacji.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Sprawdź ponownie",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Otwórz Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Skonfiguruj",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Dostęp do logu gry",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Debugowanie bezprzewodowe",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Nie skonfigurowano",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Parowanie",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Sparowano",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Sparowano (włączaj debugowanie bezprzewodowe ręcznie)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Ponów nadanie uprawnienia",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Skonfiguruj",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Usuń parowanie",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Usunąć parowanie?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Spowoduje to usunięcie klucza parowania tej aplikacji i jej uprawnienia do przełączania debugowania bezprzewodowego. Aby później użyć debugowania bezprzewodowego, trzeba będzie sparować ponownie.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Usunięto parowanie",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Usunięto klucz parowania tej aplikacji i jej uprawnienie do włączania i wyłączania debugowania bezprzewodowego.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Klucz parowania usunięty",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Usunięto klucz parowania tej aplikacji, ale tym razem nie udało się połączyć z debugowaniem bezprzewodowym, więc uprawnienie do jego włączania i wyłączania nie zostało odebrane.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Bez parowania ta aplikacja nie korzysta z tego uprawnienia. Aby usunąć je całkowicie, połącz się z Wi-Fi, sparuj ponownie, a następnie jeszcze raz usuń parowanie.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Na liście Debugowanie bezprzewodowe → Sparowane urządzenia w systemie nadal będzie widoczne „{name}”. Nie może się już połączyć, więc możesz je zostawić; aby je usunąć, dotknij go i usuń.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Na liście Debugowanie bezprzewodowe → Sparowane urządzenia w systemie nadal widnieje też „{name}”; dotknij go, aby usunąć.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metoda",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Udostępnij",
   "shareFailed": "Nie udało się udostępnić",
   "dialogSaveAsTitle": "Zapisz jako",

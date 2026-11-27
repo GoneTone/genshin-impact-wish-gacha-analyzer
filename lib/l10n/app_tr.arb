@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (etkin)",
   "emptyNoSyncTitle": "Henüz veri eşitlenmedi",
   "emptyNoSyncMessage": "Başlamak için sağ üstteki {icon} simgesine dokunun",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Bu banner için kayıt yok",
   "emptyNoFilterMatch": "Geçerli filtreyle eşleşen kayıt yok",
   "emptyNoOdesRecords": "Henüz Övgü kaydı yok",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Genshin Impact'i açın → Dilek → Dilek Geçmişi",
   "progressFallbackHint": "(Önceki Dilek Geçmişi URL'sinin süresi doldu, yeniden alınması gerekiyor)",
   "progressNotDetectedLink": "Dilek Geçmişi'ni açtınız ama hiçbir şey olmuyor mu?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Müdahale aracı başlatılamadı (sertifika reddedilmiş veya bağlantı noktası kullanımda olabilir); bu yüzden algılama yalnızca oyunun web önbelleğine dayanıyor. Lütfen oyunda Dilek Geçmişi sayfasını açın.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Müdahale aracı başlatılamadı (sertifika reddedilmiş veya bağlantı noktası kullanımda olabilir) ve oyun klasörü de bulunamadı. Klasörü elle ayarlamak için aşağıdaki \"Oyun klasörünü seç\" düğmesine basın.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Dilek Geçmişi algılanmadı",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Genshin Impact oyun klasörü bulunamadı. Oyun klasörünü seçtiğinizde bu araç Dilek Geçmişi URL'sini oyunun web önbelleğinden de alabilir.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Şu anda kullanılan oyun klasörü: {path}. Oynadığınız oyun kopyası bu değilse lütfen yeniden seçin.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Oyun klasörü ayarlandı. Lütfen oyuna dönüp Dilek Geçmişi'ni bir kez daha açın.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Bu klasörde Genshin Impact bulunamadı. Lütfen \"Genshin Impact game\" klasörünü seçin.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Oyun klasörünü seç",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Yeniden seç",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Alınıyor: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Dönüştürme başarısız oldu; veriler değişmedi. Bağlantınızı kontrol edip tekrar deneyin.",
   "settingsDataManagement": "Veri yönetimi",
   "settingsGameDir": "Oyun klasörü",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Otomatik algılandı: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Elle ayarlandı: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Oyun klasörü bulunamadı",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Temizle",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Bulut eşitleme",
   "cloudSyncIntro": "Dilek kayıtlarınızı Google Drive'ınıza otomatik olarak yedeklemek ve birden fazla cihazı eşit tutmak için Google hesabınızı bağlayın.",
   "cloudSyncUnconfigured": "Bu sürümde Google OAuth kimlik bilgileri yapılandırılmamış; bulut eşitleme kullanılamıyor.",
@@ -609,9 +655,39 @@
   "pagerLast": "Son",
   "pagerJumpTitle": "Sayfaya git",
   "pagerJumpLabel": "Sayfa ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Şu anki sayfa: {page} · {total} kayıt",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Git",
   "pagerJumpInvalid": "{min}–{max} arasında bir sayfa girin",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Geçerli hesabın verilerini temizle",
   "settingsClearAll": "Tüm verileri temizle",
   "settingsRefetchHoyoWikiImagesTitle": "Eşya görsellerini zorla yeniden al",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Ortalama",
   "luckTierUnlucky": "Şanssız",
   "manualUrlEntry": "Dilek Geçmişi URL'sini elle gir",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Dilek Geçmişi URL'sini Elle Gir",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Dilek Geçmişi URL'sini başka bir yolla (örneğin bilgisayarınızdaki bir araçla) zaten aldıysanız buraya yapıştırabilirsiniz. Metnin tamamını yapıştırmanız da olur; uygulama URL'yi otomatik olarak bulur.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "URL'yi yapıştırın...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Panodan yapıştır",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Dilek Geçmişi URL'si bulunamadı. Lütfen yapıştırdığınız içeriği kontrol edin.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL, hesap kimlik bilgilerinizi içerir. Herkese açık olarak paylaşmayın. Bir süre sonra geçerliliğini yitirir.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "Tamam",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Oyunda Dilek Geçmişi sayfasını açmanız bekleniyor...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Genshin Impact'i açın → Dilek → Dilek Geçmişi",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Oyun günlük dosyasını okumaya hazırlanılıyor...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Dilek Geçmişi URL'si otomatik olarak alınamıyor",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Oyun günlük dosyasını okuma henüz ayarlanmadı. Tek seferlik bir kurulumdan sonra her güncellemede otomatik olarak okunur.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Kablosuz hata ayıklama yalnızca Wi‑Fi'de çalışır. Wi‑Fi'ye bağlanıp geri dönün; uygulama otomatik olarak devam eder. URL'yi elle de girebilirsiniz.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root bulundu ancak bu uygulamaya root erişimi verilmedi. Root ile okumak için root yöneticinizde (örneğin Magisk'in Superuser listesi) bu uygulamaya izin verip geri dönün; uygulama otomatik olarak yeniden dener.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Kablosuz hata ayıklamaya bağlanılamadı. Eşlemenin süresi dolmuş olabilir; lütfen yeniden eşleyin.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Cihazınız bu uygulamanın kablosuz hata ayıklamayı açmasına izin vermiyor. Kablosuz hata ayıklama sayfasından açıp geri dönün; uygulama otomatik olarak devam eder.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Bu Wi‑Fi ağına henüz kablosuz hata ayıklama için izin verilmedi. Sistem isteminde \"İzin ver\"e dokunun (tekrar sorulmaması için \"Bu ağda her zaman izin ver\"i işaretleyin), uygulama otomatik olarak devam eder. İstemi kapattıysanız \"Yeniden dene\"ye dokunun.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Bu cihaz Dilek Geçmişi URL'sini otomatik olarak okuyamıyor (Android 11 veya üzeri ya da root gerekir). Lütfen URL'yi elle girin.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Bu cihazda Genshin Impact bulunamadı. Yükledikten sonra buraya dönün, oyun otomatik olarak algılanır.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Genshin Impact'i aç",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Kablosuz hata ayıklamayı aç",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Kablosuz hata ayıklama bağlantısı koptu, yeniden bağlanılıyor... Düzelmezse Wi‑Fi bağlantınızı kontrol edin veya URL'yi elle girin.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Kablosuz hata ayıklama hâlâ açık. Sistem ayarlarından kapatabilirsiniz.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Dilek Geçmişi URL'si alındı. Bu uygulamaya döndüğünüzde Dilek Geçmişiniz alınmaya başlayacak.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Yeniden kontrol et",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Google Play'i aç",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Kur",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Oyun Günlük Dosyası Erişimi",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Kablosuz hata ayıklama",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Ayarlanmadı",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Eşleme",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Eşlendi",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Eşlendi (kablosuz hata ayıklamayı elle açın)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "İzni yeniden dene",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Kur",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Eşlemeyi kaldır",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Eşleme kaldırılsın mı?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Bu işlem bu uygulamanın eşleme anahtarını siler ve bu uygulamanın kablosuz hata ayıklamayı açıp kapatma iznini kaldırır. Daha sonra kablosuz hata ayıklamayı kullanmak için yeniden eşlemeniz gerekir.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Eşleme kaldırıldı",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Bu uygulamanın eşleme anahtarı silindi ve kablosuz hata ayıklamayı açıp kapatma izni kaldırıldı.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Eşleme anahtarı silindi",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Bu uygulamanın eşleme anahtarı silindi ancak bu kez kablosuz hata ayıklamaya bağlanılamadı; bu yüzden kablosuz hata ayıklamayı açıp kapatma izni kaldırılmadı.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Eşlenmemişken bu uygulama bu izni kullanmaz. İzni tamamen kaldırmak için Wi‑Fi'ye bağlanın, yeniden eşleyin ve ardından eşlemeyi bir kez daha kaldırın.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "Sistemdeki Kablosuz hata ayıklama → Eşlenen cihazlar listesinde \"{name}\" görünmeye devam edecek. Artık bağlanamaz, bu yüzden bırakabilirsiniz; kaldırmak için üzerine dokunup silin.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "Sistemdeki Kablosuz hata ayıklama → Eşlenen cihazlar listesinde \"{name}\" de hâlâ görünüyor; silmek için üzerine dokunun.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Yöntem",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Paylaş",
   "shareFailed": "Paylaşılamadı",
   "dialogSaveAsTitle": "Farklı kaydet",

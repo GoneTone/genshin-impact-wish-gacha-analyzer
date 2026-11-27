@@ -1,14 +1,14 @@
 {
   "@@locale": "ro",
   "localeNativeName": "Română",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Traducere: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Traducere: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (activ)",
   "emptyNoSyncTitle": "Încă nu s-au sincronizat date",
   "emptyNoSyncMessage": "Atingeți {icon} din dreapta sus pentru a începe",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Nu există înregistrări pentru acest banner",
   "emptyNoFilterMatch": "Nicio înregistrare nu corespunde filtrului curent",
   "emptyNoOdesRecords": "Încă nu există înregistrări în Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Deschideți Genshin → Wishes → History",
   "progressFallbackHint": "(URL-ul Wish History anterior a expirat și trebuie obținut din nou)",
   "progressNotDetectedLink": "Ați deschis Wish History, dar nu se întâmplă nimic?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Nu s-a putut porni captura (certificatul poate fi respins sau portul este ocupat), așa că detectarea folosește doar memoria cache web a jocului. Deschideți pagina Wish History în joc.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Nu s-a putut porni captura (certificatul poate fi respins sau portul este ocupat), iar folderul jocului nu a fost găsit. Apăsați mai jos „Alege folderul jocului” pentru a-l seta manual.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History nu a fost detectat",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Folderul jocului Genshin Impact nu a fost găsit. După ce alegeți folderul jocului, instrumentul poate obține URL-ul Wish History și din memoria cache web a jocului.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Folderul jocului folosit acum: {path}. Dacă nu este copia jocului cu care jucați, alegeți din nou.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Folderul jocului a fost setat. Reveniți în joc și deschideți din nou Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact nu a fost găsit în acest folder. Alegeți folderul „Genshin Impact game”.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Alege folderul jocului",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Alege din nou",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Se descarcă: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Conversia a eșuat, datele sunt neschimbate. Verificați rețeaua și încercați din nou.",
   "settingsDataManagement": "Gestionarea datelor",
   "settingsGameDir": "Folderul jocului",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Detectat automat: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Setat manual: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Folderul jocului nu a fost găsit",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Șterge",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Sincronizare în cloud",
   "cloudSyncIntro": "Asociați contul Google pentru a face automat copii de rezervă ale înregistrărilor în Google Drive și pentru a sincroniza mai multe dispozitive.",
   "cloudSyncUnconfigured": "Această versiune nu are datele de autentificare Google OAuth configurate; sincronizarea în cloud nu este disponibilă.",
@@ -609,9 +655,39 @@
   "pagerLast": "Ultima",
   "pagerJumpTitle": "Mergi la pagina",
   "pagerJumpLabel": "Pagina ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Pagina curentă: {page} · {total, plural, one{{total} înregistrare} few{{total} înregistrări} other{{total} de înregistrări}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Mergi",
   "pagerJumpInvalid": "Introduceți o pagină între {min} și {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Șterge datele contului curent",
   "settingsClearAll": "Șterge toate datele",
   "settingsRefetchHoyoWikiImagesTitle": "Forțează redescărcarea imaginilor obiectelor",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Mediu",
   "luckTierUnlucky": "Ghinionist",
   "manualUrlEntry": "Introdu manual URL-ul Wish History",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Introdu manual URL-ul Wish History",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Dacă ați obținut URL-ul Wish History în alt mod (de exemplu cu un instrument pe computer), îl puteți lipi aici. Puteți lipi și tot textul; aplicația găsește singură URL-ul.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Lipiți URL-ul...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Lipește din clipboard",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Nu s-a găsit niciun URL Wish History. Verificați ce ați lipit.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL-ul conține datele de autentificare ale contului dvs. Nu îl partajați public. Expiră după un timp.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Se așteaptă să deschideți în joc pagina Wish History...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Deschideți Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Se pregătește citirea jurnalului jocului...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "URL-ul Wish History nu poate fi obținut automat",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Citirea jurnalului jocului nu este încă configurată. După o configurare unică, fiecare actualizare îl citește automat.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Remedierea erorilor wireless funcționează doar prin Wi-Fi. Conectați-vă la Wi-Fi și reveniți; aplicația continuă automat. Puteți și să introduceți URL-ul manual.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root a fost găsit, dar aplicației nu i s-a acordat acces root. Pentru a citi prin root, permiteți aplicația în managerul root (de exemplu în lista Superuser din Magisk), apoi reveniți; aplicația reîncearcă automat.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Nu s-a putut conecta la remedierea erorilor wireless. Asocierea poate să fi expirat; asociați din nou.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Dispozitivul dvs. nu permite acestei aplicații să pornească remedierea erorilor wireless. Porniți-o în pagina Remedierea erorilor wireless și reveniți; aplicația continuă automat.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Această rețea Wi-Fi nu este încă permisă pentru remedierea erorilor wireless. Atingeți „Permite” în mesajul sistemului (bifați „Permite întotdeauna în această rețea” ca să nu mai întrebe) și aplicația continuă automat. Dacă ați închis mesajul, atingeți „Reîncearcă”.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Acest dispozitiv nu poate citi automat URL-ul Wish History (necesită Android 11 sau mai nou, ori root). Introduceți-l manual.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact nu este instalat pe acest dispozitiv. După instalare, reveniți aici și va fi detectat automat.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Deschide Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Deschide Remedierea erorilor wireless",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Conexiunea de remediere a erorilor wireless s-a pierdut, se reconectează... Dacă nu revine, verificați Wi-Fi sau introduceți URL-ul manual.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Remedierea erorilor wireless este încă pornită. O puteți opri din setările sistemului.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL-ul Wish History a fost obținut. Descărcarea Wish History începe când reveniți în această aplicație.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Verifică din nou",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Deschide Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Configurează",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Acces la jurnalul jocului",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Remedierea erorilor wireless",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Neconfigurat",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Asociere",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Asociat",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Asociat (porniți manual remedierea erorilor wireless)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Reîncearcă acordarea permisiunii",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Configurează",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Elimină asocierea",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Eliminați asocierea?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Aceasta șterge cheia de asociere a aplicației și îi retrage permisiunea de a comuta remedierea erorilor wireless. Va trebui să asociați din nou pentru a folosi ulterior remedierea erorilor wireless.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Asocierea a fost eliminată",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Cheia de asociere a aplicației a fost ștearsă și i-a fost retrasă permisiunea de a porni și opri remedierea erorilor wireless.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Cheia de asociere a fost ștearsă",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Cheia de asociere a aplicației a fost ștearsă, dar de data aceasta nu s-a putut conecta la remedierea erorilor wireless, așa că permisiunea de a porni și opri remedierea erorilor wireless nu a fost retrasă.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Cât timp nu este asociată, aplicația nu folosește această permisiune. Pentru a o elimina complet, conectați-vă la Wi-Fi, asociați din nou, apoi eliminați asocierea încă o dată.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "În lista de sistem Remedierea erorilor wireless → Dispozitive asociate va apărea în continuare „{name}”. Nu se mai poate conecta, deci îl puteți lăsa; pentru a-l elimina, atingeți-l și ștergeți-l.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "În lista de sistem Remedierea erorilor wireless → Dispozitive asociate apare în continuare și „{name}”; atingeți-l pentru a-l șterge.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Metodă",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Partajează",
   "shareFailed": "Nu s-a putut partaja",
   "dialogSaveAsTitle": "Salvează ca",

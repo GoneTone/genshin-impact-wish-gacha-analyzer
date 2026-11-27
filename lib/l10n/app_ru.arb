@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (активный)",
   "emptyNoSyncTitle": "Данные ещё не загружены",
   "emptyNoSyncMessage": "Нажмите {icon} в правом верхнем углу, чтобы начать",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "В этом баннере нет записей",
   "emptyNoFilterMatch": "Нет записей, подходящих под фильтр",
   "emptyNoOdesRecords": "Записей Од пока нет",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Откройте Genshin → Молитва → Журнал Молитв",
   "progressFallbackHint": "(Предыдущий URL Журнала Молитв устарел, его нужно получить заново)",
   "progressNotDetectedLink": "Открыли Журнал Молитв, но ничего не происходит?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Не удалось запустить перехватчик (возможно, сертификат отклонён или порт занят), поэтому поиск идёт только по веб-кэшу игры. Откройте Журнал Молитв в игре.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Не удалось запустить перехватчик (возможно, сертификат отклонён или порт занят), а папка игры не найдена. Нажмите «Выбрать папку игры» ниже, чтобы указать её вручную.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Журнал Молитв не обнаружен",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Не удалось найти папку игры Genshin Impact. Если указать её, приложение сможет получать URL Журнала Молитв и из веб-кэша игры.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Используется папка игры: {path}. Если это не та копия игры, в которую вы играете, выберите папку заново.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "Папка игры сохранена. Вернитесь в игру и ещё раз откройте Журнал Молитв.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact не найдена в этой папке. Выберите папку «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Выбрать папку игры",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Выбрать заново",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Загрузка: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Не удалось преобразовать, данные не изменены. Проверьте подключение и попробуйте снова.",
   "settingsDataManagement": "Управление данными",
   "settingsGameDir": "Папка игры",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Найдена автоматически: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Указана вручную: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "Папка игры не найдена",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Сбросить",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Облачная синхронизация",
   "cloudSyncIntro": "Привяжите аккаунт Google, чтобы записи молитв автоматически сохранялись на Google Drive и синхронизировались между устройствами.",
   "cloudSyncUnconfigured": "В этой сборке не настроены учётные данные Google OAuth, облачная синхронизация недоступна.",
@@ -609,9 +655,39 @@
   "pagerLast": "Последняя",
   "pagerJumpTitle": "Перейти к странице",
   "pagerJumpLabel": "Страница ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Сейчас страница {page} · записей: {total}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Перейти",
   "pagerJumpInvalid": "Введите номер страницы от {min} до {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Удалить данные текущего аккаунта",
   "settingsClearAll": "Удалить все данные",
   "settingsRefetchHoyoWikiImagesTitle": "Принудительно загрузить изображения предметов заново",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Средне",
   "luckTierUnlucky": "Неудачно",
   "manualUrlEntry": "Ввести URL Журнала Молитв вручную",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Ввод URL Журнала Молитв вручную",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Если вы уже получили URL Журнала Молитв другим способом (например, с помощью программы на компьютере), вставьте его сюда. Можно вставить и весь текст целиком: приложение само найдёт URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Вставьте URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Вставить из буфера обмена",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "URL Журнала Молитв не найден. Проверьте вставленный текст.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL содержит данные для входа в ваш аккаунт. Не публикуйте его. Через некоторое время он перестаёт действовать.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Ожидание, пока вы откроете Журнал Молитв в игре...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Откройте Genshin Impact → Молитва → Журнал Молитв",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Подготовка к чтению лога игры...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "Не удаётся автоматически получить URL Журнала Молитв",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "Чтение лога игры ещё не настроено. После однократной настройки он будет считываться автоматически при каждом обновлении.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "Отладка по Wi‑Fi работает только при подключении к Wi‑Fi. Подключитесь к Wi‑Fi и вернитесь — приложение продолжит автоматически. Также можно ввести URL вручную.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root обнаружен, но этому приложению не выдан root-доступ. Чтобы читать лог через root, разрешите приложение в менеджере root (например, в списке Superuser в Magisk) и вернитесь — приложение повторит попытку автоматически.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Не удалось подключиться к отладке по Wi‑Fi. Возможно, сопряжение устарело — выполните его заново.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Устройство не позволяет этому приложению включить отладку по Wi‑Fi. Включите её на странице «Отладка по Wi‑Fi» и вернитесь — приложение продолжит автоматически.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Эта сеть Wi‑Fi ещё не разрешена для отладки по Wi‑Fi. Нажмите «Разрешить» в системном запросе (отметьте «Всегда разрешать в этой сети», чтобы он больше не появлялся), и приложение продолжит автоматически. Если вы закрыли запрос, нажмите «Повторить».",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Это устройство не может автоматически получить URL Журнала Молитв (нужен Android 11 или новее либо root). Введите его вручную.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact не установлена на этом устройстве. После установки вернитесь сюда — игра будет обнаружена автоматически.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Открыть Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Открыть отладку по Wi‑Fi",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Соединение с отладкой по Wi‑Fi потеряно, переподключение... Если оно не восстановится, проверьте Wi‑Fi или введите URL вручную.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "Отладка по Wi‑Fi всё ещё включена. Её можно отключить в настройках системы.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL Журнала Молитв получен. Загрузка истории молитв начнётся, когда вы вернётесь в приложение.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Проверить снова",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Открыть Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Настроить",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Доступ к логу игры",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Отладка по Wi‑Fi",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Не настроено",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Сопряжение",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Сопряжено",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Сопряжено (отладку по Wi‑Fi нужно включать вручную)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Повторить выдачу разрешения",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Настроить",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Удалить сопряжение",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Удалить сопряжение?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Ключ сопряжения этого приложения будет удалён, а у приложения будет отозвано разрешение управлять отладкой по Wi‑Fi. Чтобы снова использовать отладку по Wi‑Fi, потребуется новое сопряжение.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Сопряжение удалено",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Ключ сопряжения этого приложения удалён, и у него отозвано разрешение включать и отключать отладку по Wi‑Fi.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Ключ сопряжения удалён",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Ключ сопряжения этого приложения удалён, но на этот раз не удалось подключиться к отладке по Wi‑Fi, поэтому разрешение включать и отключать её не отозвано.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Без сопряжения приложение это разрешение не использует. Чтобы отозвать его полностью, подключитесь к Wi‑Fi, выполните сопряжение заново, а затем снова удалите его.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "В системном списке «Отладка по Wi‑Fi» → «Подключенные устройства» по-прежнему будет «{name}». Подключиться оно больше не может, так что его можно оставить; чтобы удалить, нажмите на него и удалите.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "В системном списке «Отладка по Wi‑Fi» → «Подключенные устройства» также остаётся «{name}»; нажмите на него, чтобы удалить.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Способ",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Поделиться",
   "shareFailed": "Не удалось поделиться",
   "dialogSaveAsTitle": "Сохранить как",

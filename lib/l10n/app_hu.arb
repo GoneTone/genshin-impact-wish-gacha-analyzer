@@ -1,14 +1,14 @@
 {
   "@@locale": "hu",
   "localeNativeName": "Magyar",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Fordító: {translator}",
   "@localeNativeName": {
     "description": "Native name of this locale, shown in language picker."
   },
-  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "@localeTranslator": {
     "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
   },
-  "localeTranslatorLabel": "Fordító: {translator}",
   "@localeTranslatorLabel": {
     "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
     "placeholders": {
@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (aktív)",
   "emptyNoSyncTitle": "Még nincs szinkronizált adat",
   "emptyNoSyncMessage": "A kezdéshez nyomja meg a jobb felső sarokban lévő {icon} ikont",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "Ehhez a bannerhez nincsenek rekordok",
   "emptyNoFilterMatch": "Egy rekord sem felel meg a szűrőnek",
   "emptyNoOdesRecords": "Még nincsenek Ode-előzmények",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "Nyissa meg: Genshin → Wishes → History",
   "progressFallbackHint": "(A korábbi kívánságelőzmények URL-je lejárt, újra le kell kérni)",
   "progressNotDetectedLink": "Megnyitotta a Wish History oldalt, de semmi sem történik?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "Nem sikerült elindítani a lehallgatót (lehet, hogy a tanúsítványt elutasították, vagy a port foglalt), ezért az észlelés csak a játék webes gyorsítótárára támaszkodik. Nyissa meg a Wish History oldalt a játékban.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "Nem sikerült elindítani a lehallgatót (lehet, hogy a tanúsítványt elutasították, vagy a port foglalt), és a játék mappája sem található. Nyomja meg lent a „Játékmappa kiválasztása” gombot a kézi beállításhoz.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "A Wish History oldal nem észlelhető",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "Nem található a Genshin Impact játékmappája. Ha kiválasztja, az eszköz a kívánságelőzmények URL-jét a játék webes gyorsítótárából is meg tudja szerezni.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Használt játékmappa: {path}. Ha ez nem az a példány, amellyel játszik, válasszon újra.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "A játékmappa beállítva. Térjen vissza a játékhoz, és nyissa meg még egyszer a Wish History oldalt.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Ebben a mappában nem található a Genshin Impact. Válassza ki a „Genshin Impact game” mappát.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Játékmappa kiválasztása",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Újraválasztás",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Lekérés: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "Az átalakítás sikertelen, az adatok nem változtak. Ellenőrizze a hálózatot, és próbálja újra.",
   "settingsDataManagement": "Adatkezelés",
   "settingsGameDir": "Játékmappa",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Automatikusan észlelve: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "Kézzel beállítva: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "A játékmappa nem található",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Törlés",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Felhőszinkronizálás",
   "cloudSyncIntro": "Kapcsolja össze Google-fiókját, hogy a gacha-előzményekről automatikusan biztonsági mentés készüljön a Google Drive-ra, és több eszköz is szinkronban maradjon.",
   "cloudSyncUnconfigured": "Ebben a buildben nincsenek beállítva Google OAuth hitelesítő adatok; a felhőszinkronizálás nem érhető el.",
@@ -609,9 +655,39 @@
   "pagerLast": "Utolsó",
   "pagerJumpTitle": "Ugrás oldalra",
   "pagerJumpLabel": "Oldal ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Jelenlegi oldal: {page} · {total} rekord",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Ugrás",
   "pagerJumpInvalid": "Adjon meg egy oldalt {min}–{max} között",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "A jelenlegi fiók adatainak törlése",
   "settingsClearAll": "Minden adat törlése",
   "settingsRefetchHoyoWikiImagesTitle": "Tárgyképek kényszerített újralekérése",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "Átlagos",
   "luckTierUnlucky": "Szerencsétlen",
   "manualUrlEntry": "A kívánságelőzmények URL-jének kézi megadása",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "A kívánságelőzmények URL-jének kézi megadása",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Ha a kívánságelőzmények URL-jét már másképp megszerezte (például egy számítógépes eszközzel), ide beillesztheti. A teljes szöveg beillesztése is működik; az alkalmazás automatikusan megtalálja az URL-t.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "URL beillesztése...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Beillesztés a vágólapról",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "Nem található a kívánságelőzmények URL-je. Ellenőrizze a beillesztett tartalmat.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "Az URL a fiókja hitelesítő adatait tartalmazza. Ne ossza meg nyilvánosan. Egy idő után lejár.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Várakozás arra, hogy megnyissa a játékban a Wish History oldalt...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Nyissa meg: Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Felkészülés a játéknapló olvasására...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "A kívánságelőzmények URL-je nem szerezhető meg automatikusan",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "A játéknapló olvasása még nincs beállítva. Egyszeri beállítás után minden frissítés automatikusan beolvassa.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "A vezeték nélküli hibakeresés csak Wi‑Fi-n működik. Csatlakozzon Wi‑Fi-hálózathoz, majd térjen vissza; az alkalmazás automatikusan folytatja. Az URL-t kézzel is megadhatja.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Root észlelhető, de ez az alkalmazás nem kapott root-hozzáférést. A roottal történő beolvasáshoz engedélyezze az alkalmazást a rootkezelőben (például a Magisk Superuser listájában), majd térjen vissza; az alkalmazás automatikusan újrapróbálja.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "Nem sikerült csatlakozni a vezeték nélküli hibakereséshez. Lehet, hogy a párosítás lejárt; párosítsa újra.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Az eszköze nem engedi, hogy ez az alkalmazás bekapcsolja a vezeték nélküli hibakeresést. Kapcsolja be a Vezeték nélküli hibakeresés oldalon, majd térjen vissza; az alkalmazás automatikusan folytatja.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Ez a Wi‑Fi-hálózat még nincs engedélyezve a vezeték nélküli hibakereséshez. Koppintson az Engedélyezés gombra a rendszerüzenetben (jelölje be a „Mindig engedélyezés ezen a hálózaton” lehetőséget, hogy ne kérdezzen újra), és az alkalmazás automatikusan folytatja. Ha bezárta az üzenetet, koppintson az Újra gombra.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Ez az eszköz nem tudja automatikusan beolvasni a kívánságelőzmények URL-jét (Android 11 vagy újabb, illetve root szükséges). Adja meg kézzel.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "A Genshin Impact nincs telepítve ezen az eszközön. Telepítés után térjen vissza ide, és automatikusan észleli.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Genshin Impact megnyitása",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Vezeték nélküli hibakeresés megnyitása",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Megszakadt a kapcsolat a vezeték nélküli hibakereséssel, újracsatlakozás... Ha nem áll helyre, ellenőrizze a Wi‑Fi-t, vagy adja meg kézzel az URL-t.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "A vezeték nélküli hibakeresés még be van kapcsolva. A rendszerbeállításokban kikapcsolhatja.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "Megvan a kívánságelőzmények URL-je. A kívánságelőzmények lekérése akkor indul, amikor visszatér az alkalmazásba.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Újbóli ellenőrzés",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Google Play megnyitása",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Beállítás",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Hozzáférés a játéknaplóhoz",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Vezeték nélküli hibakeresés",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Nincs beállítva",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Párosítás",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Párosítva",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Párosítva (a vezeték nélküli hibakeresést kézzel kell bekapcsolni)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Engedély újrapróbálása",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Beállítás",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Párosítás eltávolítása",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "Eltávolítja a párosítást?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Ez törli az alkalmazás párosítási kulcsát, és visszavonja az alkalmazás engedélyét a vezeték nélküli hibakeresés kapcsolására. Ha később újra használni szeretné a vezeték nélküli hibakeresést, újra párosítania kell.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Párosítás eltávolítva",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Az alkalmazás párosítási kulcsa törölve, és visszavonva az engedélye a vezeték nélküli hibakeresés be- és kikapcsolására.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Párosítási kulcs törölve",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Az alkalmazás párosítási kulcsa törölve, de ezúttal nem sikerült csatlakozni a vezeték nélküli hibakereséshez, így a be- és kikapcsolására vonatkozó engedély nincs visszavonva.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Párosítás nélkül az alkalmazás nem használja ezt az engedélyt. A teljes visszavonáshoz csatlakozzon Wi‑Fi-hálózathoz, párosítson újra, majd szüntesse meg ismét a párosítást.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "A rendszer Vezeték nélküli hibakeresés → Párosított eszközök listájában továbbra is megjelenik a(z) „{name}”. Már nem tud csatlakozni, így nyugodtan ott hagyhatja; eltávolításához koppintson rá, és törölje.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "A rendszer Vezeték nélküli hibakeresés → Párosított eszközök listájában szintén megjelenik még a(z) „{name}”; koppintson rá a törléséhez.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Módszer",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Megosztás",
   "shareFailed": "Nem sikerült megosztani",
   "dialogSaveAsTitle": "Mentés másként",

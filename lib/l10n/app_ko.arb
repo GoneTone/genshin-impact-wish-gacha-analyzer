@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (사용 중)",
   "emptyNoSyncTitle": "아직 동기화된 데이터가 없습니다",
   "emptyNoSyncMessage": "오른쪽 위의 {icon}을(를) 눌러 시작하세요",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "이 배너에는 기록이 없습니다",
   "emptyNoFilterMatch": "현재 필터와 일치하는 기록이 없습니다",
   "emptyNoOdesRecords": "아직 축원 기록이 없습니다",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "원신 실행 → 기원 → 기원 히스토리를 열어 주세요",
   "progressFallbackHint": "(이전 기원 히스토리 URL이 만료되어 다시 가져와야 합니다)",
   "progressNotDetectedLink": "기원 히스토리를 열었는데 반응이 없나요?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "가로채기 프로그램을 시작할 수 없어(인증서가 거부되었거나 포트가 사용 중일 수 있습니다) 게임의 웹 캐시에서만 감지합니다. 게임에서 기원 히스토리 페이지를 열어 주세요.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "가로채기 프로그램을 시작할 수 없으며(인증서가 거부되었거나 포트가 사용 중일 수 있습니다) 게임 폴더도 찾지 못했습니다. 아래의 “게임 폴더 선택”을 눌러 직접 지정해 주세요.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "기원 히스토리가 감지되지 않음",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "원신 게임 폴더를 찾지 못했습니다. 게임 폴더를 선택하면 이 도구가 게임의 웹 캐시에서도 기원 히스토리 URL을 가져올 수 있습니다.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "현재 사용 중인 게임 폴더: {path}. 플레이 중인 게임이 아니라면 다시 선택해 주세요.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "게임 폴더를 설정했습니다. 게임으로 돌아가 기원 히스토리를 한 번 더 열어 주세요.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "이 폴더에서 원신을 찾지 못했습니다. “Genshin Impact game” 폴더를 선택해 주세요.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "게임 폴더 선택",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "다시 선택",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "가져오는 중: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "변환에 실패했습니다. 데이터는 변경되지 않았습니다. 연결을 확인한 후 다시 시도해 주세요.",
   "settingsDataManagement": "데이터 관리",
   "settingsGameDir": "게임 폴더",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "자동 감지: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "직접 지정: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "게임 폴더를 찾지 못했습니다",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "지우기",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "클라우드 동기화",
   "cloudSyncIntro": "Google 계정을 연결하면 기원 기록을 Google Drive에 자동으로 백업하고 여러 기기 간에 동기화합니다.",
   "cloudSyncUnconfigured": "이 빌드에는 Google OAuth 인증 정보가 설정되어 있지 않아 클라우드 동기화를 사용할 수 없습니다.",
@@ -609,9 +655,39 @@
   "pagerLast": "마지막",
   "pagerJumpTitle": "페이지 이동",
   "pagerJumpLabel": "페이지 ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "현재 {page}페이지 · 총 {total}건",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "이동",
   "pagerJumpInvalid": "{min}–{max} 사이의 페이지를 입력하세요",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "현재 계정 데이터 삭제",
   "settingsClearAll": "모든 데이터 삭제",
   "settingsRefetchHoyoWikiImagesTitle": "아이템 이미지 강제로 다시 받기",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "보통",
   "luckTierUnlucky": "불운",
   "manualUrlEntry": "기원 히스토리 URL 직접 입력",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "기원 히스토리 URL 직접 입력",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "다른 방법(예: 컴퓨터의 도구)으로 이미 기원 히스토리 URL을 얻었다면 여기에 붙여 넣을 수 있습니다. 전체 텍스트를 붙여 넣어도 앱이 URL을 자동으로 찾습니다.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "URL 붙여넣기...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "클립보드에서 붙여넣기",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "기원 히스토리 URL을 찾을 수 없습니다. 붙여 넣은 내용을 확인해 주세요.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "이 URL에는 계정 인증 정보가 들어 있으므로 공개적으로 공유하지 마세요. 일정 시간이 지나면 만료됩니다.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "확인",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "게임에서 기원 히스토리 페이지를 열 때까지 기다리는 중...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "원신 실행 → 기원 → 기원 히스토리를 열어 주세요",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "게임 로그 파일을 읽을 준비 중...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "기원 히스토리 URL을 자동으로 가져올 수 없음",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "게임 로그 파일 읽기가 아직 설정되지 않았습니다. 한 번만 설정하면 이후 업데이트할 때마다 자동으로 읽습니다.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "무선 디버깅은 Wi‑Fi에서만 작동합니다. Wi‑Fi에 연결한 후 돌아오면 자동으로 계속됩니다. URL을 직접 입력할 수도 있습니다.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "루트가 감지되었지만 이 앱에 루트 권한이 허용되지 않았습니다. 루트로 읽으려면 루트 관리자(예: Magisk의 슈퍼유저 목록)에서 이 앱을 허용한 후 돌아오세요. 앱이 자동으로 다시 시도합니다.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "무선 디버깅에 연결하지 못했습니다. 페어링이 만료되었을 수 있으니 다시 페어링해 주세요.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "이 기기에서는 앱이 무선 디버깅을 켤 수 없습니다. 무선 디버깅 화면에서 직접 켠 후 돌아오면 자동으로 계속됩니다.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "이 Wi‑Fi 네트워크는 아직 무선 디버깅이 허용되지 않았습니다. 시스템 팝업에서 허용을 누르면(“이 네트워크에서 항상 허용”을 체크하면 다시 묻지 않습니다) 자동으로 계속됩니다. 팝업을 닫았다면 다시 시도를 누르세요.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "이 기기에서는 기원 히스토리 URL을 자동으로 읽을 수 없습니다(Android 11 이상 또는 루트 필요). URL을 직접 입력해 주세요.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "이 기기에서 원신을 찾을 수 없습니다. 설치한 뒤 여기로 돌아오면 자동으로 다시 감지합니다.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "원신 열기",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "무선 디버깅 열기",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "무선 디버깅 연결이 끊겨 다시 연결하는 중입니다... 복구되지 않으면 Wi‑Fi를 확인하거나 URL을 직접 입력해 주세요.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "무선 디버깅이 아직 켜져 있습니다. 시스템 설정에서 끌 수 있습니다.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "기원 히스토리 URL을 가져왔습니다. 이 앱으로 돌아오면 기원 히스토리 가져오기를 시작합니다.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "다시 감지",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Google Play 열기",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "설정",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "게임 로그 파일 접근",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "루트",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "무선 디버깅",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "설정 안 됨",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "페어링",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "페어링됨",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "페어링됨 (무선 디버깅 직접 켜기)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "권한 다시 시도",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "설정",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "페어링 해제",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "페어링을 해제할까요?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "이 앱의 페어링 키를 삭제하고 이 앱의 무선 디버깅 전환 권한을 제거합니다. 나중에 무선 디버깅을 사용하려면 다시 페어링해야 합니다.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "페어링을 해제했습니다",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "이 앱의 페어링 키를 삭제하고 무선 디버깅 전환 권한을 제거했습니다.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "페어링 키를 삭제했습니다",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "이 앱의 페어링 키를 삭제했지만, 이번에는 무선 디버깅에 연결하지 못해 무선 디버깅 전환 권한은 제거하지 못했습니다.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "페어링하지 않은 동안에는 이 앱이 이 권한을 사용하지 않습니다. 완전히 제거하려면 Wi‑Fi에 연결해 다시 페어링한 뒤 한 번 더 해제하세요.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "시스템의 무선 디버깅 → 페어링된 기기 목록에 '{name}'이(가) 남아 있습니다. 더 이상 연결할 수 없으므로 그대로 두어도 됩니다. 삭제하려면 탭해서 삭제하세요.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "시스템의 무선 디버깅 → 페어링된 기기 목록에도 '{name}'이(가) 남아 있습니다. 탭해서 삭제할 수 있습니다.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "방식",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "공유",
   "shareFailed": "공유할 수 없습니다",
   "dialogSaveAsTitle": "다른 이름으로 저장",

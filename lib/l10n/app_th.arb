@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (ใช้งานอยู่)",
   "emptyNoSyncTitle": "ยังไม่ได้ซิงค์ข้อมูล",
   "emptyNoSyncMessage": "กด {icon} ที่มุมบนขวาเพื่อเริ่มต้น",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "ไม่มีบันทึกสำหรับ banner นี้",
   "emptyNoFilterMatch": "ไม่พบรายการที่ตรงกับเงื่อนไข",
   "emptyNoOdesRecords": "ยังไม่มีบันทึกภาวนา",
@@ -186,16 +193,50 @@
   "progressOpenGameHint": "กรุณาเปิด Genshin Impact → กาชา → ประวัติการอธิษฐาน",
   "progressFallbackHint": "(URL ประวัติการอธิษฐานก่อนหน้าหมดอายุ จำเป็นต้องขอรับใหม่)",
   "progressNotDetectedLink": "เปิดประวัติการอธิษฐานแล้วแต่ไม่มีปฏิกิริยาใด ๆ?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) จึงตรวจจับจากแคชเว็บของเกมเท่านั้น กรุณาเปิดหน้าประวัติการอธิษฐานในเกม",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) และไม่พบโฟลเดอร์เกม กรุณากด \"เลือกโฟลเดอร์เกม\" ด้านล่างเพื่อระบุด้วยตนเอง",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "ตรวจไม่พบประวัติการอธิษฐาน",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "ไม่พบโฟลเดอร์เกม Genshin Impact เมื่อเลือกโฟลเดอร์เกมแล้ว เครื่องมือนี้จะรับ URL ประวัติการอธิษฐานจากแคชเว็บของเกมได้ด้วย",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "โฟลเดอร์เกมที่ใช้อยู่ตอนนี้: {path} หากไม่ใช่เกมที่คุณกำลังเล่น กรุณาเลือกใหม่",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "gameDirHelpReopen": "ตั้งค่าโฟลเดอร์เกมแล้ว กรุณากลับไปที่เกมและเปิดประวัติการอธิษฐานอีกครั้ง",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "ไม่พบ Genshin Impact ในโฟลเดอร์นี้ กรุณาเลือกโฟลเดอร์ \"Genshin Impact game\"",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "เลือกโฟลเดอร์เกม",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "เลือกใหม่",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "กำลังดึงข้อมูล: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -374,12 +415,35 @@
   "settingsDataLanguageUnifyFailed": "การแปลงล้มเหลว ข้อมูลไม่มีการเปลี่ยนแปลง กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง",
   "settingsDataManagement": "จัดการข้อมูล",
   "settingsGameDir": "โฟลเดอร์เกม",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "ตรวจพบอัตโนมัติ: {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirManual": "ตั้งค่าด้วยตนเอง: {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirNone": "ไม่พบโฟลเดอร์เกม",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "ล้าง",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "การซิงค์ผ่านคลาวด์",
   "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างหลายอุปกรณ์",
   "cloudSyncUnconfigured": "บิลด์นี้ไม่ได้ตั้งค่าข้อมูลรับรอง Google OAuth จึงใช้การซิงค์ผ่านคลาวด์ไม่ได้",
@@ -591,9 +655,39 @@
   "pagerLast": "หน้าสุดท้าย",
   "pagerJumpTitle": "ไปที่หน้า",
   "pagerJumpLabel": "หน้า ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "ขณะนี้อยู่หน้า {page} · {total} รายการ",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "ไป",
   "pagerJumpInvalid": "กรอกหมายเลขหน้า {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "ล้างข้อมูลบัญชีปัจจุบัน",
   "settingsClearAll": "ล้างข้อมูลทั้งหมด",
   "settingsRefetchHoyoWikiImagesTitle": "บังคับดึงภาพไอเทมใหม่",
@@ -1156,32 +1250,113 @@
   "luckTierAverage": "ปกติ",
   "luckTierUnlucky": "โชคร้าย",
   "manualUrlEntry": "ป้อน URL ประวัติการอธิษฐานด้วยตนเอง",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "ป้อน URL ประวัติการอธิษฐานด้วยตนเอง",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "หากคุณได้ URL ประวัติการอธิษฐานมาด้วยวิธีอื่นแล้ว (เช่น ด้วยเครื่องมือบนคอมพิวเตอร์) สามารถวางที่นี่ได้ จะวางข้อความทั้งหมดก็ได้ แอปจะค้นหา URL ให้อัตโนมัติ",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "วาง URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "วางจากคลิปบอร์ด",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "ไม่พบ URL ประวัติการอธิษฐาน โปรดตรวจสอบเนื้อหาที่วาง",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "URL นี้มีข้อมูลรับรองบัญชีของคุณ อย่าแชร์แบบสาธารณะ และจะหมดอายุเมื่อผ่านไปสักระยะ",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "ตกลง",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "กำลังรอให้คุณเปิดหน้าประวัติการอธิษฐานในเกม...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "กรุณาเปิด Genshin Impact → การอธิษฐาน → ประวัติการอธิษฐาน",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "กำลังเตรียมอ่านบันทึกของเกม...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "รับ URL ประวัติการอธิษฐานอัตโนมัติไม่ได้",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "ยังไม่ได้ตั้งค่าการอ่านบันทึกของเกม ตั้งค่าเพียงครั้งเดียว แล้วทุกครั้งที่อัปเดตจะอ่านให้อัตโนมัติ",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "การแก้ไขข้อบกพร่องแบบไร้สายใช้ได้เฉพาะบน Wi‑Fi เชื่อมต่อ Wi‑Fi แล้วกลับมา แอปจะดำเนินการต่อโดยอัตโนมัติ หรือจะป้อน URL ด้วยตนเองก็ได้",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "พบสิทธิ์ root แต่แอปนี้ไม่ได้รับสิทธิ์ root หากต้องการอ่านด้วย root ให้อนุญาตแอปนี้ในตัวจัดการ root (เช่น รายการ Superuser ของ Magisk) แล้วกลับมา แอปจะลองใหม่โดยอัตโนมัติ",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "เชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายไม่ได้ การจับคู่อาจหมดอายุ โปรดจับคู่ใหม่",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "อุปกรณ์ของคุณไม่อนุญาตให้แอปนี้เปิดการแก้ไขข้อบกพร่องแบบไร้สาย โปรดเปิดเองในหน้าการแก้ไขข้อบกพร่องแบบไร้สายแล้วกลับมา แอปจะดำเนินการต่อโดยอัตโนมัติ",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "เครือข่าย Wi‑Fi นี้ยังไม่ได้รับอนุญาตสำหรับการแก้ไขข้อบกพร่องแบบไร้สาย แตะอนุญาตในหน้าต่างของระบบ (ติ๊ก “อนุญาตในเครือข่ายนี้เสมอ” เพื่อไม่ให้ถามอีก) แล้วแอปจะดำเนินการต่อโดยอัตโนมัติ หากปิดหน้าต่างไปแล้ว ให้แตะลองอีกครั้ง",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "อุปกรณ์นี้อ่าน URL ประวัติการอธิษฐานอัตโนมัติไม่ได้ (ต้องใช้ Android 11 ขึ้นไป หรือมีสิทธิ์ root) โปรดป้อนด้วยตนเอง",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "ไม่พบ Genshin Impact ในอุปกรณ์นี้ เมื่อติดตั้งแล้วให้กลับมาที่นี่ ระบบจะตรวจหาให้อัตโนมัติ",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "เปิด Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "เปิดการแก้ไขข้อบกพร่องแบบไร้สาย",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "การเชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายขาดหาย กำลังเชื่อมต่อใหม่... หากไม่กลับมา โปรดตรวจสอบ Wi‑Fi หรือป้อน URL ด้วยตนเอง",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "การแก้ไขข้อบกพร่องแบบไร้สายยังเปิดอยู่ คุณปิดได้ในการตั้งค่าระบบ",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "ได้ URL ประวัติการอธิษฐานแล้ว จะเริ่มดึงประวัติการอธิษฐานเมื่อคุณกลับมาที่แอปนี้",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "ตรวจหาอีกครั้ง",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "เปิด Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "ตั้งค่า",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1335,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "การเข้าถึงบันทึกของเกม",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "การแก้ไขข้อบกพร่องแบบไร้สาย",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "ยังไม่ได้ตั้งค่า",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "การจับคู่",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "จับคู่แล้ว",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "จับคู่แล้ว (เปิดการแก้ไขข้อบกพร่องแบบไร้สายเอง)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "ลองขอสิทธิ์อีกครั้ง",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "ตั้งค่า",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "ยกเลิกการจับคู่",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "ยกเลิกการจับคู่?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "การดำเนินการนี้จะลบคีย์การจับคู่ของแอปนี้ และเพิกถอนสิทธิ์ของแอปนี้ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย หากต้องการใช้การแก้ไขข้อบกพร่องแบบไร้สายในภายหลัง จะต้องจับคู่ใหม่",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "ยกเลิกการจับคู่แล้ว",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว และเพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สายแล้ว",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "ลบคีย์การจับคู่แล้ว",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว แต่ครั้งนี้เชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายไม่ได้ จึงยังไม่ได้เพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "แอปนี้จะไม่ใช้สิทธิ์นี้ขณะที่ยังไม่ได้จับคู่ หากต้องการเพิกถอนทั้งหมด ให้เชื่อมต่อ Wi‑Fi แล้วจับคู่ใหม่ จากนั้นยกเลิกการจับคู่อีกครั้ง",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบจะยังแสดง \"{name}\" อยู่ อุปกรณ์นี้เชื่อมต่อไม่ได้แล้ว จึงปล่อยไว้ได้ หากต้องการนำออก ให้แตะแล้วลบ",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบยังแสดง \"{name}\" อยู่ด้วย แตะเพื่อลบได้",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "วิธีการ",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "แชร์",
   "shareFailed": "แชร์ไม่ได้",
   "dialogSaveAsTitle": "บันทึกเป็น",

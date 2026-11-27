@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (פעיל)",
   "emptyNoSyncTitle": "עדיין לא סונכרנו נתונים",
   "emptyNoSyncMessage": "הקישו על {icon} למעלה כדי להתחיל",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "אין רשומות בבאנר הזה",
   "emptyNoFilterMatch": "אין רשומות שתואמות לסינון הנוכחי",
   "emptyNoOdesRecords": "עדיין אין רשומות Ode",
@@ -186,12 +193,28 @@
   "progressOpenGameHint": "פתחו את Genshin → Wishes → History",
   "progressFallbackHint": "(תוקף כתובת ה-URL הקודמת של Wish History פג ויש להשיג אותה מחדש)",
   "progressNotDetectedLink": "פתחתם את Wish History ושום דבר לא קורה?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "לא ניתן היה להפעיל את רכיב היירוט (ייתכן שהתעודה נדחתה או שהיציאה בשימוש), ולכן הזיהוי מסתמך רק על מטמון האינטרנט של המשחק. פתחו את דף Wish History במשחק.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "לא ניתן היה להפעיל את רכיב היירוט (ייתכן שהתעודה נדחתה או שהיציאה בשימוש), ותיקיית המשחק לא נמצאה גם היא. הקישו על \"בחירת תיקיית המשחק\" למטה כדי להגדיר אותה ידנית.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "Wish History לא זוהה",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "תיקיית המשחק Genshin Impact לא נמצאה. אחרי שתבחרו את תיקיית המשחק, הכלי יוכל לקבל את כתובת ה-URL של Wish History גם ממטמון האינטרנט של המשחק.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "תיקיית המשחק שבשימוש כרגע: {path}. אם זה לא העותק של המשחק שאתם משחקים בו, בחרו שוב.",
   "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -199,9 +222,21 @@
     }
   },
   "gameDirHelpReopen": "תיקיית המשחק נשמרה. חזרו למשחק ופתחו שוב את Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "Genshin Impact לא נמצא בתיקייה זו. בחרו את התיקייה \"Genshin Impact game\".",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "בחירת תיקיית המשחק",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "בחירה מחדש",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "מאחזר: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -380,8 +415,12 @@
   "settingsDataLanguageUnifyFailed": "ההמרה נכשלה והנתונים לא השתנו. בדקו את החיבור ונסו שוב.",
   "settingsDataManagement": "ניהול נתונים",
   "settingsGameDir": "תיקיית המשחק",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "זוהתה אוטומטית: {path}",
   "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -390,6 +429,7 @@
   },
   "settingsGameDirManual": "הוגדרה ידנית: {path}",
   "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
     "placeholders": {
       "path": {
         "type": "String"
@@ -397,7 +437,13 @@
     }
   },
   "settingsGameDirNone": "תיקיית המשחק לא נמצאה",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "ניקוי",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "סנכרון בענן",
   "cloudSyncIntro": "קשרו את חשבון Google שלכם כדי לגבות אוטומטית את רשומות המשיכה ל-Google Drive ולשמור על סנכרון בין כמה מכשירים.",
   "cloudSyncUnconfigured": "בגרסה זו לא הוגדרו פרטי OAuth של Google, ולכן סנכרון בענן אינו זמין.",
@@ -609,9 +655,39 @@
   "pagerLast": "אחרון",
   "pagerJumpTitle": "מעבר לדף",
   "pagerJumpLabel": "דף ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "דף נוכחי: {page} · {total, plural, one{רשומה אחת} two{שתי רשומות} other{{total} רשומות}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "מעבר",
   "pagerJumpInvalid": "הזינו דף בין {min} ל-{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "מחיקת נתוני החשבון הנוכחי",
   "settingsClearAll": "מחיקת כל הנתונים",
   "settingsRefetchHoyoWikiImagesTitle": "אחזור מאולץ של תמונות פריטים",
@@ -1174,32 +1250,113 @@
   "luckTierAverage": "ממוצע",
   "luckTierUnlucky": "חסר מזל",
   "manualUrlEntry": "הזנה ידנית של כתובת URL של Wish History",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "הזנה ידנית של כתובת URL של Wish History",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "אם השגתם את כתובת ה-URL של Wish History בדרך אחרת (למשל באמצעות כלי במחשב), אפשר להדביק אותה כאן. אפשר גם להדביק את הטקסט כולו; האפליקציה מוצאת את הכתובת אוטומטית.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "הדביקו כתובת URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "הדבקה מהלוח",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "לא נמצאה כתובת URL של Wish History. בדקו את מה שהדבקתם.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "הכתובת מכילה את פרטי ההתחברות של החשבון שלכם. אל תשתפו אותה בפומבי. תוקפה פג אחרי זמן מה.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "אישור",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "ממתין שתפתחו את דף Wish History במשחק...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "פתחו את Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "מתכונן לקריאת יומן המשחק...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "לא ניתן לקבל אוטומטית את כתובת ה-URL של Wish History",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "קריאת יומן המשחק עדיין לא הוגדרה. אחרי הגדרה חד־פעמית, כל עדכון יקרא אותו אוטומטית.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "ניפוי באגים אלחוטי פועל רק ב-Wi‑Fi. התחברו ל-Wi‑Fi וחזרו; האפליקציה תמשיך אוטומטית. אפשר גם להזין את כתובת ה-URL ידנית.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "נמצאה גישת Root, אבל האפליקציה לא קיבלה הרשאת Root. כדי לקרוא עם Root, אשרו את האפליקציה במנהל ה-Root (למשל ברשימת Superuser של Magisk) וחזרו; האפליקציה תנסה שוב אוטומטית.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "לא ניתן להתחבר לניפוי באגים אלחוטי. ייתכן שתוקף ההתאמה פג; בצעו התאמה מחדש.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "המכשיר שלכם לא מאפשר לאפליקציה להפעיל ניפוי באגים אלחוטי. הפעילו אותו בדף ניפוי באגים אלחוטי וחזרו; האפליקציה תמשיך אוטומטית.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "רשת ה-Wi‑Fi הזו עדיין לא אושרה לניפוי באגים אלחוטי. הקישו על \"אישור\" בהודעת המערכת (סמנו \"אפשר תמיד ברשת זו\" כדי שלא תישאלו שוב) והאפליקציה תמשיך אוטומטית. אם סגרתם את ההודעה, הקישו על \"ניסיון חוזר\".",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "המכשיר הזה לא יכול לקרוא אוטומטית את כתובת ה-URL של Wish History (נדרש Android 11 ומעלה, או Root). הזינו אותה ידנית.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "Genshin Impact לא מותקן במכשיר הזה. אחרי ההתקנה חזרו לכאן והמשחק יזוהה אוטומטית.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "פתיחת Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "פתיחת ניפוי באגים אלחוטי",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "החיבור לניפוי באגים אלחוטי אבד, מתחבר מחדש... אם הוא לא יתחדש, בדקו את ה-Wi‑Fi או הזינו את כתובת ה-URL ידנית.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "ניפוי באגים אלחוטי עדיין פועל. אפשר לכבות אותו בהגדרות המערכת.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "כתובת ה-URL של Wish History התקבלה. אחזור Wish History יתחיל כשתחזרו לאפליקציה.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "בדיקה חוזרת",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "פתיחת Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "הגדרה",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1353,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "גישה ליומן המשחק",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "ניפוי באגים אלחוטי",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "לא הוגדר",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "התאמה",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "מותאם",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "מותאם (הפעלה ידנית של ניפוי באגים אלחוטי)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "ניסיון חוזר לקבלת הרשאה",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "הגדרה",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "הסרת ההתאמה",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "להסיר את ההתאמה?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "פעולה זו תמחק את מפתח ההתאמה של האפליקציה ותסיר את הרשאת האפליקציה להפעיל ולכבות ניפוי באגים אלחוטי. כדי להשתמש בניפוי באגים אלחוטי בהמשך, תצטרכו לבצע התאמה מחדש.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "ההתאמה הוסרה",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "מפתח ההתאמה של האפליקציה נמחק וההרשאה שלה להפעיל ולכבות ניפוי באגים אלחוטי הוסרה.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "מפתח ההתאמה נמחק",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "מפתח ההתאמה של האפליקציה נמחק, אבל הפעם לא ניתן היה להתחבר לניפוי באגים אלחוטי, ולכן ההרשאה להפעיל ולכבות אותו לא הוסרה.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "האפליקציה לא משתמשת בהרשאה הזו כשאין התאמה. כדי להסיר אותה לגמרי, יש להתחבר ל‑Wi‑Fi, לבצע התאמה מחדש ואז לבטל אותה שוב.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "ברשימת המערכת ניפוי באגים אלחוטי ← מכשירים מותאמים עדיין יופיע \"{name}\". הוא כבר לא יכול להתחבר, כך שאפשר להשאיר אותו; כדי להסיר אותו, יש להקיש עליו ולמחוק.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "ברשימת המערכת ניפוי באגים אלחוטי ← מכשירים מותאמים מופיע גם \"{name}\"; אפשר להקיש עליו כדי למחוק.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "שיטה",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "שיתוף",
   "shareFailed": "השיתוף נכשל",
   "dialogSaveAsTitle": "שמירה בשם",

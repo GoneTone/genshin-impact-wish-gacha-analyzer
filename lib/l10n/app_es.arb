@@ -107,6 +107,13 @@
   "uidActiveSuffix": " (Activo)",
   "emptyNoSyncTitle": "Aún no se ha sincronizado ningún dato",
   "emptyNoSyncMessage": "Toca {icon} en la esquina superior derecha para comenzar",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
   "emptyNoRecords": "No hay registros para este banner",
   "emptyNoFilterMatch": "No hay registros que coincidan con los filtros",
   "emptyNoOdesRecords": "Aún no hay registros de Oda",
@@ -186,16 +193,50 @@
   "progressOpenGameHint": "Abre Genshin Impact → Deseos → Historial",
   "progressFallbackHint": "(La URL anterior del historial de Gachapón ha caducado, es necesario obtenerla de nuevo)",
   "progressNotDetectedLink": "¿Has abierto el Historial de Deseos pero no pasa nada?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
   "progressCaptureUnavailableHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado), así que solo se detecta desde la caché web del juego. Abre la página del Historial de Deseos en el juego.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
   "progressCaptureUnavailableNoGameDirHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado) y tampoco se encontró la carpeta del juego. Pulsa «Elegir carpeta del juego» abajo para indicarla manualmente.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
   "gameDirHelpTitle": "No se detecta el Historial de Deseos",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
   "gameDirHelpNotFound": "No se encontró la carpeta de Genshin Impact. Una vez elegida la carpeta del juego, esta herramienta también podrá obtener la URL del Historial de Deseos desde la caché web del juego.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
   "gameDirHelpFound": "Carpeta del juego en uso: {path}. Si no es la copia del juego que estás usando, elige otra.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "gameDirHelpReopen": "Carpeta del juego configurada. Vuelve al juego y abre de nuevo el Historial de Deseos.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
   "gameDirInvalid": "No se encontró Genshin Impact en esta carpeta. Elige la carpeta «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
   "actionChooseGameDir": "Elegir carpeta del juego",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
   "actionRechooseGameDir": "Elegir de nuevo",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "Obteniendo: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -374,12 +415,35 @@
   "settingsDataLanguageUnifyFailed": "La conversión falló, los datos no se modificaron. Comprueba tu conexión e inténtalo de nuevo.",
   "settingsDataManagement": "Gestión de datos",
   "settingsGameDir": "Carpeta del juego",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
   "settingsGameDirAuto": "Detectada automáticamente: {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirManual": "Configurada manualmente: {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGameDirNone": "No se encontró la carpeta del juego",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
   "actionClearGameDir": "Borrar",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "Sincronización en la nube",
   "cloudSyncIntro": "Vincula tu cuenta de Google para respaldar automáticamente los registros de deseos en tu Google Drive y mantenerlos sincronizados entre varios dispositivos.",
   "cloudSyncUnconfigured": "Esta compilación no tiene credenciales de Google OAuth configuradas; la sincronización en la nube no está disponible.",
@@ -591,9 +655,39 @@
   "pagerLast": "Última página",
   "pagerJumpTitle": "Ir a la página",
   "pagerJumpLabel": "Página ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpCurrent": "Página actual: {page} · {total, plural, =1{1 registro} other{{total} registros}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "pagerJumpGo": "Ir",
   "pagerJumpInvalid": "Introduce una página de {min} a {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "Borrar datos de la cuenta actual",
   "settingsClearAll": "Borrar todos los datos",
   "settingsRefetchHoyoWikiImagesTitle": "Forzar redescarga de imágenes de objetos",
@@ -1156,32 +1250,113 @@
   "luckTierAverage": "Normal",
   "luckTierUnlucky": "Sin suerte",
   "manualUrlEntry": "Introducir manualmente la URL del historial de Gachapón",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
   "manualUrlTitle": "Introducir manualmente la URL del historial de Gachapón",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
   "manualUrlHint": "Si ya obtuviste la URL del historial de Gachapón de otra forma (por ejemplo, con una herramienta en tu ordenador), pégala aquí. También puedes pegar todo el texto; la app encuentra la URL automáticamente.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
   "manualUrlFieldHint": "Pegar URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
   "manualUrlPaste": "Pegar del portapapeles",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
   "manualUrlNotFound": "No se encontró la URL del historial de Gachapón. Comprueba lo que has pegado.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
   "manualUrlWarning": "La URL contiene las credenciales de tu cuenta. No la compartas públicamente. Caduca al cabo de un tiempo.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
   "manualUrlSubmit": "Aceptar",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
   "progressWaitingLog": "Esperando a que abras la página del Historial de Deseos en el juego...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
   "progressOpenGameHintAndroid": "Abre Genshin Impact → Gachapón → Historial",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
   "progressCheckingLogAccess": "Preparando la lectura del registro del juego...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
   "progressLogUnavailableTitle": "No se puede obtener automáticamente la URL del historial de Gachapón",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
   "logUnavailableNotPaired": "La lectura del registro del juego aún no está configurada. Tras configurarla una sola vez, cada actualización lo leerá automáticamente.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
   "logUnavailableNoWifi": "La depuración inalámbrica solo funciona con Wi‑Fi. Conéctate a una red Wi‑Fi y vuelve; la app continuará automáticamente. También puedes introducir la URL manualmente.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
   "logRootDeniedHint": "Se detectó root, pero esta app no tiene acceso root. Para leer con root, permite esta app en tu gestor de root (por ejemplo, la lista de Superusuario de Magisk) y vuelve; la app lo reintentará automáticamente.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
   "logUnavailableAdbFailed": "No se pudo conectar con la depuración inalámbrica. Puede que la vinculación haya caducado; vuelve a vincular.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
   "logUnavailableWirelessOff": "Tu dispositivo no permite que esta app active la depuración inalámbrica. Actívala en la página Depuración inalámbrica y vuelve; la app continuará automáticamente.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
   "logUnavailableNetworkNotAllowed": "Esta red Wi‑Fi aún no está permitida para la depuración inalámbrica. Toca Permitir en el aviso del sistema (marca \"Permitir siempre en esta red\" para que no vuelva a preguntar) y la app continuará automáticamente. Si cerraste el aviso, toca Reintentar.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
   "logUnavailableUnsupported": "Este dispositivo no puede leer automáticamente la URL del historial de Gachapón (requiere Android 11 o posterior, o root). Introdúcela manualmente.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
   "logUnavailableGameNotInstalled": "No se encontró Genshin Impact en este dispositivo. Después de instalarlo, vuelve aquí y se detectará automáticamente.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
   "actionOpenGame": "Abrir Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
   "actionOpenWirelessDebugging": "Abrir Depuración inalámbrica",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
   "progressLogConnectionLost": "Se perdió la conexión de depuración inalámbrica; reconectando... Si no se recupera, comprueba tu Wi‑Fi o introduce la URL manualmente.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
   "progressWirelessLeftOnHint": "La depuración inalámbrica sigue activada. Puedes desactivarla en los ajustes del sistema.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
   "progressCredentialReady": "URL del historial de Gachapón obtenida. La descarga del historial de Gachapón empezará cuando vuelvas a esta app.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
   "actionRedetectGame": "Volver a comprobar",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
   "updateOpenPlayStore": "Abrir Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
   "actionSetupLogAccess": "Configurar",
   "@actionSetupLogAccess": {
     "description": "Waiting screen button that opens the log access setup page"
@@ -1335,25 +1510,95 @@
     "description": "Shown just before returning and starting the update"
   },
   "settingsLogAccess": "Acceso al registro del juego",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
   "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
   "logAccessMethodWireless": "Depuración inalámbrica",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
   "logAccessMethodNone": "Sin configurar",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
   "settingsPairingStatus": "Vinculación",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
   "settingsPaired": "Vinculado",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
   "settingsPairedManual": "Vinculado (activa la depuración inalámbrica manualmente)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
   "settingsRetryGrant": "Reintentar permiso",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
   "settingsSetupLogAccess": "Configurar",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
   "settingsUnpair": "Quitar vinculación",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
   "settingsUnpairConfirmTitle": "¿Quitar vinculación?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
   "settingsUnpairConfirmBody": "Se eliminará la clave de vinculación de esta app y se retirará el permiso de esta app para activar y desactivar la depuración inalámbrica. Tendrás que volver a vincular para usarla más adelante.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
   "settingsUnpairDone": "Vinculación quitada",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
   "settingsUnpairDoneBody": "Se eliminó la clave de vinculación de esta app y se retiró su permiso para activar y desactivar la depuración inalámbrica.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
   "settingsUnpairUnreachableTitle": "Clave de vinculación eliminada",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
   "settingsUnpairUnreachableBody": "Se eliminó la clave de vinculación de esta app, pero esta vez no se pudo conectar con la depuración inalámbrica, así que no se retiró el permiso para activarla y desactivarla.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
   "settingsUnpairUnreachableRevokeHint": "Esta app no usa ese permiso mientras no está vinculada. Para retirarlo por completo, conéctate a una red Wi‑Fi, vuelve a vincular y luego desvincula otra vez.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
   "settingsUnpairLeftover": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema seguirá mostrando «{name}». Ya no puede conectarse, así que puedes dejarlo; para quitarlo, tócalo y elimínalo.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsUnpairLeftoverAlso": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema también sigue mostrando «{name}»; tócalo para eliminarlo.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsLogAccessMethod": "Método",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
   "actionShare": "Compartir",
   "shareFailed": "No se pudo compartir",
   "dialogSaveAsTitle": "Guardar como",
