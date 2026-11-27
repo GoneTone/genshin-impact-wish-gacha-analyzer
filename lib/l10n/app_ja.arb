@@ -33,6 +33,7 @@
   "navSettings": "設定",
   "navContributors": "貢献者",
   "gachaTypeCharacter": "イベント祈願・キャラクター",
+  "gachaTypeCharacter2": "イベント祈願・キャラクター 2",
   "gachaTypeWeapon": "イベント祈願・武器",
   "gachaTypeChronicled": "集録祈願",
   "gachaTypeStandard": "通常祈願",
@@ -105,6 +106,16 @@
   "uidNotSynced": "未同期",
   "uidActiveSuffix": "（使用中）",
   "emptyNoSyncTitle": "まだデータが同期されていません",
+  "emptyNoSyncMessage": "右上の {icon} から開始してください",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "この祈願に記録がありません",
+  "emptyNoFilterMatch": "条件に一致する記録がありません",
   "emptyNoOdesRecords": "星願の記録がまだありません",
   "emptyNoGachaRecords": "祈願の記録がまだありません",
   "statsTotal": "累計回数",
@@ -144,6 +155,23 @@
   },
   "tableTotalIndex": "累計回数",
   "tableMainPity": "天井カウント",
+  "tableSortButton": "並べ替え：{column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "並べ替え：既定",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "並べ替え",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "前回の {star} からの回数",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -162,6 +190,53 @@
   "progressFetching": "取得中…",
   "progressDone": "更新完了",
   "progressFailed": "失敗",
+  "progressOpenGameHint": "原神 → 祈願 → 履歴 を開いてください",
+  "progressFallbackHint": "（以前の祈願履歴の URL が失効したため、再取得が必要です）",
+  "progressNotDetectedLink": "祈願履歴を開いたのに、まったく反応しませんか？",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "傍受プログラムを起動できませんでした（証明書が拒否されたか、ポートが使用中の可能性があります）。ゲームのウェブキャッシュからのみ検出します。ゲームで祈願履歴のページを開いてください。",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "傍受プログラムを起動できず（証明書が拒否されたか、ポートが使用中の可能性があります）、ゲームフォルダも見つかりませんでした。下の「ゲームフォルダを選択」を押して手動で指定してください。",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "祈願履歴を検出できません",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "原神のゲームフォルダが見つかりません。ゲームフォルダを選択すると、本ツールはゲームのウェブキャッシュからも祈願履歴の URL を取得できるようになります。",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "現在使用しているゲームフォルダ：{path}。プレイ中のゲームと異なる場合は、選び直してください。",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "ゲームフォルダを設定しました。ゲームに戻って、もう一度祈願履歴を開いてください。",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "このフォルダに原神が見つかりません。「Genshin Impact game」フォルダを選択してください。",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "ゲームフォルダを選択",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "選び直す",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
   "progressFetchingBanner": "取得中：{name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -176,6 +251,14 @@
       "page": {
         "type": "int"
       },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count} 件の記録を追加しました",
+  "@progressDoneSummary": {
+    "placeholders": {
       "count": {
         "type": "int"
       }
@@ -292,9 +375,11 @@
       }
     }
   },
+  "errorNoRecords": "このアカウントには祈願の記録がまだありません",
   "pageOverviewTitle": "総合データ（全祈願合計）",
   "pageOverviewGachaSection": "祈願総合",
   "pageOverviewOdesSection": "星願総合",
+  "pageBannerRecordList": "記録一覧",
   "rarityOverviewTitle": "{star} 一覧",
   "@rarityOverviewTitle": {
     "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
@@ -329,10 +414,42 @@
   },
   "settingsDataLanguageUnifyFailed": "変換に失敗しました。データは変更されていません。ネットワークを確認してから再試行してください。",
   "settingsDataManagement": "データ管理",
+  "settingsGameDir": "ゲームフォルダ",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "自動検出：{path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "手動設定：{path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "ゲームフォルダが見つかりません",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "クリア",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
   "settingsCloudSync": "クラウド同期",
+  "cloudSyncIntro": "Google アカウントを連携すると、祈願履歴が自動的に Google ドライブへバックアップされ、複数のデバイス間で同期されます。",
   "cloudSyncUnconfigured": "このビルドには Google OAuth 認証情報が設定されていないため、クラウド同期は利用できません。",
   "cloudSyncLink": "Google アカウントを連携",
   "cloudSyncAwaitingConsent": "ブラウザを開きました。ブラウザで認可を完了してください...",
+  "cloudSyncAwaitingConsentAndroid": "Google の画面で認可を完了してください...",
   "cloudSyncLinkedAs": "連携中：{email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -371,6 +488,14 @@
   "settingsPrivacySectionTitle": "プライバシー",
   "settingsMaskUidInUi": "画面上の UID をマスク",
   "settingsMaskUidInUiHint": "オンにすると、画面とアカウント一覧の UID が先頭 3 桁と残りを • でマスクして表示されます（例：123•••••）。配信や画面共有時に便利です。共有画像、エクスポートファイル、削除確認ダイアログは影響を受けません。",
+  "settingsAdPrivacyOptions": "広告のプライバシーオプション",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "パーソナライズ広告の表示に同意するかどうかを変更します。",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "このツールについて",
   "settingsAboutVersion": "バージョン {version}",
   "@settingsAboutVersion": {
@@ -392,6 +517,7 @@
   "contributorsTranslatedLanguages": "翻訳済み言語",
   "contributorsHelpTranslate": "あなたの言語がありませんか？翻訳にご協力ください！",
   "contributorsProjectLicense": "プロジェクトライセンス",
+  "contributorsOpenSourceLicenses": "オープンソースライセンス",
   "pityRank": "{star} 天井",
   "@pityRank": {
     "placeholders": {
@@ -441,6 +567,14 @@
   "@pityAverageInterval": {
     "placeholders": {
       "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "{star} の記録はまだありません",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
         "type": "String"
       }
     }
@@ -519,11 +653,50 @@
   "filterClear": "フィルターをクリア",
   "pagerFirst": "最初のページ",
   "pagerLast": "最後のページ",
+  "pagerJumpTitle": "ページへ移動",
+  "pagerJumpLabel": "ページ番号（{min}–{max}）",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "現在 {page} ページ目（全 {total} 件）",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "移動",
+  "pagerJumpInvalid": "{min}–{max} のページ番号を入力してください",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "settingsClearActive": "現在のアカウントのデータを削除",
   "settingsClearAll": "すべてのデータを削除",
   "settingsRefetchHoyoWikiImagesTitle": "アイテム画像を強制再取得",
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "祈願記録がありません、再取得対象がありません",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
   "confirmRefetchHoyoWikiTitle": "アイテム画像を強制再取得",
   "@confirmRefetchHoyoWikiTitle": {
@@ -664,6 +837,17 @@
     }
   },
   "settingsImportConfirmTitle": "インポートの確認",
+  "settingsImportConfirmIntro": "{accounts} 個のアカウント（計 {records} 件の記録）をインポートします：",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
   "settingsImportConfirmMergeHeader": "以下のアカウントはローカルデータと統合されます。既存の記録は削除されません：",
   "settingsImportConfirmNoConflict": "データの競合はありません。",
   "settingsImportConfirmPreserveFooter": "その他の既存アカウント（{uids}）は保持されます。",
@@ -671,6 +855,17 @@
     "placeholders": {
       "uids": {
         "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts} 個のアカウント（{records} 件の記録）を正常にインポートしました",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
       }
     }
   },
@@ -701,11 +896,117 @@
   "importReasonUnreadable": "ファイルを読み込めません",
   "exportReasonWriteFailed": "ファイルを書き込めません。保存先と権限を確認してください",
   "importReasonForeignApp": "このファイルは本ツールでエクスポートされたバックアップではありません",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "他のプラットフォームからインポート",
+  "platformPickerTitle": "インポート元のプラットフォームを選択",
+  "importReasonNotPlatformFile": "このファイルは有効な {platform} のエクスポートではありません",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export などのツール・JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe・Excel",
+  "importTargetAccountTitle": "どのアカウントにインポートしますか？",
+  "importTargetAccountBody": "paimon.moe のエクスポートファイルには UID が含まれていません。これらの記録が属するアカウントを選択してください。",
+  "importTargetAccountOtherUid": "その他の UID",
+  "importTargetAccountUidHint": "UID を入力",
+  "importTargetAccountRecordCount": "ローカルに {count} 件の記録",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "このファイルの UIGF バージョン（{version}）は新しいため、まだ対応していません。本ツールを更新するか、エクスポート元のツールで v4 形式を選んでエクスポートしてください",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "ファイルに未対応の祈願の種類（{types}）が含まれています",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "アイテムデータ（{item}）を補完できませんでした。ネットワーク接続を確認してから再試行してください",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}：{from}～{to} の期間は両方に記録がありますが、{groups} 回の祈願のうち、ローカルの公式記録と一致するものが 1 つもありません。アカウントの選択を間違えたか、ファイルのタイムゾーンが異なる可能性があります。",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}：{from}～{to} の期間は両方に記録がありますが、{groups} 回の祈願のうち、ローカルの公式記録と一致するのは {matched} 回だけです。アカウントの選択を間違えたか、ファイルのタイムゾーンが異なる可能性があります。",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "それでもインポート",
+  "importResolvingItems": "アイテムデータを補完中...",
   "settingsExportSelectTitle": "エクスポートするアカウントを選択",
   "settingsImportSelectTitle": "インポートするアカウントを選択",
   "settingsImportMergeBadge": "統合",
   "accountsPickerSelectAll": "すべて選択",
+  "accountRecordCount": "{n} 件の記録",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "confirmTitle": "操作の確認",
+  "confirmClearActiveBody": "UID {uid} のすべての祈願記録を完全に削除します。確認のため UID を入力してください：",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "すべてのアカウントの祈願記録を完全に削除します。確認のため DELETE と入力してください：",
   "confirmDelete": "削除",
   "confirmImport": "インポート",
   "confirmExport": "エクスポート",
@@ -725,6 +1026,9 @@
   "accountAdd": "アカウントを追加",
   "accountAliasLabel": "別名",
   "accountAliasHint": "このアカウントに覚えやすい名前を付けてください",
+  "accountAliasNone": "別名未設定",
+  "accountActionEditAlias": "別名を編集",
+  "accountEditAliasTitle": "別名を編集",
   "accountDragHandleTooltip": "ドラッグで並べ替え",
   "loadingBootstrap": "読み込み中…",
   "timelineTopRarityTitle": "{star} タイムライン（{n}）",
@@ -767,6 +1071,15 @@
     }
   },
   "updateButtonDownload": "ダウンロードへ",
+  "updateButtonUpdate": "アップデート",
+  "updateNotesUnavailable": "現在アップデート内容を取得できません。詳しくは Google Play をご覧ください。",
+  "updateDownloadingMessage": "アップデートをダウンロードしています...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "アップデートのダウンロードが完了しました",
+  "updateRestartAction": "再起動",
+  "updateInAppUnavailable": "現在アプリ内でアップデートできません。Google Play からアップデートしてください。",
   "updateButtonSkip": "このバージョンをスキップ",
   "updateButtonLater": "後で",
   "updateCheckButton": "更新を確認",
@@ -792,6 +1105,7 @@
     }
   },
   "updateErrorFormat": "応答フォーマットが異常です",
+  "updateErrorPlay": "Google Play に接続できないか、このアプリは Google Play からインストールされていません",
   "currentReleaseTitle": "現在のバージョンの更新内容",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -871,6 +1185,10 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
+  "detailScrollDown": "下へスクロール",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
   "actionViewOnHoYoWiki": "HoYoWiki で開く",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -930,5 +1248,362 @@
   },
   "luckTierLucky": "強運",
   "luckTierAverage": "普通",
-  "luckTierUnlucky": "不運"
+  "luckTierUnlucky": "不運",
+  "manualUrlEntry": "祈願履歴の URL を手動で入力",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "祈願履歴の URL を手動で入力",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "他の方法（パソコン上のツールなど）で祈願履歴の URL を取得済みの場合は、ここに貼り付けてください。テキスト全体でも、アプリが URL を自動で見つけます。",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "URL を貼り付け...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "クリップボードから貼り付け",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "祈願履歴の URL が見つかりません。貼り付けた内容を確認してください。",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "URL にはアカウントの認証情報が含まれます。公開しないでください。URL はしばらくすると無効になります。",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "ゲームで祈願履歴ページが開かれるのを待っています...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "原神 → 祈願 → 履歴 を開いてください",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "ゲームのログを読み取る準備をしています...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "祈願履歴の URL を自動で取得できません",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "ゲームのログの読み取り方法がまだ設定されていません。一度設定すれば、以降の更新では自動で読み取ります。",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "ワイヤレスデバッグは Wi‑Fi 接続時のみ使えます。Wi‑Fi に接続してアプリに戻ると、自動で続行します。URL を手動で入力することもできます。",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "root を検出しましたが、このアプリには root 権限が許可されていません。root で読み取るには、root 管理アプリ（Magisk の「スーパーユーザー」など）でこのアプリを許可してから戻ってください。自動で再試行します。",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "ワイヤレスデバッグに接続できません。ペア設定が無効になった可能性があります。もう一度ペア設定してください。",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "このデバイスでは、アプリがワイヤレスデバッグを自動でオンにできません。ワイヤレスデバッグの画面でオンにしてからアプリに戻ると、自動で続行します。",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "この Wi‑Fi ではまだワイヤレスデバッグが許可されていません。システムの確認画面で「許可」をタップすると自動で続行します（「このネットワークで常に許可する」にチェックすると次回から確認されません）。確認画面を閉じた場合は「再試行」をタップしてください。",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "このデバイスでは祈願履歴の URL を自動で読み取れません（Android 11 以降、または root が必要です）。手動で入力してください。",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "このデバイスに原神が見つかりません。インストール後にここへ戻ると自動で再検出します。",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "原神を開く",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "ワイヤレスデバッグを開く",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "ワイヤレスデバッグとの接続が切れました。再接続しています...復旧しない場合は Wi‑Fi の接続を確認するか、URL を手動で入力してください。",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "ワイヤレスデバッグはオンのままです。システム設定でオフにできます。",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "祈願履歴の URL を取得しました。アプリに戻ると祈願履歴の取得を開始します。",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "再検出",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Google Play を開く",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "読み取り方法を設定",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "もう一度ペア設定",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "システムログの読み取り",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "この設定が必要な理由",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android では、アプリが他のアプリのシステムログを直接読むことはできません。このアプリはシステム標準の「ワイヤレスデバッグ」を使って、原神の祈願履歴の URL を読み取ります。",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "このアプリが行うこと",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "・原神の祈願履歴の URL だけを読み取ります\n・読み取り後すぐに切断します（ワイヤレスデバッグをこのアプリがオンにした場合はオフに戻します）\n・ワイヤレスデバッグのオン／オフを自分で行う権限を付与し、次回からは設定不要です\n・設定画面からいつでも解除できます",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "利用条件",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 以上、Wi‑Fi 接続、通知の許可",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "設定を開始",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "URL を手動で入力する",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "ワイヤレスデバッグのペア設定",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. 開発者向けオプションをオンにする",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. システムの「設定」で「デバイス情報」などのページを開く\n2. 「ビルド番号」を 7 回タップ\n3. 「これでデベロッパーになりました」と表示されたらアプリに戻る",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "開発者向けオプションはまだオフです。「ビルド番号」をタップしたときに、これ以上の操作は不要と表示された場合（例：「すでにデベロッパーです」）、開発者向けオプションのメインスイッチがオフになっています。「開発者向けオプション」を開いて一番上のスイッチをオンにしてから、このアプリに戻ってください。",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "「デバイス情報」を開く",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. 開発者向けオプションはオンです",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. 通知を許可",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "ペア設定コードは通知から入力するため、このアプリの通知を許可してください。",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "通知を許可",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "通知設定を開く",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. 通知は許可されています",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. ペア設定",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. 下のボタンで「ワイヤレスデバッグ」を開く\n2. 「ワイヤレスデバッグを使用」をオンにして「ペア設定コードによるデバイスのペア設定」をタップ\n3. 画面上部から下にスワイプし、このアプリの通知に、「ワイヤレスデバッグ」のペア設定画面に表示された 6 桁のペア設定コードを入力",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "通知からペア設定コードを入力してください...\nワイヤレスデバッグのペア設定画面を開いたまま入力してください。",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "もう一度ワイヤレスデバッグを開く",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "ペア設定中...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "ペア設定は成功、あと 1 ステップ",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "このデバイスには追加のセキュリティ制限があります。アプリがワイヤレスデバッグを自動でオン／オフできるよう、もう 1 つオプションをオンにしてください。",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "オンにする方法",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. 「開発者向けオプション」を開く\n2. USB デバッグのセキュリティや権限の監視に関するスイッチをオンにする。例：\n・Xiaomi：「USB デバッグ（セキュリティ設定）」\n・OPPO／realme：「権限の監視を無効にする」\n3. ワイヤレスデバッグがオンであることを確認し、アプリに戻って「再試行」をタップ",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "開発者向けオプションを開く",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "再試行",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "スキップ（更新のたびに手動でワイヤレスデバッグをオン）",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "設定完了",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "今後は「データ更新」を押すだけで自動的に読み取ります。再設定は不要です。",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "「データ更新」を押したら、案内に従ってワイヤレスデバッグをオンにしてください。",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "戻って更新を開始します...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "ゲームログの読み取り",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "ワイヤレスデバッグ",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "未設定",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "ペア設定",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "ペア設定済み",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "ペア設定済み（ワイヤレスデバッグは手動でオン）",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "権限を再試行",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "設定",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "ペア設定を解除",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "ペア設定を解除しますか？",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "このアプリのペア設定キーを削除し、アプリのワイヤレスデバッグ切り替え権限を取り消します。再び使うにはもう一度ペア設定が必要です。",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "ペア設定を解除しました",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "このアプリのペア設定キーを削除し、ワイヤレスデバッグの切り替え権限を取り消しました。",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "ペア設定キーを削除しました",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "このアプリのペア設定キーを削除しましたが、今回はワイヤレスデバッグに接続できず、ワイヤレスデバッグの切り替え権限は取り消せませんでした。",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "ペア設定していない間、このアプリはこの権限を使いません。完全に取り消すには、Wi‑Fi に接続してもう一度ペア設定し、再度解除してください。",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "システムの「ワイヤレスデバッグ → ペア設定済みのデバイス」には「{name}」が残ります。このペア設定はもう接続できないため、そのままでも問題ありません。削除する場合はタップして削除してください。",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "システムの「ワイヤレスデバッグ → ペア設定済みのデバイス」にも「{name}」が残っています。タップすると削除できます。",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "読み取り方法",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "共有",
+  "shareFailed": "共有できませんでした",
+  "dialogSaveAsTitle": "名前を付けて保存",
+  "dialogOpenTitle": "開く",
+  "dialogSelectFolderTitle": "フォルダーの選択",
+  "actionSave": "保存",
+  "settingsLogsShare": "ログを共有"
 }
