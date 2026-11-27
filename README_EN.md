@@ -59,7 +59,7 @@ The utility may trigger anti-virus software during installation and execution. T
 - Runs on Windows and Android
 - Gets the Wish History URL automatically — no need to paste URLs by hand: on Windows it intercepts the in-game WebView's request to the miHoYo wish history API via a local proxy and a self-signed root certificate; on Android it reads the system log (via root or Wireless debugging)
 - Supports the Global server (CN server not supported yet)
-- Covers all 7 gacha types: Character Event Wish, Weapon Event Wish, Chronicled Wish, Permanent Wish, Novice Wishes, Event Ode, Standard Ode
+- Covers all gacha types: Character Event Wish, Weapon Event Wish, Chronicled Wish, Permanent Wish, Novice Wishes, Event Ode, Standard Ode
 - Multi-account (UID) management: custom aliases, drag-to-reorder, one-click switching
 - Incremental updates merge new records without overwriting old ones, so entries that fall off the official history won't disappear
 - Total pulls and 5★ / 4★ / 3★ / 2★ counts with their share of the total
