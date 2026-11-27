@@ -1,5 +1,1174 @@
 {
   "@@locale": "no",
+  "localeNativeName": "Norsk (bokmål)",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Oversatt av: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Oppdater",
+  "actionCancel": "Avbryt",
+  "actionClose": "Lukk",
+  "actionPrevPage": "Forrige",
+  "actionNextPage": "Neste",
+  "actionOpenFolder": "Åpne mappe",
+  "navOverview": "Oversikt",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Innstillinger",
+  "navContributors": "Bidragsytere",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Ikke synkronisert",
+  "footerLastUpdated": "Sist oppdatert: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Akkurat nå",
+  "relativeSecondsAgo": "{count, plural, =1{For 1 sekund siden} other{For {count} sekunder siden}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{For 1 minutt siden} other{For {count} minutter siden}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{For 1 time siden} other{For {count} timer siden}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{For 1 dag siden} other{For {count} dager siden}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{For 1 måned siden} other{For {count} måneder siden}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "For {count} år siden",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Bytt konto",
+  "uidNotSynced": "Ikke synkronisert",
+  "uidActiveSuffix": " (aktiv)",
+  "emptyNoSyncTitle": "Ingen data synkronisert ennå",
+  "emptyNoSyncMessage": "Trykk på {icon} øverst til høyre for å starte",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "Ingen historikk for dette banneret",
+  "emptyNoFilterMatch": "Ingen oppføringer samsvarer med filteret",
+  "emptyNoOdesRecords": "Ingen Ode-historikk ennå",
+  "emptyNoGachaRecords": "Ingen Wish-historikk ennå",
+  "statsTotal": "Totalt antall trekk",
+  "statsRankCount": "Antall {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate} % av totalen",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Fordeling etter sjeldenhet",
+  "statsItemTypeDistribution": "Fordeling etter type",
+  "statsNoData": "Ingen data",
+  "kindUnknown": "Ukjent",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Tid",
+  "tableName": "Navn",
+  "tableKind": "Type",
+  "tableRarity": "Sjeldenhet",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Totalt",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Sortering: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sortering: standard",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sorter etter",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Trekk siden forrige {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Synkende",
+  "sortDirectionAsc": "Stigende",
+  "sortHintClickToSort": "Klikk for å sortere",
+  "progressPreparing": "Forbereder...",
+  "progressPreparingHint": "Forbereder datakilden...",
+  "progressConvertingHint": "Konverterer dataspråk, vent litt...",
+  "progressWaiting": "Venter på registrering...",
+  "progressFetching": "Henter...",
+  "progressDone": "Oppdatering fullført",
+  "progressFailed": "Mislyktes",
+  "progressOpenGameHint": "Åpne Genshin → Wishes → History",
+  "progressFallbackHint": "(Den forrige URL-en til Wish History er utløpt og må hentes på nytt)",
+  "progressNotDetectedLink": "Har du åpnet Wish History, men ingenting skjer?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Kunne ikke starte avlytteren (sertifikatet kan ha blitt avvist, eller porten er i bruk), så det letes nå bare i spillets nettbuffer. Åpne siden Wish History i spillet.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Kunne ikke starte avlytteren (sertifikatet kan ha blitt avvist, eller porten er i bruk), og spillmappen ble heller ikke funnet. Trykk på «Velg spillmappe» nedenfor for å angi den manuelt.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Fant ikke Wish History",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Fant ikke spillmappen til Genshin Impact. Når du velger spillmappen, kan verktøyet også hente URL-en til Wish History fra spillets nettbuffer.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Spillmappe i bruk: {path}. Hvis dette ikke er kopien av spillet du spiller, velger du på nytt.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Spillmappen er angitt. Gå tilbake til spillet og åpne Wish History én gang til.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "Fant ikke Genshin Impact i denne mappen. Velg mappen «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Velg spillmappe",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Velg på nytt",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
+  "progressFetchingBanner": "Henter: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Side {page}, {count, plural, =1{1 ny oppføring} other{{count} nye oppføringer}} så langt",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{La til 1 ny oppføring} other{La til {count} nye oppføringer}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, =1{Lastet ned {count} bilde av gjenstand} other{Lastet ned {count} bilder av gjenstander}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, =1{Oppdaterte data for {count} gjenstand} other{Oppdaterte data for {count} gjenstander}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{Lastet ned 1 manglende bilde av gjenstand} other{Lastet ned {count} manglende bilder av gjenstander}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Ryddet opp i data på utdatert språk for {count} gjenstand} other{Ryddet opp i data på utdatert språk for {count} gjenstander}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Delvis mislykket: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{Importerte 1 konto} other{Importerte {accounts} kontoer}}: {added, plural, =1{1 ny} other{{added} nye}}, {duplicate} fantes fra før",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Importen mislyktes delvis: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Søker etter gjenstandsdata {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Henter gjenstandsdetaljer {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Laster ned bilder av gjenstander {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Autentiseringen utløper stadig; logg inn i spillet på nytt",
+  "errorRateLimited": "For mange forespørsler; prøv igjen senere",
+  "errorServer": "Serverfeil: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Denne kontoen har ingen Wish-historikk ennå",
+  "pageOverviewTitle": "Oversikt (alle bannere)",
+  "pageOverviewGachaSection": "Wish-oversikt",
+  "pageOverviewOdesSection": "Ode-oversikt",
+  "pageBannerRecordList": "Historikk",
+  "rarityOverviewTitle": "Oversikt over {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Innstillinger",
+  "settingsAppearance": "Utseende",
+  "settingsThemeSystem": "Følg systemet",
+  "settingsThemeDark": "Mørkt",
+  "settingsThemeLight": "Lyst",
+  "settingsLanguage": "Språk",
+  "settingsLocaleSystem": "Følg systemet",
+  "settingsDataLanguage": "Dataspråk",
+  "settingsDataLanguageDesc": "Samler visningsspråket for gacha-historikken til ett språk, uavhengig av appens grensesnittspråk. Når dette er valgt, konverteres data automatisk til dette språket ved oppdatering eller import. Ode-oppføringer og gjenstander uten tilsvarende data beholder det opprinnelige språket.",
+  "settingsDataLanguageUnset": "Ikke valgt (ingen konvertering)",
+  "settingsDataLanguageUnify": "Konverter dataspråket nå",
+  "settingsDataLanguageUnifying": "Konverterer...",
+  "settingsDataLanguageUnifyDone": "Konverterte {converted}, {unresolved} kunne ikke konverteres.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Konverteringen mislyktes. Dataene er uendret. Sjekk tilkoblingen og prøv igjen.",
+  "settingsDataManagement": "Databehandling",
+  "settingsGameDir": "Spillmappe",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Funnet automatisk: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Angitt manuelt: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Fant ikke spillmappen",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Fjern",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
+  "settingsCloudSync": "Skysynkronisering",
+  "cloudSyncIntro": "Koble til Google-kontoen din for å sikkerhetskopiere gacha-oppføringer automatisk til Google Drive og holde flere enheter synkronisert.",
+  "cloudSyncUnconfigured": "Denne versjonen har ingen Google OAuth-legitimasjon. Skysynkronisering er ikke tilgjengelig.",
+  "cloudSyncLink": "Koble til Google-konto",
+  "cloudSyncAwaitingConsent": "Nettleseren er åpnet. Fullfør autoriseringen i nettleseren...",
+  "cloudSyncAwaitingConsentAndroid": "Fullfør autoriseringen i Google-vinduet...",
+  "cloudSyncLinkedAs": "Tilkoblet: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Automatisk synkronisering",
+  "cloudSyncAutoToggleHint": "Synkroniserer automatisk når appen starter og når data endres. Manuell synkronisering er tilgjengelig også når dette er av.",
+  "cloudSyncNow": "Synkroniser nå",
+  "cloudSyncUnlink": "Koble fra",
+  "cloudSyncUnlinkConfirmTitle": "Koble fra",
+  "cloudSyncUnlinkConfirmBody": "Synkroniseringen stopper. Både lokale data og sikkerhetskopien i skyen beholdes.",
+  "cloudSyncLastSynced": "Sist synkronisert: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Ikke synkronisert ennå",
+  "cloudSyncErrorNetwork": "Synkroniseringen mislyktes på grunn av nettverksproblemer. Prøver igjen automatisk.",
+  "cloudSyncErrorBusy": "Synkroniseringen er utsatt fordi en oppdatering eller import pågår. Prøver igjen automatisk.",
+  "cloudSyncErrorSchemaTooNew": "Synkroniseringen ble hoppet over: dataene i skyen er laget av en nyere versjon av appen. Oppdater appen først.",
+  "cloudSyncErrorAuthFailed": "Autoriseringen mislyktes. Prøv igjen.",
+  "cloudSyncErrorScopeMissing": "Autoriseringen ga ikke tilgang til Google Drive. Koble til på nytt og huk av for Drive-data på Googles samtykkeside.",
+  "cloudSyncReauthRequired": "Autoriseringen er utløpt. Koble til Google-kontoen på nytt.",
+  "cloudSyncRemoveFromCloud": "Fjern også denne kontoen fra synkroniseringsdataene i skyen",
+  "cloudSyncPostAuthTitle": "Autoriseringen er fullført",
+  "cloudSyncPostAuthBody": "Du kan lukke denne fanen og gå tilbake til appen.",
+  "cloudSyncPostAuthScopeMissingTitle": "Mangler tillatelse til Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "Det ble ikke huket av for Google Drive-data. Gå tilbake til appen, koble til på nytt og huk av for denne tillatelsen.",
+  "settingsAccountManagement": "Kontoadministrasjon",
+  "settingsPrivacySectionTitle": "Personvern",
+  "settingsMaskUidInUi": "Skjul UID i grensesnittet",
+  "settingsMaskUidInUiHint": "Når dette er på, viser UID-er i grensesnittet og kontolisten bare de tre første sifrene, resten skjules (f.eks. 123•••••). Nyttig ved strømming eller skjermdeling. Delingsbilder, eksporterte filer og bekreftelsesdialogen for sletting påvirkes ikke.",
+  "settingsAdPrivacyOptions": "Personverninnstillinger for annonser",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Endre om du samtykker til å se personlig tilpassede annonser.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Om",
+  "settingsAboutVersion": "Versjon {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Versjoner for andre spill",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "Flere spill kan bli støttet i fremtiden...",
+  "contributorsTitle": "Bidragsytere",
+  "contributorsSubtitle": "En spesiell takk til alle som har bidratt til utviklingen av denne programvaren!",
+  "contributorsProjectLeader": "Prosjektansvarlig",
+  "contributorsTesters": "Testere",
+  "contributorsGithubContributors": "Bidragsytere på GitHub",
+  "contributorsTranslationReviewer": "Korrekturlesere av oversettelser",
+  "contributorsTranslatedLanguages": "Tilgjengelige språk",
+  "contributorsHelpTranslate": "Finnes ikke språket ditt? Hjelp oss å oversette!",
+  "contributorsProjectLicense": "Prosjektlisens",
+  "contributorsOpenSourceLicenses": "Lisenser for åpen kildekode",
+  "pityRank": "{star}-pity",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n} trekk til garantert",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Nesten garantert! {n} trekk igjen",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Garantert snart",
+  "pityNoMainRarity": "Ingen {star} ennå",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Avsluttet",
+  "pityAverageInterval": "Snitt {n} trekk",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Ingen {star} i historikken",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n} trekk",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Nå",
+  "timelineNowPulls": "{n} trekk",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n} trekk siden forrige {star}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n} trekk siden forrige {star} på tvers av bannere",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Rull til venstre",
+  "timelineScrollRight": "Rull til høyre",
+  "timelineLoadMore": "Last inn flere ({n} gjenstår)",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Alle sjeldenheter",
+  "filterRarityRankOnly": "Bare {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Alle typer",
+  "filterSearchHint": "Søk etter navn...",
+  "filterClear": "Fjern filtre",
+  "pagerFirst": "Første",
+  "pagerLast": "Siste",
+  "pagerJumpTitle": "Gå til side",
+  "pagerJumpLabel": "Side ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Side {page} · {total, plural, =1{1 oppføring} other{{total} oppføringer}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Gå",
+  "pagerJumpInvalid": "Skriv inn en side fra {min} til {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsClearActive": "Slett data for gjeldende konto",
+  "settingsClearAll": "Slett alle data",
+  "settingsRefetchHoyoWikiImagesTitle": "Tving ny henting av bilder av gjenstander",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Ingen gacha-oppføringer ennå, ingenting å hente på nytt",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Tving ny henting av bilder av gjenstander",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Dette tømmer hele den lokale bufferen med bilder av gjenstander og laster ned ikonene på nytt fra HoYoWiki. Detaljbilder lastes ned ved behov neste gang du åpner gjenstanden. Avhengig av antall gjenstander kan det ta flere minutter og bruke en del båndbredde.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Start ny henting",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Gjenstandsdata",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Henter de nyeste gjenstandsdetaljene (beskrivelse, bildeliste osv.) på nytt fra HoYoWiki og beholder bilder som allerede er lastet ned. Nye bilder lastes ned når du åpner detaljene for gjenstanden.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Oppdater gjenstandsdata",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Ingen gacha-oppføringer ennå, ingenting å oppdatere",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Oppdatere gjenstandsdata?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Dette kontakter HoYoWiki for å hente detaljene for alle gjenstander på nytt, noe som kan ta en stund avhengig av hvor mange gjenstander du har. Bilder som allerede er lastet ned, beholdes og tømmes ikke.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Start oppdatering",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Bildebuffer",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Totalt",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikoner",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Detaljbilder",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Beregner...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Kan ikke lese bufferstørrelsen",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Kunne ikke tømme detaljbildene",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Tøm detaljbilder",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Tømme detaljbilder?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Omtrent {size} med detaljbilder av gjenstander slettes. Ikonbufferen beholdes. Bildene lastes ned på nytt neste gang du åpner gjenstandsdetaljene.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Tøm",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Eksporter data",
+  "settingsImportData": "Importer data",
+  "shareImageButton": "Lag delingsbilde",
+  "shareImageDialogTitle": "Alternativer for delingsbilde",
+  "shareImageThemeLabel": "Tema",
+  "shareImageThemeDark": "Mørkt",
+  "shareImageThemeLight": "Lyst",
+  "shareImageShowFullUid": "Vis hele UID-en på bildet",
+  "shareImageShowFullUidHint": "Når dette er av, vises bare de tre første sifrene, resten skjules med •",
+  "shareImageUpdatedAt": "Oppdatert {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Kopiert til utklippstavlen",
+  "shareImageFailed": "Kunne ikke lage delingsbilde",
+  "shareImageActionCopy": "Kopier bilde",
+  "shareImageActionSave": "Lagre bilde",
+  "shareImageCopyFailed": "Kunne ikke kopiere til utklippstavlen",
+  "shareImageGenerating": "Lager delingsbilde...",
+  "shareImageSaved": "Lagret: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Eksporten er fullført",
+  "exportDialogFailedTitle": "Eksporten mislyktes",
+  "settingsExportFailed": "Eksporten mislyktes: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Eksportert til {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Bekreft import",
+  "settingsImportConfirmIntro": "{accounts, plural, =1{Importerer 1 konto} other{Importerer {accounts} kontoer}} ({records, plural, =1{1 oppføring} other{{records} oppføringer}} totalt):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Følgende kontoer slås sammen med lokale data. Eksisterende oppføringer slettes ikke:",
+  "settingsImportConfirmNoConflict": "Ingen datakonflikter.",
+  "settingsImportConfirmPreserveFooter": "Andre eksisterende kontoer ({uids}) beholdes.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts, plural, =1{1 konto} other{{accounts} kontoer}} ble importert ({records, plural, =1{1 oppføring} other{{records} oppføringer}} totalt)",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Importerte {success}/{total} kontoer; mislyktes: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Importen mislyktes: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Filformatet er ugyldig, eller filen er skadet",
+  "importReasonUnsupportedVersion": "Denne filen ble eksportert fra en nyere versjon av appen. Oppdater appen før du importerer.",
+  "importReasonUnreadable": "Kan ikke lese filen",
+  "exportReasonWriteFailed": "Kan ikke skrive filen. Sjekk lagringsstedet og tillatelsene",
+  "importReasonForeignApp": "Denne filen ble ikke eksportert av denne appen",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Importer fra andre plattformer",
+  "platformPickerTitle": "Velg kildeplattform",
+  "importReasonNotPlatformFile": "Denne filen er ikke en gyldig eksport fra {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export og andre verktøy · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Hvilken konto skal det importeres til?",
+  "importTargetAccountBody": "Eksporter fra paimon.moe inneholder ikke UID. Velg kontoen disse oppføringene hører til.",
+  "importTargetAccountOtherUid": "Annen UID",
+  "importTargetAccountUidHint": "Skriv inn UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 oppføring på denne enheten} other{{count} oppføringer på denne enheten}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Denne filen bruker en nyere UIGF-versjon ({version}) som ikke støttes ennå. Oppdater appen, eller eksporter som v4 i det opprinnelige verktøyet.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Filen inneholder bannertyper som ikke støttes ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Kunne ikke fylle ut gjenstandsdata ({item}). Sjekk tilkoblingen og prøv igjen.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Begge sider har oppføringer fra {from} til {to}, men ingen av de {groups} trekkene i perioden samsvarer med de offisielle oppføringene på denne enheten. Du kan ha valgt feil konto, eller filen bruker en annen tidssone.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Begge sider har oppføringer fra {from} til {to}, men de offisielle oppføringene på denne enheten samsvarer bare med {matched} av de {groups} trekkene i perioden. Du kan ha valgt feil konto, eller filen bruker en annen tidssone.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importer likevel",
+  "importResolvingItems": "Fyller ut gjenstandsdata...",
+  "settingsExportSelectTitle": "Velg kontoer som skal eksporteres",
+  "settingsImportSelectTitle": "Velg kontoer som skal importeres",
+  "settingsImportMergeBadge": "Slå sammen",
+  "accountsPickerSelectAll": "Velg alle",
+  "accountRecordCount": "{n, plural, =1{1 oppføring} other{{n} oppføringer}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Bekreft",
+  "confirmClearActiveBody": "Dette sletter all Wish-historikk for UID {uid} permanent. Skriv inn UID-en for å bekrefte:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Dette sletter Wish-historikken for alle kontoer permanent. Skriv DELETE for å bekrefte:",
+  "confirmDelete": "Slett",
+  "confirmImport": "Importer",
+  "confirmExport": "Eksporter",
+  "confirmContinue": "Fortsett",
+  "accountListEmpty": "Ingen kontoer ennå",
+  "accountLastUpdated": "Sist oppdatert {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktiv",
+  "accountSetActive": "Gjør aktiv",
+  "accountRemove": "Fjern",
+  "accountAdd": "Legg til konto",
+  "accountAliasLabel": "Kallenavn",
+  "accountAliasHint": "Et lett gjenkjennelig navn på kontoen",
+  "accountAliasNone": "Ingen kallenavn",
+  "accountActionEditAlias": "Endre kallenavn",
+  "accountEditAliasTitle": "Endre kallenavn",
+  "accountDragHandleTooltip": "Dra for å endre rekkefølge",
+  "loadingBootstrap": "Laster inn...",
+  "timelineTopRarityTitle": "Tidslinje for {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Antall av høyeste sjeldenhet per banner",
+  "bannerTopRarityPullsSinceLast": "{n} trekk siden forrige {star}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Ny versjon {version} er tilgjengelig",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Utgitt {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Last ned",
+  "updateButtonUpdate": "Oppdater",
+  "updateNotesUnavailable": "Versjonsmerknadene er ikke tilgjengelige akkurat nå. Se Google Play for detaljer.",
+  "updateDownloadingMessage": "Laster ned oppdateringen...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Oppdateringen er lastet ned",
+  "updateRestartAction": "Start på nytt",
+  "updateInAppUnavailable": "Kan ikke oppdatere i appen akkurat nå. Oppdater via Google Play.",
+  "updateButtonSkip": "Hopp over denne versjonen",
+  "updateButtonLater": "Senere",
+  "updateCheckButton": "Se etter oppdateringer",
+  "updateChecking": "Ser etter oppdateringer...",
+  "updateAlreadyLatest": "Du har den nyeste versjonen",
+  "updateCheckFailed": "Kunne ikke se etter oppdateringer: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Kan ikke koble til. Sjekk nettverket",
+  "updateErrorTimeout": "Forespørselen fikk tidsavbrudd",
+  "updateErrorRateLimited": "GitHub API-kvoten er brukt opp. Prøv igjen senere",
+  "updateErrorServer": "Serverfeil (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Uventet svarformat",
+  "updateErrorPlay": "Kunne ikke nå Google Play, eller denne kopien ble ikke installert fra Google Play",
+  "currentReleaseTitle": "Versjonsmerknader for denne versjonen",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Fant ikke versjonsmerknader for {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Vis på GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Gå til GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Vis versjonsmerknader",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Kunne ikke tømme bildebufferen for gjenstander: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Feilsøkingslogger",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Hvis du får problemer, kan du eksportere loggene for å hjelpe utviklerne med å finne feilen.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Rapporter et problem",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Eksporter logger",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Åpne loggmappen",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Slett alle logger",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Loggene er eksportert: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Eksport av logger mislyktes: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Dette sletter alle filer i logs/ permanent. Eksporter dem først hvis du trenger dem til feilrapporter. Skriv CLEAR for å bekrefte.",
   "galleryCardLabel": "Kort",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +1176,434 @@
   "galleryIconLabel": "Ikon",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Forrige",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Neste",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Rull ned",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Vis på HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Kunne ikke laste inn bildet",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Prøv igjen",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Lukk forhåndsvisning",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kopier bilde",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Lagre bilde",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Zoom inn",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Zoom ut",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Hent bildet på nytt",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Bildet er kopiert til utklippstavlen",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Kunne ikke kopiere bildet",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Kunne ikke lagre bildet",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Lagret i {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Heldig",
+  "luckTierAverage": "Gjennomsnittlig",
+  "luckTierUnlucky": "Uheldig",
+  "manualUrlEntry": "Skriv inn URL til Wish History manuelt",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Skriv inn URL til Wish History manuelt",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "Hvis du allerede har fått URL-en til Wish History på en annen måte (for eksempel med et verktøy på datamaskinen), kan du lime den inn her. Du kan også lime inn hele teksten, så finner appen URL-en automatisk.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Lim inn URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Lim inn fra utklippstavlen",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "Fant ingen URL til Wish History. Kontroller det du limte inn.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "URL-en inneholder kontoopplysningene dine. Ikke del den offentlig. Den utløper etter en stund.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Venter på at du åpner siden Wish History i spillet...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Åpne Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Gjør klar til å lese spillets logg...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "Kan ikke hente URL-en til Wish History automatisk",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Lesing av spillets logg er ikke konfigurert ennå. Etter et engangsoppsett leses den automatisk ved hver oppdatering.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Trådløs feilsøking fungerer bare på Wi‑Fi. Koble til Wi‑Fi og kom tilbake, så fortsetter appen automatisk. Du kan også skrive inn URL-en manuelt.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Root ble funnet, men denne appen har ikke fått root-tilgang. For å lese med root må du tillate appen i root-behandleren (for eksempel Superuser-listen i Magisk) og så komme tilbake. Appen prøver igjen automatisk.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Kunne ikke koble til trådløs feilsøking. Sammenkoblingen kan ha utløpt. Koble sammen på nytt.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Enheten lar ikke denne appen slå på trådløs feilsøking. Slå det på under Trådløs feilsøking og kom tilbake, så fortsetter appen automatisk.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "Dette Wi‑Fi-nettverket er ikke tillatt for trådløs feilsøking ennå. Trykk på Tillat i systemvarselet (huk av for «Tillat alltid på dette nettverket», så slipper du å bli spurt igjen), så fortsetter appen automatisk. Hvis du lukket varselet, trykker du på Prøv igjen.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "Denne enheten kan ikke lese URL-en til Wish History automatisk (krever Android 11 eller nyere, eller root). Skriv den inn manuelt.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Genshin Impact er ikke installert på denne enheten. Kom tilbake hit etter installasjonen, så oppdages spillet automatisk.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Åpne Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Åpne Trådløs feilsøking",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Mistet tilkoblingen til trådløs feilsøking, kobler til på nytt... Hvis den ikke kommer tilbake, sjekk Wi‑Fi eller skriv inn URL-en manuelt.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Trådløs feilsøking er fortsatt på. Du kan slå det av i systeminnstillingene.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "Fant URL-en til Wish History. Hentingen av Wish History starter når du går tilbake til denne appen.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Sjekk på nytt",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Åpne Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Konfigurer",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Koble sammen på nytt",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Les systemlogg",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Hvorfor trengs dette?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android lar ikke apper lese systemloggene til andre apper. Denne appen bruker den innebygde funksjonen Trådløs feilsøking til å lese URL-en til Wish History fra Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Dette gjør appen",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Leser bare URL-en til Wish History fra Genshin Impact\n• Kobler fra rett etter lesing, og slår av trådløs feilsøking hvis det var denne appen som slo den på\n• Gir seg selv tillatelse til å slå trådløs feilsøking av og på, så du slipper å konfigurere det på nytt\n• Du kan fjerne dette når som helst i Innstillinger",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Krav",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 eller nyere, Wi‑Fi, varsler tillatt",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Start oppsett",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Skriv inn URL-en manuelt i stedet",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Koble sammen trådløs feilsøking",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Slå på Utvikleralternativer",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Åpne Om-siden i systeminnstillingene (for eksempel «Om telefonen» eller «Om nettbrettet»)\n2. Finn «Delversjonsnummer» og trykk på det 7 ganger\n3. Når du ser «Nå er du utvikler!», går du tilbake til denne appen",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Utvikleralternativer er fortsatt slått av. Hvis systemet sa at det ikke var mer å gjøre da du trykket på «Delversjonsnummer» (for eksempel «Du er allerede utvikler»), er hovedbryteren for Utvikleralternativer slått av. Åpne Utvikleralternativer, slå på bryteren øverst og gå deretter tilbake til denne appen.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Åpne Om-siden",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Utvikleralternativer er på",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Tillat varsler",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Du skriver inn tilkoblingskoden i et varsel, så la denne appen vise varsler.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Tillat varsler",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Åpne varselinnstillinger",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Varsler er tillatt",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Koble sammen",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Trykk på knappen nedenfor for å åpne Trådløs feilsøking\n2. Slå på «Bruk trådløs feilsøking» og trykk på «Koble til enheten med en tilkoblingskode»\n3. Sveip ned fra toppen av skjermen, og skriv inn den 6-sifrede tilkoblingskoden som vises på tilkoblingsskjermen for Trådløs feilsøking, i varselet fra denne appen",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Venter på at du skriver inn tilkoblingskoden i varselet...\nSkriv den inn mens tilkoblingsskjermen i Trådløs feilsøking fortsatt er åpen.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Åpne Trådløs feilsøking igjen",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Kobler sammen...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Sammenkoblet – ett steg til",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Enheten din har en ekstra sikkerhetsbegrensning. Slå på ett alternativ til, så kan denne appen slå trådløs feilsøking av og på automatisk.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Slik slår du det på",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Åpne Utvikleralternativer\n2. Finn bryteren for sikkerhet ved USB-feilsøking eller tillatelsesovervåking, og slå den på, for eksempel:\n• Xiaomi: «USB-feilsøking (sikkerhetsinnstillinger)»\n• OPPO / realme: «Deaktiver tillatelsesovervåking»\n3. Kontroller at trådløs feilsøking er på, kom tilbake og trykk på Prøv igjen",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Åpne Utvikleralternativer",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Prøv igjen",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Hopp over (slå på trådløs feilsøking selv ved hver oppdatering)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Alt er klart",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Fra nå av leser Oppdater loggen automatisk. Du trenger ikke å konfigurere noe mer.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Når du trykker på Oppdater, slår du på trådløs feilsøking når du blir bedt om det.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Går tilbake og starter oppdateringen...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Tilgang til spillets logg",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Trådløs feilsøking",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Ikke konfigurert",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Sammenkobling",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Sammenkoblet",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Sammenkoblet (slå på trådløs feilsøking manuelt)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Prøv tillatelsen igjen",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Konfigurer",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Fjern sammenkobling",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Fjerne sammenkoblingen?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "Dette sletter appens tilkoblingsnøkkel og fjerner appens tillatelse til å slå trådløs feilsøking av og på. Du må koble sammen på nytt for å bruke trådløs feilsøking senere.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Sammenkoblingen er fjernet",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Appens sammenkoblingsnøkkel er slettet, og tillatelsen til å slå trådløs feilsøking av og på er fjernet.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Sammenkoblingsnøkkelen er slettet",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Appens sammenkoblingsnøkkel er slettet, men denne gangen kunne den ikke koble til trådløs feilsøking, så tillatelsen til å slå trådløs feilsøking av og på er ikke fjernet.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "Appen bruker ikke denne tillatelsen så lenge den ikke er sammenkoblet. Vil du fjerne den helt, kobler du til Wi‑Fi, kobler sammen på nytt og fjerner deretter sammenkoblingen igjen.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "Systemets liste Trådløs feilsøking → Sammenkoblede enheter viser fortsatt «{name}». Den kan ikke lenger koble til, så du kan la den stå; trykk på den og slett den hvis du vil fjerne den.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "Systemets liste Trådløs feilsøking → Sammenkoblede enheter viser også fortsatt «{name}»; trykk på den for å slette den.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Metode",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Del",
+  "shareFailed": "Kunne ikke dele",
+  "dialogSaveAsTitle": "Lagre som",
+  "dialogOpenTitle": "Åpne",
+  "dialogSelectFolderTitle": "Velg mappe",
+  "actionSave": "Lagre",
+  "settingsLogsShare": "Del logger"
 }
