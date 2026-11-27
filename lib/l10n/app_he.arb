@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "לאיזה חשבון לייבא?",
   "importTargetAccountBody": "קובצי הייצוא של {platform} לא כוללים UID. בחרו את החשבון שאליו שייכות הרשומות האלה.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "UID אחר",
   "importTargetAccountUidHint": "הזינו UID",
