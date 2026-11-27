@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Σε ποιον λογαριασμό να γίνει η εισαγωγή;",
   "importTargetAccountBody": "Οι εξαγωγές του {platform} δεν περιέχουν UID. Επιλέξτε τον λογαριασμό στον οποίο ανήκουν αυτές οι εγγραφές.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Άλλο UID",
   "importTargetAccountUidHint": "Εισαγάγετε UID",

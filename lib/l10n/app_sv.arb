@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Vilket konto ska det importeras till?",
   "importTargetAccountBody": "Exporter från {platform} innehåller inget UID. Välj kontot som posterna tillhör.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Annat UID",
   "importTargetAccountUidHint": "Ange UID",

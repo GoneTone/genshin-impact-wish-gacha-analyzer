@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "どのアカウントにインポートしますか？",
   "importTargetAccountBody": "{platform} のエクスポートファイルには UID が含まれていません。これらの記録が属するアカウントを選択してください。",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "その他の UID",
   "importTargetAccountUidHint": "UID を入力",

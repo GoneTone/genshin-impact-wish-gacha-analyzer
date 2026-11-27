@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Do kterého účtu importovat?",
   "importTargetAccountBody": "Exporty z {platform} neobsahují UID. Vyberte účet, ke kterému tyto záznamy patří.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Jiné UID",
   "importTargetAccountUidHint": "Zadejte UID",

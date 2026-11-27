@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "У који налог увести?",
   "importTargetAccountBody": "Извози из {platform} не садрже UID. Изаберите налог коме припадају ови записи.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Други UID",
   "importTargetAccountUidHint": "Унесите UID",

@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Nhập vào tài khoản nào?",
   "importTargetAccountBody": "Tệp xuất của {platform} không có UID. Hãy chọn tài khoản sở hữu các bản ghi này.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "UID khác",
   "importTargetAccountUidHint": "Nhập UID",

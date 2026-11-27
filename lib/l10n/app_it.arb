@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "In quale account importare?",
   "importTargetAccountBody": "Le esportazioni di {platform} non contengono l'UID. Scegli l'account a cui appartengono questi record.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Altro UID",
   "importTargetAccountUidHint": "Inserisci l'UID",

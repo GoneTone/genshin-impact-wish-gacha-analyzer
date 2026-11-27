@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "إلى أي حساب تريد الاستيراد؟",
   "importTargetAccountBody": "ملفات التصدير من {platform} لا تتضمن UID. اختر الحساب الذي تنتمي إليه هذه السجلات.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "UID آخر",
   "importTargetAccountUidHint": "أدخل UID",

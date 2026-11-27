@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Melyik fiókba importáljuk?",
   "importTargetAccountBody": "A {platform} exportjai nem tartalmaznak UID-t. Válassza ki, melyik fiókhoz tartoznak ezek a rekordok.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Másik UID",
   "importTargetAccountUidHint": "Adja meg az UID-t",

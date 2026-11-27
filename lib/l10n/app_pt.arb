@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Importar para que conta?",
   "importTargetAccountBody": "As exportações do {platform} não incluem UID. Escolha a conta a que estes registos pertencem.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Outro UID",
   "importTargetAccountUidHint": "Introduza o UID",

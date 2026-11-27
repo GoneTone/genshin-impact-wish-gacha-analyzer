@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Mille tilille tuodaan?",
   "importTargetAccountBody": "{platform}:n viennit eivät sisällä UID:tä. Valitse tili, jolle nämä tapahtumat kuuluvat.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Muu UID",
   "importTargetAccountUidHint": "Syötä UID",
