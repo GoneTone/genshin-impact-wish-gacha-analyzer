@@ -911,7 +911,10 @@
   "platformUigfSubtitle": "genshin-wish-export и други алати · JSON",
   "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "У који налог увести?",
-  "importTargetAccountBody": "Извози из paimon.moe не садрже UID. Изаберите налог коме припадају ови записи.",
+  "importTargetAccountBody": "Извози из {platform} не садрже UID. Изаберите налог коме припадају ови записи.",
+  "@importTargetAccountBody": {
+    "placeholders": { "platform": { "type": "String" } }
+  },
   "importTargetAccountOtherUid": "Други UID",
   "importTargetAccountUidHint": "Унесите UID",
   "importTargetAccountRecordCount": "{count, plural, one{На уређају: {count} запис} few{На уређају: {count} записа} other{На уређају: {count} записа}}",

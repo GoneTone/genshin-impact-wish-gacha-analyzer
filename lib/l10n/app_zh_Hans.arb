@@ -907,7 +907,10 @@
   "platformUigfSubtitle": "genshin-wish-export 等工具・JSON",
   "platformPaimonMoeSubtitle": "paimon.moe・Excel",
   "importTargetAccountTitle": "导入到哪个账号？",
-  "importTargetAccountBody": "paimon.moe 的导出文件没有 UID，请选择这些记录属于哪个账号。",
+  "importTargetAccountBody": "{platform} 的导出文件没有 UID，请选择这些记录属于哪个账号。",
+  "@importTargetAccountBody": {
+    "placeholders": { "platform": { "type": "String" } }
+  },
   "importTargetAccountOtherUid": "其他 UID",
   "importTargetAccountUidHint": "输入 UID",
   "importTargetAccountRecordCount": "本机已有 {count} 条记录",

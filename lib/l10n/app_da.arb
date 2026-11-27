@@ -911,7 +911,10 @@
   "platformUigfSubtitle": "genshin-wish-export og andre værktøjer · JSON",
   "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "Hvilken konto skal der importeres til?",
-  "importTargetAccountBody": "Eksporter fra paimon.moe indeholder ikke noget UID. Vælg den konto, disse poster hører til.",
+  "importTargetAccountBody": "Eksporter fra {platform} indeholder ikke noget UID. Vælg den konto, disse poster hører til.",
+  "@importTargetAccountBody": {
+    "placeholders": { "platform": { "type": "String" } }
+  },
   "importTargetAccountOtherUid": "Andet UID",
   "importTargetAccountUidHint": "Angiv UID",
   "importTargetAccountRecordCount": "{count, plural, =1{1 post på denne enhed} other{{count} poster på denne enhed}}",

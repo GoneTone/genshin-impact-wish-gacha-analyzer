@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -27,31 +29,36 @@ final _accounts = [
   ),
 ];
 
-/// 開啟選帳號對話框；[accounts] 為本機帳號。
+/// 開啟選帳號對話框；[accounts] 為本機帳號，[maskUidInUi] 為介面隱私設定。
 Future<void> _open(
   WidgetTester tester,
-  List<AccountPickerEntry> accounts,
-) async {
+  List<AccountPickerEntry> accounts, {
+  bool maskUidInUi = false,
+}) async {
   _result = null;
   _completed = false;
+  SharedPreferences.setMockInitialValues({'pref.maskUidInUi': maskUidInUi});
   await tester.pumpWidget(
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('zh', 'Hant'),
-      theme: buildDarkTheme(),
-      home: Scaffold(
-        body: Builder(
-          builder: (ctx) => Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                _result = await showImportTargetAccountDialog(
-                  context: ctx,
-                  accounts: accounts,
-                );
-                _completed = true;
-              },
-              child: const Text('open'),
+    ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh', 'Hant'),
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (ctx) => Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  _result = await showImportTargetAccountDialog(
+                    context: ctx,
+                    platformName: 'Paimon.moe',
+                    accounts: accounts,
+                  );
+                  _completed = true;
+                },
+                child: const Text('open'),
+              ),
             ),
           ),
         ),
@@ -75,6 +82,7 @@ void main() {
   ) async {
     await _open(tester, _accounts);
     expect(find.text('匯入到哪個帳號？'), findsOneWidget);
+    expect(find.text('Paimon.moe 的匯出檔沒有 UID，請選擇這些記錄屬於哪個帳號。'), findsOneWidget);
     expect(find.text('800000001'), findsOneWidget);
     expect(find.text('本機已有 1155 筆記錄'), findsOneWidget);
     expect(_continueEnabled(tester), isTrue);
@@ -92,6 +100,16 @@ void main() {
       find.text('${List.filled(6, '很長的別名').join()} (800000002)'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('masks the UID when maskUidInUi is on', (tester) async {
+    await _open(tester, _accounts, maskUidInUi: true);
+    expect(find.text('800••••••'), findsOneWidget);
+    expect(
+      find.text('${List.filled(6, '很長的別名').join()} (800••••••)'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('80000000'), findsNothing);
   });
 
   testWidgets('other UID needs 9 to 10 digits before continuing', (

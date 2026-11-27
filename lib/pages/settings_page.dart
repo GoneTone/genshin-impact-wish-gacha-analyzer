@@ -39,6 +39,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/format_bytes.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
@@ -832,14 +833,14 @@ class _DataManagement extends ConsumerWidget {
       }
     }
 
+    final mask = ref.read(settingsProvider).maskUidInUi;
     final buf = StringBuffer()
       ..writeln(l.settingsImportConfirmIntro(incoming.length, totalRecords));
     for (final a in filteredBundle.accounts) {
       final alias = a.alias;
+      final uid = displayUid(a.data.uid, mask: mask);
       buf.writeln(
-        alias == null || alias.isEmpty
-            ? '  • ${a.data.uid}'
-            : '  • ${a.data.uid} ($alias)',
+        alias == null || alias.isEmpty ? '  • $uid' : '  • $uid ($alias)',
       );
     }
     buf.writeln();
@@ -848,12 +849,16 @@ class _DataManagement extends ConsumerWidget {
     } else {
       buf.writeln(l.settingsImportConfirmMergeHeader);
       for (final uid in conflicts) {
-        buf.writeln('  • $uid');
+        buf.writeln('  • ${displayUid(uid, mask: mask)}');
       }
     }
     if (preserved.isNotEmpty) {
       buf.writeln();
-      buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
+      buf.writeln(
+        l.settingsImportConfirmPreserveFooter(
+          preserved.map((u) => displayUid(u, mask: mask)).join(', '),
+        ),
+      );
     }
 
     final warning = fromPlatform
@@ -891,6 +896,7 @@ class _DataManagement extends ConsumerWidget {
     AccountsBundle bundle,
   ) {
     final local = ref.read(gachaRepositoryProvider).byUid;
+    final mask = ref.read(settingsProvider).maskUidInUi;
     // 記錄時間是牆鐘時間（可能標成 UTC），直接格式化、不轉時區。
     final date = DateFormat('yyyy-MM-dd');
     final warnings = [
@@ -900,13 +906,13 @@ class _DataManagement extends ConsumerWidget {
               case final m?)
             m.matched == 0
                 ? l.importOverlapWarning(
-                    m.uid,
+                    displayUid(m.uid, mask: mask),
                     date.format(m.from),
                     date.format(m.to),
                     m.groups,
                   )
                 : l.importOverlapWarningPartial(
-                    m.uid,
+                    displayUid(m.uid, mask: mask),
                     date.format(m.from),
                     date.format(m.to),
                     m.groups,
@@ -993,6 +999,7 @@ class _DataManagement extends ConsumerWidget {
     if (platform.requiresTargetUid) {
       final uid = await showImportTargetAccountDialog(
         context: ctx,
+        platformName: platform.displayName(l),
         accounts: _localAccountEntries(ref),
       );
       if (uid == null || !ctx.mounted) return;
