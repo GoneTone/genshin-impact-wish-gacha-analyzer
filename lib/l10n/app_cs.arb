@@ -1,5 +1,1174 @@
 {
   "@@locale": "cs",
+  "localeNativeName": "Čeština",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Překlad: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Aktualizovat",
+  "actionCancel": "Zrušit",
+  "actionClose": "Zavřít",
+  "actionPrevPage": "Předchozí",
+  "actionNextPage": "Další",
+  "actionOpenFolder": "Otevřít složku",
+  "navOverview": "Přehled",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Nastavení",
+  "navContributors": "Přispěvatelé",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Nesynchronizováno",
+  "footerLastUpdated": "Poslední aktualizace: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Právě teď",
+  "relativeSecondsAgo": "{count, plural, one{před {count} sekundou} few{před {count} sekundami} many{před {count} sekundy} other{před {count} sekundami}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, one{před {count} minutou} few{před {count} minutami} many{před {count} minuty} other{před {count} minutami}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, one{před {count} hodinou} few{před {count} hodinami} many{před {count} hodiny} other{před {count} hodinami}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, one{před {count} dnem} few{před {count} dny} many{před {count} dne} other{před {count} dny}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, one{před {count} měsícem} few{před {count} měsíci} many{před {count} měsíce} other{před {count} měsíci}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, one{před {count} rokem} few{před {count} lety} many{před {count} roku} other{před {count} lety}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Přepnout účet",
+  "uidNotSynced": "Nesynchronizováno",
+  "uidActiveSuffix": " (aktivní)",
+  "emptyNoSyncTitle": "Zatím nejsou synchronizována žádná data",
+  "emptyNoSyncMessage": "Klepnutím na {icon} vpravo nahoře začněte",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "Pro tento banner nejsou žádné záznamy",
+  "emptyNoFilterMatch": "Aktuálnímu filtru neodpovídají žádné záznamy",
+  "emptyNoOdesRecords": "V Ode zatím nejsou žádné záznamy",
+  "emptyNoGachaRecords": "Ve Wish zatím nejsou žádné záznamy",
+  "statsTotal": "Celkem tahů",
+  "statsRankCount": "Počet {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% z celku",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Rozdělení vzácnosti",
+  "statsItemTypeDistribution": "Rozdělení typů",
+  "statsNoData": "Žádná data",
+  "kindUnknown": "Neznámý",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Čas",
+  "tableName": "Název",
+  "tableKind": "Typ",
+  "tableRarity": "Vzácnost",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Celkem",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Řazení: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Řazení: výchozí",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Řadit podle",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Tahy od posledního {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Sestupně",
+  "sortDirectionAsc": "Vzestupně",
+  "sortHintClickToSort": "Kliknutím seřadíte",
+  "progressPreparing": "Příprava...",
+  "progressPreparingHint": "Příprava zdroje dat...",
+  "progressConvertingHint": "Převod jazyka dat, čekejte prosím...",
+  "progressWaiting": "Čekání na zachycení...",
+  "progressFetching": "Stahování...",
+  "progressDone": "Aktualizace dokončena",
+  "progressFailed": "Selhalo",
+  "progressOpenGameHint": "Otevřete Genshin → Wishes → History",
+  "progressFallbackHint": "(Předchozí URL Wish History vypršelo a je třeba ho získat znovu)",
+  "progressNotDetectedLink": "Otevřeli jste Wish History, ale nic se neděje?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Nepodařilo se spustit zachytávání (certifikát mohl být odmítnut nebo je port obsazený), takže se detekce spoléhá jen na webovou mezipaměť hry. Otevřete ve hře stránku Wish History.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Nepodařilo se spustit zachytávání (certifikát mohl být odmítnut nebo je port obsazený) a nebyla nalezena ani složka hry. Stiskněte níže „Vybrat složku hry“ a nastavte ji ručně.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Wish History nebylo zjištěno",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Složka hry Genshin Impact nebyla nalezena. Po výběru složky hry může nástroj získat URL Wish History také z webové mezipaměti hry.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Aktuálně používaná složka hry: {path}. Pokud to není kopie hry, kterou hrajete, vyberte složku znovu.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Složka hry je nastavena. Vraťte se do hry a otevřete Wish History ještě jednou.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "V této složce nebyl nalezen Genshin Impact. Vyberte složku „Genshin Impact game“.",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Vybrat složku hry",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Vybrat znovu",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
+  "progressFetchingBanner": "Stahování: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Stránka {page}, zatím {count, plural, one{{count} nový záznam} few{{count} nové záznamy} many{{count} nového záznamu} other{{count} nových záznamů}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, one{Přidán {count} nový záznam} few{Přidány {count} nové záznamy} many{Přidáno {count} nového záznamu} other{Přidáno {count} nových záznamů}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, one{Staženo {count} obrázek předmětu} few{Staženy {count} obrázky předmětů} many{Staženo {count} obrázku předmětu} other{Staženo {count} obrázků předmětů}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, one{Aktualizována data {count} předmětu} few{Aktualizována data {count} předmětů} many{Aktualizována data {count} předmětu} other{Aktualizována data {count} předmětů}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, one{Doplněn {count} obrázek předmětu} few{Doplněny {count} obrázky předmětů} many{Doplněno {count} obrázku předmětu} other{Doplněno {count} obrázků předmětů}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, one{Vyčištěna data ve starém jazyce u {count} předmětu} few{Vyčištěna data ve starém jazyce u {count} předmětů} many{Vyčištěna data ve starém jazyce u {count} předmětu} other{Vyčištěna data ve starém jazyce u {count} předmětů}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Částečné selhání: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, one{Importován {accounts} účet} few{Importovány {accounts} účty} many{Importováno {accounts} účtu} other{Importováno {accounts} účtů}}: nové: {added}, již existující: {duplicate}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Částečné selhání importu: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Vyhledávání dat předmětů {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Stahování podrobností předmětů {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Stahování obrázků předmětů {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Autorizace stále vyprší; přihlaste se do hry znovu",
+  "errorRateLimited": "Příliš mnoho požadavků; zkuste to později",
+  "errorServer": "Chyba serveru: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Tento účet zatím nemá ve Wish žádné záznamy",
+  "pageOverviewTitle": "Přehled (všechny bannery)",
+  "pageOverviewGachaSection": "Přehled Wish",
+  "pageOverviewOdesSection": "Přehled Ode",
+  "pageBannerRecordList": "Seznam záznamů",
+  "rarityOverviewTitle": "Přehled {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Nastavení",
+  "settingsAppearance": "Vzhled",
+  "settingsThemeSystem": "Podle systému",
+  "settingsThemeDark": "Tmavý",
+  "settingsThemeLight": "Světlý",
+  "settingsLanguage": "Jazyk",
+  "settingsLocaleSystem": "Podle systému",
+  "settingsDataLanguage": "Jazyk dat",
+  "settingsDataLanguageDesc": "Sjednotí jazyk zobrazení dat historie tahů nezávisle na jazyce rozhraní aplikace. Po nastavení se data při aktualizaci nebo importu automaticky převedou do tohoto jazyka. Záznamy Ode a předměty bez odpovídajících dat si ponechají původní jazyk.",
+  "settingsDataLanguageUnset": "Nenastaveno (bez převodu)",
+  "settingsDataLanguageUnify": "Převést jazyk dat nyní",
+  "settingsDataLanguageUnifying": "Probíhá převod...",
+  "settingsDataLanguageUnifyDone": "Převedeno: {converted}, nepodařilo se převést: {unresolved}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Převod selhal, data zůstala beze změny. Zkontrolujte připojení k síti a zkuste to znovu.",
+  "settingsDataManagement": "Správa dat",
+  "settingsGameDir": "Složka hry",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Zjištěno automaticky: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Nastaveno ručně: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Složka hry nebyla nalezena",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Vymazat",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
+  "settingsCloudSync": "Synchronizace v cloudu",
+  "cloudSyncIntro": "Propojte svůj účet Google a záznamy se budou automaticky zálohovat na váš Disk Google a synchronizovat mezi zařízeními.",
+  "cloudSyncUnconfigured": "Toto sestavení nemá nastavené přihlašovací údaje Google OAuth; synchronizace v cloudu není dostupná.",
+  "cloudSyncLink": "Propojit účet Google",
+  "cloudSyncAwaitingConsent": "Prohlížeč byl otevřen. Dokončete autorizaci v prohlížeči...",
+  "cloudSyncAwaitingConsentAndroid": "Dokončete autorizaci v okně Google...",
+  "cloudSyncLinkedAs": "Propojeno: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Automatická synchronizace",
+  "cloudSyncAutoToggleHint": "Synchronizuje automaticky při spuštění aplikace a po změně dat; po vypnutí lze stále synchronizovat ručně.",
+  "cloudSyncNow": "Synchronizovat nyní",
+  "cloudSyncUnlink": "Odpojit",
+  "cloudSyncUnlinkConfirmTitle": "Odpojit",
+  "cloudSyncUnlinkConfirmBody": "Synchronizace se zastaví. Místní data i záloha v cloudu zůstanou zachovány.",
+  "cloudSyncLastSynced": "Poslední synchronizace: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Zatím nesynchronizováno",
+  "cloudSyncErrorNetwork": "Synchronizace selhala: problém se sítí. Bude automaticky zopakována.",
+  "cloudSyncErrorBusy": "Synchronizace odložena: probíhá aktualizace nebo import. Bude automaticky zopakována.",
+  "cloudSyncErrorSchemaTooNew": "Synchronizace přeskočena: data v cloudu vytvořila novější verze aplikace. Nejprve aplikaci aktualizujte.",
+  "cloudSyncErrorAuthFailed": "Autorizace selhala. Zkuste to znovu.",
+  "cloudSyncErrorScopeMissing": "Autorizace nezahrnovala přístup k Disku Google. Propojte účet znovu a na stránce souhlasu Google zaškrtněte políčko s daty Disku.",
+  "cloudSyncReauthRequired": "Autorizace vypršela. Propojte svůj účet Google znovu.",
+  "cloudSyncRemoveFromCloud": "Odebrat tento účet také z dat synchronizace v cloudu",
+  "cloudSyncPostAuthTitle": "Autorizace dokončena",
+  "cloudSyncPostAuthBody": "Tuto kartu můžete zavřít a vrátit se do aplikace.",
+  "cloudSyncPostAuthScopeMissingTitle": "Chybí oprávnění k Disku Google",
+  "cloudSyncPostAuthScopeMissingBody": "Políčko s daty Disku Google nebylo zaškrtnuto. Vraťte se do aplikace, propojte účet znovu a toto oprávnění zaškrtněte.",
+  "settingsAccountManagement": "Správa účtů",
+  "settingsPrivacySectionTitle": "Soukromí",
+  "settingsMaskUidInUi": "Maskovat UID v rozhraní",
+  "settingsMaskUidInUiHint": "Je-li zapnuto, UID v rozhraní a v seznamu účtů zobrazují první 3 číslice a zbytek je maskován (např. 123•••••). Vhodné při streamování nebo sdílení obrazovky. Netýká se obrázků ke sdílení, exportovaných souborů ani potvrzovacího okna pro smazání.",
+  "settingsAdPrivacyOptions": "Možnosti soukromí u reklam",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Změňte svůj souhlas se zobrazováním personalizovaných reklam.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "O aplikaci",
+  "settingsAboutVersion": "Verze {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Verze pro jiné hry",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "V budoucnu mohou přibýt další hry...",
+  "contributorsTitle": "Přispěvatelé",
+  "contributorsSubtitle": "Zvláštní poděkování následujícím partnerům, kteří přispěli k vývoji tohoto softwaru!",
+  "contributorsProjectLeader": "Moderátor projektu",
+  "contributorsTesters": "Testeři",
+  "contributorsGithubContributors": "Přispěvatelé na GitHubu",
+  "contributorsTranslationReviewer": "Korektoři překladů",
+  "contributorsTranslatedLanguages": "Dostupné jazyky",
+  "contributorsHelpTranslate": "Chybí váš jazyk? Pomozte nám s překladem!",
+  "contributorsProjectLicense": "Licence projektu",
+  "contributorsOpenSourceLicenses": "Licence open source",
+  "pityRank": "Pity {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, one{{n} tah do garance} few{{n} tahy do garance} many{{n} tahu do garance} other{{n} tahů do garance}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Blízko garance! Zbývá: {n, plural, one{{n} tah} few{{n} tahy} many{{n} tahu} other{{n} tahů}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Brzy garance",
+  "pityNoMainRarity": "Zatím žádné {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Ukončeno",
+  "pityAverageInterval": "Prům. {n} tahů",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Žádné záznamy {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, one{{n} tah} few{{n} tahy} many{{n} tahu} other{{n} tahů}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Nyní",
+  "timelineNowPulls": "{n, plural, one{{n} tah} few{{n} tahy} many{{n} tahu} other{{n} tahů}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, one{{n} tah od posledního {star}} few{{n} tahy od posledního {star}} many{{n} tahu od posledního {star}} other{{n} tahů od posledního {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, one{{n} tah od posledního {star} napříč bannery} few{{n} tahy od posledního {star} napříč bannery} many{{n} tahu od posledního {star} napříč bannery} other{{n} tahů od posledního {star} napříč bannery}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Posunout doleva",
+  "timelineScrollRight": "Posunout doprava",
+  "timelineLoadMore": "Načíst další (zbývá: {n})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Všechny vzácnosti",
+  "filterRarityRankOnly": "Pouze {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Všechny typy",
+  "filterSearchHint": "Hledat název...",
+  "filterClear": "Zrušit filtry",
+  "pagerFirst": "První",
+  "pagerLast": "Poslední",
+  "pagerJumpTitle": "Přejít na stránku",
+  "pagerJumpLabel": "Stránka ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Aktuální stránka: {page} · {total, plural, one{{total} záznam} few{{total} záznamy} many{{total} záznamu} other{{total} záznamů}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Přejít",
+  "pagerJumpInvalid": "Zadejte stránku od {min} do {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsClearActive": "Vymazat data aktuálního účtu",
+  "settingsClearAll": "Vymazat všechna data",
+  "settingsRefetchHoyoWikiImagesTitle": "Vynutit nové stažení obrázků předmětů",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Zatím žádné záznamy, není co stahovat znovu",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Vynutit nové stažení obrázků předmětů",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Tím se vymaže celá místní mezipaměť obrázků předmětů a ikony se znovu stáhnou z HoYoWiki. Obrázky v detailu předmětu se stáhnou na vyžádání při dalším otevření předmětu. Podle počtu předmětů to může trvat několik minut a spotřebovat nezanedbatelná data.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Zahájit stahování",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Data předmětů",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Znovu stáhne z HoYoWiki nejnovější podrobnosti o předmětech (popisy, seznamy obrázků apod.) a ponechá již stažené obrázky. Nové obrázky se stáhnou po otevření detailu předmětu.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Aktualizovat data předmětů",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Zatím žádné záznamy — není co aktualizovat",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Aktualizovat data předmětů?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Aplikace se připojí k HoYoWiki a znovu stáhne podrobnosti o každém předmětu, což podle jejich počtu chvíli potrvá. Již stažené obrázky zůstanou zachovány a nebudou smazány.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Zahájit aktualizaci",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Mezipaměť obrázků",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Celkem",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikony",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Obrázky detailů",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Výpočet...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Velikost mezipaměti se nepodařilo zjistit",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Obrázky detailů se nepodařilo vymazat",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Vymazat obrázky detailů",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Vymazat obrázky detailů?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Bude smazáno asi {size} obrázků detailů předmětů; mezipaměť ikon zůstane zachována. Stáhnou se znovu při dalším otevření detailu předmětu.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Vymazat",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Exportovat data",
+  "settingsImportData": "Importovat data",
+  "shareImageButton": "Vytvořit obrázek ke sdílení",
+  "shareImageDialogTitle": "Možnosti obrázku ke sdílení",
+  "shareImageThemeLabel": "Motiv",
+  "shareImageThemeDark": "Tmavý",
+  "shareImageThemeLight": "Světlý",
+  "shareImageShowFullUid": "Zobrazit na obrázku celé UID",
+  "shareImageShowFullUidHint": "Je-li vypnuto, zobrazí se jen první 3 číslice a zbytek je maskován znakem •",
+  "shareImageUpdatedAt": "Aktualizováno {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Zkopírováno do schránky",
+  "shareImageFailed": "Obrázek ke sdílení se nepodařilo vytvořit",
+  "shareImageActionCopy": "Kopírovat obrázek",
+  "shareImageActionSave": "Uložit obrázek",
+  "shareImageCopyFailed": "Zkopírování do schránky se nepodařilo",
+  "shareImageGenerating": "Vytváření obrázku ke sdílení...",
+  "shareImageSaved": "Uloženo: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Export dokončen",
+  "exportDialogFailedTitle": "Export selhal",
+  "settingsExportFailed": "Export selhal: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Exportováno do {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Potvrzení importu",
+  "settingsImportConfirmIntro": "Chystáte se importovat: {accounts, plural, one{{accounts} účet} few{{accounts} účty} many{{accounts} účtu} other{{accounts} účtů}} (celkem {records, plural, one{{records} záznam} few{{records} záznamy} many{{records} záznamu} other{{records} záznamů}}):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Následující účty budou sloučeny s místními daty; stávající záznamy nebudou smazány:",
+  "settingsImportConfirmNoConflict": "Žádné konflikty dat.",
+  "settingsImportConfirmPreserveFooter": "Ostatní stávající účty ({uids}) zůstanou zachovány.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "Úspěšně importováno: {accounts, plural, one{{accounts} účet} few{{accounts} účty} many{{accounts} účtu} other{{accounts} účtů}} ({records, plural, one{{records} záznam} few{{records} záznamy} many{{records} záznamu} other{{records} záznamů}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Importováno {success}/{total} účtů; selhalo: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Import selhal: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Formát souboru je neplatný nebo je soubor poškozen",
+  "importReasonUnsupportedVersion": "Tento soubor exportovala novější verze aplikace. Před importem aplikaci aktualizujte.",
+  "importReasonUnreadable": "Soubor nelze přečíst",
+  "exportReasonWriteFailed": "Soubor nelze zapsat, zkontrolujte umístění a oprávnění",
+  "importReasonForeignApp": "Tento soubor nebyl exportován touto aplikací",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Importovat z jiných platforem",
+  "platformPickerTitle": "Vyberte zdrojovou platformu",
+  "importReasonNotPlatformFile": "Tento soubor není platným exportem z {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export a další nástroje · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Do kterého účtu importovat?",
+  "importTargetAccountBody": "Exporty z paimon.moe neobsahují UID. Vyberte účet, ke kterému tyto záznamy patří.",
+  "importTargetAccountOtherUid": "Jiné UID",
+  "importTargetAccountUidHint": "Zadejte UID",
+  "importTargetAccountRecordCount": "{count, plural, one{V zařízení: {count} záznam} few{V zařízení: {count} záznamy} many{V zařízení: {count} záznamu} other{V zařízení: {count} záznamů}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Tento soubor používá novější verzi UIGF ({version}), která zatím není podporována. Aktualizujte aplikaci nebo v původním nástroji exportujte ve verzi v4.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Soubor obsahuje nepodporované typy bannerů ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Nepodařilo se doplnit data předmětu ({item}). Zkontrolujte připojení k síti a zkuste to znovu.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: v období {from}–{to} mají záznamy obě strany, ale žádný tah z tohoto období neodpovídá oficiálním záznamům v zařízení (počet tahů: {groups}). Možná jste vybrali nesprávný účet nebo soubor používá jiné časové pásmo.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: v období {from}–{to} mají záznamy obě strany, ale oficiálním záznamům v zařízení odpovídá jen málo tahů z tohoto období ({matched} z {groups}). Možná jste vybrali nesprávný účet nebo soubor používá jiné časové pásmo.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Přesto importovat",
+  "importResolvingItems": "Doplňování dat předmětů...",
+  "settingsExportSelectTitle": "Vyberte účty k exportu",
+  "settingsImportSelectTitle": "Vyberte účty k importu",
+  "settingsImportMergeBadge": "Sloučit",
+  "accountsPickerSelectAll": "Vybrat vše",
+  "accountRecordCount": "{n, plural, one{{n} záznam} few{{n} záznamy} many{{n} záznamu} other{{n} záznamů}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Potvrdit",
+  "confirmClearActiveBody": "Tím se trvale smažou všechny záznamy Wish pro UID {uid}. Pro potvrzení zadejte UID:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Tím se trvale smažou záznamy Wish všech účtů. Pro potvrzení zadejte DELETE:",
+  "confirmDelete": "Smazat",
+  "confirmImport": "Importovat",
+  "confirmExport": "Exportovat",
+  "confirmContinue": "Pokračovat",
+  "accountListEmpty": "Zatím žádné účty",
+  "accountLastUpdated": "Poslední aktualizace: {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktivní",
+  "accountSetActive": "Nastavit jako aktivní",
+  "accountRemove": "Odebrat",
+  "accountAdd": "Přidat účet",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "Přátelský název tohoto účtu",
+  "accountAliasNone": "Alias není nastaven",
+  "accountActionEditAlias": "Upravit alias",
+  "accountEditAliasTitle": "Upravit alias",
+  "accountDragHandleTooltip": "Přetažením změníte pořadí",
+  "loadingBootstrap": "Načítání...",
+  "timelineTopRarityTitle": "Časová osa {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Počet nejvyšší vzácnosti v každém banneru",
+  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} tah od posledního {star}} few{{n} tahy od posledního {star}} many{{n} tahu od posledního {star}} other{{n} tahů od posledního {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Je dostupná nová verze {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Vydáno: {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Stáhnout",
+  "updateButtonUpdate": "Aktualizovat",
+  "updateNotesUnavailable": "Poznámky k verzi teď nejsou k dispozici. Podrobnosti najdete na Google Play.",
+  "updateDownloadingMessage": "Stahuje se aktualizace...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Aktualizace byla stažena",
+  "updateRestartAction": "Restartovat",
+  "updateInAppUnavailable": "Aktualizace v aplikaci teď není možná. Aktualizujte prosím přes Google Play.",
+  "updateButtonSkip": "Přeskočit tuto verzi",
+  "updateButtonLater": "Později",
+  "updateCheckButton": "Zkontrolovat aktualizace",
+  "updateChecking": "Kontrola...",
+  "updateAlreadyLatest": "Máte nejnovější verzi",
+  "updateCheckFailed": "Kontrola aktualizací selhala: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Nelze se připojit, zkontrolujte připojení k síti",
+  "updateErrorTimeout": "Časový limit požadavku vypršel",
+  "updateErrorRateLimited": "Limit API GitHubu byl vyčerpán, zkuste to později",
+  "updateErrorServer": "Chyba serveru (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Neočekávaný formát odpovědi",
+  "updateErrorPlay": "Nelze se spojit s Google Play, nebo tato kopie nebyla nainstalována z Google Play",
+  "currentReleaseTitle": "Poznámky k aktuálnímu vydání",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Poznámky k vydání {version} nebyly nalezeny",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Zobrazit na GitHubu",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Přejít na stránku vydání na GitHubu",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Zobrazit poznámky k vydání",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Mezipaměť obrázků předmětů se nepodařilo vymazat: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Ladicí protokoly",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Pokud narazíte na problém, exportujte protokoly, aby mohli vývojáři zjistit příčinu.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Nahlásit problém",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Exportovat protokoly",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Otevřít složku protokolů",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Vymazat všechny protokoly",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Protokoly exportovány: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Export protokolů selhal: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Tím se trvale smažou všechny soubory ve složce logs/. Pokud je potřebujete pro nahlášení chyby, nejprve je exportujte. Pro potvrzení zadejte CLEAR.",
   "galleryCardLabel": "Karta",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +1176,434 @@
   "galleryIconLabel": "Ikona",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Předchozí",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Další",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Posunout dolů",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Zobrazit na HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Obrázek se nepodařilo načíst",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Zkusit znovu",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Zavřít náhled obrázku",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kopírovat obrázek",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Uložit obrázek",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Přiblížit",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Oddálit",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Stáhnout obrázek znovu",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Obrázek zkopírován do schránky",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Obrázek se nepodařilo zkopírovat",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Obrázek se nepodařilo uložit",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Uloženo do {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Šťastný",
+  "luckTierAverage": "Průměrný",
+  "luckTierUnlucky": "Smolař",
+  "manualUrlEntry": "Zadat URL Wish History ručně",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Zadat URL Wish History ručně",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "Pokud jste URL Wish History získali jiným způsobem (např. nástrojem v počítači), můžete ho sem vložit. Funguje i vložení celého textu; aplikace URL najde sama.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Vložte URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Vložit ze schránky",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "URL Wish History nebylo nalezeno. Zkontrolujte vložený text.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "URL obsahuje přihlašovací údaje vašeho účtu. Nesdílejte ho veřejně. Po čase vyprší.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Čekání, až ve hře otevřete stránku Wish History...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Otevřete Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Příprava čtení herního protokolu...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "URL Wish History nelze získat automaticky",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Čtení herního protokolu ještě není nastaveno. Po jednorázovém nastavení ho každá aktualizace přečte automaticky.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Bezdrátové ladění funguje jen přes Wi-Fi. Připojte se k Wi-Fi a vraťte se; aplikace bude automaticky pokračovat. URL můžete také zadat ručně.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Root byl nalezen, ale této aplikaci nebyl udělen přístup root. Chcete-li číst přes root, povolte aplikaci ve správci root (např. v seznamu Superuser v Magisku) a vraťte se; aplikace to automaticky zkusí znovu.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Nepodařilo se připojit k bezdrátovému ladění. Párování mohlo vypršet; spárujte znovu.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Vaše zařízení této aplikaci nedovoluje zapnout bezdrátové ladění. Zapněte ho na stránce Bezdrátové ladění a vraťte se; aplikace bude automaticky pokračovat.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "Tato síť Wi-Fi zatím není pro bezdrátové ladění povolena. Klepněte v systémovém dotazu na „Povolit“ (zaškrtněte „Vždy povolit v této síti“, aby se systém znovu neptal) a aplikace bude automaticky pokračovat. Pokud jste dotaz zavřeli, klepněte na „Zkusit znovu“.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "Toto zařízení nemůže URL Wish History přečíst automaticky (vyžaduje Android 11 nebo novější, případně root). Zadejte ho ručně.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Genshin Impact není v tomto zařízení nainstalován. Po instalaci se sem vraťte a hra bude zjištěna automaticky.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Otevřít Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Otevřít Bezdrátové ladění",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Spojení bezdrátového ladění bylo ztraceno, připojuji znovu... Pokud se neobnoví, zkontrolujte Wi-Fi nebo zadejte URL ručně.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Bezdrátové ladění je stále zapnuté. Můžete ho vypnout v nastavení systému.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "URL Wish History bylo získáno. Stahování Wish History začne po návratu do této aplikace.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Zkontrolovat znovu",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Otevřít Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Nastavit",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Spárovat znovu",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Čtení systémového protokolu",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Proč je to potřeba?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android aplikacím nedovoluje číst systémové protokoly jiných aplikací. Tato aplikace používá vestavěnou funkci Bezdrátové ladění a přečte z Genshin Impact URL Wish History.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Co tato aplikace dělá",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Čte pouze URL Wish History z Genshin Impact\n• Hned po přečtení se odpojí a bezdrátové ladění vypne, pokud ho zapnula ona\n• Udělí si oprávnění zapínat a vypínat bezdrátové ladění, takže ho nemusíte nastavovat znovu\n• Můžete to kdykoli odstranit v Nastavení",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Požadavky",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 nebo novější, Wi-Fi, povolená oznámení",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Zahájit nastavení",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Zadat URL ručně",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Spárování bezdrátového ladění",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Zapněte Možnosti pro vývojáře",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. V nastavení systému otevřete stránku s informacemi o zařízení (např. „Informace o telefonu“ nebo „Informace o tabletu“)\n2. Najděte „Číslo sestavení“ a klepněte na něj 7krát\n3. Až se zobrazí „Nyní jste vývojářem“, vraťte se do této aplikace",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Možnosti pro vývojáře jsou stále vypnuté. Pokud systém po klepnutí na „Číslo sestavení“ oznámil, že už není co dělat (např. „Není to nutné, už jste vývojář“), je vypnutý hlavní přepínač Možností pro vývojáře. Otevřete Možnosti pro vývojáře, zapněte přepínač nahoře a vraťte se do této aplikace.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Otevřít stránku s informacemi o zařízení",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Možnosti pro vývojáře jsou zapnuté",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Povolte oznámení",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Párovací kód zadáte v oznámení, proto této aplikaci povolte zobrazování oznámení.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Povolit oznámení",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Otevřít nastavení oznámení",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Oznámení jsou povolena",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Spárujte",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Klepnutím na tlačítko níže otevřete Bezdrátové ladění\n2. Zapněte „Bezdrátové ladění“ a klepněte na „Párovat zařízení pomocí párovacího kódu“\n3. Přejeďte prstem shora dolů a v oznámení této aplikace zadejte 6místný párovací kód zobrazený na obrazovce párování v Bezdrátovém ladění",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Čekání na zadání párovacího kódu v oznámení...\nZadejte ho, dokud je otevřená obrazovka párování v Bezdrátovém ladění.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Znovu otevřít Bezdrátové ladění",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Párování...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Spárováno, ještě jeden krok",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Vaše zařízení má dodatečné bezpečnostní omezení. Zapněte ještě jednu volbu, aby tato aplikace mohla bezdrátové ladění zapínat a vypínat automaticky.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Jak to zapnout",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Otevřete Možnosti pro vývojáře\n2. Najděte přepínač související s bezpečností ladění přes USB nebo s monitorováním oprávnění a zapněte ho, například:\n• Xiaomi: „Ladění USB (Nastavení zabezpečení)“\n• OPPO / realme: „Vypnout monitorování oprávnění“\n3. Ujistěte se, že je bezdrátové ladění zapnuté, vraťte se a klepněte na „Zkusit znovu“",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Otevřít Možnosti pro vývojáře",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Zkusit znovu",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Přeskočit (bezdrátové ladění si při každé aktualizaci zapnete sami)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Hotovo",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Od teď aktualizace čte protokol automaticky. Další nastavování není potřeba.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Po klepnutí na „Aktualizovat“ zapněte bezdrátové ladění, až budete vyzváni.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Návrat a spouštění aktualizace...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Přístup k herním protokolům",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Bezdrátové ladění",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Nenastaveno",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Párování",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Spárováno",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Spárováno (bezdrátové ladění zapínejte ručně)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Zopakovat udělení oprávnění",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Nastavit",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Zrušit párování",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Zrušit párování?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "Tím se smaže párovací klíč této aplikace a odebere se její oprávnění přepínat bezdrátové ladění. Chcete-li bezdrátové ladění později použít, budete muset spárovat znovu.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Párování zrušeno",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Párovací klíč této aplikace byl smazán a bylo odebráno její oprávnění zapínat a vypínat bezdrátové ladění.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Párovací klíč smazán",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Párovací klíč této aplikace byl smazán, ale tentokrát se nepodařilo připojit k bezdrátovému ladění, takže oprávnění zapínat a vypínat bezdrátové ladění nebylo odebráno.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "Bez párování tato aplikace toto oprávnění nepoužívá. Chcete-li ho odebrat úplně, připojte se k Wi-Fi, spárujte znovu a poté párování zrušte ještě jednou.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "V systémovém seznamu Bezdrátové ladění → Spárovaná zařízení bude stále uvedeno „{name}“. Už se nemůže připojit, takže ho můžete nechat; chcete-li ho odstranit, klepněte na něj a smažte ho.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "V systémovém seznamu Bezdrátové ladění → Spárovaná zařízení je stále uvedeno také „{name}“; klepnutím ho smažete.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Metoda",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Sdílet",
+  "shareFailed": "Sdílení se nepodařilo",
+  "dialogSaveAsTitle": "Uložit jako",
+  "dialogOpenTitle": "Otevřít",
+  "dialogSelectFolderTitle": "Vybrat složku",
+  "actionSave": "Uložit",
+  "settingsLogsShare": "Sdílet protokoly"
 }
