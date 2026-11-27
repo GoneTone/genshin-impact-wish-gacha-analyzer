@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
@@ -204,7 +207,7 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
 }
 
 /// 帳號挑選列表中單一帳號的 checkbox row。
-class _PickerRow extends StatelessWidget {
+class _PickerRow extends ConsumerWidget {
   const _PickerRow({
     required this.entry,
     required this.selected,
@@ -221,13 +224,13 @@ class _PickerRow extends StatelessWidget {
   final ValueChanged<bool?> onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
+    final mask = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
+    final uid = displayUid(entry.uid, mask: mask);
     final alias = entry.alias;
-    final title = (alias != null && alias.isNotEmpty)
-        ? '${entry.uid} ($alias)'
-        : entry.uid;
+    final title = (alias != null && alias.isNotEmpty) ? '$uid ($alias)' : uid;
     final badge = entry.badge;
     return CheckboxListTile(
       value: selected,

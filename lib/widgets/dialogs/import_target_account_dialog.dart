@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/platform_import.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 
@@ -147,7 +150,7 @@ class _ImportTargetAccountDialogState
 }
 
 /// 帳號列的文字：別名＋UID 與本機筆數；[compact] 時筆數換到第二行。
-class _AccountLabel extends StatelessWidget {
+class _AccountLabel extends ConsumerWidget {
   /// 建立 [_AccountLabel]。
   const _AccountLabel({
     required this.entry,
@@ -165,12 +168,12 @@ class _AccountLabel extends StatelessWidget {
   final TextStyle countStyle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
+    final mask = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
+    final uid = displayUid(entry.uid, mask: mask);
     final alias = entry.alias;
-    final name = Text(
-      alias == null || alias.isEmpty ? entry.uid : '$alias (${entry.uid})',
-    );
+    final name = Text(alias == null || alias.isEmpty ? uid : '$alias ($uid)');
     final count = Text(
       l.importTargetAccountRecordCount(entry.recordCount),
       style: countStyle,
