@@ -14,23 +14,34 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.da
 /// 顯示「匯入到哪個帳號？」對話框（匯出檔沒有 UID 的平台用），回傳選定的 UID；
 /// 取消回 null。
 ///
-/// [accounts] 為本機帳號，預選第一個；最後一項「其他 UID」附輸入框。空清單時
-/// 只顯示輸入框。UID 不符合 [isValidUid] 時「繼續」不能按。
+/// [platformName] 為來源平台的顯示名稱，帶進說明文字。[accounts] 為本機帳號，
+/// 預選第一個；最後一項「其他 UID」附輸入框。空清單時只顯示輸入框。UID 不符合
+/// [isValidUid] 時「繼續」不能按。
 Future<String?> showImportTargetAccountDialog({
   required BuildContext context,
+  required String platformName,
   required List<AccountPickerEntry> accounts,
 }) {
   return showDialog<String>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => _ImportTargetAccountDialog(accounts: accounts),
+    builder: (_) => _ImportTargetAccountDialog(
+      platformName: platformName,
+      accounts: accounts,
+    ),
   );
 }
 
 /// 選匯入目標帳號 dialog 的實作 widget。
 class _ImportTargetAccountDialog extends StatefulWidget {
   /// 建立 [_ImportTargetAccountDialog]。
-  const _ImportTargetAccountDialog({required this.accounts});
+  const _ImportTargetAccountDialog({
+    required this.platformName,
+    required this.accounts,
+  });
+
+  /// 來源平台的顯示名稱。
+  final String platformName;
 
   /// 本機帳號。
   final List<AccountPickerEntry> accounts;
@@ -95,7 +106,7 @@ class _ImportTargetAccountDialogState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l.importTargetAccountBody),
+          Text(l.importTargetAccountBody(widget.platformName)),
           const SizedBox(height: AppSpacing.m),
           if (widget.accounts.isEmpty)
             field

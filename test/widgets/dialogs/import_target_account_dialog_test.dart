@@ -52,6 +52,7 @@ Future<void> _open(
                 onPressed: () async {
                   _result = await showImportTargetAccountDialog(
                     context: ctx,
+                    platformName: 'Paimon.moe',
                     accounts: accounts,
                   );
                   _completed = true;
@@ -81,6 +82,7 @@ void main() {
   ) async {
     await _open(tester, _accounts);
     expect(find.text('匯入到哪個帳號？'), findsOneWidget);
+    expect(find.text('Paimon.moe 的匯出檔沒有 UID，請選擇這些記錄屬於哪個帳號。'), findsOneWidget);
     expect(find.text('800000001'), findsOneWidget);
     expect(find.text('本機已有 1155 筆記錄'), findsOneWidget);
     expect(_continueEnabled(tester), isTrue);

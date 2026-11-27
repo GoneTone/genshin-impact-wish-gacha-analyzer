@@ -911,7 +911,10 @@
   "platformUigfSubtitle": "genshin-wish-export 등 도구 · JSON",
   "platformPaimonMoeSubtitle": "paimon.moe · Excel",
   "importTargetAccountTitle": "어느 계정으로 가져올까요?",
-  "importTargetAccountBody": "Paimon.moe 내보내기 파일에는 UID가 없습니다. 이 기록이 속한 계정을 선택해 주세요.",
+  "importTargetAccountBody": "{platform} 내보내기 파일에는 UID가 없습니다. 이 기록이 속한 계정을 선택해 주세요.",
+  "@importTargetAccountBody": {
+    "placeholders": { "platform": { "type": "String" } }
+  },
   "importTargetAccountOtherUid": "다른 UID",
   "importTargetAccountUidHint": "UID 입력",
   "importTargetAccountRecordCount": "로컬에 {count}건 저장됨",

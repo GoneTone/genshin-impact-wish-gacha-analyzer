@@ -999,6 +999,7 @@ class _DataManagement extends ConsumerWidget {
     if (platform.requiresTargetUid) {
       final uid = await showImportTargetAccountDialog(
         context: ctx,
+        platformName: platform.displayName(l),
         accounts: _localAccountEntries(ref),
       );
       if (uid == null || !ctx.mounted) return;
