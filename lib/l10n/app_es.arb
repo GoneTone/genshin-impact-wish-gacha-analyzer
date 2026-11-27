@@ -1,5 +1,5 @@
 {
-  "@@locale": "es-ES",
+  "@@locale": "es",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
