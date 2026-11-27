@@ -1,5 +1,5 @@
 {
-  "@@locale": "es",
+  "@@locale": "es-ES",
   "localeNativeName": "Español",
   "localeTranslator": "cahoinu, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Traductor: {translator}",
@@ -33,7 +33,6 @@
   "navSettings": "Configuración",
   "navContributors": "Contribucion",
   "gachaTypeCharacter": "Gachapón promocional de personaje",
-  "gachaTypeCharacter2": "Gachapón promocional de personaje 2",
   "gachaTypeWeapon": "Gachapón promocional de arma",
   "gachaTypeChronicled": "Gachapón recopilatorio",
   "gachaTypeStandard": "Gachapón permanente",
@@ -43,7 +42,7 @@
   "navOdesEvent": "Promocional",
   "navOdesStandard": "Permanente",
   "navSectionGacha": "Gachapón",
-  "navSectionOdes": "Oda",
+  "navSectionOdes": "Odas",
   "footerNotSynced": "No sincronizado",
   "footerLastUpdated": "Ultima actualizacion: {time}",
   "@footerLastUpdated": {
@@ -106,10 +105,7 @@
   "uidNotSynced": "No sincronizado",
   "uidActiveSuffix": " (Activo)",
   "emptyNoSyncTitle": "Aún no se ha sincronizado ningún dato",
-  "emptyNoSyncMessage": "Toca {icon} en la esquina superior derecha para comenzar",
-  "emptyNoRecords": "No hay registros para este banner",
-  "emptyNoFilterMatch": "No hay registros que coincidan con los filtros",
-  "emptyNoOdesRecords": "Aún no hay registros de Oda",
+  "emptyNoOdesRecords": "Aún no hay registros de Odas",
   "emptyNoGachaRecords": "Aún no hay registros de Gachapón",
   "statsTotal": "Deseos Totales",
   "statsRankCount": "Numero de articulos {star}",
@@ -148,23 +144,6 @@
   },
   "tableTotalIndex": "Deseos Totales",
   "tableMainPity": "Dentro del pity",
-  "tableSortButton": "Ordenar: {column}",
-  "@tableSortButton": {
-    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
-    "placeholders": {
-      "column": {
-        "type": "String"
-      }
-    }
-  },
-  "tableSortDefault": "Ordenar: predeterminado",
-  "@tableSortDefault": {
-    "description": "Sort button text when the records are in their default order"
-  },
-  "tableSortSheetTitle": "Ordenar por",
-  "@tableSortSheetTitle": {
-    "description": "Title of the bottom sheet that picks the sort column"
-  },
   "tableMainPityTooltip": "Deseos desde el último {star}",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -183,19 +162,6 @@
   "progressFetching": "Obteniendo datos…",
   "progressDone": "Actualización completada",
   "progressFailed": "Fallido",
-  "progressOpenGameHint": "Abre Genshin Impact → Deseos → Historial",
-  "progressFallbackHint": "(La URL anterior del historial de Gachapón ha caducado, es necesario obtenerla de nuevo)",
-  "progressNotDetectedLink": "¿Has abierto el Historial de Deseos pero no pasa nada?",
-  "progressCaptureUnavailableHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado), así que solo se detecta desde la caché web del juego. Abre la página del Historial de Deseos en el juego.",
-  "progressCaptureUnavailableNoGameDirHint": "No se pudo iniciar el interceptor (puede que se haya rechazado el certificado o que el puerto esté ocupado) y tampoco se encontró la carpeta del juego. Pulsa «Elegir carpeta del juego» abajo para indicarla manualmente.",
-  "gameDirHelpTitle": "No se detecta el Historial de Deseos",
-  "gameDirHelpNotFound": "No se encontró la carpeta de Genshin Impact. Una vez elegida la carpeta del juego, esta herramienta también podrá obtener la URL del Historial de Deseos desde la caché web del juego.",
-  "gameDirHelpFound": "Carpeta del juego en uso: {path}. Si no es la copia del juego que estás usando, elige otra.",
-  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
-  "gameDirHelpReopen": "Carpeta del juego configurada. Vuelve al juego y abre de nuevo el Historial de Deseos.",
-  "gameDirInvalid": "No se encontró Genshin Impact en esta carpeta. Elige la carpeta «Genshin Impact game».",
-  "actionChooseGameDir": "Elegir carpeta del juego",
-  "actionRechooseGameDir": "Elegir de nuevo",
   "progressFetchingBanner": "Obteniendo: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -204,20 +170,12 @@
       }
     }
   },
-  "progressPageStatus": "Página {page}, {count, plural, =1{1 registro añadido} other{{count} registros añadidos}}",
+  "progressPageStatus": "Página {page}, {count} registros añadidos",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
         "type": "int"
       },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressDoneSummary": "{count, plural, =1{1 registro añadido} other{{count} registros añadidos}}",
-  "@progressDoneSummary": {
-    "placeholders": {
       "count": {
         "type": "int"
       }
@@ -232,7 +190,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "{count, plural, =1{Datos de 1 objeto actualizados} other{Datos de {count} objetos actualizados}}",
+  "progressDoneItemDataSummary": "Datos de {count} objetos actualizados",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -241,7 +199,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "{count, plural, =1{Descargada 1 imagen de objeto faltante} other{Descargadas {count} imágenes de objetos faltantes}}",
+  "progressDoneItemDataImagesSummary": "Descargadas {count} imágenes de objetos faltantes",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -250,7 +208,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Se limpiaron datos de idioma obsoletos de 1 objeto} other{Se limpiaron datos de idioma obsoletos de {count} objetos}}",
+  "progressDoneItemDataPrunedSummary": "Se limpiaron datos de idioma obsoletos de {count} objetos",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -334,11 +292,9 @@
       }
     }
   },
-  "errorNoRecords": "Esta cuenta aún no tiene registros de ningún banner",
   "pageOverviewTitle": "Cuadro de datos globales",
   "pageOverviewGachaSection": "Resumen de Gachapón",
-  "pageOverviewOdesSection": "Resumen de Oda",
-  "pageBannerRecordList": "Lista de registros",
+  "pageOverviewOdesSection": "Resumen de Odas",
   "rarityOverviewTitle": "Resumen de {star}",
   "@rarityOverviewTitle": {
     "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
@@ -356,7 +312,7 @@
   "settingsLanguage": "Idioma",
   "settingsLocaleSystem": "Seguir el sistema",
   "settingsDataLanguage": "Idioma de los datos",
-  "settingsDataLanguageDesc": "Unifica el idioma de visualización del historial de tiradas, independientemente del idioma de la interfaz de la aplicación. Una vez configurado, al actualizar o importar datos se convertirán automáticamente a este idioma. Los registros de Oda y los objetos sin datos correspondientes conservan su idioma original.",
+  "settingsDataLanguageDesc": "Unifica el idioma de visualización del historial de tiradas, independientemente del idioma de la interfaz de la aplicación. Una vez configurado, al actualizar o importar datos se convertirán automáticamente a este idioma. Los registros de Odas y los objetos sin datos correspondientes conservan su idioma original.",
   "settingsDataLanguageUnset": "Sin configurar (sin conversión)",
   "settingsDataLanguageUnify": "Convertir el idioma de los datos ahora",
   "settingsDataLanguageUnifying": "Convirtiendo...",
@@ -373,19 +329,10 @@
   },
   "settingsDataLanguageUnifyFailed": "La conversión falló, los datos no se modificaron. Comprueba tu conexión e inténtalo de nuevo.",
   "settingsDataManagement": "Gestión de datos",
-  "settingsGameDir": "Carpeta del juego",
-  "settingsGameDirAuto": "Detectada automáticamente: {path}",
-  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
-  "settingsGameDirManual": "Configurada manualmente: {path}",
-  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
-  "settingsGameDirNone": "No se encontró la carpeta del juego",
-  "actionClearGameDir": "Borrar",
   "settingsCloudSync": "Sincronización en la nube",
-  "cloudSyncIntro": "Vincula tu cuenta de Google para respaldar automáticamente los registros de deseos en tu Google Drive y mantenerlos sincronizados entre varios dispositivos.",
   "cloudSyncUnconfigured": "Esta compilación no tiene credenciales de Google OAuth configuradas; la sincronización en la nube no está disponible.",
   "cloudSyncLink": "Vincular cuenta de Google",
   "cloudSyncAwaitingConsent": "Se abrió el navegador. Completa la autorización en el navegador...",
-  "cloudSyncAwaitingConsentAndroid": "Completa la autorización en la ventana de Google...",
   "cloudSyncLinkedAs": "Vinculada: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -424,14 +371,6 @@
   "settingsPrivacySectionTitle": "Privacidad",
   "settingsMaskUidInUi": "Ocultar UID en la interfaz",
   "settingsMaskUidInUiHint": "Cuando está activado, los UID en la interfaz y la lista de cuentas muestran los primeros 3 dígitos y el resto enmascarado (por ejemplo, 123•••••). Útil para transmisiones en vivo o al compartir pantalla. Las imágenes para compartir, los archivos exportados y el diálogo de confirmación de eliminación no se ven afectados.",
-  "settingsAdPrivacyOptions": "Opciones de privacidad de anuncios",
-  "@settingsAdPrivacyOptions": {
-    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
-  },
-  "settingsAdPrivacyOptionsHint": "Cambia si aceptas ver anuncios personalizados.",
-  "@settingsAdPrivacyOptionsHint": {
-    "description": "One-line explanation shown above the ad privacy options button."
-  },
   "settingsAbout": "Sobre",
   "settingsAboutVersion": "Versión {version}",
   "@settingsAboutVersion": {
@@ -453,7 +392,6 @@
   "contributorsTranslatedLanguages": "Ha sido traducido a",
   "contributorsHelpTranslate": "¡¿No esta tu lenguaje? Ayudanos a traducirlo!",
   "contributorsProjectLicense": "Licencia del proyecto",
-  "contributorsOpenSourceLicenses": "Licencias de código abierto",
   "pityRank": "Pity de {star}",
   "@pityRank": {
     "placeholders": {
@@ -473,7 +411,7 @@
       }
     }
   },
-  "pityDistance": "{n, plural, =1{1 deseo hasta el próximo pity} other{{n} deseos hasta el próximo pity}}",
+  "pityDistance": "{n} deseos hasta el próximo pity",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -481,7 +419,7 @@
       }
     }
   },
-  "pityClose": "¡Casi en pity! {n, plural, =1{Queda 1 deseo} other{Quedan {n} deseos}}",
+  "pityClose": "¡Casi en pity! Quedan {n} deseos",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -507,15 +445,7 @@
       }
     }
   },
-  "timelineNoRecordsForRank": "Sin registros de {star} aún",
-  "@timelineNoRecordsForRank": {
-    "placeholders": {
-      "star": {
-        "type": "String"
-      }
-    }
-  },
-  "timelineSinceLast": "{n, plural, =1{1 deseo} other{{n} deseos}}",
+  "timelineSinceLast": "{n} deseos",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -524,7 +454,7 @@
     }
   },
   "timelineNowLabel": "Ahora",
-  "timelineNowPulls": "{n, plural, =1{1 deseo realizado} other{{n} deseos realizados}}",
+  "timelineNowPulls": "{n} deseos realizados",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -532,7 +462,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n, plural, =1{1 deseo desde el último {star}} other{{n} deseos desde el último {star}}}",
+  "timelineNowSinceLast": "{n} deseos desde el último {star}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -543,7 +473,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, =1{1 deseo desde el último {star} (todos los banners)} other{{n} deseos desde el último {star} (todos los banners)}}",
+  "timelineNowSinceCrossPool": "{n} deseos desde el último {star} (todos los banners)",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -567,7 +497,7 @@
   },
   "timelineScrollLeft": "Desplazar a la izquierda",
   "timelineScrollRight": "Desplazar a la derecha",
-  "timelineLoadMore": "{n, plural, =1{Cargar más (1 restante)} other{Cargar más ({n} restantes)}}",
+  "timelineLoadMore": "Cargar más ({n} restantes)",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -589,20 +519,11 @@
   "filterClear": "Limpiar filtros",
   "pagerFirst": "Primera página",
   "pagerLast": "Última página",
-  "pagerJumpTitle": "Ir a la página",
-  "pagerJumpLabel": "Página ({min}–{max})",
-  "pagerJumpCurrent": "Página actual: {page} · {total, plural, =1{1 registro} other{{total} registros}}",
-  "pagerJumpGo": "Ir",
-  "pagerJumpInvalid": "Introduce una página de {min} a {max}",
   "settingsClearActive": "Borrar datos de la cuenta actual",
   "settingsClearAll": "Borrar todos los datos",
   "settingsRefetchHoyoWikiImagesTitle": "Forzar redescarga de imágenes de objetos",
   "@settingsRefetchHoyoWikiImagesTitle": {
     "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
-  },
-  "settingsRefetchHoyoWikiImagesEmpty": "Aún no hay registros de Gachapón, nada que redescargar",
-  "@settingsRefetchHoyoWikiImagesEmpty": {
-    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
   },
   "confirmRefetchHoyoWikiTitle": "Forzar redescarga de imágenes de objetos",
   "@confirmRefetchHoyoWikiTitle": {
@@ -743,17 +664,6 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmar importación",
-  "settingsImportConfirmIntro": "Se van a importar {accounts, plural, =1{1 cuenta} other{{accounts} cuentas}} ({records, plural, =1{1 registro} other{{records} registros}} en total):",
-  "@settingsImportConfirmIntro": {
-    "placeholders": {
-      "accounts": {
-        "type": "int"
-      },
-      "records": {
-        "type": "int"
-      }
-    }
-  },
   "settingsImportConfirmMergeHeader": "Las siguientes cuentas se combinarán con los datos locales; no se eliminarán los registros existentes:",
   "settingsImportConfirmNoConflict": "Sin conflictos de datos.",
   "settingsImportConfirmPreserveFooter": "Las demás cuentas existentes ({uids}) se conservarán.",
@@ -761,17 +671,6 @@
     "placeholders": {
       "uids": {
         "type": "String"
-      }
-    }
-  },
-  "settingsImportSuccess": "{accounts, plural, =1{Se ha importado correctamente 1 cuenta} other{Se han importado correctamente {accounts} cuentas}} ({records, plural, =1{1 registro} other{{records} registros}})",
-  "@settingsImportSuccess": {
-    "placeholders": {
-      "accounts": {
-        "type": "int"
-      },
-      "records": {
-        "type": "int"
       }
     }
   },
@@ -802,117 +701,11 @@
   "importReasonUnreadable": "No se puede leer el archivo",
   "exportReasonWriteFailed": "No se puede escribir el archivo, comprueba la ubicación de guardado y los permisos",
   "importReasonForeignApp": "Este archivo no es una copia de seguridad exportada por la aplicación",
-  "platformUigf": "UIGF",
-  "platformPaimonMoe": "Paimon.moe",
-  "settingsImportOtherPlatform": "Importar de otras plataformas",
-  "platformPickerTitle": "Elige la plataforma de origen",
-  "importReasonNotPlatformFile": "Este archivo no es una exportación válida de {platform}",
-  "@importReasonNotPlatformFile": {
-    "placeholders": {
-      "platform": {
-        "type": "String"
-      }
-    }
-  },
-  "platformUigfSubtitle": "genshin-wish-export y otras herramientas · JSON",
-  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
-  "importTargetAccountTitle": "¿A qué cuenta quieres importar?",
-  "importTargetAccountBody": "Las exportaciones de paimon.moe no incluyen UID. Elige la cuenta a la que pertenecen estos registros.",
-  "importTargetAccountOtherUid": "Otro UID",
-  "importTargetAccountUidHint": "Introduce el UID",
-  "importTargetAccountRecordCount": "{count, plural, =1{1 registro en este dispositivo} other{{count} registros en este dispositivo}}",
-  "@importTargetAccountRecordCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "importReasonUigfVersionTooNew": "Este archivo usa una versión de UIGF más reciente ({version}) que aún no es compatible. Actualiza la aplicación o exporta en v4 desde la herramienta original.",
-  "@importReasonUigfVersionTooNew": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "importReasonUnknownGachaType": "El archivo contiene tipos de gachapón no compatibles ({types})",
-  "@importReasonUnknownGachaType": {
-    "placeholders": {
-      "types": {
-        "type": "String"
-      }
-    }
-  },
-  "importReasonItemUnresolved": "No se pudieron completar los datos del objeto ({item}). Comprueba tu conexión e inténtalo de nuevo.",
-  "@importReasonItemUnresolved": {
-    "placeholders": {
-      "item": {
-        "type": "String"
-      }
-    }
-  },
-  "importOverlapWarning": "⚠ {uid}: ambos lados tienen registros entre {from} y {to}, pero ninguno de los {groups} deseos de ese período coincide con los registros oficiales de este dispositivo. Puede que hayas elegido la cuenta equivocada o que el archivo use otra zona horaria.",
-  "@importOverlapWarning": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      },
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      },
-      "groups": {
-        "type": "int"
-      }
-    }
-  },
-  "importOverlapWarningPartial": "⚠ {uid}: ambos lados tienen registros entre {from} y {to}, pero los registros oficiales de este dispositivo solo coinciden con {matched} de los {groups} deseos de ese período. Puede que hayas elegido la cuenta equivocada o que el archivo use otra zona horaria.",
-  "@importOverlapWarningPartial": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      },
-      "from": {
-        "type": "String"
-      },
-      "to": {
-        "type": "String"
-      },
-      "groups": {
-        "type": "int"
-      },
-      "matched": {
-        "type": "int"
-      }
-    }
-  },
-  "confirmImportAnyway": "Importar de todos modos",
-  "importResolvingItems": "Completando datos de objetos...",
   "settingsExportSelectTitle": "Seleccionar cuentas a exportar",
   "settingsImportSelectTitle": "Seleccionar cuentas a importar",
   "settingsImportMergeBadge": "Combinar",
   "accountsPickerSelectAll": "Seleccionar todo",
-  "accountRecordCount": "{n, plural, =1{1 registro} other{{n} registros}}",
-  "@accountRecordCount": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "confirmTitle": "Confirmar operación",
-  "confirmClearActiveBody": "Esto eliminará permanentemente todos los registros de deseos del UID {uid}. Escribe el UID para confirmar:",
-  "@confirmClearActiveBody": {
-    "placeholders": {
-      "uid": {
-        "type": "String"
-      }
-    }
-  },
-  "confirmClearAllBody": "Esto eliminará permanentemente todos los registros de deseos de todas las cuentas. Escribe DELETE para confirmar:",
   "confirmDelete": "Eliminar",
   "confirmImport": "Importar",
   "confirmExport": "Exportar",
@@ -932,9 +725,6 @@
   "accountAdd": "Agregar cuenta",
   "accountAliasLabel": "Alias",
   "accountAliasHint": "Pon un nombre fácil de recordar a esta cuenta",
-  "accountAliasNone": "Sin alias",
-  "accountActionEditAlias": "Editar alias",
-  "accountEditAliasTitle": "Editar alias",
   "accountDragHandleTooltip": "Arrastrar para ordenar",
   "loadingBootstrap": "Cargando…",
   "timelineTopRarityTitle": "Línea de tiempo {star} ({n})",
@@ -949,7 +739,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Cantidad de ítems de mayor rareza por banner",
-  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 deseo desde el último {star}} other{{n} deseos desde el último {star}}}",
+  "bannerTopRarityPullsSinceLast": "{n} deseos desde el último {star}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {
@@ -977,15 +767,6 @@
     }
   },
   "updateButtonDownload": "Ir a descargar",
-  "updateButtonUpdate": "Actualizar",
-  "updateNotesUnavailable": "Las notas de la versión no están disponibles en este momento. Consulta Google Play para más detalles.",
-  "updateDownloadingMessage": "Descargando la actualización...",
-  "@updateDownloadingMessage": {
-    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
-  },
-  "updateDownloadedMessage": "Se ha descargado la actualización",
-  "updateRestartAction": "Reiniciar",
-  "updateInAppUnavailable": "Ahora mismo no se puede actualizar desde la app. Actualízala desde Google Play.",
   "updateButtonSkip": "Omitir esta versión",
   "updateButtonLater": "Más tarde",
   "updateCheckButton": "Buscar actualizaciones",
@@ -1011,7 +792,6 @@
     }
   },
   "updateErrorFormat": "Formato de respuesta inesperado",
-  "updateErrorPlay": "No se pudo conectar con Google Play, o esta copia no se instaló desde Google Play",
   "currentReleaseTitle": "Notas de la versión actual",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -1091,10 +871,6 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
-  "detailScrollDown": "Desplazar hacia abajo",
-  "@detailScrollDown": {
-    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
-  },
   "actionViewOnHoYoWiki": "Ver en HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -1154,211 +930,5 @@
   },
   "luckTierLucky": "Con suerte",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Sin suerte",
-  "manualUrlEntry": "Introducir manualmente la URL del historial de Gachapón",
-  "manualUrlTitle": "Introducir manualmente la URL del historial de Gachapón",
-  "manualUrlHint": "Si ya obtuviste la URL del historial de Gachapón de otra forma (por ejemplo, con una herramienta en tu ordenador), pégala aquí. También puedes pegar todo el texto; la app encuentra la URL automáticamente.",
-  "manualUrlFieldHint": "Pegar URL...",
-  "manualUrlPaste": "Pegar del portapapeles",
-  "manualUrlNotFound": "No se encontró la URL del historial de Gachapón. Comprueba lo que has pegado.",
-  "manualUrlWarning": "La URL contiene las credenciales de tu cuenta. No la compartas públicamente. Caduca al cabo de un tiempo.",
-  "manualUrlSubmit": "Aceptar",
-  "progressWaitingLog": "Esperando a que abras la página del Historial de Deseos en el juego...",
-  "progressOpenGameHintAndroid": "Abre Genshin Impact → Gachapón → Historial",
-  "progressCheckingLogAccess": "Preparando la lectura del registro del juego...",
-  "progressLogUnavailableTitle": "No se puede obtener automáticamente la URL del historial de Gachapón",
-  "logUnavailableNotPaired": "La lectura del registro del juego aún no está configurada. Tras configurarla una sola vez, cada actualización lo leerá automáticamente.",
-  "logUnavailableNoWifi": "La depuración inalámbrica solo funciona con Wi‑Fi. Conéctate a una red Wi‑Fi y vuelve; la app continuará automáticamente. También puedes introducir la URL manualmente.",
-  "logRootDeniedHint": "Se detectó root, pero esta app no tiene acceso root. Para leer con root, permite esta app en tu gestor de root (por ejemplo, la lista de Superusuario de Magisk) y vuelve; la app lo reintentará automáticamente.",
-  "logUnavailableAdbFailed": "No se pudo conectar con la depuración inalámbrica. Puede que la vinculación haya caducado; vuelve a vincular.",
-  "logUnavailableWirelessOff": "Tu dispositivo no permite que esta app active la depuración inalámbrica. Actívala en la página Depuración inalámbrica y vuelve; la app continuará automáticamente.",
-  "logUnavailableNetworkNotAllowed": "Esta red Wi‑Fi aún no está permitida para la depuración inalámbrica. Toca Permitir en el aviso del sistema (marca \"Permitir siempre en esta red\" para que no vuelva a preguntar) y la app continuará automáticamente. Si cerraste el aviso, toca Reintentar.",
-  "logUnavailableUnsupported": "Este dispositivo no puede leer automáticamente la URL del historial de Gachapón (requiere Android 11 o posterior, o root). Introdúcela manualmente.",
-  "logUnavailableGameNotInstalled": "No se encontró Genshin Impact en este dispositivo. Después de instalarlo, vuelve aquí y se detectará automáticamente.",
-  "actionOpenGame": "Abrir Genshin Impact",
-  "actionOpenWirelessDebugging": "Abrir Depuración inalámbrica",
-  "progressLogConnectionLost": "Se perdió la conexión de depuración inalámbrica; reconectando... Si no se recupera, comprueba tu Wi‑Fi o introduce la URL manualmente.",
-  "progressWirelessLeftOnHint": "La depuración inalámbrica sigue activada. Puedes desactivarla en los ajustes del sistema.",
-  "progressCredentialReady": "URL del historial de Gachapón obtenida. La descarga del historial de Gachapón empezará cuando vuelvas a esta app.",
-  "actionRedetectGame": "Volver a comprobar",
-  "updateOpenPlayStore": "Abrir Google Play",
-  "actionSetupLogAccess": "Configurar",
-  "@actionSetupLogAccess": {
-    "description": "Waiting screen button that opens the log access setup page"
-  },
-  "actionRepair": "Volver a vincular",
-  "@actionRepair": {
-    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
-  },
-  "setupTitle": "Leer el registro del sistema",
-  "@setupTitle": {
-    "description": "App bar title of the log access setup disclosure page"
-  },
-  "setupWhyTitle": "¿Por qué es necesario?",
-  "@setupWhyTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupWhyBody": "Android no permite que las apps lean directamente el registro del sistema de otras apps. Esta app usa la función integrada de depuración inalámbrica para leer la URL del historial de Gachapón de Genshin Impact.",
-  "@setupWhyBody": {
-    "description": "Disclosure page: why the app needs wireless debugging"
-  },
-  "setupWhatTitle": "Qué hace esta app",
-  "@setupWhatTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupWhatBody": "• Solo lee la URL del historial de Gachapón de Genshin Impact\n• Se desconecta justo después de leerlo y desactiva la depuración inalámbrica si fue esta app quien la activó\n• Se concede a sí misma permiso para activar y desactivar la depuración inalámbrica, para que no tengas que volver a configurarla\n• Puedes quitarlo en cualquier momento en Ajustes",
-  "@setupWhatBody": {
-    "description": "Disclosure page bullet list. Keep the line breaks."
-  },
-  "setupNeedTitle": "Requisitos",
-  "@setupNeedTitle": {
-    "description": "Disclosure page card title"
-  },
-  "setupNeedBody": "Android 11 o posterior, Wi‑Fi y notificaciones permitidas",
-  "@setupNeedBody": {
-    "description": "Disclosure page requirements"
-  },
-  "setupStart": "Empezar configuración",
-  "@setupStart": {
-    "description": "Disclosure page primary button"
-  },
-  "setupUseManual": "Introducir la URL manualmente",
-  "@setupUseManual": {
-    "description": "Disclosure page link to manual input instead"
-  },
-  "setupPairTitle": "Vincular depuración inalámbrica",
-  "@setupPairTitle": {
-    "description": "App bar title of the pairing guide page"
-  },
-  "setupStepDevOptions": "1. Activa las Opciones para desarrolladores",
-  "@setupStepDevOptions": {
-    "description": "Pairing guide step 1 title"
-  },
-  "setupStepDevOptionsBody": "1. Abre la página de información en los Ajustes del sistema (por ejemplo, \"Información del teléfono\" o \"Información del tablet\")\n2. Busca \"Número de compilación\" y tócalo 7 veces\n3. Cuando veas \"Ahora eres desarrollador\", vuelve a esta app",
-  "@setupStepDevOptionsBody": {
-    "description": "Pairing guide step 1 instructions. Keep the line breaks."
-  },
-  "setupDevOptionsUndetected": "Las Opciones para desarrolladores siguen desactivadas. Si al tocar \"Número de compilación\" el sistema indicó que no hacía falta hacer nada más (por ejemplo, \"Ya eres desarrollador\"), el interruptor principal de las Opciones para desarrolladores está desactivado. Abre las Opciones para desarrolladores, activa el interruptor de la parte superior y vuelve a esta app.",
-  "@setupDevOptionsUndetected": {
-    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
-  },
-  "setupOpenAbout": "Abrir información del dispositivo",
-  "@setupOpenAbout": {
-    "description": "Button that opens the system About page"
-  },
-  "setupStepDevOptionsDone": "1. Opciones para desarrolladores activadas",
-  "@setupStepDevOptionsDone": {
-    "description": "Pairing guide step 1 done"
-  },
-  "setupStepNotifications": "2. Permite las notificaciones",
-  "@setupStepNotifications": {
-    "description": "Pairing guide step 2 title"
-  },
-  "setupStepNotificationsBody": "Introducirás el código de vinculación en una notificación, así que permite que esta app muestre notificaciones.",
-  "@setupStepNotificationsBody": {
-    "description": "Pairing guide step 2 explanation"
-  },
-  "setupAllowNotifications": "Permitir notificaciones",
-  "@setupAllowNotifications": {
-    "description": "Button that requests notification permission"
-  },
-  "setupOpenNotificationSettings": "Abrir ajustes de notificaciones",
-  "@setupOpenNotificationSettings": {
-    "description": "Button that opens the app's notification settings after the permission was denied"
-  },
-  "setupStepNotificationsDone": "2. Notificaciones permitidas",
-  "@setupStepNotificationsDone": {
-    "description": "Pairing guide step 2 done"
-  },
-  "setupStepPair": "3. Vincula",
-  "@setupStepPair": {
-    "description": "Pairing guide step 3 title"
-  },
-  "setupStepPairBody": "1. Toca el botón de abajo para abrir Depuración inalámbrica\n2. Activa \"Usar depuración inalámbrica\" y toca \"Vincular dispositivo con código de vinculación\"\n3. Desliza hacia abajo desde la parte superior de la pantalla y, en la notificación de esta app, introduce el código de vinculación de 6 dígitos que aparece en la pantalla de vinculación de Depuración inalámbrica",
-  "@setupStepPairBody": {
-    "description": "Pairing guide step 3 instructions. Keep the line breaks."
-  },
-  "setupWaitingCode": "Esperando a que introduzcas el código de vinculación en la notificación...\nIntrodúcelo mientras la pantalla de vinculación de Depuración inalámbrica siga abierta.",
-  "@setupWaitingCode": {
-    "description": "Pairing guide while waiting for the code. Keep the line break."
-  },
-  "setupOpenWirelessAgain": "Volver a abrir Depuración inalámbrica",
-  "@setupOpenWirelessAgain": {
-    "description": "Button to open Wireless debugging again while waiting"
-  },
-  "setupPairing": "Vinculando...",
-  "@setupPairing": {
-    "description": "Shown while pairing and granting permission"
-  },
-  "setupGrantFailedTitle": "Vinculado, falta un paso",
-  "@setupGrantFailedTitle": {
-    "description": "Card title when pairing worked but the permission grant failed"
-  },
-  "setupGrantFailedBody": "Tu dispositivo tiene una restricción de seguridad adicional. Activa una opción más para que esta app pueda activar y desactivar la depuración inalámbrica automáticamente.",
-  "@setupGrantFailedBody": {
-    "description": "Explanation when the permission grant failed"
-  },
-  "setupGrantHowTitle": "Cómo activarla",
-  "@setupGrantHowTitle": {
-    "description": "Card title for how to enable the extra option"
-  },
-  "setupGrantHowBody": "1. Abre las Opciones para desarrolladores\n2. Busca el interruptor relacionado con la seguridad de la depuración USB o la supervisión de permisos y actívalo, por ejemplo:\n• Xiaomi: \"Depuración USB (ajustes de seguridad)\"\n• OPPO / realme: \"Desactivar supervisión de permisos\"\n3. Asegúrate de que la depuración inalámbrica esté activada, vuelve y toca Reintentar",
-  "@setupGrantHowBody": {
-    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
-  },
-  "setupOpenDeveloperOptions": "Abrir Opciones para desarrolladores",
-  "@setupOpenDeveloperOptions": {
-    "description": "Button that opens Developer options"
-  },
-  "setupRetry": "Reintentar",
-  "@setupRetry": {
-    "description": "Button to retry granting the permission"
-  },
-  "setupSkipGrant": "Omitir (activa tú la depuración inalámbrica en cada actualización)",
-  "@setupSkipGrant": {
-    "description": "Link to skip the grant and use manual toggle mode"
-  },
-  "setupDoneTitle": "Todo listo",
-  "@setupDoneTitle": {
-    "description": "Title when setup finished"
-  },
-  "setupDoneBody": "A partir de ahora, Actualizar leerá el registro automáticamente. No hace falta configurar nada más.",
-  "@setupDoneBody": {
-    "description": "Body when setup finished"
-  },
-  "setupDoneManualBody": "Cuando toques Actualizar, activa la depuración inalámbrica cuando se te pida.",
-  "@setupDoneManualBody": {
-    "description": "Body when setup finished in manual toggle mode"
-  },
-  "setupDoneReturning": "Volviendo e iniciando la actualización...",
-  "@setupDoneReturning": {
-    "description": "Shown just before returning and starting the update"
-  },
-  "settingsLogAccess": "Acceso al registro del juego",
-  "logAccessMethodRoot": "Root",
-  "logAccessMethodWireless": "Depuración inalámbrica",
-  "logAccessMethodNone": "Sin configurar",
-  "settingsPairingStatus": "Vinculación",
-  "settingsPaired": "Vinculado",
-  "settingsPairedManual": "Vinculado (activa la depuración inalámbrica manualmente)",
-  "settingsRetryGrant": "Reintentar permiso",
-  "settingsSetupLogAccess": "Configurar",
-  "settingsUnpair": "Quitar vinculación",
-  "settingsUnpairConfirmTitle": "¿Quitar vinculación?",
-  "settingsUnpairConfirmBody": "Se eliminará la clave de vinculación de esta app y se retirará el permiso de esta app para activar y desactivar la depuración inalámbrica. Tendrás que volver a vincular para usarla más adelante.",
-  "settingsUnpairDone": "Vinculación quitada",
-  "settingsUnpairDoneBody": "Se eliminó la clave de vinculación de esta app y se retiró su permiso para activar y desactivar la depuración inalámbrica.",
-  "settingsUnpairUnreachableTitle": "Clave de vinculación eliminada",
-  "settingsUnpairUnreachableBody": "Se eliminó la clave de vinculación de esta app, pero esta vez no se pudo conectar con la depuración inalámbrica, así que no se retiró el permiso para activarla y desactivarla.",
-  "settingsUnpairUnreachableRevokeHint": "Esta app no usa ese permiso mientras no está vinculada. Para retirarlo por completo, conéctate a una red Wi‑Fi, vuelve a vincular y luego desvincula otra vez.",
-  "settingsUnpairLeftover": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema seguirá mostrando «{name}». Ya no puede conectarse, así que puedes dejarlo; para quitarlo, tócalo y elimínalo.",
-  "settingsUnpairLeftoverAlso": "La lista Depuración inalámbrica → Dispositivos vinculados del sistema también sigue mostrando «{name}»; tócalo para eliminarlo.",
-  "settingsLogAccessMethod": "Método",
-  "actionShare": "Compartir",
-  "shareFailed": "No se pudo compartir",
-  "dialogSaveAsTitle": "Guardar como",
-  "dialogOpenTitle": "Abrir",
-  "dialogSelectFolderTitle": "Seleccionar carpeta",
-  "actionSave": "Guardar",
-  "settingsLogsShare": "Compartir logs"
+  "luckTierUnlucky": "Sin suerte"
 }
