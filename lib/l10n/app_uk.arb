@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "До якого акаунта імпортувати?",
   "importTargetAccountBody": "В експорті {platform} немає UID. Виберіть акаунт, якому належать ці записи.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Інший UID",
   "importTargetAccountUidHint": "Введіть UID",
