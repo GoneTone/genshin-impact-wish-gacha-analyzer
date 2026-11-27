@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Wireless debugging pairing</string>
+    <string name="pairing_searching_title">Looking for the pairing service</string>
+    <string name="pairing_searching_text">In Wireless debugging, tap \"Pair device with pairing code\"</string>
+    <string name="pairing_found_title">Enter the pairing code</string>
+    <string name="pairing_found_text">Type the 6-digit code shown on the pairing screen</string>
+    <string name="pairing_input_label">Pairing code</string>
+    <string name="pairing_action_pair">Pair</string>
+    <string name="pairing_action_stop">Stop</string>
+    <string name="pairing_in_progress">Pairing...</string>
+    <string name="pairing_success_title">Pairing succeeded</string>
+    <string name="pairing_success_text">Tap here to return to the app</string>
+    <string name="pairing_failed_text">Pairing failed. Check the code and enter it again</string>
+    <string name="pairing_no_app_text">Pairing failed. Return to the app and try again</string>
+    <string name="pairing_timeout_title">Pairing timed out</string>
+    <string name="pairing_timeout_text">Tap here to start again</string>
+</resources>
