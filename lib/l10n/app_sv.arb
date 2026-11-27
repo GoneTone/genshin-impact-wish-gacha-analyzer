@@ -1,11 +1,1609 @@
 {
-  "@@locale": "sv",
-  "galleryCardLabel": "Card",
+  "@@locale": "sv-SE",
+  "localeNativeName": "Svenska",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Översättare: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Uppdatera",
+  "actionCancel": "Avbryt",
+  "actionClose": "Stäng",
+  "actionPrevPage": "Föregående",
+  "actionNextPage": "Nästa",
+  "actionOpenFolder": "Öppna mapp",
+  "navOverview": "Översikt",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Inställningar",
+  "navContributors": "Bidragsgivare",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Inte synkroniserad",
+  "footerLastUpdated": "Senast uppdaterad: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Just nu",
+  "relativeSecondsAgo": "{count, plural, =1{För 1 sekund sedan} other{För {count} sekunder sedan}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{För 1 minut sedan} other{För {count} minuter sedan}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{För 1 timme sedan} other{För {count} timmar sedan}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{För 1 dag sedan} other{För {count} dagar sedan}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{För 1 månad sedan} other{För {count} månader sedan}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "För {count} år sedan",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Byt konto",
+  "uidNotSynced": "Inte synkroniserad",
+  "uidActiveSuffix": " (aktiv)",
+  "emptyNoSyncTitle": "Inga data har synkroniserats än",
+  "emptyNoSyncMessage": "Tryck på {icon} uppe till höger för att komma igång",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "Inga poster för den här bannern",
+  "emptyNoFilterMatch": "Inga poster matchar det aktuella filtret",
+  "emptyNoOdesRecords": "Inga Ode-poster än",
+  "emptyNoGachaRecords": "Inga Wish-poster än",
+  "statsTotal": "Totalt antal pulls",
+  "statsRankCount": "Antal {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% av totalen",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Fördelning efter sällsynthet",
+  "statsItemTypeDistribution": "Fördelning efter typ",
+  "statsNoData": "Inga data",
+  "kindUnknown": "Okänd",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Tid",
+  "tableName": "Namn",
+  "tableKind": "Typ",
+  "tableRarity": "Sällsynthet",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Totalt",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Sortering: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sortering: standard",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sortera efter",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Pulls sedan senaste {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Fallande",
+  "sortDirectionAsc": "Stigande",
+  "sortHintClickToSort": "Klicka för att sortera",
+  "progressPreparing": "Förbereder...",
+  "progressPreparingHint": "Förbereder datakälla...",
+  "progressConvertingHint": "Konverterar dataspråk, vänta...",
+  "progressWaiting": "Väntar på avlyssning...",
+  "progressFetching": "Hämtar...",
+  "progressDone": "Uppdateringen är klar",
+  "progressFailed": "Misslyckades",
+  "progressOpenGameHint": "Öppna Genshin → Wishes → History",
+  "progressFallbackHint": "(Den tidigare URL:en till Wish History har gått ut och måste hämtas på nytt)",
+  "progressNotDetectedLink": "Har du öppnat Wish History men inget händer?",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Avlyssningen kunde inte startas (certifikatet kan ha avvisats, eller så används porten), så nu söks endast spelets webbcache igenom. Öppna sidan Wish History i spelet.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Avlyssningen kunde inte startas (certifikatet kan ha avvisats, eller så används porten) och spelmappen hittades inte heller. Tryck på \"Välj spelmapp\" nedan för att ange den manuellt.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Wish History hittades inte",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Spelmappen för Genshin Impact hittades inte. När du har valt spelmappen kan verktyget även hämta URL:en till Wish History från spelets webbcache.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Spelmapp som används: {path}. Om det inte är den kopia av spelet du spelar väljer du igen.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Spelmappen är inställd. Gå tillbaka till spelet och öppna Wish History en gång till.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "Genshin Impact hittades inte i den här mappen. Välj mappen \"Genshin Impact game\".",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Välj spelmapp",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Välj igen",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
+  "progressFetchingBanner": "Hämtar: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Sida {page}, {count, plural, =1{1 ny post} other{{count} nya poster}} hittills",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{1 ny post har lagts till} other{{count} nya poster har lagts till}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, =1{{count} föremålsbild har laddats ned} other{{count} föremålsbilder har laddats ned}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, =1{Data har uppdaterats för {count} föremål} other{Data har uppdaterats för {count} föremål}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{1 saknad föremålsbild nedladdad} other{{count} saknade föremålsbilder nedladdade}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Inaktuella språkdata har rensats för {count} föremål} other{Inaktuella språkdata har rensats för {count} föremål}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Delvis misslyckad: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{1 konto importerat} other{{accounts} konton importerade}}: {added, plural, =1{1 ny} other{{added} nya}}, {duplicate} fanns redan",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Importen misslyckades delvis: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Söker föremålsdata {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Hämtar föremålsdetaljer {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Laddar ned föremålsbilder {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Behörigheten går hela tiden ut; logga in i spelet igen",
+  "errorRateLimited": "För många förfrågningar; försök igen senare",
+  "errorServer": "Serverfel: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Det här kontot har inga Wish-poster än",
+  "pageOverviewTitle": "Översikt (alla banners)",
+  "pageOverviewGachaSection": "Wish-översikt",
+  "pageOverviewOdesSection": "Ode-översikt",
+  "pageBannerRecordList": "Postlista",
+  "rarityOverviewTitle": "Översikt {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Inställningar",
+  "settingsAppearance": "Utseende",
+  "settingsThemeSystem": "Följ systemet",
+  "settingsThemeDark": "Mörkt",
+  "settingsThemeLight": "Ljust",
+  "settingsLanguage": "Språk",
+  "settingsLocaleSystem": "Följ systemet",
+  "settingsDataLanguage": "Dataspråk",
+  "settingsDataLanguageDesc": "Samlar visningsspråket för gacha-historiken på ett språk, oberoende av appens språk. När det är inställt konverteras data automatiskt till det språket vid uppdatering eller import. Ode-poster och föremål utan motsvarande data behåller sitt ursprungliga språk.",
+  "settingsDataLanguageUnset": "Inte inställt (ingen konvertering)",
+  "settingsDataLanguageUnify": "Konvertera dataspråk nu",
+  "settingsDataLanguageUnifying": "Konverterar...",
+  "settingsDataLanguageUnifyDone": "{converted} konverterade, {unresolved} kunde inte konverteras.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Konverteringen misslyckades; data har inte ändrats. Kontrollera anslutningen och försök igen.",
+  "settingsDataManagement": "Datahantering",
+  "settingsGameDir": "Spelmapp",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Hittades automatiskt: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Angiven manuellt: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Spelmappen hittades inte",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Rensa",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
+  "settingsCloudSync": "Molnsynkronisering",
+  "cloudSyncIntro": "Länka ditt Google-konto för att automatiskt säkerhetskopiera gacha-poster till din Google Drive och hålla flera enheter synkroniserade.",
+  "cloudSyncUnconfigured": "Den här versionen saknar Google OAuth-uppgifter; molnsynkronisering är inte tillgänglig.",
+  "cloudSyncLink": "Länka Google-konto",
+  "cloudSyncAwaitingConsent": "Webbläsaren har öppnats. Slutför auktoriseringen i webbläsaren...",
+  "cloudSyncAwaitingConsentAndroid": "Slutför auktoriseringen i Google-fönstret...",
+  "cloudSyncLinkedAs": "Länkat: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Automatisk synkronisering",
+  "cloudSyncAutoToggleHint": "Synkroniserar automatiskt när appen startar och efter ändringar i data; när det är avstängt kan du fortfarande synkronisera manuellt.",
+  "cloudSyncNow": "Synkronisera nu",
+  "cloudSyncUnlink": "Ta bort länk",
+  "cloudSyncUnlinkConfirmTitle": "Ta bort länk",
+  "cloudSyncUnlinkConfirmBody": "Synkroniseringen stoppas. Både lokala data och säkerhetskopian i molnet behålls.",
+  "cloudSyncLastSynced": "Senast synkroniserad: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Inte synkroniserad än",
+  "cloudSyncErrorNetwork": "Synkroniseringen misslyckades: nätverksproblem. Försöker igen automatiskt.",
+  "cloudSyncErrorBusy": "Synkroniseringen har skjutits upp: en uppdatering eller import pågår. Försöker igen automatiskt.",
+  "cloudSyncErrorSchemaTooNew": "Synkroniseringen hoppades över: molndata skapades av en nyare version av appen. Uppdatera appen först.",
+  "cloudSyncErrorAuthFailed": "Auktoriseringen misslyckades. Försök igen.",
+  "cloudSyncErrorScopeMissing": "Auktoriseringen omfattade inte åtkomst till Google Drive. Länka igen och markera kryssrutan för Drive-data på Googles medgivandesida.",
+  "cloudSyncReauthRequired": "Auktoriseringen har gått ut. Länka ditt Google-konto igen.",
+  "cloudSyncRemoveFromCloud": "Ta även bort det här kontot från synkroniseringsdata i molnet",
+  "cloudSyncPostAuthTitle": "Auktoriseringen är klar",
+  "cloudSyncPostAuthBody": "Du kan stänga den här fliken och gå tillbaka till appen.",
+  "cloudSyncPostAuthScopeMissingTitle": "Behörighet till Google Drive saknas",
+  "cloudSyncPostAuthScopeMissingBody": "Kryssrutan för Google Drive-data markerades inte. Gå tillbaka till appen, länka igen och markera den behörigheten.",
+  "settingsAccountManagement": "Kontohantering",
+  "settingsPrivacySectionTitle": "Integritet",
+  "settingsMaskUidInUi": "Dölj UID i gränssnittet",
+  "settingsMaskUidInUiHint": "När detta är på visar gränssnittet och kontolistan bara de 3 första siffrorna i UID och resten döljs (t.ex. 123•••••). Praktiskt vid streaming eller skärmdelning. Delningsbilder, exporterade filer och bekräftelsedialogen vid borttagning påverkas inte.",
+  "settingsAdPrivacyOptions": "Integritetsalternativ för annonser",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Ändra om du samtycker till att se personligt anpassade annonser.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Om",
+  "settingsAboutVersion": "Version {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Versioner för andra spel",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "Fler spel kan komma att stödjas i framtiden...",
+  "contributorsTitle": "Bidragsgivare",
+  "contributorsSubtitle": "Ett särskilt tack till följande personer som har bidragit till utvecklingen av programmet!",
+  "contributorsProjectLeader": "Projektansvarig",
+  "contributorsTesters": "Testare",
+  "contributorsGithubContributors": "GitHub-bidragsgivare",
+  "contributorsTranslationReviewer": "Korrekturläsare av översättningar",
+  "contributorsTranslatedLanguages": "Tillgängliga språk",
+  "contributorsHelpTranslate": "Saknas ditt språk? Hjälp oss att översätta!",
+  "contributorsProjectLicense": "Projektlicens",
+  "contributorsOpenSourceLicenses": "Licenser för öppen källkod",
+  "pityRank": "{star}-pity",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, =1{1 pull kvar till garanti} other{{n} pulls kvar till garanti}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "{n, plural, =1{Nära garanti! 1 pull kvar} other{Nära garanti! {n} pulls kvar}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Garanti snart",
+  "pityNoMainRarity": "Ingen {star} än",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Avslutad",
+  "pityAverageInterval": "Snitt {n} pulls",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Inga {star}-poster",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{1 pull} other{{n} pulls}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Nu",
+  "timelineNowPulls": "{n, plural, =1{1 pull} other{{n} pulls}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, =1{1 pull sedan senaste {star}} other{{n} pulls sedan senaste {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 pull sedan senaste {star} över alla banners} other{{n} pulls sedan senaste {star} över alla banners}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Rulla åt vänster",
+  "timelineScrollRight": "Rulla åt höger",
+  "timelineLoadMore": "Läs in fler ({n} kvar)",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Alla sällsyntheter",
+  "filterRarityRankOnly": "Endast {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Alla typer",
+  "filterSearchHint": "Sök efter namn...",
+  "filterClear": "Rensa filter",
+  "pagerFirst": "Första",
+  "pagerLast": "Sista",
+  "pagerJumpTitle": "Gå till sida",
+  "pagerJumpLabel": "Sida ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Sida {page} · {total, plural, =1{1 post} other{{total} poster}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Gå",
+  "pagerJumpInvalid": "Ange en sida från {min}–{max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsClearActive": "Rensa data för aktuellt konto",
+  "settingsClearAll": "Rensa alla data",
+  "settingsRefetchHoyoWikiImagesTitle": "Tvinga omhämtning av föremålsbilder",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Inga gacha-poster än, inget att hämta om",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Tvinga omhämtning av föremålsbilder",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Detta rensar hela den lokala cachen med föremålsbilder och laddar ned ikonerna på nytt från HoYoWiki. Detaljbilder laddas ned vid behov nästa gång du öppnar föremålet. Beroende på antalet föremål kan det ta flera minuter och använda en del bandbredd.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Starta omhämtning",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Föremålsdata",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Hämtar de senaste föremålsdetaljerna (beskrivning, bildlista m.m.) från HoYoWiki på nytt. Redan nedladdade bilder behålls; nya bilder laddas ned när du öppnar föremålets detaljer.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Uppdatera föremålsdata",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Inga gacha-poster än, inget att uppdatera",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Uppdatera föremålsdata?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Detta kontaktar HoYoWiki för att hämta detaljerna för alla föremål på nytt, vilket kan ta en stund beroende på hur många föremål du har. Redan nedladdade bilder behålls och rensas inte.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Starta uppdatering",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Bildcache",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Totalt",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikoner",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Detaljbilder",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Beräknar...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Det gick inte att läsa cachestorleken",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Det gick inte att rensa detaljbilderna",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Rensa detaljbilder",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Rensa detaljbilder?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Cirka {size} detaljbilder av föremål tas bort; ikoncachen behålls. De laddas ned igen nästa gång du öppnar ett föremåls detaljer.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Rensa",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Exportera data",
+  "settingsImportData": "Importera data",
+  "shareImageButton": "Skapa delningsbild",
+  "shareImageDialogTitle": "Alternativ för delningsbild",
+  "shareImageThemeLabel": "Tema",
+  "shareImageThemeDark": "Mörkt",
+  "shareImageThemeLight": "Ljust",
+  "shareImageShowFullUid": "Visa hela UID på bilden",
+  "shareImageShowFullUidHint": "När detta är av visas bara de 3 första siffrorna och resten döljs med •",
+  "shareImageUpdatedAt": "Uppdaterad {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Kopierat till urklipp",
+  "shareImageFailed": "Det gick inte att skapa delningsbilden",
+  "shareImageActionCopy": "Kopiera bild",
+  "shareImageActionSave": "Spara bild",
+  "shareImageCopyFailed": "Det gick inte att kopiera till urklipp",
+  "shareImageGenerating": "Skapar delningsbild...",
+  "shareImageSaved": "Sparad: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Exporten lyckades",
+  "exportDialogFailedTitle": "Exporten misslyckades",
+  "settingsExportFailed": "Exporten misslyckades: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Exporterat till {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Bekräfta import",
+  "settingsImportConfirmIntro": "{accounts, plural, =1{1 konto kommer att importeras} other{{accounts} konton kommer att importeras}} ({records, plural, =1{1 post} other{{records} poster}} totalt):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Följande konton slås samman med lokala data; befintliga poster tas inte bort:",
+  "settingsImportConfirmNoConflict": "Inga datakonflikter.",
+  "settingsImportConfirmPreserveFooter": "Övriga befintliga konton ({uids}) behålls.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts, plural, =1{1 konto} other{{accounts} konton}} importerades ({records, plural, =1{1 post} other{{records} poster}} totalt)",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Importerade {success}/{total} konton; misslyckades: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Importen misslyckades: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Filformatet är ogiltigt eller så är filen skadad",
+  "importReasonUnsupportedVersion": "Den här filen exporterades från en nyare version av appen. Uppdatera appen innan du importerar.",
+  "importReasonUnreadable": "Det gick inte att läsa filen",
+  "exportReasonWriteFailed": "Det gick inte att skriva filen. Kontrollera sparplatsen och behörigheterna",
+  "importReasonForeignApp": "Filen har inte exporterats från den här appen",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Importera från andra plattformar",
+  "platformPickerTitle": "Välj en källplattform",
+  "importReasonNotPlatformFile": "Filen är inte en giltig export från {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export och andra verktyg · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Vilket konto ska det importeras till?",
+  "importTargetAccountBody": "Exporter från paimon.moe innehåller inget UID. Välj kontot som posterna tillhör.",
+  "importTargetAccountOtherUid": "Annat UID",
+  "importTargetAccountUidHint": "Ange UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 post på den här enheten} other{{count} poster på den här enheten}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Filen använder en nyare UIGF-version ({version}) som inte stöds ännu. Uppdatera appen eller exportera som v4 i det ursprungliga verktyget.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Filen innehåller bannertyper som inte stöds ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Det gick inte att komplettera föremålsdata ({item}). Kontrollera anslutningen och försök igen.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Båda sidor har poster från {from} till {to}, men ingen av de {groups} pulls under perioden stämmer med de officiella posterna på den här enheten. Du kan ha valt fel konto, eller så använder filen en annan tidszon.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Båda sidor har poster från {from} till {to}, men de officiella posterna på den här enheten stämmer bara med {matched} av de {groups} pulls under perioden. Du kan ha valt fel konto, eller så använder filen en annan tidszon.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importera ändå",
+  "importResolvingItems": "Kompletterar föremålsdata...",
+  "settingsExportSelectTitle": "Välj konton att exportera",
+  "settingsImportSelectTitle": "Välj konton att importera",
+  "settingsImportMergeBadge": "Slå samman",
+  "accountsPickerSelectAll": "Markera alla",
+  "accountRecordCount": "{n, plural, =1{1 post} other{{n} poster}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Bekräfta",
+  "confirmClearActiveBody": "Detta tar permanent bort alla Wish-poster för UID {uid}. Skriv UID för att bekräfta:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Detta tar permanent bort Wish-posterna för alla konton. Skriv DELETE för att bekräfta:",
+  "confirmDelete": "Ta bort",
+  "confirmImport": "Importera",
+  "confirmExport": "Exportera",
+  "confirmContinue": "Fortsätt",
+  "accountListEmpty": "Inga konton än",
+  "accountLastUpdated": "Senast uppdaterad {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktiv",
+  "accountSetActive": "Gör aktiv",
+  "accountRemove": "Ta bort",
+  "accountAdd": "Lägg till konto",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "Ett lättigenkännligt namn för kontot",
+  "accountAliasNone": "Inget alias angivet",
+  "accountActionEditAlias": "Redigera alias",
+  "accountEditAliasTitle": "Redigera alias",
+  "accountDragHandleTooltip": "Dra för att ändra ordning",
+  "loadingBootstrap": "Läser in...",
+  "timelineTopRarityTitle": "{star}-tidslinje ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Antal av högsta sällsynthet per banner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 pull sedan senaste {star}} other{{n} pulls sedan senaste {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Ny version {version} finns tillgänglig",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Släpptes {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Ladda ned",
+  "updateButtonUpdate": "Uppdatera",
+  "updateNotesUnavailable": "Versionsinformationen är inte tillgänglig just nu. Se Google Play för mer information.",
+  "updateDownloadingMessage": "Laddar ned uppdateringen...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Uppdateringen har laddats ned",
+  "updateRestartAction": "Starta om",
+  "updateInAppUnavailable": "Det går inte att uppdatera i appen just nu. Uppdatera via Google Play.",
+  "updateButtonSkip": "Hoppa över den här versionen",
+  "updateButtonLater": "Senare",
+  "updateCheckButton": "Sök efter uppdateringar",
+  "updateChecking": "Söker...",
+  "updateAlreadyLatest": "Du har den senaste versionen",
+  "updateCheckFailed": "Sökningen efter uppdateringar misslyckades: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Det går inte att ansluta. Kontrollera nätverket",
+  "updateErrorTimeout": "Tidsgränsen för begäran överskreds",
+  "updateErrorRateLimited": "GitHub API-kvoten är slut. Försök igen senare",
+  "updateErrorServer": "Serverfel (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Oväntat svarsformat",
+  "updateErrorPlay": "Det gick inte att nå Google Play, eller så har appen inte installerats från Google Play",
+  "currentReleaseTitle": "Versionsinformation för aktuell version",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Ingen versionsinformation hittades för {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Visa på GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Gå till GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Visa versionsinformation",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Det gick inte att rensa cachen för föremålsbilder: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Felsökningsloggar",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Om du stöter på problem kan du exportera loggarna och hjälpa utvecklarna att undersöka dem.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Rapportera ett problem",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Exportera loggar",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Öppna loggmappen",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Rensa alla loggar",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Loggarna har exporterats: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Exporten av loggar misslyckades: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Detta tar permanent bort alla filer i logs/. Exportera dem först om du behöver dem för en felrapport. Skriv CLEAR för att bekräfta.",
+  "galleryCardLabel": "Kort",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
   },
   "galleryIconLabel": "Ikon",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Föregående",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Nästa",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Rulla nedåt",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Visa på HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Det gick inte att läsa in bilden",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Försök igen",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Stäng förhandsvisning",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kopiera bild",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Spara bild",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Zooma in",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Zooma ut",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Hämta bilden igen",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Bilden har kopierats till urklipp",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Det gick inte att kopiera bilden",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Det gick inte att spara bilden",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Sparad i {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Tur",
+  "luckTierAverage": "Genomsnitt",
+  "luckTierUnlucky": "Otur",
+  "manualUrlEntry": "Ange URL till Wish History manuellt",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Ange URL till Wish History manuellt",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "Om du redan har fått URL:en till Wish History på annat sätt (till exempel med ett verktyg på datorn) kan du klistra in den här. Du kan också klistra in hela texten; appen hittar URL:en automatiskt.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Klistra in URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Klistra in från urklipp",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "Ingen URL till Wish History hittades. Kontrollera det du klistrade in.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "URL:en innehåller dina kontouppgifter. Dela den inte offentligt. Den går ut efter en tid.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Väntar på att du öppnar sidan Wish History i spelet...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Öppna Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Förbereder läsning av spelets logg...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "URL:en till Wish History kan inte hämtas automatiskt",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Läsning av spelets logg har inte konfigurerats än. Efter en engångskonfiguration läses den automatiskt vid varje uppdatering.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Trådlös felsökning fungerar bara via Wi‑Fi. Anslut till Wi‑Fi och kom tillbaka; appen fortsätter automatiskt. Du kan också ange URL:en manuellt.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Root hittades, men appen har inte fått root-åtkomst. Om du vill läsa med root ger du appen behörighet i din root-hanterare (till exempel Superuser-listan i Magisk) och kommer tillbaka; appen försöker igen automatiskt.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Det gick inte att ansluta till trådlös felsökning. Parkopplingen kan ha gått ut; parkoppla igen.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Din enhet tillåter inte att appen aktiverar trådlös felsökning. Aktivera det på sidan Trådlös felsökning och kom tillbaka; appen fortsätter automatiskt.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "Det här Wi‑Fi-nätverket är ännu inte tillåtet för trådlös felsökning. Tryck på Tillåt i systemfrågan (markera \"Tillåt alltid i det här nätverket\" så att du inte tillfrågas igen) så fortsätter appen automatiskt. Om du har stängt frågan trycker du på Försök igen.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "Den här enheten kan inte läsa URL:en till Wish History automatiskt (kräver Android 11 eller senare, eller root). Ange den manuellt.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Genshin Impact är inte installerat på den här enheten. Kom tillbaka hit efter installationen så identifieras spelet automatiskt.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Öppna Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Öppna Trådlös felsökning",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Anslutningen till trådlös felsökning bröts, ansluter igen... Om den inte återställs kontrollerar du ditt Wi‑Fi eller anger URL:en manuellt.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Trådlös felsökning är fortfarande på. Du kan stänga av den i systeminställningarna.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "URL:en till Wish History har tagits emot. Hämtningen av din Wish History startar när du går tillbaka till appen.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Kontrollera igen",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Öppna Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Konfigurera",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Parkoppla igen",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Läs systemlogg",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Varför behövs det här?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android tillåter inte att appar läser andra appars systemloggar. Den här appen använder den inbyggda funktionen Trådlös felsökning för att läsa URL:en till Wish History från Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Vad appen gör",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Läser bara URL:en till Wish History från Genshin Impact\n• Kopplar från direkt efter läsningen och stänger av trådlös felsökning om den här appen slog på den\n• Ger sig själv behörighet att slå på och av trådlös felsökning, så att du inte behöver konfigurera det igen\n• Du kan när som helst ta bort detta under Inställningar",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Krav",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 eller senare, Wi‑Fi, aviseringar tillåtna",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Starta konfigurationen",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Ange URL:en manuellt i stället",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Parkoppla trådlös felsökning",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Aktivera Utvecklaralternativ",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Öppna sidan Om i systemets Inställningar (till exempel \"Om telefonen\" eller \"Om surfplattan\")\n2. Leta upp \"Versionsnummer\" och tryck på det 7 gånger\n3. När du ser \"Nu är du en utvecklare\" går du tillbaka till den här appen",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Utvecklaralternativ är fortfarande avstängda. Om systemet sa att inget mer behövdes när du tryckte på \"Versionsnummer\" (till exempel \"Du är redan utvecklare\") är huvudreglaget för Utvecklaralternativ avstängt. Öppna Utvecklaralternativ, aktivera reglaget högst upp och gå sedan tillbaka till den här appen.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Öppna sidan Om",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Utvecklaralternativ är aktiverade",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Tillåt aviseringar",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Du anger kopplingskoden i en avisering, så tillåt aviseringar för den här appen.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Tillåt aviseringar",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Öppna aviseringsinställningar",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Aviseringar är tillåtna",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Parkoppla",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Tryck på knappen nedan för att öppna Trådlös felsökning\n2. Aktivera \"Använd trådlös felsökning\" och tryck på \"Parkoppla enheten med en parkopplingskod\"\n3. Svep nedåt från skärmens överkant och ange, i den här appens avisering, den 6-siffriga kopplingskoden som visas på kopplingsskärmen i Trådlös felsökning",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Väntar på att du ska ange kopplingskoden i aviseringen...\nAnge den medan parkopplingsskärmen i Trådlös felsökning fortfarande är öppen.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Öppna Trådlös felsökning igen",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Parkopplar...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Parkopplad, ett steg till",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Din enhet har en extra säkerhetsbegränsning. Aktivera ytterligare ett alternativ så att appen automatiskt kan slå på och av trådlös felsökning.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Så här aktiverar du det",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Öppna Utvecklaralternativ\n2. Leta upp reglaget för säkerhet vid USB-felsökning eller behörighetsövervakning och aktivera det, till exempel:\n• Xiaomi: \"USB-felsökning (säkerhetsinställningar)\"\n• OPPO / realme: \"Inaktivera behörighetsövervakning\"\n3. Se till att trådlös felsökning är på, kom tillbaka och tryck på Försök igen",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Öppna Utvecklaralternativ",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Försök igen",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Hoppa över (aktivera trådlös felsökning själv vid varje uppdatering)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Allt är klart",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Från och med nu läser Uppdatera loggen automatiskt. Ingen mer konfiguration behövs.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "När du trycker på Uppdatera aktiverar du trådlös felsökning när du ombeds göra det.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Går tillbaka och startar uppdateringen...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Åtkomst till spelets logg",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Trådlös felsökning",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Inte konfigurerad",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Parkoppling",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Parkopplad",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Parkopplad (aktivera trådlös felsökning manuellt)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Försök ge behörighet igen",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Konfigurera",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Ta bort parkoppling",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Ta bort parkoppling?",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "Detta tar bort appens kopplingsnyckel och appens behörighet att slå på och av trådlös felsökning. Du måste parkoppla igen för att använda trådlös felsökning senare.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Parkopplingen har tagits bort",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Appens parkopplingsnyckel har tagits bort och dess behörighet att slå på och av trådlös felsökning har dragits in.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Parkopplingsnyckeln har tagits bort",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Appens parkopplingsnyckel har tagits bort, men den här gången gick det inte att ansluta till trådlös felsökning, så behörigheten att slå på och av trådlös felsökning har inte dragits in.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "Appen använder inte behörigheten så länge den inte är parkopplad. Om du vill dra in den helt ansluter du till wifi, parkopplar igen och tar sedan bort parkopplingen en gång till.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "Systemets lista Trådlös felsökning → Parkopplade enheter visar fortfarande \"{name}\". Den kan inte längre ansluta, så du kan låta den vara; tryck på den och radera den om du vill ta bort den.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "Systemets lista Trådlös felsökning → Parkopplade enheter visar också fortfarande \"{name}\"; tryck på den för att radera den.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Metod",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Dela",
+  "shareFailed": "Det gick inte att dela",
+  "dialogSaveAsTitle": "Spara som",
+  "dialogOpenTitle": "Öppna",
+  "dialogSelectFolderTitle": "Välj mapp",
+  "actionSave": "Spara",
+  "settingsLogsShare": "Dela loggar"
 }
