@@ -1,5 +1,1174 @@
 {
   "@@locale": "el",
+  "localeNativeName": "Ελληνικά",
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "localeTranslatorLabel": "Μετάφραση: {translator}",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Ενημέρωση",
+  "actionCancel": "Ακύρωση",
+  "actionClose": "Κλείσιμο",
+  "actionPrevPage": "Προηγούμενη",
+  "actionNextPage": "Επόμενη",
+  "actionOpenFolder": "Άνοιγμα φακέλου",
+  "navOverview": "Επισκόπηση",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Ρυθμίσεις",
+  "navContributors": "Συντελεστές",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Δεν έχει συγχρονιστεί",
+  "footerLastUpdated": "Τελευταία ενημέρωση: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Μόλις τώρα",
+  "relativeSecondsAgo": "{count, plural, =1{Πριν από 1 δευτερόλεπτο} other{Πριν από {count} δευτερόλεπτα}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, =1{Πριν από 1 λεπτό} other{Πριν από {count} λεπτά}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, =1{Πριν από 1 ώρα} other{Πριν από {count} ώρες}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, =1{Πριν από 1 ημέρα} other{Πριν από {count} ημέρες}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, =1{Πριν από 1 μήνα} other{Πριν από {count} μήνες}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, =1{Πριν από 1 χρόνο} other{Πριν από {count} χρόνια}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Εναλλαγή λογαριασμού",
+  "uidNotSynced": "Δεν έχει συγχρονιστεί",
+  "uidActiveSuffix": " (ενεργός)",
+  "emptyNoSyncTitle": "Δεν έχουν συγχρονιστεί δεδομένα ακόμα",
+  "emptyNoSyncMessage": "Πατήστε {icon} επάνω δεξιά για να ξεκινήσετε",
+  "@emptyNoSyncMessage": {
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyNoRecords": "Δεν υπάρχουν εγγραφές για αυτό το banner",
+  "emptyNoFilterMatch": "Καμία εγγραφή δεν ταιριάζει με το φίλτρο",
+  "emptyNoOdesRecords": "Δεν υπάρχει ακόμα ιστορικό Ode",
+  "emptyNoGachaRecords": "Δεν υπάρχει ακόμα ιστορικό ευχών",
+  "statsTotal": "Σύνολο τραβηγμάτων",
+  "statsRankCount": "Πλήθος {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% του συνόλου",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Κατανομή σπανιότητας",
+  "statsItemTypeDistribution": "Κατανομή τύπων",
+  "statsNoData": "Χωρίς δεδομένα",
+  "kindUnknown": "Άγνωστο",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Ώρα",
+  "tableName": "Όνομα",
+  "tableKind": "Τύπος",
+  "tableRarity": "Σπανιότητα",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Σύνολο",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Ταξινόμηση: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Ταξινόμηση: προεπιλογή",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Ταξινόμηση κατά",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Τραβήγματα από το τελευταίο {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Φθίνουσα",
+  "sortDirectionAsc": "Αύξουσα",
+  "sortHintClickToSort": "Κάντε κλικ για ταξινόμηση",
+  "progressPreparing": "Προετοιμασία...",
+  "progressPreparingHint": "Προετοιμασία πηγής δεδομένων...",
+  "progressConvertingHint": "Μετατροπή γλώσσας δεδομένων, περιμένετε...",
+  "progressWaiting": "Αναμονή για καταγραφή...",
+  "progressFetching": "Λήψη...",
+  "progressDone": "Η ενημέρωση ολοκληρώθηκε",
+  "progressFailed": "Απέτυχε",
+  "progressOpenGameHint": "Ανοίξτε Genshin → Wishes → History",
+  "progressFallbackHint": "(Η προηγούμενη διεύθυνση URL του ιστορικού ευχών έληξε και πρέπει να ληφθεί ξανά)",
+  "progressNotDetectedLink": "Ανοίξατε το Wish History αλλά δεν συμβαίνει τίποτα;",
+  "@progressNotDetectedLink": {
+    "description": "Link on the waiting dialog for users whose opened wish history is not being detected."
+  },
+  "progressCaptureUnavailableHint": "Δεν ήταν δυνατή η εκκίνηση του προγράμματος αναχαίτισης (ίσως το πιστοποιητικό απορρίφθηκε ή η θύρα χρησιμοποιείται), οπότε η ανίχνευση βασίζεται μόνο στην προσωρινή μνήμη ιστού του παιχνιδιού. Ανοίξτε τη σελίδα Wish History στο παιχνίδι.",
+  "@progressCaptureUnavailableHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and only the game web cache is watched."
+  },
+  "progressCaptureUnavailableNoGameDirHint": "Δεν ήταν δυνατή η εκκίνηση του προγράμματος αναχαίτισης (ίσως το πιστοποιητικό απορρίφθηκε ή η θύρα χρησιμοποιείται) και δεν βρέθηκε ούτε ο φάκελος του παιχνιδιού. Πατήστε «Επιλογή φακέλου παιχνιδιού» παρακάτω για να τον ορίσετε χειροκίνητα.",
+  "@progressCaptureUnavailableNoGameDirHint": {
+    "description": "Warning on the waiting dialog when the interceptor failed to start and no game folder was found; refers to the choose-folder button."
+  },
+  "gameDirHelpTitle": "Η σελίδα Wish History δεν εντοπίστηκε",
+  "@gameDirHelpTitle": {
+    "description": "Title of the game folder help dialog."
+  },
+  "gameDirHelpNotFound": "Δεν βρέθηκε ο φάκελος του παιχνιδιού Genshin Impact. Μόλις τον επιλέξετε, το εργαλείο μπορεί να λάβει τη διεύθυνση URL του ιστορικού ευχών και από την προσωρινή μνήμη ιστού του παιχνιδιού.",
+  "@gameDirHelpNotFound": {
+    "description": "Help dialog text when no game folder could be located."
+  },
+  "gameDirHelpFound": "Φάκελος παιχνιδιού σε χρήση: {path}. Αν δεν είναι το αντίγραφο του παιχνιδιού που παίζετε, επιλέξτε ξανά.",
+  "@gameDirHelpFound": {
+    "description": "Help dialog text showing the game folder currently in use.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Ο φάκελος του παιχνιδιού ορίστηκε. Επιστρέψτε στο παιχνίδι και ανοίξτε ξανά το Wish History.",
+  "@gameDirHelpReopen": {
+    "description": "Help dialog text shown after a game folder was saved."
+  },
+  "gameDirInvalid": "Δεν βρέθηκε το Genshin Impact σε αυτόν τον φάκελο. Επιλέξτε τον φάκελο «Genshin Impact game».",
+  "@gameDirInvalid": {
+    "description": "Error shown when the picked folder does not contain the game."
+  },
+  "actionChooseGameDir": "Επιλογή φακέλου παιχνιδιού",
+  "@actionChooseGameDir": {
+    "description": "Button that opens the folder picker to choose the game folder."
+  },
+  "actionRechooseGameDir": "Νέα επιλογή",
+  "@actionRechooseGameDir": {
+    "description": "Button that opens the folder picker again to replace the game folder."
+  },
+  "progressFetchingBanner": "Λήψη: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Σελίδα {page}, {count, plural, =1{1 νέα εγγραφή} other{{count} νέες εγγραφές}} μέχρι στιγμής",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, =1{Προστέθηκε 1 νέα εγγραφή} other{Προστέθηκαν {count} νέες εγγραφές}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, =1{Λήφθηκε {count} εικόνα αντικειμένου} other{Λήφθηκαν {count} εικόνες αντικειμένων}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, =1{Ενημερώθηκαν τα δεδομένα 1 αντικειμένου} other{Ενημερώθηκαν τα δεδομένα {count} αντικειμένων}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{Συμπληρώθηκε 1 εικόνα αντικειμένου} other{Συμπληρώθηκαν {count} εικόνες αντικειμένων}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Καθαρίστηκαν τα δεδομένα παλιάς γλώσσας για 1 αντικείμενο} other{Καθαρίστηκαν τα δεδομένα παλιάς γλώσσας για {count} αντικείμενα}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Μερική αποτυχία: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, =1{Εισήχθη 1 λογαριασμός} other{Εισήχθησαν {accounts} λογαριασμοί}}: {added, plural, =1{1 νέα} other{{added} νέες}}, {duplicate, plural, =1{1 υπήρχε ήδη} other{{duplicate} υπήρχαν ήδη}}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Μερική αποτυχία εισαγωγής: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Αναζήτηση δεδομένων αντικειμένων {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Λήψη λεπτομερειών αντικειμένων {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Λήψη εικόνων αντικειμένων {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Η ταυτοποίηση λήγει συνεχώς· συνδεθείτε ξανά στο παιχνίδι",
+  "errorRateLimited": "Πάρα πολλά αιτήματα· δοκιμάστε ξανά αργότερα",
+  "errorServer": "Σφάλμα διακομιστή: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "Αυτός ο λογαριασμός δεν έχει ακόμα ιστορικό ευχών",
+  "pageOverviewTitle": "Επισκόπηση (όλα τα banner)",
+  "pageOverviewGachaSection": "Επισκόπηση ευχών",
+  "pageOverviewOdesSection": "Επισκόπηση Ode",
+  "pageBannerRecordList": "Λίστα εγγραφών",
+  "rarityOverviewTitle": "Επισκόπηση {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Ρυθμίσεις",
+  "settingsAppearance": "Εμφάνιση",
+  "settingsThemeSystem": "Σύμφωνα με το σύστημα",
+  "settingsThemeDark": "Σκοτεινό",
+  "settingsThemeLight": "Φωτεινό",
+  "settingsLanguage": "Γλώσσα",
+  "settingsLocaleSystem": "Σύμφωνα με το σύστημα",
+  "settingsDataLanguage": "Γλώσσα δεδομένων",
+  "settingsDataLanguageDesc": "Ενοποιεί τη γλώσσα εμφάνισης των δεδομένων του ιστορικού gacha, ανεξάρτητα από τη γλώσσα της εφαρμογής. Μόλις οριστεί, τα δεδομένα μετατρέπονται αυτόματα σε αυτή τη γλώσσα κατά την ενημέρωση ή την εισαγωγή. Οι εγγραφές Ode και τα αντικείμενα χωρίς αντίστοιχα δεδομένα διατηρούν την αρχική τους γλώσσα.",
+  "settingsDataLanguageUnset": "Δεν έχει οριστεί (χωρίς μετατροπή)",
+  "settingsDataLanguageUnify": "Μετατροπή γλώσσας δεδομένων τώρα",
+  "settingsDataLanguageUnifying": "Μετατροπή...",
+  "settingsDataLanguageUnifyDone": "{converted, plural, =1{Μετατράπηκε 1} other{Μετατράπηκαν {converted}}}, {unresolved, plural, =1{1 δεν ήταν δυνατό να μετατραπεί} other{{unresolved} δεν ήταν δυνατό να μετατραπούν}}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Η μετατροπή απέτυχε, τα δεδομένα δεν άλλαξαν. Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά.",
+  "settingsDataManagement": "Διαχείριση δεδομένων",
+  "settingsGameDir": "Φάκελος παιχνιδιού",
+  "@settingsGameDir": {
+    "description": "Settings section title for the game folder."
+  },
+  "settingsGameDirAuto": "Αυτόματος εντοπισμός: {path}",
+  "@settingsGameDirAuto": {
+    "description": "Shows the automatically detected game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Χειροκίνητη ρύθμιση: {path}",
+  "@settingsGameDirManual": {
+    "description": "Shows the manually chosen game folder path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Δεν βρέθηκε ο φάκελος του παιχνιδιού",
+  "@settingsGameDirNone": {
+    "description": "Shown when no game folder could be found."
+  },
+  "actionClearGameDir": "Απαλοιφή",
+  "@actionClearGameDir": {
+    "description": "Button that clears the manually chosen game folder."
+  },
+  "settingsCloudSync": "Συγχρονισμός στο cloud",
+  "cloudSyncIntro": "Συνδέστε τον λογαριασμό σας Google για αυτόματη δημιουργία αντιγράφων ασφαλείας του ιστορικού gacha στο Google Drive και συγχρονισμό μεταξύ πολλών συσκευών.",
+  "cloudSyncUnconfigured": "Σε αυτή την έκδοση δεν έχουν ρυθμιστεί διαπιστευτήρια Google OAuth. Ο συγχρονισμός στο cloud δεν είναι διαθέσιμος.",
+  "cloudSyncLink": "Σύνδεση λογαριασμού Google",
+  "cloudSyncAwaitingConsent": "Το πρόγραμμα περιήγησης άνοιξε. Ολοκληρώστε την εξουσιοδότηση στο πρόγραμμα περιήγησης...",
+  "cloudSyncAwaitingConsentAndroid": "Ολοκληρώστε την εξουσιοδότηση στο παράθυρο της Google...",
+  "cloudSyncLinkedAs": "Σύνδεση: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Αυτόματος συγχρονισμός",
+  "cloudSyncAutoToggleHint": "Συγχρονίζει αυτόματα κατά την εκκίνηση της εφαρμογής και μετά από αλλαγές στα δεδομένα. Ο χειροκίνητος συγχρονισμός παραμένει διαθέσιμος όταν είναι απενεργοποιημένος.",
+  "cloudSyncNow": "Συγχρονισμός τώρα",
+  "cloudSyncUnlink": "Αποσύνδεση",
+  "cloudSyncUnlinkConfirmTitle": "Αποσύνδεση",
+  "cloudSyncUnlinkConfirmBody": "Ο συγχρονισμός θα σταματήσει. Τόσο τα τοπικά δεδομένα όσο και το αντίγραφο ασφαλείας στο cloud διατηρούνται.",
+  "cloudSyncLastSynced": "Τελευταίος συγχρονισμός: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Δεν έχει συγχρονιστεί ακόμα",
+  "cloudSyncErrorNetwork": "Ο συγχρονισμός απέτυχε λόγω προβλήματος δικτύου. Θα γίνει αυτόματα νέα προσπάθεια.",
+  "cloudSyncErrorBusy": "Ο συγχρονισμός αναβλήθηκε επειδή εκτελείται ενημέρωση ή εισαγωγή. Θα γίνει αυτόματα νέα προσπάθεια.",
+  "cloudSyncErrorSchemaTooNew": "Ο συγχρονισμός παραλείφθηκε: τα δεδομένα στο cloud δημιουργήθηκαν από νεότερη έκδοση της εφαρμογής. Ενημερώστε πρώτα την εφαρμογή.",
+  "cloudSyncErrorAuthFailed": "Η εξουσιοδότηση απέτυχε. Δοκιμάστε ξανά.",
+  "cloudSyncErrorScopeMissing": "Η εξουσιοδότηση δεν περιλάμβανε πρόσβαση στο Google Drive. Συνδεθείτε ξανά και επιλέξτε το πλαίσιο για τα δεδομένα του Drive στη σελίδα συγκατάθεσης της Google.",
+  "cloudSyncReauthRequired": "Η εξουσιοδότηση έληξε. Συνδέστε ξανά τον λογαριασμό σας Google.",
+  "cloudSyncRemoveFromCloud": "Κατάργηση αυτού του λογαριασμού και από τα δεδομένα συγχρονισμού στο cloud",
+  "cloudSyncPostAuthTitle": "Η εξουσιοδότηση ολοκληρώθηκε",
+  "cloudSyncPostAuthBody": "Μπορείτε να κλείσετε αυτή την καρτέλα και να επιστρέψετε στην εφαρμογή.",
+  "cloudSyncPostAuthScopeMissingTitle": "Λείπει η άδεια για το Google Drive",
+  "cloudSyncPostAuthScopeMissingBody": "Δεν επιλέχθηκε το πλαίσιο για τα δεδομένα του Google Drive. Επιστρέψτε στην εφαρμογή, συνδεθείτε ξανά και επιλέξτε αυτή την άδεια.",
+  "settingsAccountManagement": "Διαχείριση λογαριασμών",
+  "settingsPrivacySectionTitle": "Απόρρητο",
+  "settingsMaskUidInUi": "Απόκρυψη UID στη διεπαφή",
+  "settingsMaskUidInUiHint": "Όταν είναι ενεργό, τα UID στη διεπαφή και στη λίστα λογαριασμών εμφανίζουν μόνο τα 3 πρώτα ψηφία και τα υπόλοιπα κρύβονται (π.χ. 123•••••). Χρήσιμο σε streaming ή κοινή χρήση οθόνης. Δεν επηρεάζει τις εικόνες κοινοποίησης, τα αρχεία εξαγωγής και το παράθυρο επιβεβαίωσης διαγραφής.",
+  "settingsAdPrivacyOptions": "Επιλογές απορρήτου διαφημίσεων",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Αλλάξτε εάν συναινείτε στην εμφάνιση εξατομικευμένων διαφημίσεων.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "Σχετικά",
+  "settingsAboutVersion": "Έκδοση {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Εκδόσεις για άλλα παιχνίδια",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "Ίσως υποστηριχθούν περισσότερα παιχνίδια στο μέλλον...",
+  "contributorsTitle": "Συντελεστές",
+  "contributorsSubtitle": "Ευχαριστούμε θερμά όλους όσοι συνέβαλαν στην ανάπτυξη αυτού του λογισμικού!",
+  "contributorsProjectLeader": "Υπεύθυνος έργου",
+  "contributorsTesters": "Δοκιμαστές",
+  "contributorsGithubContributors": "Συνεισφέροντες στο GitHub",
+  "contributorsTranslationReviewer": "Επιμελητές μετάφρασης",
+  "contributorsTranslatedLanguages": "Διαθέσιμες γλώσσες",
+  "contributorsHelpTranslate": "Δεν βρίσκετε τη γλώσσα σας; Βοηθήστε μας να μεταφράσουμε!",
+  "contributorsProjectLicense": "Άδεια χρήσης έργου",
+  "contributorsOpenSourceLicenses": "Άδειες χρήσης ανοιχτού κώδικα",
+  "pityRank": "Pity {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, =1{1 τράβηγμα ως το εγγυημένο} other{{n} τραβήγματα ως το εγγυημένο}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "{n, plural, =1{Κοντά στο εγγυημένο! Απομένει 1 τράβηγμα} other{Κοντά στο εγγυημένο! Απομένουν {n} τραβήγματα}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Εγγυημένο σύντομα",
+  "pityNoMainRarity": "Κανένα {star} ακόμα",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Έληξε",
+  "pityAverageInterval": "Μ.ό. {n} τραβήγματα",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Καμία εγγραφή {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, =1{1 τράβηγμα} other{{n} τραβήγματα}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Τώρα",
+  "timelineNowPulls": "{n, plural, =1{1 τράβηγμα} other{{n} τραβήγματα}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, =1{1 τράβηγμα από το τελευταίο {star}} other{{n} τραβήγματα από το τελευταίο {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, =1{1 τράβηγμα από το τελευταίο {star} σε όλα τα banner} other{{n} τραβήγματα από το τελευταίο {star} σε όλα τα banner}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Κύλιση αριστερά",
+  "timelineScrollRight": "Κύλιση δεξιά",
+  "timelineLoadMore": "{n, plural, =1{Φόρτωση περισσότερων (απομένει 1)} other{Φόρτωση περισσότερων (απομένουν {n})}}",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Όλες οι σπανιότητες",
+  "filterRarityRankOnly": "Μόνο {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Όλοι οι τύποι",
+  "filterSearchHint": "Αναζήτηση ονόματος...",
+  "filterClear": "Απαλοιφή φίλτρων",
+  "pagerFirst": "Πρώτη",
+  "pagerLast": "Τελευταία",
+  "pagerJumpTitle": "Μετάβαση σε σελίδα",
+  "pagerJumpLabel": "Σελίδα ({min}–{max})",
+  "@pagerJumpLabel": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpCurrent": "Τρέχουσα σελίδα {page} · {total, plural, =1{1 εγγραφή} other{{total} εγγραφές}}",
+  "@pagerJumpCurrent": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pagerJumpGo": "Μετάβαση",
+  "pagerJumpInvalid": "Εισαγάγετε σελίδα από {min} έως {max}",
+  "@pagerJumpInvalid": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsClearActive": "Διαγραφή δεδομένων τρέχοντος λογαριασμού",
+  "settingsClearAll": "Διαγραφή όλων των δεδομένων",
+  "settingsRefetchHoyoWikiImagesTitle": "Αναγκαστική νέα λήψη εικόνων αντικειμένων",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Δεν υπάρχει ακόμα ιστορικό gacha, δεν υπάρχει τίποτα για νέα λήψη",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Αναγκαστική νέα λήψη εικόνων αντικειμένων",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Θα διαγραφεί όλη η τοπική προσωρινή μνήμη των εικόνων αντικειμένων και τα εικονίδια θα ληφθούν ξανά από το HoYoWiki. Οι εικόνες λεπτομερειών των αντικειμένων θα ληφθούν κατά παραγγελία την επόμενη φορά που θα ανοίξετε το αντικείμενο. Ανάλογα με τον αριθμό των αντικειμένων, αυτό μπορεί να απαιτήσει αρκετά λεπτά και κίνηση δεδομένων.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Έναρξη νέας λήψης",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Δεδομένα αντικειμένων",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Ξαναλαμβάνει τις πιο πρόσφατες λεπτομέρειες των αντικειμένων (περιγραφές, λίστες εικόνων κ.λπ.) από το HoYoWiki, διατηρώντας τις ήδη ληφθείσες εικόνες. Οι νέες εικόνες λαμβάνονται όταν ανοίξετε τις λεπτομέρειες του αντικειμένου.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Ενημέρωση δεδομένων αντικειμένων",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Δεν υπάρχει ακόμα ιστορικό gacha, δεν υπάρχει τίποτα για ενημέρωση",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Ενημέρωση δεδομένων αντικειμένων;",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Θα γίνει σύνδεση με το HoYoWiki για νέα λήψη των λεπτομερειών όλων των αντικειμένων, κάτι που μπορεί να πάρει λίγη ώρα ανάλογα με τον αριθμό τους. Οι ήδη ληφθείσες εικόνες διατηρούνται και δεν θα διαγραφούν.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Έναρξη ενημέρωσης",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Κρυφή μνήμη εικόνων",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Σύνολο",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Εικονίδια",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Εικόνες λεπτομερειών",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Υπολογισμός...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Δεν είναι δυνατή η ανάγνωση του μεγέθους της κρυφής μνήμης",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Αποτυχία διαγραφής των εικόνων λεπτομερειών",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Διαγραφή εικόνων λεπτομερειών",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Διαγραφή εικόνων λεπτομερειών;",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Θα διαγραφούν περίπου {size} εικόνων λεπτομερειών αντικειμένων. Η κρυφή μνήμη εικονιδίων διατηρείται. Θα ληφθούν ξανά την επόμενη φορά που θα ανοίξετε τις λεπτομέρειες του αντικειμένου.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Διαγραφή",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Εξαγωγή δεδομένων",
+  "settingsImportData": "Εισαγωγή δεδομένων",
+  "shareImageButton": "Δημιουργία εικόνας κοινοποίησης",
+  "shareImageDialogTitle": "Επιλογές εικόνας κοινοποίησης",
+  "shareImageThemeLabel": "Θέμα",
+  "shareImageThemeDark": "Σκοτεινό",
+  "shareImageThemeLight": "Φωτεινό",
+  "shareImageShowFullUid": "Εμφάνιση πλήρους UID στην εικόνα",
+  "shareImageShowFullUidHint": "Όταν είναι απενεργοποιημένο, εμφανίζονται μόνο τα 3 πρώτα ψηφία και τα υπόλοιπα κρύβονται με •",
+  "shareImageUpdatedAt": "Ενημέρωση {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Αντιγράφηκε στο πρόχειρο",
+  "shareImageFailed": "Η δημιουργία εικόνας κοινοποίησης απέτυχε",
+  "shareImageActionCopy": "Αντιγραφή εικόνας",
+  "shareImageActionSave": "Αποθήκευση εικόνας",
+  "shareImageCopyFailed": "Η αντιγραφή στο πρόχειρο απέτυχε",
+  "shareImageGenerating": "Δημιουργία εικόνας κοινοποίησης...",
+  "shareImageSaved": "Αποθηκεύτηκε: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Η εξαγωγή ολοκληρώθηκε",
+  "exportDialogFailedTitle": "Η εξαγωγή απέτυχε",
+  "settingsExportFailed": "Η εξαγωγή απέτυχε: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Έγινε εξαγωγή στο {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Επιβεβαίωση εισαγωγής",
+  "settingsImportConfirmIntro": "{accounts, plural, =1{Πρόκειται να εισαχθεί 1 λογαριασμός} other{Πρόκειται να εισαχθούν {accounts} λογαριασμοί}} ({records, plural, =1{1 εγγραφή} other{{records} εγγραφές}} συνολικά):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Οι παρακάτω λογαριασμοί θα συγχωνευτούν με τα τοπικά δεδομένα. Οι υπάρχουσες εγγραφές δεν θα διαγραφούν:",
+  "settingsImportConfirmNoConflict": "Δεν υπάρχουν διενέξεις δεδομένων.",
+  "settingsImportConfirmPreserveFooter": "Οι άλλοι υπάρχοντες λογαριασμοί ({uids}) θα διατηρηθούν.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "{accounts, plural, =1{Εισήχθη 1 λογαριασμός} other{Εισήχθησαν {accounts} λογαριασμοί}} με επιτυχία ({records, plural, =1{1 εγγραφή} other{{records} εγγραφές}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Εισήχθησαν {success}/{total} λογαριασμοί· απέτυχαν: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Η εισαγωγή απέτυχε: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Η μορφή του αρχείου δεν είναι έγκυρη ή το αρχείο είναι κατεστραμμένο",
+  "importReasonUnsupportedVersion": "Αυτό το αρχείο εξήχθη από νεότερη έκδοση της εφαρμογής. Ενημερώστε την εφαρμογή πριν από την εισαγωγή.",
+  "importReasonUnreadable": "Δεν είναι δυνατή η ανάγνωση του αρχείου",
+  "exportReasonWriteFailed": "Δεν είναι δυνατή η εγγραφή του αρχείου. Ελέγξτε τη θέση αποθήκευσης και τα δικαιώματα",
+  "importReasonForeignApp": "Αυτό το αρχείο δεν εξήχθη από την εφαρμογή",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Εισαγωγή από άλλες πλατφόρμες",
+  "platformPickerTitle": "Επιλέξτε πλατφόρμα προέλευσης",
+  "importReasonNotPlatformFile": "Αυτό το αρχείο δεν είναι έγκυρη εξαγωγή του {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export και άλλα εργαλεία · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Σε ποιον λογαριασμό να γίνει η εισαγωγή;",
+  "importTargetAccountBody": "Οι εξαγωγές του paimon.moe δεν περιέχουν UID. Επιλέξτε τον λογαριασμό στον οποίο ανήκουν αυτές οι εγγραφές.",
+  "importTargetAccountOtherUid": "Άλλο UID",
+  "importTargetAccountUidHint": "Εισαγάγετε UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{1 εγγραφή σε αυτή τη συσκευή} other{{count} εγγραφές σε αυτή τη συσκευή}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Αυτό το αρχείο χρησιμοποιεί νεότερη έκδοση UIGF ({version}) που δεν υποστηρίζεται ακόμη. Ενημερώστε την εφαρμογή ή κάντε εξαγωγή σε v4 από το αρχικό εργαλείο.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Το αρχείο περιέχει μη υποστηριζόμενους τύπους banner ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Δεν ήταν δυνατή η συμπλήρωση των δεδομένων του αντικειμένου ({item}). Ελέγξτε το δίκτυό σας και δοκιμάστε ξανά.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Και οι δύο πλευρές έχουν εγγραφές από {from} έως {to}, αλλά κανένα από τα {groups} τραβήγματα αυτής της περιόδου δεν ταιριάζει με τις επίσημες εγγραφές σε αυτή τη συσκευή. Ίσως επιλέξατε λάθος λογαριασμό ή το αρχείο χρησιμοποιεί διαφορετική ζώνη ώρας.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Και οι δύο πλευρές έχουν εγγραφές από {from} έως {to}, αλλά οι επίσημες εγγραφές σε αυτή τη συσκευή ταιριάζουν μόνο με {matched} από τα {groups} τραβήγματα αυτής της περιόδου. Ίσως επιλέξατε λάθος λογαριασμό ή το αρχείο χρησιμοποιεί διαφορετική ζώνη ώρας.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Εισαγωγή παρ' όλα αυτά",
+  "importResolvingItems": "Συμπλήρωση δεδομένων αντικειμένων...",
+  "settingsExportSelectTitle": "Επιλέξτε λογαριασμούς για εξαγωγή",
+  "settingsImportSelectTitle": "Επιλέξτε λογαριασμούς για εισαγωγή",
+  "settingsImportMergeBadge": "Συγχώνευση",
+  "accountsPickerSelectAll": "Επιλογή όλων",
+  "accountRecordCount": "{n, plural, =1{1 εγγραφή} other{{n} εγγραφές}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Επιβεβαίωση",
+  "confirmClearActiveBody": "Θα διαγραφεί οριστικά όλο το ιστορικό ευχών για το UID {uid}. Πληκτρολογήστε το UID για επιβεβαίωση:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Θα διαγραφεί οριστικά το ιστορικό ευχών όλων των λογαριασμών. Πληκτρολογήστε DELETE για επιβεβαίωση:",
+  "confirmDelete": "Διαγραφή",
+  "confirmImport": "Εισαγωγή",
+  "confirmExport": "Εξαγωγή",
+  "confirmContinue": "Συνέχεια",
+  "accountListEmpty": "Δεν υπάρχουν ακόμα λογαριασμοί",
+  "accountLastUpdated": "Τελευταία ενημέρωση {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Ενεργός",
+  "accountSetActive": "Ορισμός ως ενεργού",
+  "accountRemove": "Κατάργηση",
+  "accountAdd": "Προσθήκη λογαριασμού",
+  "accountAliasLabel": "Ψευδώνυμο",
+  "accountAliasHint": "Ένα εύκολο όνομα για αυτόν τον λογαριασμό",
+  "accountAliasNone": "Δεν έχει οριστεί ψευδώνυμο",
+  "accountActionEditAlias": "Επεξεργασία ψευδωνύμου",
+  "accountEditAliasTitle": "Επεξεργασία ψευδωνύμου",
+  "accountDragHandleTooltip": "Σύρετε για αλλαγή σειράς",
+  "loadingBootstrap": "Φόρτωση...",
+  "timelineTopRarityTitle": "Χρονολόγιο {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Πλήθος υψηλότερης σπανιότητας ανά banner",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 τράβηγμα από το τελευταίο {star}} other{{n} τραβήγματα από το τελευταίο {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Διαθέσιμη νέα έκδοση {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Κυκλοφόρησε στις {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Λήψη",
+  "updateButtonUpdate": "Ενημέρωση",
+  "updateNotesUnavailable": "Οι σημειώσεις έκδοσης δεν είναι διαθέσιμες αυτή τη στιγμή. Δείτε λεπτομέρειες στο Google Play.",
+  "updateDownloadingMessage": "Λήψη ενημέρωσης...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Η ενημέρωση λήφθηκε",
+  "updateRestartAction": "Επανεκκίνηση",
+  "updateInAppUnavailable": "Δεν είναι δυνατή η ενημέρωση μέσα από την εφαρμογή αυτή τη στιγμή. Ενημερώστε από το Google Play.",
+  "updateButtonSkip": "Παράλειψη αυτής της έκδοσης",
+  "updateButtonLater": "Αργότερα",
+  "updateCheckButton": "Έλεγχος για ενημερώσεις",
+  "updateChecking": "Έλεγχος...",
+  "updateAlreadyLatest": "Έχετε την πιο πρόσφατη έκδοση",
+  "updateCheckFailed": "Ο έλεγχος για ενημερώσεις απέτυχε: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Δεν είναι δυνατή η σύνδεση. Ελέγξτε το δίκτυό σας",
+  "updateErrorTimeout": "Λήξη χρονικού ορίου αιτήματος",
+  "updateErrorRateLimited": "Το όριο του GitHub API εξαντλήθηκε. Δοκιμάστε ξανά αργότερα",
+  "updateErrorServer": "Σφάλμα διακομιστή (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Μη αναμενόμενη μορφή απόκρισης",
+  "updateErrorPlay": "Δεν ήταν δυνατή η σύνδεση με το Google Play ή αυτό το αντίγραφο δεν εγκαταστάθηκε από το Google Play",
+  "currentReleaseTitle": "Σημειώσεις τρέχουσας έκδοσης",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Δεν βρέθηκαν σημειώσεις έκδοσης για την {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Προβολή στο GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Μετάβαση στη σελίδα GitHub Releases",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Προβολή σημειώσεων έκδοσης",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Αποτυχία εκκαθάρισης της προσωρινής μνήμης εικόνων αντικειμένων: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Αρχεία καταγραφής εντοπισμού σφαλμάτων",
+  "@settingsLogs": {},
+  "settingsLogsHint": "Αν αντιμετωπίσετε προβλήματα, εξαγάγετε τα αρχεία καταγραφής για να βοηθήσετε τους προγραμματιστές να τα διερευνήσουν.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Αναφορά προβλήματος",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Εξαγωγή αρχείων καταγραφής",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Άνοιγμα φακέλου αρχείων καταγραφής",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Διαγραφή όλων των αρχείων καταγραφής",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Τα αρχεία καταγραφής εξήχθησαν: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Η εξαγωγή αρχείων καταγραφής απέτυχε: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Θα διαγραφούν οριστικά όλα τα αρχεία στο logs/. Εξαγάγετέ τα πρώτα αν τα χρειάζεστε για αναφορές σφαλμάτων. Πληκτρολογήστε CLEAR για επιβεβαίωση.",
   "galleryCardLabel": "Κάρτα",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +1176,434 @@
   "galleryIconLabel": "Εικονίδιο",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Προηγούμενο",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Επόμενο",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Κύλιση προς τα κάτω",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Προβολή στο HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Η φόρτωση της εικόνας απέτυχε",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Επανάληψη",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Κλείσιμο προεπισκόπησης εικόνας",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Αντιγραφή εικόνας",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Αποθήκευση εικόνας",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Μεγέθυνση",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Σμίκρυνση",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Νέα λήψη εικόνας",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Η εικόνα αντιγράφηκε στο πρόχειρο",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Αποτυχία αντιγραφής εικόνας",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Αποτυχία αποθήκευσης εικόνας",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Αποθηκεύτηκε στο {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Τυχερό",
+  "luckTierAverage": "Μέτριο",
+  "luckTierUnlucky": "Άτυχο",
+  "manualUrlEntry": "Χειροκίνητη εισαγωγή URL ιστορικού ευχών",
+  "@manualUrlEntry": {
+    "description": "Link on the waiting dialog that opens the manual wish history URL input dialog"
+  },
+  "manualUrlTitle": "Χειροκίνητη εισαγωγή URL ιστορικού ευχών",
+  "@manualUrlTitle": {
+    "description": "Title of the manual wish history URL input dialog"
+  },
+  "manualUrlHint": "Αν έχετε ήδη λάβει το URL του ιστορικού ευχών με άλλον τρόπο (για παράδειγμα με ένα εργαλείο στον υπολογιστή σας), μπορείτε να το επικολλήσετε εδώ. Λειτουργεί και η επικόλληση ολόκληρου του κειμένου· η εφαρμογή βρίσκει αυτόματα το URL.",
+  "@manualUrlHint": {
+    "description": "Explanation above the text field of the manual URL input dialog"
+  },
+  "manualUrlFieldHint": "Επικόλληση URL...",
+  "@manualUrlFieldHint": {
+    "description": "Placeholder of the text field in the manual URL input dialog"
+  },
+  "manualUrlPaste": "Επικόλληση από το πρόχειρο",
+  "@manualUrlPaste": {
+    "description": "Button that pastes the clipboard into the manual URL input field"
+  },
+  "manualUrlNotFound": "Δεν βρέθηκε URL ιστορικού ευχών. Ελέγξτε το περιεχόμενο που επικολλήσατε.",
+  "@manualUrlNotFound": {
+    "description": "Error shown when the pasted text contains no valid wish history URL"
+  },
+  "manualUrlWarning": "Το URL περιέχει τα διαπιστευτήρια του λογαριασμού σας. Μην το μοιράζεστε δημόσια. Λήγει μετά από λίγο.",
+  "@manualUrlWarning": {
+    "description": "Security warning at the bottom of the manual URL input dialog"
+  },
+  "manualUrlSubmit": "OK",
+  "@manualUrlSubmit": {
+    "description": "Confirm button of the manual wish history URL input dialog"
+  },
+  "progressWaitingLog": "Αναμονή να ανοίξετε τη σελίδα Wish History στο παιχνίδι...",
+  "@progressWaitingLog": {
+    "description": "Android waiting dialog title while watching the system log for the wish history URL"
+  },
+  "progressOpenGameHintAndroid": "Ανοίξτε Genshin Impact → Wish → History",
+  "@progressOpenGameHintAndroid": {
+    "description": "Android waiting dialog hint telling the player where to open the wish history in the game"
+  },
+  "progressCheckingLogAccess": "Προετοιμασία για ανάγνωση του αρχείου καταγραφής του παιχνιδιού...",
+  "@progressCheckingLogAccess": {
+    "description": "Android waiting dialog title while deciding how to read the system log"
+  },
+  "progressLogUnavailableTitle": "Δεν είναι δυνατή η αυτόματη λήψη του URL ιστορικού ευχών",
+  "@progressLogUnavailableTitle": {
+    "description": "Android waiting dialog title when the URL cannot be read automatically"
+  },
+  "logUnavailableNotPaired": "Η ανάγνωση του αρχείου καταγραφής του παιχνιδιού δεν έχει ρυθμιστεί ακόμα. Μετά από μία εφάπαξ ρύθμιση, κάθε ενημέρωση το διαβάζει αυτόματα.",
+  "@logUnavailableNotPaired": {
+    "description": "Reason shown when wireless debugging has not been paired yet"
+  },
+  "logUnavailableNoWifi": "Ο ασύρματος εντοπισμός σφαλμάτων λειτουργεί μόνο μέσω Wi‑Fi. Συνδεθείτε σε Wi‑Fi και επιστρέψτε. Η εφαρμογή θα συνεχίσει αυτόματα. Μπορείτε επίσης να εισαγάγετε τη διεύθυνση URL χειροκίνητα.",
+  "@logUnavailableNoWifi": {
+    "description": "Reason shown when the device is not on Wi-Fi"
+  },
+  "logRootDeniedHint": "Εντοπίστηκε root, αλλά δεν δόθηκε πρόσβαση root σε αυτή την εφαρμογή. Για ανάγνωση με root, επιτρέψτε την εφαρμογή στη διαχείριση root (π.χ. στη λίστα Superuser του Magisk) και επιστρέψτε. Η εφαρμογή θα δοκιμάσει ξανά αυτόματα.",
+  "@logRootDeniedHint": {
+    "description": "Hint shown when the device is rooted but root access was not granted"
+  },
+  "logUnavailableAdbFailed": "Δεν ήταν δυνατή η σύνδεση στον ασύρματο εντοπισμό σφαλμάτων. Η σύζευξη ίσως έχει λήξει. Κάντε ξανά σύζευξη.",
+  "@logUnavailableAdbFailed": {
+    "description": "Reason shown when connecting to wireless debugging failed"
+  },
+  "logUnavailableWirelessOff": "Η συσκευή σας δεν επιτρέπει σε αυτή την εφαρμογή να ενεργοποιήσει τον ασύρματο εντοπισμό σφαλμάτων. Ενεργοποιήστε τον στη σελίδα Ασύρματος εντοπισμός σφαλμάτων και επιστρέψτε. Η εφαρμογή θα συνεχίσει αυτόματα.",
+  "@logUnavailableWirelessOff": {
+    "description": "Reason shown when the app cannot turn on wireless debugging itself"
+  },
+  "logUnavailableNetworkNotAllowed": "Αυτό το δίκτυο Wi‑Fi δεν επιτρέπεται ακόμα για ασύρματο εντοπισμό σφαλμάτων. Πατήστε Να επιτρέπεται στο μήνυμα του συστήματος (επιλέξτε «Να επιτρέπεται πάντα σε αυτό το δίκτυο» για να μην ερωτηθείτε ξανά) και η εφαρμογή θα συνεχίσει αυτόματα. Αν κλείσατε το μήνυμα, πατήστε Επανάληψη.",
+  "@logUnavailableNetworkNotAllowed": {
+    "description": "Reason shown when the current Wi-Fi is not yet allowed for wireless debugging"
+  },
+  "logUnavailableUnsupported": "Αυτή η συσκευή δεν μπορεί να διαβάσει αυτόματα το URL ιστορικού ευχών (απαιτείται Android 11 ή νεότερο, ή root). Εισαγάγετε το χειροκίνητα.",
+  "@logUnavailableUnsupported": {
+    "description": "Reason shown when this device cannot read the URL automatically"
+  },
+  "logUnavailableGameNotInstalled": "Το Genshin Impact δεν είναι εγκατεστημένο σε αυτή τη συσκευή. Μόλις εγκατασταθεί, επιστρέψτε εδώ και θα εντοπιστεί αυτόματα.",
+  "@logUnavailableGameNotInstalled": {
+    "description": "Reason shown when Genshin Impact is not installed on the device"
+  },
+  "actionOpenGame": "Άνοιγμα Genshin Impact",
+  "@actionOpenGame": {
+    "description": "Button that launches Genshin Impact from the Android waiting dialog"
+  },
+  "actionOpenWirelessDebugging": "Άνοιγμα ασύρματου εντοπισμού σφαλμάτων",
+  "@actionOpenWirelessDebugging": {
+    "description": "Button that opens the system Wireless debugging page"
+  },
+  "progressLogConnectionLost": "Η σύνδεση με τον ασύρματο εντοπισμό σφαλμάτων χάθηκε, γίνεται επανασύνδεση... Αν δεν αποκατασταθεί, ελέγξτε το Wi‑Fi ή εισαγάγετε τη διεύθυνση URL χειροκίνητα.",
+  "@progressLogConnectionLost": {
+    "description": "Warning shown while the wireless debugging connection is lost and reconnecting"
+  },
+  "progressWirelessLeftOnHint": "Ο ασύρματος εντοπισμός σφαλμάτων είναι ακόμα ενεργός. Μπορείτε να τον απενεργοποιήσετε στις ρυθμίσεις συστήματος.",
+  "@progressWirelessLeftOnHint": {
+    "description": "Completion hint when wireless debugging could not be turned off by the app"
+  },
+  "progressCredentialReady": "Βρέθηκε το URL ιστορικού ευχών. Η λήψη του ιστορικού ευχών θα ξεκινήσει όταν επιστρέψετε σε αυτή την εφαρμογή.",
+  "@progressCredentialReady": {
+    "description": "Android waiting dialog text when the URL was found while the app was in the background"
+  },
+  "actionRedetectGame": "Νέος έλεγχος",
+  "@actionRedetectGame": {
+    "description": "Button that checks again whether Genshin Impact is installed"
+  },
+  "updateOpenPlayStore": "Άνοιγμα Google Play",
+  "@updateOpenPlayStore": {
+    "description": "Button that opens a Google Play page: the Genshin Impact page, or this app's page when an in-app update cannot run"
+  },
+  "actionSetupLogAccess": "Ρύθμιση",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Νέα σύζευξη",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Ανάγνωση αρχείου καταγραφής συστήματος",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Γιατί χρειάζεται;",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Το Android δεν επιτρέπει στις εφαρμογές να διαβάζουν τα αρχεία καταγραφής συστήματος άλλων εφαρμογών. Αυτή η εφαρμογή χρησιμοποιεί την ενσωματωμένη λειτουργία ασύρματου εντοπισμού σφαλμάτων για να διαβάσει το URL ιστορικού ευχών από το Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Τι κάνει η εφαρμογή",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Διαβάζει μόνο το URL ιστορικού ευχών από το Genshin Impact\n• Αποσυνδέεται αμέσως μετά την ανάγνωση και απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων, αν τον είχε ενεργοποιήσει αυτή η εφαρμογή\n• Παραχωρεί στον εαυτό της άδεια να ενεργοποιεί και να απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων, ώστε να μη χρειάζεται νέα ρύθμιση\n• Μπορείτε να το καταργήσετε ανά πάσα στιγμή από τις Ρυθμίσεις",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Απαιτήσεις",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ή νεότερο, Wi‑Fi, ενεργές ειδοποιήσεις",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Έναρξη ρύθμισης",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Χειροκίνητη εισαγωγή διεύθυνσης URL",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Σύζευξη ασύρματου εντοπισμού σφαλμάτων",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Ενεργοποίηση επιλογών για προγραμματιστές",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Ανοίξτε τη σελίδα «Σχετικά» στις Ρυθμίσεις του συστήματος (π.χ. «Σχετικά με το τηλέφωνο» ή «Σχετικά με το tablet»)\n2. Βρείτε τον «Αριθμό έκδοσης» και πατήστε τον 7 φορές\n3. Όταν δείτε «Είστε πλέον προγραμματιστής!», επιστρέψτε σε αυτή την εφαρμογή",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Οι επιλογές για προγραμματιστές είναι ακόμη απενεργοποιημένες. Αν το σύστημα ανέφερε ότι δεν χρειάζεται κάτι άλλο όταν πατήσατε τον «Αριθμό έκδοσης» (π.χ. «Είστε ήδη προγραμματιστής»), ο κύριος διακόπτης των επιλογών για προγραμματιστές είναι απενεργοποιημένος. Ανοίξτε τις Επιλογές για προγραμματιστές, ενεργοποιήστε τον διακόπτη στο επάνω μέρος και επιστρέψτε σε αυτή την εφαρμογή.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Άνοιγμα σελίδας «Σχετικά»",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Οι επιλογές για προγραμματιστές είναι ενεργές",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Να επιτρέπονται οι ειδοποιήσεις",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Θα εισαγάγετε τον κωδικό σύζευξης σε μια ειδοποίηση, γι' αυτό επιτρέψτε σε αυτή την εφαρμογή να εμφανίζει ειδοποιήσεις.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Να επιτρέπονται οι ειδοποιήσεις",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Άνοιγμα ρυθμίσεων ειδοποιήσεων",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Οι ειδοποιήσεις επιτρέπονται",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Σύζευξη",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Πατήστε το παρακάτω κουμπί για να ανοίξετε τον Ασύρματο εντοπισμό σφαλμάτων\n2. Ενεργοποιήστε τη «Χρήση ασύρματου εντοπισμού σφαλμάτων» και πατήστε «Σύζευξη συσκευής με κωδικό σύζευξης»\n3. Σύρετε προς τα κάτω από το επάνω μέρος της οθόνης και, στην ειδοποίηση αυτής της εφαρμογής, εισαγάγετε τον 6ψήφιο κωδικό σύζευξης που εμφανίζεται στην οθόνη σύζευξης του Ασύρματου εντοπισμού σφαλμάτων",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Αναμονή για εισαγωγή του κωδικού σύζευξης στην ειδοποίηση...\nΕισαγάγετέ τον ενώ η οθόνη σύζευξης του ασύρματου εντοπισμού σφαλμάτων είναι ακόμα ανοιχτή.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Άνοιγμα ασύρματου εντοπισμού σφαλμάτων ξανά",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Σύζευξη...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Η σύζευξη έγινε, απομένει ένα βήμα",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Η συσκευή σας έχει έναν επιπλέον περιορισμό ασφαλείας. Ενεργοποιήστε μία ακόμα επιλογή, ώστε η εφαρμογή να μπορεί να ενεργοποιεί και να απενεργοποιεί αυτόματα τον ασύρματο εντοπισμό σφαλμάτων.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Πώς να το ενεργοποιήσετε",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Ανοίξτε τις Επιλογές για προγραμματιστές\n2. Βρείτε τον διακόπτη που σχετίζεται με την ασφάλεια του εντοπισμού σφαλμάτων USB ή την παρακολούθηση αδειών και ενεργοποιήστε τον, για παράδειγμα:\n• Xiaomi: «Εντοπισμός σφαλμάτων USB (Ρυθμίσεις ασφαλείας)»\n• OPPO / realme: «Απενεργοποίηση παρακολούθησης αδειών»\n3. Βεβαιωθείτε ότι ο ασύρματος εντοπισμός σφαλμάτων είναι ενεργός, επιστρέψτε και πατήστε Επανάληψη",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Άνοιγμα επιλογών για προγραμματιστές",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Επανάληψη",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Παράλειψη (ενεργοποιείτε μόνοι σας τον ασύρματο εντοπισμό σφαλμάτων σε κάθε ενημέρωση)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Όλα έτοιμα",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Από εδώ και πέρα, η Ενημέρωση διαβάζει αυτόματα το αρχείο καταγραφής. Δεν χρειάζεται άλλη ρύθμιση.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Όταν πατάτε Ενημέρωση, ενεργοποιήστε τον ασύρματο εντοπισμό σφαλμάτων όταν σας ζητηθεί.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Επιστροφή και έναρξη ενημέρωσης...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Πρόσβαση στο αρχείο καταγραφής του παιχνιδιού",
+  "@settingsLogAccess": {
+    "description": "Settings section title (Android only) for how the app reads the game log"
+  },
+  "logAccessMethodRoot": "Root",
+  "@logAccessMethodRoot": {
+    "description": "Log access method name: root. 'root' is a technical term, keep it."
+  },
+  "logAccessMethodWireless": "Ασύρματος εντοπισμός σφαλμάτων",
+  "@logAccessMethodWireless": {
+    "description": "Log access method name: wireless debugging"
+  },
+  "logAccessMethodNone": "Δεν έχει ρυθμιστεί",
+  "@logAccessMethodNone": {
+    "description": "Log access method not set up yet"
+  },
+  "settingsPairingStatus": "Σύζευξη",
+  "@settingsPairingStatus": {
+    "description": "Settings row label: wireless debugging pairing status"
+  },
+  "settingsPaired": "Σε σύζευξη",
+  "@settingsPaired": {
+    "description": "Pairing status: paired and the app can toggle wireless debugging"
+  },
+  "settingsPairedManual": "Σε σύζευξη (ενεργοποιήστε χειροκίνητα τον ασύρματο εντοπισμό σφαλμάτων)",
+  "@settingsPairedManual": {
+    "description": "Pairing status: paired but the user has to turn wireless debugging on each time"
+  },
+  "settingsRetryGrant": "Νέα προσπάθεια άδειας",
+  "@settingsRetryGrant": {
+    "description": "Settings button to retry granting the permission to toggle wireless debugging"
+  },
+  "settingsSetupLogAccess": "Ρύθμιση",
+  "@settingsSetupLogAccess": {
+    "description": "Settings button that opens the log access setup page"
+  },
+  "settingsUnpair": "Κατάργηση σύζευξης",
+  "@settingsUnpair": {
+    "description": "Settings button to remove the wireless debugging pairing"
+  },
+  "settingsUnpairConfirmTitle": "Κατάργηση σύζευξης;",
+  "@settingsUnpairConfirmTitle": {
+    "description": "Confirm dialog title for removing the pairing"
+  },
+  "settingsUnpairConfirmBody": "Θα διαγραφεί το κλειδί σύζευξης αυτής της εφαρμογής και θα καταργηθεί η άδεια της εφαρμογής να ενεργοποιεί και να απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων. Θα χρειαστεί νέα σύζευξη για να τον χρησιμοποιήσετε αργότερα.",
+  "@settingsUnpairConfirmBody": {
+    "description": "Confirm dialog body for removing the pairing"
+  },
+  "settingsUnpairDone": "Η σύζευξη καταργήθηκε",
+  "@settingsUnpairDone": {
+    "description": "Title of the dialog after the pairing was removed"
+  },
+  "settingsUnpairDoneBody": "Το κλειδί σύζευξης της εφαρμογής διαγράφηκε και καταργήθηκε η άδειά της να ενεργοποιεί και να απενεργοποιεί τον ασύρματο εντοπισμό σφαλμάτων.",
+  "@settingsUnpairDoneBody": {
+    "description": "Body of the dialog after unpairing wireless debugging when the permission was revoked"
+  },
+  "settingsUnpairUnreachableTitle": "Το κλειδί σύζευξης διαγράφηκε",
+  "@settingsUnpairUnreachableTitle": {
+    "description": "Title of the dialog after unpairing when wireless debugging could not be reached to revoke the permission"
+  },
+  "settingsUnpairUnreachableBody": "Το κλειδί σύζευξης της εφαρμογής διαγράφηκε, αλλά αυτή τη φορά δεν ήταν δυνατή η σύνδεση στον ασύρματο εντοπισμό σφαλμάτων, οπότε η άδεια ενεργοποίησης και απενεργοποίησής του δεν καταργήθηκε.",
+  "@settingsUnpairUnreachableBody": {
+    "description": "First paragraph when unpairing could not reach wireless debugging; the key is deleted but the WRITE_SECURE_SETTINGS grant remains"
+  },
+  "settingsUnpairUnreachableRevokeHint": "Η εφαρμογή δεν χρησιμοποιεί αυτή την άδεια όσο δεν υπάρχει σύζευξη. Για να την καταργήσετε πλήρως, συνδεθείτε σε Wi‑Fi, κάντε ξανά σύζευξη και έπειτα καταργήστε τη σύζευξη ξανά.",
+  "@settingsUnpairUnreachableRevokeHint": {
+    "description": "Second paragraph: the app does not use the remaining permission while unpaired and how to revoke it completely"
+  },
+  "settingsUnpairLeftover": "Στη λίστα του συστήματος Ασύρματος εντοπισμός σφαλμάτων → Συζευγμένες συσκευές θα εξακολουθεί να εμφανίζεται το «{name}». Δεν μπορεί πλέον να συνδεθεί, οπότε μπορείτε να το αφήσετε· για να το αφαιρέσετε, πατήστε το και διαγράψτε το.",
+  "@settingsUnpairLeftover": {
+    "description": "Explains that the system Wireless debugging paired devices list still shows this app's entry ({name}) and how to delete it",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnpairLeftoverAlso": "Στη λίστα του συστήματος Ασύρματος εντοπισμός σφαλμάτων → Συζευγμένες συσκευές εμφανίζεται επίσης το «{name}»· πατήστε το για να το διαγράψετε.",
+  "@settingsUnpairLeftoverAlso": {
+    "description": "Same as settingsUnpairLeftover but shorter, used after the unreachable paragraphs",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogAccessMethod": "Μέθοδος",
+  "@settingsLogAccessMethod": {
+    "description": "Settings row label: the current log access method"
+  },
+  "actionShare": "Κοινοποίηση",
+  "shareFailed": "Η κοινοποίηση απέτυχε",
+  "dialogSaveAsTitle": "Αποθήκευση ως",
+  "dialogOpenTitle": "Άνοιγμα",
+  "dialogSelectFolderTitle": "Επιλογή φακέλου",
+  "actionSave": "Αποθήκευση",
+  "settingsLogsShare": "Κοινοποίηση αρχείων καταγραφής"
 }
