@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "În ce cont importați?",
   "importTargetAccountBody": "Exporturile {platform} nu conțin UID. Alegeți contul căruia îi aparțin aceste înregistrări.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Alt UID",
   "importTargetAccountUidHint": "Introduceți UID-ul",
