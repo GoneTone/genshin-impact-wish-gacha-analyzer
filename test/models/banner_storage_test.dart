@@ -1,17 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 
-GachaRecord _r(String id, {String lang = 'zh-tw'}) => GachaRecord(
-  id: id,
-  uid: '100000001',
-  gachaType: '301',
-  name: 'x',
-  itemType: '武器',
-  rankType: 3,
-  time: DateTime.utc(2025, 1, 1),
-  lang: lang,
-);
+GachaRecord _r(String id, {String lang = 'zh-tw', DateTime? time}) =>
+    GachaRecord(
+      id: id,
+      uid: '100000001',
+      gachaType: '301',
+      name: 'x',
+      itemType: '武器',
+      rankType: 3,
+      time: time ?? DateTime.utc(2025, 1, 1),
+      lang: lang,
+    );
 
 BannerStorage _s(
   Map<String, List<GachaRecord>> banners, {
@@ -32,6 +34,59 @@ void main() {
     });
     final merged = local.mergeWith(incoming);
     expect(merged.banners['301']!.map((r) => r.id).toList(), ['3', '2', '1']);
+  });
+
+  test('incoming 400 corrects local 301 with same id', () {
+    final local = _s({
+      '301': [_r('1')],
+    });
+    final incoming = _s({
+      '301': [_r('1').copyWith(gachaType: '400')],
+    });
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.single.gachaType, '400');
+  });
+
+  test('local 400 is not downgraded by incoming 301', () {
+    final local = _s({
+      '301': [_r('1').copyWith(gachaType: '400')],
+    });
+    final incoming = _s({
+      '301': [_r('1')],
+    });
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.single.gachaType, '400');
+  });
+
+  test('same id: lang backfill and 301 to 400 correction apply together', () {
+    final local = _s({
+      '301': [_r('1', lang: '')],
+    });
+    final incoming = _s({
+      '301': [_r('1', lang: 'en-us').copyWith(gachaType: '400')],
+    });
+    final merged = local.mergeWith(incoming).banners['301']!.single;
+    expect(merged.lang, 'en-us');
+    expect(merged.gachaType, '400');
+  });
+
+  test('substitutes: official replaces same second, fills other seconds', () {
+    final t1 = DateTime(2025, 12, 1, 4, 6, 48);
+    final t2 = DateTime(2025, 12, 2, 4, 6, 48);
+    GachaRecord sub(DateTime t, int seq) => _r(substituteId(t, seq), time: t);
+    final local = _s({
+      '301': [_r('1733000000000000000', time: t1)],
+    });
+    final incoming = _s({
+      '301': [sub(t2, 1), sub(t2, 0), sub(t1, 1), sub(t1, 0)],
+    }, lastUpdated: DateTime.utc(2026, 5, 12));
+    final merged = local.mergeWith(incoming);
+    expect(merged.banners['301']!.map((r) => r.id).toList(), [
+      substituteId(t2, 1),
+      substituteId(t2, 0),
+      '1733000000000000000',
+    ]);
+    expect(merged.lastUpdated, DateTime.utc(2026, 5, 12));
   });
 
   test('banner keys are unioned', () {
@@ -83,5 +138,68 @@ void main() {
     });
     final merged = local.mergeWith(incoming);
     expect(merged.banners['301']!.map((r) => r.id).toList(), ['2', '1']);
+  });
+
+  group('sameContentAs', () {
+    BannerStorage make({
+      DateTime? updated,
+      List<GachaRecord>? records,
+      String uid = '100000001',
+    }) => BannerStorage(
+      uid: uid,
+      lastUpdated: updated ?? DateTime.utc(2026, 5, 21),
+      banners: {
+        '301': records ?? [_r('2'), _r('1')],
+      },
+    );
+
+    test('不同物件但內容相同 → true', () {
+      expect(make().sameContentAs(make()), isTrue);
+    });
+
+    test('uid、更新時間、卡池數、筆數或任一記錄欄位不同 → false', () {
+      final base = make();
+      expect(base.sameContentAs(make(uid: '100000002')), isFalse);
+      expect(
+        base.sameContentAs(make(updated: DateTime.utc(2026, 5, 22))),
+        isFalse,
+      );
+      expect(base.sameContentAs(make(records: [_r('2')])), isFalse);
+      expect(
+        base.sameContentAs(make(records: [_r('3'), _r('2'), _r('1')])),
+        isFalse,
+      );
+      expect(
+        base.sameContentAs(
+          make(
+            records: [
+              _r('2', lang: 'en-us'),
+              _r('1'),
+            ],
+          ),
+        ),
+        isFalse,
+      );
+      expect(
+        base.sameContentAs(
+          make(
+            records: [
+              _r('2').copyWith(name: '別名'),
+              _r('1'),
+            ],
+          ),
+        ),
+        isFalse,
+      );
+      final extraBanner = BannerStorage(
+        uid: '100000001',
+        lastUpdated: DateTime.utc(2026, 5, 21),
+        banners: {
+          '301': [_r('2'), _r('1')],
+          '302': const [],
+        },
+      );
+      expect(base.sameContentAs(extraBanner), isFalse);
+    });
   });
 }

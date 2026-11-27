@@ -1,0 +1,134 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "page": {
+      "id": "50",
+      "name": "Xiangling",
+      "icon_url": "https://bbs.hoyolab.com/hoyowiki/picture/character/Xiangling_icon.png",
+      "filter_values": {
+        "character_region": {
+          "values": [
+            "Liyue"
+          ],
+          "value_types": [
+            {
+              "id": "42",
+              "value": "Liyue",
+              "mi18n_key": "filter_42",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_region",
+            "text": "Region",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_region",
+            "is_multi_select": false,
+            "id": "6",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_rarity": {
+          "values": [
+            "4-Star"
+          ],
+          "value_types": [
+            {
+              "id": "14",
+              "value": "4-Star",
+              "mi18n_key": "filter_14",
+              "icon": "",
+              "enum_string": "4"
+            }
+          ],
+          "key": {
+            "key": "character_rarity",
+            "text": "Quality",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_rarity",
+            "is_multi_select": false,
+            "id": "7",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_property": {
+          "values": [
+            "Elemental Mastery"
+          ],
+          "value_types": [
+            {
+              "id": "473",
+              "value": "Elemental Mastery",
+              "mi18n_key": "filter_473",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_property",
+            "text": "Bonus Attributes From Ascension",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_property",
+            "is_multi_select": false,
+            "id": "8",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_vision": {
+          "values": [
+            "Pyro"
+          ],
+          "value_types": [
+            {
+              "id": "729",
+              "value": "Pyro",
+              "mi18n_key": "filter_729",
+              "icon": "https://act-webstatic.hoyoverse.com/event-static-hoyowiki-admin/2024/03/27/ac3123b42bf631685287e76c8c834a6c_564491877314389852.png",
+              "enum_string": "pyro"
+            }
+          ],
+          "key": {
+            "key": "character_vision",
+            "text": "Elemental Type",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_vision",
+            "is_multi_select": false,
+            "id": "5",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_weapon": {
+          "values": [
+            "Polearm"
+          ],
+          "value_types": [
+            {
+              "id": "124",
+              "value": "Polearm",
+              "mi18n_key": "filter_124",
+              "icon": "https://act-webstatic.hoyoverse.com/event-static-hoyowiki-admin/2024/03/27/9c0f0c167f2753035b78c0aed9f01b9f_3170160339356492715.png",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_weapon",
+            "text": "Weapons",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_weapon",
+            "is_multi_select": false,
+            "id": "9",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        }
+      },
+      "modules": []
+    }
+  }
+}

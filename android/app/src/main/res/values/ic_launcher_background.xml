@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 取自 tool/app_icon_source.png 左右邊緣中段的平均深藍色；前景層不透明，這裡只在前景載入前短暫可見 -->
+    <color name="ic_launcher_background">#131E30</color>
+</resources>

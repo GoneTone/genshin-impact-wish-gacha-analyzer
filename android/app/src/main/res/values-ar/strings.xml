@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">محلل سحوبات Genshin Impact Wish</string>
+    <string name="pairing_channel">إقران تصحيح الأخطاء اللاسلكي</string>
+    <string name="pairing_searching_title">جارٍ البحث عن خدمة الإقران</string>
+    <string name="pairing_searching_text">في تصحيح الأخطاء اللاسلكي، اضغط «إقران الجهاز باستخدام رمز الإقران»</string>
+    <string name="pairing_found_title">أدخل رمز الإقران</string>
+    <string name="pairing_found_text">اكتب الرمز المكوّن من 6 أرقام الظاهر على شاشة الإقران</string>
+    <string name="pairing_input_label">رمز الإقران</string>
+    <string name="pairing_action_pair">إقران</string>
+    <string name="pairing_action_stop">إيقاف</string>
+    <string name="pairing_in_progress">جارٍ الإقران...</string>
+    <string name="pairing_success_title">تم الإقران بنجاح</string>
+    <string name="pairing_success_text">اضغط هنا للعودة إلى التطبيق</string>
+    <string name="pairing_failed_text">فشل الإقران. تحقق من الرمز وأدخله مرة أخرى</string>
+    <string name="pairing_no_app_text">فشل الإقران. عُد إلى التطبيق وحاول مرة أخرى</string>
+    <string name="pairing_timeout_title">انتهت مهلة الإقران</string>
+    <string name="pairing_timeout_text">اضغط هنا للبدء من جديد</string>
+</resources>

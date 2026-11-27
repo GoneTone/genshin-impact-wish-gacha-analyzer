@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+
 /// 應用層 log pipeline。在 `main()` 透過 [bootstrap] 啟動,
 /// 訂閱 `Logger.root.onRecord` 並把每條紀錄分發到:
 /// 1. `dart:developer.log()`(IDE / DevTools);
@@ -63,7 +65,7 @@ class LogService {
     // (例如 main.dart 的 onError 寫 log) 會炸 "Cannot fire new event"。
     // 只能用 developer.log 報失敗，不要再呼叫 Logger.xxx。
     try {
-      final line = _format(r);
+      final line = sanitizeLogMessage(_format(r));
 
       developer.log(
         r.message,
@@ -141,6 +143,9 @@ class LogService {
     final now = DateTime.now().toUtc();
     _todayDate = DateTime.utc(now.year, now.month, now.day);
     final file = _fileFor(_todayDate!);
+    // openWrite 開檔是非同步、不會等檔案建立完成；先 create 讓呼叫端
+    // （例如 clearAll 之後立刻列目錄）一定看得到今天的檔案。
+    await file.create(recursive: true);
     _todaySink = file.openWrite(mode: FileMode.append, encoding: utf8);
   }
 
@@ -221,7 +226,7 @@ class LogService {
           ..sort((a, b) => a.path.compareTo(b.path));
 
     final buf = StringBuffer()
-      ..writeln('=== Genshin Gacha Gacha Analyzer log bundle ===')
+      ..writeln('=== Genshin Wish Gacha Analyzer log bundle ===')
       ..writeln('exported_at: ${DateTime.now().toUtc().toIso8601String()}')
       ..writeln('app_version: $appVersion')
       ..writeln('os: $osDescription')

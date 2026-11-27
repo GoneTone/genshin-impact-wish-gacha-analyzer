@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Asociere pentru remedierea erorilor wireless</string>
+    <string name="pairing_searching_title">Se caută serviciul de asociere</string>
+    <string name="pairing_searching_text">În Remedierea erorilor wireless, atingeți „Asociază dispozitivul folosind codul de conectare”</string>
+    <string name="pairing_found_title">Introduceți codul de asociere</string>
+    <string name="pairing_found_text">Introduceți codul de 6 cifre afișat pe ecranul de asociere</string>
+    <string name="pairing_input_label">Cod de asociere</string>
+    <string name="pairing_action_pair">Asociați</string>
+    <string name="pairing_action_stop">Opriți</string>
+    <string name="pairing_in_progress">Se asociază...</string>
+    <string name="pairing_success_title">Asocierea a reușit</string>
+    <string name="pairing_success_text">Atingeți aici pentru a reveni în aplicație</string>
+    <string name="pairing_failed_text">Asocierea nu a reușit. Verificați codul și introduceți-l din nou</string>
+    <string name="pairing_no_app_text">Asocierea nu a reușit. Reveniți în aplicație și încercați din nou</string>
+    <string name="pairing_timeout_title">Timpul pentru asociere a expirat</string>
+    <string name="pairing_timeout_text">Atingeți aici pentru a începe din nou</string>
+</resources>

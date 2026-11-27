@@ -77,4 +77,61 @@ void main() {
     await tester.tap(find.text(TeamInfo.name));
     await tester.pumpAndSettle();
   });
+
+  testWidgets('compact hides the team name and uses 48dp targets', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_wrap(const TeamLinksBar(compact: true)));
+    expect(find.text(TeamInfo.name), findsNothing);
+    expect(find.byType(FaIcon), findsNWidgets(4));
+    for (final button in tester.widgetList<IconButton>(
+      find.byType(IconButton),
+    )) {
+      expect(button.constraints?.minWidth, 48);
+      expect(button.constraints?.minHeight, 48);
+    }
+  });
+
+  testWidgets('stacked puts 48dp icons over a centred team name', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(const SizedBox(width: 280, child: TeamLinksBar(stacked: true))),
+    );
+    expect(find.byType(FaIcon), findsNWidgets(4));
+    var iconsBottom = 0.0;
+    for (final button in tester.widgetList<IconButton>(
+      find.byType(IconButton),
+    )) {
+      expect(button.constraints?.minWidth, 48);
+      expect(button.constraints?.minHeight, 48);
+    }
+    for (final label in const ['Facebook', 'Discord', 'Line', 'GitHub']) {
+      final rect = tester.getRect(find.byTooltip(label));
+      iconsBottom = rect.bottom > iconsBottom ? rect.bottom : iconsBottom;
+    }
+    final name = tester.getRect(find.text(TeamInfo.name));
+    expect(iconsBottom, lessThanOrEqualTo(name.top));
+    expect(
+      tester.widget<Text>(find.text(TeamInfo.name)).textAlign,
+      TextAlign.center,
+    );
+    expect(
+      tester.widget<AppLink>(find.byType(AppLink)).url,
+      TeamInfo.websiteUrl,
+    );
+  });
+
+  testWidgets('stacked wraps the team name instead of overflowing', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(const SizedBox(width: 200, child: TeamLinksBar(stacked: true))),
+    );
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.getSize(find.text(TeamInfo.name)).width,
+      lessThanOrEqualTo(200),
+    );
+  });
 }

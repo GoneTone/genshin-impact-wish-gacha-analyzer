@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 
@@ -177,5 +178,30 @@ void main() {
       ),
     );
     expect(() => importAccounts(text), throwsA(isA<ForeignBundleException>()));
+  });
+
+  test('duplicate UID 的 log 不含完整 uid', () {
+    final records = <LogRecord>[];
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+
+    expect(
+      () => importAccounts(
+        jsonEncode(
+          _bundle(
+            app: accountsBundleAppId,
+            accounts: [
+              _account('801057625', ['301']),
+              _account('801057625', ['301']),
+            ],
+          ),
+        ),
+      ),
+      throwsA(isA<FormatException>()),
+    );
+
+    final warning = records.singleWhere((r) => r.level == Level.WARNING);
+    expect(warning.message, contains('Duplicate UID'));
+    expect(warning.message, isNot(contains('801057625')));
   });
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,6 +100,29 @@ void main() {
     expect(container.read(settingsProvider).uidAliases, isEmpty);
   });
 
+  test('setUidAlias 別名沒變時不寫入也不記 log', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setUidAlias('A', 'Main');
+
+    Logger.root.level = Level.ALL;
+    final logs = <String>[];
+    final sub = Logger.root.onRecord.listen((r) => logs.add(r.message));
+    addTearDown(sub.cancel);
+    final before = container.read(settingsProvider);
+
+    await notifier.setUidAlias('A', '  Main ');
+    await notifier.setUidAlias('B', '   ');
+    await notifier.setUidAlias('B', null);
+    expect(logs, isEmpty);
+    expect(container.read(settingsProvider), same(before));
+
+    await notifier.setUidAlias('A', 'Alt');
+    expect(logs, hasLength(1));
+  });
+
   test('setUidOrder 寫入並持久化', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
@@ -111,6 +136,44 @@ void main() {
     expect(container.read(settingsProvider).uidOrder, ['C', 'A', 'B']);
     final reloaded = await SettingsStorage.load();
     expect(reloaded.uidOrder, ['C', 'A', 'B']);
+  });
+
+  test('setUidAlias 設定、清空都記錄修改時間，別名沒變時不動', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+
+    final before = DateTime.now().toUtc();
+    await notifier.setUidAlias('A', '主帳');
+    final setAt = container.read(settingsProvider).uidAliasUpdatedAt['A']!;
+    expect(setAt.isUtc, isTrue);
+    expect(setAt.isBefore(before), isFalse);
+    expect(setAt.isAfter(DateTime.now().toUtc()), isFalse);
+
+    await notifier.setUidAlias('A', ' 主帳 ');
+    expect(container.read(settingsProvider).uidAliasUpdatedAt['A'], setAt);
+
+    await Future<void>.delayed(const Duration(milliseconds: 2));
+    await notifier.setUidAlias('A', null);
+    final s = container.read(settingsProvider);
+    expect(s.uidAliases.containsKey('A'), isFalse);
+    expect(s.uidAliasUpdatedAt['A']!.isAfter(setAt), isTrue);
+  });
+
+  test('removeUidFromSettings 與 clearAllUidPreferences 一併清掉別名修改時間', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    await notifier.setUidAlias('A', '主帳');
+    await notifier.setUidAlias('B', '小號');
+
+    await notifier.removeUidFromSettings('A');
+    expect(container.read(settingsProvider).uidAliasUpdatedAt.keys, ['B']);
+
+    await notifier.clearAllUidPreferences();
+    expect(container.read(settingsProvider).uidAliasUpdatedAt, isEmpty);
   });
 
   test('removeUidFromSettings 同時清 alias 與 order，不動 lastActiveUid', () async {
@@ -157,6 +220,7 @@ void main() {
         .read(settingsProvider.notifier)
         .applyImportedPreferences(
           aliases: const {'A': '主號', 'C': '小號'},
+          aliasUpdatedAt: {'A': DateTime.utc(2026, 11, 24, 1)},
           uidOrder: const ['A', 'C', 'B'],
           lastActiveUid: 'A',
         );
@@ -168,6 +232,7 @@ void main() {
 
     final reloaded = await SettingsStorage.load();
     expect(reloaded.uidAliases, {'A': '主號', 'C': '小號'});
+    expect(reloaded.uidAliasUpdatedAt, {'A': DateTime.utc(2026, 11, 24, 1)});
     expect(reloaded.uidOrder, ['A', 'C', 'B']);
     expect(reloaded.lastActiveUid, 'A');
   });
@@ -182,6 +247,7 @@ void main() {
         .read(settingsProvider.notifier)
         .applyImportedPreferences(
           aliases: const {},
+          aliasUpdatedAt: const {},
           uidOrder: const [],
           lastActiveUid: null,
         );
@@ -217,6 +283,53 @@ void main() {
     expect(container.read(settingsProvider).skippedReleaseTag, isNull);
     final reloaded = await SettingsStorage.load();
     expect(reloaded.skippedReleaseTag, isNull);
+  });
+
+  test('setGameDir 寫入 state 與 prefs，null 清除並移除 key', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    const dir = r'D:\Program Files\Genshin Impact\games\Genshin Impact game';
+
+    await notifier.setGameDir(dir);
+    expect(container.read(settingsProvider).gameDir, dir);
+    expect((await SettingsStorage.load()).gameDir, dir);
+
+    await notifier.setGameDir(null);
+    expect(container.read(settingsProvider).gameDir, isNull);
+    expect((await SettingsStorage.load()).gameDir, isNull);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey('pref.gameDir'), isFalse);
+  });
+
+  test('setLogAccessMethod 寫入、清除 state 與 prefs', () async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    await notifier.waitForLoad();
+    expect(container.read(settingsProvider).logAccessMethod, isNull);
+
+    await notifier.setLogAccessMethod(LogAccessMethod.wirelessDebugging);
+    expect(
+      container.read(settingsProvider).logAccessMethod,
+      LogAccessMethod.wirelessDebugging,
+    );
+    expect(
+      (await SettingsStorage.load()).logAccessMethod,
+      LogAccessMethod.wirelessDebugging,
+    );
+
+    await notifier.setLogAccessMethod(null);
+    expect((await SettingsStorage.load()).logAccessMethod, isNull);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey('pref.logAccessMethod'), isFalse);
+  });
+
+  test('unknown stored logAccessMethod loads as null', () async {
+    SharedPreferences.setMockInitialValues({'pref.logAccessMethod': 'shizuku'});
+    expect((await SettingsStorage.load()).logAccessMethod, isNull);
   });
 
   group('setMaskUidInUi', () {

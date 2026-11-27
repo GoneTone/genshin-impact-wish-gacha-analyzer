@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- 登記成 AdMob 測試裝置的內測手機從 Play 安裝也會拿到測試廣告，
+             原生廣告驗證器會一直彈出；正式版關掉，除錯／profile 版保留以便開發時抓排版問題。
+             驗證器只出現在測試廣告上，不影響一般玩家與廣告投放。 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
+    </application>
+</manifest>

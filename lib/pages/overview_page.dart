@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/ads/ad_placement.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
@@ -11,18 +12,22 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/overview_sections.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/ads/native_ad.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/banner_top_rarity_bars.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/chart_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/stat_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/five_star_overview.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/empty_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/inline_section_title.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/last_updated_label.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/loading_state.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
@@ -31,6 +36,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/rarity_pie.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_action_button.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/share_image_helper.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/width_layout_builder.dart';
 
 /// 總覽頁，將 gacha 與 odes 分兩段各自呈現統計、圖表、timeline。
 class OverviewPage extends ConsumerWidget {
@@ -41,21 +47,56 @@ class OverviewPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
-    final state = ref.watch(gachaRepositoryProvider);
-    final activeData = state.activeData;
+    // 只訂閱用到的欄位：更新時進度每換一池就變一次，訂閱整個狀態會讓整頁跟著重算統計。
+    final (:activeData, :isBootstrapping) = ref.watch(
+      gachaRepositoryProvider.select(
+        (s) => (activeData: s.activeData, isBootstrapping: s.isBootstrapping),
+      ),
+    );
+    // 兩段各自判斷有沒有記錄：空狀態的段落不放廣告。
+    final isAndroid = ref.watch(isAndroidProvider);
+    final canRequestAds =
+        isAndroid && ref.watch(adsProvider.select((s) => s.canRequestAds));
+    final gachaAdsAllowed =
+        isAndroid &&
+        canRequestAds &&
+        ref.watch(
+          gachaRepositoryProvider.select(
+            (g) => overviewSectionHasAdContent(
+              category: GachaCategory.gacha,
+              gacha: g,
+            ),
+          ),
+        );
+    final odesAdsAllowed =
+        isAndroid &&
+        canRequestAds &&
+        ref.watch(
+          gachaRepositoryProvider.select(
+            (g) => overviewSectionHasAdContent(
+              category: GachaCategory.odes,
+              gacha: g,
+            ),
+          ),
+        );
 
-    if (state.isBootstrapping) {
+    if (isBootstrapping) {
       return const LoadingState();
     }
     if (activeData == null) {
-      return EmptyState.noSync(context);
+      return noSyncPageBody(context);
     }
 
+    final hoyowikiIndex = ref.watch(hoyowikiIndexProvider);
     final sections = buildOverviewSections(
       activeData.banners,
-      index: ref.watch(hoyowikiIndexProvider),
+      index: hoyowikiIndex,
     );
     final gachaSec = sections.gacha;
+    final gachaFiveStarItems = buildFiveStarCollectionAcrossBanners(
+      gachaSec.banners,
+      index: hoyowikiIndex,
+    );
     final odesSec = sections.odes;
     final bannerColors = BannerColors.of(Theme.of(context).brightness);
 
@@ -118,63 +159,137 @@ class OverviewPage extends ConsumerWidget {
       ),
     ];
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.l),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: PageHeader(
-                  title: l.pageOverviewTitle,
-                  icon: Icons.dashboard_outlined,
+    final pagePadding = pagePaddingOf(context);
+    final brightness = Theme.of(context).brightness;
+    // 廣告在頁面層級監聽：放進按需建構的子項，捲出畫面就會被釋放、捲回來又重新載入；
+    // 寬度要等版面才知道，LayoutBuilder 裡不能用此處的 ref.watch，改由 Consumer 監聽。
+    return WidthLayoutBuilder(
+      builder: (context, width) {
+        final fits = width - pagePadding * 2 >= kNativeMinWidth;
+        return Consumer(
+          builder: (context, adsRef, _) {
+            /// 讀取 [placement] 已載入的廣告；條件不符時不監聽，回傳 null。
+            LoadedNative? adOf(NativeAdPlacement placement, bool allowed) =>
+                allowed && fits
+                ? adsRef
+                      .watch(
+                        nativeAdProvider((
+                          placement: placement,
+                          scope: 'overview',
+                          brightness: brightness,
+                        )),
+                      )
+                      .value
+                : null;
+            return _buildScroll(
+              context,
+              ref,
+              l,
+              activeData,
+              gachaSec,
+              odesSec,
+              gachaStatCards,
+              odesStatCards,
+              bannerColors,
+              pagePadding,
+              gachaFiveStarItems,
+              adOf(NativeAdPlacement.overviewGacha, gachaAdsAllowed),
+              adOf(NativeAdPlacement.overviewOdes, odesAdsAllowed),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// 總覽頁的捲動內容；[gachaAd]／[odesAd] 非 null 時在該段「類型分布」與「各卡池主稀有度件數」之間插入原生廣告。
+  Widget _buildScroll(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    BannerStorage activeData,
+    GachaSectionData gachaSec,
+    OdesSectionData odesSec,
+    List<Widget> gachaStatCards,
+    List<Widget> odesStatCards,
+    BannerColors bannerColors,
+    double pagePadding,
+    List<FiveStarCollectionItem> gachaFiveStarItems,
+    LoadedNative? gachaAd,
+    LoadedNative? odesAd,
+  ) {
+    // 按需建構：標題列與區塊內容都是清單裡的獨立項目，畫面外的五星一覽與時間軸不會被建構。
+    return CustomScrollView(
+      scrollCacheExtent: pageScrollCacheExtent(),
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(pagePadding),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PageHeader(
+                        title: l.pageOverviewTitle,
+                        icon: Icons.dashboard_outlined,
+                        trailing: phoneLandscapeLastUpdated(context),
+                      ),
+                    ),
+                    ShareActionButton(
+                      enabled: activeData.banners.values.any(
+                        (r) => r.isNotEmpty,
+                      ),
+                      onGenerate: () =>
+                          _generateOverviewShare(context, ref, l, activeData),
+                    ),
+                  ],
                 ),
               ),
-              ShareActionButton(
-                enabled: activeData.banners.values.any((r) => r.isNotEmpty),
-                onGenerate: () =>
-                    _generateOverviewShare(context, ref, l, activeData),
+              _OverviewSection(
+                adPlacement: NativeAdPlacement.overviewGacha,
+                title: l.pageOverviewGachaSection,
+                types: gachaSec.types,
+                banners: gachaSec.banners,
+                stats: gachaSec.stats,
+                bannerColors: bannerColors,
+                statCards: gachaStatCards,
+                emptyTitle: l.emptyNoGachaRecords,
+                timeline: gachaSec.timeline,
+                timelineNowPulls: gachaSec.timelineNowPulls,
+                timelineRank: gachaSec.timelineRank,
+                fiveStarItems: gachaFiveStarItems,
+                nativeAd: gachaAd,
+              ),
+              SliverList.list(
+                children: [
+                  const SizedBox(height: AppSpacing.xxxl),
+                  Divider(
+                    color: Theme.of(context).gacha.borderEmphasis,
+                    height: 1,
+                    thickness: 1,
+                  ),
+                  const SizedBox(height: AppSpacing.xxxl),
+                ],
+              ),
+              _OverviewSection(
+                adPlacement: NativeAdPlacement.overviewOdes,
+                title: l.pageOverviewOdesSection,
+                types: odesSec.types,
+                banners: odesSec.banners,
+                stats: odesSec.stats,
+                bannerColors: bannerColors,
+                statCards: odesStatCards,
+                emptyTitle: l.emptyNoOdesRecords,
+                timeline: odesSec.timeline,
+                timelineNowPulls: odesSec.timelineNowPulls,
+                timelineRank: odesSec.timelineRank,
+                nativeAd: odesAd,
               ),
             ],
           ),
-          _OverviewSection(
-            title: l.pageOverviewGachaSection,
-            types: gachaSec.types,
-            banners: gachaSec.banners,
-            stats: gachaSec.stats,
-            bannerColors: bannerColors,
-            statCards: gachaStatCards,
-            emptyTitle: l.emptyNoGachaRecords,
-            timeline: gachaSec.timeline,
-            timelineNowPulls: gachaSec.timelineNowPulls,
-            timelineRank: gachaSec.timelineRank,
-            fiveStarItems: buildFiveStarCollectionAcrossBanners(
-              gachaSec.banners,
-              index: ref.watch(hoyowikiIndexProvider),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          Divider(
-            color: Theme.of(context).gacha.borderEmphasis,
-            height: 1,
-            thickness: 1,
-          ),
-          const SizedBox(height: AppSpacing.xxxl),
-          _OverviewSection(
-            title: l.pageOverviewOdesSection,
-            types: odesSec.types,
-            banners: odesSec.banners,
-            stats: odesSec.stats,
-            bannerColors: bannerColors,
-            statCards: odesStatCards,
-            emptyTitle: l.emptyNoOdesRecords,
-            timeline: odesSec.timeline,
-            timelineNowPulls: odesSec.timelineNowPulls,
-            timelineRank: odesSec.timelineRank,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -205,7 +320,7 @@ class OverviewPage extends ConsumerWidget {
   }
 }
 
-/// 總覽頁中 gacha 或 odes 的單一段落，包含 stat 卡、圖表與 timeline。
+/// 總覽頁中 gacha 或 odes 的單一段落，包含 stat 卡、圖表與 timeline；以 sliver 回傳，讓每個區塊按需建構。
 class _OverviewSection extends StatelessWidget {
   const _OverviewSection({
     required this.title,
@@ -219,6 +334,8 @@ class _OverviewSection extends StatelessWidget {
     required this.timelineNowPulls,
     required this.timelineRank,
     this.fiveStarItems = const [],
+    this.nativeAd,
+    required this.adPlacement,
   });
 
   /// 段落標題文字。
@@ -254,15 +371,19 @@ class _OverviewSection extends StatelessWidget {
   /// 此段的五星一覽清單；空清單時不顯示該區塊（頌願段一律空）。
   final List<FiveStarCollectionItem> fiveStarItems;
 
+  /// 已載入、可顯示的原生廣告；null 時版面與沒有廣告時相同。
+  final LoadedNative? nativeAd;
+
+  /// 此段廣告的位置，決定廣告外框樣式。
+  final NativeAdPlacement adPlacement;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final tokens = Theme.of(context).gacha;
     final hasData = banners.values.any((r) => r.isNotEmpty);
 
     if (!hasData) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      return SliverList.list(
         children: [
           InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
           const SizedBox(height: AppSpacing.m),
@@ -271,169 +392,172 @@ class _OverviewSection extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
-        const SizedBox(height: AppSpacing.m),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverList.list(
+          children: [
+            InlineSectionTitle(icon: Icons.summarize_outlined, title: title),
+            const SizedBox(height: AppSpacing.m),
 
-        // Stat row: 三聯卡片（無保底）
-        LayoutBuilder(
-          builder: (context, c) {
-            final wide = c.maxWidth >= 1024;
-            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
+            // Stat row: 三聯卡片（無保底）
+            WidthLayoutBuilder(
+              builder: (context, width) {
+                final wide = width >= 1024;
+                final mid = width < 1024;
 
-            if (wide) {
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(flex: 6, child: statCards[0]),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(flex: 3, child: statCards[1]),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(flex: 3, child: statCards[2]),
-                  ],
-                ),
-              );
-            }
-            if (mid) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  statCards[0],
-                  const SizedBox(height: AppSpacing.m),
-                  IntrinsicHeight(
+                if (wide) {
+                  return IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(child: statCards[1]),
+                        Expanded(flex: 6, child: statCards[0]),
                         const SizedBox(width: AppSpacing.m),
-                        Expanded(child: statCards[2]),
+                        Expanded(flex: 3, child: statCards[1]),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(flex: 3, child: statCards[2]),
                       ],
                     ),
-                  ),
-                ],
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (var i = 0; i < statCards.length; i++) ...[
-                  if (i > 0) const SizedBox(height: AppSpacing.m),
-                  statCards[i],
-                ],
-              ],
-            );
-          },
-        ),
-
-        const SizedBox(height: AppSpacing.l),
-
-        // Pie row: 稀有度 + 物品類型
-        LayoutBuilder(
-          builder: (context, c) {
-            final wide = c.maxWidth >= 1024;
-            final mid = c.maxWidth >= 800 && c.maxWidth < 1024;
-
-            final rarityCard = ChartCard(
-              title: l.statsRarityDistribution,
-              icon: Icons.pie_chart_outline,
-              chart: RarityPie(stats: stats),
-              legend: DistributionLegend(
-                entries: rarityDistributionEntries(stats, tokens, l),
-              ),
-            );
-            final itemTypeCard = ChartCard(
-              title: l.statsItemTypeDistribution,
-              icon: Icons.donut_small_outlined,
-              chart: ItemTypePie(stats: stats),
-              legend: DistributionLegend(
-                entries: itemTypeDistributionEntries(
-                  stats,
-                  Theme.of(context).brightness,
-                  l,
-                ),
-              ),
-            );
-
-            if (wide) {
-              // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
-              // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
-              final card1Width = (c.maxWidth - AppSpacing.m * 2) / 2;
-              return IntrinsicHeight(
-                child: Row(
+                  );
+                }
+                if (mid) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      statCards[0],
+                      const SizedBox(height: AppSpacing.m),
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(child: statCards[1]),
+                            const SizedBox(width: AppSpacing.m),
+                            Expanded(child: statCards[2]),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(width: card1Width, child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
+                    for (var i = 0; i < statCards.length; i++) ...[
+                      if (i > 0) const SizedBox(height: AppSpacing.m),
+                      statCards[i],
+                    ],
                   ],
-                ),
-              );
-            }
-            if (mid) {
-              return IntrinsicHeight(
-                child: Row(
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.m),
+
+            // Pie row: 稀有度 + 物品類型
+            WidthLayoutBuilder(
+              builder: (context, width) {
+                final wide = width >= 1024;
+                final mid = width >= 800 && width < 1024;
+
+                final layout = ChartCardLayout.of(context, width);
+                final rarityCard = RarityChartCard(
+                  stats: stats,
+                  layout: layout,
+                );
+                final itemTypeCard = ItemTypeChartCard(
+                  stats: stats,
+                  layout: layout,
+                );
+
+                if (wide) {
+                  // 對齊 Stat row（flex 6/3/3 + 兩個 m gap）：
+                  // 第 1 卡寬 = (maxWidth - 24) / 2 = Stat row「總抽數」寬度。
+                  final card1Width = (width - AppSpacing.m * 2) / 2;
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(width: card1Width, child: rarityCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: itemTypeCard),
+                      ],
+                    ),
+                  );
+                }
+                if (mid || layout == ChartCardLayout.compactTitleBeside) {
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: rarityCard),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(child: itemTypeCard),
+                      ],
+                    ),
+                  );
+                }
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(child: rarityCard),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(child: itemTypeCard),
+                    rarityCard,
+                    const SizedBox(height: AppSpacing.m),
+                    itemTypeCard,
                   ],
-                ),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                rarityCard,
-                const SizedBox(height: AppSpacing.m),
-                itemTypeCard,
-              ],
-            );
-          },
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.m),
+            if (nativeAd != null) ...[
+              NativeAdBlock(ad: nativeAd!, placement: adPlacement),
+              const SizedBox(height: AppSpacing.m),
+            ],
+
+            // 各卡池主稀有度件數
+            ChartCard(
+              title: l.bannerTopRarityCountTitle,
+              icon: Icons.bar_chart,
+              height: null,
+              chart: BannerTopRarityBars(
+                types: types,
+                banners: banners,
+                colors: bannerColors,
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.xl),
+            if (fiveStarItems.isNotEmpty) ...[
+              InlineSectionTitle(
+                icon: Icons.star_outline,
+                title: l.rarityOverviewTitle(l.rarityStar(5)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+            ],
+          ],
         ),
-
-        const SizedBox(height: AppSpacing.m),
-
-        // 各卡池主稀有度件數
-        ChartCard(
-          title: l.bannerTopRarityCountTitle,
-          icon: Icons.bar_chart,
-          height: null,
-          chart: BannerTopRarityBars(
-            types: types,
-            banners: banners,
-            colors: bannerColors,
-          ),
-        ),
-
-        const SizedBox(height: AppSpacing.xl),
+        // 五星一覽獨立成按列建構的 sliver：數十個圖示一次建好會在捲入的那一幀卡頓。
         if (fiveStarItems.isNotEmpty) ...[
-          InlineSectionTitle(
-            icon: Icons.star_outline,
-            title: l.rarityOverviewTitle(l.rarityStar(5)),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          FiveStarOverview(items: fiveStarItems),
-          const SizedBox(height: AppSpacing.xl),
+          SliverFiveStarOverview(items: fiveStarItems),
+          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
         ],
-        InlineSectionTitle(
-          icon: Icons.timeline,
-          title: l.timelineTopRarityTitle(
-            l.rarityStar(timelineRank),
-            timeline.length,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.s),
-        TimelineVertical(
-          entries: timeline,
-          colors: bannerColors,
-          targetRank: timelineRank,
-          nowPulls: timelineNowPulls,
-          isAcrossBanners: true,
-          showLuckLegend: true,
+        SliverList.list(
+          children: [
+            InlineSectionTitle(
+              icon: Icons.timeline,
+              title: l.timelineTopRarityTitle(
+                l.rarityStar(timelineRank),
+                timeline.length,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            TimelineVertical(
+              entries: timeline,
+              colors: bannerColors,
+              targetRank: timelineRank,
+              nowPulls: timelineNowPulls,
+              isAcrossBanners: true,
+              showLuckLegend: true,
+            ),
+          ],
         ),
       ],
     );

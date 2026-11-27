@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 
 /// 認證過期（retcode -100 / -101）。
 class AuthExpiredException implements Exception {
@@ -105,6 +106,7 @@ class GachaFetcher {
   Future<FetchedPage> fetchPage(Uri url, http.Client client) async {
     final queryGachaType = url.queryParameters['gacha_type'] ?? '';
     final queryLang = url.queryParameters['lang'] ?? '';
+    final isOdes = url.path.endsWith(GachaEndpoint.odes.pathSegment);
     var attempt = 0;
     _log.fine(
       'fetchPage gachaType=$queryGachaType url=${sanitizeUrl(url.toString())}',
@@ -120,7 +122,11 @@ class GachaFetcher {
               .map(
                 (e) => GachaRecord.fromApiJson(
                   e as Map<String, dynamic>,
-                  gachaType: queryGachaType,
+                  // 頌願的 op_gacha_type 是檔期層級 id，必須沿用查詢值；祈願要保留
+                  // API 回傳的類型，才分得出查 301 時一併回傳的 400。
+                  gachaType: isOdes
+                      ? queryGachaType
+                      : (e['gacha_type'] as String? ?? queryGachaType),
                   fallbackLang: queryLang,
                 ),
               )
@@ -157,7 +163,9 @@ class GachaFetcher {
     required void Function(FetchProgress) onProgress,
     required http.Client client,
   }) async {
-    final existingMaxId = existing.isEmpty ? '0' : existing.first.id;
+    // 替代記錄的 id 以 0 開頭，不能當停止點；取最新一筆官方記錄
+    final existingMaxId =
+        existing.map((r) => r.id).where(isOfficialId).firstOrNull ?? '0';
     _log.info('banner=$gachaType start, existing=${existing.length}');
     final fresh = <GachaRecord>[];
     var endId = '0';
@@ -232,7 +240,7 @@ class GachaFetcher {
         );
       }
     }
-    return [...fresh, ...normalizedExisting];
+    return mergeBannerRecords(normalizedExisting, fresh);
   }
 
   /// 字串字典序比對；id 等長 19 字元 → 字典序 = 數值序

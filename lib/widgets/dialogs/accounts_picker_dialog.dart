@@ -32,20 +32,26 @@ class AccountPickerEntry {
   final String? badge;
 }
 
-/// 顯示帳號挑選對話框；回傳被勾選的 UID 清單（保持 entries 傳入順序）。
-/// 使用者取消時回傳 null。
-Future<List<String>?> showAccountsPickerDialog({
+/// 帳號挑選對話框的結果：被勾選的 [uids]（保持 entries 傳入順序），
+/// [secondary] 為 true 表示按的是第二顆確認鈕。
+typedef AccountsPickResult = ({List<String> uids, bool secondary});
+
+/// 顯示帳號挑選對話框；使用者取消時回傳 null。
+/// 給 [secondaryConfirmLabel] 時會在取消與主確認鈕之間多一顆次要確認鈕。
+Future<AccountsPickResult?> showAccountsPickerDialog({
   required BuildContext context,
   required String title,
   required String confirmLabel,
+  String? secondaryConfirmLabel,
   required List<AccountPickerEntry> entries,
 }) {
-  return showDialog<List<String>>(
+  return showDialog<AccountsPickResult>(
     context: context,
     barrierDismissible: false,
     builder: (_) => _AccountsPickerDialog(
       title: title,
       confirmLabel: confirmLabel,
+      secondaryConfirmLabel: secondaryConfirmLabel,
       entries: entries,
     ),
   );
@@ -53,9 +59,11 @@ Future<List<String>?> showAccountsPickerDialog({
 
 /// 帳號複選 dialog 的實作 widget。
 class _AccountsPickerDialog extends StatefulWidget {
+  /// 建立 [_AccountsPickerDialog]。
   const _AccountsPickerDialog({
     required this.title,
     required this.confirmLabel,
+    required this.secondaryConfirmLabel,
     required this.entries,
   });
 
@@ -64,6 +72,9 @@ class _AccountsPickerDialog extends StatefulWidget {
 
   /// 確認按鈕的標籤文字。
   final String confirmLabel;
+
+  /// 次要確認按鈕的標籤文字；null 表示不顯示次要按鈕。
+  final String? secondaryConfirmLabel;
 
   /// 可挑選的帳號條目列表。
   final List<AccountPickerEntry> entries;
@@ -120,9 +131,19 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
     _setAll(_selectAllValue != true);
   }
 
+  /// 以目前勾選結果關閉對話框；[secondary] 標示按的是哪顆確認鈕。
+  void _confirm({required bool secondary}) {
+    final ordered = [
+      for (final e in widget.entries)
+        if (_selected.contains(e.uid)) e.uid,
+    ];
+    Navigator.of(context).pop((uids: ordered, secondary: secondary));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final secondaryLabel = widget.secondaryConfirmLabel;
     return AppDialog(
       size: AppDialogSize.md,
       title: Text(widget.title),
@@ -162,16 +183,18 @@ class _AccountsPickerDialogState extends State<_AccountsPickerDialog> {
           icon: const Icon(Icons.close, size: 18),
           label: Text(l.actionCancel),
         ),
+        if (secondaryLabel != null)
+          OutlinedButton.icon(
+            onPressed: _selected.isEmpty
+                ? null
+                : () => _confirm(secondary: true),
+            icon: const Icon(Icons.share_outlined, size: 18),
+            label: Text(secondaryLabel),
+          ),
         FilledButton.icon(
           onPressed: _selected.isEmpty
               ? null
-              : () {
-                  final ordered = [
-                    for (final e in widget.entries)
-                      if (_selected.contains(e.uid)) e.uid,
-                  ];
-                  Navigator.of(context).pop(ordered);
-                },
+              : () => _confirm(secondary: false),
           icon: const Icon(Icons.check, size: 18),
           label: Text(widget.confirmLabel),
         ),
@@ -234,12 +257,13 @@ class _PickerRow extends StatelessWidget {
       ),
       subtitle: DefaultTextStyle.merge(
         style: TextStyle(color: tokens.textMuted, fontSize: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             RelativeTimeText(
               time: entry.lastUpdated,
               templateBuilder: l.accountLastUpdated,
+              tooltipOnTap: false,
             ),
             const Text(' ・ '),
             Text(l.accountRecordCount(entry.recordCount)),

@@ -1,39 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_auth_service.dart';
 
+import '../../helpers/cloud_sync_fakes.dart';
+
 void main() {
-  group('isInvalidGrant', () {
-    test('訊息含 invalid_grant → true', () {
-      expect(
-        isInvalidGrant(Exception('Refresh failed: invalid_grant')),
-        isTrue,
+  test(
+    'signOut deletes the stored token without any network request',
+    () async {
+      var requests = 0;
+      final store = InMemoryTokenStore()..token = 'refresh-1';
+      final svc = GoogleAuthService(
+        tokenStore: store,
+        baseClientFactory: () => MockClient((_) async {
+          requests++;
+          return http.Response('', 200);
+        }),
       );
-    });
-
-    test('一般網路錯誤 → false', () {
-      expect(isInvalidGrant(Exception('Connection refused')), isFalse);
-    });
-  });
-
-  group('isInsufficientScope', () {
-    test('insufficient_scope → true', () {
-      expect(isInsufficientScope(Exception('401 insufficient_scope')), isTrue);
-    });
-
-    test('insufficient authentication scopes → true', () {
-      expect(
-        isInsufficientScope(
-          Exception('Request had insufficient authentication scopes.'),
-        ),
-        isTrue,
-      );
-    });
-
-    test('一般網路錯誤 → false', () {
-      expect(isInsufficientScope(Exception('Connection refused')), isFalse);
-    });
-  });
+      await svc.unlink();
+      expect(store.token, isNull);
+      expect(requests, 0);
+    },
+  );
 
   group('hasRequiredCloudScopes', () {
     test('含 drive.appdata → true', () {

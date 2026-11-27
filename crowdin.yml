@@ -8,3 +8,14 @@ files:
         zh-TW: zh
         zh-CN: zh_Hans
         pt-BR: pt_BR
+  # Android 原生字串（啟動器名稱、無線偵錯配對通知）；英文寫回預設的 values/，希伯來文要用 Android 的舊式代碼 iw，挪威文用系統的書面挪威語 nb
+  - source: /android/app/src/main/res/values-zh-rTW/strings.xml
+    translation: /android/app/src/main/res/values-%two_letters_code%/strings.xml
+    translation_replace:
+      values-en/: values/
+    languages_mapping:
+      two_letters_code:
+        zh-CN: zh-rCN
+        pt-BR: pt-rBR
+        he: iw
+        "no": nb

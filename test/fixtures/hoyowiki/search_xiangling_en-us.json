@@ -1,0 +1,50 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "list": [
+      {
+        "entry_page_id": "3182",
+        "name": "Xiangling",
+        "menu": {
+          "id": "16",
+          "name": "Genius Invokation TCG",
+          "sub_menus": [
+            {
+              "id": "17",
+              "name": "Character Cards"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "50",
+        "name": "Xiangling",
+        "menu": {
+          "id": "1",
+          "name": "Characters",
+          "sub_menus": [
+            {
+              "id": "2",
+              "name": "Character Archive"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "11776",
+        "name": "Letter From Xiangling",
+        "menu": {
+          "id": "8",
+          "name": "Materials",
+          "sub_menus": [
+            {
+              "id": "9",
+              "name": "Teyvat's Resources"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

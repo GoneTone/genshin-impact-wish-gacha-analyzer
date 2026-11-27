@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Ghép nối gỡ lỗi không dây</string>
+    <string name="pairing_searching_title">Đang tìm dịch vụ ghép nối</string>
+    <string name="pairing_searching_text">Trong Gỡ lỗi không dây, nhấn “Ghép nối thiết bị bằng mã ghép nối”</string>
+    <string name="pairing_found_title">Nhập mã ghép nối</string>
+    <string name="pairing_found_text">Nhập mã 6 chữ số hiển thị trên màn hình ghép nối</string>
+    <string name="pairing_input_label">Mã ghép nối</string>
+    <string name="pairing_action_pair">Ghép nối</string>
+    <string name="pairing_action_stop">Dừng</string>
+    <string name="pairing_in_progress">Đang ghép nối...</string>
+    <string name="pairing_success_title">Ghép nối thành công</string>
+    <string name="pairing_success_text">Nhấn vào đây để quay lại ứng dụng</string>
+    <string name="pairing_failed_text">Ghép nối không thành công. Kiểm tra mã rồi nhập lại</string>
+    <string name="pairing_no_app_text">Ghép nối không thành công. Quay lại ứng dụng và thử lại</string>
+    <string name="pairing_timeout_title">Hết thời gian ghép nối</string>
+    <string name="pairing_timeout_text">Nhấn vào đây để bắt đầu lại</string>
+</resources>

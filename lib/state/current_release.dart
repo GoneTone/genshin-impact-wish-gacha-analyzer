@@ -33,8 +33,8 @@ final currentReleaseProvider = FutureProvider.family<AppRelease, String>((
     );
     _log.info('fetch success tag=${release.tagName}');
     return release;
-  } on ReleaseCheckError catch (e) {
-    _log.warning('fetch failed version=$version: $e');
+  } on ReleaseCheckError catch (e, st) {
+    _log.warning('fetch failed version=$version', e, st);
     rethrow;
   }
 }, retry: (_, _) => null);

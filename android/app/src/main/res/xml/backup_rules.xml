@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 11 以下的自動備份。flutter_secure_storage 的值用綁定裝置的 Keystore 金鑰加密，
+     還原到其他裝置或重裝後解不開，所以排除；其餘 App 資料照常備份。
+     檔名對照 flutter_secure_storage 10.3.1 預設選項（FlutterSecureStorageConfig／NamespacedConfigSource）。 -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="FlutterSecureStorage.xml"/>
+    <exclude domain="sharedpref" path="FlutterSecureKeyStorage.xml"/>
+    <exclude domain="sharedpref" path="FlutterSecureStorageConfiguration.xml"/>
+    <exclude domain="sharedpref" path="FlutterSecureStorageConfiguration:FlutterSecureStorage.xml"/>
+</full-backup-content>

@@ -1,0 +1,34 @@
+// shortcut: Gradle 9 移除了 Project.exec()，但 super_clipboard 依賴的 super_native_extensions 與
+// irondash_engine_context 內附的 cargokit 仍呼叫它，導致 Android 建置失敗。這裡替所有子專案補回同名方法，
+// 轉接到 ExecOperations.exec。上游修正（superlistapp/super_native_extensions#565／#585、irondash/irondash#95）發布後刪除本檔。
+import org.gradle.process.ExecOperations
+
+import javax.inject.Inject
+
+/// 讓 Gradle 注入公開的 ExecOperations；行為與已移除的 Project.exec() 相同（輸出直接串流到 console）。
+interface CargokitExecOps {
+    @Inject
+    ExecOperations getExecOps()
+}
+
+allprojects { p ->
+    def ops = p.objects.newInstance(CargokitExecOps).execOps
+    // Gradle 的 Project 不吃 Groovy metaClass 注入；ext 裡的 closure 可被當成方法呼叫。
+    p.ext.exec = { Closure spec ->
+        ops.exec { s ->
+            spec.delegate = s
+            spec.resolveStrategy = Closure.DELEGATE_FIRST
+            spec.call(s)
+        }
+    }
+}
+
+// shortcut: 同兩個套件的 android/build.gradle 寫死 compileSdkVersion 31，新版 androidx 依賴要求 ≥ 34；
+// 改用 :app 的 compileSdk（隨 Flutter 版本走）。上游調高後刪除。
+subprojects { p ->
+    if (p.name in ['irondash_engine_context', 'super_native_extensions']) {
+        p.afterEvaluate {
+            p.android.compileSdkVersion(rootProject.project(':app').android.compileSdk)
+        }
+    }
+}

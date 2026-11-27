@@ -6,8 +6,12 @@ import 'package:screen_retriever/screen_retriever.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
-/// 視窗最小尺寸（寬 × 高，dp）。
-const Size _kMinWindowSize = Size(800, 450);
+/// 使用者拖拉視窗的下限（寬 × 高，dp）；寬度可以拉到 600 以下以切換成手機排版。
+@visibleForTesting
+const Size kMinWindowSize = Size(360, 450);
+
+/// 螢幕太小時的預設視窗尺寸，也是預設尺寸計算結果的下限（寬 × 高，dp）。
+const Size _kFallbackWindowSize = Size(800, 450);
 
 /// 計算預設視窗大小時留的邊距（dp）。
 const double _kMargin = 100;
@@ -23,7 +27,7 @@ Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
 
   // 極端小螢幕保護：未達 200dp 直接走 fallback
   if (w < 200 || h < 200) {
-    return _kMinWindowSize;
+    return _kFallbackWindowSize;
   }
 
   late Size raw;
@@ -37,12 +41,12 @@ Size computeDefaultWindowSize(Size workArea, {double margin = _kMargin}) {
     raw = Size(w - margin, h - margin);
   }
 
-  // 兩個維度都低於最小尺寸 → 視為螢幕太小，fallback 到 min。
+  // 兩個維度都低於保底尺寸 → 視為螢幕太小，退回保底尺寸 800×450。
   // 單一維度低於（例如 portrait 螢幕 9:16 寬度<800）則保留比例信任公式，
-  // 由 setMinimumSize 在使用者拖拉時提供下限保護。
-  if (raw.width < _kMinWindowSize.width &&
-      raw.height < _kMinWindowSize.height) {
-    return _kMinWindowSize;
+  // 使用者拖拉的下限另由 setMinimumSize（[kMinWindowSize]）保護。
+  if (raw.width < _kFallbackWindowSize.width &&
+      raw.height < _kFallbackWindowSize.height) {
+    return _kFallbackWindowSize;
   }
   return raw;
 }
@@ -132,7 +136,7 @@ class WindowStateKeeper with WindowListener {
 
     const opts = WindowOptions(skipTaskbar: false);
     await windowManager.waitUntilReadyToShow(opts, () async {
-      await windowManager.setMinimumSize(_kMinWindowSize);
+      await windowManager.setMinimumSize(kMinWindowSize);
       await windowManager.setBounds(bounds);
       if (wasMaximized) {
         await windowManager.maximize();

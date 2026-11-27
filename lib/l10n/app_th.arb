@@ -33,6 +33,7 @@
   "navSettings": "การตั้งค่า",
   "navContributors": "ผลงาน",
   "gachaTypeCharacter": "กิจกรรมอธิษฐานตัวละคร",
+  "gachaTypeCharacter2": "กิจกรรมอธิษฐานตัวละคร - 2",
   "gachaTypeWeapon": "กิจกรรมอธิษฐานอาวุธ",
   "gachaTypeChronicled": "การอธิษฐานรวมปรารถนา",
   "gachaTypeStandard": "อธิษฐานถาวร",
@@ -105,7 +106,7 @@
   "uidNotSynced": "ยังไม่ได้ซิงค์",
   "uidActiveSuffix": " (ใช้งานอยู่)",
   "emptyNoSyncTitle": "ยังไม่ได้ซิงค์ข้อมูล",
-  "emptyNoSyncMessage": "กดปุ่ม \"อัพเดทข้อมูล\" ที่มุมบนขวาเพื่อเริ่มต้น",
+  "emptyNoSyncMessage": "กด {icon} ที่มุมบนขวาเพื่อเริ่มต้น",
   "emptyNoRecords": "ไม่มีบันทึกสำหรับ banner นี้",
   "emptyNoFilterMatch": "ไม่พบรายการที่ตรงกับเงื่อนไข",
   "emptyNoOdesRecords": "ยังไม่มีบันทึกภาวนา",
@@ -147,6 +148,23 @@
   },
   "tableTotalIndex": "จำนวนครั้ง",
   "tableMainPity": "pity ปัจจุบัน",
+  "tableSortButton": "เรียง: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "เรียง: ค่าเริ่มต้น",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "เรียงตาม",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "จำนวนครั้งนับจาก {star} ครั้งล่าสุด",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -166,7 +184,18 @@
   "progressDone": "อัพเดทสำเร็จ",
   "progressFailed": "ล้มเหลว",
   "progressOpenGameHint": "กรุณาเปิด Genshin Impact → กาชา → ประวัติการอธิษฐาน",
-  "progressFallbackHint": "(การยืนยันตัวตนก่อนหน้าหมดอายุ จำเป็นต้องดักจับใหม่)",
+  "progressFallbackHint": "(URL ประวัติการอธิษฐานก่อนหน้าหมดอายุ จำเป็นต้องขอรับใหม่)",
+  "progressNotDetectedLink": "เปิดประวัติการอธิษฐานแล้วแต่ไม่มีปฏิกิริยาใด ๆ?",
+  "progressCaptureUnavailableHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) จึงตรวจจับจากแคชเว็บของเกมเท่านั้น กรุณาเปิดหน้าประวัติการอธิษฐานในเกม",
+  "progressCaptureUnavailableNoGameDirHint": "ไม่สามารถเริ่มตัวดักจับได้ (ใบรับรองอาจถูกปฏิเสธหรือพอร์ตถูกใช้งานอยู่) และไม่พบโฟลเดอร์เกม กรุณากด \"เลือกโฟลเดอร์เกม\" ด้านล่างเพื่อระบุด้วยตนเอง",
+  "gameDirHelpTitle": "ตรวจไม่พบประวัติการอธิษฐาน",
+  "gameDirHelpNotFound": "ไม่พบโฟลเดอร์เกม Genshin Impact เมื่อเลือกโฟลเดอร์เกมแล้ว เครื่องมือนี้จะรับ URL ประวัติการอธิษฐานจากแคชเว็บของเกมได้ด้วย",
+  "gameDirHelpFound": "โฟลเดอร์เกมที่ใช้อยู่ตอนนี้: {path} หากไม่ใช่เกมที่คุณกำลังเล่น กรุณาเลือกใหม่",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "ตั้งค่าโฟลเดอร์เกมแล้ว กรุณากลับไปที่เกมและเปิดประวัติการอธิษฐานอีกครั้ง",
+  "gameDirInvalid": "ไม่พบ Genshin Impact ในโฟลเดอร์นี้ กรุณาเลือกโฟลเดอร์ \"Genshin Impact game\"",
+  "actionChooseGameDir": "เลือกโฟลเดอร์เกม",
+  "actionRechooseGameDir": "เลือกใหม่",
   "progressFetchingBanner": "กำลังดึงข้อมูล: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -344,11 +373,19 @@
   },
   "settingsDataLanguageUnifyFailed": "การแปลงล้มเหลว ข้อมูลไม่มีการเปลี่ยนแปลง กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง",
   "settingsDataManagement": "จัดการข้อมูล",
+  "settingsGameDir": "โฟลเดอร์เกม",
+  "settingsGameDirAuto": "ตรวจพบอัตโนมัติ: {path}",
+  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirManual": "ตั้งค่าด้วยตนเอง: {path}",
+  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirNone": "ไม่พบโฟลเดอร์เกม",
+  "actionClearGameDir": "ล้าง",
   "settingsCloudSync": "การซิงค์ผ่านคลาวด์",
-  "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างคอมพิวเตอร์หลายเครื่อง",
+  "cloudSyncIntro": "เชื่อมโยงบัญชี Google เพื่อสำรองประวัติการอธิษฐานไปยัง Google ไดรฟ์ของคุณโดยอัตโนมัติ และซิงค์ระหว่างหลายอุปกรณ์",
   "cloudSyncUnconfigured": "บิลด์นี้ไม่ได้ตั้งค่าข้อมูลรับรอง Google OAuth จึงใช้การซิงค์ผ่านคลาวด์ไม่ได้",
   "cloudSyncLink": "เชื่อมโยงบัญชี Google",
   "cloudSyncAwaitingConsent": "เปิดเบราว์เซอร์แล้ว โปรดทำการอนุญาตให้เสร็จในเบราว์เซอร์...",
+  "cloudSyncAwaitingConsentAndroid": "โปรดให้สิทธิ์ให้เสร็จในหน้าต่าง Google...",
   "cloudSyncLinkedAs": "เชื่อมโยงแล้ว: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -387,6 +424,14 @@
   "settingsPrivacySectionTitle": "ความเป็นส่วนตัว",
   "settingsMaskUidInUi": "ปิดบัง UID ในอินเทอร์เฟซ",
   "settingsMaskUidInUiHint": "เมื่อเปิดใช้งาน UID ในอินเทอร์เฟซและรายการบัญชีจะแสดง 3 หลักแรกและส่วนที่เหลือจะถูกปิดบัง (เช่น 123•••••) เหมาะสำหรับการสตรีมหรือการแชร์หน้าจอ ภาพแชร์ ไฟล์ส่งออก และกล่องโต้ตอบยืนยันการลบจะไม่ได้รับผลกระทบ",
+  "settingsAdPrivacyOptions": "ตัวเลือกความเป็นส่วนตัวของโฆษณา",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "เปลี่ยนการยินยอมให้แสดงโฆษณาที่ปรับให้เหมาะกับคุณ",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "เกี่ยวกับ",
   "settingsAboutVersion": "เวอร์ชัน {version}",
   "@settingsAboutVersion": {
@@ -408,6 +453,7 @@
   "contributorsTranslatedLanguages": "ภาษาที่แปล",
   "contributorsHelpTranslate": "ไม่มีให้บริการในภาษาที่คุณต้องการ ? ช่วยเราแปล ！",
   "contributorsProjectLicense": "ใบอนุญาตโปรเจค",
+  "contributorsOpenSourceLicenses": "สัญญาอนุญาตโอเพนซอร์ส",
   "pityRank": "{star} pity",
   "@pityRank": {
     "placeholders": {
@@ -543,6 +589,11 @@
   "filterClear": "ล้างตัวกรอง",
   "pagerFirst": "หน้าแรก",
   "pagerLast": "หน้าสุดท้าย",
+  "pagerJumpTitle": "ไปที่หน้า",
+  "pagerJumpLabel": "หน้า ({min}–{max})",
+  "pagerJumpCurrent": "ขณะนี้อยู่หน้า {page} · {total} รายการ",
+  "pagerJumpGo": "ไป",
+  "pagerJumpInvalid": "กรอกหมายเลขหน้า {min}–{max}",
   "settingsClearActive": "ล้างข้อมูลบัญชีปัจจุบัน",
   "settingsClearAll": "ล้างข้อมูลทั้งหมด",
   "settingsRefetchHoyoWikiImagesTitle": "บังคับดึงภาพไอเทมใหม่",
@@ -751,6 +802,95 @@
   "importReasonUnreadable": "ไม่สามารถอ่านไฟล์ได้",
   "exportReasonWriteFailed": "ไม่สามารถเขียนไฟล์ได้ กรุณาตรวจสอบตำแหน่งที่บันทึกและสิทธิ์การเข้าถึง",
   "importReasonForeignApp": "ไฟล์นี้ไม่ใช่ข้อมูลสำรองที่ส่งออกจากแอปนี้",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "นำเข้าจากแพลตฟอร์มอื่น",
+  "platformPickerTitle": "เลือกแพลตฟอร์มต้นทาง",
+  "importReasonNotPlatformFile": "ไฟล์นี้ไม่ใช่ไฟล์ส่งออกของ {platform} ที่ถูกต้อง",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export และเครื่องมืออื่น ๆ · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "นำเข้าไปยังบัญชีใด",
+  "importTargetAccountBody": "ไฟล์ส่งออกของ paimon.moe ไม่มี UID กรุณาเลือกบัญชีเจ้าของบันทึกเหล่านี้",
+  "importTargetAccountOtherUid": "UID อื่น",
+  "importTargetAccountUidHint": "ป้อน UID",
+  "importTargetAccountRecordCount": "มี {count} รายการในเครื่องนี้",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "ไฟล์นี้ใช้ UIGF เวอร์ชันใหม่กว่า ({version}) ซึ่งยังไม่รองรับ กรุณาอัปเดตแอป หรือส่งออกเป็น v4 จากเครื่องมือต้นทาง",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "ไฟล์มีประเภทการอธิษฐานที่ไม่รองรับ ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "ไม่สามารถเติมข้อมูลไอเทม ({item}) ได้ กรุณาตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: ช่วง {from} ถึง {to} มีบันทึกทั้งสองฝั่ง แต่การสุ่ม {groups} ครั้งไม่ตรงกับบันทึกทางการในเครื่องนี้เลยสักครั้ง อาจเลือกบัญชีผิด หรือไฟล์ใช้เขตเวลาต่างกัน",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: ช่วง {from} ถึง {to} มีบันทึกทั้งสองฝั่ง แต่การสุ่ม {groups} ครั้งตรงกับบันทึกทางการในเครื่องนี้เพียง {matched} ครั้ง อาจเลือกบัญชีผิด หรือไฟล์ใช้เขตเวลาต่างกัน",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "นำเข้าอยู่ดี",
+  "importResolvingItems": "กำลังเติมข้อมูลไอเทม...",
   "settingsExportSelectTitle": "เลือกบัญชีที่จะส่งออก",
   "settingsImportSelectTitle": "เลือกบัญชีที่จะนำเข้า",
   "settingsImportMergeBadge": "ผสาน",
@@ -792,6 +932,9 @@
   "accountAdd": "เพิ่มบัญชี",
   "accountAliasLabel": "ชื่อเล่น",
   "accountAliasHint": "ตั้งชื่อที่จำง่ายสำหรับบัญชีนี้",
+  "accountAliasNone": "ยังไม่ได้ตั้งชื่อเล่น",
+  "accountActionEditAlias": "แก้ไขชื่อเล่น",
+  "accountEditAliasTitle": "แก้ไขชื่อเล่น",
   "accountDragHandleTooltip": "ลากเพื่อเรียงลำดับ",
   "loadingBootstrap": "กำลังโหลด…",
   "timelineTopRarityTitle": "ไทม์ไลน์ {star} ({n})",
@@ -834,6 +977,15 @@
     }
   },
   "updateButtonDownload": "ดาวน์โหลด",
+  "updateButtonUpdate": "อัปเดต",
+  "updateNotesUnavailable": "ไม่สามารถแสดงบันทึกประจำรุ่นได้ในขณะนี้ ดูรายละเอียดได้ที่ Google Play",
+  "updateDownloadingMessage": "กำลังดาวน์โหลดอัปเดต...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "ดาวน์โหลดอัปเดตแล้ว",
+  "updateRestartAction": "รีสตาร์ท",
+  "updateInAppUnavailable": "อัปเดตในแอปไม่ได้ในขณะนี้ โปรดอัปเดตจาก Google Play",
   "updateButtonSkip": "ข้ามเวอร์ชันนี้",
   "updateButtonLater": "ภายหลัง",
   "updateCheckButton": "ตรวจสอบอัพเดท",
@@ -859,6 +1011,7 @@
     }
   },
   "updateErrorFormat": "รูปแบบการตอบกลับผิดปกติ",
+  "updateErrorPlay": "เชื่อมต่อ Google Play ไม่ได้ หรือแอปนี้ไม่ได้ติดตั้งจาก Google Play",
   "currentReleaseTitle": "บันทึกการอัปเดตเวอร์ชันปัจจุบัน",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -938,6 +1091,10 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
+  "detailScrollDown": "เลื่อนลง",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
   "actionViewOnHoYoWiki": "เปิดใน HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -997,5 +1154,211 @@
   },
   "luckTierLucky": "โชคดี",
   "luckTierAverage": "ปกติ",
-  "luckTierUnlucky": "โชคร้าย"
+  "luckTierUnlucky": "โชคร้าย",
+  "manualUrlEntry": "ป้อน URL ประวัติการอธิษฐานด้วยตนเอง",
+  "manualUrlTitle": "ป้อน URL ประวัติการอธิษฐานด้วยตนเอง",
+  "manualUrlHint": "หากคุณได้ URL ประวัติการอธิษฐานมาด้วยวิธีอื่นแล้ว (เช่น ด้วยเครื่องมือบนคอมพิวเตอร์) สามารถวางที่นี่ได้ จะวางข้อความทั้งหมดก็ได้ แอปจะค้นหา URL ให้อัตโนมัติ",
+  "manualUrlFieldHint": "วาง URL...",
+  "manualUrlPaste": "วางจากคลิปบอร์ด",
+  "manualUrlNotFound": "ไม่พบ URL ประวัติการอธิษฐาน โปรดตรวจสอบเนื้อหาที่วาง",
+  "manualUrlWarning": "URL นี้มีข้อมูลรับรองบัญชีของคุณ อย่าแชร์แบบสาธารณะ และจะหมดอายุเมื่อผ่านไปสักระยะ",
+  "manualUrlSubmit": "ตกลง",
+  "progressWaitingLog": "กำลังรอให้คุณเปิดหน้าประวัติการอธิษฐานในเกม...",
+  "progressOpenGameHintAndroid": "กรุณาเปิด Genshin Impact → การอธิษฐาน → ประวัติการอธิษฐาน",
+  "progressCheckingLogAccess": "กำลังเตรียมอ่านบันทึกของเกม...",
+  "progressLogUnavailableTitle": "รับ URL ประวัติการอธิษฐานอัตโนมัติไม่ได้",
+  "logUnavailableNotPaired": "ยังไม่ได้ตั้งค่าการอ่านบันทึกของเกม ตั้งค่าเพียงครั้งเดียว แล้วทุกครั้งที่อัปเดตจะอ่านให้อัตโนมัติ",
+  "logUnavailableNoWifi": "การแก้ไขข้อบกพร่องแบบไร้สายใช้ได้เฉพาะบน Wi‑Fi เชื่อมต่อ Wi‑Fi แล้วกลับมา แอปจะดำเนินการต่อโดยอัตโนมัติ หรือจะป้อน URL ด้วยตนเองก็ได้",
+  "logRootDeniedHint": "พบสิทธิ์ root แต่แอปนี้ไม่ได้รับสิทธิ์ root หากต้องการอ่านด้วย root ให้อนุญาตแอปนี้ในตัวจัดการ root (เช่น รายการ Superuser ของ Magisk) แล้วกลับมา แอปจะลองใหม่โดยอัตโนมัติ",
+  "logUnavailableAdbFailed": "เชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายไม่ได้ การจับคู่อาจหมดอายุ โปรดจับคู่ใหม่",
+  "logUnavailableWirelessOff": "อุปกรณ์ของคุณไม่อนุญาตให้แอปนี้เปิดการแก้ไขข้อบกพร่องแบบไร้สาย โปรดเปิดเองในหน้าการแก้ไขข้อบกพร่องแบบไร้สายแล้วกลับมา แอปจะดำเนินการต่อโดยอัตโนมัติ",
+  "logUnavailableNetworkNotAllowed": "เครือข่าย Wi‑Fi นี้ยังไม่ได้รับอนุญาตสำหรับการแก้ไขข้อบกพร่องแบบไร้สาย แตะอนุญาตในหน้าต่างของระบบ (ติ๊ก “อนุญาตในเครือข่ายนี้เสมอ” เพื่อไม่ให้ถามอีก) แล้วแอปจะดำเนินการต่อโดยอัตโนมัติ หากปิดหน้าต่างไปแล้ว ให้แตะลองอีกครั้ง",
+  "logUnavailableUnsupported": "อุปกรณ์นี้อ่าน URL ประวัติการอธิษฐานอัตโนมัติไม่ได้ (ต้องใช้ Android 11 ขึ้นไป หรือมีสิทธิ์ root) โปรดป้อนด้วยตนเอง",
+  "logUnavailableGameNotInstalled": "ไม่พบ Genshin Impact ในอุปกรณ์นี้ เมื่อติดตั้งแล้วให้กลับมาที่นี่ ระบบจะตรวจหาให้อัตโนมัติ",
+  "actionOpenGame": "เปิด Genshin Impact",
+  "actionOpenWirelessDebugging": "เปิดการแก้ไขข้อบกพร่องแบบไร้สาย",
+  "progressLogConnectionLost": "การเชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายขาดหาย กำลังเชื่อมต่อใหม่... หากไม่กลับมา โปรดตรวจสอบ Wi‑Fi หรือป้อน URL ด้วยตนเอง",
+  "progressWirelessLeftOnHint": "การแก้ไขข้อบกพร่องแบบไร้สายยังเปิดอยู่ คุณปิดได้ในการตั้งค่าระบบ",
+  "progressCredentialReady": "ได้ URL ประวัติการอธิษฐานแล้ว จะเริ่มดึงประวัติการอธิษฐานเมื่อคุณกลับมาที่แอปนี้",
+  "actionRedetectGame": "ตรวจหาอีกครั้ง",
+  "updateOpenPlayStore": "เปิด Google Play",
+  "actionSetupLogAccess": "ตั้งค่า",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "จับคู่ใหม่",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "อ่านบันทึกระบบ",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "ทำไมต้องตั้งค่านี้?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android ไม่อนุญาตให้แอปอ่านบันทึกระบบของแอปอื่นโดยตรง แอปนี้จึงใช้ฟีเจอร์การแก้ไขข้อบกพร่องแบบไร้สายที่มีในระบบเพื่ออ่าน URL ประวัติการอธิษฐานของ Genshin Impact",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "สิ่งที่แอปนี้ทำ",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• อ่านเฉพาะ URL ประวัติการอธิษฐานของ Genshin Impact\n• ตัดการเชื่อมต่อทันทีหลังอ่านเสร็จ และปิดการแก้ไขข้อบกพร่องแบบไร้สายหากแอปนี้เป็นผู้เปิดไว้\n• ให้สิทธิ์ตัวเองในการเปิดและปิดการแก้ไขข้อบกพร่องแบบไร้สาย เพื่อที่คุณจะไม่ต้องตั้งค่าใหม่\n• ยกเลิกได้ทุกเมื่อในการตั้งค่า",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "สิ่งที่ต้องมี",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ขึ้นไป, Wi‑Fi, อนุญาตการแจ้งเตือน",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "เริ่มตั้งค่า",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "ป้อน URL ด้วยตนเองแทน",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "จับคู่การแก้ไขข้อบกพร่องแบบไร้สาย",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอป",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. เปิดหน้าเกี่ยวกับในการตั้งค่าระบบ (เช่น “เกี่ยวกับโทรศัพท์” หรือ “เกี่ยวกับแท็บเล็ต”)\n2. หา “หมายเลขบิลด์” แล้วแตะ 7 ครั้ง\n3. เมื่อเห็นข้อความ “ตอนนี้คุณเป็นนักพัฒนาซอฟต์แวร์แล้ว” ให้กลับมาที่แอปนี้",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "ตัวเลือกสำหรับนักพัฒนาแอปยังปิดอยู่ หากตอนแตะ “หมายเลขบิลด์” ระบบแจ้งว่าไม่ต้องดำเนินการเพิ่มเติม (เช่น “คุณเป็นนักพัฒนาซอฟต์แวร์อยู่แล้ว”) แสดงว่าสวิตช์หลักของตัวเลือกสำหรับนักพัฒนาแอปถูกปิดอยู่ ให้เปิดตัวเลือกสำหรับนักพัฒนาแอป เปิดสวิตช์ด้านบนสุด แล้วกลับมาที่แอปนี้",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "เปิดหน้าเกี่ยวกับ",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอปแล้ว",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. อนุญาตการแจ้งเตือน",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "คุณจะต้องป้อนรหัสจับคู่ในการแจ้งเตือน จึงต้องอนุญาตให้แอปนี้แสดงการแจ้งเตือน",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "อนุญาตการแจ้งเตือน",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "เปิดการตั้งค่าการแจ้งเตือน",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. อนุญาตการแจ้งเตือนแล้ว",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. จับคู่",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. แตะปุ่มด้านล่างเพื่อเปิดการแก้ไขข้อบกพร่องแบบไร้สาย\n2. เปิด “ใช้การแก้ไขข้อบกพร่องแบบไร้สาย” แล้วแตะ “จับคู่อุปกรณ์ด้วยรหัสการจับคู่”\n3. ปัดลงจากด้านบนของหน้าจอ แล้วป้อนรหัสการจับคู่ 6 หลักที่แสดงบนหน้าจอจับคู่ของการแก้ไขข้อบกพร่องแบบไร้สายในการแจ้งเตือนของแอปนี้",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "กำลังรอให้คุณป้อนรหัสจับคู่ในการแจ้งเตือน...\nป้อนรหัสขณะที่หน้าจับคู่ในการแก้ไขข้อบกพร่องแบบไร้สายยังเปิดอยู่",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "เปิดการแก้ไขข้อบกพร่องแบบไร้สายอีกครั้ง",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "กำลังจับคู่...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "จับคู่แล้ว เหลืออีกหนึ่งขั้นตอน",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "อุปกรณ์ของคุณมีข้อจำกัดด้านความปลอดภัยเพิ่มเติม โปรดเปิดอีกหนึ่งตัวเลือกเพื่อให้แอปนี้เปิดและปิดการแก้ไขข้อบกพร่องแบบไร้สายได้โดยอัตโนมัติ",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "วิธีเปิด",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. เปิดตัวเลือกสำหรับนักพัฒนาแอป\n2. หาสวิตช์ที่เกี่ยวกับความปลอดภัยของการแก้ไขข้อบกพร่อง USB หรือการตรวจสอบสิทธิ์ แล้วเปิด เช่น:\n• Xiaomi: “การแก้ไขข้อบกพร่อง USB (การตั้งค่าความปลอดภัย)”\n• OPPO / realme: “ปิดใช้งานการตรวจสอบสิทธิ์”\n3. ตรวจสอบว่าการแก้ไขข้อบกพร่องแบบไร้สายเปิดอยู่ แล้วกลับมาแตะลองอีกครั้ง",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "เปิดตัวเลือกสำหรับนักพัฒนาแอป",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "ลองอีกครั้ง",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "ข้าม (เปิดการแก้ไขข้อบกพร่องแบบไร้สายเองทุกครั้งที่อัปเดต)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "เรียบร้อยแล้ว",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "จากนี้ไป การอัปเดตจะอ่านล็อกให้อัตโนมัติ ไม่ต้องตั้งค่าอีก",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "เมื่อแตะอัปเดต ให้เปิดการแก้ไขข้อบกพร่องแบบไร้สายเมื่อระบบขอ",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "กำลังกลับไปเริ่มอัปเดต...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "การเข้าถึงบันทึกของเกม",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "การแก้ไขข้อบกพร่องแบบไร้สาย",
+  "logAccessMethodNone": "ยังไม่ได้ตั้งค่า",
+  "settingsPairingStatus": "การจับคู่",
+  "settingsPaired": "จับคู่แล้ว",
+  "settingsPairedManual": "จับคู่แล้ว (เปิดการแก้ไขข้อบกพร่องแบบไร้สายเอง)",
+  "settingsRetryGrant": "ลองขอสิทธิ์อีกครั้ง",
+  "settingsSetupLogAccess": "ตั้งค่า",
+  "settingsUnpair": "ยกเลิกการจับคู่",
+  "settingsUnpairConfirmTitle": "ยกเลิกการจับคู่?",
+  "settingsUnpairConfirmBody": "การดำเนินการนี้จะลบคีย์การจับคู่ของแอปนี้ และเพิกถอนสิทธิ์ของแอปนี้ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย หากต้องการใช้การแก้ไขข้อบกพร่องแบบไร้สายในภายหลัง จะต้องจับคู่ใหม่",
+  "settingsUnpairDone": "ยกเลิกการจับคู่แล้ว",
+  "settingsUnpairDoneBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว และเพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สายแล้ว",
+  "settingsUnpairUnreachableTitle": "ลบคีย์การจับคู่แล้ว",
+  "settingsUnpairUnreachableBody": "ลบคีย์การจับคู่ของแอปนี้แล้ว แต่ครั้งนี้เชื่อมต่อการแก้ไขข้อบกพร่องแบบไร้สายไม่ได้ จึงยังไม่ได้เพิกถอนสิทธิ์ในการเปิดปิดการแก้ไขข้อบกพร่องแบบไร้สาย",
+  "settingsUnpairUnreachableRevokeHint": "แอปนี้จะไม่ใช้สิทธิ์นี้ขณะที่ยังไม่ได้จับคู่ หากต้องการเพิกถอนทั้งหมด ให้เชื่อมต่อ Wi‑Fi แล้วจับคู่ใหม่ จากนั้นยกเลิกการจับคู่อีกครั้ง",
+  "settingsUnpairLeftover": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบจะยังแสดง \"{name}\" อยู่ อุปกรณ์นี้เชื่อมต่อไม่ได้แล้ว จึงปล่อยไว้ได้ หากต้องการนำออก ให้แตะแล้วลบ",
+  "settingsUnpairLeftoverAlso": "รายการ การแก้ไขข้อบกพร่องแบบไร้สาย → อุปกรณ์ที่จับคู่ ของระบบยังแสดง \"{name}\" อยู่ด้วย แตะเพื่อลบได้",
+  "settingsLogAccessMethod": "วิธีการ",
+  "actionShare": "แชร์",
+  "shareFailed": "แชร์ไม่ได้",
+  "dialogSaveAsTitle": "บันทึกเป็น",
+  "dialogOpenTitle": "เปิด",
+  "dialogSelectFolderTitle": "เลือกโฟลเดอร์",
+  "actionSave": "บันทึก",
+  "settingsLogsShare": "แชร์ logs"
 }

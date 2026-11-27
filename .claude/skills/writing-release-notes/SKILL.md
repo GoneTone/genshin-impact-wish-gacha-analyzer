@@ -1,9 +1,15 @@
 ---
 name: writing-release-notes
-description: Use when drafting GitHub release notes or changelog content for this project (Genshin Impact Wish Gacha Analyzer). Triggers when the user asks to write release content for a new version, summarize a tag-to-tag diff (e.g. "v1.0.0...v1.1.0"), or produce "更新內容 / 版本說明 / release note". Produces bilingual (zh-Hant on top, en on bottom) Discord-style prose for headline features with a short bullet list for minor items — NOT a corporate-style changelog with one section header per category.
+description: Use when drafting GitHub release notes or changelog content for this project (Genshin Impact Wish Gacha Analyzer). Triggers when the user asks to write release content for a new version, summarize a tag-to-tag diff (e.g. "v1.0.0...v1.1.0"), or produce "更新內容 / 版本說明 / release note". Produces bilingual (zh-Hant on top, en on bottom) Discord-style prose for headline features with a short bullet list for minor items — NOT a corporate-style changelog with one section header per category. Also appends a separate short plain-text Google Play "What's new" (zh-TW + en-US, max 500 characters each).
 ---
 
 # Writing Release Notes (this project)
+
+**使用者校稿過的偏好（2026-11-26，鳴潮姐妹專案 v1.10.0 校稿時提出，兩邊同步）**：
+- **先讀 PR 描述再寫**：只看 commit 標題會漏掉真正修了什麼問題、在什麼情境發生。範圍內每個 PR 都要用 `gh pr view` 讀過描述。
+- **只影響單一平台的要標明**：hero 散文點出平台（「在 Android 上⋯」），bullet 開頭寫「Android：」／「Windows：」或句尾加「（Windows）」。兩個平台共用的程式不標；問題只在某平台測出、但程式是共用的，也不標。
+- **bug fix 要寫成「修正了⋯的問題」**：不要寫成「這版起不會再⋯」，讀起來像原本就故意這樣設計。
+- **另外附上 Google Play 版更新內容**：見下方「Google Play 更新內容」。
 
 ## 風格摘要
 
@@ -50,11 +56,12 @@ description: Use when drafting GitHub release notes or changelog content for thi
 ```bash
 git log <prev-tag>..HEAD --oneline                                    # 看所有 commit
 git log <prev-tag>..HEAD --merges --pretty=format:"%h %s"             # PR 標題（高層脈絡）
+gh pr view <n> --json title,body                                   # 每個 PR 的描述（必讀）
 git diff <prev-tag>..HEAD -- README.md README_EN.md                   # 確認對外講法
 git diff <prev-tag>..HEAD --stat | tail -30                           # 大致變動規模
 ```
 
-從 PR 標題挑 2–3 個 hero，其餘進 bullet。**Crowdin / Dependabot / 機械 refactor 永遠進 bullet 區或省略。**
+讀完 PR 描述後挑 2–3 個 hero，其餘進 bullet。**Crowdin / Dependabot / 機械 refactor 永遠進 bullet 區或省略。**
 
 ## Gold Standard：v1.1.0（使用者親自校稿後的版本）
 
@@ -142,15 +149,51 @@ On top of that, we also did:
 - 自然口語英文，不要把中文逐字直譯
 - 雙引號用直引號 `"`，不要用花引號 `"` `"`（GitHub markdown 顯示一致性）
 
+## Google Play 更新內容
+
+GitHub 版寫完後，**另外附上** Google Play 的繁中（zh-TW）與英文（en-US）「最新異動」，分成兩個 code block，方便直接貼進 Play Console。
+
+- **每個語言上限 500 字元**：寫完存成檔案，用 `node -e "console.log([...require('fs').readFileSync('<檔案>','utf8').trimEnd()].length)"` 實際算字數，回覆時附上。英文通常比繁中長很多，要以英文版為準來刪減。
+- **純文字**：Play 不支援 Markdown，條列用 `•`，不要用 `-`、粗體、標題。
+- **只挑 Android 使用者在意的**：Windows 專屬的項目不放。大約 5 條，Android 相關的修正優先。
+- **最後一條放一句幽默的話**（例如抽卡運氣），emoji 只放在這一條。
+- **空一行後附 GitHub Release 網址**：繁中寫「完整更新內容：<網址>」，英文寫 "Full release notes: <URL>"。網址格式是 `https://github.com/GoneTone/genshin-impact-wish-gacha-analyzer/releases/tag/vX.Y.Z`，版本號還沒定案時要提醒使用者跟著改。Play 上的網址點不了，所以重點條目不能省，只放網址玩家會看不出改了什麼。
+- 中英條數、順序一一對應。
+
+範例（v1.10.0，使用者校稿後的版本；繁中 272、英文 495 字元）。範例取自鳴潮姐妹專案，寫這個專案時換成原神的用語（祈願等）與這個 repo 的網址。
+
+```
+• 修正讀取喚取記錄後，部分情況下無線偵錯沒有關回去的問題
+• 修正按取消要等很久、無線偵錯剛關又開就連不上、root 連線中斷後不會恢復
+• 開發人員選項總開關被關閉時，會提示你去哪裡打開
+• 手機橫向時點輸入框改開全螢幕輸入頁，不再被鍵盤擋住
+• 雲端同步：帳號別名以最後修改的一方為準，清空也會同步
+• 抽卡運氣不在本次更新範圍內，請自行努力 🍀
+
+完整更新內容：https://github.com/GoneTone/wuthering-waves-convene-gacha-analyzer/releases/tag/v1.10.0
+```
+
+```
+• Fixed wireless debugging sometimes staying on after fetching records
+• Fixed slow Cancel, wireless debugging reconnects and root session recovery
+• Shows where to enable the developer options master switch
+• Phone landscape: text fields open a full-screen input page
+• Cloud sync: the latest alias change wins, even when cleared
+• Luck with your pulls is not included in this update 🍀
+
+Full release notes: https://github.com/GoneTone/wuthering-waves-convene-gacha-analyzer/releases/tag/v1.10.0
+```
+
 ## 草稿流程
 
-1. `git log <prev-tag>..HEAD --merges` 抓 PR 標題、`git log --oneline` 看細部
+1. `git log <prev-tag>..HEAD --merges` 抓 PR 標題、`git log --oneline` 看細部，再用 `gh pr view` 讀每個 PR 的描述
 2. 挑 2–3 個 hero（**合併相關的**），其餘進 bullet
 3. **先寫繁中版**：把「故事」用散文寫清楚，再雕 emoji 和段落節奏
 4. **再寫英文版**：對齊段落結構、bullet 條數、emoji 位置；用自然英文重寫，不逐字直譯
 5. 兩個 H2 直接相鄰，**不要加 `---`**
-6. 給使用者過稿
-7. 若使用者改稿後風格有調整 → **回來更新這個技能的 Gold Standard 段落**（中英都要更新），下次才不會走回頭路
+6. 另外寫 Google Play 的繁中與英文版（見上節），實際算字數
+7. 給使用者過稿
+8. 若使用者改稿後風格有調整 → **回來更新這個技能的 Gold Standard 段落**（中英都要更新），下次才不會走回頭路
 
 ## 紅旗自檢
 
@@ -164,3 +207,7 @@ On top of that, we also did:
 - [ ] 是不是不小心又灑了「✨ ⚡ 🎨」三段式分節？
 - [ ] Crowdin / Dependabot / 機械 refactor 有沒有乖乖待在 bullet 區？
 - [ ] 英文版讀起來是自然英文，不是中式直譯？
+- [ ] 每個 PR 的描述都讀過了，不是只看 commit 標題？
+- [ ] 只影響單一平台的項目有標出平台？共用的沒有亂標？
+- [ ] bug fix 寫成「修正了⋯」，而不是像原本就這樣設計？
+- [ ] 有附上 Google Play 繁中與英文版？各自不超過 500 字元（實際算過）？是純文字、最後有 GitHub Release 網址？

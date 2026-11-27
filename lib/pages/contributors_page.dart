@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/contributors.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
@@ -19,7 +21,7 @@ class ContributorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.l),
+      padding: EdgeInsets.all(pagePaddingOf(context)),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
@@ -36,13 +38,13 @@ class ContributorsPage extends StatelessWidget {
                 icon: Icons.workspace_premium_outlined,
                 child: const _ContributorChips(projectLeaders),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTesters,
                 icon: Icons.bug_report_outlined,
                 child: const _ContributorChips(testers),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsGithubContributors,
                 icon: Icons.groups_outlined,
@@ -51,13 +53,13 @@ class ContributorsPage extends StatelessWidget {
                       '<a href="$githubContributorsUrl">$githubContributorsUrl</a>',
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTranslationReviewer,
                 icon: Icons.translate,
                 child: const _ContributorChips(translationReviewers),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsTranslatedLanguages,
                 icon: Icons.public,
@@ -75,18 +77,59 @@ class ContributorsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.contributorsProjectLicense,
                 icon: Icons.gavel_outlined,
-                child: const TranslatorText(
-                  raw: '<a href="$licenseUrl">MIT License</a>',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TranslatorText(
+                      raw: '<a href="$licenseUrl">MIT License</a>',
+                    ),
+                    const SizedBox(height: AppSpacing.m),
+                    const _ThirdPartyLicensesButton(),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 開啟 Flutter 內建授權頁的按鈕，列出 App 用到的套件授權。
+class _ThirdPartyLicensesButton extends ConsumerWidget {
+  /// 建立 [_ThirdPartyLicensesButton]。
+  const _ThirdPartyLicensesButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    return OutlinedButton.icon(
+      onPressed: () => showLicensePage(
+        context: context,
+        applicationName: l.appName,
+        applicationVersion: ref.read(appVersionProvider),
+        // Flutter 的授權頁把名稱、圖示、版本直接疊在一起，間距要自己補
+        applicationIcon: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            child: Image.asset(
+              'assets/icons/app_icon.png',
+              width: 64,
+              height: 64,
+              filterQuality: FilterQuality.high,
+            ),
+          ),
+        ),
+        useRootNavigator: true,
+      ),
+      icon: const Icon(Icons.integration_instructions_outlined, size: 18),
+      label: Text(l.contributorsOpenSourceLicenses),
     );
   }
 }
@@ -130,13 +173,11 @@ class _LanguageList extends ConsumerWidget {
             padding: const EdgeInsets.only(bottom: AppSpacing.xs),
             child: entry.value.translator.isEmpty
                 ? Text(entry.value.nativeName)
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                // 語言名稱長或字級放大時，翻譯者改排到下一行，不擠出右緣；放得下時仍同一行。
+                : Wrap(
                     children: [
                       Text('${entry.value.nativeName} — '),
-                      Expanded(
-                        child: TranslatorText(raw: entry.value.translator),
-                      ),
+                      TranslatorText(raw: entry.value.translator),
                     ],
                   ),
           ),

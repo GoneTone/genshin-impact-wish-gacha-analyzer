@@ -9,10 +9,12 @@ use tracing::{debug, warn};
 
 /// root CA 的 subject CommonName / Organization。
 /// generate 與 load 分支共用，避免兩處字串漂移。
+/// 解除安裝程式（`scripts/build_installer/installer.iss` 的 `RemoveCaArtifacts`）以此名稱刪除憑證，改名時要同步。
 pub const EXPECTED_CN: &str = "Genshin Impact Wish Gacha Analyzer Root CA";
 pub const EXPECTED_ORG: &str = "GoneTone";
 
 /// Returns `%APPDATA%\genshin_impact_wish_gacha_analyzer\ca\`, creating it if missing.
+/// The uninstaller (`RemoveCaArtifacts` in `scripts/build_installer/installer.iss`) deletes this folder; keep the path in sync.
 pub fn ca_dir() -> Result<PathBuf> {
     let appdata = std::env::var("APPDATA").context("APPDATA environment variable not set")?;
     let dir = PathBuf::from(appdata)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Vezeték nélküli hibakeresés párosítása</string>
+    <string name="pairing_searching_title">Párosítási szolgáltatás keresése</string>
+    <string name="pairing_searching_text">A Vezeték nélküli hibakeresésben koppintson az „Eszköz párosítása párosítókóddal” elemre</string>
+    <string name="pairing_found_title">Adja meg a párosítókódot</string>
+    <string name="pairing_found_text">Írja be a párosítási képernyőn látható 6 számjegyű kódot</string>
+    <string name="pairing_input_label">Párosítókód</string>
+    <string name="pairing_action_pair">Párosítás</string>
+    <string name="pairing_action_stop">Leállítás</string>
+    <string name="pairing_in_progress">Párosítás...</string>
+    <string name="pairing_success_title">Sikeres párosítás</string>
+    <string name="pairing_success_text">Koppintson ide az alkalmazáshoz való visszatéréshez</string>
+    <string name="pairing_failed_text">A párosítás sikertelen. Ellenőrizze a kódot, és adja meg újra</string>
+    <string name="pairing_no_app_text">A párosítás sikertelen. Térjen vissza az alkalmazásba, és próbálja újra</string>
+    <string name="pairing_timeout_title">A párosítás időtúllépés miatt megszakadt</string>
+    <string name="pairing_timeout_text">Koppintson ide az újrakezdéshez</string>
+</resources>

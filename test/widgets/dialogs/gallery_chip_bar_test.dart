@@ -125,4 +125,76 @@ void main() {
     await tester.pump();
     expect(picked, 2);
   });
+
+  testWidgets('gallery chips scroll with a finger drag', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        GalleryChipBar(
+          labels: [for (var i = 0; i < 12; i++) 'Label number $i'],
+          selectedIndex: 0,
+          onSelected: (_) {},
+        ),
+      ),
+    );
+    final scrollable = find
+        .descendant(
+          of: find.byType(GalleryChipBar),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.drag(scrollable, const Offset(-200, 0));
+    await tester.pumpAndSettle();
+    expect(
+      tester.state<ScrollableState>(scrollable).position.pixels,
+      greaterThan(0),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('phone arrows get room for their 48dp targets', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _wrap(
+        GalleryChipBar(
+          labels: const ['A', 'B', 'C'],
+          selectedIndex: 1,
+          onSelected: (_) {},
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    for (final arrow in find.byType(ScrollArrowButton).evaluate()) {
+      expect(tester.getSize(find.byWidget(arrow.widget)).width, 48);
+    }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('desktop arrows have a hit area of at least 44x44', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _wrap(
+        GalleryChipBar(
+          labels: const ['A', 'B', 'C'],
+          selectedIndex: 1,
+          onSelected: (_) {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    for (final icon in [Icons.arrow_left, Icons.arrow_right]) {
+      final size = tester.getSize(
+        find.ancestor(
+          of: find.byIcon(icon),
+          matching: find.byType(ScrollArrowButton),
+        ),
+      );
+      expect(size.width, greaterThanOrEqualTo(44));
+      expect(size.height, greaterThanOrEqualTo(44));
+    }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 }

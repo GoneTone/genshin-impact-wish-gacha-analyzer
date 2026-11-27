@@ -66,7 +66,10 @@ class OtherGameVersions extends StatelessWidget {
                 // AppLink 的 hover 只透過 DefaultTextStyle 染文字、不影響 Icon
                 // （Icon 取 IconTheme），放進去顏色會對不上；此處圖示僅作「會開
                 // 外部瀏覽器」提示，不需隨 hover 變色。
-                AppLink(url: game.url, child: Text(game.label(l))),
+                // 窄寬度加大字級時讓遊戲名換行，不溢出。
+                Flexible(
+                  child: AppLink(url: game.url, child: Text(game.label(l))),
+                ),
                 const SizedBox(width: AppSpacing.xs),
                 Icon(Icons.open_in_new, size: 14, color: tokens.textSecondary),
               ],

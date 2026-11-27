@@ -6,6 +6,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/item_type_kind.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/record_filter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/search_filter_bar.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/data/sortable_table.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
   theme: buildDarkTheme(),
@@ -127,5 +128,131 @@ void main() {
     await tester.tap(find.byType(DropdownButton<String?>));
     await tester.pumpAndSettle();
     expect(find.text('服裝'), findsWidgets);
+  });
+
+  for (final (width, want) in [(344.0, 344.0), (900.0, 240.0)]) {
+    testWidgets('search field spans the row on narrow widths ($width)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: width,
+              child: SearchFilterBar(
+                state: const RecordFilterState(
+                  filter: RecordFilter(),
+                  sort: null,
+                ),
+                availableItemTypes: const [kItemKindCharacter],
+                onFilterChanged: (_) {},
+                onClear: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(TextField)).width, want);
+    });
+  }
+
+  testWidgets('query text survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      _wrap(
+        ListView(
+          key: listKey,
+          children: [
+            SearchFilterBar(
+              state: const RecordFilterState(
+                filter: RecordFilter(),
+                sort: null,
+              ),
+              availableItemTypes: const [kItemKindCharacter],
+              onFilterChanged: (_) {},
+              onClear: () {},
+            ),
+            const SizedBox(height: 5000),
+          ],
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'keqing');
+    // 聚焦中的 EditableText 自帶 keep-alive，要先失焦才驗得出 SearchFilterBar 自己的 keep-alive。
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pump();
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -6000));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 6000));
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller?.text,
+      'keqing',
+    );
+  });
+
+  group('trailing', () {
+    /// 寬 [width] 的篩選列，尾端放排序按鈕。
+    Widget bar(double width, Locale locale) => MaterialApp(
+      theme: buildDarkTheme(),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: width,
+            child: SearchFilterBar(
+              state: const RecordFilterState(
+                filter: RecordFilter(),
+                sort: null,
+              ),
+              availableItemTypes: const [kItemKindCharacter, kItemKindWeapon],
+              onFilterChanged: (_) {},
+              onClear: () {},
+              trailing: RecordSortButton(
+                sort: null,
+                mainRank: 5,
+                onTap: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    testWidgets('sits on the same row as the rarity dropdown at 360', (
+      tester,
+    ) async {
+      await tester.pumpWidget(bar(360, const Locale('zh')));
+      // Wrap 以垂直置中對齊同一列，所以中心 dy 相同才算同列。
+      expect(
+        tester.getCenter(find.byType(RecordSortButton)).dy,
+        tester.getCenter(find.byType(DropdownButton<RarityFilter>)).dy,
+      );
+    });
+
+    for (final locale in [
+      const Locale('en'),
+      const Locale('zh'),
+      const Locale('ja'),
+    ]) {
+      testWidgets('does not overflow at 1.3x text and width 320 ($locale)', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await tester.pumpWidget(bar(320, locale));
+        final e = tester.takeException();
+        expect(e, isNull, reason: e is FlutterError ? e.toStringDeep() : '$e');
+      });
+    }
   });
 }

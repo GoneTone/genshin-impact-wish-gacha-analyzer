@@ -20,6 +20,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import '../helpers/no_game_dir.dart';
 
 class _NullCapture implements GachaCapture {
   @override
@@ -37,6 +38,7 @@ Future<ProviderContainer> _setupContainer({
   final container = ProviderContainer(
     overrides: [
       gachaStorageProvider.overrideWithValue(storage),
+      noGameDirOverride,
       gachaCaptureProvider.overrideWithValue(_NullCapture()),
       cancellableHttpClientFactoryProvider.overrideWithValue(
         () => CancellableHttpClient(
@@ -52,7 +54,7 @@ Future<ProviderContainer> _setupContainer({
     ],
   );
   await container.read(settingsProvider.notifier).waitForLoad();
-  container.read(gachaRepositoryProvider);
+  await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
   await Future<void>.delayed(const Duration(milliseconds: 50));
   return container;
 }

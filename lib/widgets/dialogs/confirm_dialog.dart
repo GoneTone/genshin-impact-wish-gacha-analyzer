@@ -75,6 +75,7 @@ Future<ConfirmTypeResult?> showConfirmTypeDialogWithCheckbox({
 /// 顯示一個一般確認 dialog（無打字閘）。
 /// 回傳值：true = 確認 / false = 取消 / null = 系統 dismiss。
 /// [isDanger] 為 true 時確認鍵用 danger 紅；false 時用預設（中性）配色。
+/// [warning] 非 null 時在內文下方多一塊警告色區塊。
 Future<bool?> showConfirmDialog({
   required BuildContext context,
   required String title,
@@ -83,6 +84,7 @@ Future<bool?> showConfirmDialog({
   required String confirmLabel,
   IconData? confirmIcon,
   bool isDanger = false,
+  String? warning,
 }) {
   return showDialog<bool>(
     context: context,
@@ -90,8 +92,29 @@ Future<bool?> showConfirmDialog({
     builder: (ctx) {
       final tokens = Theme.of(ctx).gacha;
       return AppDialog(
+        scrollable: true,
         title: Text(title),
-        content: Text(body),
+        content: warning == null
+            ? Text(body)
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(body),
+                  const SizedBox(height: AppSpacing.m),
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.m),
+                    decoration: BoxDecoration(
+                      color: tokens.stateWarning.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                    ),
+                    child: Text(
+                      warning,
+                      style: TextStyle(color: tokens.stateWarning),
+                    ),
+                  ),
+                ],
+              ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
@@ -179,6 +202,7 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
     final matches = _ctrl.text == widget.expectedText;
     return AppDialog(
       // size 預設 sm，符合短訊息語意，不必顯式傳。
+      scrollable: true,
       title: Text(widget.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -189,7 +213,11 @@ class _ConfirmDialogState extends State<_ConfirmDialog> {
           TextField(
             controller: _ctrl,
             autofocus: true,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
+            // 手機橫向會改在全螢幕輸入頁打字，看不到對話框的說明，提示要輸入的內容。
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: widget.expectedText,
+            ),
             onChanged: (_) => setState(() {}),
           ),
           if (widget.checkboxLabel != null) ...[

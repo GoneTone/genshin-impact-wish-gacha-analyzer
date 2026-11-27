@@ -23,6 +23,7 @@ Future<void> showExportResultDialog(
   return showDialog<void>(
     context: context,
     builder: (ctx) => AppDialog(
+      scrollable: true,
       title: Text(
         success ? l.exportDialogSuccessTitle : l.exportDialogFailedTitle,
       ),

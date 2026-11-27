@@ -12,12 +12,15 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_cli
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../helpers/no_game_dir.dart';
+import '../helpers/wait_until.dart';
 
 class _FakeCapture implements GachaCapture {
   _FakeCapture(this._url);
@@ -77,6 +80,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -95,7 +99,7 @@ void main() {
     expect(initial.byUid, isEmpty);
 
     // 等 bootstrap fire-and-forget 完成
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     final after = container.read(gachaRepositoryProvider);
     expect(after.activeUid, isNull);
   });
@@ -120,6 +124,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -132,7 +137,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final state = container.read(gachaRepositoryProvider);
     expect(state.knownUids.toSet(), {'100000001', '100000002'});
@@ -173,6 +178,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWith((ref) {
           // 計數 capture 被呼叫幾次
           return _CountingCapture(fakeCapture, () => captureCalls++);
@@ -186,7 +192,7 @@ void main() {
 
     // 等 bootstrap 完成
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
 
     await container.read(gachaRepositoryProvider.notifier).update();
@@ -221,6 +227,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -237,13 +244,14 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     final updateFut = notifier.update();
 
     // 把 microtask 跑一輪，讓 loadCapturedUrl 完成、進到 probe 並 await
     // mock client 的 future（永遠不 complete），此刻 state.progress 應該是 Preparing
+    // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
     expect(
@@ -275,6 +283,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -291,10 +300,11 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     final updateFut = notifier.update();
+    // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
     notifier.cancelPreparing();
@@ -304,6 +314,70 @@ void main() {
     expect(container.read(gachaRepositoryProvider).progress, isNull);
     // 既有資料保留
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
+  });
+
+  group('捕獲到 URL 後 probe UID 期間', () {
+    /// 建立走捕獲路徑（無快取 URL）、HTTP 請求卡在 [block] 的 container。
+    ProviderContainer captureThenBlockedProbe(Completer<http.Response> block) {
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(
+            _FakeCapture('https://example.com/getGachaLog?authkey=x'),
+          ),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) => block.future),
+              cancel: () {
+                if (!block.isCompleted) {
+                  block.completeError(http.ClientException('cancelled'));
+                }
+              },
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      return container;
+    }
+
+    test('progress 為 Preparing 而非 WaitingForCapture', () async {
+      final block = Completer<http.Response>();
+      final container = captureThenBlockedProbe(block);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      expect(
+        container.read(gachaRepositoryProvider).progress,
+        isA<Preparing>(),
+      );
+
+      notifier.cancelPreparing();
+      await updateFut;
+    });
+
+    test('cancelPreparing 結束更新、progress 清空', () async {
+      final block = Completer<http.Response>();
+      final container = captureThenBlockedProbe(block);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+
+      final notifier = container.read(gachaRepositoryProvider.notifier);
+      final updateFut = notifier.update();
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+
+      notifier.cancelPreparing();
+      await updateFut;
+
+      expect(container.read(gachaRepositoryProvider).progress, isNull);
+    });
   });
 
   test('probe 階段真實 ClientException（非取消） → UpdateFailed', () async {
@@ -323,6 +397,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -337,7 +412,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).update();
 
@@ -350,6 +425,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -363,7 +439,7 @@ void main() {
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     // 等 bootstrap 完成，避免 async 工作洩漏到測試邊界後
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await notifier.waitForBootstrap();
 
     notifier.debugSetProgress(const UpdateFailed(UpdateErrorOther('test')));
     expect(
@@ -381,6 +457,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_HangingCapture()),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -393,12 +470,14 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
-      await Future<void>.delayed(
-        const Duration(milliseconds: 30),
+      await waitUntil(
+        () =>
+            container.read(gachaRepositoryProvider).progress
+                is WaitingForCapture,
       ); // 進入 WaitingForCapture
 
       expect(
@@ -429,6 +508,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(GachaStorage(tempDir)),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_HangingCancelCapture()),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -441,15 +521,16 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50)); // bootstrap
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final notifier = container.read(gachaRepositoryProvider.notifier);
     // 縮短逾時，避免真實掛鐘等待；只 await 完成、不做時間斷言 → 不 flaky。
     notifier.debugSetCancelTeardownTimeout(const Duration(milliseconds: 20));
 
     final updateFut = notifier.update();
-    await Future<void>.delayed(
-      const Duration(milliseconds: 30),
+    await waitUntil(
+      () =>
+          container.read(gachaRepositoryProvider).progress is WaitingForCapture,
     ); // 進入 WaitingForCapture
     expect(
       container.read(gachaRepositoryProvider).progress,
@@ -497,6 +578,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -509,7 +591,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
 
@@ -548,6 +630,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -560,7 +643,7 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
       expect(
         container.read(gachaRepositoryProvider).activeUid,
         '100000002',
@@ -584,6 +667,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -596,7 +680,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
     final reloaded = await SettingsStorage.load();
     expect(reloaded.lastActiveUid, '100000001');
@@ -625,6 +709,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -637,7 +722,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
     // lastActiveUid 為 null → fallback 走 mergeUidOrder.first → 自訂順序的第一個 = 100000001
     expect(container.read(gachaRepositoryProvider).activeUid, '100000001');
   });
@@ -672,6 +757,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -732,13 +818,14 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final notifier = container.read(gachaRepositoryProvider.notifier);
       final updateFut = notifier.update();
 
       // 等更長一點，讓 probe 完成（命中第一個 banner）、進入 fetchBannerWithMerge、
       // 處理 primer（onProgress → state=FetchingBanner）、再 await 第二頁 HTTP（block.future）
+      // 固定等待：progress 在 update() 同步設定，早於它 await mock HTTP，改等 progress 會太早返回。
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // 確認此刻已經是 FetchingBanner
@@ -782,6 +869,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -793,7 +881,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -828,6 +916,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -839,7 +928,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -872,6 +961,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -883,7 +973,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -907,6 +997,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -918,7 +1009,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container
         .read(gachaRepositoryProvider.notifier)
@@ -949,6 +1040,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -960,7 +1052,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).clearActive();
     expect(container.read(gachaRepositoryProvider).activeUid, '100000002');
@@ -986,6 +1078,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -997,7 +1090,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     await container.read(gachaRepositoryProvider.notifier).clearAll();
     expect(container.read(gachaRepositoryProvider).activeUid, isNull);
@@ -1020,6 +1113,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -1031,7 +1125,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final beforeReload = await SettingsStorage.load();
     await container
@@ -1073,6 +1167,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1084,7 +1179,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final newA = BannerStorage(
         uid: '100000001',
@@ -1147,6 +1242,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1158,7 +1254,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1185,6 +1281,103 @@ void main() {
     },
   );
 
+  group('importAccounts: 別名依修改時間合併', () {
+    final t1 = DateTime.utc(2026, 11, 24, 1);
+    final t2 = DateTime.utc(2026, 11, 24, 2);
+
+    /// 建立本機已有帳號 100000001（別名與修改時間由參數決定）的 container，匯入 [incoming] 後回傳設定。
+    Future<AppSettings> importWith({
+      required Map<String, Object> localPrefs,
+      required ExportedAccount incoming,
+    }) async {
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: const {'301': []},
+        ),
+      );
+      SharedPreferences.setMockInitialValues(localPrefs);
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+      await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(
+            AccountsBundle(
+              exportedAt: DateTime.utc(2026, 11, 24),
+              appVersion: 'x',
+              lastActiveUid: null,
+              accounts: [incoming],
+            ),
+          );
+      return container.read(settingsProvider);
+    }
+
+    ExportedAccount account({String? alias, DateTime? at}) => ExportedAccount(
+      data: BannerStorage(
+        uid: '100000001',
+        lastUpdated: DateTime.utc(2026, 5, 12),
+        banners: const {'301': []},
+      ),
+      alias: alias,
+      aliasUpdatedAt: at,
+    );
+
+    test('匯入方較新的清空 → 移除本機別名並採用其時間', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+          'pref.uidAliasUpdatedAt': jsonEncode({
+            '100000001': t1.toIso8601String(),
+          }),
+        },
+        incoming: account(at: t2),
+      );
+      expect(s.uidAliases.containsKey('100000001'), isFalse);
+      expect(s.uidAliasUpdatedAt['100000001'], t2);
+    });
+
+    test('本機較新 → 保留本機別名與時間', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+          'pref.uidAliasUpdatedAt': jsonEncode({
+            '100000001': t2.toIso8601String(),
+          }),
+        },
+        incoming: account(alias: '乙', at: t1),
+      );
+      expect(s.uidAliases['100000001'], '甲');
+      expect(s.uidAliasUpdatedAt['100000001'], t2);
+    });
+
+    test('本機舊別名沒有時間、匯入方有 → 採用匯入方', () async {
+      final s = await importWith(
+        localPrefs: {
+          'pref.uidAliases': jsonEncode({'100000001': '甲'}),
+        },
+        incoming: account(alias: '乙', at: t1),
+      );
+      expect(s.uidAliases['100000001'], '乙');
+      expect(s.uidAliasUpdatedAt['100000001'], t1);
+    });
+  });
+
   test('importAccounts: uidOrder keeps local order, appends new UIDs', () async {
     final storage = GachaStorage(tempDir);
     for (final uid in ['100000001', '100000003', '100000004']) {
@@ -1204,6 +1397,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         gachaStorageProvider.overrideWithValue(storage),
+        noGameDirOverride,
         gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
         cancellableHttpClientFactoryProvider.overrideWithValue(
           () => CancellableHttpClient(
@@ -1215,7 +1409,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.read(gachaRepositoryProvider);
-    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
     final bundle = AccountsBundle(
       exportedAt: DateTime.utc(2026, 5, 12),
@@ -1256,6 +1450,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1267,7 +1462,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1330,6 +1525,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1341,7 +1537,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       expect(container.read(gachaRepositoryProvider).activeUid, '200000001');
 
@@ -1376,6 +1572,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1387,7 +1584,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1422,7 +1619,8 @@ void main() {
         name: 'x',
         itemType: '武器',
         rankType: 3,
-        time: DateTime.utc(2025, 1, 1),
+        // 存檔讀回的時間是本地時間；與傳入記錄同為本地時間，才是同一秒。
+        time: DateTime(2025, 1, 1),
         lang: 'zh-tw',
       );
 
@@ -1440,6 +1638,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1451,7 +1650,7 @@ void main() {
       );
       addTearDown(container.dispose);
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       final bundle = AccountsBundle(
         exportedAt: DateTime.utc(2026, 5, 12),
@@ -1483,6 +1682,86 @@ void main() {
           .map((r) => r.id)
           .toList();
       expect(merged, ['3', '2', '1']); // 本機 id 3 沒被丟、降序
+    },
+  );
+
+  test(
+    'importAccounts: official replacing more substitutes never counts negative',
+    () async {
+      final t = DateTime(2025, 12, 1, 4, 6, 48);
+      GachaRecord rec(String id) => GachaRecord(
+        id: id,
+        uid: '100000001',
+        gachaType: '301',
+        name: 'x',
+        itemType: '武器',
+        rankType: 3,
+        time: t,
+        lang: 'zh-tw',
+      );
+
+      final storage = GachaStorage(tempDir);
+      await storage.save(
+        BannerStorage(
+          uid: '100000001',
+          lastUpdated: DateTime.utc(2026, 1, 1),
+          banners: {
+            '301': [
+              for (var seq = 0; seq < 3; seq++) rec(substituteId(t, seq)),
+            ],
+          },
+        ),
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
+          gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
+          cancellableHttpClientFactoryProvider.overrideWithValue(
+            () => CancellableHttpClient(
+              client: MockClient((_) async => http.Response('{}', 200)),
+              cancel: () {},
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(gachaRepositoryProvider);
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
+
+      final bundle = AccountsBundle(
+        exportedAt: DateTime.utc(2026, 5, 12),
+        appVersion: 'x',
+        lastActiveUid: null,
+        accounts: [
+          ExportedAccount(
+            data: BannerStorage(
+              uid: '100000001',
+              lastUpdated: DateTime.utc(2026, 5, 12),
+              banners: {
+                '301': [rec('1733000000000000000')],
+              },
+            ),
+          ),
+        ],
+      );
+
+      final result = await container
+          .read(gachaRepositoryProvider.notifier)
+          .debugImportOnly(bundle);
+
+      expect(result.addedRecords, 0);
+      expect(result.duplicateRecords, 1);
+      expect(
+        container
+            .read(gachaRepositoryProvider)
+            .byUid['100000001']!
+            .banners['301']!
+            .single
+            .id,
+        '1733000000000000000',
+      );
     },
   );
 
@@ -1529,6 +1808,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gachaStorageProvider.overrideWithValue(storage),
+          noGameDirOverride,
           gachaCaptureProvider.overrideWithValue(_FakeCapture(null)),
           cancellableHttpClientFactoryProvider.overrideWithValue(
             () => CancellableHttpClient(
@@ -1592,7 +1872,7 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(gachaRepositoryProvider);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await container.read(gachaRepositoryProvider.notifier).waitForBootstrap();
 
       await container.read(gachaRepositoryProvider.notifier).update();
 

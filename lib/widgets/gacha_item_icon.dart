@@ -11,6 +11,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/share/preloaded_hoyow
 /// 頌願卡池（odes） gachaType 集合 — 不顯示 icon 也不顯示 placeholder。
 const _odesGachaTypes = {'2000', '1000'};
 
+/// [record] 是否會畫出 icon（含 placeholder）；頌願物品沒有 HoYoWiki icon，
+/// [GachaItemIcon] 不佔任何空間，排版要預留 icon 高度的地方須先問這裡。
+bool showsGachaItemIcon(GachaRecord record) =>
+    !_odesGachaTypes.contains(record.gachaType);
+
 /// 顯示一筆卡池物品的 icon；cache 未到 / 缺資料時顯示 [_Placeholder]。
 class GachaItemIcon extends ConsumerWidget {
   /// 解碼失敗等情境的 logger（對齊 `gacha.hoyowiki.*` 樹）。
@@ -40,9 +45,7 @@ class GachaItemIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (_odesGachaTypes.contains(record.gachaType)) {
-      return const SizedBox.shrink();
-    }
+    if (!showsGachaItemIcon(record)) return const SizedBox.shrink();
 
     final index = ref.watch(hoyowikiIndexProvider);
     final cacheDir = ref.watch(hoyowikiCacheDirProvider);

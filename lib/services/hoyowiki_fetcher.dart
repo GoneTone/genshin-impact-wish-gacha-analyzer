@@ -268,8 +268,8 @@ class HoYoWikiFetcher {
         'download non-2xx status=${res.statusCode} url=${sanitizeUrl(url)}',
       );
       return null;
-    } catch (e) {
-      _log.warning('download failed url=${sanitizeUrl(url)} err=$e');
+    } catch (e, st) {
+      _log.warning('download failed url=${sanitizeUrl(url)}', e, st);
       return null;
     }
   }

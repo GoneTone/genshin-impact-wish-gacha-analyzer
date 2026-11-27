@@ -16,6 +16,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_fetcher.dar
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import '../helpers/no_game_dir.dart';
 
 /// 建立測試用的 [GachaRecord]，預設 5★ 角色、英文 lang。
 GachaRecord _rec({
@@ -91,6 +92,7 @@ Future<ProviderContainer> _bootstrap({
 
   final container = ProviderContainer(
     overrides: [
+      noGameDirOverride,
       gachaStorageProvider.overrideWithValue(storage),
       hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
       hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),
@@ -352,6 +354,7 @@ void main() {
 
     final container = ProviderContainer(
       overrides: [
+        noGameDirOverride,
         gachaStorageProvider.overrideWithValue(failStorage),
         hoyowikiIndexStorageProvider.overrideWithValue(indexStorage),
         hoyowikiCacheDirProvider.overrideWithValue(hoyowikiDir),

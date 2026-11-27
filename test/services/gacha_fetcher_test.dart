@@ -72,6 +72,45 @@ void main() {
       );
     });
 
+    test('wish page keeps api gacha_type 400', () async {
+      final mock = MockClient(
+        (req) async =>
+            _ok([_record(id: '2', type: '400'), _record(id: '1', type: '301')]),
+      );
+      final page = await GachaFetcher(rateLimit: Duration.zero).fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '301', endId: '0', endpoint: GachaEndpoint.gacha),
+        mock,
+      );
+      expect(page.records.map((r) => r.gachaType), ['400', '301']);
+    });
+
+    test('odes page still overrides with queried 1000/2000', () async {
+      final mock = MockClient(
+        (req) async => _ok([
+          {
+            'uid': '801057625',
+            'op_gacha_type': '20021',
+            'item_id': '265044',
+            'count': '1',
+            'time': '2025-10-24 01:51:25',
+            'item_name': 'x',
+            'item_type': '裝扮套裝',
+            'rank_type': '5',
+            'id': '99',
+          },
+        ]),
+      );
+      final page = await GachaFetcher(rateLimit: Duration.zero).fetchPage(
+        GachaUrl.parse(
+          _baseUrl,
+        ).build(gachaType: '2000', endId: '0', endpoint: GachaEndpoint.odes),
+        mock,
+      );
+      expect(page.records.single.gachaType, '2000');
+    });
+
     test('頌願回傳無 lang 時，以 URL 的 lang 補上', () async {
       final mock = MockClient(
         (req) async => _ok([
@@ -218,6 +257,105 @@ void main() {
         client: client,
       );
       expect(merged.first.lang, '');
+    });
+
+    group('替代記錄（第三方匯入）', () {
+      const offNew = '1000000000000000103';
+      const offOld = '1000000000000000100';
+
+      GachaRecord sub(String id, DateTime time) => GachaRecord(
+        id: id,
+        uid: '801057625',
+        gachaType: '301',
+        name: 'x',
+        itemType: '武器',
+        rankType: 3,
+        time: time,
+        lang: 'zh-tw',
+      );
+
+      Map<String, dynamic> api(String id, String time) =>
+          _record(id: id, type: '301')..['time'] = time;
+
+      /// 產生 [count] 筆由 [from] 遞減的官方 id 回應。
+      List<Map<String, dynamic>> apiPage(int from, int count, String time) => [
+        for (var i = 0; i < count; i++)
+          api('1000000000000000${(from - i).toString().padLeft(3, '0')}', time),
+      ];
+
+      Future<(List<GachaRecord>, List<String>)> run(
+        List<GachaRecord> existing,
+        Map<String, List<Map<String, dynamic>>> pagesByEndId,
+      ) async {
+        final endIds = <String>[];
+        final client = MockClient((req) async {
+          final endId = req.url.queryParameters['end_id']!;
+          endIds.add(endId);
+          return _ok(pagesByEndId[endId] ?? const []);
+        });
+        final merged = await GachaFetcher(rateLimit: Duration.zero)
+            .fetchBannerWithMerge(
+              url: GachaUrl.parse(_baseUrl),
+              gachaType: '301',
+              endpoint: GachaEndpoint.gacha,
+              existing: existing,
+              primer: null,
+              onProgress: (_) {},
+              client: client,
+            );
+        return (merged, endIds);
+      }
+
+      test('stop point skips substitute records', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+          sub(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+        ];
+        // 替代 id 以 0 開頭，比任何官方 id 都小；若誤當停止點，永遠不會停而繼續翻到
+        // 第 3 頁。正確停止點是 offOld，第 2 頁碰到它就停。
+        final page1 = apiPage(150, 20, '2025-10-02 10:00:00');
+        final page2 = apiPage(100, 20, '2025-09-23 21:27:37');
+        final (merged, endIds) = await run(existing, {
+          '0': page1,
+          page1.last['id'] as String: page2,
+          page2.last['id'] as String: apiPage(80, 1, '2025-09-01 10:00:00'),
+        });
+        expect(endIds, ['0', page1.last['id']]);
+        expect(merged.where((r) => r.id == offOld), hasLength(1));
+      });
+
+      test('substitute newer than newest official is replaced by fetched '
+          'official in the same second', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+          sub('0202509300900000000', DateTime(2025, 9, 30, 9)),
+          sub(offOld, DateTime(2025, 9, 23, 21, 27, 37)),
+        ];
+        final (merged, _) = await run(existing, {
+          '0': [
+            api(offNew, '2025-10-01 12:00:00'),
+            api(offOld, '2025-09-23 21:27:37'),
+          ],
+        });
+        expect(merged.map((r) => r.id), [
+          offNew,
+          '0202509300900000000',
+          offOld,
+        ]);
+      });
+
+      test('existing with only substitutes fetches to api end', () async {
+        final existing = [
+          sub('0202510011200000000', DateTime(2025, 10, 1, 12)),
+        ];
+        final page1 = apiPage(150, 20, '2025-10-02 10:00:00');
+        final (merged, endIds) = await run(existing, {
+          '0': page1,
+          page1.last['id'] as String: apiPage(130, 1, '2025-10-01 10:00:00'),
+        });
+        expect(endIds, ['0', page1.last['id']]);
+        expect(merged, hasLength(22));
+      });
     });
   });
 

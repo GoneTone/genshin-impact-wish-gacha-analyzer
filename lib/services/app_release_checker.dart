@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:pub_semver/pub_semver.dart';
@@ -95,6 +96,13 @@ Version? _parseTag(String tag) {
   }
 }
 
+/// 把 UTF-8 [bytes] 解成 JSON；格式錯誤拋 [FormatException]（供背景 isolate 呼叫）。
+dynamic _decodeJsonBytes(List<int> bytes) => jsonDecode(utf8.decode(bytes));
+
+/// 在背景 isolate 解 JSON；closure 建在頂層函式內，只捕獲 [bytes]。
+Future<dynamic> _decodeJsonInBackground(List<int> bytes) =>
+    Isolate.run(() => _decodeJsonBytes(bytes));
+
 /// 共用 GET + 解析骨架：對 [uri] 發 GitHub API 請求，統一處理
 /// 超時 / 網路 / rate limit / 一般非 200 / JSON 解碼錯誤，回傳已
 /// `jsonDecode` 的 body。
@@ -137,7 +145,7 @@ Future<dynamic> _githubGet(
   }
 
   try {
-    return jsonDecode(resp.body);
+    return await _decodeJsonInBackground(resp.bodyBytes);
   } on FormatException {
     throw const ReleaseCheckFormat();
   }

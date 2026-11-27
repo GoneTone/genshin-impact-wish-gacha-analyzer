@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Dilek Analizcisi</string>
+    <string name="pairing_channel">Kablosuz hata ayıklama eşlemesi</string>
+    <string name="pairing_searching_title">Eşleme hizmeti aranıyor</string>
+    <string name="pairing_searching_text">Kablosuz hata ayıklamada \"Eşleme kodu ile cihaz eşle\"ye dokunun</string>
+    <string name="pairing_found_title">Eşleme kodunu girin</string>
+    <string name="pairing_found_text">Eşleme ekranında gösterilen 6 haneli kodu yazın</string>
+    <string name="pairing_input_label">Eşleme kodu</string>
+    <string name="pairing_action_pair">Eşle</string>
+    <string name="pairing_action_stop">Durdur</string>
+    <string name="pairing_in_progress">Eşleniyor...</string>
+    <string name="pairing_success_title">Eşleme başarılı</string>
+    <string name="pairing_success_text">Uygulamaya dönmek için buraya dokunun</string>
+    <string name="pairing_failed_text">Eşleme başarısız oldu. Kodu kontrol edip tekrar girin</string>
+    <string name="pairing_no_app_text">Eşleme başarısız oldu. Uygulamaya dönüp tekrar deneyin</string>
+    <string name="pairing_timeout_title">Eşleme zaman aşımına uğradı</string>
+    <string name="pairing_timeout_text">Yeniden başlamak için buraya dokunun</string>
+</resources>

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,12 +9,16 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/android_cloud_auth.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_auth.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_remote.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_auth_service.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/google_authorization_gateway.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/token_store.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 /// 雲端同步的即時狀態。
@@ -62,6 +65,21 @@ final googleAuthServiceProvider = Provider<GoogleAuthService>(
   ),
 );
 
+/// [GoogleAuthorizationGateway] provider（Android 授權 API，測試可替換）。
+final googleAuthorizationGatewayProvider = Provider<GoogleAuthorizationGateway>(
+  (ref) => PluginGoogleAuthorizationGateway(),
+);
+
+/// 目前平台的 [CloudAuth] provider。
+final cloudAuthProvider = Provider<CloudAuth>(
+  (ref) => ref.watch(isAndroidProvider)
+      ? AndroidCloudAuth(
+          gateway: ref.watch(googleAuthorizationGatewayProvider),
+          baseClientFactory: http.Client.new,
+        )
+      : ref.watch(googleAuthServiceProvider),
+);
+
 /// 以授權 client 建立 [CloudSyncRemote] 的工廠 provider。
 final cloudSyncRemoteFactoryProvider =
     Provider<CloudSyncRemote Function(http.Client)>(
@@ -84,8 +102,8 @@ final windowForegroundProvider = Provider<Future<void> Function()>(
       if (await windowManager.isMinimized()) await windowManager.restore();
       await windowManager.show();
       await windowManager.focus();
-    } catch (e) {
-      Logger('cloudsync.sync').warning('bring-to-foreground failed: $e');
+    } catch (e, st) {
+      Logger('cloudsync.sync').warning('bring-to-foreground failed', e, st);
     }
   },
 );
@@ -101,10 +119,13 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   static final _log = Logger('cloudsync.sync');
 
   /// 目前的授權 client；null = 尚未還原或未連結。
-  AuthClient? _client;
+  http.Client? _client;
 
   /// 資料變動觸發的 debounce timer。
   Timer? _debounce;
+
+  /// 同步輪正在把雲端資料合併進本機；這段的本機變動不排變動檢查（該輪合併後會自己比對指紋）。
+  bool _applyingRemote = false;
 
   /// 單飛鎖：一輪同步進行中。
   bool _syncing = false;
@@ -149,14 +170,27 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     if (!ref.mounted || !_linked) return;
     // 沒等本機 bootstrap 完成就同步，byUid 會是空的，雲端內容會把本機檔案當「全新」覆蓋掉。
     await ref.read(gachaRepositoryProvider.notifier).waitForBootstrap();
-    if (!ref.mounted) return;
+    if (!ref.mounted || !_linked) return;
+    final auth = ref.read(cloudAuthProvider);
+    // 短效授權的 client 用不到跨輪：同步輪自己會還原，這裡不重複還原。
+    if (!auth.keepsClientAcrossRounds) {
+      if (_syncing) return;
+      if (ref.read(settingsProvider).cloudAutoSyncEnabled) {
+        await syncNow(manual: false, trigger: 'startup');
+        return;
+      }
+    }
     try {
-      await _ensureClient();
+      if (auth.keepsClientAcrossRounds) {
+        await _ensureClient();
+      } else {
+        (await _restoreClient(auth)).close();
+      }
     } on CloudReauthRequiredException {
       state = const CloudSyncState(phase: CloudSyncPhase.reauthRequired);
       return;
-    } catch (e) {
-      _log.warning('startup restore failed: $e');
+    } catch (e, st) {
+      _log.warning('startup restore failed', e, st);
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'network',
@@ -164,7 +198,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return;
     }
     if (!ref.mounted) return;
-    if (ref.read(settingsProvider).cloudAutoSyncEnabled) {
+    if (auth.keepsClientAcrossRounds &&
+        ref.read(settingsProvider).cloudAutoSyncEnabled) {
       await syncNow(manual: false, trigger: 'startup');
     }
   }
@@ -178,25 +213,34 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     if (state.phase == CloudSyncPhase.awaitingConsent) return;
     final gen = ++_authGeneration;
     state = const CloudSyncState(phase: CloudSyncPhase.awaitingConsent);
-    final auth = ref.read(googleAuthServiceProvider);
+    final auth = ref.read(cloudAuthProvider);
     final openUrl = ref.read(cloudSyncUrlOpenerProvider);
     try {
-      final session = await auth.signIn(openUrl, postAuthPage: postAuthPage);
+      final result = await auth.link(
+        openUrl: openUrl,
+        postAuthPage: postAuthPage,
+      );
       if (!ref.mounted || gen != _authGeneration) {
-        // 取消後在瀏覽器遲到完成的授權：拋棄 client、revoke 該次 grant，不寫入 token store。
-        session.client.close();
-        unawaited(auth.revokeToken(session.refreshToken));
+        // 取消後遲到完成的授權：只拋棄 client，不 commit、不撤銷。
+        result.client.close();
         return;
       }
-      await ref
-          .read(tokenStoreProvider)
-          .writeRefreshToken(session.refreshToken);
+      try {
+        await result.commit();
+      } catch (_) {
+        result.client.close();
+        rethrow;
+      }
       _client?.close();
-      _client = session.client;
-      await ref.read(settingsProvider.notifier).setCloudAccount(session.email);
+      _client = result.client;
+      await ref.read(settingsProvider.notifier).setCloudAccount(result.email);
       if (!ref.mounted) return;
       state = const CloudSyncState();
       await syncNow(manual: true, trigger: 'link');
+    } on CloudLinkCancelledException catch (e) {
+      if (!ref.mounted || gen != _authGeneration) return;
+      _log.info('link cancelled by user reason=${e.reason}');
+      state = const CloudSyncState();
     } on CloudScopeMissingException {
       if (!ref.mounted || gen != _authGeneration) return;
       _log.warning('link failed: required Drive scope not granted');
@@ -204,9 +248,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         phase: CloudSyncPhase.error,
         errorToken: 'scopeMissing',
       );
-    } catch (e) {
+    } catch (e, st) {
       if (!ref.mounted || gen != _authGeneration) return;
-      _log.warning('link failed: $e');
+      _log.warning('link failed', e, st);
       state = const CloudSyncState(
         phase: CloudSyncPhase.error,
         errorToken: 'authFailed',
@@ -222,11 +266,11 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     _log.info('link cancelled');
   }
 
-  /// 中斷連結：revoke＋刪 token＋清 settings；本機與雲端資料皆保留。
+  /// 中斷連結：只忘記本機（刪 token＋清 settings，不向 Google 撤銷）；本機與雲端資料皆保留。
   Future<void> unlink() async {
     _authGeneration++;
     _debounce?.cancel();
-    await ref.read(googleAuthServiceProvider).signOut();
+    await ref.read(cloudAuthProvider).unlink();
     if (!ref.mounted) return;
     _client?.close();
     _client = null;
@@ -279,9 +323,14 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         remote: ref.read(cloudSyncRemoteFactoryProvider)(_client!),
         pendingRemovals: pending,
         applyRemote: (bundle) async {
-          mergeResult = await ref
-              .read(gachaRepositoryProvider.notifier)
-              .importBundleForCloudSync(bundle);
+          _applyingRemote = true;
+          try {
+            mergeResult = await ref
+                .read(gachaRepositoryProvider.notifier)
+                .importBundleForCloudSync(bundle);
+          } finally {
+            _applyingRemote = false;
+          }
         },
         exportLocal: _exportLocal,
         clearPendingRemovals: (uids) => ref
@@ -352,6 +401,10 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       );
     } finally {
       _syncing = false;
+      if (ref.mounted && !ref.read(cloudAuthProvider).keepsClientAcrossRounds) {
+        _client?.close();
+        _client = null;
+      }
       if (_pendingRerun && ref.mounted) {
         _pendingRerun = false;
         unawaited(syncNow(manual: false, trigger: 'rerun'));
@@ -359,12 +412,24 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     }
   }
 
-  /// 還原授權 client（已有就直接用）；無 token 視同需要重新連結。
+  /// 為同步輪備妥 [_client]；無 token 視同需要重新連結。
+  ///
+  /// 跨輪沿用的授權（Windows）已有 client 就直接用；否則每次重新還原並先關掉舊的。
   Future<void> _ensureClient() async {
-    if (_client != null) return;
-    final restored = await ref.read(googleAuthServiceProvider).restore();
+    final auth = ref.read(cloudAuthProvider);
+    if (_client != null && auth.keepsClientAcrossRounds) return;
+    _client?.close();
+    _client = null;
+    _client = await _restoreClient(auth);
+  }
+
+  /// 以 [auth] 還原授權 client；無法靜默還原時拋 [CloudReauthRequiredException]。
+  Future<http.Client> _restoreClient(CloudAuth auth) async {
+    final restored = await auth.restoreClient(
+      expectedEmail: ref.read(settingsProvider).cloudAccountEmail!,
+    );
     if (restored == null) throw const CloudReauthRequiredException();
-    _client = restored;
+    return restored;
   }
 
   /// 本機資料（byUid／別名）變動時排程 debounce 同步。
@@ -375,6 +440,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     if (state.phase == CloudSyncPhase.reauthRequired) return;
     if (!ref.read(settingsProvider).cloudAutoSyncEnabled) return;
     if (ref.read(gachaRepositoryProvider).isBootstrapping) return;
+    if (_applyingRemote) return;
     _scheduleDebounced();
   }
 
@@ -382,9 +448,26 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// （避免同步自身的合併寫入造成空轉輪）。
   void _scheduleDebounced() {
     _debounce?.cancel();
-    _debounce = Timer(debounceDelay, () {
+    _debounce = Timer(debounceDelay, () async {
       if (!ref.mounted || !_linked) return;
-      if (syncFingerprint(_exportLocal()) == _lastFingerprint) return;
+      // 同步進行中：等該輪結束再比對（該輪會更新指紋），不要排一輪無條件補跑。
+      if (_syncing) {
+        _scheduleDebounced();
+        return;
+      }
+      final String fingerprint;
+      try {
+        fingerprint = await syncFingerprintInBackground(await _exportLocal());
+      } catch (e, st) {
+        // 狀態維持不變：下一次資料變動或啟動輪會再比對。
+        _log.warning('dataChange check failed', e, st);
+        return;
+      }
+      if (!ref.mounted || !_linked) return;
+      if (fingerprint == _lastFingerprint) {
+        _log.info('dataChange check: fingerprint unchanged, round skipped');
+        return;
+      }
       unawaited(syncNow(manual: false, trigger: 'dataChange'));
     });
   }
@@ -399,14 +482,16 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     });
   }
 
-  /// 把本機全帳號打包成與手動匯出同格式的 bundle JSON。
-  String _exportLocal() {
+  /// 把本機全帳號打包成與手動匯出同格式的 bundle JSON（在背景 isolate 序列化）。
+  Future<String> _exportLocal() {
     final gacha = ref.read(gachaRepositoryProvider);
     final settings = ref.read(settingsProvider);
-    return exportAccounts(
+    return exportAccountsInBackground(
       byUid: gacha.byUid,
+      recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
       uidOrder: settings.uidOrder,
       uidAliases: settings.uidAliases,
+      uidAliasUpdatedAt: settings.uidAliasUpdatedAt,
       lastActiveUid: gacha.activeUid,
       appVersion: ref.read(appVersionProvider),
       now: DateTime.now(),

@@ -1,0 +1,134 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "page": {
+      "id": "50",
+      "name": "香菱",
+      "icon_url": "https://bbs.hoyolab.com/hoyowiki/picture/character/Xiangling_icon.png",
+      "filter_values": {
+        "character_property": {
+          "values": [
+            "元素精通"
+          ],
+          "value_types": [
+            {
+              "id": "473",
+              "value": "元素精通",
+              "mi18n_key": "filter_473",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_property",
+            "text": "突破加成屬性",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_property",
+            "is_multi_select": false,
+            "id": "8",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_vision": {
+          "values": [
+            "火元素"
+          ],
+          "value_types": [
+            {
+              "id": "729",
+              "value": "火元素",
+              "mi18n_key": "filter_729",
+              "icon": "https://act-webstatic.hoyoverse.com/event-static-hoyowiki-admin/2024/03/27/ac3123b42bf631685287e76c8c834a6c_564491877314389852.png",
+              "enum_string": "pyro"
+            }
+          ],
+          "key": {
+            "key": "character_vision",
+            "text": "元素屬性",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_vision",
+            "is_multi_select": false,
+            "id": "5",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_weapon": {
+          "values": [
+            "長柄武器"
+          ],
+          "value_types": [
+            {
+              "id": "124",
+              "value": "長柄武器",
+              "mi18n_key": "filter_124",
+              "icon": "https://act-webstatic.hoyoverse.com/event-static-hoyowiki-admin/2024/03/27/9c0f0c167f2753035b78c0aed9f01b9f_3170160339356492715.png",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_weapon",
+            "text": "武器",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_weapon",
+            "is_multi_select": false,
+            "id": "9",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_region": {
+          "values": [
+            "璃月"
+          ],
+          "value_types": [
+            {
+              "id": "42",
+              "value": "璃月",
+              "mi18n_key": "filter_42",
+              "icon": "",
+              "enum_string": ""
+            }
+          ],
+          "key": {
+            "key": "character_region",
+            "text": "地區",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_region",
+            "is_multi_select": false,
+            "id": "6",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        },
+        "character_rarity": {
+          "values": [
+            "四星"
+          ],
+          "value_types": [
+            {
+              "id": "14",
+              "value": "四星",
+              "mi18n_key": "filter_14",
+              "icon": "",
+              "enum_string": "4"
+            }
+          ],
+          "key": {
+            "key": "character_rarity",
+            "text": "品質",
+            "values": [],
+            "mi18n_key": "hoyowikihoyowiki.filter_key_character_rarity",
+            "is_multi_select": false,
+            "id": "7",
+            "is_hidden": false,
+            "updated_at": "1711524197"
+          }
+        }
+      },
+      "modules": []
+    }
+  }
+}

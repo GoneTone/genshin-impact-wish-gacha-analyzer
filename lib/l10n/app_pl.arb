@@ -1,5 +1,1098 @@
 {
   "@@locale": "pl",
+  "localeNativeName": "Polski",
+  "@localeNativeName": {
+    "description": "Native name of this locale, shown in language picker."
+  },
+  "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
+  "@localeTranslator": {
+    "description": "Comma-separated list of translators for this locale. Empty = original language (no credit row shown)."
+  },
+  "localeTranslatorLabel": "Tłumaczenie: {translator}",
+  "@localeTranslatorLabel": {
+    "description": "Settings language section: shows who translated the currently active language. {translator} is the comma-separated translator credit (may contain <a href> markup), rendered by TranslatorText.",
+    "placeholders": {
+      "translator": {
+        "type": "String"
+      }
+    }
+  },
+  "appName": "Genshin Impact Wish Gacha Analyzer",
+  "actionUpdate": "Aktualizuj",
+  "actionCancel": "Anuluj",
+  "actionClose": "Zamknij",
+  "actionPrevPage": "Poprzednia",
+  "actionNextPage": "Następna",
+  "actionOpenFolder": "Otwórz folder",
+  "navOverview": "Przegląd",
+  "navCharacter": "Character",
+  "navWeapon": "Weapon",
+  "navChronicled": "Chronicled",
+  "navStandard": "Permanent",
+  "navBeginner": "Novice",
+  "navSettings": "Ustawienia",
+  "navContributors": "Współtwórcy",
+  "gachaTypeCharacter": "Character Event Wish",
+  "gachaTypeCharacter2": "Character Event Wish-2",
+  "gachaTypeWeapon": "Weapon Event Wish",
+  "gachaTypeChronicled": "Chronicled Wish",
+  "gachaTypeStandard": "Permanent Wish",
+  "gachaTypeBeginner": "Novice Wishes",
+  "gachaTypeOdesEvent": "Event Ode",
+  "gachaTypeOdesStandard": "Standard Ode",
+  "navOdesEvent": "Event",
+  "navOdesStandard": "Standard",
+  "navSectionGacha": "Wish",
+  "navSectionOdes": "Ode",
+  "footerNotSynced": "Nie zsynchronizowano",
+  "footerLastUpdated": "Ostatnia aktualizacja: {time}",
+  "@footerLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeNow": "Przed chwilą",
+  "relativeSecondsAgo": "{count, plural, one{{count} sekundę temu} few{{count} sekundy temu} many{{count} sekund temu} other{{count} sekundy temu}}",
+  "@relativeSecondsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMinutesAgo": "{count, plural, one{{count} minutę temu} few{{count} minuty temu} many{{count} minut temu} other{{count} minuty temu}}",
+  "@relativeMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHoursAgo": "{count, plural, one{{count} godzinę temu} few{{count} godziny temu} many{{count} godzin temu} other{{count} godziny temu}}",
+  "@relativeHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeDaysAgo": "{count, plural, one{{count} dzień temu} few{{count} dni temu} many{{count} dni temu} other{{count} dnia temu}}",
+  "@relativeDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeMonthsAgo": "{count, plural, one{{count} miesiąc temu} few{{count} miesiące temu} many{{count} miesięcy temu} other{{count} miesiąca temu}}",
+  "@relativeMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYearsAgo": "{count, plural, one{{count} rok temu} few{{count} lata temu} many{{count} lat temu} other{{count} roku temu}}",
+  "@relativeYearsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uidSwitchTooltip": "Przełącz konto",
+  "uidNotSynced": "Nie zsynchronizowano",
+  "uidActiveSuffix": " (aktywne)",
+  "emptyNoSyncTitle": "Nie zsynchronizowano jeszcze żadnych danych",
+  "emptyNoSyncMessage": "Dotknij {icon} w prawym górnym rogu, aby zacząć",
+  "emptyNoRecords": "Brak rekordów dla tego banera",
+  "emptyNoFilterMatch": "Brak rekordów pasujących do bieżącego filtra",
+  "emptyNoOdesRecords": "Brak rekordów w Ode",
+  "emptyNoGachaRecords": "Brak rekordów w Wish",
+  "statsTotal": "Łącznie losowań",
+  "statsRankCount": "Liczba {star}",
+  "@statsRankCount": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "statsShareOfTotal": "{rate}% całości",
+  "@statsShareOfTotal": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRarityDistribution": "Rozkład rzadkości",
+  "statsItemTypeDistribution": "Rozkład typów",
+  "statsNoData": "Brak danych",
+  "kindUnknown": "Nieznany",
+  "kindCharacter": "Character",
+  "kindWeapon": "Weapon",
+  "tableTime": "Czas",
+  "tableName": "Nazwa",
+  "tableKind": "Typ",
+  "tableRarity": "Rzadkość",
+  "rarityStar": "{rank}★",
+  "@rarityStar": {
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "tableTotalIndex": "Łącznie",
+  "tableMainPity": "Pity",
+  "tableSortButton": "Sortuj: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sortuj: domyślnie",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sortuj według",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
+  "tableMainPityTooltip": "Losowania od ostatniego {star}",
+  "@tableMainPityTooltip": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "sortDirectionDesc": "Malejąco",
+  "sortDirectionAsc": "Rosnąco",
+  "sortHintClickToSort": "Kliknij, aby sortować",
+  "progressPreparing": "Przygotowywanie...",
+  "progressPreparingHint": "Przygotowywanie źródła danych...",
+  "progressConvertingHint": "Konwertowanie języka danych, proszę czekać...",
+  "progressWaiting": "Oczekiwanie na przechwycenie...",
+  "progressFetching": "Pobieranie...",
+  "progressDone": "Aktualizacja zakończona",
+  "progressFailed": "Niepowodzenie",
+  "progressOpenGameHint": "Otwórz Genshin → Wishes → History",
+  "progressFallbackHint": "(Poprzedni adres URL Wish History wygasł i trzeba go uzyskać ponownie)",
+  "progressNotDetectedLink": "Otwarto Wish History, ale nic się nie dzieje?",
+  "progressCaptureUnavailableHint": "Nie udało się uruchomić przechwytywania (certyfikat mógł zostać odrzucony lub port jest zajęty), więc wykrywanie korzysta wyłącznie z pamięci podręcznej stron gry. Otwórz w grze stronę Wish History.",
+  "progressCaptureUnavailableNoGameDirHint": "Nie udało się uruchomić przechwytywania (certyfikat mógł zostać odrzucony lub port jest zajęty), a folderu gry też nie znaleziono. Naciśnij poniżej „Wybierz folder gry”, aby ustawić go ręcznie.",
+  "gameDirHelpTitle": "Nie wykryto Wish History",
+  "gameDirHelpNotFound": "Nie znaleziono folderu gry Genshin Impact. Po wskazaniu folderu gry narzędzie będzie mogło też pobrać adres URL Wish History z pamięci podręcznej stron gry.",
+  "gameDirHelpFound": "Aktualnie używany folder gry: {path}. Jeśli to nie jest kopia gry, w którą grasz, wybierz folder ponownie.",
+  "@gameDirHelpFound": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDirHelpReopen": "Folder gry ustawiony. Wróć do gry i otwórz Wish History jeszcze raz.",
+  "gameDirInvalid": "Nie znaleziono Genshin Impact w tym folderze. Wybierz folder „Genshin Impact game”.",
+  "actionChooseGameDir": "Wybierz folder gry",
+  "actionRechooseGameDir": "Wybierz ponownie",
+  "progressFetchingBanner": "Pobieranie: {name}",
+  "@progressFetchingBanner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressPageStatus": "Strona {page}, dotąd: {count, plural, one{{count} nowy rekord} few{{count} nowe rekordy} many{{count} nowych rekordów} other{{count} nowego rekordu}}",
+  "@progressPageStatus": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneSummary": "{count, plural, one{Dodano {count} nowy rekord} few{Dodano {count} nowe rekordy} many{Dodano {count} nowych rekordów} other{Dodano {count} nowego rekordu}}",
+  "@progressDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneImagesSummary": "{count, plural, one{Pobrano {count} obraz przedmiotu} few{Pobrano {count} obrazy przedmiotów} many{Pobrano {count} obrazów przedmiotów} other{Pobrano {count} obrazu przedmiotu}}",
+  "@progressDoneImagesSummary": {
+    "description": "Completion summary additional line: how many HoYoWiki item images (icon/header) were successfully downloaded in this run. Shown after progressDoneSummary in update completion dialog. Always shown including count = 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataSummary": "{count, plural, one{Zaktualizowano dane {count} przedmiotu} few{Zaktualizowano dane {count} przedmiotów} many{Zaktualizowano dane {count} przedmiotów} other{Zaktualizowano dane {count} przedmiotu}}",
+  "@progressDoneItemDataSummary": {
+    "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataImagesSummary": "{count, plural, one{Uzupełniono {count} obraz przedmiotu} few{Uzupełniono {count} obrazy przedmiotów} many{Uzupełniono {count} obrazów przedmiotów} other{Uzupełniono {count} obrazu przedmiotu}}",
+  "@progressDoneItemDataImagesSummary": {
+    "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDoneItemDataPrunedSummary": "{count, plural, one{Wyczyszczono dane w nieaktualnym języku dla {count} przedmiotu} few{Wyczyszczono dane w nieaktualnym języku dla {count} przedmiotów} many{Wyczyszczono dane w nieaktualnym języku dla {count} przedmiotów} other{Wyczyszczono dane w nieaktualnym języku dla {count} przedmiotu}}",
+  "@progressDoneItemDataPrunedSummary": {
+    "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialFailed": "⚠ Częściowe niepowodzenie: {names}",
+  "@progressPartialFailed": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "progressDoneImportSummary": "{accounts, plural, one{Zaimportowano {accounts} konto} few{Zaimportowano {accounts} konta} many{Zaimportowano {accounts} kont} other{Zaimportowano {accounts} konta}}: nowe: {added}, już istniejące: {duplicate}",
+  "@progressDoneImportSummary": {
+    "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "added": {
+        "type": "int"
+      },
+      "duplicate": {
+        "type": "int"
+      }
+    }
+  },
+  "progressPartialImportFailed": "⚠ Częściowe niepowodzenie importu: {uids}",
+  "@progressPartialImportFailed": {
+    "description": "Completion dialog warning line shown when some UIDs failed to write to storage during import. uids is a comma-separated list.",
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "updateProgressHoyoWikiSearching": "Wyszukiwanie danych przedmiotów {done}/{total}",
+  "@updateProgressHoyoWikiSearching": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiFetchingEntries": "Pobieranie szczegółów przedmiotów {done}/{total}",
+  "@updateProgressHoyoWikiFetchingEntries": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updateProgressHoyoWikiDownloading": "Pobieranie obrazów przedmiotów {done}/{total}",
+  "@updateProgressHoyoWikiDownloading": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAuthExpired": "Autoryzacja ciągle wygasa; zaloguj się do gry ponownie",
+  "errorRateLimited": "Zbyt wiele żądań; spróbuj ponownie później",
+  "errorServer": "Błąd serwera: {message}",
+  "@errorServer": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorNoRecords": "To konto nie ma jeszcze rekordów w Wish",
+  "pageOverviewTitle": "Przegląd (wszystkie bannery)",
+  "pageOverviewGachaSection": "Przegląd Wish",
+  "pageOverviewOdesSection": "Przegląd Ode",
+  "pageBannerRecordList": "Lista rekordów",
+  "rarityOverviewTitle": "Przegląd {star}",
+  "@rarityOverviewTitle": {
+    "description": "Section title above the record list / timeline showing every unique item of the given rarity the user pulled, each with a badge of how many copies were obtained.",
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Ustawienia",
+  "settingsAppearance": "Wygląd",
+  "settingsThemeSystem": "Zgodnie z systemem",
+  "settingsThemeDark": "Ciemny",
+  "settingsThemeLight": "Jasny",
+  "settingsLanguage": "Język",
+  "settingsLocaleSystem": "Zgodnie z systemem",
+  "settingsDataLanguage": "Język danych",
+  "settingsDataLanguageDesc": "Ujednolica język wyświetlania danych historii losowań, niezależnie od języka interfejsu aplikacji. Po ustawieniu aktualizacja lub import danych automatycznie konwertuje je na ten język. Rekordy Ode oraz przedmioty bez pasujących danych zachowują oryginalny język.",
+  "settingsDataLanguageUnset": "Nie ustawiono (bez konwersji)",
+  "settingsDataLanguageUnify": "Konwertuj język danych teraz",
+  "settingsDataLanguageUnifying": "Konwertowanie...",
+  "settingsDataLanguageUnifyDone": "Przekonwertowano: {converted}, nie udało się przekonwertować: {unresolved}.",
+  "@settingsDataLanguageUnifyDone": {
+    "placeholders": {
+      "converted": {
+        "type": "int"
+      },
+      "unresolved": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDataLanguageUnifyFailed": "Konwersja nie powiodła się, dane bez zmian. Sprawdź połączenie z siecią i spróbuj ponownie.",
+  "settingsDataManagement": "Zarządzanie danymi",
+  "settingsGameDir": "Folder gry",
+  "settingsGameDirAuto": "Wykryty automatycznie: {path}",
+  "@settingsGameDirAuto": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirManual": "Ustawiony ręcznie: {path}",
+  "@settingsGameDirManual": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGameDirNone": "Nie znaleziono folderu gry",
+  "actionClearGameDir": "Wyczyść",
+  "settingsCloudSync": "Synchronizacja w chmurze",
+  "cloudSyncIntro": "Połącz konto Google, aby automatycznie tworzyć kopię zapasową rekordów na Dysku Google i synchronizować wiele urządzeń.",
+  "cloudSyncUnconfigured": "Ta wersja nie ma skonfigurowanych danych uwierzytelniających Google OAuth; synchronizacja w chmurze jest niedostępna.",
+  "cloudSyncLink": "Połącz konto Google",
+  "cloudSyncAwaitingConsent": "Otwarto przeglądarkę. Dokończ autoryzację w przeglądarce...",
+  "cloudSyncAwaitingConsentAndroid": "Dokończ autoryzację w oknie Google...",
+  "cloudSyncLinkedAs": "Połączono: {email}",
+  "@cloudSyncLinkedAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncAutoToggle": "Automatyczna synchronizacja",
+  "cloudSyncAutoToggleHint": "Synchronizuje automatycznie przy uruchomieniu aplikacji i po zmianie danych; po wyłączeniu nadal można synchronizować ręcznie.",
+  "cloudSyncNow": "Synchronizuj teraz",
+  "cloudSyncUnlink": "Odłącz",
+  "cloudSyncUnlinkConfirmTitle": "Odłącz",
+  "cloudSyncUnlinkConfirmBody": "Synchronizacja zostanie zatrzymana. Dane lokalne i kopia zapasowa w chmurze zostaną zachowane.",
+  "cloudSyncLastSynced": "Ostatnia synchronizacja: {time}",
+  "@cloudSyncLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudSyncNeverSynced": "Jeszcze nie synchronizowano",
+  "cloudSyncErrorNetwork": "Synchronizacja nie powiodła się: problem z siecią. Zostanie ponowiona automatycznie.",
+  "cloudSyncErrorBusy": "Synchronizacja odroczona: trwa aktualizacja lub import. Zostanie ponowiona automatycznie.",
+  "cloudSyncErrorSchemaTooNew": "Synchronizację pominięto: dane w chmurze utworzyła nowsza wersja aplikacji. Najpierw zaktualizuj aplikację.",
+  "cloudSyncErrorAuthFailed": "Autoryzacja nie powiodła się. Spróbuj ponownie.",
+  "cloudSyncErrorScopeMissing": "Autoryzacja nie obejmowała dostępu do Dysku Google. Połącz konto ponownie i zaznacz pole dotyczące danych Dysku na stronie zgody Google.",
+  "cloudSyncReauthRequired": "Autoryzacja wygasła. Połącz konto Google ponownie.",
+  "cloudSyncRemoveFromCloud": "Usuń też to konto z danych synchronizacji w chmurze",
+  "cloudSyncPostAuthTitle": "Autoryzacja zakończona",
+  "cloudSyncPostAuthBody": "Możesz zamknąć tę kartę i wrócić do aplikacji.",
+  "cloudSyncPostAuthScopeMissingTitle": "Brak uprawnienia do Dysku Google",
+  "cloudSyncPostAuthScopeMissingBody": "Nie zaznaczono pola dotyczącego danych Dysku Google. Wróć do aplikacji, połącz konto ponownie i zaznacz to uprawnienie.",
+  "settingsAccountManagement": "Zarządzanie kontami",
+  "settingsPrivacySectionTitle": "Prywatność",
+  "settingsMaskUidInUi": "Maskuj UID w interfejsie",
+  "settingsMaskUidInUiHint": "Gdy włączone, UID w interfejsie i na liście kont pokazują pierwsze 3 cyfry, a resztę maskują (np. 123•••••). Przydatne podczas streamowania lub udostępniania ekranu. Nie dotyczy obrazów do udostępniania, wyeksportowanych plików ani okna potwierdzenia usunięcia.",
+  "settingsAdPrivacyOptions": "Opcje prywatności reklam",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Zmień swoją zgodę na wyświetlanie spersonalizowanych reklam.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
+  "settingsAbout": "O aplikacji",
+  "settingsAboutVersion": "Wersja {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOtherGamesTitle": "Wersje dla innych gier",
+  "settingsOtherGamesWutheringWaves": "Wuthering Waves",
+  "settingsOtherGamesFuture": "W przyszłości mogą dojść kolejne gry...",
+  "contributorsTitle": "Współtwórcy",
+  "contributorsSubtitle": "Szczególne podziękowania dla poniższych osób, które przyczyniły się do rozwoju tego oprogramowania!",
+  "contributorsProjectLeader": "Moderator projektu",
+  "contributorsTesters": "Testerzy",
+  "contributorsGithubContributors": "Współtwórcy na GitHub",
+  "contributorsTranslationReviewer": "Korektorzy tłumaczeń",
+  "contributorsTranslatedLanguages": "Dostępne języki",
+  "contributorsHelpTranslate": "Brakuje Twojego języka? Pomóż nam go przetłumaczyć!",
+  "contributorsProjectLicense": "Licencja projektu",
+  "contributorsOpenSourceLicenses": "Licencje open source",
+  "pityRank": "Pity {star}",
+  "@pityRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityCurrent": "{current} / {threshold}",
+  "@pityCurrent": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "threshold": {
+        "type": "int"
+      }
+    }
+  },
+  "pityDistance": "{n, plural, one{{n} losowanie do gwarancji} few{{n} losowania do gwarancji} many{{n} losowań do gwarancji} other{{n} losowania do gwarancji}}",
+  "@pityDistance": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityClose": "Blisko gwarancji! Zostało: {n, plural, one{{n} losowanie} few{{n} losowania} many{{n} losowań} other{{n} losowania}}",
+  "@pityClose": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pityGuaranteed": "Wkrótce gwarancja",
+  "pityNoMainRarity": "Brak {star}",
+  "@pityNoMainRarity": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "pityBeginnerEnded": "Zakończono",
+  "pityAverageInterval": "Śr. {n} losowań",
+  "@pityAverageInterval": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineNoRecordsForRank": "Brak rekordów {star}",
+  "@timelineNoRecordsForRank": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineSinceLast": "{n, plural, one{{n} losowanie} few{{n} losowania} many{{n} losowań} other{{n} losowania}}",
+  "@timelineSinceLast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowLabel": "Teraz",
+  "timelineNowPulls": "{n, plural, one{{n} losowanie} few{{n} losowania} many{{n} losowań} other{{n} losowania}}",
+  "@timelineNowPulls": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceLast": "{n, plural, one{{n} losowanie od ostatniego {star}} few{{n} losowania od ostatniego {star}} many{{n} losowań od ostatniego {star}} other{{n} losowania od ostatniego {star}}}",
+  "@timelineNowSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineNowSinceCrossPool": "{n, plural, one{{n} losowanie od ostatniego {star} (między banerami)} few{{n} losowania od ostatniego {star} (między banerami)} many{{n} losowań od ostatniego {star} (między banerami)} other{{n} losowania od ostatniego {star} (między banerami)}}",
+  "@timelineNowSinceCrossPool": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMonthLabel": "{month} / {year}",
+  "@timelineMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineScrollLeft": "Przewiń w lewo",
+  "timelineScrollRight": "Przewiń w prawo",
+  "timelineLoadMore": "Wczytaj więcej (pozostało: {n})",
+  "@timelineLoadMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRarityAll": "Wszystkie rzadkości",
+  "filterRarityRankOnly": "Tylko {star}",
+  "@filterRarityRankOnly": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      }
+    }
+  },
+  "filterKindAll": "Wszystkie typy",
+  "filterSearchHint": "Szukaj nazwy...",
+  "filterClear": "Wyczyść filtry",
+  "pagerFirst": "Pierwsza",
+  "pagerLast": "Ostatnia",
+  "pagerJumpTitle": "Przejdź do strony",
+  "pagerJumpLabel": "Strona ({min}–{max})",
+  "pagerJumpCurrent": "Bieżąca strona: {page} · {total, plural, one{{total} rekord} few{{total} rekordy} many{{total} rekordów} other{{total} rekordu}}",
+  "pagerJumpGo": "Przejdź",
+  "pagerJumpInvalid": "Podaj stronę od {min} do {max}",
+  "settingsClearActive": "Wyczyść dane bieżącego konta",
+  "settingsClearAll": "Wyczyść wszystkie dane",
+  "settingsRefetchHoyoWikiImagesTitle": "Wymuś ponowne pobranie obrazów przedmiotów",
+  "@settingsRefetchHoyoWikiImagesTitle": {
+    "description": "Settings → Data management → button: forcibly clears all cached HoYoWiki item images (icon + header) and re-fetches them from scratch."
+  },
+  "settingsRefetchHoyoWikiImagesEmpty": "Brak rekordów, nie ma czego pobierać ponownie",
+  "@settingsRefetchHoyoWikiImagesEmpty": {
+    "description": "Tooltip shown when the Refetch button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefetchHoyoWikiTitle": "Wymuś ponowne pobranie obrazów przedmiotów",
+  "@confirmRefetchHoyoWikiTitle": {
+    "description": "Title of the AlertDialog confirming the refetch action."
+  },
+  "confirmRefetchHoyoWikiBody": "Spowoduje to wyczyszczenie całej lokalnej pamięci podręcznej obrazów przedmiotów i ponowne pobranie ikon z HoYoWiki. Obrazy szczegółów przedmiotu zostaną pobrane na żądanie przy następnym otwarciu przedmiotu. W zależności od liczby przedmiotów może to potrwać kilka minut i zużyć sporo transferu.",
+  "@confirmRefetchHoyoWikiBody": {
+    "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
+  },
+  "confirmRefetchHoyoWikiConfirm": "Rozpocznij pobieranie",
+  "@confirmRefetchHoyoWikiConfirm": {
+    "description": "Confirm button label in the refetch AlertDialog."
+  },
+  "settingsItemData": "Dane przedmiotów",
+  "@settingsItemData": {
+    "description": "Settings page section title for item data (HoYoWiki metadata) controls."
+  },
+  "settingsRefreshItemDataDesc": "Pobiera ponownie z HoYoWiki najnowsze szczegóły przedmiotów (opisy, listy obrazów itp.), zachowując już pobrane obrazy. Nowe obrazy zostaną pobrane po otwarciu szczegółów przedmiotu.",
+  "@settingsRefreshItemDataDesc": {
+    "description": "Description under the 'refresh item data' button explaining the non-destructive metadata refresh."
+  },
+  "settingsRefreshItemDataTitle": "Aktualizuj dane przedmiotów",
+  "@settingsRefreshItemDataTitle": {
+    "description": "Settings → Item data → button: re-fetch latest HoYoWiki item metadata without clearing cached images."
+  },
+  "settingsRefreshItemDataEmpty": "Brak rekordów — nie ma czego aktualizować",
+  "@settingsRefreshItemDataEmpty": {
+    "description": "Tooltip shown when the refresh-item-data button is disabled because there are no gacha records on the device."
+  },
+  "confirmRefreshItemDataTitle": "Zaktualizować dane przedmiotów?",
+  "@confirmRefreshItemDataTitle": {
+    "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
+  },
+  "confirmRefreshItemDataBody": "Aplikacja połączy się z HoYoWiki, aby ponownie pobrać szczegóły każdego przedmiotu, co może chwilę potrwać w zależności od liczby przedmiotów. Już pobrane obrazy zostaną zachowane i nie będą usuwane.",
+  "@confirmRefreshItemDataBody": {
+    "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
+  },
+  "confirmRefreshItemDataConfirm": "Rozpocznij aktualizację",
+  "@confirmRefreshItemDataConfirm": {
+    "description": "Confirm button label in the refresh-item-data AlertDialog."
+  },
+  "settingsImageCache": "Pamięć podręczna obrazów",
+  "@settingsImageCache": {
+    "description": "Settings page section title for image cache controls."
+  },
+  "settingsImageCacheTotal": "Łącznie",
+  "@settingsImageCacheTotal": {
+    "description": "Label for total cache size (icon + gallery)."
+  },
+  "settingsImageCacheIcons": "Ikony",
+  "@settingsImageCacheIcons": {
+    "description": "Label for icon cache size (small thumbnails shown in wish list)."
+  },
+  "settingsImageCacheGallery": "Obrazy szczegółów",
+  "@settingsImageCacheGallery": {
+    "description": "Label for gallery cache size (large detail images shown in item dialog)."
+  },
+  "settingsImageCacheCalculating": "Obliczanie...",
+  "@settingsImageCacheCalculating": {
+    "description": "Loading placeholder while scanning cache size."
+  },
+  "settingsImageCacheFailed": "Nie można odczytać rozmiaru pamięci podręcznej",
+  "@settingsImageCacheFailed": {
+    "description": "Shown when scanning cache size fails (e.g. permission denied)."
+  },
+  "settingsImageCacheClearFailed": "Nie udało się wyczyścić obrazów szczegółów",
+  "@settingsImageCacheClearFailed": {
+    "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
+  },
+  "settingsImageCacheClearGallery": "Wyczyść obrazy szczegółów",
+  "@settingsImageCacheClearGallery": {
+    "description": "Button label: clear gallery cache (keeps icons)."
+  },
+  "confirmClearGalleryCacheTitle": "Wyczyścić obrazy szczegółów?",
+  "@confirmClearGalleryCacheTitle": {
+    "description": "Confirmation dialog title for clearing gallery cache."
+  },
+  "confirmClearGalleryCacheBody": "Zostanie usunięte około {size} obrazów szczegółów przedmiotów; pamięć podręczna ikon zostanie zachowana. Pobiorą się ponownie przy następnym otwarciu szczegółów przedmiotu.",
+  "@confirmClearGalleryCacheBody": {
+    "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearGalleryCacheConfirm": "Wyczyść",
+  "@confirmClearGalleryCacheConfirm": {
+    "description": "Confirm button label for clearing gallery cache."
+  },
+  "settingsExportData": "Eksportuj dane",
+  "settingsImportData": "Importuj dane",
+  "shareImageButton": "Utwórz obraz do udostępnienia",
+  "shareImageDialogTitle": "Opcje obrazu do udostępnienia",
+  "shareImageThemeLabel": "Motyw",
+  "shareImageThemeDark": "Ciemny",
+  "shareImageThemeLight": "Jasny",
+  "shareImageShowFullUid": "Pokaż pełny UID na obrazie",
+  "shareImageShowFullUidHint": "Gdy wyłączone, widoczne są tylko pierwsze 3 cyfry, a reszta jest zamaskowana znakiem •",
+  "shareImageUpdatedAt": "Zaktualizowano {time}",
+  "@shareImageUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareImageCopiedOnly": "Skopiowano do schowka",
+  "shareImageFailed": "Nie udało się utworzyć obrazu do udostępnienia",
+  "shareImageActionCopy": "Kopiuj obraz",
+  "shareImageActionSave": "Zapisz obraz",
+  "shareImageCopyFailed": "Nie udało się skopiować do schowka",
+  "shareImageGenerating": "Tworzenie obrazu do udostępnienia...",
+  "shareImageSaved": "Zapisano: {path}",
+  "@shareImageSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "exportDialogSuccessTitle": "Eksport zakończony",
+  "exportDialogFailedTitle": "Eksport nie powiódł się",
+  "settingsExportFailed": "Eksport nie powiódł się: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSuccess": "Wyeksportowano do {path}",
+  "@settingsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportConfirmTitle": "Potwierdzenie importu",
+  "settingsImportConfirmIntro": "Za chwilę zostanie zaimportowane: {accounts, plural, one{{accounts} konto} few{{accounts} konta} many{{accounts} kont} other{{accounts} konta}} (łącznie: {records, plural, one{{records} rekord} few{{records} rekordy} many{{records} rekordów} other{{records} rekordu}}):",
+  "@settingsImportConfirmIntro": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportConfirmMergeHeader": "Poniższe konta zostaną scalone z danymi lokalnymi; istniejące rekordy nie zostaną usunięte:",
+  "settingsImportConfirmNoConflict": "Brak konfliktów danych.",
+  "settingsImportConfirmPreserveFooter": "Pozostałe istniejące konta ({uids}) zostaną zachowane.",
+  "@settingsImportConfirmPreserveFooter": {
+    "placeholders": {
+      "uids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportSuccess": "Pomyślnie zaimportowano: {accounts, plural, one{{accounts} konto} few{{accounts} konta} many{{accounts} kont} other{{accounts} konta}} ({records, plural, one{{records} rekord} few{{records} rekordy} many{{records} rekordów} other{{records} rekordu}})",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "accounts": {
+        "type": "int"
+      },
+      "records": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportPartial": "Zaimportowano {success}/{total} kont; niepowodzenia: {failedUids}",
+  "@settingsImportPartial": {
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "failedUids": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportFailed": "Import nie powiódł się: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonInvalidFormat": "Format pliku jest nieprawidłowy lub plik jest uszkodzony",
+  "importReasonUnsupportedVersion": "Ten plik wyeksportowała nowsza wersja aplikacji. Zaktualizuj aplikację przed importem.",
+  "importReasonUnreadable": "Nie można odczytać pliku",
+  "exportReasonWriteFailed": "Nie można zapisać pliku, sprawdź lokalizację zapisu i uprawnienia",
+  "importReasonForeignApp": "Ten plik nie został wyeksportowany przez tę aplikację",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Importuj z innych platform",
+  "platformPickerTitle": "Wybierz platformę źródłową",
+  "importReasonNotPlatformFile": "Ten plik nie jest prawidłowym eksportem z {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export i inne narzędzia · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Do którego konta zaimportować?",
+  "importTargetAccountBody": "Eksporty z paimon.moe nie zawierają UID. Wybierz konto, do którego należą te rekordy.",
+  "importTargetAccountOtherUid": "Inny UID",
+  "importTargetAccountUidHint": "Wpisz UID",
+  "importTargetAccountRecordCount": "{count, plural, one{Na urządzeniu: {count} rekord} few{Na urządzeniu: {count} rekordy} many{Na urządzeniu: {count} rekordów} other{Na urządzeniu: {count} rekordu}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Ten plik używa nowszej wersji UIGF ({version}), która nie jest jeszcze obsługiwana. Zaktualizuj aplikację lub wyeksportuj w wersji v4 w oryginalnym narzędziu.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Plik zawiera nieobsługiwane typy banerów ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Nie udało się uzupełnić danych przedmiotu ({item}). Sprawdź połączenie z siecią i spróbuj ponownie.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: w okresie {from}–{to} obie strony mają rekordy, ale żadne losowanie z tego okresu nie pasuje do oficjalnych rekordów na urządzeniu (liczba losowań: {groups}). Być może wybrano niewłaściwe konto lub plik używa innej strefy czasowej.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: w okresie {from}–{to} obie strony mają rekordy, ale do oficjalnych rekordów na urządzeniu pasuje niewiele losowań z tego okresu ({matched} z {groups}). Być może wybrano niewłaściwe konto lub plik używa innej strefy czasowej.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importuj mimo to",
+  "importResolvingItems": "Uzupełnianie danych przedmiotów...",
+  "settingsExportSelectTitle": "Wybierz konta do eksportu",
+  "settingsImportSelectTitle": "Wybierz konta do importu",
+  "settingsImportMergeBadge": "Scal",
+  "accountsPickerSelectAll": "Zaznacz wszystko",
+  "accountRecordCount": "{n, plural, one{{n} rekord} few{{n} rekordy} many{{n} rekordów} other{{n} rekordu}}",
+  "@accountRecordCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmTitle": "Potwierdź",
+  "confirmClearActiveBody": "Spowoduje to trwałe usunięcie wszystkich rekordów Wish dla UID {uid}. Wpisz UID, aby potwierdzić:",
+  "@confirmClearActiveBody": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmClearAllBody": "Spowoduje to trwałe usunięcie rekordów Wish wszystkich kont. Wpisz DELETE, aby potwierdzić:",
+  "confirmDelete": "Usuń",
+  "confirmImport": "Importuj",
+  "confirmExport": "Eksportuj",
+  "confirmContinue": "Kontynuuj",
+  "accountListEmpty": "Brak kont",
+  "accountLastUpdated": "Ostatnia aktualizacja: {time}",
+  "@accountLastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountActiveTag": "Aktywne",
+  "accountSetActive": "Ustaw jako aktywne",
+  "accountRemove": "Usuń",
+  "accountAdd": "Dodaj konto",
+  "accountAliasLabel": "Alias",
+  "accountAliasHint": "Przyjazna nazwa tego konta",
+  "accountAliasNone": "Nie ustawiono aliasu",
+  "accountActionEditAlias": "Edytuj alias",
+  "accountEditAliasTitle": "Edytuj alias",
+  "accountDragHandleTooltip": "Przeciągnij, aby zmienić kolejność",
+  "loadingBootstrap": "Wczytywanie...",
+  "timelineTopRarityTitle": "Oś czasu {star} ({n})",
+  "@timelineTopRarityTitle": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerTopRarityCountTitle": "Liczba najwyższej rzadkości w każdym banerze",
+  "bannerTopRarityPullsSinceLast": "{n, plural, one{{n} losowanie od ostatniego {star}} few{{n} losowania od ostatniego {star}} many{{n} losowań od ostatniego {star}} other{{n} losowania od ostatniego {star}}}",
+  "@bannerTopRarityPullsSinceLast": {
+    "placeholders": {
+      "star": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "updateTitle": "Dostępna nowa wersja {version}",
+  "@updateTitle": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateReleasedAt": "Wydano: {date}",
+  "@updateReleasedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updateButtonDownload": "Pobierz",
+  "updateButtonUpdate": "Aktualizuj",
+  "updateNotesUnavailable": "Informacje o wersji są obecnie niedostępne. Szczegóły znajdziesz w Google Play.",
+  "updateDownloadingMessage": "Pobieranie aktualizacji...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Aktualizacja została pobrana",
+  "updateRestartAction": "Uruchom ponownie",
+  "updateInAppUnavailable": "Nie można teraz zaktualizować w aplikacji. Zaktualizuj ją w Google Play.",
+  "updateButtonSkip": "Pomiń tę wersję",
+  "updateButtonLater": "Później",
+  "updateCheckButton": "Sprawdź aktualizacje",
+  "updateChecking": "Sprawdzanie...",
+  "updateAlreadyLatest": "Masz najnowszą wersję",
+  "updateCheckFailed": "Nie udało się sprawdzić aktualizacji: {reason}",
+  "@updateCheckFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorNetwork": "Nie można się połączyć, sprawdź połączenie z siecią",
+  "updateErrorTimeout": "Upłynął limit czasu żądania",
+  "updateErrorRateLimited": "Wyczerpano limit API GitHub, spróbuj ponownie później",
+  "updateErrorServer": "Błąd serwera (HTTP {status})",
+  "@updateErrorServer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "updateErrorFormat": "Nieoczekiwany format odpowiedzi",
+  "updateErrorPlay": "Nie udało się połączyć z Google Play lub ta kopia nie została zainstalowana z Google Play",
+  "currentReleaseTitle": "Informacje o bieżącym wydaniu",
+  "@currentReleaseTitle": {
+    "description": "Title of the dialog showing release notes for the currently installed version."
+  },
+  "currentReleaseNotFound": "Nie znaleziono informacji o wydaniu {version}",
+  "@currentReleaseNotFound": {
+    "description": "Shown inside the current-release dialog when GitHub returns 404 for the version's tag.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "currentReleaseOpenOnGithub": "Zobacz na GitHub",
+  "@currentReleaseOpenOnGithub": {
+    "description": "Action button: open this release page on github.com in the external browser."
+  },
+  "currentReleaseOpenReleasesPage": "Przejdź do strony wydań na GitHub",
+  "@currentReleaseOpenReleasesPage": {
+    "description": "Action button shown when no release was found / rate-limited: open the repo's GitHub Releases listing."
+  },
+  "aboutViewReleaseNotes": "Zobacz informacje o wydaniu",
+  "@aboutViewReleaseNotes": {
+    "description": "Settings > About: button next to the version label that opens the current-release dialog."
+  },
+  "updateErrorWipeHoyoWikiCache": "Nie udało się wyczyścić pamięci podręcznej obrazów przedmiotów: {detail}",
+  "@updateErrorWipeHoyoWikiCache": {
+    "description": "Force-refetch flow: failed to clear hoyowiki_index.json or hoyowiki_cache/ directory. {detail} is the sanitized exception message.",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogs": "Logi diagnostyczne",
+  "@settingsLogs": {},
+  "settingsLogsHint": "W razie problemów wyeksportuj logi, aby pomóc deweloperom w diagnozie.",
+  "@settingsLogsHint": {},
+  "settingsLogsReport": "Zgłoś problem",
+  "@settingsLogsReport": {},
+  "settingsLogsExport": "Eksportuj logi",
+  "@settingsLogsExport": {},
+  "settingsLogsOpenFolder": "Otwórz folder logów",
+  "@settingsLogsOpenFolder": {},
+  "settingsLogsClear": "Wyczyść wszystkie logi",
+  "@settingsLogsClear": {},
+  "settingsLogsExportSuccess": "Wyeksportowano logi: {path}",
+  "@settingsLogsExportSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsExportFailed": "Eksport logów nie powiódł się: {error}",
+  "@settingsLogsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLogsClearConfirmBody": "Spowoduje to trwałe usunięcie wszystkich plików w logs/. Jeśli potrzebujesz ich do zgłoszenia błędu, najpierw je wyeksportuj. Wpisz CLEAR, aby potwierdzić.",
   "galleryCardLabel": "Karta",
   "@galleryCardLabel": {
     "description": "Item detail dialog gallery: chip label for the card (pic) page. Maps to hoyowiki entry_page gallery_character.pic; not the item's own name."
@@ -7,5 +1100,283 @@
   "galleryIconLabel": "Ikona",
   "@galleryIconLabel": {
     "description": "Item detail dialog gallery: chip label for the icon page placed last in the chip row. Lets items without a gallery_character module (e.g. weapons) still open the dialog and show the icon image."
-  }
+  },
+  "galleryPrevTab": "Poprzednia",
+  "@galleryPrevTab": {
+    "description": "Item detail dialog gallery: tooltip for the left triangle arrow that selects the PREVIOUS tab/chip. Not a viewport scroll — it switches the selected gallery page."
+  },
+  "galleryNextTab": "Następna",
+  "@galleryNextTab": {
+    "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
+  },
+  "detailScrollDown": "Przewiń w dół",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
+  "actionViewOnHoYoWiki": "Zobacz w HoYoWiki",
+  "@actionViewOnHoYoWiki": {
+    "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
+  },
+  "galleryLazyLoadFailed": "Nie udało się wczytać obrazu",
+  "@galleryLazyLoadFailed": {
+    "description": "Item detail dialog gallery: message shown in the image area when lazy download of a gallery image fails."
+  },
+  "actionRetry": "Spróbuj ponownie",
+  "@actionRetry": {
+    "description": "Generic retry button label; used in item detail dialog gallery when lazy image download fails."
+  },
+  "actionCloseImagePreview": "Zamknij podgląd obrazu",
+  "@actionCloseImagePreview": {
+    "description": "Tooltip and semantic label for the close (X) button on the full-screen zoomable image overlay opened from the item detail dialog gallery."
+  },
+  "actionCopyImage": "Kopiuj obraz",
+  "@actionCopyImage": {
+    "description": "Item detail dialog image menu: option that copies the currently shown image to the system clipboard as PNG."
+  },
+  "actionSaveImage": "Zapisz obraz",
+  "@actionSaveImage": {
+    "description": "Item detail dialog image menu: option that opens the system save dialog to save the currently shown image as PNG."
+  },
+  "actionZoomIn": "Powiększ",
+  "@actionZoomIn": {
+    "description": "Tooltip for the zoom-in toggle button on the full-screen zoomable image overlay; shown when the image is at fit (clicking zooms in)."
+  },
+  "actionZoomOut": "Pomniejsz",
+  "@actionZoomOut": {
+    "description": "Tooltip for the zoom-out toggle button on the full-screen zoomable image overlay; shown when the image is zoomed in (clicking returns to fit)."
+  },
+  "actionRefetchImage": "Pobierz obraz ponownie",
+  "@actionRefetchImage": {
+    "description": "Item detail dialog image menu: option that re-downloads the currently shown image, overwriting the cached copy."
+  },
+  "imageCopied": "Skopiowano obraz do schowka",
+  "@imageCopied": {
+    "description": "Item detail dialog snackbar shown when the image is successfully copied to the clipboard."
+  },
+  "imageCopyFailed": "Nie udało się skopiować obrazu",
+  "@imageCopyFailed": {
+    "description": "Item detail dialog snackbar shown when copying the image to the clipboard fails."
+  },
+  "imageSaveFailed": "Nie udało się zapisać obrazu",
+  "@imageSaveFailed": {
+    "description": "Item detail dialog snackbar shown when saving the image to disk fails."
+  },
+  "imageSavedTo": "Zapisano w {path}",
+  "@imageSavedTo": {
+    "description": "Item detail dialog snackbar shown after the image is saved, with the full save path.",
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "luckTierLucky": "Szczęściarz",
+  "luckTierAverage": "Przeciętnie",
+  "luckTierUnlucky": "Pech",
+  "manualUrlEntry": "Wpisz adres URL Wish History ręcznie",
+  "manualUrlTitle": "Wpisz adres URL Wish History ręcznie",
+  "manualUrlHint": "Jeśli adres URL Wish History uzyskałeś w inny sposób (np. narzędziem na komputerze), możesz go tu wkleić. Możesz też wkleić cały tekst; aplikacja sama znajdzie adres.",
+  "manualUrlFieldHint": "Wklej adres URL...",
+  "manualUrlPaste": "Wklej ze schowka",
+  "manualUrlNotFound": "Nie znaleziono adresu URL Wish History. Sprawdź wklejoną treść.",
+  "manualUrlWarning": "Adres URL zawiera dane uwierzytelniające Twojego konta. Nie udostępniaj go publicznie. Po pewnym czasie wygasa.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Oczekiwanie na otwarcie strony Wish History w grze...",
+  "progressOpenGameHintAndroid": "Otwórz Genshin Impact → Wish → History",
+  "progressCheckingLogAccess": "Przygotowywanie do odczytu logu gry...",
+  "progressLogUnavailableTitle": "Nie można automatycznie uzyskać adresu URL Wish History",
+  "logUnavailableNotPaired": "Odczyt logu gry nie jest jeszcze skonfigurowany. Po jednorazowej konfiguracji każda aktualizacja odczyta go automatycznie.",
+  "logUnavailableNoWifi": "Debugowanie bezprzewodowe działa tylko przez Wi-Fi. Połącz się z Wi-Fi i wróć; aplikacja będzie kontynuować automatycznie. Możesz też wpisać adres URL ręcznie.",
+  "logRootDeniedHint": "Wykryto root, ale ta aplikacja nie otrzymała dostępu root. Aby czytać przez root, zezwól tej aplikacji w menedżerze root (np. na liście Superuser w Magisk), a potem wróć; aplikacja spróbuje ponownie automatycznie.",
+  "logUnavailableAdbFailed": "Nie udało się połączyć z debugowaniem bezprzewodowym. Parowanie mogło wygasnąć; sparuj ponownie.",
+  "logUnavailableWirelessOff": "Twoje urządzenie nie pozwala tej aplikacji włączyć debugowania bezprzewodowego. Włącz je na stronie Debugowanie bezprzewodowe i wróć; aplikacja będzie kontynuować automatycznie.",
+  "logUnavailableNetworkNotAllowed": "Ta sieć Wi-Fi nie jest jeszcze dozwolona dla debugowania bezprzewodowego. Dotknij „Zezwól” w komunikacie systemowym (zaznacz „Zawsze zezwalaj w tej sieci”, aby nie pytał ponownie), a aplikacja będzie kontynuować automatycznie. Jeśli zamknąłeś komunikat, dotknij „Spróbuj ponownie”.",
+  "logUnavailableUnsupported": "To urządzenie nie może automatycznie odczytać adresu URL Wish History (wymaga Androida 11 lub nowszego albo roota). Wpisz go ręcznie.",
+  "logUnavailableGameNotInstalled": "Genshin Impact nie jest zainstalowany na tym urządzeniu. Po instalacji wróć tutaj, a gra zostanie wykryta automatycznie.",
+  "actionOpenGame": "Otwórz Genshin Impact",
+  "actionOpenWirelessDebugging": "Otwórz Debugowanie bezprzewodowe",
+  "progressLogConnectionLost": "Utracono połączenie debugowania bezprzewodowego, ponowne łączenie... Jeśli nie wróci, sprawdź Wi-Fi lub wpisz adres URL ręcznie.",
+  "progressWirelessLeftOnHint": "Debugowanie bezprzewodowe jest nadal włączone. Możesz je wyłączyć w ustawieniach systemu.",
+  "progressCredentialReady": "Uzyskano adres URL Wish History. Pobieranie Wish History rozpocznie się po powrocie do tej aplikacji.",
+  "actionRedetectGame": "Sprawdź ponownie",
+  "updateOpenPlayStore": "Otwórz Google Play",
+  "actionSetupLogAccess": "Skonfiguruj",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Sparuj ponownie",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Odczyt logu systemowego",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Dlaczego to jest potrzebne?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android nie pozwala aplikacjom czytać logów systemowych innych aplikacji. Ta aplikacja używa wbudowanej funkcji Debugowanie bezprzewodowe, aby odczytać adres URL Wish History z Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Co robi ta aplikacja",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Odczytuje tylko adres URL Wish History z Genshin Impact\n• Rozłącza się zaraz po odczycie i wyłącza debugowanie bezprzewodowe, jeśli to ta aplikacja je włączyła\n• Nadaje sobie uprawnienie do włączania i wyłączania debugowania bezprzewodowego, abyś nie musiał konfigurować go ponownie\n• Możesz to w każdej chwili usunąć w Ustawieniach",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Wymagania",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 lub nowszy, Wi-Fi, zezwolenie na powiadomienia",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Rozpocznij konfigurację",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Wpisz adres URL ręcznie",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Parowanie debugowania bezprzewodowego",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Włącz Opcje programistyczne",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Otwórz w ustawieniach systemu stronę z informacjami o urządzeniu (np. „Informacje o telefonie” lub „Informacje o tablecie”)\n2. Znajdź „Numer kompilacji” i dotknij go 7 razy\n3. Gdy zobaczysz „Jesteś teraz programistą”, wróć do tej aplikacji",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Opcje programistyczne są nadal wyłączone. Jeśli po dotknięciu „Numer kompilacji” system napisał, że nie trzeba nic robić (np. „Nie ma potrzeby, jesteś już programistą”), główny przełącznik Opcji programistycznych jest wyłączony. Otwórz Opcje programistyczne, włącz przełącznik na górze i wróć do tej aplikacji.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Otwórz stronę z informacjami o urządzeniu",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Opcje programistyczne są włączone",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Zezwól na powiadomienia",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Kod parowania wpiszesz w powiadomieniu, więc zezwól tej aplikacji na wyświetlanie powiadomień.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Zezwól na powiadomienia",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Otwórz ustawienia powiadomień",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Powiadomienia dozwolone",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Sparuj",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Dotknij przycisku poniżej, aby otworzyć Debugowanie bezprzewodowe\n2. Włącz „Debugowanie bezprzewodowe” i dotknij „Sparuj urządzenie przy pomocy kodu parowania”\n3. Przesuń palcem w dół od góry ekranu i w powiadomieniu tej aplikacji wpisz 6-cyfrowy kod parowania widoczny na ekranie parowania w Debugowaniu bezprzewodowym",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Oczekiwanie na wpisanie kodu parowania w powiadomieniu...\nWpisz go, dopóki ekran parowania w Debugowaniu bezprzewodowym jest otwarty.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Otwórz Debugowanie bezprzewodowe ponownie",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Parowanie...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Sparowano, jeszcze jeden krok",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Twoje urządzenie ma dodatkowe zabezpieczenie. Włącz jeszcze jedną opcję, aby ta aplikacja mogła automatycznie włączać i wyłączać debugowanie bezprzewodowe.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Jak to włączyć",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Otwórz Opcje programistyczne\n2. Znajdź przełącznik związany z zabezpieczeniami debugowania USB lub monitorowaniem uprawnień i włącz go, na przykład:\n• Xiaomi: „Debugowanie USB (ustawienia zabezpieczeń)”\n• OPPO / realme: „Wyłącz monitorowanie uprawnień”\n3. Upewnij się, że debugowanie bezprzewodowe jest włączone, wróć i dotknij „Spróbuj ponownie”",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Otwórz Opcje programistyczne",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Spróbuj ponownie",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Pomiń (przy każdej aktualizacji włączaj debugowanie bezprzewodowe samodzielnie)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Wszystko gotowe",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Od teraz aktualizacja odczytuje log automatycznie. Nie trzeba już nic konfigurować.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Po dotknięciu „Aktualizuj” włącz debugowanie bezprzewodowe, gdy zostaniesz o to poproszony.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Powrót i rozpoczynanie aktualizacji...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Dostęp do logu gry",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Debugowanie bezprzewodowe",
+  "logAccessMethodNone": "Nie skonfigurowano",
+  "settingsPairingStatus": "Parowanie",
+  "settingsPaired": "Sparowano",
+  "settingsPairedManual": "Sparowano (włączaj debugowanie bezprzewodowe ręcznie)",
+  "settingsRetryGrant": "Ponów nadanie uprawnienia",
+  "settingsSetupLogAccess": "Skonfiguruj",
+  "settingsUnpair": "Usuń parowanie",
+  "settingsUnpairConfirmTitle": "Usunąć parowanie?",
+  "settingsUnpairConfirmBody": "Spowoduje to usunięcie klucza parowania tej aplikacji i jej uprawnienia do przełączania debugowania bezprzewodowego. Aby później użyć debugowania bezprzewodowego, trzeba będzie sparować ponownie.",
+  "settingsUnpairDone": "Usunięto parowanie",
+  "settingsUnpairDoneBody": "Usunięto klucz parowania tej aplikacji i jej uprawnienie do włączania i wyłączania debugowania bezprzewodowego.",
+  "settingsUnpairUnreachableTitle": "Klucz parowania usunięty",
+  "settingsUnpairUnreachableBody": "Usunięto klucz parowania tej aplikacji, ale tym razem nie udało się połączyć z debugowaniem bezprzewodowym, więc uprawnienie do jego włączania i wyłączania nie zostało odebrane.",
+  "settingsUnpairUnreachableRevokeHint": "Bez parowania ta aplikacja nie korzysta z tego uprawnienia. Aby usunąć je całkowicie, połącz się z Wi-Fi, sparuj ponownie, a następnie jeszcze raz usuń parowanie.",
+  "settingsUnpairLeftover": "Na liście Debugowanie bezprzewodowe → Sparowane urządzenia w systemie nadal będzie widoczne „{name}”. Nie może się już połączyć, więc możesz je zostawić; aby je usunąć, dotknij go i usuń.",
+  "settingsUnpairLeftoverAlso": "Na liście Debugowanie bezprzewodowe → Sparowane urządzenia w systemie nadal widnieje też „{name}”; dotknij go, aby usunąć.",
+  "settingsLogAccessMethod": "Metoda",
+  "actionShare": "Udostępnij",
+  "shareFailed": "Nie udało się udostępnić",
+  "dialogSaveAsTitle": "Zapisz jako",
+  "dialogOpenTitle": "Otwórz",
+  "dialogSelectFolderTitle": "Wybierz folder",
+  "actionSave": "Zapisz",
+  "settingsLogsShare": "Udostępnij logi"
 }

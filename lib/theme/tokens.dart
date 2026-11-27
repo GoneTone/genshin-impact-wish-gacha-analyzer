@@ -54,6 +54,9 @@ abstract class AppFontSize {
   static const double label = 11;
 }
 
+/// 等寬數字 [FontFeature]（tabular figures），讓數字欄位等寬對齊、更新時不跳動。
+const List<FontFeature> kTabularFigures = [FontFeature.tabularFigures()];
+
 /// 應用層級的色 token。透過 ThemeExtension 注入。
 ///
 /// 卡池配色不放在這裡（見 [BannerColors]）— 那組顏色刻意跟稀有度脫鉤，

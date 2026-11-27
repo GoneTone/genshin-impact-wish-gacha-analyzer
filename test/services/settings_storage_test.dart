@@ -135,6 +135,35 @@ void main() {
       expect(s.uidAliases, {'A': '主帳', 'B': '小號'});
     });
 
+    test('uidAliasUpdatedAt round-trip', () async {
+      await SettingsStorage.save(
+        AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: const SystemLanguage(),
+          uidAliasUpdatedAt: {'800000001': DateTime.utc(2026, 11, 24, 1)},
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.uidAliasUpdatedAt, {'800000001': DateTime.utc(2026, 11, 24, 1)});
+    });
+
+    test('uidAliasUpdatedAt JSON 壞掉 → fallback 為空 map', () async {
+      SharedPreferences.setMockInitialValues({
+        'pref.uidAliasUpdatedAt': 'not json',
+      });
+      final s = await SettingsStorage.load();
+      expect(s.uidAliasUpdatedAt, isEmpty);
+    });
+
+    test('uidAliasUpdatedAt 單筆無法解析 → 略過該筆', () async {
+      SharedPreferences.setMockInitialValues({
+        'pref.uidAliasUpdatedAt':
+            '{"A":"2026-11-24T01:00:00.000Z","B":"oops","C":42}',
+      });
+      final s = await SettingsStorage.load();
+      expect(s.uidAliasUpdatedAt, {'A': DateTime.utc(2026, 11, 24, 1)});
+    });
+
     test('uidOrder round-trip', () async {
       await SettingsStorage.save(
         const AppSettings(
@@ -191,6 +220,28 @@ void main() {
     test('預設 skippedReleaseTag 為 null', () async {
       final s = await SettingsStorage.load();
       expect(s.skippedReleaseTag, isNull);
+    });
+  });
+
+  group('gameDir', () {
+    test('round-trip', () async {
+      await SettingsStorage.save(
+        const AppSettings(
+          themeMode: AppThemeMode.system,
+          locale: SystemLanguage(),
+          gameDir: r'D:\Genshin Impact game',
+        ),
+      );
+      final s = await SettingsStorage.load();
+      expect(s.gameDir, r'D:\Genshin Impact game');
+    });
+
+    test('null 表清除並移除 key', () async {
+      SharedPreferences.setMockInitialValues({'pref.gameDir': r'D:\x'});
+      await SettingsStorage.save(AppSettings.defaults);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.containsKey('pref.gameDir'), isFalse);
+      expect((await SettingsStorage.load()).gameDir, isNull);
     });
   });
 

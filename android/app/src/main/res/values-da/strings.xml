@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Parring af trådløs fejlretning</string>
+    <string name="pairing_searching_title">Søger efter parringstjenesten</string>
+    <string name="pairing_searching_text">Tryk på \"Par enhed ved hjælp af en parringskode\" i Trådløs fejlretning</string>
+    <string name="pairing_found_title">Indtast parringskoden</string>
+    <string name="pairing_found_text">Indtast den 6-cifrede kode, der vises på parringsskærmen</string>
+    <string name="pairing_input_label">Parringskode</string>
+    <string name="pairing_action_pair">Par</string>
+    <string name="pairing_action_stop">Stop</string>
+    <string name="pairing_in_progress">Parrer...</string>
+    <string name="pairing_success_title">Parringen lykkedes</string>
+    <string name="pairing_success_text">Tryk her for at vende tilbage til appen</string>
+    <string name="pairing_failed_text">Parringen mislykkedes. Tjek koden, og indtast den igen</string>
+    <string name="pairing_no_app_text">Parringen mislykkedes. Gå tilbage til appen, og prøv igen</string>
+    <string name="pairing_timeout_title">Parringen fik timeout</string>
+    <string name="pairing_timeout_text">Tryk her for at starte forfra</string>
+</resources>

@@ -25,6 +25,7 @@ void main() {
         'A',
       ], // custom order; B not in custom → goes by lastUpdated
       uidAliases: const {'A': '主號', 'C': '小號'},
+      uidAliasUpdatedAt: {'B': DateTime.utc(2026, 11, 24, 1)},
       lastActiveUid: 'A',
       appVersion: '9.9.9',
       now: DateTime.utc(2026, 5, 12, 8, 30),
@@ -42,6 +43,8 @@ void main() {
     expect(accounts[0]['alias'], '小號');
     expect(accounts[1]['alias'], '主號');
     expect(accounts[2].containsKey('alias'), isFalse);
+    expect(accounts[2]['alias_updated_at'], '2026-11-24T01:00:00.000Z');
+    expect(accounts[0].containsKey('alias_updated_at'), isFalse);
 
     // pretty-printed → contains newlines + 2-space indent
     expect(out.contains('\n  '), isTrue);
@@ -57,6 +60,7 @@ void main() {
       byUid: byUid,
       uidOrder: const ['A', 'C'],
       uidAliases: const {'A': '主號'},
+      uidAliasUpdatedAt: const {},
       lastActiveUid: null,
       appVersion: '9.9.9',
       now: DateTime.utc(2026, 5, 12),

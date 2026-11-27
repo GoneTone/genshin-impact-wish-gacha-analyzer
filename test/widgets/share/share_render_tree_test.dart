@@ -187,4 +187,31 @@ void main() {
       );
     });
   });
+
+  testWidgets('buildShareRenderTree 依語言決定書寫方向', (t) async {
+    for (final (locale, expected) in [
+      (const Locale('zh'), TextDirection.ltr),
+      (const Locale('en'), TextDirection.ltr),
+      (const Locale('ar'), TextDirection.rtl),
+      (const Locale('he'), TextDirection.rtl),
+    ]) {
+      TextDirection? actual;
+      // Overlay 只在第一次建立時讀 initialEntries，每輪先拆掉整棵樹。
+      await t.pumpWidget(const SizedBox());
+      await t.pumpWidget(
+        buildShareRenderTree(
+          card: Builder(
+            builder: (context) {
+              actual = Directionality.of(context);
+              return const SizedBox();
+            },
+          ),
+          brightness: Brightness.dark,
+          locale: locale,
+          container: container,
+        ),
+      );
+      expect(actual, expected, reason: '$locale');
+    }
+  });
 }

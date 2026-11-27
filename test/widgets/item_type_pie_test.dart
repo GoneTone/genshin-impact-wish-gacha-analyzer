@@ -1,7 +1,9 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_stats.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/item_type_pie.dart';
 
 Future<AppLocalizations> _loadL10n() async {
@@ -95,5 +97,43 @@ void main() {
       final light = itemTypeDistributionEntries(stats, Brightness.light, l);
       expect(dark.first.color, isNot(equals(light.first.color)));
     });
+  });
+
+  testWidgets('item type pie sections are unchanged by the refactor', (
+    t,
+  ) async {
+    const stats = GachaStats(
+      total: 10,
+      fiveStarCount: 0,
+      fourStarCount: 0,
+      threeStarCount: 0,
+      twoStarCount: 0,
+      byItemType: {'角色': 4, '武器': 6},
+    );
+    await t.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('zh'),
+        home: const Scaffold(
+          body: SizedBox(
+            width: 240,
+            height: 240,
+            child: ItemTypePie(stats: stats, animationDuration: Duration.zero),
+          ),
+        ),
+      ),
+    );
+    await t.pump();
+    final data = t.widget<PieChart>(find.byType(PieChart)).data;
+    expect(data.sectionsSpace, 2);
+    expect(data.centerSpaceRadius, 40);
+    expect(data.sections.map((s) => s.value).toList(), [6, 4]);
+    expect(data.sections.map((s) => s.color).toList(), [
+      const Color(0xFF6BC5E5),
+      const Color(0xFFF2849A),
+    ]);
+    expect(data.sections.every((s) => s.radius == 75 && !s.showTitle), isTrue);
   });
 }

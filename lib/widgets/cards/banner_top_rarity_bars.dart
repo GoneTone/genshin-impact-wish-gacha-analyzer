@@ -113,6 +113,62 @@ class _BannerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = theme.gacha;
+    final summary = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$topCount',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text('·', style: TextStyle(color: tokens.textMuted)),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            subtitle,
+            textAlign: TextAlign.end,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tokens.textMuted,
+            ),
+          ),
+        ),
+      ],
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 名稱 120 ＋說明 180 的固定欄寬放不進手機寬度，改成上下兩行。
+        if (constraints.maxWidth < _stackedBelowWidth) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // spaceBetween 把短名稱用不完的空間放在兩者之間，數字才會貼齊右緣。
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(name, style: theme.textTheme.bodyMedium),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Flexible(child: summary),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              _Bar(color: color, ratio: ratio),
+            ],
+          );
+        }
+        return _wide(theme, summary);
+      },
+    );
+  }
+
+  /// 小於此寬度時改成上下兩行。
+  static const double _stackedBelowWidth = 420;
+
+  /// 寬螢幕的一行版面：名稱｜長條｜件數與說明（[summary] 靠右，各列右緣對齊）。
+  Widget _wide(ThemeData theme, Widget summary) {
     return Row(
       children: [
         SizedBox(
@@ -121,7 +177,7 @@ class _BannerRow extends StatelessWidget {
           child: Text(
             name,
             style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.end,
           ),
         ),
         const SizedBox(width: AppSpacing.s),
@@ -132,27 +188,9 @@ class _BannerRow extends StatelessWidget {
         SizedBox(
           width:
               180, // count + separator + subtitle; subtitle wraps freely (no ellipsis)
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '$topCount',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text('·', style: TextStyle(color: tokens.textMuted)),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  subtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: tokens.textMuted,
-                  ),
-                ),
-              ),
-            ],
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: summary,
           ),
         ),
       ],
@@ -182,7 +220,7 @@ class _Bar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: FractionallySizedBox(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           widthFactor: ratio.clamp(0.0, 1.0),
           heightFactor: 1.0,
           child: Container(

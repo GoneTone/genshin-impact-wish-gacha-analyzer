@@ -96,11 +96,17 @@ class GachaRecord {
     };
   }
 
-  /// 複製本 record，可覆寫 [name] 與／或 [lang]（其餘欄位沿用原值）。
-  GachaRecord copyWith({String? name, String? lang}) => GachaRecord(
-    id: id,
-    uid: uid,
-    gachaType: gachaType,
+  /// 複製本 record，可覆寫 [id]、[uid]、[gachaType]、[name] 與／或 [lang]（其餘欄位沿用原值）。
+  GachaRecord copyWith({
+    String? id,
+    String? uid,
+    String? gachaType,
+    String? name,
+    String? lang,
+  }) => GachaRecord(
+    id: id ?? this.id,
+    uid: uid ?? this.uid,
+    gachaType: gachaType ?? this.gachaType,
     name: name ?? this.name,
     itemType: itemType,
     rankType: rankType,

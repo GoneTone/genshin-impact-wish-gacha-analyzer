@@ -5,6 +5,11 @@ import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
 
 void main() {
+  test('400 shares the character event color', () {
+    final colors = BannerColors.of(Brightness.dark);
+    expect(colors.colorFor('400'), colors.colorFor('301'));
+  });
+
   for (final (label, brightness, tokens) in [
     ('dark', Brightness.dark, GachaTokens.dark),
     ('light', Brightness.light, GachaTokens.light),

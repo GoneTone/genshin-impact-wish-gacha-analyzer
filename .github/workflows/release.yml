@@ -1,0 +1,465 @@
+name: release
+run-name: release ${{ inputs.tag }}
+
+# 同一個 tag 一次發 Windows 與 Android，兩個平台都建置成功才發佈：
+#   prepare：驗證 tag、算出版本號，記下要建置的 master commit（不推任何東西）。
+#   build-windows／build-android：同時建置該 commit（版本號只在 runner 上改），產物存成 workflow artifact。
+#   publish：兩邊都成功才執行，推版本號 commit 到 master、建 GitHub Release 草稿、上傳 AAB 到 Play 內部測試軌道。
+# 任一邊建置失敗時什麼都不發佈；修好後在 run 頁面按「Re-run failed jobs」只重跑失敗的那邊，成功後 publish 會接著跑。
+# Play 的「新功能」由維護者在 Play Console 升級正式版時手動填寫。
+# 預覽版（-rc.N）只留在內部測試，不要升級正式版（App 內查 GitHub 更新說明時會略過預覽版）。
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (vX.Y.Z or vX.Y.Z-rc.N)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+
+    outputs:
+      base_sha: ${{ steps.version.outputs.base_sha }}
+      semver: ${{ steps.version.outputs.semver }}
+      pubspec_version: ${{ steps.version.outputs.pubspec_version }}
+
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v7
+        with:
+          ref: master
+
+      - name: Parse tag
+        id: version
+        shell: pwsh
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          $tag = $env:TAG
+          # 與 lib/services/android_version_code.dart 同一套格式（大小寫敏感），不合格就在建置前失敗；
+          # MAJOR 上限 2099 只由 Android 建置檢查。
+          if ($tag -cnotmatch '^v([1-9]\d*\.(?:0|[1-9]\d?)\.(?:0|[1-9]\d?)(?:-rc\.(?:[1-9]|[1-8]\d|9[0-8]))?)$') {
+            throw "tag '$tag' does not match vX.Y.Z or vX.Y.Z-rc.N (N = 1-98)"
+          }
+          $semver = $Matches[1]
+          $sha = (git rev-parse HEAD).Trim()
+          "semver=$semver" | Out-File $env:GITHUB_OUTPUT -Append
+          "pubspec_version=$semver+${{ github.run_number }}" | Out-File $env:GITHUB_OUTPUT -Append
+          "base_sha=$sha" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Base commit: $sha"
+
+  build-windows:
+    needs: prepare
+    runs-on: windows-latest
+
+    env:
+      WINDOWS_SIGN_PFX_BASE64: ${{ secrets.WINDOWS_SIGN_PFX_BASE64 }}
+      WINDOWS_SIGN_PASSWORD:   ${{ secrets.WINDOWS_SIGN_PASSWORD }}
+      PUBSPEC_VERSION: ${{ needs.prepare.outputs.pubspec_version }}
+
+    steps:
+      # === A. Checkout ==============================================
+      - name: Checkout base commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.base_sha }}
+
+      # runner 的工作目錄是 D:\a\<repo>\<repo>，Rust 1.100 起 Cargo 的中間產物目錄更深，
+      # super_native_extensions 的 proc-macro DLL 路徑超過 MSVC 連結器的 260 字元上限（LNK1104）。
+      # 改在短的實體路徑 D:\s 建一份 worktree 來建置（約縮短 80 字元）。
+      # 不能用 subst 掛成磁碟機根目錄：專案路徑變成 W:\ 時，Flutter 產生的建置設定被結尾的 \ 弄壞，
+      # flutter_assemble 以 255 結束（Setting current working directory failed, path = 'W:;FLUTTER_TARGET=...'）。
+      - name: Create short-path worktree
+        shell: pwsh
+        run: |
+          git worktree add --detach D:\s HEAD
+          if ($LASTEXITCODE -ne 0) { throw "git worktree add failed" }
+
+      # === B. Toolchain =============================================
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          channel: stable
+          cache: true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: Install Inno Setup 6
+        shell: pwsh
+        run: choco install innosetup -y --no-progress
+
+      - name: Verify ISCC on PATH
+        shell: pwsh
+        run: |
+          $iscc = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+          if (-not $iscc) { throw "ISCC.exe not on PATH after chocolatey install" }
+          Write-Host "ISCC: $($iscc.Source)"
+
+      # === C. Version (local only; publish commits the same change) ===
+      - name: Rewrite pubspec version
+        shell: pwsh
+        working-directory: D:\s
+        run: |
+          $content = Get-Content pubspec.yaml -Raw -Encoding UTF8
+          $updated = [regex]::Replace($content, '(?m)^version:\s*\S+', "version: $env:PUBSPEC_VERSION", 1)
+          Set-Content pubspec.yaml -Value $updated -Encoding UTF8 -NoNewline
+          Write-Host "pubspec version: $env:PUBSPEC_VERSION"
+
+      # === D. Build =================================================
+      # 雲端同步 OAuth 憑證不進 repo，由 repo secrets 於建置前寫成
+      # dart-define-from-file 輸入檔（缺 secrets 時跳過，僅該功能停用）。
+      - name: Write cloud sync defines from secrets
+        shell: pwsh
+        working-directory: D:\s
+        env:
+          CLOUD_SYNC_CLIENT_ID: ${{ secrets.CLOUD_SYNC_CLIENT_ID }}
+          CLOUD_SYNC_CLIENT_SECRET: ${{ secrets.CLOUD_SYNC_CLIENT_SECRET }}
+        run: |
+          if ($env:CLOUD_SYNC_CLIENT_ID -and $env:CLOUD_SYNC_CLIENT_SECRET) {
+            New-Item -ItemType Directory -Force secrets | Out-Null
+            @{
+              CLOUD_SYNC_CLIENT_ID     = $env:CLOUD_SYNC_CLIENT_ID
+              CLOUD_SYNC_CLIENT_SECRET = $env:CLOUD_SYNC_CLIENT_SECRET
+            } | ConvertTo-Json | Set-Content secrets/cloud_sync_defines.json -Encoding UTF8
+            Write-Host "cloud sync defines written"
+          } else {
+            Write-Host "::warning::CLOUD_SYNC_CLIENT_ID/SECRET secrets not set; cloud sync will be disabled in this release build"
+          }
+
+      - name: Build Windows installer
+        shell: pwsh
+        working-directory: D:\s
+        run: .\scripts\build_installer\build_release.ps1
+
+      - name: Check single installer
+        shell: pwsh
+        working-directory: D:\s
+        run: |
+          $candidates = @(Get-ChildItem build\installer\*.exe -ErrorAction SilentlyContinue)
+          if ($candidates.Count -ne 1) {
+            throw "Expected exactly 1 *.exe in build\installer, found $($candidates.Count):`n$($candidates.FullName -join "`n")"
+          }
+
+      # === E. Sign (skip, structure 內嵌於 build_release.ps1) ==========
+
+      # === F. Artifact ==============================================
+      - name: Upload installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-installer-${{ env.PUBSPEC_VERSION }}
+          path: D:/s/build/installer/*.exe
+          retention-days: 30
+          if-no-files-found: error
+
+  build-android:
+    needs: prepare
+    runs-on: ubuntu-latest
+
+    outputs:
+      version_code: ${{ steps.version_code.outputs.version_code }}
+
+    steps:
+      # === A. Checkout ==============================================
+      # 與 Windows 建置同一個 commit，不取執行當下的 master。
+      - name: Checkout base commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.base_sha }}
+
+      # === B. Toolchain =============================================
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          channel: stable
+          cache: true
+
+      # super_native_extensions 透過 cargokit 編 Rust，需要 rustup 自動加 Android target。
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      # === C. Version code ==========================================
+      # tag 不合法時 CLI 以非 0 結束碼離開，流程直接失敗。
+      - name: Compute version code
+        id: version_code
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          out="$(dart run tool/android_version_code.dart "$TAG")"
+          echo "$out"
+          echo "$out" | grep -E '^(VERSION_CODE|BUILD_NAME)=' >> "$GITHUB_ENV"
+          echo "$out" | sed -n 's/^VERSION_CODE=/version_code=/p' >> "$GITHUB_OUTPUT"
+
+      # === D. Secrets ===============================================
+      # 缺任何一個簽章 secret 就失敗，絕不退回 debug 金鑰簽章。
+      - name: Restore upload key
+        env:
+          ANDROID_UPLOAD_KEYSTORE_BASE64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+          ANDROID_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_STORE_PASSWORD }}
+          ANDROID_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_UPLOAD_KEY_ALIAS }}
+          ANDROID_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          missing=0
+          for name in ANDROID_UPLOAD_KEYSTORE_BASE64 ANDROID_UPLOAD_STORE_PASSWORD ANDROID_UPLOAD_KEY_ALIAS ANDROID_UPLOAD_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON; do
+            if [ -z "${!name}" ]; then
+              echo "::error::secret $name is not set"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          printf '%s' "$ANDROID_UPLOAD_KEYSTORE_BASE64" | base64 -d > android/upload.jks
+          {
+            echo "storeFile=upload.jks"
+            echo "storePassword=$ANDROID_UPLOAD_STORE_PASSWORD"
+            echo "keyAlias=$ANDROID_UPLOAD_KEY_ALIAS"
+            echo "keyPassword=$ANDROID_UPLOAD_KEY_PASSWORD"
+          } > android/key.properties
+
+      # 雲端同步 OAuth 憑證不進 repo；缺 secrets 時只停用該功能，與 Windows 流程一致。
+      - name: Write cloud sync defines from secrets
+        env:
+          CLOUD_SYNC_CLIENT_ID: ${{ secrets.CLOUD_SYNC_CLIENT_ID }}
+          CLOUD_SYNC_CLIENT_SECRET: ${{ secrets.CLOUD_SYNC_CLIENT_SECRET }}
+        run: |
+          if [ -n "$CLOUD_SYNC_CLIENT_ID" ] && [ -n "$CLOUD_SYNC_CLIENT_SECRET" ]; then
+            mkdir -p secrets
+            jq -n --arg id "$CLOUD_SYNC_CLIENT_ID" --arg secret "$CLOUD_SYNC_CLIENT_SECRET" \
+              '{CLOUD_SYNC_CLIENT_ID: $id, CLOUD_SYNC_CLIENT_SECRET: $secret}' > secrets/cloud_sync_defines.json
+            echo "DEFINES_ARG=--dart-define-from-file=secrets/cloud_sync_defines.json" >> "$GITHUB_ENV"
+            echo "cloud sync defines written"
+          else
+            echo "::warning::CLOUD_SYNC_CLIENT_ID/SECRET secrets not set; cloud sync will be disabled in this release build"
+          fi
+
+      # AdMob ID 不進 repo；缺 secrets 時只會顯示官方測試廣告，不影響建置。
+      - name: Write ads defines from secrets
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          ADMOB_NATIVE_UNIT_ID: ${{ secrets.ADMOB_NATIVE_UNIT_ID }}
+        run: |
+          if [ -n "$ADMOB_APP_ID" ] && [ -n "$ADMOB_NATIVE_UNIT_ID" ]; then
+            mkdir -p secrets
+            jq -n --arg app "$ADMOB_APP_ID" --arg native "$ADMOB_NATIVE_UNIT_ID" \
+              '{ADMOB_APP_ID: $app, ADMOB_NATIVE_UNIT_ID: $native}' > secrets/ads_defines.json
+            echo "DEFINES_ARG=${DEFINES_ARG:-} --dart-define-from-file=secrets/ads_defines.json" >> "$GITHUB_ENV"
+            echo "ads defines written"
+          else
+            echo "::warning::ADMOB_APP_ID/ADMOB_NATIVE_UNIT_ID secrets not set; this release build will only show test ads"
+          fi
+
+      # === E. Build =================================================
+      - name: Build app bundle
+        run: |
+          flutter build appbundle --release \
+            --build-name "$BUILD_NAME" \
+            --build-number "$VERSION_CODE" \
+            ${DEFINES_ARG:-}
+
+      - name: Verify bundle is not debug-signed
+        run: |
+          owner="$(keytool -printcert -jarfile build/app/outputs/bundle/release/app-release.aab | grep -m1 'Owner:')"
+          echo "$owner"
+          if echo "$owner" | grep -q 'CN=Android Debug'; then
+            echo "::error::bundle is signed with the debug key"
+            exit 1
+          fi
+
+      # === F. Artifact & cleanup ====================================
+      - name: Upload bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-bundle-${{ needs.prepare.outputs.pubspec_version }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Remove signing material
+        if: always()
+        run: rm -f android/upload.jks android/key.properties secrets/cloud_sync_defines.json secrets/ads_defines.json
+
+  # 只在兩個平台都建置成功時執行（needs 預設要求全部成功）。
+  publish:
+    needs: [prepare, build-windows, build-android]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    env:
+      BASE_SHA: ${{ needs.prepare.outputs.base_sha }}
+      SEMVER: ${{ needs.prepare.outputs.semver }}
+      PUBSPEC_VERSION: ${{ needs.prepare.outputs.pubspec_version }}
+      VERSION_CODE: ${{ needs.build-android.outputs.version_code }}
+
+    steps:
+      # === A. Version bump commit ===================================
+      - name: Checkout base commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.base_sha }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 建置用的是 base commit；這裡把同樣的版本號改動 commit 到它上面再推回 master。
+      # master 在建置期間被推了別的 commit 時推送會失敗（非 fast-forward），要重新 Run workflow。
+      # 重跑 publish 時若上次已推好版本號 commit，就直接沿用。
+      - name: Commit and push pubspec bump
+        id: release_sha
+        shell: pwsh
+        run: |
+          git fetch origin master
+          $remote = (git rev-parse origin/master).Trim()
+          $remoteVersion = (git show origin/master:pubspec.yaml | Select-String -Pattern '^version:\s*(\S+)').Matches[0].Groups[1].Value
+          if ($remote -ne $env:BASE_SHA -and $remoteVersion -eq $env:PUBSPEC_VERSION -and (git rev-parse "origin/master~1").Trim() -eq $env:BASE_SHA) {
+            Write-Host "Version bump already pushed in a previous attempt: $remote"
+            $sha = $remote
+          } else {
+            $content = Get-Content pubspec.yaml -Raw -Encoding UTF8
+            $updated = [regex]::Replace($content, '(?m)^version:\s*\S+', "version: $env:PUBSPEC_VERSION", 1)
+            if ($updated -ne $content) {
+              Set-Content pubspec.yaml -Value $updated -Encoding UTF8 -NoNewline
+              git config user.name  "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add pubspec.yaml
+              git commit -m "chore(release): bump version to v$env:SEMVER [skip ci]"
+            }
+            git push origin HEAD:master
+            if ($LASTEXITCODE -ne 0) { throw "push to master failed (master moved since the build started?)" }
+            $sha = (git rev-parse HEAD).Trim()
+          }
+          "RELEASE_SHA=$sha" | Out-File $env:GITHUB_ENV -Append
+          Write-Host "Release commit SHA: $sha"
+
+      # === B. Artifacts =============================================
+      - name: Download installer
+        uses: actions/download-artifact@v7
+        with:
+          name: windows-installer-${{ env.PUBSPEC_VERSION }}
+          path: artifacts/windows
+
+      - name: Download bundle
+        uses: actions/download-artifact@v7
+        with:
+          name: android-bundle-${{ env.PUBSPEC_VERSION }}
+          path: artifacts/android
+
+      - name: Locate installer
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem artifacts/windows/*.exe)
+          if ($candidates.Count -ne 1) { throw "Expected exactly 1 installer, found $($candidates.Count)" }
+          "INSTALLER_PATH=$($candidates[0].FullName)" | Out-File $env:GITHUB_ENV -Append
+          "INSTALLER_NAME=$($candidates[0].Name)" | Out-File $env:GITHUB_ENV -Append
+
+      # === C. GitHub Release draft ==================================
+      - name: Create or update release draft
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          $tag = $env:TAG
+          # inputs.prerelease 是 workflow_dispatch boolean，傳進環境變數後是字串 "true"/"false"，故用字串比較
+          # --json/--jq 同時偵測 release 是否存在並取得 draft 狀態，順帶把 view 的 stdout 收進變數不污染 log
+          $isDraft = gh release view "$tag" --json isDraft --jq '.isDraft' 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            if ($isDraft -ne "true") {
+              throw "Release '$tag' already exists and is PUBLISHED; refusing to overwrite its assets."
+            }
+            Write-Host "Draft '$tag' already exists; refreshing target to $env:RELEASE_SHA and re-uploading installer with --clobber"
+            gh release edit "$tag" --target "$env:RELEASE_SHA"
+            gh release upload "$tag" "$env:INSTALLER_PATH" --clobber
+          } else {
+            Write-Host "Creating draft release '$tag' targeting $env:RELEASE_SHA"
+            $createArgs = @("$tag", "$env:INSTALLER_PATH", "--draft", "--title", "$tag", "--generate-notes", "--target", "$env:RELEASE_SHA")
+            if ($env:PRERELEASE -eq "true") { $createArgs += "--prerelease" }
+            gh release create @createArgs
+
+            # 在自動產生的 What's Changed 上下用 `---` 包夾，並於底部附上固定文案
+            # （下載徽章／翻譯邀請／防毒說明，維護於 .github/release-footer.md）。
+            # 上方分隔線預留給維護者編輯 draft 時手動補上的版本說明文案，使最終結構為：
+            #   [手動版本說明]\n\n---\n\n## What's Changed ...\n\n---\n\n[footer]
+            # ConvertFrom-Json 取 body 為單一字串，避免 pwsh 把多行 stdout 切成陣列。
+            # TrimEnd 去掉上游可能帶的尾換行，確保與 `---` 之間固定剛好一個空行。
+            $generated = (gh release view "$tag" --json body | ConvertFrom-Json).body.TrimEnd()
+            $footer = Get-Content .github/release-footer.md -Raw -Encoding UTF8
+            # footer 的 Windows 下載徽章直接連到這個版本的安裝檔；草稿沒有 tag，Publish 後網址才有效。
+            $installerUrl = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/$tag/$([uri]::EscapeDataString($env:INSTALLER_NAME))"
+            $footer = $footer.Replace('{{INSTALLER_URL}}', $installerUrl)
+            $bodyFile = Join-Path $env:RUNNER_TEMP "release_body.md"
+            Set-Content -Path $bodyFile -Value "---`n`n$generated`n`n---`n`n$footer" -Encoding UTF8 -NoNewline
+            gh release edit "$tag" --notes-file $bodyFile
+          }
+
+      # === D. Upload to Play ========================================
+      - name: Upload to Play internal track
+        # 這一步拿得到 Play 服務帳戶金鑰，釘在 commit 上，避免 tag 被改指向別的程式碼。
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: tw.reh.genshin.gacha
+          releaseFiles: artifacts/android/app-release.aab
+          releaseName: ${{ inputs.tag }}
+          tracks: internal
+          # 直接推出給內部測試人員；Play 只在 App 從沒推出過任何版本時要求 draft，第一版由維護者手動上傳並推出。
+          status: completed
+
+      # === E. Step summary ==========================================
+      - name: Write step summary
+        shell: pwsh
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          $exe = $env:INSTALLER_PATH
+          $aab = "artifacts/android/app-release.aab"
+          @"
+          ## Release $env:TAG
+
+          - **Release commit**: ``$env:RELEASE_SHA``
+          - **Pubspec version**: $env:PUBSPEC_VERSION
+
+          ### Windows
+          - **Installer**: ``$env:INSTALLER_NAME``
+          - **Size**: $([math]::Round((Get-Item $exe).Length / 1MB, 2)) MB
+          - **SHA-256**: ``$((Get-FileHash $exe -Algorithm SHA256).Hash)``
+          - **Draft created**: ✓ — review and Publish manually
+
+          ### Android
+          - **Version code**: $env:VERSION_CODE
+          - **Size**: $([math]::Round((Get-Item $aab).Length / 1MB, 2)) MB
+          - **SHA-256**: ``$((Get-FileHash $aab -Algorithm SHA256).Hash)``
+          - **Play track**: internal (completed)
+          - Next: fill in "What's new" and promote to production in Play Console (stable tags only)
+          "@ | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8

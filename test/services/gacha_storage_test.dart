@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
@@ -53,6 +54,23 @@ void main() {
 
   test('load 不存在的 UID → null', () async {
     expect(await storage.load('not_exist'), isNull);
+  });
+
+  test('load 損毀的 JSON → 拋 FormatException，主 isolate 記 severe log', () async {
+    await File('${tempDir.path}/801057625.json').writeAsString('{not json');
+    final records = <LogRecord>[];
+    final sub = Logger.root.onRecord.listen(records.add);
+    addTearDown(sub.cancel);
+
+    await expectLater(
+      storage.load('801057625'),
+      throwsA(isA<FormatException>()),
+    );
+
+    final severe = records.where((r) => r.level == Level.SEVERE);
+    expect(severe, hasLength(1));
+    expect(severe.single.message, startsWith('load failed for uid='));
+    expect(severe.single.error, isA<FormatException>());
   });
 
   test('listKnownUids 只列出純數字 <uid>.json，忽略 .url.json 與非數字檔', () async {
@@ -120,5 +138,116 @@ void main() {
     expect(loaded!.banners['301']!.first.id, '2');
     expect(loaded.lastUpdated, DateTime.utc(2026, 5, 9));
     expect(await File('${tempDir.path}/999.json.tmp').exists(), isFalse);
+  });
+
+  group('背景讀檔占住記錄檔時（Windows 無 FILE_SHARE_DELETE）', () {
+    /// 建立只含 [uid] 的最小資料。
+    BannerStorage sample(String uid, DateTime t) =>
+        BannerStorage(uid: uid, lastUpdated: t, banners: {'301': []});
+
+    /// 先存一份舊資料，回傳以唯讀開啟 `<uid>.json` 的 handle。
+    Future<RandomAccessFile> holdOpen(String uid) async {
+      await storage.save(sample(uid, DateTime.utc(2026, 1, 1)));
+      return storage.recordsFile(uid).open();
+    }
+
+    test('save retries when the records file is briefly held open', () async {
+      final raf = await holdOpen('42');
+      Future<void>.delayed(
+        const Duration(milliseconds: 50),
+      ).then((_) => raf.close());
+
+      await storage.save(sample('42', DateTime.utc(2026, 6, 1)));
+
+      final loaded = await storage.load('42');
+      expect(loaded!.lastUpdated, DateTime.utc(2026, 6, 1));
+    }, skip: !Platform.isWindows);
+
+    test('save still throws when the records file stays locked', () async {
+      final raf = await holdOpen('42');
+      addTearDown(raf.close);
+
+      await expectLater(
+        storage.save(sample('42', DateTime.utc(2026, 6, 1))),
+        throwsA(isA<PathAccessException>()),
+      );
+      expect(await storage.listKnownUids(), ['42']);
+      final kept = await storage.recordsFile('42').readAsString();
+      expect(kept, contains('2026-01-01'));
+    }, skip: !Platform.isWindows);
+
+    test('delete retries when the records file is briefly held open', () async {
+      final raf = await holdOpen('42');
+      Future<void>.delayed(
+        const Duration(milliseconds: 50),
+      ).then((_) => raf.close());
+
+      await storage.delete('42');
+
+      expect(await storage.recordsFile('42').exists(), isFalse);
+    }, skip: !Platform.isWindows);
+  });
+
+  group('retryWhileHeld', () {
+    /// 前 [failures] 次丟 [error]、之後成功的操作；[calls] 記錄被呼叫次數。
+    Future<Object?> Function() flaky(
+      List<int> calls,
+      int failures,
+      Object error,
+    ) => () async {
+      calls.add(calls.length + 1);
+      if (calls.length <= failures) throw error;
+      return null;
+    };
+
+    test(
+      'succeeds after two PathAccessException retries and logs it',
+      () async {
+        final messages = <String>[];
+        final sub = Logger.root.onRecord
+            .where((r) => r.loggerName == 'gacha.storage')
+            .listen((r) => messages.add(r.message));
+        addTearDown(sub.cancel);
+        final calls = <int>[];
+
+        await retryWhileHeld(
+          flaky(calls, 2, const PathAccessException('x', OSError('held', 32))),
+          '42',
+        );
+
+        expect(calls, hasLength(3));
+        expect(messages, contains(contains('retries=2')));
+      },
+    );
+
+    test('rethrows after five attempts when always held', () async {
+      final calls = <int>[];
+      await expectLater(
+        retryWhileHeld(
+          flaky(calls, 99, const PathAccessException('x', OSError('held', 32))),
+          '42',
+        ),
+        throwsA(isA<PathAccessException>()),
+      );
+      expect(calls, hasLength(5));
+    });
+
+    test('rethrows another FileSystemException without retrying', () async {
+      final calls = <int>[];
+      await expectLater(
+        retryWhileHeld(
+          flaky(calls, 99, const FileSystemException('other')),
+          '42',
+        ),
+        throwsA(
+          isA<FileSystemException>().having(
+            (e) => e is PathAccessException,
+            'is PathAccessException',
+            isFalse,
+          ),
+        ),
+      );
+      expect(calls, hasLength(1));
+    });
   });
 }

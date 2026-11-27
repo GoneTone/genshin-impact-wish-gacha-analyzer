@@ -70,4 +70,30 @@ void main() {
       expect(titleText.style?.fontSize, 22);
     });
   }
+
+  testWidgets('long title keeps full width and moves the trailing below', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(300, 600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final title = 'A very long banner title ' * 3;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildDarkTheme(),
+        home: Scaffold(
+          body: PageHeader(
+            title: title,
+            icon: Icons.dashboard_outlined,
+            trailing: const Text('Last updated: 1 days ago'),
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    final titleRect = tester.getRect(find.text(title));
+    final trailing = tester.getRect(find.text('Last updated: 1 days ago'));
+    expect(titleRect.width, greaterThan(200));
+    expect(trailing.top, greaterThanOrEqualTo(titleRect.bottom));
+  });
 }

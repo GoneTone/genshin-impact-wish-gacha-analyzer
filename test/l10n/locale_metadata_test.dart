@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -257,7 +258,7 @@ void main() {
       }
     });
 
-    test('zh-Hant-TW (帶 scriptCode) → null，交給 Flutter 預設邏輯', () {
+    test('zh-Hant-TW (帶 scriptCode) → 裸 zh（繁體中文）', () {
       final result = localeListResolution([
         const Locale.fromSubtags(
           languageCode: 'zh',
@@ -265,7 +266,53 @@ void main() {
           countryCode: 'TW',
         ),
       ], supported);
-      expect(result, isNull);
+      expect(result, const Locale('zh'));
+    });
+
+    test(
+      '[zh-Hant-TW, zh-Hans-CN]（Android 帶 scriptCode）→ 裸 zh，不被第二順位的簡中搶走',
+      () {
+        final result = localeListResolution([
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'TW',
+          ),
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hans',
+            countryCode: 'CN',
+          ),
+        ], supported);
+        expect(result, const Locale('zh'));
+      },
+    );
+
+    test('zh-Hant-HK → 裸 zh（繁體中文）', () {
+      expect(
+        localeListResolution([
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'HK',
+          ),
+        ], supported),
+        const Locale('zh'),
+      );
+    });
+
+    test('使用者偏好順序：[en-US, zh-Hant-TW] → null（en 先匹配到，尊重順序）', () {
+      expect(
+        localeListResolution([
+          const Locale('en', 'US'),
+          const Locale.fromSubtags(
+            languageCode: 'zh',
+            scriptCode: 'Hant',
+            countryCode: 'TW',
+          ),
+        ], supported),
+        isNull,
+      );
     });
 
     test('en-US (其他語言) → null', () {
@@ -275,7 +322,7 @@ void main() {
       );
     });
 
-    test('ja-JP / pt-BR / de-DE (其他語言) → null', () {
+    test('ja-JP / pt-BR (其他語言) → null', () {
       expect(
         localeListResolution([const Locale('ja', 'JP')], supported),
         isNull,
@@ -284,8 +331,14 @@ void main() {
         localeListResolution([const Locale('pt', 'BR')], supported),
         isNull,
       );
+    });
+
+    test('清單外的 de-DE 排在支援的 ja-JP 前 → null（交給預設選 ja）', () {
       expect(
-        localeListResolution([const Locale('de', 'DE')], supported),
+        localeListResolution([
+          const Locale('de', 'DE'),
+          const Locale('ja', 'JP'),
+        ], supported),
         isNull,
       );
     });
@@ -296,6 +349,27 @@ void main() {
         const Locale('zh', 'CN'),
       ], supported);
       expect(result, isNull);
+    });
+
+    test('系統的挪威文 nb／nn → App 的 no', () {
+      const withNo = [...supported, Locale('no')];
+      for (final user in const [
+        Locale('nb', 'NO'),
+        Locale('nb'),
+        Locale('nn', 'NO'),
+        Locale('nn'),
+      ]) {
+        expect(
+          localeListResolution([user], withNo),
+          const Locale('no'),
+          reason: '$user',
+        );
+      }
+      // App 沒提供挪威文時照常落到英文。
+      expect(
+        localeListResolution(const [Locale('nb', 'NO')], supported),
+        const Locale('en'),
+      );
     });
 
     test('[yue-HK, zh-CN] → zh-Hans (yue 不支援，繼續處理 zh-CN)', () {
@@ -314,14 +388,36 @@ void main() {
       expect(localeListResolution([const Locale('zh')], supported), isNull);
     });
 
-    test('空 / null systemLocales → null', () {
-      expect(localeListResolution(null, supported), isNull);
-      expect(localeListResolution(const [], supported), isNull);
+    test('空 / null systemLocales → en', () {
+      expect(localeListResolution(null, supported), const Locale('en'));
+      expect(localeListResolution(const [], supported), const Locale('en'));
     });
 
-    test('完全不支援的語言 [ko-KR] → null', () {
+    test('完全不支援的語言 [ko-KR] → en', () {
       expect(
         localeListResolution([const Locale('ko', 'KR')], supported),
+        const Locale('en'),
+      );
+    });
+
+    test('支援清單以 af 開頭時，不支援的 [id-ID, hi-IN] → en，不是排第一的 af', () {
+      const withAf = [Locale('af'), ...supported];
+      expect(
+        localeListResolution([
+          const Locale('id', 'ID'),
+          const Locale('hi', 'IN'),
+        ], withAf),
+        const Locale('en'),
+      );
+      expect(
+        localeListResolution([const Locale('id')], withAf),
+        const Locale('en'),
+      );
+    });
+
+    test('支援清單沒有 en 時，對不上仍回 null', () {
+      expect(
+        localeListResolution(const [Locale('ko')], const [Locale('ja')]),
         isNull,
       );
     });
@@ -344,6 +440,53 @@ void main() {
 
     test('空 Map → 空 List', () {
       expect(sortedLocaleMetadata(const {}), isEmpty);
+    });
+  });
+
+  group('appLocalizationsDelegates', () {
+    /// 以 [locale] 建 MaterialApp，回傳解析出的 Material／Cupertino 內建文字。
+    Future<(MaterialLocalizations, CupertinoLocalizations)> pumpWith(
+      WidgetTester tester,
+      Locale locale,
+    ) async {
+      late MaterialLocalizations material;
+      late CupertinoLocalizations cupertino;
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: appLocalizationsDelegates,
+          home: Builder(
+            builder: (ctx) {
+              material = MaterialLocalizations.of(ctx);
+              cupertino = CupertinoLocalizations.of(ctx);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return (material, cupertino);
+    }
+
+    testWidgets('裸 zh（本 app 的繁中）→ Material／Cupertino 內建文字也是繁中', (tester) async {
+      final (material, cupertino) = await pumpWith(tester, const Locale('zh'));
+      expect(material.closeButtonTooltip, '關閉');
+      expect(cupertino.cutButtonLabel, '剪下');
+    });
+
+    testWidgets('zh-Hans → 內建文字維持簡中', (tester) async {
+      final (material, cupertino) = await pumpWith(
+        tester,
+        const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      );
+      expect(material.closeButtonTooltip, '关闭');
+      expect(cupertino.cutButtonLabel, '剪切');
+    });
+
+    testWidgets('其他語言不受影響（ja）', (tester) async {
+      final (material, _) = await pumpWith(tester, const Locale('ja'));
+      expect(material.closeButtonTooltip, '閉じる');
     });
   });
 }

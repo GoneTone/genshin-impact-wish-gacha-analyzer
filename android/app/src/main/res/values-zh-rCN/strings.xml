@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">原神祈愿卡池分析</string>
+    <string name="pairing_channel">无线调试配对</string>
+    <string name="pairing_searching_title">正在寻找配对服务</string>
+    <string name="pairing_searching_text">请在「无线调试」点「使用配对码配对设备」</string>
+    <string name="pairing_found_title">请输入配对码</string>
+    <string name="pairing_found_text">输入配对画面上显示的 6 位数配对码</string>
+    <string name="pairing_input_label">配对码</string>
+    <string name="pairing_action_pair">配对</string>
+    <string name="pairing_action_stop">停止</string>
+    <string name="pairing_in_progress">配对中...</string>
+    <string name="pairing_success_title">配对成功</string>
+    <string name="pairing_success_text">点这里回到 App</string>
+    <string name="pairing_failed_text">配对失败，请确认配对码后重新输入</string>
+    <string name="pairing_no_app_text">配对失败，请回到 App 再试一次</string>
+    <string name="pairing_timeout_title">配对超时</string>
+    <string name="pairing_timeout_text">点这里重新开始</string>
+</resources>

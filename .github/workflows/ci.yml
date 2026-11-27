@@ -35,13 +35,15 @@ jobs:
 
       - name: Commit normalized ARB files (same-repo PRs only)
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           if [ -n "$(git status --porcelain lib/l10n)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add lib/l10n
             git commit -m "fix(l10n): normalize ARB locale key to match filenames"
-            git push origin "HEAD:${{ github.head_ref }}"
+            git push origin "HEAD:$HEAD_REF"
           fi
 
       - run: flutter pub get

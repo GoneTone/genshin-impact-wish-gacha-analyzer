@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -31,5 +33,44 @@ void main() {
     await t.tap(find.byType(IconButton));
     await t.pump();
     expect(called, isTrue);
+  });
+
+  testWidgets('busy state survives being scrolled out of a lazy list', (
+    t,
+  ) async {
+    final pending = Completer<void>();
+    var calls = 0;
+    const listKey = Key('outer');
+    await t.pumpWidget(
+      _host(
+        ListView(
+          key: listKey,
+          children: [
+            ShareActionButton(
+              enabled: true,
+              onGenerate: () {
+                calls++;
+                return pending.future;
+              },
+            ),
+            const SizedBox(height: 5000),
+          ],
+        ),
+      ),
+    );
+    await t.tap(find.byType(IconButton));
+    await t.pump();
+
+    await t.drag(find.byKey(listKey), const Offset(0, -6000));
+    await t.pump(const Duration(seconds: 1));
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    await t.drag(find.byKey(listKey), const Offset(0, 6000));
+    await t.pump(const Duration(seconds: 1));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(IconButton), findsNothing);
+    expect(calls, 1);
+    pending.complete();
+    await t.pump();
   });
 }

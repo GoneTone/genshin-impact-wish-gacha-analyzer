@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/utils/relative_time.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_node.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/gacha_item_detail_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
@@ -13,14 +16,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_palette.dart';
 /// 左側月份標籤欄的固定寬度。
 const double _monthColumnWidth = 80;
 
-/// 節點內圓直徑。
-const double _nodeSize = 14;
-
 /// 節點外圍 halo（觸控熱區）直徑。
 const double _haloSize = 22;
 
-/// 軸線 left 偏移：月份欄右緣 + halo 半徑，使軸線穿過節點中心。
-const double _railLeft = _monthColumnWidth + (_haloSize / 2);
+/// 軸線寬度。
+const double _railWidth = 2;
+
+/// 軸線 left 偏移：月份欄右緣 + halo 半徑（節點中心）再退半個線寬，使軸線以節點中心置中。
+const double _railLeft = _monthColumnWidth + (_haloSize / 2) - (_railWidth / 2);
 
 /// 直向時間軸(視覺隱喻 B):
 /// - 上 → 下 = 新 → 舊
@@ -87,7 +90,12 @@ class TimelineVertical extends StatefulWidget {
 }
 
 /// [TimelineVertical] 的 State：管理分頁顯示數量 [_visibleCount]。
-class _TimelineVerticalState extends State<TimelineVertical> {
+class _TimelineVerticalState extends State<TimelineVertical>
+    with AutomaticKeepAliveClientMixin {
+  /// 放在按需建構的清單裡時，捲出畫面也保留本地狀態。
+  @override
+  bool get wantKeepAlive => true;
+
   /// 首次渲染顯示的最大條目數。
   static const int _initialPageSize = 10;
 
@@ -140,6 +148,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
     final tokens = theme.gacha;
     final l = AppLocalizations.of(context)!;
@@ -147,7 +156,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
     final title = widget.title;
     final footerNote = widget.footerNote;
     final fillHeight = widget.fillHeight;
-    Widget container(Widget child) {
+    Widget container(Widget child, {bool withLegend = false}) {
       // title 與 footerNote 皆未傳（App 既有用法）→ 回傳原 child 本體，
       // 渲染樹與加入此參數前逐字等價、零回歸。
       final Widget body = (title == null && footerNote == null)
@@ -179,48 +188,32 @@ class _TimelineVerticalState extends State<TimelineVertical> {
       // OverflowBox 區域 = 有界高，body 自然高較矮 → 下方為卡內留白。
       // fillHeight=false（App 既有用法）：child 維持原 body，渲染樹與加入
       // 此參數前逐字等價、零回歸。
-      // showLuckLegend=true：在邊框內底部釘上 LuckLegend，fillHeight 路徑
-      // 用 Expanded 占滿剩餘高並用 ClipRect 裁切，讓圖例恆可見。
-      final Widget content;
-      if (widget.showLuckLegend) {
-        const legend = Padding(
-          padding: EdgeInsets.only(top: AppSpacing.s),
-          child: LuckLegend(),
-        );
-        content = fillHeight
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: ClipRect(
-                      child: OverflowBox(
-                        minHeight: 0,
-                        maxHeight: double.infinity,
-                        alignment: Alignment.topCenter,
-                        child: body,
-                      ),
-                    ),
-                  ),
-                  legend,
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [body, legend],
-              );
-      } else {
-        content = fillHeight
-            ? ClipRect(
-                child: OverflowBox(
-                  minHeight: 0,
-                  maxHeight: double.infinity,
-                  alignment: Alignment.topCenter,
-                  child: body,
+      final Widget scroller = fillHeight
+          ? ClipRect(
+              child: OverflowBox(
+                minHeight: 0,
+                maxHeight: double.infinity,
+                alignment: Alignment.topCenter,
+                child: body,
+              ),
+            )
+          : body;
+      // 歐非圖例釘在卡片底部（邊框內、裁切區下方）。fillHeight 時內容區用
+      // Expanded 占滿剩餘高並自行裁切，圖例不被 OverflowBox 的高度解放拖出
+      // 邊框、恆可見；非 fillHeight（App）時自然排在內容下方。
+      final Widget content = withLegend
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: fillHeight ? MainAxisSize.max : MainAxisSize.min,
+              children: [
+                if (fillHeight) Expanded(child: scroller) else scroller,
+                const Padding(
+                  padding: EdgeInsets.only(top: AppSpacing.m),
+                  child: LuckLegend(),
                 ),
-              )
-            : body;
-      }
+              ],
+            )
+          : scroller;
       return Container(
         constraints: fillHeight
             ? const BoxConstraints(minHeight: double.infinity)
@@ -282,11 +275,11 @@ class _TimelineVerticalState extends State<TimelineVertical> {
           Stack(
             children: [
               // 背景軸線
-              Positioned(
-                left: _railLeft,
+              PositionedDirectional(
+                start: _railLeft,
                 top: 0,
                 bottom: 0,
-                width: 2,
+                width: _railWidth,
                 child: Container(
                   color: tokens.textMuted.withValues(alpha: 0.3),
                 ),
@@ -331,6 +324,7 @@ class _TimelineVerticalState extends State<TimelineVertical> {
             ),
         ],
       ),
+      withLegend: widget.showLuckLegend && entries.isNotEmpty,
     );
   }
 }
@@ -357,15 +351,16 @@ class _EntryRow extends StatelessWidget {
   /// 主題 token。
   final GachaTokens tokens;
 
-  /// 主要顯示稀有度，用於查保底門檻換算歐非色。
+  /// 主要顯示稀有度，用於查該筆保底門檻。
   final int targetRank;
 
-  /// 名稱行：可選 icon + 粗體名稱文字的 [Row]，名稱色由 [nameColor] 決定。
-  Widget _nameRowWith(Color nameColor) => Row(
+  /// 名稱行：可選 icon + 粗體名稱文字的 [Row]，名稱以 [nameColor] 上色。
+  Widget _nameRow(Color nameColor) => Row(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      if (entry.sourceRecord != null) ...[
+      if (entry.sourceRecord != null &&
+          showsGachaItemIcon(entry.sourceRecord!)) ...[
         GachaItemIcon(record: entry.sourceRecord!, size: 32),
         const SizedBox(width: 6),
       ],
@@ -384,13 +379,7 @@ class _EntryRow extends StatelessWidget {
     ],
   );
 
-  /// 將 [DateTime] 格式化為 `MM/dd` 字串。
-  static String _formatShortDate(DateTime t) {
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${two(t.month)}/${two(t.day)}';
-  }
-
-  /// 依 [gachaType] 查在地化卡池名稱；查無時回傳帶預設保底的 fallback 名稱。
+  /// 依 [gachaType] 查在地化卡池名稱；查無時回傳 fallback type 的解析名。
   String _bannerName(String gachaType, AppLocalizations l) =>
       gachaTypeFor(gachaType).resolveName(l);
 
@@ -401,9 +390,9 @@ class _EntryRow extends StatelessWidget {
     final pity = pityThresholdFor(entry.gachaType, rank);
     final tier = luckTierFor(entry.pullsSincePrev, pity);
     final luck = luckColorFor(tier, tokens);
+    final bannerColor = colors.colorFor(entry.gachaType);
     final year = entry.time.year.toString();
     final month = entry.time.month.toString().padLeft(2, '0');
-    final nameRow = _nameRowWith(luck);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -413,49 +402,48 @@ class _EntryRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 月份左欄(固定寬度,僅在 showMonthTag 時填字)
           SizedBox(
             width: _monthColumnWidth,
             child: showMonthTag
                 ? Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.s, top: 4),
+                    padding: const EdgeInsetsDirectional.only(
+                      end: AppSpacing.s,
+                      top: 4,
+                    ),
                     child: Text(
                       l.timelineMonthLabel(year, month),
                       maxLines: 1,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.end,
                       style: TextStyle(
                         color: tokens.textSecondary,
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.6,
-                        fontFeatures: const [FontFeature.tabularFigures()],
+                        fontFeatures: kTabularFigures,
                       ),
                     ),
                   )
                 : const SizedBox.shrink(),
           ),
-          // 節點圓 (tooltip 僅顯示物品名稱)
           Tooltip(
             message: entry.name,
             preferBelow: false,
             waitDuration: const Duration(milliseconds: 100),
+            triggerMode: tapTooltipTrigger(context),
             child: SizedBox(
               width: _haloSize,
               child: Center(
-                child: _Node(color: luck, tokens: tokens),
+                child: TimelineNode(color: luck, tokens: tokens),
               ),
             ),
           ),
           const SizedBox(width: AppSpacing.m),
-          // 名稱 + meta (各自 tooltip，目標 = 文字本身寬度)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // mainAxisSize: min 讓 Row 收縮到 icon+text 實際寬度；
-                  // 否則 Row 預設吃滿父層，Tooltip 會以那整片寬區置中而飄到右側。
                   Tooltip(
                     message: entry.name,
                     preferBelow: false,
@@ -463,29 +451,30 @@ class _EntryRow extends StatelessWidget {
                     child: entry.sourceRecord != null
                         ? GachaItemTapTarget(
                             record: entry.sourceRecord!,
-                            child: nameRow,
+                            child: _nameRow(luck),
                           )
-                        : nameRow,
+                        : _nameRow(luck),
                   ),
                   const SizedBox(height: 2),
                   Tooltip(
                     message: entry.name,
                     preferBelow: false,
                     waitDuration: const Duration(milliseconds: 100),
+                    triggerMode: tapTooltipTrigger(context),
                     child: Text.rich(
                       TextSpan(
                         style: TextStyle(
                           color: tokens.textMuted,
                           fontSize: 12,
-                          fontFeatures: const [FontFeature.tabularFigures()],
+                          fontFeatures: kTabularFigures,
                         ),
                         children: [
-                          TextSpan(text: '${_formatShortDate(entry.time)} · '),
+                          TextSpan(
+                            text: '${formatShortMonthDay(entry.time)} · ',
+                          ),
                           TextSpan(
                             text: _bannerName(entry.gachaType, l),
-                            style: TextStyle(
-                              color: colors.colorFor(entry.gachaType),
-                            ),
+                            style: TextStyle(color: bannerColor),
                           ),
                           const TextSpan(text: ' · '),
                           TextSpan(
@@ -542,7 +531,7 @@ class _NowRow extends StatelessWidget {
           SizedBox(
             width: _haloSize,
             child: Center(
-              child: _Node(
+              child: TimelineNode(
                 color: tokens.accentPrimary,
                 tokens: tokens,
                 hollow: true,
@@ -570,7 +559,7 @@ class _NowRow extends StatelessWidget {
                     style: TextStyle(
                       color: tokens.textMuted,
                       fontSize: 12,
-                      fontFeatures: const [FontFeature.tabularFigures()],
+                      fontFeatures: kTabularFigures,
                     ),
                   ),
                 ],
@@ -578,42 +567,6 @@ class _NowRow extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// 節點圓:外圍 halo + 內圓。`hollow=true` 時內圓填容器底色看起來只剩 border。
-class _Node extends StatelessWidget {
-  const _Node({required this.color, required this.tokens, this.hollow = false});
-
-  /// 節點與 halo 的主色。
-  final Color color;
-
-  /// 主題 token，用於取得 [GachaTokens.surfaceCard]（hollow 填色）。
-  final GachaTokens tokens;
-
-  /// true 時內圓填 surfaceCard 使節點看起來只有邊框，用於「現在」節點。
-  final bool hollow;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _haloSize,
-      height: _haloSize,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color.withValues(alpha: 0.25),
-      ),
-      child: Container(
-        width: _nodeSize,
-        height: _nodeSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: hollow ? tokens.surfaceCard : color,
-          border: Border.all(color: color, width: 2),
-        ),
       ),
     );
   }

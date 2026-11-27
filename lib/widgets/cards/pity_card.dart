@@ -48,7 +48,33 @@ class _PityCardState extends State<PityCard>
     _breath = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncBreath();
+  }
+
+  @override
+  void didUpdateWidget(PityCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncBreath();
+  }
+
+  /// 只在「快保底」且未要求減少動態時跑呼吸動畫；計時器一跑就會每個 vsync 都排一幀。
+  void _syncBreath() {
+    final animate =
+        _phase(widget.pity) == _Phase.close &&
+        !MediaQuery.disableAnimationsOf(context);
+    if (animate) {
+      if (!_breath.isAnimating) _breath.repeat(reverse: true);
+    } else if (_breath.isAnimating || _breath.value != 0) {
+      _breath
+        ..stop()
+        ..value = 0;
+    }
   }
 
   @override
@@ -75,7 +101,7 @@ class _PityCardState extends State<PityCard>
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: tokens.surfaceCard,
-        border: Border(left: BorderSide(color: accent, width: 3)),
+        border: BorderDirectional(start: BorderSide(color: accent, width: 3)),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Column(
@@ -86,11 +112,13 @@ class _PityCardState extends State<PityCard>
           const SizedBox(height: AppSpacing.xs),
           Text(
             l.pityCurrent(p.current, p.threshold),
+            // 由右往左的語言會把「5 / 80」排成「80 / 5」。
+            textDirection: TextDirection.ltr,
             style: TextStyle(
               fontSize: AppFontSize.display,
               fontWeight: FontWeight.w800,
               color: tokens.textPrimary,
-              fontFeatures: const [FontFeature.tabularFigures()],
+              fontFeatures: kTabularFigures,
               height: 1.1,
             ),
           ),
@@ -168,7 +196,7 @@ class _ProgressBar extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: FractionallySizedBox(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           widthFactor: progress.clamp(0.0, 1.0),
           heightFactor: 1.0,
           child: Container(
@@ -185,11 +213,13 @@ class _ProgressBar extends StatelessWidget {
     );
 
     if (breath != null && phase == _Phase.close) {
-      bar = AnimatedBuilder(
-        animation: breath!,
-        builder: (_, child) =>
-            Opacity(opacity: 0.7 + 0.3 * breath!.value, child: child),
-        child: bar,
+      bar = RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: breath!,
+          builder: (_, child) =>
+              Opacity(opacity: 0.7 + 0.3 * breath!.value, child: child),
+          child: bar,
+        ),
       );
     }
     return bar;

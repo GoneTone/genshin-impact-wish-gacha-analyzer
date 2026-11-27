@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
 
 /// App 設定的 Riverpod notifier，負責從磁碟讀寫 [AppSettings]。
@@ -68,17 +70,24 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await SettingsStorage.save(state);
   }
 
-  /// 設定指定 UID 的別名；[alias] 為 null 或空白時刪除別名。
+  /// 設定指定 UID 的別名；[alias] 為 null 或空白時刪除別名，與現值相同時不寫入。
   Future<void> setUidAlias(String uid, String? alias) async {
     final trimmed = alias?.trim();
+    final value = trimmed == null || trimmed.isEmpty ? null : trimmed;
+    if (state.uidAliases[uid] == value) return;
     final next = Map<String, String>.from(state.uidAliases);
-    if (trimmed == null || trimmed.isEmpty) {
+    if (value == null) {
       next.remove(uid);
     } else {
-      next[uid] = trimmed;
+      next[uid] = value;
     }
-    state = state.copyWith(uidAliases: next);
+    // 清空也要記時間：同步時靠它讓「已清空」蓋過其他裝置較舊的別名。
+    final times = {...state.uidAliasUpdatedAt, uid: DateTime.now().toUtc()};
+    state = state.copyWith(uidAliases: next, uidAliasUpdatedAt: times);
     await SettingsStorage.save(state);
+    Logger('app.settings').info(
+      'uidAlias ${next.containsKey(uid) ? 'set' : 'cleared'} uid=${sanitizeUid(uid)}',
+    );
   }
 
   /// 更新 UID 排列順序並持久化。
@@ -96,6 +105,17 @@ class SettingsNotifier extends Notifier<AppSettings> {
     await SettingsStorage.save(state);
   }
 
+  /// 設定遊戲資料夾；[dir] 為 null 時清除。
+  Future<void> setGameDir(String? dir) async {
+    state = state.copyWith(gameDir: dir, clearGameDir: dir == null);
+    await SettingsStorage.save(state);
+    Logger('app.settings').info(
+      dir == null
+          ? 'gameDir cleared'
+          : 'gameDir set source=manual path=${sanitizeFsPath(dir)}',
+    );
+  }
+
   /// 切換「遮蔽介面 UID」設定並持久化；變更值同步寫入 log。
   Future<void> setMaskUidInUi(bool value) async {
     state = state.copyWith(maskUidInUi: value);
@@ -103,33 +123,53 @@ class SettingsNotifier extends Notifier<AppSettings> {
     Logger('app.settings').info('maskUidInUi toggled=$value');
   }
 
-  /// 從 aliases 與 uidOrder 中移除指定 UID 並持久化。
+  /// 記錄 Android 上次成功取得系統記錄的方式並持久化；[method] 為 null 時清除（解除配對）。
+  Future<void> setLogAccessMethod(LogAccessMethod? method) async {
+    if (state.logAccessMethod == method) return;
+    state = state.copyWith(
+      logAccessMethod: method,
+      clearLogAccessMethod: method == null,
+    );
+    await SettingsStorage.save(state);
+    Logger('app.settings').info('logAccessMethod=${method?.name}');
+  }
+
+  /// 從 aliases、別名修改時間與 uidOrder 中移除指定 UID 並持久化。
   Future<void> removeUidFromSettings(String uid) async {
     final aliases = Map<String, String>.from(state.uidAliases)..remove(uid);
+    final times = Map<String, DateTime>.from(state.uidAliasUpdatedAt)
+      ..remove(uid);
     final order = state.uidOrder.where((u) => u != uid).toList();
-    state = state.copyWith(uidAliases: aliases, uidOrder: order);
+    state = state.copyWith(
+      uidAliases: aliases,
+      uidAliasUpdatedAt: times,
+      uidOrder: order,
+    );
     await SettingsStorage.save(state);
   }
 
-  /// 清除所有 UID 相關偏好（aliases、uidOrder、lastActiveUid）並持久化。
+  /// 清除所有 UID 相關偏好（aliases、別名修改時間、uidOrder、lastActiveUid）並持久化。
   Future<void> clearAllUidPreferences() async {
     state = state.copyWith(
       clearLastActiveUid: true,
       uidAliases: const {},
+      uidAliasUpdatedAt: const {},
       uidOrder: const [],
     );
     await SettingsStorage.save(state);
   }
 
-  /// 一次性把匯入後的偏好寫入：aliases、uidOrder、lastActiveUid。
-  /// 三個欄位合併寫入單次 [SettingsStorage.save]，避免中途失敗造成裂腦狀態。
+  /// 一次性把匯入後的偏好寫入：aliases、別名修改時間、uidOrder、lastActiveUid。
+  /// 各欄位合併寫入單次 [SettingsStorage.save]，避免中途失敗造成裂腦狀態。
   Future<void> applyImportedPreferences({
     required Map<String, String> aliases,
+    required Map<String, DateTime> aliasUpdatedAt,
     required List<String> uidOrder,
     required String? lastActiveUid,
   }) async {
     state = state.copyWith(
       uidAliases: Map.unmodifiable(aliases),
+      uidAliasUpdatedAt: Map.unmodifiable(aliasUpdatedAt),
       uidOrder: List.unmodifiable(uidOrder),
       lastActiveUid: lastActiveUid,
       clearLastActiveUid: lastActiveUid == null,

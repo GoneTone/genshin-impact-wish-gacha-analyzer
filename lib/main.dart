@@ -13,11 +13,11 @@ import 'package:window_manager/window_manager.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/routing/app_router.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/window_state_keeper.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/android_app_prefs_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
@@ -29,15 +29,18 @@ import 'package:genshin_impact_wish_gacha_analyzer/state/log_service.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/landscape_input_host.dart';
 
-/// 應用程式入口：初始化 Flutter、Rust bridge、視窗管理、log 服務，然後啟動 app。
+/// 應用程式入口：初始化 Flutter、Rust bridge（僅 Windows）、視窗管理、log 服務，然後啟動 app。
+///
+/// Rust 只提供 Windows 的攔截功能，其他平台不編譯也不載入 Rust 函式庫。
 Future<void> main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await RustLib.init();
-
       if (Platform.isWindows) {
+        await RustLib.init();
         await windowManager.ensureInitialized();
         await WindowStateKeeper.bootstrap();
       }
@@ -65,7 +68,9 @@ Future<void> main() async {
         return true;
       };
 
-      unawaited(_connectRustLogStream());
+      if (Platform.isWindows) {
+        unawaited(_connectRustLogStream());
+      }
 
       final pkgInfo = await PackageInfo.fromPlatform();
 
@@ -75,15 +80,17 @@ Future<void> main() async {
         'locale=${Platform.localeName}',
       );
 
-      try {
-        final cleaned = await rust_capture.cleanupStaleProxy();
-        if (cleaned) {
-          Logger(
-            'app.startup',
-          ).info('cleanup_stale_proxy: stale proxy detected and reset');
+      if (Platform.isWindows) {
+        try {
+          final cleaned = await rust_capture.cleanupStaleProxy();
+          if (cleaned) {
+            Logger(
+              'app.startup',
+            ).info('cleanup_stale_proxy: stale proxy detected and reset');
+          }
+        } catch (e, st) {
+          Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
         }
-      } catch (e, st) {
-        Logger('app.startup').warning('cleanup_stale_proxy failed', e, st);
       }
 
       final gachaDir = Directory('${supportDir.path}/gacha_data');
@@ -121,14 +128,14 @@ Future<void> main() async {
   );
 }
 
-/// 訂閱 Rust 端的 log stream，將每條 log 轉發到 Dart logging。
+/// 訂閱 Rust 端的 log stream，將每條 log 轉發到 Dart logging；只在 Windows 呼叫。
 Future<void> _connectRustLogStream() async {
   try {
     rust_logging.startLogStream().listen(
       (event) {
         Logger(
           'rust.${event.target}',
-        ).log(_levelFromRust(event.level), sanitizeLogMessage(event.message));
+        ).log(_levelFromRust(event.level), event.message);
       },
       onError: (Object e, StackTrace st) {
         Logger('rust.bridge').warning('log stream error', e, st);
@@ -164,6 +171,14 @@ class _MainAppState extends ConsumerState<MainApp> {
   late final GoRouter _router = buildAppRouter();
 
   @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      unawaited(ref.read(androidAppPrefsSyncProvider).start());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
@@ -186,10 +201,12 @@ class _MainAppState extends ConsumerState<MainApp> {
       darkTheme: buildDarkTheme(),
       themeMode: themeMode,
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: ref.watch(releasedLocalesProvider),
       localeListResolutionCallback: localeListResolution,
       routerConfig: _router,
+      actions: appActions,
+      builder: (context, child) => LandscapeInputHost(child: child!),
     );
   }
 }

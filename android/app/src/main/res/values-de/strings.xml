@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Gebets-Analyse</string>
+    <string name="pairing_channel">Kopplung für Debugging über WLAN</string>
+    <string name="pairing_searching_title">Kopplungsdienst wird gesucht</string>
+    <string name="pairing_searching_text">Tippe unter „Debugging über WLAN“ auf „Gerät über einen Kopplungscode koppeln“</string>
+    <string name="pairing_found_title">Kopplungscode eingeben</string>
+    <string name="pairing_found_text">Gib den 6-stelligen Code ein, der auf dem Kopplungsbildschirm angezeigt wird</string>
+    <string name="pairing_input_label">Kopplungscode</string>
+    <string name="pairing_action_pair">Koppeln</string>
+    <string name="pairing_action_stop">Beenden</string>
+    <string name="pairing_in_progress">Wird gekoppelt...</string>
+    <string name="pairing_success_title">Kopplung erfolgreich</string>
+    <string name="pairing_success_text">Hier tippen, um zur App zurückzukehren</string>
+    <string name="pairing_failed_text">Kopplung fehlgeschlagen. Prüfe den Code und gib ihn erneut ein</string>
+    <string name="pairing_no_app_text">Kopplung fehlgeschlagen. Kehre zur App zurück und versuche es erneut</string>
+    <string name="pairing_timeout_title">Zeitüberschreitung bei der Kopplung</string>
+    <string name="pairing_timeout_text">Hier tippen, um neu zu starten</string>
+</resources>

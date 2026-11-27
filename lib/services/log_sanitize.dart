@@ -31,14 +31,33 @@ String sanitizeUid(String uid) {
   return '${uid.substring(0, 3)}****${uid.substring(uid.length - 3)}';
 }
 
-/// 掃描自由文字 log 訊息中內嵌的 http(s) URL,逐段套 [sanitizeUrl] 後原位替換,
-/// 非 URL 內容原樣保留。Rust log 跨橋進 Dart 時統一呼叫,作為單一脫敏匣道,
-/// 避免在 Rust 端複製脫敏邏輯。
-String sanitizeLogMessage(String message) {
-  // log 訊息中 URL 皆為末段或後接空白,以非空白序列界定 token 邊界即足夠。
-  final urlPattern = RegExp(r'https?://\S+', caseSensitive: false);
-  return message.replaceAllMapped(urlPattern, (m) => sanitizeUrl(m.group(0)!));
-}
+/// log 文字中的 http(s) 網址；網址皆為末段或後接空白，以非空白序列界定邊界即足夠。
+final _urlPattern = RegExp(r'https?://\S+', caseSensitive: false);
+
+/// log 文字中任意位置的家目錄路徑：group(1) 是保留的前綴，group(2) 是使用者名稱。
+///
+/// 涵蓋 `C:\Users\<name>`、`file:///C:/Users/<name>`、`/Users/<name>`、`/home/<name>`；
+/// 斜線開頭的形式要求前面不是網址或路徑片段，避免誤遮 `https://host/home/...`。
+final _homeDirPattern = RegExp(
+  r'''((?:[A-Za-z]:|(?<![\w.%:-]))[\\/](?:Users|home)[\\/])([^\\/'"\r\n]+)''',
+  caseSensitive: false,
+);
+
+/// 卡池記錄檔名（`<uid>.json`、`<uid>.url.json`、`<uid>.json.tmp`）裡的 uid：group(1) 是路徑分隔符號。
+final _uidFilePattern = RegExp(r'([\\/])(\d{6,})(?=\.(?:url\.)?json)');
+
+/// 把要寫進 log 的整段文字脫敏：網址套 [sanitizeUrl]、家目錄的使用者名稱換成 `***`、
+/// 卡池記錄檔名裡的 uid 套 [sanitizeUid]，其餘內容原樣保留。
+///
+/// `LogService` 寫入每一筆 log 前統一呼叫，涵蓋訊息、例外物件與 stack trace，
+/// 呼叫端照常把例外物件傳給 `Logger` 即可。
+String sanitizeLogMessage(String message) => message
+    .replaceAllMapped(_urlPattern, (m) => sanitizeUrl(m.group(0)!))
+    .replaceAllMapped(_homeDirPattern, (m) => '${m.group(1)}***')
+    .replaceAllMapped(
+      _uidFilePattern,
+      (m) => '${m.group(1)}${sanitizeUid(m.group(2)!)}',
+    );
 
 /// 把檔案路徑內的 home 段 username 換成 `***`，避免 log 洩漏使用者名稱。
 ///

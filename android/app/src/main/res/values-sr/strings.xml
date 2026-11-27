@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Анализатор Wish за Genshin Impact</string>
+    <string name="pairing_channel">Упаривање за бежично отклањање грешака</string>
+    <string name="pairing_searching_title">Тражи се услуга упаривања</string>
+    <string name="pairing_searching_text">У „Бежичном отклањању грешака“ додирните „Упарите уређај помоћу кода за упаривање“</string>
+    <string name="pairing_found_title">Унесите кôд за упаривање</string>
+    <string name="pairing_found_text">Укуцајте шестоцифрени кôд приказан на екрану за упаривање</string>
+    <string name="pairing_input_label">Кôд за упаривање</string>
+    <string name="pairing_action_pair">Упари</string>
+    <string name="pairing_action_stop">Заустави</string>
+    <string name="pairing_in_progress">Упаривање...</string>
+    <string name="pairing_success_title">Упаривање је успело</string>
+    <string name="pairing_success_text">Додирните овде да бисте се вратили у апликацију</string>
+    <string name="pairing_failed_text">Упаривање није успело. Проверите кôд и унесите га поново</string>
+    <string name="pairing_no_app_text">Упаривање није успело. Вратите се у апликацију и покушајте поново</string>
+    <string name="pairing_timeout_title">Време за упаривање је истекло</string>
+    <string name="pairing_timeout_text">Додирните овде да бисте почели поново</string>
+</resources>

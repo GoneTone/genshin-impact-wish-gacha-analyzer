@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Genshin Impact Wish Gacha Analyzer</string>
+    <string name="pairing_channel">Langattoman virheenkorjauksen laitepari</string>
+    <string name="pairing_searching_title">Etsitään laiteparipalvelua</string>
+    <string name="pairing_searching_text">Napauta Langattomassa virheenkorjauksessa ”Yhdistä laite laiteparikoodilla”</string>
+    <string name="pairing_found_title">Syötä laiteparikoodi</string>
+    <string name="pairing_found_text">Kirjoita laiteparinäkymässä näkyvä 6-numeroinen koodi</string>
+    <string name="pairing_input_label">Laiteparikoodi</string>
+    <string name="pairing_action_pair">Muodosta pari</string>
+    <string name="pairing_action_stop">Lopeta</string>
+    <string name="pairing_in_progress">Muodostetaan laiteparia...</string>
+    <string name="pairing_success_title">Laitepari muodostettiin</string>
+    <string name="pairing_success_text">Palaa sovellukseen napauttamalla tätä</string>
+    <string name="pairing_failed_text">Laiteparin muodostus epäonnistui. Tarkista koodi ja syötä se uudelleen</string>
+    <string name="pairing_no_app_text">Laiteparin muodostus epäonnistui. Palaa sovellukseen ja yritä uudelleen</string>
+    <string name="pairing_timeout_title">Laiteparin muodostus aikakatkaistiin</string>
+    <string name="pairing_timeout_text">Aloita alusta napauttamalla tätä</string>
+</resources>

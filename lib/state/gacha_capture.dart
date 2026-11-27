@@ -28,37 +28,43 @@ abstract class GachaCapture {
 class RustGachaCapture implements GachaCapture {
   static final _log = Logger('gacha.capture');
 
+  /// 啟動 Rust MITM 捕獲；啟動失敗（例如橋接未初始化）也經 [CaptureSession.result] 回報，不同步丟出。
   @override
   CaptureSession start() {
     final completer = Completer<String?>();
     String? capturedUrl;
     _log.info('capture started');
 
-    rust_capture.startCapture().listen(
-      (event) {
-        capturedUrl ??= event.url;
-        _log.fine('captured: host=${event.host}');
-        // 不 complete 這裡：等 stream onDone 觸發 = MITM 已 graceful shutdown +
-        // system proxy 已還原；此時呼叫 HTTP fetcher 才不會誤走代理
-      },
-      onError: (Object e, StackTrace st) {
-        _log.severe('capture error', e, st);
-        if (!completer.isCompleted) completer.completeError(e);
-      },
-      onDone: () {
-        if (capturedUrl == null) {
-          _log.info('capture done with no match');
-        } else {
-          _log.info('capture done, url=${sanitizeUrl(capturedUrl!)}');
-        }
-        if (!completer.isCompleted) completer.complete(capturedUrl);
-      },
-    );
+    try {
+      rust_capture.startCapture().listen(
+        (event) {
+          capturedUrl ??= event.url;
+          _log.fine('captured: host=${event.host}');
+          // 不 complete 這裡：等 stream onDone 觸發 = MITM 已 graceful shutdown +
+          // system proxy 已還原；此時呼叫 HTTP fetcher 才不會誤走代理
+        },
+        onError: (Object e, StackTrace st) {
+          _log.severe('capture error', e, st);
+          if (!completer.isCompleted) completer.completeError(e, st);
+        },
+        onDone: () {
+          if (capturedUrl == null) {
+            _log.info('capture done with no match');
+          } else {
+            _log.info('capture done, url=${sanitizeUrl(capturedUrl!)}');
+          }
+          if (!completer.isCompleted) completer.complete(capturedUrl);
+        },
+      );
+    } catch (e, st) {
+      _log.severe('capture error', e, st);
+      completer.completeError(e, st);
+    }
 
     return CaptureSession(
       result: completer.future,
       cancel: () async {
-        _log.info('capture cancelled by user');
+        _log.info('capture stop requested');
         await rust_capture.stopCapture();
       },
     );

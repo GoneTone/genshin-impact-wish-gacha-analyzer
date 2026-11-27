@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/services/five_star_collection.dart';
@@ -13,6 +15,9 @@ const double _ringWidth = 2;
 
 /// 徽章高度（直徑）。
 const double _badgeSize = 19;
+
+/// 單一 chip 的外框邊長：icon、兩側金環，加上收進徽章外溢的 2px padding。
+const double _chipExtent = _iconSize + _ringWidth * 2 + 2;
 
 /// 五星一覽：把不重複五星物品以橫向 [Wrap] 排列，每個 chip 為圓形 icon +
 /// 金色外環 + 右下角累計次數徽章。一行排滿自動換行、不限行數。空清單不顯示。
@@ -40,6 +45,80 @@ class FiveStarOverview extends StatelessWidget {
         for (final item in items)
           _FiveStarChip(item: item, interactive: interactive),
       ],
+    );
+  }
+}
+
+/// [FiveStarOverview] 的 sliver 版：依可用寬度切成列、按需建構。
+///
+/// 五星一覽常有數十個圖示，整塊一次建好會在捲入畫面的那一幀卡頓；
+/// 拆成列後每次只多建一列。排版與 [Wrap] 版逐一相同（同間距、靠左、同換行點）。
+class SliverFiveStarOverview extends StatefulWidget {
+  /// 建立 [SliverFiveStarOverview]。
+  const SliverFiveStarOverview({super.key, required this.items});
+
+  /// 要顯示的五星物品（已依次數排序）。
+  final List<FiveStarCollectionItem> items;
+
+  @override
+  State<SliverFiveStarOverview> createState() => _SliverFiveStarOverviewState();
+}
+
+/// [SliverFiveStarOverview] 的 State：依寬度快取列清單。
+class _SliverFiveStarOverviewState extends State<SliverFiveStarOverview> {
+  /// 產生 [_rows] 時的可用寬度。
+  double? _extent;
+
+  /// 依 [_extent] 切好的列清單。
+  Widget? _rows;
+
+  @override
+  void didUpdateWidget(SliverFiveStarOverview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.items != widget.items) _rows = null;
+  }
+
+  /// 依可用寬度 [extent] 把物品切成列，回傳按需建構的列清單。
+  Widget _buildRows(double extent) {
+    final items = widget.items;
+    // 與 Wrap 相同的換行規則：n 個 chip 加 n-1 個間距不超過可用寬度。
+    final perRow = math.max(
+      1,
+      ((extent + AppSpacing.m) / (_chipExtent + AppSpacing.m)).floor(),
+    );
+    return SliverList.separated(
+      itemCount: (items.length / perRow).ceil(),
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.m),
+      itemBuilder: (context, row) {
+        final start = row * perRow;
+        final end = math.min(start + perRow, items.length);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = start; i < end; i++) ...[
+              if (i > start) const SizedBox(width: AppSpacing.m),
+              _FiveStarChip(item: items[i], interactive: true),
+            ],
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.items.isEmpty) return const SliverToBoxAdapter();
+    // SliverLayoutBuilder 每次捲動都會重跑（捲動位置也在約束裡）；
+    // 寬度沒變就回傳同一個 widget，畫面上的列才不會每幀重建。
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        final extent = constraints.crossAxisExtent;
+        if (_rows == null || extent != _extent) {
+          _extent = extent;
+          _rows = _buildRows(extent);
+        }
+        return _rows!;
+      },
     );
   }
 }
@@ -87,8 +166,8 @@ class _FiveStarChip extends StatelessWidget {
               circular: true,
             ),
           ),
-          Positioned(
-            right: -2,
+          PositionedDirectional(
+            end: -2,
             bottom: -2,
             child: Container(
               constraints: const BoxConstraints(minWidth: _badgeSize),
@@ -107,7 +186,7 @@ class _FiveStarChip extends StatelessWidget {
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   height: 1,
-                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontFeatures: kTabularFigures,
                 ),
               ),
             ),
@@ -116,10 +195,10 @@ class _FiveStarChip extends StatelessWidget {
       ),
     );
 
-    // 徽章以 right/bottom: -2 微微外溢 SizedBox；靠右下 padding 把溢出量收進
+    // 徽章以 end/bottom: -2 微微外溢 SizedBox；靠右下 padding 把溢出量收進
     // chip 自身的 box，避免放進會裁切的容器時邊角被切掉。
     final chip = Padding(
-      padding: const EdgeInsets.only(right: 2, bottom: 2),
+      padding: const EdgeInsetsDirectional.only(end: 2, bottom: 2),
       child: stack,
     );
 

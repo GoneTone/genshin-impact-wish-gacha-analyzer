@@ -1,0 +1,50 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "list": [
+      {
+        "entry_page_id": "3865",
+        "name": "天空之刃",
+        "menu": {
+          "id": "16",
+          "name": "七聖召喚",
+          "sub_menus": [
+            {
+              "id": "18",
+              "name": "行動牌"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "1954",
+        "name": "天空之刃",
+        "menu": {
+          "id": "3",
+          "name": "裝備圖鑑",
+          "sub_menus": [
+            {
+              "id": "4",
+              "name": "武器"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "1",
+        "name": "七七",
+        "menu": {
+          "id": "1",
+          "name": "人物誌",
+          "sub_menus": [
+            {
+              "id": "2",
+              "name": "角色圖鑑"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cloud_sync/cloud_sync_config.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
@@ -98,11 +99,14 @@ class CloudSyncSection extends ConsumerWidget {
 
     // 授權等待結束（成功、失敗、缺 scope 皆同）時把視窗帶回前景，
     // 使用者在瀏覽器按完「允許」不必自己切回 app 看結果。
+    // Android 走系統 Google 授權視窗，沒有需要切回的桌面視窗。
     ref.listen(cloudSyncProvider, (prev, next) {
       final leftConsent =
           prev?.phase == CloudSyncPhase.awaitingConsent &&
           next.phase != CloudSyncPhase.awaitingConsent;
-      if (leftConsent) unawaited(ref.read(windowForegroundProvider)());
+      if (leftConsent && !ref.read(isAndroidProvider)) {
+        unawaited(ref.read(windowForegroundProvider)());
+      }
     });
 
     final email = ref.watch(
@@ -150,7 +154,7 @@ class _UnlinkedView extends ConsumerWidget {
           _AwaitingConsentRow(l: l)
         else
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: FilledButton.icon(
               onPressed: () => _linkWithLocalizedPage(context, ref),
               icon: const Icon(Icons.link, size: 18),
@@ -162,7 +166,7 @@ class _UnlinkedView extends ConsumerWidget {
   }
 }
 
-/// 等待瀏覽器授權中的提示列：spinner＋說明＋取消，未連結與重連兩處共用。
+/// 等待授權中的提示列（桌面為瀏覽器、Android 為 Google 視窗）：spinner＋說明＋取消，未連結與重連兩處共用。
 class _AwaitingConsentRow extends ConsumerWidget {
   /// 建立 [_AwaitingConsentRow]。
   const _AwaitingConsentRow({required this.l});
@@ -183,7 +187,9 @@ class _AwaitingConsentRow extends ConsumerWidget {
         const SizedBox(width: AppSpacing.m),
         Expanded(
           child: Text(
-            l.cloudSyncAwaitingConsent,
+            ref.watch(isAndroidProvider)
+                ? l.cloudSyncAwaitingConsentAndroid
+                : l.cloudSyncAwaitingConsent,
             style: TextStyle(color: tokens.textSecondary),
           ),
         ),

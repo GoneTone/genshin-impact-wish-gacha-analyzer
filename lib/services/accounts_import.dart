@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 
@@ -17,6 +18,13 @@ class ForeignBundleException implements Exception {
   String toString() => 'ForeignBundleException';
 }
 
+/// 在背景 isolate 跑 [importAccounts]：數 MB 的 JSON 解析在主 isolate 會卡住畫面。
+///
+/// 例外（[FormatException]、[ForeignBundleException]、[UnsupportedSchemaVersionException]）
+/// 原樣傳回呼叫端；背景 isolate 內的 log 不會寫進 App 的記錄，由呼叫端依例外記錄。
+Future<AccountsBundle> importAccountsInBackground(String text) =>
+    Isolate.run(() => importAccounts(text));
+
 /// 把 JSON 文字解析回 [AccountsBundle]。
 /// 版本號過新時拋出 [UnsupportedSchemaVersionException]；
 /// 非本軟體產生的備份時拋出 [ForeignBundleException]；
@@ -25,8 +33,8 @@ AccountsBundle importAccounts(String text) {
   Object? raw;
   try {
     raw = jsonDecode(text);
-  } catch (e) {
-    _log.warning('import failed: invalid JSON ($e)');
+  } catch (e, st) {
+    _log.warning('import failed: invalid JSON', e, st);
     throw const FormatException('Invalid JSON');
   }
   if (raw is! Map<String, dynamic>) {

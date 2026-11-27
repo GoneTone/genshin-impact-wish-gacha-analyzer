@@ -10,9 +10,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/services/timeline_entries.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_colors.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_node.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/timeline_vertical.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/gacha_item_icon.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/luck_legend.dart';
+
+import '../../helpers/timeline_geometry.dart';
 
 TimelineEntry _e(String name, String gachaType, int pulls, DateTime time) =>
     TimelineEntry(
@@ -59,6 +64,27 @@ Future<void> pumpTimelineVertical(
 }
 
 void main() {
+  testWidgets('every node is centred on the rail', (tester) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: [
+        _e('A', '301', 70, DateTime(2026, 6, 2)),
+        _e('B', '302', 30, DateTime(2026, 5, 20)),
+      ],
+      targetRank: 5,
+      nowPulls: 5,
+    );
+    final rail = find.byWidgetPredicate((w) => w is Positioned && w.width == 2);
+    final railX = tester.getCenter(rail).dx;
+    expect(find.byType(TimelineNode), findsNWidgets(3));
+    for (final node in find.byType(TimelineNode).evaluate()) {
+      expect(
+        tester.getCenter(find.byWidget(node.widget)).dx,
+        closeTo(railX, 0.5),
+      );
+    }
+  });
+
   testWidgets('empty + no nowPulls → shows timelineNoRecords', (tester) async {
     await tester.pumpWidget(
       _wrap(
@@ -425,6 +451,46 @@ void main() {
     );
   });
 
+  testWidgets('loaded count survives being scrolled out of a lazy list', (
+    tester,
+  ) async {
+    final entries = List<TimelineEntry>.generate(
+      25,
+      (i) => _e('item-$i', '301', 10, DateTime(2025, 4, 28 - i)),
+    );
+    const listKey = Key('outer');
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => ListView(
+          key: listKey,
+          children: [
+            TimelineVertical(entries: entries, colors: colors, targetRank: 5),
+            const SizedBox(height: 5000),
+          ],
+        ),
+      ),
+    );
+    final l = AppLocalizations.of(
+      tester.element(find.byType(TimelineVertical)),
+    )!;
+    await tester.ensureVisible(find.text(l.timelineLoadMore(15)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l.timelineLoadMore(15)));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byKey(listKey), const Offset(0, -8000));
+    await tester.pumpAndSettle();
+    expect(find.text('item-0'), findsNothing);
+    await tester.drag(find.byKey(listKey), const Offset(0, 8000));
+    await tester.pumpAndSettle();
+
+    expect(find.text('item-19', skipOffstage: false), findsOneWidget);
+    expect(
+      find.text(l.timelineLoadMore(5), skipOffstage: false),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('entries=11 → defaults to first 10 entries only', (tester) async {
     final entries = List<TimelineEntry>.generate(
       11,
@@ -689,6 +755,84 @@ void main() {
     expect(find.byType(GachaItemIcon), findsNWidgets(entries.length));
   });
 
+  testWidgets('odes names line up with entries that have no icon', (
+    tester,
+  ) async {
+    late Directory tempDir;
+    await tester.runAsync(() async {
+      tempDir = await Directory.systemTemp.createTemp('timeline_v_odes_test_');
+    });
+    addTearDown(() async {
+      try {
+        await tempDir.delete(recursive: true);
+      } catch (_) {}
+    });
+    final container = ProviderContainer(
+      overrides: [
+        hoyowikiIndexStorageProvider.overrideWithValue(
+          HoYoWikiIndexStorage(tempDir),
+        ),
+        hoyowikiCacheDirProvider.overrideWithValue(tempDir),
+      ],
+    );
+    addTearDown(container.dispose);
+    await tester.runAsync(
+      () => container.read(hoyowikiIndexProvider.notifier).waitForLoad(),
+    );
+
+    final odes = buildTimelineEntries([
+      GachaRecord(
+        id: '1',
+        uid: '100000001',
+        gachaType: '2000',
+        name: 'OdeItem',
+        itemType: '裝扮套裝',
+        rankType: 5,
+        time: DateTime(2025, 4, 1),
+        lang: 'zh-tw',
+      ),
+    ], targetRank: 5);
+    final entries = [
+      ...odes,
+      TimelineEntry(
+        name: 'PlainItem',
+        gachaType: '2000',
+        time: DateTime(2025, 3, 1),
+        pullsSincePrev: 10,
+      ),
+    ];
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: buildDarkTheme(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Builder(
+              builder: (ctx) => SizedBox(
+                width: 600,
+                child: TimelineVertical(
+                  entries: entries,
+                  colors: BannerColors.of(Theme.of(ctx).brightness),
+                  targetRank: 5,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(GachaItemIcon), findsNothing);
+    expect(
+      tester.getTopLeft(find.text('OdeItem').first).dx,
+      tester.getTopLeft(find.text('PlainItem').first).dx,
+    );
+  });
+
   testWidgets(
     'Tooltip 不被 GachaItemTapTarget 包裝破壞：longPress 名稱會疊出 tooltip overlay',
     (tester) async {
@@ -786,10 +930,10 @@ void main() {
     );
   });
 
-  testWidgets('showLuckLegend 時顯示圖例', (tester) async {
+  testWidgets('luck legend shows when there are entries', (tester) async {
     await pumpTimelineVertical(
       tester,
-      entries: const [],
+      entries: [_e('夜蘭', '301', 87, DateTime(2026, 1, 5))],
       targetRank: 5,
       nowPulls: 10,
       showLuckLegend: true,
@@ -797,6 +941,160 @@ void main() {
     final l = AppLocalizations.of(
       tester.element(find.byType(TimelineVertical)),
     )!;
+    expect(find.byType(LuckLegend), findsOneWidget);
     expect(find.text(l.luckTierLucky), findsOneWidget);
   });
+
+  testWidgets('luck legend is hidden when there are no entries', (
+    tester,
+  ) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: const [],
+      targetRank: 5,
+      nowPulls: 10,
+      showLuckLegend: true,
+    );
+    expect(find.byType(LuckLegend), findsNothing);
+  });
+
+  testWidgets('luck legend sits AppSpacing.m below the timeline', (
+    tester,
+  ) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: [_e('夜蘭', '301', 87, DateTime(2026, 1, 5))],
+      targetRank: 5,
+      showLuckLegend: true,
+    );
+    final timelineBottom = tester
+        .getBottomLeft(
+          find
+              .descendant(
+                of: find.byType(TimelineVertical),
+                matching: find.byType(Stack),
+              )
+              .first,
+        )
+        .dy;
+    final legendTop = tester.getTopLeft(find.byType(LuckLegend)).dy;
+    expect(legendTop - timelineBottom, AppSpacing.m);
+  });
+
+  testWidgets('on phones a tap on the node or the date shows the name', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      _wrap(
+        (ctx, colors) => TimelineVertical(
+          entries: [_e('夜蘭', '301', 87, DateTime(2025, 4, 1))],
+          colors: colors,
+          targetRank: 5,
+        ),
+      ),
+    );
+    final tips = find.descendant(
+      of: find.byType(TimelineVertical),
+      matching: find.byType(Tooltip),
+    );
+    for (final tip in [tips.first, tips.last]) {
+      await tester.tap(tip);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('夜蘭'), findsNWidgets(2));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+    }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('luck legend is hidden when there are no records and no now', (
+    tester,
+  ) async {
+    await pumpTimelineVertical(
+      tester,
+      entries: const [],
+      targetRank: 5,
+      showLuckLegend: true,
+    );
+    expect(find.byType(LuckLegend), findsNothing);
+  });
+
+  for (final fillHeight in [false, true]) {
+    testWidgets('vertical timeline geometry matches the sister layout '
+        '(fillHeight: $fillHeight)', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          (ctx, colors) => SizedBox(
+            height: fillHeight ? 700 : null,
+            child: TimelineVertical(
+              entries: [
+                _e('夜蘭', '301', 87, DateTime(2026, 1, 5)),
+                _e('流浪者', '301', 74, DateTime(2026, 1, 2)),
+                _e('納西妲', '301', 40, DateTime(2025, 12, 20)),
+                _e('魈', '200', 90, DateTime(2025, 11, 30)),
+                _e('刻晴', '302', 62, DateTime(2025, 11, 3)),
+              ],
+              colors: colors,
+              targetRank: 5,
+              nowPulls: 28,
+              isAcrossBanners: true,
+              showLuckLegend: true,
+              fillHeight: fillHeight,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      final actual = timelineGeometry(
+        tester,
+        find.byType(TimelineVertical),
+        exclude: find.byType(LuckLegend),
+      );
+      // 圖例文字不列入；數值為實測。
+      expect(actual, <(String, Rect)>[
+        ('Now', const Rect.fromLTRB(131.0, 19.0, 173.75, 39.0)),
+        (
+          '28 pulls since last 5★ across banners',
+          const Rect.fromLTRB(131.0, 41.0, 583.0, 75.0),
+        ),
+        ('01 / 2026', const Rect.fromLTRB(17.0, 103.0, 89.0, 119.0)),
+        ('夜蘭', const Rect.fromLTRB(131.0, 101.0, 159.5, 121.0)),
+        (
+          '01/05 · Character Event Wish · 87 pulls',
+          const Rect.fromLTRB(131.0, 123.0, 583.0, 157.0),
+        ),
+        ('流浪者', const Rect.fromLTRB(131.0, 171.0, 173.75, 191.0)),
+        (
+          '01/02 · Character Event Wish · 74 pulls',
+          const Rect.fromLTRB(131.0, 193.0, 583.0, 227.0),
+        ),
+        ('12 / 2025', const Rect.fromLTRB(17.0, 255.0, 89.0, 271.0)),
+        ('納西妲', const Rect.fromLTRB(131.0, 253.0, 173.75, 273.0)),
+        (
+          '12/20 · Character Event Wish · 40 pulls',
+          const Rect.fromLTRB(131.0, 275.0, 583.0, 309.0),
+        ),
+        ('11 / 2025', const Rect.fromLTRB(17.0, 337.0, 89.0, 353.0)),
+        ('魈', const Rect.fromLTRB(131.0, 335.0, 145.25, 355.0)),
+        (
+          '11/30 · Permanent Wish · 90 pulls',
+          const Rect.fromLTRB(131.0, 357.0, 535.25, 374.0),
+        ),
+        ('刻晴', const Rect.fromLTRB(131.0, 388.0, 159.5, 408.0)),
+        (
+          '11/03 · Weapon Event Wish · 62 pulls',
+          const Rect.fromLTRB(131.0, 410.0, 572.0, 427.0),
+        ),
+        ('node', const Rect.fromLTRB(97.0, 17.0, 119.0, 39.0)),
+        ('node', const Rect.fromLTRB(97.0, 99.0, 119.0, 121.0)),
+        ('node', const Rect.fromLTRB(97.0, 169.0, 119.0, 191.0)),
+        ('node', const Rect.fromLTRB(97.0, 251.0, 119.0, 273.0)),
+        ('node', const Rect.fromLTRB(97.0, 333.0, 119.0, 355.0)),
+        ('node', const Rect.fromLTRB(97.0, 386.0, 119.0, 408.0)),
+        // 卡片外框；fillHeight 時撐滿測試畫面高 600。
+        ('border', Rect.fromLTRB(0, 0, 600, fillHeight ? 600 : 484)),
+      ]);
+    });
+  }
 }

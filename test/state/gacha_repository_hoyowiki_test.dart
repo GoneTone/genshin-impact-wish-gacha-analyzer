@@ -15,6 +15,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/hoyowiki_index.dart'
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../helpers/no_game_dir.dart';
 
 GachaRecord _rec({
   required String id,
@@ -59,6 +60,7 @@ void main() {
 
     final container = ProviderContainer(
       overrides: [
+        noGameDirOverride,
         gachaStorageProvider.overrideWithValue(storage),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(tempDir),
@@ -550,6 +552,7 @@ void main() {
 
     final container = ProviderContainer(
       overrides: [
+        noGameDirOverride,
         gachaStorageProvider.overrideWithValue(storage),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(tempDir),
@@ -701,6 +704,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          noGameDirOverride,
           gachaStorageProvider.overrideWithValue(storage),
           hoyowikiIndexStorageProvider.overrideWithValue(
             HoYoWikiIndexStorage(tempDir),
@@ -824,6 +828,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          noGameDirOverride,
           gachaStorageProvider.overrideWithValue(storage),
           hoyowikiIndexStorageProvider.overrideWithValue(
             HoYoWikiIndexStorage(tempDir),
@@ -958,6 +963,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          noGameDirOverride,
           gachaStorageProvider.overrideWithValue(storage),
           hoyowikiIndexStorageProvider.overrideWithValue(
             HoYoWikiIndexStorage(tempDir),
@@ -1039,6 +1045,7 @@ void main() {
 
     final container = ProviderContainer(
       overrides: [
+        noGameDirOverride,
         gachaStorageProvider.overrideWithValue(storage),
         hoyowikiIndexStorageProvider.overrideWithValue(
           HoYoWikiIndexStorage(tempDir),
@@ -1326,6 +1333,7 @@ void main() {
       );
       final container = ProviderContainer(
         overrides: [
+          noGameDirOverride,
           gachaStorageProvider.overrideWithValue(storage),
           hoyowikiIndexStorageProvider.overrideWithValue(
             HoYoWikiIndexStorage(tempDir),

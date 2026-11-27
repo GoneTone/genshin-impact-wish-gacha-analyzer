@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">原神祈願分析ツール</string>
+    <string name="pairing_channel">ワイヤレスデバッグのペア設定</string>
+    <string name="pairing_searching_title">ペア設定サービスを探しています</string>
+    <string name="pairing_searching_text">「ワイヤレスデバッグ」で「ペア設定コードによるデバイスのペア設定」をタップしてください</string>
+    <string name="pairing_found_title">ペア設定コードを入力</string>
+    <string name="pairing_found_text">ペア設定画面に表示された 6 桁のコードを入力してください</string>
+    <string name="pairing_input_label">ペア設定コード</string>
+    <string name="pairing_action_pair">ペア設定</string>
+    <string name="pairing_action_stop">停止</string>
+    <string name="pairing_in_progress">ペア設定中...</string>
+    <string name="pairing_success_title">ペア設定に成功しました</string>
+    <string name="pairing_success_text">タップしてアプリに戻る</string>
+    <string name="pairing_failed_text">ペア設定に失敗しました。コードを確認してもう一度入力してください</string>
+    <string name="pairing_no_app_text">ペア設定に失敗しました。アプリに戻ってもう一度お試しください</string>
+    <string name="pairing_timeout_title">ペア設定がタイムアウトしました</string>
+    <string name="pairing_timeout_text">タップしてやり直す</string>
+</resources>

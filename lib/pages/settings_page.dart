@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,15 +18,23 @@ import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_export.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/accounts_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/data_language.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/file_reveal.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/import_overlap_check.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/importers/uigf_item_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/platform_import.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/settings_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/ads.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/app_release.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/localization_metadata.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_cache_usage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/format_bytes.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
@@ -33,20 +43,29 @@ import 'package:genshin_impact_wish_gacha_analyzer/widgets/app_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/banner_link.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/account_management.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/cloud_sync_section.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/log_access_section.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/cards/section_card.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/accounts_picker_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/app_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/current_release_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/export_result_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/import_target_account_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/platform_picker_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/share_progress_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/distribution_legend.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/game_dir_picker.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/other_game_versions.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/page_header.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/translator_text.dart';
 
 /// 設定頁，包含外觀、語言、資料管理、帳號管理、日誌、關於等 section。
 class SettingsPage extends ConsumerWidget {
-  /// 建立 [SettingsPage]。
-  const SettingsPage({super.key});
+  /// 建立 [SettingsPage]；[pickGameDir] 為 null 時使用系統選資料夾視窗。
+  const SettingsPage({super.key, this.pickGameDir});
+
+  /// 選遊戲資料夾的函式，供測試注入。
+  final Future<String?> Function()? pickGameDir;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +75,7 @@ class SettingsPage extends ConsumerWidget {
     final notifier = ref.read(settingsProvider.notifier);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.l),
+      padding: EdgeInsets.all(pagePaddingOf(context)),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
@@ -73,7 +92,7 @@ class SettingsPage extends ConsumerWidget {
                   l: l,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsLanguage,
                 icon: Icons.language,
@@ -83,55 +102,69 @@ class SettingsPage extends ConsumerWidget {
                   l: l,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsDataLanguage,
                 icon: Icons.translate_outlined,
                 child: const _DataLanguageSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsPrivacySectionTitle,
                 icon: Icons.shield_outlined,
                 child: const _PrivacySection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsAccountManagement,
                 icon: Icons.manage_accounts_outlined,
                 child: const AccountManagement(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsDataManagement,
                 icon: Icons.folder_outlined,
                 child: const _DataManagement(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
+              // 手機上的遊戲資料夾是固定的，改為顯示讀取遊戲記錄的方式。
+              if (ref.watch(isAndroidProvider))
+                SectionCard(
+                  title: l.settingsLogAccess,
+                  icon: Icons.sports_esports_outlined,
+                  child: const LogAccessSection(),
+                )
+              else
+                SectionCard(
+                  title: l.settingsGameDir,
+                  icon: Icons.sports_esports_outlined,
+                  child: _GameDirSection(pickDirectory: pickGameDir),
+                ),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsCloudSync,
                 icon: Icons.cloud_sync_outlined,
                 child: const CloudSyncSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsItemData,
                 icon: Icons.dataset_outlined,
                 child: const _ItemDataSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsImageCache,
                 icon: Icons.image_outlined,
                 child: const _ImageCacheSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsLogs,
                 icon: Icons.bug_report_outlined,
                 child: const _LogsSection(),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: AppSpacing.m),
               SectionCard(
                 title: l.settingsAbout,
                 icon: Icons.info_outline,
@@ -219,23 +252,26 @@ class _LocaleDropdown extends ConsumerWidget {
                 selectableTags.contains((current as LocaleLanguage).code))
         ? current
         : const SystemLanguage();
+    final items = [
+      DropdownMenuItem<LanguagePreference>(
+        value: const SystemLanguage(),
+        child: Text(l.settingsLocaleSystem),
+      ),
+      for (final entry in sorted)
+        DropdownMenuItem<LanguagePreference>(
+          value: LocaleLanguage(entry.key),
+          child: Text(entry.value.nativeName),
+        ),
+    ];
     final dropdown = DropdownButtonFormField<LanguagePreference>(
       initialValue: effectiveCurrent,
+      isExpanded: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
-      items: [
-        DropdownMenuItem(
-          value: const SystemLanguage(),
-          child: Text(l.settingsLocaleSystem),
-        ),
-        for (final entry in sorted)
-          DropdownMenuItem(
-            value: LocaleLanguage(entry.key),
-            child: Text(entry.value.nativeName),
-          ),
-      ],
+      items: items,
+      selectedItemBuilder: _onlySelectedLabel(items, effectiveCurrent),
       onChanged: (v) {
         if (v != null) onChanged(v);
       },
@@ -261,6 +297,19 @@ class _LocaleDropdown extends ConsumerWidget {
     );
   }
 }
+
+/// 下拉選單按鈕上的已選項目：只有值等於 [selected] 的那項放文字，其餘留空。
+///
+/// `DropdownButton` 會把每個選項放進 `IndexedStack` 全部排版；選項是各國文字時，每次打開設定頁都要排版全部名稱，
+/// 第一次還要載入多種字型（ROG Phone 實測約 51 ms）。展開後的清單仍由 `items` 顯示全部名稱。
+DropdownButtonBuilder _onlySelectedLabel<T>(
+  List<DropdownMenuItem<T>> items,
+  T selected,
+) =>
+    (context) => [
+      for (final item in items)
+        item.value == selected ? item.child : const SizedBox.shrink(),
+    ];
 
 /// 關於區塊，顯示版本號、更新檢查按鈕與開發團隊資訊。
 class _AboutContent extends ConsumerWidget {
@@ -292,38 +341,55 @@ class _AboutContent extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(child: Text(l.settingsAboutVersion(version))),
-            const SizedBox(width: AppSpacing.s),
-            OutlinedButton.icon(
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) => CurrentReleaseDialog(version: version),
+        // 寬視窗：版本在左、按鈕靠右；窄到放不下時按鈕整組換行。
+        // Wrap 預設縮到內容寬，要撐滿整列 spaceBetween 才會把按鈕推到右側。
+        SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpacing.s,
+            runSpacing: AppSpacing.s,
+            children: [
+              Text(l.settingsAboutVersion(version)),
+              Wrap(
+                spacing: AppSpacing.s,
+                runSpacing: AppSpacing.s,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (_) => CurrentReleaseDialog(version: version),
+                    ),
+                    icon: const Icon(Icons.description_outlined, size: 18),
+                    label: Text(l.aboutViewReleaseNotes),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: checking
+                        ? null
+                        : () => ref
+                              .read(appReleaseProvider.notifier)
+                              .check(manual: true),
+                    icon: checking
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.refresh, size: 18),
+                    label: Text(
+                      checking ? l.updateChecking : l.updateCheckButton,
+                    ),
+                  ),
+                ],
               ),
-              icon: const Icon(Icons.description_outlined, size: 18),
-              label: Text(l.aboutViewReleaseNotes),
-            ),
-            const SizedBox(width: AppSpacing.s),
-            OutlinedButton.icon(
-              onPressed: checking
-                  ? null
-                  : () => ref
-                        .read(appReleaseProvider.notifier)
-                        .check(manual: true),
-              icon: checking
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.refresh, size: 18),
-              label: Text(checking ? l.updateChecking : l.updateCheckButton),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: AppSpacing.xs),
+        // 固定的英文署名，由右往左的語言下也維持「Developed by GoneTone」的語序。
         Wrap(
+          textDirection: TextDirection.ltr,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Icon(Icons.code, size: 16, color: theme.gacha.textSecondary),
@@ -365,18 +431,89 @@ class _AboutContent extends ConsumerWidget {
 
   /// 把 notifier 給的 token 轉成 i18n 字串。
   /// Token 格式：
-  ///   - "network" / "timeout" / "rateLimited" / "format"
+  ///   - "network" / "timeout" / "rateLimited" / "format" / "play"
   ///   - "server:&lt;status&gt;"（status 為 HTTP code）
   String _resolveReason(AppLocalizations l, String token) {
     if (token == 'network') return l.updateErrorNetwork;
     if (token == 'timeout') return l.updateErrorTimeout;
     if (token == 'rateLimited') return l.updateErrorRateLimited;
     if (token == 'format') return l.updateErrorFormat;
+    if (token == 'play') return l.updateErrorPlay;
     if (token.startsWith('server:')) {
       final status = token.substring('server:'.length);
       return l.updateErrorServer(status);
     }
     return token;
+  }
+}
+
+/// 以手動設定 [manual] 為起點解析實際使用的遊戲資料夾（設定失效時退回自動偵測）。
+final _gameDirLocationProvider = FutureProvider.autoDispose
+    .family<GameDirLocation?, String?>(
+      (ref, manual) =>
+          ref.read(gameDirLocatorProvider).locate(settingDir: manual),
+    );
+
+/// 遊戲資料夾區塊：顯示目前使用的資料夾來源與路徑，並可手動選擇或清除。
+class _GameDirSection extends ConsumerWidget {
+  /// 建立 [_GameDirSection]；[pickDirectory] 為 null 時使用系統選資料夾視窗。
+  const _GameDirSection({this.pickDirectory});
+
+  /// 選資料夾的函式，供測試注入。
+  final Future<String?> Function()? pickDirectory;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
+    final manual = ref.watch(settingsProvider.select((s) => s.gameDir));
+    final location = ref.watch(_gameDirLocationProvider(manual));
+    final text = location.isLoading
+        ? ''
+        : switch (location.value) {
+            null => l.settingsGameDirNone,
+            final loc when loc.source == GameDirSource.setting =>
+              l.settingsGameDirManual(loc.path),
+            final loc => l.settingsGameDirAuto(loc.path),
+          };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(text, maxLines: 3, overflow: TextOverflow.ellipsis),
+        const SizedBox(height: AppSpacing.s),
+        Wrap(
+          spacing: AppSpacing.s,
+          runSpacing: AppSpacing.s,
+          children: [
+            OutlinedButton.icon(
+              key: const ValueKey('settings.gameDirChoose'),
+              onPressed: () => _choose(context, ref),
+              icon: const Icon(Icons.folder_open_outlined, size: 18),
+              label: Text(l.actionChooseGameDir),
+            ),
+            if (manual != null)
+              OutlinedButton.icon(
+                key: const ValueKey('settings.gameDirClear'),
+                onPressed: () =>
+                    ref.read(settingsProvider.notifier).setGameDir(null),
+                icon: const Icon(Icons.clear, size: 18),
+                label: Text(l.actionClearGameDir),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 開啟選資料夾流程，選到無效資料夾時以 SnackBar 提示。
+  Future<void> _choose(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final outcome = await pickAndSaveGameDir(ref, pickDirectory: pickDirectory);
+    if (outcome == GameDirPickOutcome.invalid && ctx.mounted) {
+      ScaffoldMessenger.of(
+        ctx,
+      ).showSnackBar(SnackBar(content: Text(l.gameDirInvalid)));
+    }
   }
 }
 
@@ -413,6 +550,13 @@ class _DataManagement extends ConsumerWidget {
           icon: const Icon(Icons.upload_outlined, size: 18),
           label: Text(l.settingsImportData),
         ),
+        OutlinedButton.icon(
+          onPressed: progress != null
+              ? null
+              : () => _importFromPlatform(context, ref),
+          icon: const Icon(Icons.cloud_sync_outlined, size: 18),
+          label: Text(l.settingsImportOtherPlatform),
+        ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
             backgroundColor: Theme.of(context).gacha.stateDanger,
@@ -439,49 +583,29 @@ class _DataManagement extends ConsumerWidget {
     );
   }
 
-  /// 匯出帳號資料：讓使用者選取帳號、存檔位置後寫出 JSON。
+  /// 匯出帳號資料：把勾選的帳號存成 JSON 檔（Android 也可改為分享）。
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
     final gacha = ref.read(gachaRepositoryProvider);
     final settings = ref.read(settingsProvider);
     final appVersion = ref.read(appVersionProvider);
 
-    final ordered = mergeUidOrder(
-      knownUids: gacha.byUid.keys,
-      customOrder: settings.uidOrder,
-      lastUpdatedOf: (u) => gacha.byUid[u]!.lastUpdated,
-    );
-
-    final entries = [
-      for (final uid in ordered)
-        AccountPickerEntry(
-          uid: uid,
-          alias: settings.uidAliases[uid],
-          lastUpdated: gacha.byUid[uid]!.lastUpdated,
-          recordCount: gacha.byUid[uid]!.allRecords.length,
-        ),
-    ];
+    final entries = _localAccountEntries(ref);
+    final android = ref.read(isAndroidProvider);
     final picked = await showAccountsPickerDialog(
       context: ctx,
       title: l.settingsExportSelectTitle,
-      confirmLabel: l.confirmExport,
+      confirmLabel: android ? l.actionSave : l.confirmExport,
+      secondaryConfirmLabel: android ? l.actionShare : null,
       entries: entries,
     );
-    if (picked == null || picked.isEmpty) return;
+    if (picked == null || picked.uids.isEmpty) return;
     if (!ctx.mounted) return;
 
     final now = DateTime.now();
-    final stamp = fileTimestamp(now);
+    final fileName = 'genshin_gacha_backup_${fileTimestamp(now)}.json';
 
-    final loc = await getSaveLocation(
-      suggestedName: 'genshin_gacha_backup_$stamp.json',
-      acceptedTypeGroups: const [
-        XTypeGroup(label: 'JSON', extensions: ['json']),
-      ],
-    );
-    if (loc == null) return;
-
-    final pickedSet = picked.toSet();
+    final pickedSet = picked.uids.toSet();
     final filteredByUid = {
       for (final e in gacha.byUid.entries)
         if (pickedSet.contains(e.key)) e.key: e.value,
@@ -497,20 +621,60 @@ class _DataManagement extends ConsumerWidget {
         ? settings.lastActiveUid
         : null;
 
-    final text = exportAccounts(
-      byUid: filteredByUid,
-      uidOrder: filteredOrder,
-      uidAliases: filteredAliases,
-      lastActiveUid: lastActive,
-      appVersion: appVersion,
-      now: now,
-    );
+    final Uint8List bytes;
     try {
-      await File(loc.path).writeAsString(text);
+      bytes = await exportAccountsBytesInBackground(
+        byUid: filteredByUid,
+        recordsFileOf: ref.read(gachaStorageProvider).recordsFile,
+        uidOrder: filteredOrder,
+        uidAliases: filteredAliases,
+        // 只會輸出 byUid 裡的帳號，不必另外過濾。
+        uidAliasUpdatedAt: settings.uidAliasUpdatedAt,
+        lastActiveUid: lastActive,
+        appVersion: appVersion,
+        now: now,
+      );
     } catch (e, st) {
-      Logger(
-        'accounts.io',
-      ).severe('export failed ${sanitizeFsPath(loc.path)}', e, st);
+      Logger('accounts.io').warning('export failed: building file', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: l.settingsExportFailed(l.importReasonUnreadable),
+      );
+      return;
+    }
+    if (!ctx.mounted) return;
+    final records = filteredByUid.values.fold<int>(
+      0,
+      (a, b) => a + b.allRecords.length,
+    );
+
+    if (picked.secondary) {
+      Logger('accounts.io').info(
+        'export share: uids=${pickedSet.length} records=$records '
+        'bytes=${bytes.length}',
+      );
+      await _shareOrReport(
+        ctx,
+        bytes: bytes,
+        fileName: fileName,
+        mimeType: 'application/json',
+      );
+      return;
+    }
+
+    final SavedFile? saved;
+    try {
+      saved = await saveBytes(
+        bytes,
+        suggestedName: fileName,
+        extension: 'json',
+        mimeType: 'application/json',
+        dialogTitle: l.dialogSaveAsTitle,
+      );
+    } catch (e, st) {
+      Logger('accounts.io').severe('export failed name=$fileName', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -519,73 +683,104 @@ class _DataManagement extends ConsumerWidget {
       );
       return;
     }
+    if (saved == null) return;
     Logger('accounts.io').info(
-      'export: uids=${pickedSet.length} '
-      'records=${filteredByUid.values.fold<int>(0, (a, b) => a + b.allRecords.length)}',
+      'export: uids=${pickedSet.length} records=$records '
+      '${_savedLocation(saved)}',
     );
     if (!ctx.mounted) return;
     await showExportResultDialog(
       ctx,
       success: true,
-      message: l.settingsExportSuccess(loc.path),
-      revealPath: loc.path,
+      message: l.settingsExportSuccess(saved.path ?? saved.displayName),
+      revealPath: saved.path,
     );
   }
 
-  /// 匯入帳號資料：讀取 JSON、讓使用者選取帳號與確認後寫入 repository。
+  /// 依帳號排序列出本機所有帳號（別名取自設定），給帳號挑選類對話框用。
+  List<AccountPickerEntry> _localAccountEntries(WidgetRef ref) {
+    final gacha = ref.read(gachaRepositoryProvider);
+    final settings = ref.read(settingsProvider);
+    final ordered = mergeUidOrder(
+      knownUids: gacha.byUid.keys,
+      customOrder: settings.uidOrder,
+      lastUpdatedOf: (u) => gacha.byUid[u]!.lastUpdated,
+    );
+    return [
+      for (final uid in ordered)
+        AccountPickerEntry(
+          uid: uid,
+          alias: settings.uidAliases[uid],
+          lastUpdated: gacha.byUid[uid]!.lastUpdated,
+          recordCount: gacha.byUid[uid]!.allRecords.length,
+        ),
+    ];
+  }
+
+  /// 以 snackbar 顯示「匯入失敗：[reason]」。
+  void _showImportFailed(BuildContext ctx, String reason) {
+    final l = AppLocalizations.of(ctx)!;
+    ScaffoldMessenger.of(
+      ctx,
+    ).showSnackBar(SnackBar(content: Text(l.settingsImportFailed(reason))));
+  }
+
+  /// 匯入本軟體的備份：讀取 JSON、解析後交給共用下游 [_runBundleImport]。
   Future<void> _import(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
-    final file = await openFile(
-      acceptedTypeGroups: const [
-        XTypeGroup(label: 'JSON', extensions: ['json']),
-      ],
-    );
-    if (file == null) return;
-
-    final String text;
+    final String? text;
     try {
-      text = await file.readAsString();
+      text = await pickTextFile(
+        extensions: const ['json'],
+        dialogTitle: l.dialogOpenTitle,
+      );
     } catch (e, st) {
       Logger('accounts.io').warning('import: read file failed', e, st);
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonUnreadable)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonUnreadable);
       return;
     }
+    if (text == null) return;
 
     final AccountsBundle bundle;
     try {
-      bundle = importAccounts(text);
+      bundle = await importAccountsInBackground(text);
     } on ForeignBundleException {
+      Logger('accounts.io').warning('import failed: foreign bundle');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonForeignApp)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonForeignApp);
       return;
-    } on UnsupportedSchemaVersionException {
+    } on UnsupportedSchemaVersionException catch (e) {
+      Logger(
+        'accounts.io',
+      ).warning('import failed: unsupported schema version ${e.version}');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(
-            l.settingsImportFailed(l.importReasonUnsupportedVersion),
-          ),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonUnsupportedVersion);
       return;
-    } on FormatException {
+    } on FormatException catch (e) {
+      Logger('accounts.io').warning('import failed: ${e.message}');
       if (!ctx.mounted) return;
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(l.settingsImportFailed(l.importReasonInvalidFormat)),
-        ),
-      );
+      _showImportFailed(ctx, l.importReasonInvalidFormat);
       return;
     }
+
+    if (!ctx.mounted) return;
+    await _runBundleImport(ctx, ref, bundle);
+  }
+
+  /// 拿到（已解析的）[bundle] 後的共用匯入下游：帳號挑選 → 確認 → 寫入＋補圖。
+  /// 由本軟體備份匯入（[_import]）與第三方平台匯入（[_importFromPlatform]）共用。
+  ///
+  /// [fromPlatform] 只有第三方匯入為 true：對本機已有的帳號做重疊檢查（設計文件
+  /// 〈九〉），有提醒時寫進確認對話框，確認鍵改成「仍要匯入」；確認後把沒有匯出時間
+  /// 的帳號「最後更新」設為按下匯入的時刻（[stampLastUpdated]）。
+  Future<void> _runBundleImport(
+    BuildContext ctx,
+    WidgetRef ref,
+    AccountsBundle bundle, {
+    bool fromPlatform = false,
+  }) async {
+    final l = AppLocalizations.of(ctx)!;
 
     // Picker：列出檔案內的帳號讓使用者勾選。
     final existing = ref.read(gachaRepositoryProvider).byUid.keys.toSet();
@@ -608,10 +803,10 @@ class _DataManagement extends ConsumerWidget {
       confirmLabel: l.confirmContinue,
       entries: entries,
     );
-    if (picked == null || picked.isEmpty) return;
+    if (picked == null || picked.uids.isEmpty) return;
     if (!ctx.mounted) return;
 
-    final pickedSet = picked.toSet();
+    final pickedSet = picked.uids.toSet();
     final filteredBundle = AccountsBundle(
       exportedAt: bundle.exportedAt,
       appVersion: bundle.appVersion,
@@ -661,13 +856,17 @@ class _DataManagement extends ConsumerWidget {
       buf.writeln(l.settingsImportConfirmPreserveFooter(preserved.join(', ')));
     }
 
+    final warning = fromPlatform
+        ? _overlapWarning(l, ref, filteredBundle)
+        : null;
     final ok = await showConfirmDialog(
       context: ctx,
       title: l.settingsImportConfirmTitle,
       body: buf.toString(),
       cancelLabel: l.actionCancel,
-      confirmLabel: l.confirmImport,
+      confirmLabel: warning == null ? l.confirmImport : l.confirmImportAnyway,
       confirmIcon: Icons.check,
+      warning: warning,
     );
     if (ok != true) return;
     if (!ctx.mounted) return;
@@ -676,8 +875,134 @@ class _DataManagement extends ConsumerWidget {
     unawaited(
       ref
           .read(gachaRepositoryProvider.notifier)
-          .importAccountsAndFetchHoYoWiki(filteredBundle),
+          .importAccountsAndFetchHoYoWiki(
+            fromPlatform
+                ? stampLastUpdated(filteredBundle, DateTime.now().toUtc())
+                : filteredBundle,
+          ),
     );
+  }
+
+  /// 對 [bundle] 中本機已有的帳號做重疊檢查，回傳每個對不上的帳號一段的提醒文字；
+  /// 都沒問題回 null。
+  String? _overlapWarning(
+    AppLocalizations l,
+    WidgetRef ref,
+    AccountsBundle bundle,
+  ) {
+    final local = ref.read(gachaRepositoryProvider).byUid;
+    // 記錄時間是牆鐘時間（可能標成 UTC），直接格式化、不轉時區。
+    final date = DateFormat('yyyy-MM-dd');
+    final warnings = [
+      for (final a in bundle.accounts)
+        if (local[a.data.uid] case final storage?)
+          if (checkImportOverlap(local: storage, incoming: a.data)
+              case final m?)
+            m.matched == 0
+                ? l.importOverlapWarning(
+                    m.uid,
+                    date.format(m.from),
+                    date.format(m.to),
+                    m.groups,
+                  )
+                : l.importOverlapWarningPartial(
+                    m.uid,
+                    date.format(m.from),
+                    date.format(m.to),
+                    m.groups,
+                    m.matched,
+                  ),
+    ];
+    return warnings.isEmpty ? null : warnings.join('\n\n');
+  }
+
+  /// 從第三方平台匯入：選平台 → 選檔 → 解析（UIGF 需要補資料時顯示進度）→ 匯出檔
+  /// 沒有 UID 時選目標帳號 → 共用下游 [_runBundleImport]（含重疊檢查）。
+  Future<void> _importFromPlatform(BuildContext ctx, WidgetRef ref) async {
+    final l = AppLocalizations.of(ctx)!;
+    final log = Logger('wish.import.platform');
+    final platform = await showPlatformPickerDialog(context: ctx);
+    if (platform == null || !ctx.mounted) return;
+    log.info('platform import start platform=${platform.id}');
+
+    final Uint8List? bytes;
+    try {
+      bytes = await pickFileBytes(
+        extensions: platform.fileExtensions,
+        dialogTitle: l.dialogOpenTitle,
+      );
+    } catch (e, st) {
+      log.warning(
+        'platform import: unable to read file platform=${platform.id}',
+        e,
+        st,
+      );
+      if (!ctx.mounted) return;
+      _showImportFailed(ctx, l.importReasonUnreadable);
+      return;
+    }
+    if (bytes == null || !ctx.mounted) return;
+
+    final lang = ref.read(dataLanguageProvider);
+    final resolver = _ProgressItemResolver(
+      UigfItemResolver(
+        client: ref.read(httpClientProvider),
+        hoyowiki: ref.read(hoyowikiFetcherProvider),
+        targetLang: lang != null && isSupportedDataLanguage(lang)
+            ? lang
+            : 'en-us',
+      ),
+      open: () => ctx.mounted
+          ? showBlockingProgressDialog(ctx, l.importResolvingItems)
+          : null,
+    );
+    AccountsBundle? parsed;
+    String? reason;
+    try {
+      parsed = await platform.parse(bytes, resolver: resolver);
+    } on ForeignBundleException catch (e, st) {
+      log.warning(
+        'platform import: foreign file platform=${platform.id}',
+        e,
+        st,
+      );
+      reason = l.importReasonNotPlatformFile(platform.displayName(l));
+    } on UigfVersionTooNewException catch (e, st) {
+      log.warning('platform import: uigf version too new', e, st);
+      reason = l.importReasonUigfVersionTooNew(e.version);
+    } on UnknownGachaTypeException catch (e, st) {
+      log.warning('platform import: unknown gacha types', e, st);
+      reason = l.importReasonUnknownGachaType(e.types.join(', '));
+    } on ItemResolveException catch (e, st) {
+      log.warning('platform import: item unresolved', e, st);
+      reason = l.importReasonItemUnresolved(e.item);
+    } catch (e, st) {
+      // FormatException 以外的非預期錯誤也要讓使用者看到失敗訊息。
+      log.warning('platform import failed platform=${platform.id}', e, st);
+      reason = l.importReasonInvalidFormat;
+    } finally {
+      resolver.close();
+    }
+    if (!ctx.mounted) return;
+    if (parsed == null) {
+      _showImportFailed(ctx, reason ?? l.importReasonInvalidFormat);
+      return;
+    }
+
+    var bundle = parsed;
+    if (platform.requiresTargetUid) {
+      final uid = await showImportTargetAccountDialog(
+        context: ctx,
+        accounts: _localAccountEntries(ref),
+      );
+      if (uid == null || !ctx.mounted) return;
+      final existing = ref.read(gachaRepositoryProvider).byUid.containsKey(uid);
+      log.info(
+        'platform import target uid=${sanitizeUid(uid)} existing=$existing',
+      );
+      bundle = assignTargetUid(bundle, uid);
+    }
+    await _runBundleImport(ctx, ref, bundle, fromPlatform: true);
   }
 
   /// 清除當前 UID [uid] 的所有資料，需使用者輸入 UID 確認。
@@ -970,11 +1295,10 @@ class _UsageRows extends StatelessWidget {
     );
     Widget row(String label, String value, TextStyle? style) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: style)),
-          Text(value, style: style),
-        ],
+      // 數值放不下時換到下一行並靠右，長語言＋大字級下的「計算中」也不會擠出右緣。
+      child: CompactLegendRow(
+        name: Text(label, style: style),
+        numbers: Text(value, style: style, textAlign: TextAlign.end),
       ),
     );
     return Column(
@@ -988,7 +1312,25 @@ class _UsageRows extends StatelessWidget {
   }
 }
 
-/// 隱私設定區塊：目前僅含「遮蔽介面 UID」開關。
+/// 存檔位置的 log 片段：桌面為脫敏後的 `path=...`，Android 沒有路徑只有 `name=...`。
+String _savedLocation(SavedFile saved) => saved.path != null
+    ? 'path=${sanitizeFsPath(saved.path!)}'
+    : 'name=${saved.displayName}';
+
+/// 以系統分享面板分享 [bytes]；失敗時跳出「無法分享」結果視窗，成功不提示。
+Future<void> _shareOrReport(
+  BuildContext ctx, {
+  required Uint8List bytes,
+  required String fileName,
+  required String mimeType,
+}) async {
+  final l = AppLocalizations.of(ctx)!;
+  final ok = await shareBytes(bytes, fileName: fileName, mimeType: mimeType);
+  if (ok || !ctx.mounted) return;
+  await showExportResultDialog(ctx, success: false, message: l.shareFailed);
+}
+
+/// 隱私設定區塊：「遮蔽介面 UID」開關，以及 Android 在需要時顯示的「廣告隱私權選項」。
 class _PrivacySection extends ConsumerWidget {
   /// 建立 [_PrivacySection]。
   const _PrivacySection();
@@ -1001,7 +1343,7 @@ class _PrivacySection extends ConsumerWidget {
     final maskUid = ref.watch(settingsProvider.select((s) => s.maskUidInUi));
     final notifier = ref.read(settingsProvider.notifier);
 
-    return SwitchListTile(
+    final maskSwitch = SwitchListTile(
       key: const ValueKey('settings.maskUidInUiSwitch'),
       value: maskUid,
       title: Text(l.settingsMaskUidInUi),
@@ -1017,17 +1359,48 @@ class _PrivacySection extends ConsumerWidget {
       contentPadding: EdgeInsets.zero,
       onChanged: notifier.setMaskUidInUi,
     );
+
+    final showAdPrivacy =
+        ref.watch(isAndroidProvider) &&
+        ref.watch(adsProvider.select((s) => s.privacyOptionsRequired));
+    if (!showAdPrivacy) return maskSwitch;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        maskSwitch,
+        const SizedBox(height: AppSpacing.s),
+        Text(
+          l.settingsAdPrivacyOptionsHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: tokens.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: OutlinedButton(
+            key: const ValueKey('settings.adPrivacyOptionsButton'),
+            onPressed: () =>
+                ref.read(adsProvider.notifier).showPrivacyOptions(),
+            child: Text(l.settingsAdPrivacyOptions),
+          ),
+        ),
+      ],
+    );
   }
 }
 
-/// 日誌區塊，提供回報問題、匯出日誌、開啟資料夾、清除日誌等操作。
+/// 日誌區塊，提供回報問題、匯出日誌、開啟資料夾（Android 為分享日誌）、清除日誌等操作。
 class _LogsSection extends ConsumerWidget {
+  /// 建立 [_LogsSection]。
   const _LogsSection();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final android = ref.watch(isAndroidProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1053,11 +1426,18 @@ class _LogsSection extends ConsumerWidget {
               icon: const Icon(Icons.download_outlined, size: 18),
               label: Text(l.settingsLogsExport),
             ),
-            OutlinedButton.icon(
-              onPressed: () => _openFolder(context, ref),
-              icon: const Icon(Icons.folder_open_outlined, size: 18),
-              label: Text(l.settingsLogsOpenFolder),
-            ),
+            if (android)
+              OutlinedButton.icon(
+                onPressed: () => _share(context, ref),
+                icon: const Icon(Icons.share_outlined, size: 18),
+                label: Text(l.settingsLogsShare),
+              )
+            else
+              OutlinedButton.icon(
+                onPressed: () => _openFolder(context, ref),
+                icon: const Icon(Icons.folder_open_outlined, size: 18),
+                label: Text(l.settingsLogsOpenFolder),
+              ),
             FilledButton.icon(
               style: FilledButton.styleFrom(
                 backgroundColor: theme.gacha.stateDanger,
@@ -1073,37 +1453,34 @@ class _LogsSection extends ConsumerWidget {
     );
   }
 
-  /// 匯出應用程式日誌至使用者指定路徑。
+  /// 組出日誌匯出內容（UTF-8）與建議檔名。
+  Future<({Uint8List bytes, String fileName})> _buildBundle(
+    WidgetRef ref,
+  ) async {
+    final bundle = await ref
+        .read(logServiceProvider)
+        .buildExportBundle(
+          appVersion: ref.read(appVersionProvider),
+          osDescription:
+              '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
+          localeTag: Platform.localeName,
+          themeMode: ref.read(settingsProvider).themeMode.name,
+        );
+    return (
+      bytes: utf8.encode(bundle),
+      fileName: 'giwga_logs_${fileTimestamp(DateTime.now())}.log',
+    );
+  }
+
+  /// 匯出應用程式日誌至使用者指定位置。
   Future<void> _export(BuildContext ctx, WidgetRef ref) async {
     final l = AppLocalizations.of(ctx)!;
-    final log = ref.read(logServiceProvider);
-    final appVersion = ref.read(appVersionProvider);
-    final settings = ref.read(settingsProvider);
-
-    final now = DateTime.now();
-    final stamp = fileTimestamp(now);
-
-    final loc = await getSaveLocation(
-      suggestedName: 'giwga_logs_$stamp.log',
-      acceptedTypeGroups: const [
-        XTypeGroup(label: 'Log', extensions: ['log']),
-      ],
-    );
-    if (loc == null) return;
-
-    final bundle = await log.buildExportBundle(
-      appVersion: appVersion,
-      osDescription:
-          '${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
-      localeTag: Platform.localeName,
-      themeMode: settings.themeMode.name,
-    );
+    // FilePicker.saveFile 要求 bytes 一開始就備妥，所以先組 bundle 再開存檔對話框。
+    final ({Uint8List bytes, String fileName}) bundle;
     try {
-      await File(loc.path).writeAsString(bundle);
+      bundle = await _buildBundle(ref);
     } catch (e, st) {
-      Logger(
-        'accounts.io',
-      ).severe('logs export failed ${sanitizeFsPath(loc.path)}', e, st);
+      Logger('accounts.io').severe('logs export failed: build bundle', e, st);
       if (!ctx.mounted) return;
       await showExportResultDialog(
         ctx,
@@ -1112,15 +1489,64 @@ class _LogsSection extends ConsumerWidget {
       );
       return;
     }
+    final (:bytes, :fileName) = bundle;
+    final SavedFile? saved;
+    try {
+      saved = await saveBytes(
+        bytes,
+        suggestedName: fileName,
+        extension: 'log',
+        mimeType: 'text/plain',
+        dialogTitle: l.dialogSaveAsTitle,
+      );
+    } catch (e, st) {
+      Logger('accounts.io').severe('logs export failed name=$fileName', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: l.settingsLogsExportFailed(e.toString()),
+      );
+      return;
+    }
+    if (saved == null) return;
     Logger(
       'accounts.io',
-    ).info('logs exported: ${loc.path} (${bundle.length} bytes)');
+    ).info('logs exported: ${_savedLocation(saved)} bytes=${bytes.length}');
     if (!ctx.mounted) return;
     await showExportResultDialog(
       ctx,
       success: true,
-      message: l.settingsLogsExportSuccess(loc.path),
-      revealPath: loc.path,
+      message: l.settingsLogsExportSuccess(saved.path ?? saved.displayName),
+      revealPath: saved.path,
+    );
+  }
+
+  /// 以系統分享面板分享應用程式日誌（Android）。
+  Future<void> _share(BuildContext ctx, WidgetRef ref) async {
+    final ({Uint8List bytes, String fileName}) bundle;
+    try {
+      bundle = await _buildBundle(ref);
+    } catch (e, st) {
+      Logger('accounts.io').severe('logs share failed: build bundle', e, st);
+      if (!ctx.mounted) return;
+      await showExportResultDialog(
+        ctx,
+        success: false,
+        message: AppLocalizations.of(ctx)!.shareFailed,
+      );
+      return;
+    }
+    final (:bytes, :fileName) = bundle;
+    Logger(
+      'accounts.io',
+    ).info('logs share: name=$fileName bytes=${bytes.length}');
+    if (!ctx.mounted) return;
+    await _shareOrReport(
+      ctx,
+      bytes: bytes,
+      fileName: fileName,
+      mimeType: 'text/plain',
     );
   }
 
@@ -1226,6 +1652,14 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final current = ref.watch(dataLanguageProvider);
+    final items = [
+      DropdownMenuItem<String?>(
+        value: null,
+        child: Text(l.settingsDataLanguageUnset),
+      ),
+      for (final o in kDataLanguageOptions)
+        DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
+    ];
     final notifier = ref.read(settingsProvider.notifier);
     final theme = Theme.of(context);
 
@@ -1241,23 +1675,18 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
         const SizedBox(height: AppSpacing.s),
         DropdownButtonFormField<String?>(
           initialValue: current,
+          isExpanded: true,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
-          items: [
-            DropdownMenuItem<String?>(
-              value: null,
-              child: Text(l.settingsDataLanguageUnset),
-            ),
-            for (final o in kDataLanguageOptions)
-              DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
-          ],
+          items: items,
+          selectedItemBuilder: _onlySelectedLabel(items, current),
           onChanged: _busy ? null : (v) => notifier.setDataLanguage(v),
         ),
         const SizedBox(height: AppSpacing.s),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: OutlinedButton.icon(
             onPressed: (current == null || _busy) ? null : () => _unify(l),
             icon: _busy
@@ -1276,5 +1705,46 @@ class _DataLanguageSectionState extends ConsumerState<_DataLanguageSection> {
         ),
       ],
     );
+  }
+}
+
+/// 第一次需要補資料時才呼叫 [open]（顯示進度對話框）的 [ItemResolver] 包裝；
+/// UIGF 檔欄位齊全時不會呼叫 resolver，也就不會閃出對話框。
+class _ProgressItemResolver implements ItemResolver {
+  /// 建立 [_ProgressItemResolver]，實際查詢交給 [_inner]。
+  _ProgressItemResolver(this._inner, {required this.open});
+
+  /// 實際查詢名稱與星級的 resolver。
+  final ItemResolver _inner;
+
+  /// 開啟進度對話框並回傳關閉它的函式；無法開啟時回 null。
+  final CloseProgressDialog? Function() open;
+
+  /// 是否已開過進度對話框。
+  bool _opened = false;
+
+  /// 關閉進度對話框的函式；尚未開啟時為 null。
+  CloseProgressDialog? _close;
+
+  /// 第一次呼叫時開啟進度對話框。
+  void _markUsed() {
+    if (_opened) return;
+    _opened = true;
+    _close = open();
+  }
+
+  /// 關閉進度對話框（若有開啟）；可重複呼叫。
+  void close() => _close?.call();
+
+  @override
+  Future<({String name, String lang})> nameFor(String itemId) {
+    _markUsed();
+    return _inner.nameFor(itemId);
+  }
+
+  @override
+  Future<int> rankFor(String name, String lang) {
+    _markUsed();
+    return _inner.rankFor(name, lang);
   }
 }

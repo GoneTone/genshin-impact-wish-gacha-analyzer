@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">מנתח משיכות Wish ל-Genshin Impact</string>
+    <string name="pairing_channel">התאמה בניפוי באגים אלחוטי</string>
+    <string name="pairing_searching_title">מחפש את שירות ההתאמה</string>
+    <string name="pairing_searching_text">בניפוי באגים אלחוטי, הקישו על \"התאמת מכשיר באמצעות קוד התאמה\"</string>
+    <string name="pairing_found_title">הזינו את קוד ההתאמה</string>
+    <string name="pairing_found_text">הקלידו את הקוד בן 6 הספרות שמוצג במסך ההתאמה</string>
+    <string name="pairing_input_label">קוד התאמה</string>
+    <string name="pairing_action_pair">התאמה</string>
+    <string name="pairing_action_stop">עצירה</string>
+    <string name="pairing_in_progress">מתבצעת התאמה...</string>
+    <string name="pairing_success_title">ההתאמה הצליחה</string>
+    <string name="pairing_success_text">הקישו כאן כדי לחזור לאפליקציה</string>
+    <string name="pairing_failed_text">ההתאמה נכשלה. בדקו את הקוד והזינו אותו שוב</string>
+    <string name="pairing_no_app_text">ההתאמה נכשלה. חזרו לאפליקציה ונסו שוב</string>
+    <string name="pairing_timeout_title">תם הזמן להתאמה</string>
+    <string name="pairing_timeout_text">הקישו כאן כדי להתחיל מחדש</string>
+</resources>

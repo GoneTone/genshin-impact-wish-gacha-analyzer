@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_method.dart';
+
 /// 應用程式的外觀主題設定。
 enum AppThemeMode {
   /// 跟隨系統明暗模式。
@@ -78,6 +81,7 @@ class AppSettings {
     required this.locale,
     this.lastActiveUid,
     this.uidAliases = const {},
+    this.uidAliasUpdatedAt = const {},
     this.uidOrder = const [],
     this.skippedReleaseTag,
     this.maskUidInUi = false,
@@ -87,6 +91,8 @@ class AppSettings {
     this.cloudAutoSyncEnabled = true,
     this.cloudLastSyncedAt,
     this.cloudPendingRemovals = const [],
+    this.gameDir,
+    this.logAccessMethod,
   });
 
   /// 外觀主題。
@@ -100,6 +106,9 @@ class AppSettings {
 
   /// UID 別名對應，key = uid。
   final Map<String, String> uidAliases;
+
+  /// 各 UID 別名最後修改（含清空）的時間（UTC），key = uid；同步與匯入合併時較新的勝出。
+  final Map<String, DateTime> uidAliasUpdatedAt;
 
   /// 使用者自訂的 UID 顯示順序。
   final List<String> uidOrder;
@@ -128,6 +137,12 @@ class AppSettings {
   /// 待從雲端移除的 UID 清單（刪帳號勾「連雲端一起刪」時排入，同步成功後清除）。
   final List<String> cloudPendingRemovals;
 
+  /// 使用者指定的遊戲資料夾（僅存本機，不參與雲端同步）；null 代表未設定。
+  final String? gameDir;
+
+  /// Android 上次成功取得系統記錄的方式（僅存本機，不參與雲端同步）；null 代表尚無。
+  final LogAccessMethod? logAccessMethod;
+
   /// 預設設定值（跟隨系統主題與語言）。
   static const defaults = AppSettings(
     themeMode: AppThemeMode.system,
@@ -142,6 +157,7 @@ class AppSettings {
     String? lastActiveUid,
     bool clearLastActiveUid = false,
     Map<String, String>? uidAliases,
+    Map<String, DateTime>? uidAliasUpdatedAt,
     List<String>? uidOrder,
     String? skippedReleaseTag,
     bool clearSkippedReleaseTag = false,
@@ -155,6 +171,10 @@ class AppSettings {
     DateTime? cloudLastSyncedAt,
     bool clearCloudLastSyncedAt = false,
     List<String>? cloudPendingRemovals,
+    String? gameDir,
+    bool clearGameDir = false,
+    LogAccessMethod? logAccessMethod,
+    bool clearLogAccessMethod = false,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     locale: locale ?? this.locale,
@@ -162,6 +182,7 @@ class AppSettings {
         ? null
         : (lastActiveUid ?? this.lastActiveUid),
     uidAliases: uidAliases ?? this.uidAliases,
+    uidAliasUpdatedAt: uidAliasUpdatedAt ?? this.uidAliasUpdatedAt,
     uidOrder: uidOrder ?? this.uidOrder,
     skippedReleaseTag: clearSkippedReleaseTag
         ? null
@@ -179,6 +200,10 @@ class AppSettings {
         ? null
         : (cloudLastSyncedAt ?? this.cloudLastSyncedAt),
     cloudPendingRemovals: cloudPendingRemovals ?? this.cloudPendingRemovals,
+    gameDir: clearGameDir ? null : (gameDir ?? this.gameDir),
+    logAccessMethod: clearLogAccessMethod
+        ? null
+        : (logAccessMethod ?? this.logAccessMethod),
   );
 }
 
@@ -198,6 +223,9 @@ abstract final class SettingsStorage {
 
   /// SharedPreferences key：UID 別名 JSON。
   static const _kUidAliases = 'pref.uidAliases';
+
+  /// SharedPreferences key：UID 別名修改時間 JSON。
+  static const _kUidAliasUpdatedAt = 'pref.uidAliasUpdatedAt';
 
   /// SharedPreferences key：UID 排序 JSON。
   static const _kUidOrder = 'pref.uidOrder';
@@ -223,6 +251,12 @@ abstract final class SettingsStorage {
   /// SharedPreferences key：待雲端移除 UID 清單 JSON。
   static const _kCloudPendingRemovals = 'pref.cloudPendingRemovals';
 
+  /// SharedPreferences key：遊戲資料夾路徑（僅本機）。
+  static const _kGameDir = 'pref.gameDir';
+
+  /// SharedPreferences key：Android 讀取系統記錄的方式（僅本機）。
+  static const _kLogAccessMethod = 'pref.logAccessMethod';
+
   /// 從 SharedPreferences 讀取設定，欄位缺漏時回退到預設值。
   static Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -232,6 +266,7 @@ abstract final class SettingsStorage {
       locale: _parseLocale(prefs.getString(_kLocale)),
       lastActiveUid: prefs.getString(_kLastActiveUid),
       uidAliases: _parseAliases(prefs.getString(_kUidAliases)),
+      uidAliasUpdatedAt: _parseAliasTimes(prefs.getString(_kUidAliasUpdatedAt)),
       uidOrder: _parseOrder(prefs.getString(_kUidOrder)),
       skippedReleaseTag: prefs.getString(_kSkippedReleaseTag),
       maskUidInUi: prefs.getBool(_kMaskUidInUi) ?? false,
@@ -244,6 +279,10 @@ abstract final class SettingsStorage {
       cloudLastSyncedAt: _parseUtcTime(prefs.getString(_kCloudLastSyncedAt)),
       cloudPendingRemovals: _parseOrder(
         prefs.getString(_kCloudPendingRemovals),
+      ),
+      gameDir: prefs.getString(_kGameDir),
+      logAccessMethod: LogAccessMethod.fromName(
+        prefs.getString(_kLogAccessMethod),
       ),
     );
   }
@@ -259,6 +298,13 @@ abstract final class SettingsStorage {
       await prefs.setString(_kLastActiveUid, s.lastActiveUid!);
     }
     await prefs.setString(_kUidAliases, jsonEncode(s.uidAliases));
+    await prefs.setString(
+      _kUidAliasUpdatedAt,
+      jsonEncode({
+        for (final MapEntry(:key, :value) in s.uidAliasUpdatedAt.entries)
+          key: value.toUtc().toIso8601String(),
+      }),
+    );
     await prefs.setString(_kUidOrder, jsonEncode(s.uidOrder));
     if (s.skippedReleaseTag == null) {
       await prefs.remove(_kSkippedReleaseTag);
@@ -289,6 +335,16 @@ abstract final class SettingsStorage {
       _kCloudPendingRemovals,
       jsonEncode(s.cloudPendingRemovals),
     );
+    if (s.gameDir == null) {
+      await prefs.remove(_kGameDir);
+    } else {
+      await prefs.setString(_kGameDir, s.gameDir!);
+    }
+    if (s.logAccessMethod == null) {
+      await prefs.remove(_kLogAccessMethod);
+    } else {
+      await prefs.setString(_kLogAccessMethod, s.logAccessMethod!.name);
+    }
   }
 
   /// 解析主題設定字串，未知值回退到 [AppThemeMode.system]。
@@ -320,6 +376,22 @@ abstract final class SettingsStorage {
       return decoded.map((k, v) => MapEntry(k.toString(), v.toString()));
     } catch (e, st) {
       _log.warning('uidAliases corrupt, resetting to empty', e, st);
+      return const {};
+    }
+  }
+
+  /// 解析別名修改時間 JSON；整體格式錯誤時 log 警告並回傳空 map，單筆無法解析就略過。
+  static Map<String, DateTime> _parseAliasTimes(String? raw) {
+    if (raw == null || raw.isEmpty) return const {};
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map) return const {};
+      return {
+        for (final MapEntry(:key, :value) in decoded.entries)
+          key.toString(): ?parseAliasUpdatedAt(value),
+      };
+    } catch (e, st) {
+      _log.warning('uidAliasUpdatedAt corrupt, resetting to empty', e, st);
       return const {};
     }
   }

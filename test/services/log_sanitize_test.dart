@@ -93,6 +93,46 @@ void main() {
       expect('authkey=***'.allMatches(out).length, equals(2));
     });
 
+    test('masks the user name of home paths anywhere in the text', () {
+      expect(
+        sanitizeLogMessage(
+          r"PathNotFoundException: Cannot open file, path = 'c:\users\bob\a.txt'",
+        ),
+        r"PathNotFoundException: Cannot open file, path = 'c:\users\***\a.txt'",
+      );
+      expect(
+        sanitizeLogMessage('at file:///C:/Users/bob/x.dart:1:2'),
+        'at file:///C:/Users/***/x.dart:1:2',
+      );
+      expect(sanitizeLogMessage('dir=/home/bob/app'), 'dir=/home/***/app');
+      expect(sanitizeLogMessage('dir=/Users/bob/app'), 'dir=/Users/***/app');
+    });
+
+    test('keeps url paths and non-home paths', () {
+      expect(
+        sanitizeLogMessage('GET https://h.example.com/home/page'),
+        'GET https://h.example.com/home/page',
+      );
+      expect(sanitizeLogMessage(r'D:\Games\Genshin'), r'D:\Games\Genshin');
+      expect(sanitizeLogMessage('/data/user/0/x'), '/data/user/0/x');
+    });
+
+    test('masks the uid in records file names', () {
+      expect(sanitizeLogMessage('/d/800123456.json'), '/d/800****456.json');
+      expect(
+        sanitizeLogMessage(r'\d\800123456.url.json'),
+        r'\d\800****456.url.json',
+      );
+      expect(
+        sanitizeLogMessage('/d/800123456.json.tmp'),
+        '/d/800****456.json.tmp',
+      );
+      expect(
+        sanitizeLogMessage('/d/hoyowiki_index.json'),
+        '/d/hoyowiki_index.json',
+      );
+    });
+
     test('redacts authkey even when scheme is uppercase', () {
       final out = sanitizeLogMessage(
         'weird HTTPS://x.example.com/y?authkey=SECRET&size=5',

@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 import 'package:genshin_impact_wish_gacha_analyzer/data/app_repo.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
@@ -355,6 +355,7 @@ class _ShareHeader extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 AppRepo.githubUrl,
+                textDirection: TextDirection.ltr,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: tokens.textMuted,
                 ),
@@ -368,13 +369,15 @@ class _ShareHeader extends StatelessWidget {
           children: [
             Text(
               'UID $uidText',
+              textDirection: TextDirection.ltr,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: tokens.textSecondary,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              l.shareImageUpdatedAt(ts),
+              // 隔離成由左往右，阿拉伯文句子裡的日期才不會被重排成「日-月-年」。
+              l.shareImageUpdatedAt('\u2066$ts\u2069'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: tokens.textMuted,
               ),

@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
+import 'package:genshin_impact_wish_gacha_analyzer/models/alias_merge.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/data/gacha_types.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/accounts_bundle.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/banner_storage.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/cancellable_http_client.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/concurrent_pool.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_url.dart';
@@ -18,13 +22,20 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_fetcher.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/gacha_storage.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/record_merge.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/game_dir_locator.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/src/rust/api/capture.dart'
     as rust_capture;
+import 'package:genshin_impact_wish_gacha_analyzer/state/adb_pairing.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/app_foreground.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_language_converter.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/logcat_url_watch.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_capture.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_url_watch.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_progress.dart';
 
@@ -128,8 +139,17 @@ class GachaRepository extends Notifier<GachaState> {
   /// Logger 實例（非破壞性 metadata 更新流程）。
   static final _refreshMetaLog = Logger('gacha.hoyowiki.refreshMetadata');
 
+  /// 手動輸入網址流程的 logger（與對話框同一棵樹）。
+  static final _manualLog = Logger('capture.manual');
+
   /// Logger 實例（雲端同步觸發的匯入與補抓）。
   static final _cloudSyncLog = Logger('cloudsync.sync');
+
+  /// 網頁快取 URL 來源 logger（與監看器、locator 同一棵樹）。
+  static final _webCacheLog = Logger('gacha.webCache');
+
+  /// Android 讀取系統記錄流程的 logger。
+  static final _androidLog = Logger('capture.android');
 
   /// build() 內 `_bootstrapLoad()` 完成的 future，供測試 await。
   Completer<void>? _bootstrapCompleter;
@@ -219,18 +239,50 @@ class GachaRepository extends Notifier<GachaState> {
   /// 清除目前的更新進度狀態。
   void clearProgress() {
     state = state.copyWith(clearProgress: true);
+    if (_imageFetchPending) {
+      _cloudSyncLog.info('post-sync item fetch resumed: result dialog closed');
+      unawaited(fetchItemImagesForCloudSync());
+    }
   }
 
-  /// 啟動祈願資料更新，優先使用快取 URL，無快取則觸發 MITM 捕獲。
-  Future<void> update() async {
-    await _runUpdate(forceRecapture: false);
+  /// 啟動祈願資料更新，優先使用快取 URL，無快取則等待取得網址（電腦版攔截＋網頁快取，Android 讀系統記錄）。
+  ///
+  /// [afterPairing] 為 true 表示剛完成無線偵錯配對、且開始設定前無線偵錯沒開：這次用完一律關閉（玩家照引導打開的也算 App 開的）。
+  Future<void> update({bool afterPairing = false}) async {
+    await _runUpdate(forceRecapture: false, afterPairing: afterPairing);
   }
 
-  /// 實際執行更新流程；[forceRecapture] 為 true 時強制重新 MITM 捕獲。
-  Future<void> _runUpdate({required bool forceRecapture}) async {
+  /// 使用者手動貼上的祈願 API 網址：正在等待取得網址時直接完成這次等待，沒有進行中的更新時用它跑一次更新，正在抓資料時忽略。
+  ///
+  /// 完成等待走和網頁快取命中相同的路，但電腦版會立即收尾攔截，不給寬限。
+  Future<void> submitManualUrl(String apiUrl) async {
+    final hit = _cacheHit;
+    if (hit != null && !hit.isCompleted) {
+      _manualLog.info('url source=manual (completing wait)');
+      _manualHit = true;
+      hit.complete(apiUrl);
+      return;
+    }
+    if (_isUpdating) {
+      _manualLog.info('manual url ignored: update in progress');
+      return;
+    }
+    _manualLog.info('url source=manual (new update)');
+    await _runUpdate(forceRecapture: false, manualUrl: apiUrl);
+  }
+
+  /// 實際執行更新流程；[forceRecapture] 為 true 時強制重新 MITM 捕獲，[manualUrl] 非 null 時直接用它。
+  Future<void> _runUpdate({
+    required bool forceRecapture,
+    String? manualUrl,
+    bool afterPairing = false,
+  }) async {
     if (_isUpdating) return; // 防止重入
     _isUpdating = true;
     _cancelTriggered = false;
+    _afterPairing = afterPairing;
+    _androidWaitRan = false;
+    _wirelessLeftOn = false;
     _log.info('update start, forceRecapture=$forceRecapture');
 
     final cancellable = ref.read(cancellableHttpClientFactoryProvider)();
@@ -249,9 +301,9 @@ class GachaRepository extends Notifier<GachaState> {
         if (!ref.mounted) return;
       }
 
-      String? capturedUrl;
+      String? capturedUrl = manualUrl;
 
-      if (!forceRecapture && initialActiveUid != null) {
+      if (manualUrl == null && !forceRecapture && initialActiveUid != null) {
         capturedUrl = await storage.loadCapturedUrl(initialActiveUid);
         if (!ref.mounted) return;
         if (capturedUrl != null) {
@@ -262,7 +314,7 @@ class GachaRepository extends Notifier<GachaState> {
       }
 
       if (capturedUrl == null) {
-        capturedUrl = await _runMitm(isFallback: false);
+        capturedUrl = await _acquireUrl(isFallback: false);
         if (!ref.mounted) return;
         if (capturedUrl == null) {
           _log.info('update aborted (user cancelled capture)');
@@ -280,12 +332,12 @@ class GachaRepository extends Notifier<GachaState> {
         );
       } on AuthExpiredException {
         if (!ref.mounted) return;
-        _log.warning('auth expired, falling back to MITM recapture');
+        _log.warning('auth expired, falling back to recapture');
         if (initialActiveUid != null) {
           await storage.deleteCapturedUrl(initialActiveUid);
           if (!ref.mounted) return;
         }
-        final newUrl = await _runMitm(isFallback: true);
+        final newUrl = await _acquireUrl(isFallback: true);
         if (!ref.mounted) return;
         if (newUrl == null) {
           state = state.copyWith(clearProgress: true);
@@ -331,7 +383,13 @@ class GachaRepository extends Notifier<GachaState> {
         _log.severe('update unexpected error', e, st);
         state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
       }
+    } catch (e, st) {
+      // 取得網址時的錯誤（例如 Android 讀不到配對金鑰）原本會逃出 update()、讓等待畫面卡住，在此轉成更新失敗。
+      if (!ref.mounted) return;
+      _log.severe('update failed while acquiring url', e, st);
+      state = state.copyWith(progress: UpdateFailed(_friendlyError(e)));
     } finally {
+      await _disableWirelessIfPairingUnused();
       _activeCancellable?.client.close();
       _activeCancellable = null;
       _cancelTriggered = false;
@@ -339,26 +397,504 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// 啟動 MITM 捕獲會話並等候 URL；[isFallback] 為 auth 過期後的二次捕獲。
+  /// 啟動 MITM 捕獲並同時監看遊戲網頁快取，回傳先拿到的 URL；null 代表使用者取消。
   ///
-  /// 等待用 `Future.any([session.result, backstop])`：正常經 onDone 由 `result`
-  /// 回；若 onDone 失靈（Rust 拆除未 drop sink），則由 [cancelCapture] 完成的
-  /// [_captureBackstop] 解開，確保等待一定有界、不會永久卡在 `WaitingForCapture`。
+  /// [isFallback] 為 auth 過期後的二次捕獲。快取先拿到時先給攔截寬限自行結束、逾時才停掉，
+  /// 並等它收尾（MITM proxy 已停、系統代理已還原）才回傳，收尾錯誤只記 warning。快取勝出前
+  /// 攔截就失效（丟錯，或非使用者取消卻沒攔到）時先停掉攔截（還原系統代理），再改為只等快取並在畫面提示；找不到
+  /// 遊戲資料夾時提示改成請使用者選資料夾，選好即接上監看。只有使用者取消會結束等待。
+  ///
+  /// 每段等待都和 [_captureBackstop] 比快：onDone 失靈（Rust 拆除未 drop sink）或
+  /// `cancel()` 卡在根憑證確認視窗時，由 [cancelCapture] 完成它解開等待，確保一定有界。
   Future<String?> _runMitm({required bool isFallback}) async {
     state = state.copyWith(progress: WaitingForCapture(isFallback: isFallback));
     final session = ref.read(gachaCaptureProvider).start();
     _activeCancel = session.cancel;
+    _captureCancelRequested = false;
+    final cacheHit = Completer<String>();
+    _cacheHit = cacheHit;
+    _manualHit = false;
     final backstop = Completer<String?>();
     _captureBackstop = backstop;
     _log.info('MITM ${isFallback ? "fallback" : "primary"} session started');
+    final watchStart = _startWebCacheWatch();
+    String? url;
     try {
-      final result = await Future.any([session.result, backstop.future]);
-      _log.info('MITM session done, hasUrl=${result != null}');
-      return result;
+      // 攔截已自行結束（出錯、沒攔到或被 backstop 解開）時為 true；此時快取勝出不需再收尾攔截。
+      var captureFinished = false;
+      var fromCache = false;
+      try {
+        (url, fromCache) = await Future.any([
+          session.result.then((u) => (u, false)),
+          cacheHit.future.then((u) => (u, true)),
+          backstop.future.then((u) => (u, false)),
+        ]);
+        captureFinished = !fromCache;
+      } catch (e, st) {
+        // 攔截出錯（例如根憑證被拒絕、18080 埠被佔用）不判定失敗，改為只等快取。
+        _webCacheLog.warning('capture failed', e, st);
+        captureFinished = true;
+        if (await _canWaitCacheOnly(watchStart, backstop)) {
+          (url, fromCache) = await _waitCacheOnly(
+            isFallback,
+            session,
+            cacheHit,
+            backstop,
+          );
+        }
+      }
+      if (!fromCache &&
+          url == null &&
+          !_captureCancelRequested &&
+          await _canWaitCacheOnly(watchStart, backstop)) {
+        _webCacheLog.warning('capture ended without url');
+        (url, fromCache) = await _waitCacheOnly(
+          isFallback,
+          session,
+          cacheHit,
+          backstop,
+        );
+      }
+      if (fromCache && !captureFinished) {
+        await _stopCaptureAfterCacheWin(
+          session,
+          backstop,
+          skipGrace: _manualHit,
+        );
+      }
+      if (!fromCache) _log.info('MITM session done, hasUrl=${url != null}');
+      if (url != null) {
+        _webCacheLog.info(
+          'url source=${fromCache ? (_manualHit ? "manual" : "cache") : "capture"}',
+        );
+      }
     } finally {
+      _cacheHit = null;
+      _watchGeneration++;
       _activeCancel = null;
       _captureBackstop = null;
+      await _stopWebCacheWatch();
     }
+    // 收尾（攔截 teardown、停監看）可能跨越事件迴圈，期間按下的取消仍要生效。
+    if (url != null && _captureCancelRequested) {
+      _webCacheLog.info('user cancelled before fetch, discarding url');
+      return null;
+    }
+    return url;
+  }
+
+  /// 依平台取得祈願 API 網址：Android 讀系統記錄，其他平台走攔截與網頁快取競速。null 代表使用者取消。
+  Future<String?> _acquireUrl({required bool isFallback}) async {
+    if (!ref.read(isAndroidProvider)) return _runMitm(isFallback: isFallback);
+    final url = await _runAndroidWait(isFallback: isFallback);
+    // 收尾（停監看、release）可能跨越事件迴圈，期間按下的取消仍要生效（同 _runMitm）。
+    if (url != null && _captureCancelRequested) {
+      _androidLog.info('user cancelled before fetch, discarding url');
+      return null;
+    }
+    return url;
+  }
+
+  /// Android 沒有自動讀取方式而等待時重新判斷（玩家打開了無線偵錯、授權了權限、切回 App 時呼叫）；其他時候為 no-op。
+  Future<void> retryLogAccess() async {
+    final retry = _logAccessRetry;
+    if (retry == null || retry.isCompleted) return;
+    _androidLog.info('log access retry requested');
+    retry.complete();
+  }
+
+  /// Android 的等待流程：決定讀取方式、監看系統記錄，等命中、手動輸入或取消。null 代表使用者取消。
+  ///
+  /// 沒有自動讀取方式時改顯示原因並只等手動輸入，[retryLogAccess] 可以重新判斷。手動輸入走 [_cacheHit]，
+  /// 取消走 [_captureBackstop]，與電腦版相同。結束時一律先停監看再 release（中斷連線、依規則關閉無線偵錯）；
+  /// 沒拿到網址（取消）時這段收尾改在背景做、接到 [_androidTeardown]，取消才不會卡在重連中的輪詢。
+  Future<String?> _runAndroidWait({required bool isFallback}) async {
+    _androidWaitRan = true;
+    _manualHit = false;
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: isFallback,
+        checkingLogAccess: true,
+      ),
+    );
+    final hit = Completer<String>();
+    _cacheHit = hit;
+    final cancelled = Completer<String?>();
+    _captureBackstop = cancelled;
+    _captureCancelRequested = false;
+    // 判斷途中玩家取消或手動送出就不等了（root 授權視窗最多等 60 秒）。
+    final stop = Future.any<String?>([hit.future, cancelled.future]);
+    LogAccessReady? ready;
+    Future<CaptureSession>? starting;
+    var gotUrl = false;
+    // 最後一次判斷沒有讀取方式、又沒權限關掉無線偵錯；之後拿到讀取方式就交給 release 決定。
+    var blockedLeftOn = false;
+    StreamSubscription<bool>? healthSub;
+    try {
+      final previous = _androidTeardown;
+      if (previous != null) {
+        _androidLog.info('waiting for the previous android teardown');
+        await Future.any<Object?>([previous, stop]);
+        if (_captureCancelRequested || !ref.mounted) return null;
+        if (hit.isCompleted) return await hit.future;
+      }
+      var forceDisableAfterUse = _afterPairing;
+      while (true) {
+        final resolving = ref
+            .read(logAccessResolverProvider)
+            .resolve(
+              preferred: ref.read(settingsProvider).logAccessMethod,
+              forceDisableAfterUse: forceDisableAfterUse,
+              abort: stop,
+            );
+        final first = await Future.any<Object?>([resolving, stop]);
+        if (first is! LogAccessOutcome) {
+          _androidLog.info('log access resolve abandoned');
+          // 晚到的結果也要 release，否則連線或打開的無線偵錯會留著。
+          _queueAndroidTeardown(
+            resolving.then((late) async {
+              if (late is LogAccessReady) await late.release();
+            }),
+            'late log access release',
+          );
+          if (first is String && !_captureCancelRequested) return first;
+          return null;
+        }
+        final outcome = first;
+        blockedLeftOn = outcome is LogAccessBlocked && outcome.wirelessLeftOn;
+        if (outcome is LogAccessReady) {
+          ready = outcome;
+          if (_captureCancelRequested || !ref.mounted) return null;
+          state = state.copyWith(
+            progress: WaitingForCapture(
+              isFallback: isFallback,
+              gamePackage: outcome.game,
+            ),
+          );
+          break;
+        }
+        if (_captureCancelRequested || !ref.mounted) return null;
+        if (hit.isCompleted) return await hit.future;
+        final blocked = outcome as LogAccessBlocked;
+        // App 這次打開過無線偵錯，或請玩家自己打開；之後重試看到它開著，是系統（玩家按了允許）或玩家照引導開的，用完要關回去。
+        if (blocked.enabledWireless ||
+            blocked.reason == LogAccessUnavailable.wirelessDebuggingOff) {
+          forceDisableAfterUse = true;
+        }
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            logAccessUnavailable: blocked.reason,
+            rootDenied: blocked.rootDenied,
+          ),
+        );
+        final retry = Completer<void>();
+        _logAccessRetry = retry;
+        final next = await Future.any<Object?>([
+          stop,
+          retry.future.then((_) => retry),
+        ]);
+        _logAccessRetry = null;
+        if (next is String) return next;
+        if (next == null || !ref.mounted) return null;
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            checkingLogAccess: true,
+          ),
+        );
+      }
+      await ref
+          .read(settingsProvider.notifier)
+          .setLogAccessMethod(ready.method);
+      final game = ready.game;
+      healthSub = ready.healthChanges.listen((healthy) {
+        final p = state.progress;
+        if (p is! WaitingForCapture || p.logConnectionLost == !healthy) return;
+        _androidLog.info('log connection healthy=$healthy');
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: p.isFallback,
+            logConnectionLost: !healthy,
+            gamePackage: game,
+          ),
+        );
+      });
+      final start = ref.read(logcatUrlWatchProvider).start(ready.exec);
+      starting = start;
+      // start 要跑完第一輪（取時間、清殘留、啟動監看程序）才回傳；這段期間的取消與手動輸入要立刻生效。
+      final session = await Future.any<Object?>([start, stop]);
+      if (session is! CaptureSession) {
+        _androidLog.info('logcat watch start abandoned');
+        if (session is String && !_captureCancelRequested) return session;
+        return null;
+      }
+      if (_captureCancelRequested || !ref.mounted) return null;
+      unawaited(
+        session.result.then((u) {
+          if (u != null && !hit.isCompleted) hit.complete(u);
+        }),
+      );
+      final url = await stop;
+      if (url == null || _captureCancelRequested) return null;
+      _androidLog.info('url source=${_manualHit ? "manual" : "logcat"}');
+      final foreground = ref.read(appForegroundProvider);
+      if (!foreground.isForeground) {
+        _androidLog.info('url ready, waiting for the app to return');
+        state = state.copyWith(
+          progress: WaitingForCapture(
+            isFallback: isFallback,
+            credentialReady: true,
+            gamePackage: game,
+          ),
+        );
+        final resumed = await Future.any([
+          foreground.untilForeground().then((_) => true),
+          cancelled.future.then((_) => false),
+        ]);
+        if (!resumed || _captureCancelRequested || !ref.mounted) return null;
+      }
+      gotUrl = true;
+      return url;
+    } finally {
+      _cacheHit = null;
+      _captureBackstop = null;
+      _logAccessRetry = null;
+      await healthSub?.cancel();
+      if (blockedLeftOn) _wirelessLeftOn = true;
+      final r = ready;
+      if (r != null) {
+        final teardown = _stopWatchThenRelease(starting, r);
+        if (gotUrl) {
+          if (await teardown) _wirelessLeftOn = true;
+        } else {
+          // 監看可能還在跑第一輪或卡在重連中的輪詢：不讓取消卡在這裡，照樣先停監看再 release。
+          _queueAndroidTeardown(
+            teardown.then((leftOn) {
+              if (leftOn) {
+                _androidLog.info(
+                  'wireless debugging left on after a cancelled wait',
+                );
+              }
+            }),
+            'android teardown',
+          );
+        }
+      }
+    }
+  }
+
+  /// 等背景還在做的 Android 收尾（停監看、release）做完；沒有時立刻返回。
+  ///
+  /// 設定頁的設定與解除配對要先等它，否則晚到的 release 可能關掉剛為了配對打開的無線偵錯。
+  Future<void> waitAndroidTeardown() async => _androidTeardown;
+
+  /// 把背景收尾接到 [_androidTeardown] 後面（不取代還沒做完的前一段）；錯誤只記 warning，不讓下一次更新失敗。
+  void _queueAndroidTeardown(Future<void> teardown, String what) {
+    final chained = Future.wait<void>([
+      ?_androidTeardown,
+      teardown.catchError(
+        (Object e, StackTrace st) => _androidLog.warning('$what failed', e, st),
+      ),
+    ]);
+    _androidTeardown = chained;
+    unawaited(
+      chained.then((_) {
+        if (identical(_androidTeardown, chained)) _androidTeardown = null;
+      }),
+    );
+  }
+
+  /// 剛配對完、這次卻沒跑 Android 等待（快取或手動網址直接可用）時，關掉為了配對打開的無線偵錯；沒有權限關時讓完成畫面提示。
+  ///
+  /// 只做一次；有跑等待時改由無線偵錯的 release 依 [_afterPairing] 關閉，這裡不重複（等待改用 root 或手動輸入結束時不會關）。
+  Future<void> _disableWirelessIfPairingUnused() async {
+    if (!_afterPairing || _androidWaitRan || !ref.mounted) return;
+    _afterPairing = false;
+    final off = await ref
+        .read(logAccessPlatformProvider)
+        .setAdbWifiEnabled(false);
+    _androidLog.info(
+      'wireless debugging off after pairing without a wait ok=$off',
+    );
+    if (!off) _wirelessLeftOn = true;
+  }
+
+  /// 停掉 [starting] 的監看（還在啟動時等它回來）再 release [ready]；回傳無線偵錯是否因沒有權限關而留著開。
+  ///
+  /// 進行中的輪詢停下前就 release，讀取失敗會觸發重連、把剛關掉的無線偵錯又打開。
+  Future<bool> _stopWatchThenRelease(
+    Future<CaptureSession>? starting,
+    LogAccessReady ready,
+  ) async {
+    try {
+      await (await starting)?.cancel();
+    } catch (e, st) {
+      _androidLog.warning('logcat watch stop failed', e, st);
+    }
+    final leftOn = await ready.release();
+    // 連上時可能順便補回授權，設定頁的配對狀態要重讀。
+    if (ref.mounted) ref.invalidate(wirelessPairingStatusProvider);
+    return leftOn;
+  }
+
+  /// 快取勝出後收尾攔截：先給 [_cacheWinCaptureGrace] 寬限讓它自行結束，逾時才 `cancel()`；一律等 `result` 完成才返回。
+  ///
+  /// 快取通常只比 MITM 晚幾十毫秒看到網址，此時遊戲的祈願 API 請求可能還在經代理轉送，
+  /// 立刻 `cancel()` 會切斷它，遊戲紀錄頁顯示無法取得數據；Rust 端收到上游回應後會自行停止。
+  /// 每段等待都和 [backstop] 比快（使用者取消立即生效）；收尾錯誤只記 warning。
+  ///
+  /// [skipGrace] 為 true（手動輸入網址）時沒有遊戲請求要等，直接 `cancel()`。
+  Future<void> _stopCaptureAfterCacheWin(
+    CaptureSession session,
+    Completer<String?> backstop, {
+    bool skipGrace = false,
+  }) async {
+    if (skipGrace) {
+      _webCacheLog.info('manual url, cancelling capture without grace');
+    } else {
+      _webCacheLog.info(
+        'cache won, waiting up to ${_cacheWinCaptureGrace.inMilliseconds}ms '
+        'for capture to stop',
+      );
+      try {
+        await Future.any([
+          session.result,
+          backstop.future,
+        ]).timeout(_cacheWinCaptureGrace);
+        if (!backstop.isCompleted) {
+          _webCacheLog.info('capture stopped within grace after cache win');
+        }
+        return;
+      } on TimeoutException {
+        _webCacheLog.info('capture still running after grace, cancelling');
+      } catch (e, st) {
+        _webCacheLog.warning('capture teardown error after cache win', e, st);
+        return;
+      }
+    }
+    // cancel() 丟錯也要等 result：它完成才代表系統代理已還原，之後拉取才不會誤走代理。
+    for (final step in <Future<Object?> Function()>[
+      session.cancel,
+      () => session.result,
+    ]) {
+      try {
+        await Future.any([step(), backstop.future]);
+      } catch (e, st) {
+        _webCacheLog.warning('capture teardown error after cache win', e, st);
+      }
+    }
+  }
+
+  /// 等 [watchStart]（監看啟動流程）跑完後，判斷攔截失效時能否改為只等快取。
+  ///
+  /// 沒有監看 session（找不到遊戲資料夾）也照樣等：畫面會提示使用者選資料夾，選好就能接上。
+  Future<bool> _canWaitCacheOnly(
+    Future<void> watchStart,
+    Completer<String?> backstop,
+  ) async {
+    await Future.any([watchStart, backstop.future]);
+    return ref.mounted && !_captureCancelRequested;
+  }
+
+  /// 攔截失效後只等快取：先停掉攔截 session，再把等待畫面切到提示狀態，回傳快取命中的 URL，使用者取消時為 null。
+  Future<(String?, bool)> _waitCacheOnly(
+    bool isFallback,
+    CaptureSession session,
+    Completer<String> cacheHit,
+    Completer<String?> backstop,
+  ) async {
+    // MITM 在背景 task 才 bind 埠，bind 失敗時系統代理已設好；只有 cancel()（Rust stop_capture）會還原它。
+    try {
+      await Future.any([
+        session.cancel(),
+        backstop.future,
+      ]).timeout(_cancelTeardownTimeout);
+    } catch (e, st) {
+      _webCacheLog.warning('failed capture stop', e, st);
+      if (e is TimeoutException) unawaited(_bestEffortStaleProxyCleanup());
+    }
+    _webCacheLog.info(
+      'waiting on web cache only, gameDirMissing=${_webCacheSession == null}',
+    );
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: isFallback,
+        captureUnavailable: true,
+        gameDirMissing: _webCacheSession == null,
+      ),
+    );
+    // 攔截已結束，取消只需由 cancelCapture 完成 backstop 結束這段等待。
+    _activeCancel = null;
+    final url = await Future.any<String?>([cacheHit.future, backstop.future]);
+    return (url, true);
+  }
+
+  /// 定位遊戲資料夾並啟動網頁快取監看，命中時完成目前等待中的 [_cacheHit]。
+  ///
+  /// 只有最新一次呼叫的定位結果會生效；找不到資料夾時不監看。任何失敗只記 log，不影響更新。
+  Future<void> _startWebCacheWatch() async {
+    final hit = _cacheHit;
+    if (hit == null) return;
+    final generation = ++_watchGeneration;
+    try {
+      final location = await ref
+          .read(gameDirLocatorProvider)
+          .locate(settingDir: ref.read(settingsProvider).gameDir);
+      if (!ref.mounted || generation != _watchGeneration || hit.isCompleted) {
+        return;
+      }
+      if (location == null) {
+        _webCacheLog.warning('web cache watch disabled: game dir not found');
+        _syncCacheOnlyNotice();
+        return;
+      }
+      final watch = ref.read(gachaUrlWatchProvider).start(location.path);
+      _webCacheSession = watch;
+      unawaited(
+        watch.result.then((u) {
+          if (u != null && !hit.isCompleted) hit.complete(u);
+        }),
+      );
+      _syncCacheOnlyNotice();
+    } catch (e, st) {
+      // FileSystemException 的字串會帶原始路徑，只記型別。
+      _webCacheLog.warning('web cache watch start failed', e, st);
+    }
+  }
+
+  /// 只靠快取等待時，依目前有沒有監看 session 切換「找不到遊戲資料夾」提示。
+  void _syncCacheOnlyNotice() {
+    final p = state.progress;
+    if (p is! WaitingForCapture || !p.captureUnavailable) return;
+    final missing = _webCacheSession == null;
+    if (p.gameDirMissing == missing) return;
+    state = state.copyWith(
+      progress: WaitingForCapture(
+        isFallback: p.isFallback,
+        captureUnavailable: true,
+        gameDirMissing: missing,
+      ),
+    );
+  }
+
+  /// 停掉目前的網頁快取監看 session（若有）；失敗只記 log。
+  Future<void> _stopWebCacheWatch() async {
+    final watch = _webCacheSession;
+    _webCacheSession = null;
+    try {
+      await watch?.cancel();
+    } catch (e, st) {
+      _webCacheLog.warning('web cache watch stop failed', e, st);
+    }
+  }
+
+  /// 等待攔截期間停掉目前的網頁快取監看，重新定位後再啟動（baseline 從此刻重算）；其他時候為 no-op。
+  Future<void> restartWebCacheWatch() async {
+    if (state.progress is! WaitingForCapture) return;
+    _webCacheLog.info('web cache watch restart requested');
+    unawaited(_stopWebCacheWatch());
+    await _startWebCacheWatch();
   }
 
   /// 依序拉取所有 banner 的新紀錄並合併存檔。
@@ -370,6 +906,8 @@ class GachaRepository extends Notifier<GachaState> {
   }) async {
     final gachaUrl = GachaUrl.parse(url);
 
+    // 捕獲／快取取得 URL 後 probe 要數秒，期間不能還顯示「等待攔截」
+    state = state.copyWith(progress: const Preparing());
     final probe = await fetcher.probeUid(url: gachaUrl, client: client);
     if (!ref.mounted) return;
     if (probe.uid == null) {
@@ -417,14 +955,14 @@ class GachaRepository extends Notifier<GachaState> {
         if (!ref.mounted) return;
         final newCount =
             merged.length - (existing.banners[t.gachaType]?.length ?? 0);
-        totalNew += newCount;
+        totalNew += newCount < 0 ? 0 : newCount;
         mergedBanners[t.gachaType] = merged;
       } on AuthExpiredException {
         rethrow;
       } on http.ClientException {
         rethrow;
-      } catch (e) {
-        _log.warning('banner=${t.nameKey} failed: $e');
+      } catch (e, st) {
+        _log.warning('banner=${t.nameKey} failed', e, st);
         mergedBanners[t.gachaType] = existing.banners[t.gachaType] ?? const [];
         failed.add(t.nameKey);
       }
@@ -474,18 +1012,41 @@ class GachaRepository extends Notifier<GachaState> {
       state = state.copyWith(clearProgress: true);
       return;
     }
+    await _disableWirelessIfPairingUnused();
+    if (!ref.mounted) return;
     state = state.copyWith(
       progress: UpdateCompleted(
         totalNewRecords: totalNew,
         failedBanners: failed,
         updatedAt: updatedAt,
         hoYoWikiImagesDownloaded: hoYoWikiImagesDownloaded,
+        wirelessDebuggingLeftOn: _wirelessLeftOn,
       ),
     );
   }
 
+  /// 本次更新是否剛完成配對、且設定前無線偵錯沒開（用完一律關閉無線偵錯）。
+  bool _afterPairing = false;
+
+  /// 本次更新讀完後無線偵錯是否因沒有權限而留著開（完成畫面要提示）。
+  bool _wirelessLeftOn = false;
+
+  /// 本次更新是否跑過 Android 等待（[_afterPairing] 已交給它處理）。
+  bool _androidWaitRan = false;
+
+  /// 沒拿到網址的 Android 等待還在背景做的收尾（停監看、release）；下一次等待開始前先等它做完。
+  ///
+  /// root shell 與無線偵錯是共用的：下一次等待若搶先開始，晚到的 release 會關掉它剛拿到的 `su` 或剛打開的無線偵錯。
+  Future<void>? _androidTeardown;
+
+  /// Android 沒有自動讀取方式而等待時，[retryLogAccess] 會完成它以重新判斷。
+  Completer<void>? _logAccessRetry;
+
   /// 防 re-entrancy 旗標，update 進行中為 true。
   bool _isUpdating = false;
+
+  /// 雲端同步合併時結果視窗還開著而延後的補圖；視窗關閉（[clearProgress]）時補跑一次。
+  bool _imageFetchPending = false;
 
   /// 使用者觸發取消時設為 true，避免將 ClientException 誤判為錯誤。
   bool _cancelTriggered = false;
@@ -493,14 +1054,32 @@ class GachaRepository extends Notifier<GachaState> {
   /// 目前 MITM 會話的取消函式。
   Future<void> Function()? _activeCancel;
 
+  /// 本次等待期間由其他來源先拿到的網址（網頁快取、手動輸入；Android 為系統記錄）；不在等待時為 null。
+  Completer<String>? _cacheHit;
+
+  /// 本次等待是否由 [submitManualUrl] 完成；為 true 時收尾攔截不給寬限。
+  bool _manualHit = false;
+
+  /// 目前的網頁快取監看 session。
+  CaptureSession? _webCacheSession;
+
+  /// 本次等待期間使用者按過取消（含快取勝出後的攔截收尾、停監看期間）。
+  bool _captureCancelRequested = false;
+
+  /// 網頁快取監看的啟動世代；只有最新世代的定位結果會啟動 session。
+  int _watchGeneration = 0;
+
   /// 目前 HTTP 請求的可取消 client，取消後關閉所有連線。
   CancellableHttpClient? _activeCancellable;
 
-  /// 取消／逾時時用來強制解開 [_runMitm] 等待的 backstop completer。
+  /// 取消／逾時時用來強制解開 [_runMitm] 各段等待（含只等快取、快取勝出後收尾）與 [_runAndroidWait] 的 backstop completer。
   Completer<String?>? _captureBackstop;
 
   /// `cancelCapture` 等待 Rust MITM 拆除回應的上限（比 L1 的 2 秒寬鬆）。
   Duration _cancelTeardownTimeout = const Duration(seconds: 8);
+
+  /// 快取勝出後等攔截自行結束的寬限；逾時才 `cancel()`。
+  Duration _cacheWinCaptureGrace = const Duration(seconds: 3);
 
   /// 取消 Preparing 階段的 HTTP 請求。
   void cancelPreparing() {
@@ -508,23 +1087,29 @@ class GachaRepository extends Notifier<GachaState> {
     _activeCancellable?.cancel();
   }
 
-  /// 取消正在進行的 MITM 捕獲會話。
+  /// 取消正在進行的 MITM 捕獲會話與網頁快取監看（含只等快取、快取勝出後的攔截收尾期間）。
   ///
   /// 有界：最多等 [_cancelTeardownTimeout] 讓 Rust 拆除回應；逾時則 severe-log、
   /// best-effort 還原系統 proxy，並一律完成 [_captureBackstop] 解開 [_runMitm] 的
-  /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。
+  /// 等待（即使 onDone 未觸發），確保 dialog 一定能關閉。Android 沒有攔截，只完成 backstop，
+  /// 由 [_runAndroidWait] 收尾停監看與 release。
   Future<void> cancelCapture() async {
     _cancelTriggered = true;
+    _captureCancelRequested = true;
+    unawaited(_stopWebCacheWatch());
     final cancel = _activeCancel;
-    if (cancel == null) return;
-    try {
-      await cancel().timeout(_cancelTeardownTimeout);
-    } on TimeoutException {
-      _log.severe(
-        'cancelCapture: stopCapture exceeded '
-        '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
-      );
-      unawaited(_bestEffortStaleProxyCleanup());
+    if (cancel != null) {
+      try {
+        await cancel().timeout(_cancelTeardownTimeout);
+      } on TimeoutException {
+        _log.severe(
+          'cancelCapture: stopCapture exceeded '
+          '${_cancelTeardownTimeout.inSeconds}s; forcing cleanup',
+        );
+        unawaited(_bestEffortStaleProxyCleanup());
+      } catch (e, st) {
+        _log.warning('cancelCapture: stopCapture failed', e, st);
+      }
     }
     final backstop = _captureBackstop;
     if (backstop != null && !backstop.isCompleted) {
@@ -755,8 +1340,15 @@ class GachaRepository extends Notifier<GachaState> {
   /// 不啟動 progress UI、不抓物品圖片。
   ///
   /// 已有更新或匯入進行中時拋 [CloudSyncBusyException]，由雲端同步層重排。
+  /// 進度停在 [UpdateCompleted]／[UpdateFailed] 只是結果視窗還沒關，不算忙碌：
+  /// 否則視窗開著期間同步會每輪重下載雲端檔再被擋下。
   Future<ImportResult> importBundleForCloudSync(AccountsBundle bundle) async {
-    if (state.progress != null || _isUpdating) {
+    final progress = state.progress;
+    final inFlight =
+        progress != null &&
+        progress is! UpdateCompleted &&
+        progress is! UpdateFailed;
+    if (inFlight || _isUpdating) {
       _cloudSyncLog.info('cloud import rejected: busy');
       throw const CloudSyncBusyException();
     }
@@ -768,6 +1360,9 @@ class GachaRepository extends Notifier<GachaState> {
       return await _runImport(bundle);
     } finally {
       _isUpdating = false;
+      if (_imageFetchPending && state.progress == null) {
+        unawaited(fetchItemImagesForCloudSync());
+      }
     }
   }
 
@@ -783,14 +1378,29 @@ class GachaRepository extends Notifier<GachaState> {
   /// best-effort：補抓失敗僅記 log，仍照常收尾；更新／匯入進行中或
   /// bootstrap 未完成時直接略過，缺圖留待下次「更新」自然補齊。
   Future<void> fetchItemImagesForCloudSync() async {
-    if (state.progress != null) {
-      _cloudSyncLog.info('post-sync item fetch skipped: progress in-flight');
+    final progress = state.progress;
+    if (progress != null) {
+      // 只是結果視窗還開著（合併可在此時進行）：等視窗關閉（[clearProgress]）再補。
+      if ((progress is UpdateCompleted || progress is UpdateFailed) &&
+          !_isUpdating &&
+          !state.isBootstrapping) {
+        _imageFetchPending = true;
+        _cloudSyncLog.info(
+          'post-sync item fetch deferred: result dialog still open',
+        );
+        return;
+      }
+      _cloudSyncLog.info(
+        'post-sync item fetch skipped: progress=${progress.runtimeType} '
+        'updating=$_isUpdating bootstrapping=${state.isBootstrapping}',
+      );
       return;
     }
     if (_isUpdating || state.isBootstrapping) {
       _cloudSyncLog.info('post-sync item fetch skipped: busy or bootstrapping');
       return;
     }
+    _imageFetchPending = false;
     _isUpdating = true;
     _cancelTriggered = false;
     _cloudSyncLog.info('post-sync item fetch start');
@@ -885,8 +1495,14 @@ class GachaRepository extends Notifier<GachaState> {
         final merged = localBefore == null
             ? incoming
             : localBefore.mergeWith(incoming);
-        final toSave = await _convertAccountToDataLanguage(merged);
-        await storage.save(toSave);
+        var toSave = await _convertAccountToDataLanguage(merged);
+        // 合併後與本機完全相同（例如雲端同步重抓到同一份）就沿用原物件、不重寫檔案：
+        // 寫檔的 JSON 編碼在主 isolate 實機量到數十毫秒。
+        if (localBefore != null && toSave.sameContentAs(localBefore)) {
+          toSave = localBefore;
+        } else {
+          await storage.save(toSave);
+        }
         if (!ref.mounted) {
           return ImportResult(
             successAccounts: successCount,
@@ -895,10 +1511,13 @@ class GachaRepository extends Notifier<GachaState> {
             failedUids: failed,
           );
         }
-        final added =
-            toSave.allRecords.length - (localBefore?.allRecords.length ?? 0);
+        // 官方記錄取代同秒替代記錄時總筆數可能變少，兩個計數都不能為負。
+        final added = math.max(
+          0,
+          toSave.allRecords.length - (localBefore?.allRecords.length ?? 0),
+        );
         addedRecords += added;
-        duplicateRecords += incoming.allRecords.length - added;
+        duplicateRecords += math.max(0, incoming.allRecords.length - added);
         newByUid[incoming.uid] = toSave;
         successCount++;
       } catch (_) {
@@ -908,14 +1527,33 @@ class GachaRepository extends Notifier<GachaState> {
 
     final currentSettings = ref.read(settingsProvider);
     final mergedAliases = Map<String, String>.from(currentSettings.uidAliases);
+    final mergedAliasTimes = Map<String, DateTime>.from(
+      currentSettings.uidAliasUpdatedAt,
+    );
+    var aliasesTaken = 0;
+    var aliasesCleared = 0;
     for (final account in bundle.accounts) {
       final uid = account.data.uid;
       if (failed.contains(uid)) continue;
-      if (mergedAliases.containsKey(uid)) continue; // 本機已有別名 → 保留
-      final a = account.alias?.trim();
-      if (a != null && a.isNotEmpty) {
-        mergedAliases[uid] = a;
+      final incomingAlias = account.alias?.trim();
+      if (!incomingAliasWins(
+        localAlias: mergedAliases[uid],
+        localUpdatedAt: mergedAliasTimes[uid],
+        incomingAlias: incomingAlias,
+        incomingUpdatedAt: account.aliasUpdatedAt,
+      )) {
+        continue;
       }
+      if (incomingAlias != null && incomingAlias.isNotEmpty) {
+        if (mergedAliases[uid] != incomingAlias) aliasesTaken++;
+        mergedAliases[uid] = incomingAlias;
+      } else if (mergedAliases.remove(uid) != null) {
+        aliasesCleared++;
+      }
+      if (account.aliasUpdatedAt case final t?) mergedAliasTimes[uid] = t;
+    }
+    if (aliasesTaken > 0 || aliasesCleared > 0) {
+      _log.info('import aliases: taken=$aliasesTaken cleared=$aliasesCleared');
     }
 
     final localOrder = currentSettings.uidOrder;
@@ -939,6 +1577,7 @@ class GachaRepository extends Notifier<GachaState> {
 
     await settingsNotifier.applyImportedPreferences(
       aliases: mergedAliases,
+      aliasUpdatedAt: mergedAliasTimes,
       uidOrder: newOrder,
       lastActiveUid: newActive,
     );
@@ -951,8 +1590,12 @@ class GachaRepository extends Notifier<GachaState> {
       );
     }
 
+    // 沒有任何帳號換物件就保留原 Map：頁面與「本機資料變動」監聽都不必重跑。
+    final byUidChanged =
+        newByUid.length != state.byUid.length ||
+        newByUid.entries.any((e) => !identical(state.byUid[e.key], e.value));
     state = state.copyWith(
-      byUid: newByUid,
+      byUid: byUidChanged ? newByUid : null,
       activeUid: newActive,
       clearActiveUid: newActive == null,
     );
@@ -993,6 +1636,14 @@ class GachaRepository extends Notifier<GachaState> {
     );
   }
 
+  /// 測試用：直接塞一筆帳號到 state.byUid（不走 bootstrap/storage）。生產勿用。
+  @visibleForTesting
+  void debugSeedAccount(BannerStorage data) {
+    final next = Map<String, BannerStorage>.from(state.byUid)
+      ..[data.uid] = data;
+    state = state.copyWith(byUid: next, activeUid: data.uid);
+  }
+
   /// 測試用：暴露 [_runImport] 給單元測試（驗證純 import 邏輯，
   /// 不必 mock HoYoWiki fetcher）。生產勿用。
   @visibleForTesting
@@ -1022,7 +1673,11 @@ class GachaRepository extends Notifier<GachaState> {
         final data = state.byUid[uid]!;
         try {
           final outcome = await converter.convert(data, targetLang);
-          await storage.save(outcome.data);
+          // 沒有任何記錄需要轉換時不重寫檔案、不換物件：寫檔與整份 state 替換都會卡住畫面。
+          if (!outcome.data.sameContentAs(data)) {
+            await storage.save(outcome.data);
+            newByUid[uid] = outcome.data;
+          }
           for (final h in outcome.hints) {
             allHints.add((
               name: h.name,
@@ -1031,7 +1686,6 @@ class GachaRepository extends Notifier<GachaState> {
               menuId: h.menuId,
             ));
           }
-          newByUid[uid] = outcome.data;
           agg = agg + outcome.result;
         } catch (e, st) {
           Logger(
@@ -1040,7 +1694,12 @@ class GachaRepository extends Notifier<GachaState> {
         }
       }
       await indexNotifier.setSearches(allHints);
-      if (ref.mounted) state = state.copyWith(byUid: newByUid);
+      if (ref.mounted &&
+          newByUid.entries.any(
+            (e) => !identical(state.byUid[e.key], e.value),
+          )) {
+        state = state.copyWith(byUid: newByUid);
+      }
       // best-effort：補抓目標語言的 icon／詳情（`pageByLang[target]`），讓轉換後
       // 角色說明與 gallery 頁籤即時可看；失敗不影響已完成的轉換。首次轉某語言會抓
       // 該語言全部 entry_page（一次性、會快取，期間由 _fetchHoYoWiki emit
@@ -1128,14 +1787,17 @@ class GachaRepository extends Notifier<GachaState> {
     }
   }
 
-  /// 取 [data] 中非頌願、有語言的「最新」一筆 record 的 lang（供 seeding）；無則 null。
+  /// 取 [data] 中非頌願、有語言的「最新」一筆官方 record 的 lang（供 seeding）；
+  /// 無則 null。第三方匯入的替代記錄語言是匯出工具決定的，不拿來播種。
   String? _seedLangFromData(BannerStorage data) {
     GachaRecord? latest;
     for (final e in data.banners.entries) {
       if (!convertibleGachaTypes.contains(e.key)) continue;
       for (final r in e.value) {
-        if (r.lang.isEmpty) continue;
-        if (latest == null || r.id.compareTo(latest.id) > 0) latest = r;
+        if (r.lang.isEmpty || isSubstituteId(r.id)) continue;
+        if (latest == null || compareRecordsNewestFirst(r, latest) < 0) {
+          latest = r;
+        }
       }
     }
     return latest?.lang;
@@ -1316,8 +1978,8 @@ class GachaRepository extends Notifier<GachaState> {
                 entryTodo.add((id: hit.id, lang: pair.$2));
               }
             }
-          } catch (e) {
-            _log.warning('hoyowiki search failed name=${pair.$1} err=$e');
+          } catch (e, st) {
+            _log.warning('hoyowiki search failed name=${pair.$1}', e, st);
           }
           if (!ref.mounted) return;
           doneSearch++;
@@ -1363,9 +2025,11 @@ class GachaRepository extends Notifier<GachaState> {
             // enqueueDownloadsForEntry 會處理 icon + 各 lang 的 gallery 圖（URL 去重）。
             final entry = ref.read(hoyowikiIndexProvider).lookupEntry(pair.id);
             if (entry != null) enqueueDownloadsForEntry(pair.id, entry);
-          } catch (e) {
+          } catch (e, st) {
             _log.warning(
-              'hoyowiki entry failed id=${pair.id} lang=${pair.lang} err=$e',
+              'hoyowiki entry failed id=${pair.id} lang=${pair.lang}',
+              e,
+              st,
             );
           }
           if (!ref.mounted) return;
@@ -1408,9 +2072,11 @@ class GachaRepository extends Notifier<GachaState> {
               indexNotifier.bumpCacheRevision();
               downloaded++;
             }
-          } catch (e) {
+          } catch (e, st) {
             _log.warning(
-              'hoyowiki download failed url=${sanitizeUrl(item.url)} err=$e',
+              'hoyowiki download failed url=${sanitizeUrl(item.url)}',
+              e,
+              st,
             );
           }
           if (!ref.mounted) return;
@@ -1492,6 +2158,12 @@ class GachaRepository extends Notifier<GachaState> {
   @visibleForTesting
   void debugSetCancelTeardownTimeout(Duration timeout) {
     _cancelTeardownTimeout = timeout;
+  }
+
+  /// 測試用：縮短快取勝出後等攔截自行結束的寬限，避免真實掛鐘等待。生產勿用。
+  @visibleForTesting
+  void debugSetCacheWinCaptureGrace(Duration grace) {
+    _cacheWinCaptureGrace = grace;
   }
 }
 

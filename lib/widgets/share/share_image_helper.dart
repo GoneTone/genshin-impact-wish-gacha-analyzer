@@ -4,12 +4,13 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:logging/logging.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/l10n/generated/app_localizations.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/gacha_record.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/models/share_image_options.dart';
-import 'package:genshin_impact_wish_gacha_analyzer/services/image_clipboard_save.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/file_access.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/share_image_renderer.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/hoyowiki_index.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/app_theme.dart';
@@ -42,16 +43,20 @@ Widget buildShareRenderTree({
 }) {
   return UncontrolledProviderScope(
     container: container,
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: Localizations(
-        locale: locale,
-        delegates: const [
-          AppLocalizations.delegate,
-          DefaultMaterialLocalizations.delegate,
-          DefaultWidgetsLocalizations.delegate,
-          DefaultCupertinoLocalizations.delegate,
-        ],
+    child: Localizations(
+      locale: locale,
+      delegates: const [
+        AppLocalizations.delegate,
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+      // DefaultWidgetsLocalizations 固定由左往右，Localizations 會以它再包一層
+      // Directionality，所以書寫方向要在這層底下依語言重設。
+      child: Directionality(
+        textDirection: Bidi.isRtlLanguage(locale.languageCode)
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: MediaQuery(
           data: const MediaQueryData(),
           child: Theme(
@@ -83,12 +88,12 @@ Widget buildShareRenderTree({
   );
 }
 
-/// 依 [action] 把已渲染的 [png] 複製或儲存，並顯示結果 dialog。
+/// 依 [action] 把 [png] 存檔、分享或複製，並以結果視窗回報。
 ///
-/// copy：成功與失敗皆跳結果 dialog（[shareImageCopiedOnly] / [shareImageCopyFailed]）。
-/// save：成功跳結果 dialog（[shareImageSaved] 附開資料夾）；使用者取消選路徑則靜默；
-/// 寫檔失敗由 [saveImagePng] rethrow，交由呼叫端（[generateAndShareImage]）處理。
-Future<void> exportRenderedShareImage({
+/// 取消存檔與分享成功不彈視窗；Android 存檔訊息只顯示檔名、不給開啟資料夾。
+/// 存檔寫入失敗由 [saveBytes] rethrow，交由呼叫端（[generateAndShareImage]）處理。
+@visibleForTesting
+Future<void> deliverShareImage({
   required BuildContext context,
   required AppLocalizations l,
   required ShareImageAction action,
@@ -96,30 +101,49 @@ Future<void> exportRenderedShareImage({
   required String suggestedName,
 }) async {
   switch (action) {
+    case ShareImageAction.save:
+      final saved = await saveBytes(
+        png,
+        suggestedName: suggestedName,
+        extension: 'png',
+        mimeType: 'image/png',
+        dialogTitle: l.dialogSaveAsTitle,
+      );
+      if (!context.mounted || saved == null) return;
+      await showExportResultDialog(
+        context,
+        success: true,
+        message: l.shareImageSaved(saved.path ?? saved.displayName),
+        revealPath: saved.path,
+      );
+    case ShareImageAction.share:
+      final ok = await shareBytes(
+        png,
+        fileName: suggestedName,
+        mimeType: 'image/png',
+      );
+      if (!context.mounted || ok) return;
+      await showExportResultDialog(
+        context,
+        success: false,
+        message: l.shareFailed,
+      );
     case ShareImageAction.copy:
-      final ok = await copyImagePngToClipboard(png);
-      _log.info('share image copy clipboard=$ok bytes=${png.length}');
+      final ok = await copyImageToClipboard(png);
       if (!context.mounted) return;
       await showExportResultDialog(
         context,
         success: ok,
         message: ok ? l.shareImageCopiedOnly : l.shareImageCopyFailed,
       );
-    case ShareImageAction.save:
-      final path = await saveImagePng(png, suggestedName: suggestedName);
-      if (path == null) {
-        _log.info('share image save cancelled');
-        return;
-      }
-      if (!context.mounted) return;
-      await showExportResultDialog(
-        context,
-        success: true,
-        message: l.shareImageSaved(path),
-        revealPath: path,
-      );
   }
 }
+
+/// 取代 [generateAndShareImage] 預載 hoyowiki icon 那一步的測試 seam；null 表示
+/// 使用 [preloadHoYoWikiImages]。
+@visibleForTesting
+Future<Map<String, ui.Image>> Function(Iterable<GachaRecord> records)?
+shareImagePreloadOverride;
 
 /// 跑完整分享圖流程。[buildCard] 收已載入的 icon、選項，回傳 ShareCard。
 /// 分享圖寬固定為 [kShareCardWidth]、高隨內容自適應（底部不留白、不裁切）；
@@ -145,23 +169,23 @@ Future<void> generateAndShareImage({
   final container = ProviderScope.containerOf(context);
   final hoyowikiIndex = container.read(hoyowikiIndexProvider);
   final cacheDir = container.read(hoyowikiCacheDirProvider);
-  final icon = await loadAppIconImage();
-  final preloaded = await preloadHoYoWikiImages(
-    index: hoyowikiIndex,
-    cacheDir: cacheDir,
-    records: recordsForPreload,
-  );
 
-  if (!context.mounted) {
-    icon.dispose();
-    disposePreloadedHoYoWikiImages(preloaded);
-    return;
-  }
-  // 進度 dialog 只覆蓋渲染這段；render 完成或失敗後即關閉，再進入複製／存檔，
-  // 避免遮住系統存檔對話框。progressOpen 防止 catch 分支重複 pop。
-  showShareProgressDialog(context);
-  var progressOpen = true;
+  // 預載 + 離屏渲染期間顯示不可關閉的「生成中」進度視窗；closeProgress 可重複
+  // 呼叫，渲染一完成（早於存檔系統視窗／複製結果通知）即關閉，catch 與 finally
+  // 再各呼叫一次當保險，確保任何路徑都不會卡住進度視窗。
+  final closeProgress = showShareProgressDialog(context);
+
+  ui.Image? icon;
+  Map<String, ui.Image>? preloaded;
   try {
+    icon = await loadAppIconImage();
+    preloaded =
+        await (shareImagePreloadOverride?.call(recordsForPreload) ??
+            preloadHoYoWikiImages(
+              index: hoyowikiIndex,
+              cacheDir: cacheDir,
+              records: recordsForPreload,
+            ));
     final png = await renderWidgetToPng(
       buildShareRenderTree(
         card: PreloadedHoYoWikiImages(
@@ -174,12 +198,9 @@ Future<void> generateAndShareImage({
       ),
       width: kShareCardWidth,
     );
-    if (context.mounted) {
-      Navigator.of(context, rootNavigator: true).pop();
-      progressOpen = false;
-    }
+    closeProgress();
     if (!context.mounted) return;
-    await exportRenderedShareImage(
+    await deliverShareImage(
       context: context,
       l: l,
       action: choice.action,
@@ -188,9 +209,7 @@ Future<void> generateAndShareImage({
     );
   } catch (e, st) {
     _log.warning('share image flow failed', e, st);
-    if (progressOpen && context.mounted) {
-      Navigator.of(context, rootNavigator: true).pop();
-    }
+    closeProgress();
     if (!context.mounted) return;
     await showExportResultDialog(
       context,
@@ -198,7 +217,8 @@ Future<void> generateAndShareImage({
       message: l.shareImageFailed,
     );
   } finally {
-    icon.dispose();
-    disposePreloadedHoYoWikiImages(preloaded);
+    closeProgress();
+    icon?.dispose();
+    if (preloaded != null) disposePreloadedHoYoWikiImages(preloaded);
   }
 }

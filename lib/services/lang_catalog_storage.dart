@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 
@@ -57,16 +58,7 @@ class LangCatalogStorage {
     final f = _file(lang);
     if (!await f.exists()) return null;
     try {
-      final json = jsonDecode(await f.readAsString()) as Map<String, dynamic>;
-      final items = json['items'] as Map<String, dynamic>;
-      final byId = items.map((id, v) {
-        final m = v as Map<String, dynamic>;
-        return MapEntry(id, (
-          name: m['name'] as String,
-          kind: m['kind'] as int,
-        ));
-      });
-      return LangCatalog.fromEntries(lang, byId);
+      return await _loadInBackground(lang, f.path);
     } catch (e, st) {
       _log.warning('lang catalog load failed lang=$lang', e, st);
       return null;
@@ -90,3 +82,17 @@ class LangCatalogStorage {
     await tmp.rename(target.path);
   }
 }
+
+/// 在背景 isolate 讀取並解析 [path] 的名冊檔（整份 JSON 在主 isolate 解析會卡畫面）；錯誤原樣拋回呼叫端。
+Future<LangCatalog> _loadInBackground(String lang, String path) => Isolate.run(
+  () async {
+    final json =
+        jsonDecode(await File(path).readAsString()) as Map<String, dynamic>;
+    final items = json['items'] as Map<String, dynamic>;
+    final byId = items.map((id, v) {
+      final m = v as Map<String, dynamic>;
+      return MapEntry(id, (name: m['name'] as String, kind: m['kind'] as int));
+    });
+    return LangCatalog.fromEntries(lang, byId);
+  },
+);

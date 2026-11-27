@@ -73,7 +73,7 @@ class BannerColors {
 
   /// 依 [gachaType] 字串（如 `'301'`）回傳對應色；未知 type 回傳 [fallback]。
   Color colorFor(String gachaType) => switch (gachaType) {
-    '301' => character,
+    '301' || '400' => character,
     '302' => weapon,
     '500' => chronicled,
     '200' => standard,

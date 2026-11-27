@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Analizzatore dei Desideri di Genshin Impact</string>
+    <string name="pairing_channel">Accoppiamento debug wireless</string>
+    <string name="pairing_searching_title">Ricerca del servizio di accoppiamento</string>
+    <string name="pairing_searching_text">In Debug wireless, tocca «Accoppia dispositivo con codice di accoppiamento»</string>
+    <string name="pairing_found_title">Inserisci il codice di accoppiamento</string>
+    <string name="pairing_found_text">Digita il codice a 6 cifre mostrato nella schermata di accoppiamento</string>
+    <string name="pairing_input_label">Codice di accoppiamento</string>
+    <string name="pairing_action_pair">Accoppia</string>
+    <string name="pairing_action_stop">Interrompi</string>
+    <string name="pairing_in_progress">Accoppiamento in corso...</string>
+    <string name="pairing_success_title">Accoppiamento riuscito</string>
+    <string name="pairing_success_text">Tocca qui per tornare all\'app</string>
+    <string name="pairing_failed_text">Accoppiamento non riuscito. Controlla il codice e inseriscilo di nuovo</string>
+    <string name="pairing_no_app_text">Accoppiamento non riuscito. Torna all\'app e riprova</string>
+    <string name="pairing_timeout_title">Tempo di accoppiamento scaduto</string>
+    <string name="pairing_timeout_text">Tocca qui per ricominciare</string>
+</resources>

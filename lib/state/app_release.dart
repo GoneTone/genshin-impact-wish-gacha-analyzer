@@ -1,9 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
+import 'package:pub_semver/pub_semver.dart';
 
 import 'package:genshin_impact_wish_gacha_analyzer/app_info.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/android_version_code.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/app_release_checker.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/services/play_update.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/platform.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/state/play_update_download.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/services/app_release_checker.dart'
@@ -34,11 +39,15 @@ class ReleaseUpToDate extends ReleaseCheckState {
 
 /// 有可用的新版本。
 class ReleaseAvailable extends ReleaseCheckState {
-  /// 建立 [ReleaseAvailable]，[releases] 為所有比當前更新的版本（降序）。
-  const ReleaseAvailable(this.releases);
+  /// 建立 [ReleaseAvailable]，[releases] 為所有比當前更新的版本（降序）；
+  /// Android 時為不超過 [playTag] 的子集，可能為空。
+  const ReleaseAvailable(this.releases, {this.playTag});
 
-  /// 比當前版本更新的版本列表（降序）。
+  /// 比當前版本更新的版本列表（降序）；Android 取不到說明時可能為空。
   final List<AppRelease> releases;
+
+  /// Android 由 Play 版本代碼換算出的 tag；Windows 為 null。
+  final String? playTag;
 }
 
 /// 版本檢查失敗。
@@ -72,18 +81,23 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
     final currentVersion = ref.read(appVersionProvider);
     final client = ref.read(httpClientProvider);
 
+    if (ref.read(isAndroidProvider)) {
+      await _checkAndroid(manual: manual, currentVersion: currentVersion);
+      return;
+    }
+
     final List<AppRelease> releases;
     try {
       releases = await fetchNewerReleases(
         currentVersion: currentVersion,
         client: client,
       );
-    } on ReleaseCheckError catch (e) {
+    } on ReleaseCheckError catch (e, st) {
       if (manual) {
-        Logger('release').warning('release check failed (manual): $e');
+        Logger('release').warning('release check failed (manual)', e, st);
         state = ReleaseCheckFailed(_localizeError(e));
       } else {
-        Logger('release').warning('release check failed (silent): $e');
+        Logger('release').warning('release check failed (silent)', e, st);
         state = const ReleaseIdle();
       }
       return;
@@ -109,6 +123,74 @@ class AppReleaseNotifier extends Notifier<ReleaseCheckState> {
     }
 
     state = ReleaseAvailable(releases);
+  }
+
+  /// Android 檢查流程：由 Play 判斷有無新版，GitHub 僅提供更新說明。
+  Future<void> _checkAndroid({
+    required bool manual,
+    required String currentVersion,
+  }) async {
+    final log = Logger('release');
+    final PlayUpdateInfo info;
+    try {
+      info = await ref.read(playUpdateGatewayProvider).check();
+    } catch (e, st) {
+      log.warning('play update check failed', e, st);
+      state = manual ? const ReleaseCheckFailed('play') : const ReleaseIdle();
+      return;
+    }
+    final code = info.availableVersionCode;
+    final tag = code == null ? null : tagForAndroidVersionCode(code);
+    log.info(
+      'play update check: available=${info.available} code=$code tag=$tag '
+      'flexibleAllowed=${info.flexibleAllowed} '
+      'installStatus=${info.installStatus.name}',
+    );
+    final download = ref.read(playUpdateDownloadProvider.notifier);
+    final wasDownloaded =
+        ref.read(playUpdateDownloadProvider) == PlayDownloadPhase.downloaded;
+    download.syncWithPlay(info);
+    // 剛同步成已下載時，常駐的「重新啟動」SnackBar 就是提示，不再多跳一個 dialog。
+    if (info.downloaded && !wasDownloaded) {
+      log.info('play update already downloaded, showing restart prompt');
+      state = const ReleaseIdle();
+      return;
+    }
+    // 之前已開始下載，自動檢查不用再問一次；手動檢查照常顯示新版。
+    if (info.downloading && !manual) {
+      log.info('play update download already in progress');
+      state = const ReleaseIdle();
+      return;
+    }
+    if (!info.available) {
+      state = manual ? const ReleaseUpToDate() : const ReleaseIdle();
+      return;
+    }
+    if (tag == null) {
+      log.warning('play version code $code has no tag mapping');
+      state = manual ? const ReleaseUpToDate() : const ReleaseIdle();
+      return;
+    }
+    if (!manual && ref.read(settingsProvider).skippedReleaseTag == tag) {
+      state = const ReleaseIdle();
+      return;
+    }
+
+    var releases = <AppRelease>[];
+    try {
+      final newer = await fetchNewerReleases(
+        currentVersion: currentVersion,
+        client: ref.read(httpClientProvider),
+      );
+      final playVersion = Version.parse(tag.substring(1));
+      releases = newer
+          .where((r) => Version.parse(r.version) <= playVersion)
+          .toList();
+    } catch (e, st) {
+      // Android 的更新說明只是附加資訊，任何錯誤（含 TLS 等未轉換的例外）都照樣提示新版。
+      log.info('release notes unavailable, prompting without notes', e, st);
+    }
+    state = ReleaseAvailable(releases, playTag: tag);
   }
 
   /// 將 [tagName] 存入設定，下次自動檢查時跳過該版本。

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
@@ -7,6 +9,7 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/log_sanitize.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 
@@ -65,7 +68,13 @@ class UidIndicator extends ConsumerWidget {
           children: [
             const Icon(Icons.person_add_alt, size: 16),
             const SizedBox(width: AppSpacing.s),
-            Text(l.accountAdd),
+            Flexible(
+              child: Text(
+                l.accountAdd,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),
@@ -98,7 +107,14 @@ class UidIndicator extends ConsumerWidget {
           context: context,
           position: position,
           items: menuItems,
-          constraints: BoxConstraints.tightFor(width: button.size.width),
+          // 至少和按鈕一樣寬；手機上按鈕被標題列壓窄時，選單仍放寬到能完整顯示別名與 UID。
+          constraints: BoxConstraints(
+            minWidth: button.size.width,
+            maxWidth: math.max(
+              button.size.width,
+              math.min(_menuMaxWidth, overlay.size.width - 16),
+            ),
+          ),
         );
         if (key == null) return;
 
@@ -118,6 +134,9 @@ class UidIndicator extends ConsumerWidget {
     );
   }
 }
+
+/// 帳號選單的最大寬度（[AccountMenuLabel] 上限 280 ＋勾選圖示與內距）。
+const double _menuMaxWidth = 336;
 
 /// AppBar 觸發鈕的單行顯示:alias (uid),alias 過長 ellipsis;
 /// 無 alias 顯示 UID;activeUid==null 顯示「未同步」。
@@ -153,20 +172,48 @@ class AccountTriggerLabel extends StatelessWidget {
     }
     final hasAlias = alias != null && alias!.isNotEmpty;
     final shown = displayUid(uid, mask: maskUid);
-    return _row([
-      const Icon(Icons.person_outline, size: 18),
-      const SizedBox(width: AppSpacing.xs),
-      if (hasAlias) ...[
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 160),
-          child: Text(alias!, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ),
-        Text(' ($shown)'),
-      ] else
-        Text(shown),
-      const Icon(Icons.arrow_drop_down, size: 18),
-    ]);
+    // 寬度受限時（手機標題列）別名先縮；UID 只有在連別名都縮光仍放不下時才截斷。
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final uidMax = math.max(0.0, constraints.maxWidth - _iconsWidth);
+        return _row([
+          const Icon(Icons.person_outline, size: 18),
+          const SizedBox(width: AppSpacing.xs),
+          if (hasAlias)
+            Flexible(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 160),
+                child: Text(
+                  alias!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: uidMax),
+            // UID（尤其遮罩後的 701••••••）固定由左往右，否則由右往左的語言會排成
+            // ••••••701；此時括號前的空格改放後面，才會落在別名與 UID 之間。
+            child: Text(
+              hasAlias
+                  ? (Directionality.of(context) == TextDirection.rtl
+                        ? '($shown) '
+                        : ' ($shown)')
+                  : shown,
+              textDirection: TextDirection.ltr,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const Icon(Icons.arrow_drop_down, size: 18),
+        ]);
+      },
+    );
   }
+
+  /// 兩個圖示加間距的寬度（person 18 + 間距 4 + 下拉箭頭 18）。
+  static const double _iconsWidth = 18 + AppSpacing.xs + 18;
 
   /// 以 [MainAxisSize.min] Row 包裝 [children]。
   Widget _row(List<Widget> children) =>
@@ -204,6 +251,10 @@ class AccountTriggerButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
+          // 手機標題列很擠，內距從預設 24 縮成 12，UID 才放得下。
+          padding: isCompactLayout(context)
+              ? const EdgeInsets.symmetric(horizontal: 12)
+              : null,
           shape: const StadiumBorder(),
           side: BorderSide(color: tokens.borderEmphasis),
           foregroundColor: tokens.textPrimary,
@@ -256,6 +307,7 @@ class AccountMenuLabel extends StatelessWidget {
               Flexible(
                 child: Text(
                   primary,
+                  textDirection: hasAlias ? null : TextDirection.ltr,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -270,6 +322,7 @@ class AccountMenuLabel extends StatelessWidget {
           if (hasAlias)
             Text(
               shownUid,
+              textDirection: TextDirection.ltr,
               style: TextStyle(fontSize: 12, color: tokens.textMuted),
             ),
         ],

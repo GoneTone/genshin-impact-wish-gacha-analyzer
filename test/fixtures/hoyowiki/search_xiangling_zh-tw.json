@@ -1,0 +1,50 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "list": [
+      {
+        "entry_page_id": "3182",
+        "name": "香菱",
+        "menu": {
+          "id": "16",
+          "name": "七聖召喚",
+          "sub_menus": [
+            {
+              "id": "17",
+              "name": "角色牌"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "50",
+        "name": "香菱",
+        "menu": {
+          "id": "1",
+          "name": "人物誌",
+          "sub_menus": [
+            {
+              "id": "2",
+              "name": "角色圖鑑"
+            }
+          ]
+        }
+      },
+      {
+        "entry_page_id": "1872",
+        "name": "香菱的手抄筆記",
+        "menu": {
+          "id": "8",
+          "name": "物產誌",
+          "sub_menus": [
+            {
+              "id": "9",
+              "name": "提瓦特產物"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

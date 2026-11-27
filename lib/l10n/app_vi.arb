@@ -33,6 +33,7 @@
   "navSettings": "Cài Đặt",
   "navContributors": "Đóng Góp",
   "gachaTypeCharacter": "Cầu Nguyện Nhân Vật",
+  "gachaTypeCharacter2": "Cầu Nguyện Nhân Vật-2",
   "gachaTypeWeapon": "Cầu Nguyện Vũ Khí",
   "gachaTypeChronicled": "Sử Ký Cầu Nguyện",
   "gachaTypeStandard": "Cầu Nguyện Thường",
@@ -105,7 +106,7 @@
   "uidNotSynced": "Chưa đồng bộ",
   "uidActiveSuffix": " (đang dùng)",
   "emptyNoSyncTitle": "Chưa đồng bộ dữ liệu nào",
-  "emptyNoSyncMessage": "Nhấn \"Cập Nhật Dữ Liệu\" ở góc trên bên phải để bắt đầu",
+  "emptyNoSyncMessage": "Nhấn {icon} ở góc trên bên phải để bắt đầu",
   "emptyNoRecords": "Banner này chưa có bản ghi",
   "emptyNoFilterMatch": "Không tìm thấy bản ghi phù hợp với điều kiện",
   "emptyNoOdesRecords": "Chưa có bản ghi Ca Tụng",
@@ -147,6 +148,23 @@
   },
   "tableTotalIndex": "Tổng số lần",
   "tableMainPity": "Bảo hiểm hiện tại",
+  "tableSortButton": "Sắp xếp: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Sắp xếp: mặc định",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Sắp xếp theo",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Số lần kể từ {star} gần nhất",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -166,7 +184,18 @@
   "progressDone": "Cập nhật hoàn tất",
   "progressFailed": "Thất bại",
   "progressOpenGameHint": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
-  "progressFallbackHint": "(Xác thực trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
+  "progressFallbackHint": "(URL Lịch Sử Cầu Nguyện trước đó đã hết hạn, cần mở lại lịch sử cầu nguyện)",
+  "progressNotDetectedLink": "Đã mở Lịch Sử Cầu Nguyện nhưng không có phản hồi?",
+  "progressCaptureUnavailableHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), nên chỉ phát hiện từ bộ nhớ đệm web của game. Vui lòng mở trang Lịch Sử Cầu Nguyện trong game.",
+  "progressCaptureUnavailableNoGameDirHint": "Không thể khởi động trình chặn bắt (chứng chỉ có thể bị từ chối hoặc cổng đang bị chiếm dụng), và cũng không tìm thấy thư mục game. Hãy nhấn \"Chọn thư mục game\" bên dưới để chỉ định thủ công.",
+  "gameDirHelpTitle": "Không phát hiện Lịch Sử Cầu Nguyện",
+  "gameDirHelpNotFound": "Không tìm thấy thư mục game Genshin Impact. Sau khi chọn thư mục game, công cụ này cũng có thể lấy URL Lịch Sử Cầu Nguyện từ bộ nhớ đệm web của game.",
+  "gameDirHelpFound": "Thư mục game đang dùng: {path}. Nếu đây không phải bản game bạn đang chơi, vui lòng chọn lại.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Đã đặt thư mục game. Hãy quay lại game và mở Lịch Sử Cầu Nguyện thêm một lần nữa.",
+  "gameDirInvalid": "Không tìm thấy Genshin Impact trong thư mục này. Vui lòng chọn thư mục \"Genshin Impact game\".",
+  "actionChooseGameDir": "Chọn thư mục game",
+  "actionRechooseGameDir": "Chọn lại",
   "progressFetchingBanner": "Đang tải: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -344,11 +373,19 @@
   },
   "settingsDataLanguageUnifyFailed": "Chuyển đổi thất bại, dữ liệu không thay đổi. Vui lòng kiểm tra mạng và thử lại.",
   "settingsDataManagement": "Quản Lý Dữ Liệu",
+  "settingsGameDir": "Thư mục game",
+  "settingsGameDirAuto": "Tự động phát hiện: {path}",
+  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirManual": "Đặt thủ công: {path}",
+  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirNone": "Không tìm thấy thư mục game",
+  "actionClearGameDir": "Xóa",
   "settingsCloudSync": "Đồng bộ đám mây",
-  "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều máy tính.",
+  "cloudSyncIntro": "Liên kết tài khoản Google để tự động sao lưu lịch sử Cầu Nguyện lên Google Drive của bạn và đồng bộ giữa nhiều thiết bị.",
   "cloudSyncUnconfigured": "Bản dựng này chưa cấu hình thông tin xác thực Google OAuth nên không dùng được đồng bộ đám mây.",
   "cloudSyncLink": "Liên kết tài khoản Google",
-  "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất uỷ quyền trong trình duyệt...",
+  "cloudSyncAwaitingConsent": "Đã mở trình duyệt. Vui lòng hoàn tất ủy quyền trong trình duyệt...",
+  "cloudSyncAwaitingConsentAndroid": "Vui lòng hoàn tất ủy quyền trong cửa sổ Google...",
   "cloudSyncLinkedAs": "Đã liên kết: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -360,8 +397,8 @@
   "cloudSyncAutoToggle": "Tự động đồng bộ",
   "cloudSyncAutoToggleHint": "Tự động đồng bộ khi mở ứng dụng và sau khi dữ liệu thay đổi; tắt đi vẫn có thể đồng bộ thủ công.",
   "cloudSyncNow": "Đồng bộ ngay",
-  "cloudSyncUnlink": "Huỷ liên kết",
-  "cloudSyncUnlinkConfirmTitle": "Huỷ liên kết",
+  "cloudSyncUnlink": "Hủy liên kết",
+  "cloudSyncUnlinkConfirmTitle": "Hủy liên kết",
   "cloudSyncUnlinkConfirmBody": "Đồng bộ sẽ dừng lại. Dữ liệu trên máy và bản sao lưu trên đám mây đều được giữ nguyên.",
   "cloudSyncLastSynced": "Đồng bộ lần cuối: {time}",
   "@cloudSyncLastSynced": {
@@ -375,11 +412,11 @@
   "cloudSyncErrorNetwork": "Đồng bộ thất bại: sự cố mạng. Sẽ tự động thử lại.",
   "cloudSyncErrorBusy": "Hoãn đồng bộ: đang có cập nhật hoặc nhập dữ liệu. Sẽ tự động thử lại.",
   "cloudSyncErrorSchemaTooNew": "Đã bỏ qua đồng bộ: dữ liệu trên đám mây được tạo bởi phiên bản ứng dụng mới hơn. Vui lòng cập nhật ứng dụng trước.",
-  "cloudSyncErrorAuthFailed": "Uỷ quyền thất bại. Vui lòng thử lại.",
-  "cloudSyncErrorScopeMissing": "Lần uỷ quyền không bao gồm quyền truy cập Google Drive. Vui lòng liên kết lại và đánh dấu ô dữ liệu Drive trên trang đồng ý của Google.",
-  "cloudSyncReauthRequired": "Uỷ quyền đã hết hạn. Vui lòng liên kết lại tài khoản Google.",
-  "cloudSyncRemoveFromCloud": "Đồng thời xoá tài khoản này khỏi dữ liệu đồng bộ trên đám mây",
-  "cloudSyncPostAuthTitle": "Uỷ quyền hoàn tất",
+  "cloudSyncErrorAuthFailed": "Ủy quyền thất bại. Vui lòng thử lại.",
+  "cloudSyncErrorScopeMissing": "Lần ủy quyền không bao gồm quyền truy cập Google Drive. Vui lòng liên kết lại và đánh dấu ô dữ liệu Drive trên trang đồng ý của Google.",
+  "cloudSyncReauthRequired": "Ủy quyền đã hết hạn. Vui lòng liên kết lại tài khoản Google.",
+  "cloudSyncRemoveFromCloud": "Đồng thời xóa tài khoản này khỏi dữ liệu đồng bộ trên đám mây",
+  "cloudSyncPostAuthTitle": "Ủy quyền hoàn tất",
   "cloudSyncPostAuthBody": "Bạn có thể đóng thẻ này và quay lại ứng dụng.",
   "cloudSyncPostAuthScopeMissingTitle": "Thiếu quyền Google Drive",
   "cloudSyncPostAuthScopeMissingBody": "Ô dữ liệu Google Drive chưa được đánh dấu. Vui lòng quay lại ứng dụng, liên kết lại và đánh dấu quyền đó.",
@@ -387,6 +424,14 @@
   "settingsPrivacySectionTitle": "Quyền riêng tư",
   "settingsMaskUidInUi": "Che giấu UID trong giao diện",
   "settingsMaskUidInUiHint": "Khi bật, UID trong giao diện và danh sách tài khoản sẽ hiển thị 3 chữ số đầu tiên và phần còn lại được che giấu (ví dụ: 123•••••). Hữu ích khi phát trực tiếp hoặc chia sẻ màn hình. Hình ảnh chia sẻ, tệp xuất và hộp thoại xác nhận xóa không bị ảnh hưởng.",
+  "settingsAdPrivacyOptions": "Tùy chọn quyền riêng tư quảng cáo",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Thay đổi việc bạn có đồng ý xem quảng cáo được cá nhân hóa hay không.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "Giới Thiệu",
   "settingsAboutVersion": "Phiên bản {version}",
   "@settingsAboutVersion": {
@@ -408,6 +453,7 @@
   "contributorsTranslatedLanguages": "Ngôn ngữ đã dịch",
   "contributorsHelpTranslate": "Không có ngôn ngữ của bạn? Hãy giúp chúng tôi dịch!",
   "contributorsProjectLicense": "Giấy phép dự án",
+  "contributorsOpenSourceLicenses": "Giấy phép nguồn mở",
   "pityRank": "Bảo hiểm {star}",
   "@pityRank": {
     "placeholders": {
@@ -543,6 +589,11 @@
   "filterClear": "Xóa bộ lọc",
   "pagerFirst": "Trang đầu",
   "pagerLast": "Trang cuối",
+  "pagerJumpTitle": "Đến trang",
+  "pagerJumpLabel": "Trang ({min}–{max})",
+  "pagerJumpCurrent": "Đang ở trang {page} · {total} bản ghi",
+  "pagerJumpGo": "Đi",
+  "pagerJumpInvalid": "Nhập số trang từ {min}–{max}",
   "settingsClearActive": "Xóa dữ liệu tài khoản hiện tại",
   "settingsClearAll": "Xóa tất cả dữ liệu",
   "settingsRefetchHoyoWikiImagesTitle": "Buộc tải lại ảnh vật phẩm",
@@ -557,7 +608,7 @@
   "@confirmRefetchHoyoWikiTitle": {
     "description": "Title of the AlertDialog confirming the refetch action."
   },
-  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xoá bộ nhớ đệm hình ảnh vật phẩm cục bộ và tải lại biểu tượng từ HoYoWiki. Ảnh chi tiết sẽ được tải khi bạn mở vật phẩm lần tới. Tuỳ vào số lượng vật phẩm, có thể mất vài phút.",
+  "confirmRefetchHoyoWikiBody": "Thao tác này sẽ xóa bộ nhớ đệm hình ảnh vật phẩm cục bộ và tải lại biểu tượng từ HoYoWiki. Ảnh chi tiết sẽ được tải khi bạn mở vật phẩm lần tới. Tùy vào số lượng vật phẩm, có thể mất vài phút.",
   "@confirmRefetchHoyoWikiBody": {
     "description": "Body of the AlertDialog confirming the refetch action; warns about traffic and time cost."
   },
@@ -585,7 +636,7 @@
   "@confirmRefreshItemDataTitle": {
     "description": "Title of the AlertDialog confirming the non-destructive item metadata refresh."
   },
-  "confirmRefreshItemDataBody": "Thao tác này sẽ kết nối HoYoWiki để tải lại thông tin chi tiết của tất cả vật phẩm, có thể mất một lúc tuỳ vào số lượng. Ảnh đã tải sẽ được giữ nguyên, không bị xoá.",
+  "confirmRefreshItemDataBody": "Thao tác này sẽ kết nối HoYoWiki để tải lại thông tin chi tiết của tất cả vật phẩm, có thể mất một lúc tùy vào số lượng. Ảnh đã tải sẽ được giữ nguyên, không bị xóa.",
   "@confirmRefreshItemDataBody": {
     "description": "Body of the AlertDialog confirming the item metadata refresh; clarifies it is non-destructive."
   },
@@ -617,19 +668,19 @@
   "@settingsImageCacheFailed": {
     "description": "Shown when scanning cache size fails (e.g. permission denied)."
   },
-  "settingsImageCacheClearFailed": "Không thể xoá ảnh chi tiết",
+  "settingsImageCacheClearFailed": "Không thể xóa ảnh chi tiết",
   "@settingsImageCacheClearFailed": {
     "description": "Shown as a snackbar when clearing the detail-image (gallery) cache fails (e.g. file in use or permission denied)."
   },
-  "settingsImageCacheClearGallery": "Xoá ảnh chi tiết",
+  "settingsImageCacheClearGallery": "Xóa ảnh chi tiết",
   "@settingsImageCacheClearGallery": {
     "description": "Button label: clear gallery cache (keeps icons)."
   },
-  "confirmClearGalleryCacheTitle": "Xoá ảnh chi tiết?",
+  "confirmClearGalleryCacheTitle": "Xóa ảnh chi tiết?",
   "@confirmClearGalleryCacheTitle": {
     "description": "Confirmation dialog title for clearing gallery cache."
   },
-  "confirmClearGalleryCacheBody": "Khoảng {size} ảnh chi tiết sẽ bị xoá; bộ nhớ đệm biểu tượng được giữ lại. Sẽ tải lại lần tới khi bạn mở chi tiết vật phẩm.",
+  "confirmClearGalleryCacheBody": "Khoảng {size} ảnh chi tiết sẽ bị xóa; bộ nhớ đệm biểu tượng được giữ lại. Sẽ tải lại lần tới khi bạn mở chi tiết vật phẩm.",
   "@confirmClearGalleryCacheBody": {
     "description": "Confirmation dialog body for clearing gallery cache; {size} is formatted bytes string (e.g. '123.4 MB').",
     "placeholders": {
@@ -638,7 +689,7 @@
       }
     }
   },
-  "confirmClearGalleryCacheConfirm": "Xoá",
+  "confirmClearGalleryCacheConfirm": "Xóa",
   "@confirmClearGalleryCacheConfirm": {
     "description": "Confirm button label for clearing gallery cache."
   },
@@ -751,6 +802,95 @@
   "importReasonUnreadable": "Không thể đọc tệp",
   "exportReasonWriteFailed": "Không thể ghi tệp, vui lòng kiểm tra vị trí lưu và quyền truy cập",
   "importReasonForeignApp": "Tệp này không phải bản sao lưu được xuất từ ứng dụng này",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Nhập từ nền tảng khác",
+  "platformPickerTitle": "Chọn nền tảng nguồn",
+  "importReasonNotPlatformFile": "Tệp này không phải tệp xuất hợp lệ của {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export và các công cụ khác · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Nhập vào tài khoản nào?",
+  "importTargetAccountBody": "Tệp xuất của paimon.moe không có UID. Hãy chọn tài khoản sở hữu các bản ghi này.",
+  "importTargetAccountOtherUid": "UID khác",
+  "importTargetAccountUidHint": "Nhập UID",
+  "importTargetAccountRecordCount": "Đã có {count} bản ghi trên thiết bị này",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Tệp này dùng phiên bản UIGF mới hơn ({version}) và chưa được hỗ trợ. Hãy cập nhật ứng dụng hoặc xuất bằng v4 trong công cụ gốc",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "Tệp có loại cầu nguyện không được hỗ trợ ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Không thể bổ sung dữ liệu vật phẩm ({item}). Vui lòng kiểm tra kết nối mạng và thử lại",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: Trong khoảng {from}–{to} cả hai bên đều có bản ghi, nhưng không lượt nào trong {groups} lượt cầu nguyện khớp với bản ghi chính thức trên thiết bị này. Có thể bạn đã chọn sai tài khoản hoặc tệp dùng múi giờ khác.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: Trong khoảng {from}–{to} cả hai bên đều có bản ghi, nhưng chỉ {matched} trong {groups} lượt cầu nguyện khớp với bản ghi chính thức trên thiết bị này. Có thể bạn đã chọn sai tài khoản hoặc tệp dùng múi giờ khác.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Vẫn nhập",
+  "importResolvingItems": "Đang bổ sung dữ liệu vật phẩm...",
   "settingsExportSelectTitle": "Chọn tài khoản để xuất",
   "settingsImportSelectTitle": "Chọn tài khoản để nhập",
   "settingsImportMergeBadge": "Hợp nhất",
@@ -792,6 +932,9 @@
   "accountAdd": "Thêm tài khoản",
   "accountAliasLabel": "Bí danh",
   "accountAliasHint": "Đặt tên dễ nhớ cho tài khoản này",
+  "accountAliasNone": "Chưa đặt bí danh",
+  "accountActionEditAlias": "Sửa bí danh",
+  "accountEditAliasTitle": "Sửa bí danh",
   "accountDragHandleTooltip": "Kéo để sắp xếp",
   "loadingBootstrap": "Đang tải…",
   "timelineTopRarityTitle": "Dòng thời gian {star} ({n})",
@@ -834,6 +977,15 @@
     }
   },
   "updateButtonDownload": "Tải về",
+  "updateButtonUpdate": "Cập nhật",
+  "updateNotesUnavailable": "Hiện không thể hiển thị ghi chú phát hành. Xem chi tiết trên Google Play.",
+  "updateDownloadingMessage": "Đang tải bản cập nhật...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "Đã tải xong bản cập nhật",
+  "updateRestartAction": "Khởi động lại",
+  "updateInAppUnavailable": "Hiện không thể cập nhật trong ứng dụng. Vui lòng cập nhật từ Google Play.",
   "updateButtonSkip": "Bỏ qua phiên bản này",
   "updateButtonLater": "Để sau",
   "updateCheckButton": "Kiểm tra cập nhật",
@@ -859,6 +1011,7 @@
     }
   },
   "updateErrorFormat": "Định dạng phản hồi bất thường",
+  "updateErrorPlay": "Không kết nối được Google Play, hoặc bản này không được cài từ Google Play",
   "currentReleaseTitle": "Ghi chú phát hành phiên bản hiện tại",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -938,6 +1091,10 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
+  "detailScrollDown": "Cuộn xuống",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
   "actionViewOnHoYoWiki": "Xem trên HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -997,5 +1154,211 @@
   },
   "luckTierLucky": "May mắn",
   "luckTierAverage": "Bình thường",
-  "luckTierUnlucky": "Kém may"
+  "luckTierUnlucky": "Kém may",
+  "manualUrlEntry": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "manualUrlTitle": "Nhập URL Lịch Sử Cầu Nguyện thủ công",
+  "manualUrlHint": "Nếu bạn đã lấy URL Lịch Sử Cầu Nguyện bằng cách khác (ví dụ công cụ trên máy tính), hãy dán vào đây. Dán cả đoạn văn bản cũng được, ứng dụng sẽ tự tìm URL.",
+  "manualUrlFieldHint": "Dán URL...",
+  "manualUrlPaste": "Dán từ bộ nhớ tạm",
+  "manualUrlNotFound": "Không tìm thấy URL Lịch Sử Cầu Nguyện. Vui lòng kiểm tra nội dung đã dán.",
+  "manualUrlWarning": "URL chứa thông tin xác thực tài khoản của bạn. Đừng chia sẻ công khai. URL sẽ hết hạn sau một thời gian.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Đang chờ bạn mở trang Lịch Sử Cầu Nguyện trong game...",
+  "progressOpenGameHintAndroid": "Vui lòng mở Genshin Impact → Cầu Nguyện → Lịch Sử Cầu Nguyện",
+  "progressCheckingLogAccess": "Đang chuẩn bị đọc nhật ký của game...",
+  "progressLogUnavailableTitle": "Không thể tự động lấy URL Lịch Sử Cầu Nguyện",
+  "logUnavailableNotPaired": "Chưa thiết lập đọc nhật ký của game. Chỉ cần thiết lập một lần, sau đó mỗi lần cập nhật sẽ tự động đọc.",
+  "logUnavailableNoWifi": "Gỡ lỗi không dây chỉ hoạt động qua Wi‑Fi. Hãy kết nối Wi‑Fi rồi quay lại, ứng dụng sẽ tự động tiếp tục. Bạn cũng có thể nhập URL thủ công.",
+  "logRootDeniedHint": "Đã phát hiện root nhưng ứng dụng này chưa được cấp quyền root. Để đọc bằng root, hãy cho phép ứng dụng này trong trình quản lý root (ví dụ danh sách Superuser của Magisk), rồi quay lại; ứng dụng sẽ tự động thử lại.",
+  "logUnavailableAdbFailed": "Không kết nối được gỡ lỗi không dây. Việc ghép nối có thể đã hết hạn, vui lòng ghép nối lại.",
+  "logUnavailableWirelessOff": "Thiết bị của bạn không cho phép ứng dụng này bật gỡ lỗi không dây. Hãy bật trong trang Gỡ lỗi không dây rồi quay lại, ứng dụng sẽ tự động tiếp tục.",
+  "logUnavailableNetworkNotAllowed": "Mạng Wi‑Fi này chưa được phép dùng gỡ lỗi không dây. Nhấn Cho phép trong hộp thoại hệ thống (đánh dấu “Luôn cho phép trên mạng này” để không bị hỏi lại) và ứng dụng sẽ tự động tiếp tục. Nếu bạn đã đóng hộp thoại, hãy nhấn Thử lại.",
+  "logUnavailableUnsupported": "Thiết bị này không thể tự động đọc URL Lịch Sử Cầu Nguyện (cần Android 11 trở lên hoặc đã root). Vui lòng nhập thủ công.",
+  "logUnavailableGameNotInstalled": "Không tìm thấy Genshin Impact trên thiết bị này. Cài đặt xong hãy quay lại đây, ứng dụng sẽ tự động phát hiện.",
+  "actionOpenGame": "Mở Genshin Impact",
+  "actionOpenWirelessDebugging": "Mở Gỡ lỗi không dây",
+  "progressLogConnectionLost": "Mất kết nối gỡ lỗi không dây, đang kết nối lại... Nếu không khôi phục được, hãy kiểm tra Wi‑Fi hoặc nhập URL thủ công.",
+  "progressWirelessLeftOnHint": "Gỡ lỗi không dây vẫn đang bật. Bạn có thể tắt trong cài đặt hệ thống.",
+  "progressCredentialReady": "Đã lấy được URL Lịch Sử Cầu Nguyện. Việc tải Lịch Sử Cầu Nguyện sẽ bắt đầu khi bạn quay lại ứng dụng này.",
+  "actionRedetectGame": "Kiểm tra lại",
+  "updateOpenPlayStore": "Mở Google Play",
+  "actionSetupLogAccess": "Thiết lập",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Ghép nối lại",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Đọc nhật ký hệ thống",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Vì sao cần bước này?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "Android không cho ứng dụng đọc trực tiếp nhật ký hệ thống của ứng dụng khác. Ứng dụng này dùng tính năng Gỡ lỗi không dây có sẵn để đọc URL Lịch Sử Cầu Nguyện của Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "Ứng dụng này sẽ làm gì",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Chỉ đọc URL Lịch Sử Cầu Nguyện của Genshin Impact\n• Ngắt kết nối ngay sau khi đọc, và tắt gỡ lỗi không dây nếu chính ứng dụng này đã bật\n• Tự cấp quyền bật/tắt gỡ lỗi không dây để bạn không phải thiết lập lại\n• Bạn có thể gỡ bỏ bất cứ lúc nào trong Cài đặt",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Yêu cầu",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 trở lên, Wi‑Fi, cho phép thông báo",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Bắt đầu thiết lập",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Nhập URL thủ công thay thế",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Ghép nối gỡ lỗi không dây",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Bật Tùy chọn cho nhà phát triển",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Mở trang Giới thiệu trong Cài đặt hệ thống (ví dụ “Giới thiệu về điện thoại” hoặc “Giới thiệu về máy tính bảng”)\n2. Tìm “Số bản dựng” và nhấn 7 lần\n3. Khi thấy thông báo “Bạn đã là nhà phát triển”, hãy quay lại ứng dụng này",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "Tùy chọn cho nhà phát triển vẫn đang tắt. Nếu khi nhấn “Số bản dựng”, hệ thống báo không cần thao tác thêm (ví dụ “Bạn đã là nhà phát triển”), nghĩa là công tắc chính của Tùy chọn cho nhà phát triển đang tắt. Hãy mở Tùy chọn cho nhà phát triển, bật công tắc trên cùng rồi quay lại ứng dụng này.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Mở trang Giới thiệu",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Tùy chọn cho nhà phát triển đã bật",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Cho phép thông báo",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Bạn sẽ nhập mã ghép nối trong thông báo, vì vậy hãy cho phép ứng dụng này hiển thị thông báo.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Cho phép thông báo",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Mở cài đặt thông báo",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Đã cho phép thông báo",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Ghép nối",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Nhấn nút bên dưới để mở Gỡ lỗi không dây\n2. Bật “Sử dụng tính năng gỡ lỗi không dây” và nhấn “Ghép nối thiết bị bằng mã ghép nối”\n3. Vuốt xuống từ đầu màn hình và nhập mã ghép nối 6 chữ số hiển thị trên màn hình ghép nối của Gỡ lỗi không dây vào thông báo của ứng dụng này",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Đang chờ bạn nhập mã ghép nối trong thông báo...\nHãy nhập khi màn hình ghép nối trong Gỡ lỗi không dây vẫn đang mở.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Mở lại Gỡ lỗi không dây",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Đang ghép nối...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Đã ghép nối, còn một bước nữa",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Thiết bị của bạn có thêm một hạn chế bảo mật. Hãy bật thêm một tùy chọn để ứng dụng này có thể tự động bật/tắt gỡ lỗi không dây.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Cách bật",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Mở Tùy chọn cho nhà phát triển\n2. Tìm công tắc liên quan đến bảo mật gỡ lỗi USB hoặc giám sát quyền và bật lên, ví dụ:\n• Xiaomi: “Gỡ lỗi USB (Cài đặt bảo mật)”\n• OPPO / realme: “Tắt giám sát quyền”\n3. Đảm bảo gỡ lỗi không dây đang bật, rồi quay lại và nhấn Thử lại",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Mở Tùy chọn cho nhà phát triển",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Thử lại",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Bỏ qua (tự bật gỡ lỗi không dây mỗi lần cập nhật)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Hoàn tất",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "Từ giờ, Cập nhật sẽ tự động đọc log. Không cần thiết lập thêm.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Khi nhấn Cập nhật, hãy bật gỡ lỗi không dây khi được nhắc.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Đang quay lại và bắt đầu cập nhật...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Truy cập nhật ký game",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Gỡ lỗi không dây",
+  "logAccessMethodNone": "Chưa thiết lập",
+  "settingsPairingStatus": "Ghép nối",
+  "settingsPaired": "Đã ghép nối",
+  "settingsPairedManual": "Đã ghép nối (tự bật gỡ lỗi không dây)",
+  "settingsRetryGrant": "Thử cấp quyền lại",
+  "settingsSetupLogAccess": "Thiết lập",
+  "settingsUnpair": "Gỡ ghép nối",
+  "settingsUnpairConfirmTitle": "Gỡ ghép nối?",
+  "settingsUnpairConfirmBody": "Thao tác này sẽ xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây của ứng dụng. Sau này muốn dùng gỡ lỗi không dây, bạn sẽ cần ghép nối lại.",
+  "settingsUnpairDone": "Đã gỡ ghép nối",
+  "settingsUnpairDoneBody": "Đã xóa khóa ghép nối của ứng dụng này và thu hồi quyền bật/tắt gỡ lỗi không dây.",
+  "settingsUnpairUnreachableTitle": "Đã xóa khóa ghép nối",
+  "settingsUnpairUnreachableBody": "Đã xóa khóa ghép nối của ứng dụng này, nhưng lần này không kết nối được gỡ lỗi không dây nên chưa thu hồi được quyền bật/tắt gỡ lỗi không dây.",
+  "settingsUnpairUnreachableRevokeHint": "Khi chưa ghép nối, ứng dụng này không dùng quyền đó. Muốn thu hồi hoàn toàn, hãy kết nối Wi‑Fi, ghép nối lại rồi gỡ ghép nối thêm một lần nữa.",
+  "settingsUnpairLeftover": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống vẫn sẽ hiển thị \"{name}\". Mục này không thể kết nối được nữa nên bạn có thể để nguyên; muốn xóa thì nhấn vào và xóa.",
+  "settingsUnpairLeftoverAlso": "Danh sách Gỡ lỗi không dây → Thiết bị đã ghép nối của hệ thống cũng vẫn hiển thị \"{name}\"; nhấn vào để xóa.",
+  "settingsLogAccessMethod": "Phương thức",
+  "actionShare": "Chia sẻ",
+  "shareFailed": "Không chia sẻ được",
+  "dialogSaveAsTitle": "Lưu thành",
+  "dialogOpenTitle": "Mở",
+  "dialogSelectFolderTitle": "Chọn thư mục",
+  "actionSave": "Lưu",
+  "settingsLogsShare": "Chia sẻ logs"
 }

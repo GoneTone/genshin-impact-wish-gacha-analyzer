@@ -32,8 +32,9 @@
   "navBeginner": "Novato",
   "navSettings": "Configurações",
   "navContributors": "Contribuidores",
-  "gachaTypeCharacter": "Oração de Evento de Personagem",
-  "gachaTypeWeapon": "Oração de Evento de Arma",
+  "gachaTypeCharacter": "Oração do Evento do Personagem",
+  "gachaTypeCharacter2": "Oração de Evento de Personagem - 2",
+  "gachaTypeWeapon": "Oração do Evento de Arma",
   "gachaTypeChronicled": "Registro de Oração",
   "gachaTypeStandard": "Oração Comum",
   "gachaTypeBeginner": "Desejos de Novato",
@@ -42,7 +43,7 @@
   "navOdesEvent": "Evento",
   "navOdesStandard": "Permanente",
   "navSectionGacha": "Orar",
-  "navSectionOdes": "Odes",
+  "navSectionOdes": "Ode",
   "footerNotSynced": "Não sincronizado",
   "footerLastUpdated": "Última atualização: {time}",
   "@footerLastUpdated": {
@@ -53,7 +54,7 @@
     }
   },
   "relativeNow": "Agora",
-  "relativeSecondsAgo": "{count, plural, =1{Há 1 segundo} other{Há {count} segundos}}",
+  "relativeSecondsAgo": "{count, plural, =1{Há {count} segundo} other{Há {count} segundos}}",
   "@relativeSecondsAgo": {
     "placeholders": {
       "count": {
@@ -61,7 +62,7 @@
       }
     }
   },
-  "relativeMinutesAgo": "{count, plural, =1{Há 1 minuto} other{Há {count} minutos}}",
+  "relativeMinutesAgo": "{count, plural, =1{Há {count} minuto} other{Há {count} minutos}}",
   "@relativeMinutesAgo": {
     "placeholders": {
       "count": {
@@ -69,7 +70,7 @@
       }
     }
   },
-  "relativeHoursAgo": "{count, plural, =1{Há 1 hora} other{Há {count} horas}}",
+  "relativeHoursAgo": "{count, plural, =1{Há {count} hora} other{Há {count} horas}}",
   "@relativeHoursAgo": {
     "placeholders": {
       "count": {
@@ -77,7 +78,7 @@
       }
     }
   },
-  "relativeDaysAgo": "{count, plural, =1{Há 1 dia} other{Há {count} dias}}",
+  "relativeDaysAgo": "{count, plural, =1{Há {count} dia} other{Há {count} dias}}",
   "@relativeDaysAgo": {
     "placeholders": {
       "count": {
@@ -85,7 +86,7 @@
       }
     }
   },
-  "relativeMonthsAgo": "{count, plural, =1{Há 1 mês} other{Há {count} meses}}",
+  "relativeMonthsAgo": "{count, plural, =1{Há {count} mês} other{Há {count} meses}}",
   "@relativeMonthsAgo": {
     "placeholders": {
       "count": {
@@ -93,7 +94,7 @@
       }
     }
   },
-  "relativeYearsAgo": "{count, plural, =1{Há 1 ano} other{Há {count} anos}}",
+  "relativeYearsAgo": "{count, plural, =1{Há {count} ano} other{Há {count} anos}}",
   "@relativeYearsAgo": {
     "placeholders": {
       "count": {
@@ -105,7 +106,7 @@
   "uidNotSynced": "Não sincronizado",
   "uidActiveSuffix": " (ativo)",
   "emptyNoSyncTitle": "Nenhum dado sincronizado",
-  "emptyNoSyncMessage": "Clique em \"Atualizar dados\" no canto superior direito para começar",
+  "emptyNoSyncMessage": "Toque em {icon} no canto superior direito para começar",
   "emptyNoRecords": "Sem registros neste banner",
   "emptyNoFilterMatch": "Nenhum registro corresponde ao filtro",
   "emptyNoOdesRecords": "Sem registros de Ode",
@@ -147,6 +148,23 @@
   },
   "tableTotalIndex": "Total de orações",
   "tableMainPity": "Pity atual",
+  "tableSortButton": "Ordenar: {column}",
+  "@tableSortButton": {
+    "description": "Sort button above the record cards on narrow screens; column is the sorted column name with an arrow",
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSortDefault": "Ordenar: padrão",
+  "@tableSortDefault": {
+    "description": "Sort button text when the records are in their default order"
+  },
+  "tableSortSheetTitle": "Ordenar por",
+  "@tableSortSheetTitle": {
+    "description": "Title of the bottom sheet that picks the sort column"
+  },
   "tableMainPityTooltip": "Orações desde o último {star}",
   "@tableMainPityTooltip": {
     "placeholders": {
@@ -166,7 +184,18 @@
   "progressDone": "Atualização concluída",
   "progressFailed": "Falhou",
   "progressOpenGameHint": "Abra Genshin Impact → Orações → Histórico",
-  "progressFallbackHint": "(A autenticação anterior expirou, é necessário interceptar novamente)",
+  "progressFallbackHint": "(O URL anterior do Histórico de Orações expirou, é necessário obtê-lo novamente)",
+  "progressNotDetectedLink": "Abriu o Histórico de Orações, mas nada acontece?",
+  "progressCaptureUnavailableHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso); a detecção usará apenas o cache web do jogo. Abra a página do Histórico de Orações no jogo.",
+  "progressCaptureUnavailableNoGameDirHint": "Não foi possível iniciar o interceptador (o certificado pode ter sido recusado ou a porta está em uso) e a pasta do jogo também não foi encontrada. Clique em \"Escolher pasta do jogo\" abaixo para definir manualmente.",
+  "gameDirHelpTitle": "Histórico de Orações não detectado",
+  "gameDirHelpNotFound": "A pasta do Genshin Impact não foi encontrada. Depois de escolher a pasta do jogo, esta ferramenta também poderá obter o URL do Histórico de Orações a partir do cache web do jogo.",
+  "gameDirHelpFound": "Pasta do jogo em uso: {path}. Se não for a cópia do jogo que você está usando, escolha novamente.",
+  "@gameDirHelpFound": {"placeholders": {"path": {"type": "String"}}},
+  "gameDirHelpReopen": "Pasta do jogo definida. Volte ao jogo e abra o Histórico de Orações mais uma vez.",
+  "gameDirInvalid": "O Genshin Impact não foi encontrado nesta pasta. Escolha a pasta \"Genshin Impact game\".",
+  "actionChooseGameDir": "Escolher pasta do jogo",
+  "actionRechooseGameDir": "Escolher novamente",
   "progressFetchingBanner": "Buscando: {name}",
   "@progressFetchingBanner": {
     "placeholders": {
@@ -175,7 +204,7 @@
       }
     }
   },
-  "progressPageStatus": "Página {page}, {count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "progressPageStatus": "Página {page}, {count, plural, =1{{count} registro adicionado} other{{count} registros adicionados}}",
   "@progressPageStatus": {
     "placeholders": {
       "page": {
@@ -186,7 +215,7 @@
       }
     }
   },
-  "progressDoneSummary": "{count, plural, =1{1 registro adicionado} other{{count} registros adicionados}}",
+  "progressDoneSummary": "{count, plural, =1{{count} registro adicionado} other{{count} registros adicionados}}",
   "@progressDoneSummary": {
     "placeholders": {
       "count": {
@@ -203,7 +232,7 @@
       }
     }
   },
-  "progressDoneItemDataSummary": "Dados de {count} itens atualizados",
+  "progressDoneItemDataSummary": "{count, plural, =1{Dados de {count} item atualizados} other{Dados de {count} itens atualizados}}",
   "@progressDoneItemDataSummary": {
     "description": "Completion dialog main line for the manual 'update item data' (HoYoWiki metadata refresh) flow: how many distinct items had their metadata refreshed. Replaces the gacha-record summary for this flow.",
     "placeholders": {
@@ -212,7 +241,7 @@
       }
     }
   },
-  "progressDoneItemDataImagesSummary": "{count} imagens de itens ausentes baixadas",
+  "progressDoneItemDataImagesSummary": "{count, plural, =1{{count} imagem de item ausente baixada} other{{count} imagens de itens ausentes baixadas}}",
   "@progressDoneItemDataImagesSummary": {
     "description": "Completion dialog secondary line for the 'update item data' flow, shown only when count > 0: how many missing item images (icons) were backfilled during the metadata refresh.",
     "placeholders": {
@@ -221,7 +250,7 @@
       }
     }
   },
-  "progressDoneItemDataPrunedSummary": "Dados de idioma obsoletos removidos de {count} itens",
+  "progressDoneItemDataPrunedSummary": "{count, plural, =1{Dados de idioma obsoletos removidos de {count} item} other{Dados de idioma obsoletos removidos de {count} itens}}",
   "@progressDoneItemDataPrunedSummary": {
     "description": "Completion dialog reminder line for the 'update item data' flow, shown only when count > 0: how many items had stale-language metadata (from a previous data-language conversion) cleaned up this run.",
     "placeholders": {
@@ -238,7 +267,7 @@
       }
     }
   },
-  "progressDoneImportSummary": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
+  "progressDoneImportSummary": "{accounts, plural, =1{{accounts} conta importada} other{{accounts} contas importadas}}: {added} novos, {duplicate} já existentes",
   "@progressDoneImportSummary": {
     "description": "Completion dialog line shown when the import-then-fetch flow finishes: accounts imported, plus new vs already-present record counts.",
     "placeholders": {
@@ -308,7 +337,7 @@
   "errorNoRecords": "Esta conta não possui registros de Oração",
   "pageOverviewTitle": "Dados gerais (total de todos os banners)",
   "pageOverviewGachaSection": "Resumo de Orações",
-  "pageOverviewOdesSection": "Resumo de Odes",
+  "pageOverviewOdesSection": "Resumo de Ode",
   "pageBannerRecordList": "Lista de registros",
   "rarityOverviewTitle": "Visão geral de {star}",
   "@rarityOverviewTitle": {
@@ -344,11 +373,19 @@
   },
   "settingsDataLanguageUnifyFailed": "Falha na conversão, os dados não foram alterados. Verifique sua conexão e tente novamente.",
   "settingsDataManagement": "Gerenciamento de dados",
+  "settingsGameDir": "Pasta do jogo",
+  "settingsGameDirAuto": "Detectada automaticamente: {path}",
+  "@settingsGameDirAuto": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirManual": "Definida manualmente: {path}",
+  "@settingsGameDirManual": {"placeholders": {"path": {"type": "String"}}},
+  "settingsGameDirNone": "Pasta do jogo não encontrada",
+  "actionClearGameDir": "Limpar",
   "settingsCloudSync": "Sincronização na nuvem",
-  "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários computadores.",
+  "cloudSyncIntro": "Vincule sua conta do Google para fazer backup automático dos registros de desejos no seu Google Drive e sincronizá-los entre vários dispositivos.",
   "cloudSyncUnconfigured": "Esta compilação não tem credenciais do Google OAuth configuradas; a sincronização na nuvem está indisponível.",
   "cloudSyncLink": "Vincular conta do Google",
   "cloudSyncAwaitingConsent": "Navegador aberto. Conclua a autorização no navegador...",
+  "cloudSyncAwaitingConsentAndroid": "Conclua a autorização na janela do Google...",
   "cloudSyncLinkedAs": "Vinculada: {email}",
   "@cloudSyncLinkedAs": {
     "placeholders": {
@@ -387,6 +424,14 @@
   "settingsPrivacySectionTitle": "Privacidade",
   "settingsMaskUidInUi": "Mascarar UID na interface",
   "settingsMaskUidInUiHint": "Quando ativado, os UIDs na interface e na lista de contas mostram os 3 primeiros dígitos com o restante mascarado (por exemplo, 123•••••). Útil para transmissões ou compartilhamento de tela. Imagens compartilháveis, arquivos exportados e a caixa de diálogo de confirmação de exclusão não são afetados.",
+  "settingsAdPrivacyOptions": "Opções de privacidade dos anúncios",
+  "@settingsAdPrivacyOptions": {
+    "description": "Button label in Settings > Privacy that reopens Google's ad consent (UMP) privacy options form; shown only on Android in regions that require it."
+  },
+  "settingsAdPrivacyOptionsHint": "Altere seu consentimento para ver anúncios personalizados.",
+  "@settingsAdPrivacyOptionsHint": {
+    "description": "One-line explanation shown above the ad privacy options button."
+  },
   "settingsAbout": "Cerca de",
   "settingsAboutVersion": "Versão {version}",
   "@settingsAboutVersion": {
@@ -408,6 +453,7 @@
   "contributorsTranslatedLanguages": "Idiomas traduzidos",
   "contributorsHelpTranslate": "Não encontrou seu idioma? Ajude-nos a traduzir!",
   "contributorsProjectLicense": "Licença do projeto",
+  "contributorsOpenSourceLicenses": "Licenças de código aberto",
   "pityRank": "Pity de {star}",
   "@pityRank": {
     "placeholders": {
@@ -427,7 +473,7 @@
       }
     }
   },
-  "pityDistance": "{n, plural, =1{Falta 1 oração para o próximo pity} other{Faltam {n} orações para o próximo pity}}",
+  "pityDistance": "{n, plural, =1{Falta {n} oração para o próximo pity} other{Faltam {n} orações para o próximo pity}}",
   "@pityDistance": {
     "placeholders": {
       "n": {
@@ -435,7 +481,7 @@
       }
     }
   },
-  "pityClose": "Pity próximo! {n, plural, =1{Falta 1 oração} other{Faltam {n} orações}}",
+  "pityClose": "Pity próximo! {n, plural, =1{Falta {n} oração} other{Faltam {n} orações}}",
   "@pityClose": {
     "placeholders": {
       "n": {
@@ -469,7 +515,7 @@
       }
     }
   },
-  "timelineSinceLast": "{n, plural, =1{1 oração} other{{n} orações}}",
+  "timelineSinceLast": "{n, plural, =1{{n} oração} other{{n} orações}}",
   "@timelineSinceLast": {
     "placeholders": {
       "n": {
@@ -478,7 +524,7 @@
     }
   },
   "timelineNowLabel": "Agora",
-  "timelineNowPulls": "{n, plural, =1{1 oração acumulada} other{{n} orações acumuladas}}",
+  "timelineNowPulls": "{n, plural, =1{{n} oração acumulada} other{{n} orações acumuladas}}",
   "@timelineNowPulls": {
     "placeholders": {
       "n": {
@@ -486,7 +532,7 @@
       }
     }
   },
-  "timelineNowSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "timelineNowSinceLast": "{n, plural, =1{{n} oração desde o último {star}} other{{n} orações desde o último {star}}}",
   "@timelineNowSinceLast": {
     "placeholders": {
       "star": {
@@ -497,7 +543,7 @@
       }
     }
   },
-  "timelineNowSinceCrossPool": "{n, plural, =1{1 oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
+  "timelineNowSinceCrossPool": "{n, plural, =1{{n} oração desde o último {star} (todos os banners)} other{{n} orações desde o último {star} (todos os banners)}}",
   "@timelineNowSinceCrossPool": {
     "placeholders": {
       "star": {
@@ -521,7 +567,7 @@
   },
   "timelineScrollLeft": "Rolar para a esquerda",
   "timelineScrollRight": "Rolar para a direita",
-  "timelineLoadMore": "Carregar mais ({n, plural, =1{1 restante} other{{n} restantes}})",
+  "timelineLoadMore": "Carregar mais ({n, plural, =1{{n} restante} other{{n} restantes}})",
   "@timelineLoadMore": {
     "placeholders": {
       "n": {
@@ -543,6 +589,11 @@
   "filterClear": "Limpar filtros",
   "pagerFirst": "Primeira página",
   "pagerLast": "Última página",
+  "pagerJumpTitle": "Ir para a página",
+  "pagerJumpLabel": "Página ({min}–{max})",
+  "pagerJumpCurrent": "Página atual: {page} · {total, plural, =1{{total} registro} other{{total} registros}}",
+  "pagerJumpGo": "Ir",
+  "pagerJumpInvalid": "Digite uma página de {min} a {max}",
   "settingsClearActive": "Limpar dados da conta atual",
   "settingsClearAll": "Limpar todos os dados",
   "settingsRefetchHoyoWikiImagesTitle": "Forçar nova obtenção de imagens dos itens",
@@ -692,7 +743,7 @@
     }
   },
   "settingsImportConfirmTitle": "Confirmação de importação",
-  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{1 conta} other{{accounts} contas}} ({records, plural, =1{1 registro} other{{records} registros}} no total):",
+  "settingsImportConfirmIntro": "Prestes a importar {accounts, plural, =1{{accounts} conta} other{{accounts} contas}} ({records, plural, =1{{records} registro} other{{records} registros}} no total):",
   "@settingsImportConfirmIntro": {
     "placeholders": {
       "accounts": {
@@ -713,7 +764,7 @@
       }
     }
   },
-  "settingsImportSuccess": "{accounts, plural, =1{1 conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{1 registro} other{{records} registros}})",
+  "settingsImportSuccess": "{accounts, plural, =1{{accounts} conta importada} other{{accounts} contas importadas}} com sucesso ({records, plural, =1{{records} registro} other{{records} registros}})",
   "@settingsImportSuccess": {
     "placeholders": {
       "accounts": {
@@ -751,11 +802,100 @@
   "importReasonUnreadable": "Não foi possível ler o arquivo",
   "exportReasonWriteFailed": "Não foi possível gravar o arquivo. Verifique o local de salvamento e as permissões",
   "importReasonForeignApp": "Este arquivo de backup não foi exportado por este aplicativo",
+  "platformUigf": "UIGF",
+  "platformPaimonMoe": "Paimon.moe",
+  "settingsImportOtherPlatform": "Importar de outras plataformas",
+  "platformPickerTitle": "Selecione a plataforma de origem",
+  "importReasonNotPlatformFile": "Este arquivo não é uma exportação válida do {platform}",
+  "@importReasonNotPlatformFile": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "platformUigfSubtitle": "genshin-wish-export e outras ferramentas · JSON",
+  "platformPaimonMoeSubtitle": "paimon.moe · Excel",
+  "importTargetAccountTitle": "Importar para qual conta?",
+  "importTargetAccountBody": "As exportações do paimon.moe não incluem UID. Escolha a conta à qual estes registros pertencem.",
+  "importTargetAccountOtherUid": "Outro UID",
+  "importTargetAccountUidHint": "Digite o UID",
+  "importTargetAccountRecordCount": "{count, plural, =1{{count} registro neste dispositivo} other{{count} registros neste dispositivo}}",
+  "@importTargetAccountRecordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReasonUigfVersionTooNew": "Este arquivo usa uma versão do UIGF mais recente ({version}) que ainda não é compatível. Atualize o aplicativo ou exporte em v4 na ferramenta original.",
+  "@importReasonUigfVersionTooNew": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonUnknownGachaType": "O arquivo contém tipos de oração não compatíveis ({types})",
+  "@importReasonUnknownGachaType": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "importReasonItemUnresolved": "Não foi possível completar os dados do item ({item}). Verifique sua conexão e tente novamente.",
+  "@importReasonItemUnresolved": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "importOverlapWarning": "⚠ {uid}: os dois lados têm registros entre {from} e {to}, mas nenhuma das {groups} orações desse período corresponde aos registros oficiais deste dispositivo. Talvez você tenha escolhido a conta errada ou o arquivo use outro fuso horário.",
+  "@importOverlapWarning": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "importOverlapWarningPartial": "⚠ {uid}: os dois lados têm registros entre {from} e {to}, mas os registros oficiais deste dispositivo correspondem a apenas {matched} das {groups} orações desse período. Talvez você tenha escolhido a conta errada ou o arquivo use outro fuso horário.",
+  "@importOverlapWarningPartial": {
+    "placeholders": {
+      "uid": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "groups": {
+        "type": "int"
+      },
+      "matched": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmImportAnyway": "Importar mesmo assim",
+  "importResolvingItems": "Completando dados dos itens...",
   "settingsExportSelectTitle": "Selecionar contas para exportar",
   "settingsImportSelectTitle": "Selecionar contas para importar",
   "settingsImportMergeBadge": "Mesclar",
   "accountsPickerSelectAll": "Selecionar tudo",
-  "accountRecordCount": "{n, plural, =1{1 registro} other{{n} registros}}",
+  "accountRecordCount": "{n, plural, =1{{n} registro} other{{n} registros}}",
   "@accountRecordCount": {
     "placeholders": {
       "n": {
@@ -792,6 +932,9 @@
   "accountAdd": "Adicionar conta",
   "accountAliasLabel": "Apelido",
   "accountAliasHint": "Defina um nome fácil de lembrar para esta conta",
+  "accountAliasNone": "Sem apelido",
+  "accountActionEditAlias": "Editar apelido",
+  "accountEditAliasTitle": "Editar apelido",
   "accountDragHandleTooltip": "Arrastar para ordenar",
   "loadingBootstrap": "Carregando…",
   "timelineTopRarityTitle": "Linha do tempo de {star} ({n})",
@@ -806,7 +949,7 @@
     }
   },
   "bannerTopRarityCountTitle": "Contagem de itens de maior raridade por banner",
-  "bannerTopRarityPullsSinceLast": "{n, plural, =1{1 oração desde o último {star}} other{{n} orações desde o último {star}}}",
+  "bannerTopRarityPullsSinceLast": "{n, plural, =1{{n} oração desde o último {star}} other{{n} orações desde o último {star}}}",
   "@bannerTopRarityPullsSinceLast": {
     "placeholders": {
       "star": {
@@ -834,6 +977,15 @@
     }
   },
   "updateButtonDownload": "Baixar",
+  "updateButtonUpdate": "Atualizar",
+  "updateNotesUnavailable": "As notas da versão não estão disponíveis no momento. Veja os detalhes no Google Play.",
+  "updateDownloadingMessage": "Baixando a atualização...",
+  "@updateDownloadingMessage": {
+    "description": "Android SnackBar text while Google Play downloads the in-app update in the background (shown with percentage and size)"
+  },
+  "updateDownloadedMessage": "A atualização foi baixada",
+  "updateRestartAction": "Reiniciar",
+  "updateInAppUnavailable": "Não é possível atualizar pelo app agora. Atualize pelo Google Play.",
   "updateButtonSkip": "Pular esta versão",
   "updateButtonLater": "Lembrar depois",
   "updateCheckButton": "Verificar atualizações",
@@ -859,6 +1011,7 @@
     }
   },
   "updateErrorFormat": "Formato de resposta inválido",
+  "updateErrorPlay": "Não foi possível acessar o Google Play, ou esta cópia não foi instalada pelo Google Play",
   "currentReleaseTitle": "Notas da versão atual",
   "@currentReleaseTitle": {
     "description": "Title of the dialog showing release notes for the currently installed version."
@@ -938,6 +1091,10 @@
   "@galleryNextTab": {
     "description": "Item detail dialog gallery: tooltip for the right triangle arrow that selects the NEXT tab/chip."
   },
+  "detailScrollDown": "Rolar para baixo",
+  "@detailScrollDown": {
+    "description": "Item detail dialog (two-column layout): tooltip for the down-chevron button that scrolls the left info column down."
+  },
   "actionViewOnHoYoWiki": "Ver no HoYoWiki",
   "@actionViewOnHoYoWiki": {
     "description": "Item detail dialog actions: button label that opens the HoYoLAB Wiki entry page for the current item in the default browser."
@@ -997,5 +1154,211 @@
   },
   "luckTierLucky": "Sortudo",
   "luckTierAverage": "Normal",
-  "luckTierUnlucky": "Azarado"
+  "luckTierUnlucky": "Azarado",
+  "manualUrlEntry": "Inserir o URL do Histórico de Orações manualmente",
+  "manualUrlTitle": "Inserir o URL do Histórico de Orações manualmente",
+  "manualUrlHint": "Se você já obteve o URL do Histórico de Orações de outra forma (por exemplo, com uma ferramenta no computador), cole-o aqui. Colar o texto inteiro também funciona; o app encontra o URL automaticamente.",
+  "manualUrlFieldHint": "Colar URL...",
+  "manualUrlPaste": "Colar da área de transferência",
+  "manualUrlNotFound": "Nenhum URL do Histórico de Orações encontrado. Verifique o conteúdo colado.",
+  "manualUrlWarning": "O URL contém as credenciais da sua conta. Não compartilhe publicamente. Ele expira depois de um tempo.",
+  "manualUrlSubmit": "OK",
+  "progressWaitingLog": "Aguardando você abrir a página do Histórico de Orações no jogo...",
+  "progressOpenGameHintAndroid": "Abra Genshin Impact → Orar → Histórico",
+  "progressCheckingLogAccess": "Preparando a leitura do registro do jogo...",
+  "progressLogUnavailableTitle": "Não é possível obter o URL do Histórico de Orações automaticamente",
+  "logUnavailableNotPaired": "A leitura do registro do jogo ainda não foi configurada. Depois de uma configuração única, toda atualização lê o registro automaticamente.",
+  "logUnavailableNoWifi": "A depuração por Wi‑Fi só funciona conectada a uma rede Wi‑Fi. Conecte-se ao Wi‑Fi e volte; o app continua automaticamente. Você também pode inserir o URL manualmente.",
+  "logRootDeniedHint": "Root encontrado, mas este app não recebeu acesso root. Para ler com root, permita este app no seu gerenciador de root (por exemplo, na lista de Superusuário do Magisk) e volte; o app tenta de novo automaticamente.",
+  "logUnavailableAdbFailed": "Não foi possível conectar à depuração por Wi‑Fi. O pareamento pode ter expirado; pareie de novo.",
+  "logUnavailableWirelessOff": "Seu dispositivo não permite que este app ative a depuração por Wi‑Fi. Ative-a na página Depuração por Wi‑Fi e volte; o app continua automaticamente.",
+  "logUnavailableNetworkNotAllowed": "Esta rede Wi‑Fi ainda não foi permitida para a depuração por Wi‑Fi. Toque em Permitir na solicitação do sistema (marque \"Sempre permitir nesta rede\" para não ser perguntado de novo) e o app continua automaticamente. Se você fechou a solicitação, toque em Tentar de novo.",
+  "logUnavailableUnsupported": "Este dispositivo não consegue ler o URL do Histórico de Orações automaticamente (requer Android 11 ou superior, ou root). Insira o URL manualmente.",
+  "logUnavailableGameNotInstalled": "O Genshin Impact não foi encontrado neste dispositivo. Depois de instalar, volte aqui e o jogo será detectado automaticamente.",
+  "actionOpenGame": "Abrir Genshin Impact",
+  "actionOpenWirelessDebugging": "Abrir Depuração por Wi‑Fi",
+  "progressLogConnectionLost": "A conexão de depuração por Wi‑Fi caiu, reconectando... Se não voltar, verifique o Wi‑Fi ou insira o URL manualmente.",
+  "progressWirelessLeftOnHint": "A depuração por Wi‑Fi continua ativada. Você pode desativá-la nas configurações do sistema.",
+  "progressCredentialReady": "URL do Histórico de Orações obtido. A busca do seu Histórico de Orações começa quando você voltar para este app.",
+  "actionRedetectGame": "Verificar de novo",
+  "updateOpenPlayStore": "Abrir Google Play",
+  "actionSetupLogAccess": "Configurar",
+  "@actionSetupLogAccess": {
+    "description": "Waiting screen button that opens the log access setup page"
+  },
+  "actionRepair": "Parear de novo",
+  "@actionRepair": {
+    "description": "Waiting screen button that opens the setup page to pair wireless debugging again"
+  },
+  "setupTitle": "Ler o registro do sistema",
+  "@setupTitle": {
+    "description": "App bar title of the log access setup disclosure page"
+  },
+  "setupWhyTitle": "Por que isso é necessário?",
+  "@setupWhyTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhyBody": "O Android não permite que apps leiam diretamente o registro do sistema de outros apps. Este app usa o recurso nativo de depuração por Wi‑Fi para ler o URL do Histórico de Orações do Genshin Impact.",
+  "@setupWhyBody": {
+    "description": "Disclosure page: why the app needs wireless debugging"
+  },
+  "setupWhatTitle": "O que este app faz",
+  "@setupWhatTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupWhatBody": "• Lê apenas o URL do Histórico de Orações do Genshin Impact\n• Desconecta logo após a leitura e desativa a depuração por Wi‑Fi se foi este app que a ativou\n• Concede a si mesmo permissão para ativar e desativar a depuração por Wi‑Fi, para você não precisar configurar de novo\n• Você pode remover isso a qualquer momento nas Configurações",
+  "@setupWhatBody": {
+    "description": "Disclosure page bullet list. Keep the line breaks."
+  },
+  "setupNeedTitle": "Requisitos",
+  "@setupNeedTitle": {
+    "description": "Disclosure page card title"
+  },
+  "setupNeedBody": "Android 11 ou mais recente, Wi‑Fi e notificações permitidas",
+  "@setupNeedBody": {
+    "description": "Disclosure page requirements"
+  },
+  "setupStart": "Iniciar configuração",
+  "@setupStart": {
+    "description": "Disclosure page primary button"
+  },
+  "setupUseManual": "Inserir o URL manualmente",
+  "@setupUseManual": {
+    "description": "Disclosure page link to manual input instead"
+  },
+  "setupPairTitle": "Parear depuração por Wi‑Fi",
+  "@setupPairTitle": {
+    "description": "App bar title of the pairing guide page"
+  },
+  "setupStepDevOptions": "1. Ative as Opções do desenvolvedor",
+  "@setupStepDevOptions": {
+    "description": "Pairing guide step 1 title"
+  },
+  "setupStepDevOptionsBody": "1. Abra a página Sobre nas Configurações do sistema (por exemplo, \"Sobre o telefone\" ou \"Sobre o tablet\")\n2. Encontre \"Número da versão\" e toque nele 7 vezes\n3. Quando aparecer \"Você agora é um desenvolvedor\", volte para este app",
+  "@setupStepDevOptionsBody": {
+    "description": "Pairing guide step 1 instructions. Keep the line breaks."
+  },
+  "setupDevOptionsUndetected": "As Opções do desenvolvedor ainda estão desativadas. Se, ao tocar em \"Número da versão\", o sistema disse que não era preciso fazer mais nada (por exemplo, \"Você já é um desenvolvedor\"), a chave principal das Opções do desenvolvedor está desativada. Abra as Opções do desenvolvedor, ative a chave no topo e volte para este app.",
+  "@setupDevOptionsUndetected": {
+    "description": "Pairing guide step 1 hint shown after the user returns to the app and developer options are still off: the entry can stay visible while the developer options switch is off, so tell them to turn that switch on."
+  },
+  "setupOpenAbout": "Abrir página Sobre",
+  "@setupOpenAbout": {
+    "description": "Button that opens the system About page"
+  },
+  "setupStepDevOptionsDone": "1. Opções do desenvolvedor ativadas",
+  "@setupStepDevOptionsDone": {
+    "description": "Pairing guide step 1 done"
+  },
+  "setupStepNotifications": "2. Permita as notificações",
+  "@setupStepNotifications": {
+    "description": "Pairing guide step 2 title"
+  },
+  "setupStepNotificationsBody": "Você vai digitar o código de pareamento em uma notificação, então permita que este app mostre notificações.",
+  "@setupStepNotificationsBody": {
+    "description": "Pairing guide step 2 explanation"
+  },
+  "setupAllowNotifications": "Permitir notificações",
+  "@setupAllowNotifications": {
+    "description": "Button that requests notification permission"
+  },
+  "setupOpenNotificationSettings": "Abrir configurações de notificação",
+  "@setupOpenNotificationSettings": {
+    "description": "Button that opens the app's notification settings after the permission was denied"
+  },
+  "setupStepNotificationsDone": "2. Notificações permitidas",
+  "@setupStepNotificationsDone": {
+    "description": "Pairing guide step 2 done"
+  },
+  "setupStepPair": "3. Pareie",
+  "@setupStepPair": {
+    "description": "Pairing guide step 3 title"
+  },
+  "setupStepPairBody": "1. Toque no botão abaixo para abrir a Depuração por Wi‑Fi\n2. Ative \"Usar a depuração por Wi‑Fi\" e toque em \"Parear o dispositivo com um código de pareamento\"\n3. Deslize para baixo a partir do topo da tela e, na notificação deste app, digite o código de pareamento de 6 dígitos mostrado na tela de pareamento da Depuração por Wi‑Fi",
+  "@setupStepPairBody": {
+    "description": "Pairing guide step 3 instructions. Keep the line breaks."
+  },
+  "setupWaitingCode": "Aguardando você digitar o código de pareamento na notificação...\nDigite enquanto a tela de pareamento da Depuração por Wi‑Fi ainda estiver aberta.",
+  "@setupWaitingCode": {
+    "description": "Pairing guide while waiting for the code. Keep the line break."
+  },
+  "setupOpenWirelessAgain": "Abrir a Depuração por Wi‑Fi de novo",
+  "@setupOpenWirelessAgain": {
+    "description": "Button to open Wireless debugging again while waiting"
+  },
+  "setupPairing": "Pareando...",
+  "@setupPairing": {
+    "description": "Shown while pairing and granting permission"
+  },
+  "setupGrantFailedTitle": "Pareado, falta só mais um passo",
+  "@setupGrantFailedTitle": {
+    "description": "Card title when pairing worked but the permission grant failed"
+  },
+  "setupGrantFailedBody": "Seu dispositivo tem uma restrição de segurança extra. Ative mais uma opção para que este app possa ativar e desativar a depuração por Wi‑Fi automaticamente.",
+  "@setupGrantFailedBody": {
+    "description": "Explanation when the permission grant failed"
+  },
+  "setupGrantHowTitle": "Como ativar",
+  "@setupGrantHowTitle": {
+    "description": "Card title for how to enable the extra option"
+  },
+  "setupGrantHowBody": "1. Abra as Opções do desenvolvedor\n2. Encontre a chave relacionada à segurança da depuração USB ou ao monitoramento de permissões e ative-a, por exemplo:\n• Xiaomi: \"Depuração USB (configurações de segurança)\"\n• OPPO / realme: \"Desativar monitoramento de permissões\"\n3. Confira se a depuração por Wi‑Fi está ativada, volte e toque em Tentar de novo",
+  "@setupGrantHowBody": {
+    "description": "Generic steps to enable the vendor-specific security option, with examples. Keep the line breaks."
+  },
+  "setupOpenDeveloperOptions": "Abrir Opções do desenvolvedor",
+  "@setupOpenDeveloperOptions": {
+    "description": "Button that opens Developer options"
+  },
+  "setupRetry": "Tentar de novo",
+  "@setupRetry": {
+    "description": "Button to retry granting the permission"
+  },
+  "setupSkipGrant": "Pular (ativar a depuração por Wi‑Fi manualmente a cada atualização)",
+  "@setupSkipGrant": {
+    "description": "Link to skip the grant and use manual toggle mode"
+  },
+  "setupDoneTitle": "Tudo pronto",
+  "@setupDoneTitle": {
+    "description": "Title when setup finished"
+  },
+  "setupDoneBody": "A partir de agora, Atualizar lê o log automaticamente. Nenhuma configuração extra é necessária.",
+  "@setupDoneBody": {
+    "description": "Body when setup finished"
+  },
+  "setupDoneManualBody": "Quando tocar em Atualizar, ative a depuração por Wi‑Fi quando for solicitado.",
+  "@setupDoneManualBody": {
+    "description": "Body when setup finished in manual toggle mode"
+  },
+  "setupDoneReturning": "Voltando e iniciando a atualização...",
+  "@setupDoneReturning": {
+    "description": "Shown just before returning and starting the update"
+  },
+  "settingsLogAccess": "Acesso ao registro do jogo",
+  "logAccessMethodRoot": "Root",
+  "logAccessMethodWireless": "Depuração por Wi‑Fi",
+  "logAccessMethodNone": "Não configurado",
+  "settingsPairingStatus": "Pareamento",
+  "settingsPaired": "Pareado",
+  "settingsPairedManual": "Pareado (ativar a depuração por Wi‑Fi manualmente)",
+  "settingsRetryGrant": "Tentar permissão de novo",
+  "settingsSetupLogAccess": "Configurar",
+  "settingsUnpair": "Remover pareamento",
+  "settingsUnpairConfirmTitle": "Remover pareamento?",
+  "settingsUnpairConfirmBody": "A chave de pareamento deste app será excluída e a permissão deste app para ativar e desativar a depuração por Wi‑Fi será removida. Você vai precisar parear de novo para usar a depuração por Wi‑Fi depois.",
+  "settingsUnpairDone": "Pareamento removido",
+  "settingsUnpairDoneBody": "A chave de pareamento deste app foi excluída e a permissão para ativar e desativar a depuração por Wi‑Fi foi removida.",
+  "settingsUnpairUnreachableTitle": "Chave de pareamento excluída",
+  "settingsUnpairUnreachableBody": "A chave de pareamento deste app foi excluída, mas desta vez não foi possível conectar à depuração por Wi‑Fi, então a permissão para ativá-la e desativá-la não foi removida.",
+  "settingsUnpairUnreachableRevokeHint": "Este app não usa essa permissão enquanto não estiver pareado. Para removê-la por completo, conecte-se a uma rede Wi‑Fi, pareie de novo e depois remova o pareamento outra vez.",
+  "settingsUnpairLeftover": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema vai continuar mostrando \"{name}\". Ele não consegue mais se conectar, então você pode deixá-lo; para removê-lo, toque nele e exclua.",
+  "settingsUnpairLeftoverAlso": "A lista Depuração por Wi‑Fi → Dispositivos pareados do sistema também ainda mostra \"{name}\"; toque nele para excluir.",
+  "settingsLogAccessMethod": "Método",
+  "actionShare": "Compartilhar",
+  "shareFailed": "Não foi possível compartilhar",
+  "dialogSaveAsTitle": "Salvar como",
+  "dialogOpenTitle": "Abrir",
+  "dialogSelectFolderTitle": "Selecionar pasta",
+  "actionSave": "Salvar",
+  "settingsLogsShare": "Compartilhar logs"
 }

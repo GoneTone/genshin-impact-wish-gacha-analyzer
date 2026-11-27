@@ -8,12 +8,14 @@ import 'package:genshin_impact_wish_gacha_analyzer/services/uid_ordering.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/cloud_sync.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/settings.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/gacha_repository.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/theme/layout.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/utils/uid_display.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/confirm_dialog.dart';
+import 'package:genshin_impact_wish_gacha_analyzer/widgets/dialogs/edit_alias_dialog.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/widgets/relative_time_text.dart';
 
-/// 帳號管理卡片：顯示所有已知 UID 的清單，支援排序、切換、重命名與刪除。
+/// 帳號管理卡片：顯示所有已知 UID 的清單，支援排序、切換、編輯別名與刪除。
 class AccountManagement extends ConsumerWidget {
   /// 建立 [AccountManagement]。
   const AccountManagement({super.key});
@@ -77,15 +79,20 @@ class AccountManagement extends ConsumerWidget {
                 maskUid: maskUid,
                 onSetActive: () => notifier.setActiveUid(uid),
                 onRemove: () => _remove(context, ref, uid),
-                onAliasSubmit: (value) =>
-                    settingsNotifier.setUidAlias(uid, value),
+                onEditAlias: () => _editAlias(
+                  context,
+                  settingsNotifier,
+                  uid,
+                  uidAliases[uid] ?? '',
+                  maskUid,
+                ),
               );
             },
           ),
         const Divider(),
         const SizedBox(height: AppSpacing.s),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: FilledButton.icon(
             onPressed: () => notifier.forceRecaptureAndUpdate(),
             icon: const Icon(Icons.person_add_alt, size: 18),
@@ -94,6 +101,22 @@ class AccountManagement extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  /// 彈出編輯別名 dialog，確認後寫入設定；取消時不變。
+  Future<void> _editAlias(
+    BuildContext ctx,
+    SettingsNotifier settingsNotifier,
+    String uid,
+    String current,
+    bool mask,
+  ) async {
+    final value = await showEditAliasDialog(
+      context: ctx,
+      uid: displayUid(uid, mask: mask),
+      initial: current,
+    );
+    if (value != null) await settingsNotifier.setUidAlias(uid, value);
   }
 
   /// 彈出打字確認 dialog（已連結雲端時附「同時從雲端移除」勾選），
@@ -135,8 +158,21 @@ class AccountManagement extends ConsumerWidget {
   }
 }
 
-/// 帳號清單中單一 UID 的可拖排 row，包含 UID、別名編輯、切換與刪除操作。
-class _Row extends StatefulWidget {
+/// ⋮ 選單的動作。
+enum _RowAction {
+  /// 開啟別名編輯對話框，修改此 UID 的別名。
+  editAlias,
+
+  /// 將此 UID 設為使用中的帳號。
+  setActive,
+
+  /// 移除此 UID 的帳號，會先跳出確認對話框。
+  remove,
+}
+
+/// 帳號清單中單一 UID 的可拖排緊湊列：UID、別名、最後更新與 ⋮ 動作選單。
+class _Row extends StatelessWidget {
+  /// 建立 [_Row]。
   const _Row({
     super.key,
     required this.uid,
@@ -147,7 +183,7 @@ class _Row extends StatefulWidget {
     required this.maskUid,
     required this.onSetActive,
     required this.onRemove,
-    required this.onAliasSubmit,
+    required this.onEditAlias,
   });
 
   /// 該 row 代表的 UID。
@@ -168,78 +204,46 @@ class _Row extends StatefulWidget {
   /// 是否套用介面隱私模式（前 3 碼搭配 `•` 遮蔽）。
   final bool maskUid;
 
-  /// 點擊「切換」後呼叫。
+  /// 選單選「設為活躍」後呼叫。
   final VoidCallback onSetActive;
 
-  /// 點擊「移除」並確認後呼叫。
+  /// 選單選「移除」後呼叫（確認流程由呼叫端處理）。
   final VoidCallback onRemove;
 
-  /// 別名 TextField 失去 focus 或按 Enter 後呼叫。
-  final ValueChanged<String> onAliasSubmit;
+  /// 選單選「編輯別名」後呼叫。
+  final VoidCallback onEditAlias;
 
-  @override
-  State<_Row> createState() => _RowState();
-}
-
-/// State for [_Row]; 管理別名 [TextField] 的 controller 與 focus。
-class _RowState extends State<_Row> {
-  /// 別名 TextField 的 controller。
-  late final TextEditingController _ctrl;
-
-  /// 別名 TextField 的 focus node；失焦時自動提交別名。
-  late final FocusNode _focus;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = TextEditingController(text: widget.alias);
-    _focus = FocusNode();
-    _focus.addListener(_onFocusChange);
-  }
-
-  @override
-  void didUpdateWidget(covariant _Row oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // 外部 alias 變了（例如其他 row 觸發 rebuild）才 sync
-    if (widget.alias != oldWidget.alias && _ctrl.text != widget.alias) {
-      _ctrl.text = widget.alias;
-    }
-  }
-
-  /// 失焦時將目前輸入值提交為新別名。
-  void _onFocusChange() {
-    if (!_focus.hasFocus) {
-      widget.onAliasSubmit(_ctrl.text);
-    }
-  }
-
-  @override
-  void dispose() {
-    _focus.removeListener(_onFocusChange);
-    _focus.dispose();
-    _ctrl.dispose();
-    super.dispose();
-  }
+  /// 依選取的 [action] 分派到對應 callback。
+  void _onSelected(_RowAction action) => switch (action) {
+    _RowAction.editAlias => onEditAlias(),
+    _RowAction.setActive => onSetActive(),
+    _RowAction.remove => onRemove(),
+  };
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final tokens = Theme.of(context).gacha;
+    final compact = isCompactLayout(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ReorderableDragStartListener(
-            index: widget.index,
+            index: index,
             child: Tooltip(
               message: l.accountDragHandleTooltip,
               child: MouseRegion(
                 cursor: SystemMouseCursors.resizeUpDown,
-                child: Icon(
-                  Icons.drag_handle,
-                  color: tokens.textMuted,
-                  size: 20,
+                // 手機排版時把手的觸控區放大到 48dp，圖示大小不變。
+                child: SizedBox.square(
+                  dimension: compact ? 48 : null,
+                  child: Icon(
+                    Icons.drag_handle,
+                    color: tokens.textMuted,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
@@ -249,18 +253,22 @@ class _RowState extends State<_Row> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Wrap(
+                  spacing: AppSpacing.s,
+                  runSpacing: AppSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      displayUid(widget.uid, mask: widget.maskUid),
+                      displayUid(uid, mask: maskUid),
+                      // 遮罩後的 UID 在由右往左的語言會排成 ••••••701。
+                      textDirection: TextDirection.ltr,
                       style: TextStyle(
                         color: tokens.textPrimary,
                         fontWeight: FontWeight.w600,
-                        fontFeatures: const [FontFeature.tabularFigures()],
+                        fontFeatures: kTabularFigures,
                       ),
                     ),
-                    if (widget.isActive) ...[
-                      const SizedBox(width: AppSpacing.s),
+                    if (isActive)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.s,
@@ -279,51 +287,46 @@ class _RowState extends State<_Row> {
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
-                const SizedBox(height: 2),
+                Text(
+                  alias.isEmpty ? l.accountAliasNone : alias,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: alias.isEmpty
+                        ? tokens.textMuted
+                        : tokens.textPrimary,
+                  ),
+                ),
                 RelativeTimeText(
-                  time: widget.lastUpdated,
+                  time: lastUpdated,
                   templateBuilder: l.accountLastUpdated,
                   style: TextStyle(color: tokens.textMuted, fontSize: 12),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                SizedBox(
-                  width: 240,
-                  child: TextField(
-                    controller: _ctrl,
-                    focusNode: _focus,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: widget.onAliasSubmit,
-                    decoration: InputDecoration(
-                      labelText: l.accountAliasLabel,
-                      hintText: l.accountAliasHint,
-                      isDense: true,
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
                 ),
               ],
             ),
           ),
-          if (!widget.isActive)
-            TextButton.icon(
-              onPressed: widget.onSetActive,
-              icon: const Icon(Icons.check_circle_outline, size: 18),
-              label: Text(l.accountSetActive),
-            ),
-          TextButton.icon(
-            onPressed: widget.onRemove,
-            icon: Icon(
-              Icons.delete_outline,
-              size: 18,
-              color: tokens.stateDanger,
-            ),
-            label: Text(
-              l.accountRemove,
-              style: TextStyle(color: tokens.stateDanger),
-            ),
+          PopupMenuButton<_RowAction>(
+            onSelected: _onSelected,
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _RowAction.editAlias,
+                child: Text(l.accountActionEditAlias),
+              ),
+              if (!isActive)
+                PopupMenuItem(
+                  value: _RowAction.setActive,
+                  child: Text(l.accountSetActive),
+                ),
+              PopupMenuItem(
+                value: _RowAction.remove,
+                child: Text(
+                  l.accountRemove,
+                  style: TextStyle(color: tokens.stateDanger),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:genshin_impact_wish_gacha_analyzer/services/android/log_access_resolver.dart';
 import 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
 
 export 'package:genshin_impact_wish_gacha_analyzer/state/update_error.dart';
@@ -19,13 +20,47 @@ class ConvertingDataLanguage extends UpdateProgress {
   const ConvertingDataLanguage();
 }
 
-/// 等待 MITM 捕獲祈願 URL。
+/// 等待 MITM 捕獲或遊戲網頁快取（Android 為系統記錄）取得祈願 URL。
 class WaitingForCapture extends UpdateProgress {
   /// 建立 [WaitingForCapture]；[isFallback] 表示 auth 過期後的二次捕獲。
-  const WaitingForCapture({this.isFallback = false});
+  const WaitingForCapture({
+    this.isFallback = false,
+    this.checkingLogAccess = false,
+    this.captureUnavailable = false,
+    this.gameDirMissing = false,
+    this.logAccessUnavailable,
+    this.logConnectionLost = false,
+    this.credentialReady = false,
+    this.rootDenied = false,
+    this.gamePackage,
+  });
+
+  /// Android「開啟原神」要開的套件名稱；還沒決定或查不到時為 null。
+  final String? gamePackage;
 
   /// 是否為 auth 過期後的二次捕獲。
   final bool isFallback;
+
+  /// Android 正在判斷能不能自動讀取遊戲記錄；判斷完成前不引導玩家開遊戲，免得進遊戲後才發現要回來設定。
+  final bool checkingLogAccess;
+
+  /// true 表示攔截程式沒能運作（例如根憑證被拒絕、連接埠被佔用），目前只靠遊戲網頁快取偵測。
+  final bool captureUnavailable;
+
+  /// [captureUnavailable] 時是否也找不到遊戲資料夾（沒有快取可讀，需請使用者選資料夾）。
+  final bool gameDirMissing;
+
+  /// Android 沒有自動讀取遊戲記錄的方式時的原因（畫面改為只提供手動輸入）；可以自動讀取時為 null。
+  final LogAccessUnavailable? logAccessUnavailable;
+
+  /// Android 等待中與無線偵錯的連線中斷、正在重試（不中斷等待，只顯示提示）。
+  final bool logConnectionLost;
+
+  /// Android 已取得祈願紀錄網址，等玩家切回本 App 才開始抓資料（背景時網路會被系統擋）。
+  final bool credentialReady;
+
+  /// Android 沒有自動讀取方式時，裝置有 root 但本 App 沒拿到授權（提示到 root 工具允許）。
+  final bool rootDenied;
 }
 
 /// 正在拉取指定 banner 的紀錄。
@@ -85,6 +120,7 @@ class UpdateCompleted extends UpdateProgress {
     this.importSummary,
     this.hoyoWikiEntriesRefreshed,
     this.hoyoWikiStaleItemsPruned = 0,
+    this.wirelessDebuggingLeftOn = false,
   });
 
   /// 本次更新新增的總紀錄數（update 流程用；import 流程為 0）。
@@ -110,6 +146,9 @@ class UpdateCompleted extends UpdateProgress {
   /// 「更新物品資料」流程中本次被清理掉殘留語言的相異物品數（pageByLang 有縮減者）。
   /// 0 表示無殘留可清；UI 僅在 > 0 時顯示清理提醒行。其他流程恆為 0。
   final int hoyoWikiStaleItemsPruned;
+
+  /// Android 手動開關模式：照規則該關掉無線偵錯但沒有權限關，完成畫面提示玩家自行關閉。
+  final bool wirelessDebuggingLeftOn;
 }
 
 /// 更新失敗。

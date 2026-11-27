@@ -52,4 +52,112 @@ void main() {
     );
     expect(inkWell.onTap, isNull);
   });
+
+  testWidgets('arrow hit area is 48dp on phones and its edge is tappable', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var taps = 0;
+    await tester.pumpWidget(
+      _wrap(
+        (tokens) => ScrollArrowButton(
+          icon: Icons.arrow_left,
+          tooltip: 'prev',
+          tokens: tokens,
+          onPressed: () => taps++,
+        ),
+      ),
+    );
+    final size = tester.getSize(find.byType(ScrollArrowButton));
+    expect(size.width, greaterThanOrEqualTo(48));
+    expect(size.height, greaterThanOrEqualTo(48));
+    // 點在 24dp 圓圈外、48dp 觸控區內。
+    await tester.tapAt(
+      tester.getCenter(find.byType(ScrollArrowButton)) + const Offset(20, 0),
+    );
+    await tester.pump();
+    expect(taps, 1);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('arrow stays 24dp on desktop', (tester) async {
+    await tester.pumpWidget(
+      _wrap(
+        (tokens) => ScrollArrowButton(
+          icon: Icons.arrow_left,
+          tooltip: 'prev',
+          tokens: tokens,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(ScrollArrowButton)).width, 24);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
+
+  group('ScrollEdgeFade colour', () {
+    /// 取 [ScrollEdgeFade] 漸層的起始（不透明）色。
+    Color fadeStart(WidgetTester tester) {
+      final box = tester.widget<DecoratedBox>(
+        find.descendant(
+          of: find.byType(ScrollEdgeFade),
+          matching: find.byType(DecoratedBox),
+        ),
+      );
+      return ((box.decoration as BoxDecoration).gradient! as LinearGradient)
+          .colors
+          .first;
+    }
+
+    for (final (name, theme) in [
+      ('light', buildLightTheme()),
+      ('dark', buildDarkTheme()),
+    ]) {
+      testWidgets('blends into the dialog surface inside a dialog ($name)', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme,
+            home: const Dialog(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: ScrollEdgeFade(side: ScrollSide.start),
+              ),
+            ),
+          ),
+        );
+        final dialogColor = tester
+            .widget<Material>(
+              find
+                  .descendant(
+                    of: find.byType(Dialog),
+                    matching: find.byType(Material),
+                  )
+                  .first,
+            )
+            .color;
+        expect(fadeStart(tester), dialogColor);
+      });
+
+      testWidgets('uses the card colour outside a dialog ($name)', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme,
+            home: const Scaffold(
+              body: SizedBox(
+                width: 100,
+                height: 100,
+                child: ScrollEdgeFade(side: ScrollSide.start),
+              ),
+            ),
+          ),
+        );
+        expect(fadeStart(tester), theme.gacha.surfaceCard);
+      });
+    }
+  });
 }

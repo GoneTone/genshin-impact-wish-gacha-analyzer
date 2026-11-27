@@ -1,0 +1,81 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
+import 'package:flutter/widgets.dart';
+
+import 'package:genshin_impact_wish_gacha_analyzer/theme/tokens.dart';
+
+/// 手機排版的門檻（dp）：手機作業系統比較短邊、電腦作業系統比較寬度。
+const double kCompactBreakpoint = 600;
+
+/// 是否使用手機排版（抽屜導覽、精簡標題列、12dp 對話框邊距等）。
+///
+/// 手機作業系統看短邊，轉向不會改變結果；電腦作業系統只看寬度，
+/// 寬而矮的筆電視窗仍維持側欄，只有把視窗拉窄才切換。
+bool isCompactLayout(BuildContext context) {
+  final size = MediaQuery.sizeOf(context);
+  final mobileOs = switch (defaultTargetPlatform) {
+    TargetPlatform.android || TargetPlatform.iOS => true,
+    _ => false,
+  };
+  return (mobileOs ? size.shortestSide : size.width) < kCompactBreakpoint;
+}
+
+/// 頁面內容與螢幕邊緣的留白：手機排版 12dp、其他 16dp，所有頁面共用同一個值。
+double pagePaddingOf(BuildContext context) =>
+    isCompactLayout(context) ? AppSpacing.m : AppSpacing.l;
+
+/// 手機排版的螢幕方向。
+enum PhoneOrientation {
+  /// 直向（寬不大於高）。
+  portrait,
+
+  /// 橫向（寬大於高）。
+  landscape,
+}
+
+/// 手機（Android／iOS 且為手機排版）目前的螢幕方向；電腦系統或平板排版回傳 null。
+///
+/// 底部列、標題列收起等「手機專屬」規則一律用它判斷，電腦版視窗再窄也不套用。
+PhoneOrientation? phoneOrientationOf(BuildContext context) {
+  final mobileOs = switch (defaultTargetPlatform) {
+    TargetPlatform.android || TargetPlatform.iOS => true,
+    _ => false,
+  };
+  if (!mobileOs || !isCompactLayout(context)) return null;
+  final size = MediaQuery.sizeOf(context);
+  return size.width > size.height
+      ? PhoneOrientation.landscape
+      : PhoneOrientation.portrait;
+}
+
+/// 提示框的觸發方式：手機排版點一下就顯示，其他沿用預設（滑鼠停留、觸控長按）。
+///
+/// 只給「點了沒有其他動作」的元素用；外層本身可點時會搶走那個點擊。
+TooltipTriggerMode? tapTooltipTrigger(BuildContext context) =>
+    isCompactLayout(context) ? TooltipTriggerMode.tap : null;
+
+/// 長頁面清單的預先建構範圍：手機與平板按需建構（省語意樹與重繪）；
+/// 電腦系統會常駐捲軸，整頁建好滑塊才會依實際高度、不隨估算跳動。
+/// 數值取大的有限值：無限大會讓語意樹算出非有限範圍而 assert。
+ScrollCacheExtent? pageScrollCacheExtent() => switch (defaultTargetPlatform) {
+  TargetPlatform.windows ||
+  TargetPlatform.macOS ||
+  TargetPlatform.linux => const ScrollCacheExtent.pixels(100000),
+  _ => null,
+};
+
+/// 給 `MaterialApp.actions` 的全 App 動作表（預設動作加上本專案的覆寫）。
+final Map<Type, Action<Intent>> appActions = {
+  ...WidgetsApp.defaultActions,
+  // Flutter 在手機上點文字欄位外部不收焦點：按返回收起鍵盤後欄位仍有焦點，
+  // 關掉對話框時焦點回到欄位、鍵盤又跳出；別名這類「失焦才提交」的欄位也存不進去。
+  // 要等手指放開才收：從側邊滑動返回時系統會先把按下交給 App，之後送來取消而不是放開，
+  // 按下就收的話手勢還沒放開鍵盤就收起，滑回去取消也回不來。
+  EditableTextTapUpOutsideIntent:
+      CallbackAction<EditableTextTapUpOutsideIntent>(
+        onInvoke: (intent) {
+          intent.focusNode.unfocus();
+          return null;
+        },
+      ),
+};

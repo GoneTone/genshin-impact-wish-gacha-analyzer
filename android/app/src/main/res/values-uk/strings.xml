@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Аналізатор Wish для Genshin Impact</string>
+    <string name="pairing_channel">Підключення бездротового налагодження</string>
+    <string name="pairing_searching_title">Пошук служби підключення</string>
+    <string name="pairing_searching_text">У розділі «Налагодження через Wi-Fi» натисніть «Підключати пристрій за допомогою коду підключення»</string>
+    <string name="pairing_found_title">Введіть код підключення</string>
+    <string name="pairing_found_text">Введіть 6-значний код, показаний на екрані підключення</string>
+    <string name="pairing_input_label">Код підключення</string>
+    <string name="pairing_action_pair">Підключити</string>
+    <string name="pairing_action_stop">Зупинити</string>
+    <string name="pairing_in_progress">Підключення...</string>
+    <string name="pairing_success_title">Підключено</string>
+    <string name="pairing_success_text">Натисніть тут, щоб повернутися в застосунок</string>
+    <string name="pairing_failed_text">Не вдалося підключити. Перевірте код і введіть його ще раз</string>
+    <string name="pairing_no_app_text">Не вдалося підключити. Поверніться в застосунок і спробуйте ще раз</string>
+    <string name="pairing_timeout_title">Час очікування підключення минув</string>
+    <string name="pairing_timeout_text">Натисніть тут, щоб почати знову</string>
+</resources>
