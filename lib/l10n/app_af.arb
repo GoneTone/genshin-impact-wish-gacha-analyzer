@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "In watter rekening invoer?",
   "importTargetAccountBody": "{platform}-uitvoere bevat nie ’n UID nie. Kies die rekening waaraan hierdie rekords behoort.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Ander UID",
   "importTargetAccountUidHint": "Voer UID in",
