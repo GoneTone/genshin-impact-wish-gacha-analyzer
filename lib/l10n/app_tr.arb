@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Hangi hesaba içe aktarılsın?",
   "importTargetAccountBody": "{platform} dışa aktarımlarında UID bulunmaz. Bu kayıtların ait olduğu hesabı seçin.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Diğer UID",
   "importTargetAccountUidHint": "UID girin",
