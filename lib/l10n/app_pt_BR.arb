@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt-BR",
   "localeNativeName": "Português",
   "localeTranslator": "Mirusausiliq & Boemio, <a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Tradutor: {translator}",
@@ -913,7 +913,11 @@
   "importTargetAccountTitle": "Importar para qual conta?",
   "importTargetAccountBody": "As exportações do {platform} não incluem UID. Escolha a conta à qual estes registros pertencem.",
   "@importTargetAccountBody": {
-    "placeholders": { "platform": { "type": "String" } }
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
   },
   "importTargetAccountOtherUid": "Outro UID",
   "importTargetAccountUidHint": "Digite o UID",
