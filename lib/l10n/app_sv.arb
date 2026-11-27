@@ -1,5 +1,5 @@
 {
-  "@@locale": "sv",
+  "@@locale": "sv-SE",
   "localeNativeName": "Svenska",
   "localeTranslator": "<a href=\"https://claude.com/claude-code\">Claude Code</a>",
   "localeTranslatorLabel": "Översättare: {translator}",
