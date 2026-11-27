@@ -82,6 +82,14 @@ The utility may trigger anti-virus software during installation and execution. T
 - All data stays on your machine by default — nothing is uploaded; cloud sync is opt-in and backs up only to your own Google Drive
 - The Android version shows AdMob native ads (consent is requested first in regions that require it); the Windows version has no ads
 
+## Supported Third-Party Import Platforms
+
+Besides importing this utility's own backup files, you can also import wish history data exported from the following third-party platforms (Settings → *Import from other platforms*):
+
+- [UIGF](https://uigf.org/)
+- [Paimon.moe](https://paimon.moe/)
+- More platforms may be supported in the future...
+
 ## Screenshot
 
 ### Windows
